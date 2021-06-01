@@ -655,8 +655,8 @@ using DynamicStateList = vector<DynamicStateFlagBit>;
 
 enum class StencilFace {
     FRONT = 0x1,
-    BACK = 0x2,
-    ALL = 0x3,
+    BACK  = 0x2,
+    ALL   = 0x3,
 };
 CC_ENUM_OPERATORS(StencilFace);
 
@@ -873,7 +873,7 @@ struct DrawInfo {
     uint firstVertex   = 0U;
     uint indexCount    = 0U;
     uint firstIndex    = 0U;
-    uint vertexOffset  = 0U;
+    int  vertexOffset  = 0;
     uint instanceCount = 0U;
     uint firstInstance = 0U;
 };

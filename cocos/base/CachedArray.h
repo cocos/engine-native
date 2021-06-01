@@ -44,13 +44,12 @@ public:
         CC_SAFE_DELETE_ARRAY(_array);
     }
 
-    CachedArray(const CachedArray &other) noexcept
+    CachedArray(const CachedArray &other)
     : _size(other._size), _capacity(other._capacity), _array(CC_NEW_ARRAY(T, other._capacity)) {
         memcpy(_array, other._array, _size * sizeof(T));
     }
 
-    // NOLINTNEXTLINE(bugprone-unhandled-self-assignment) false positive
-    CachedArray &operator=(const CachedArray &other) noexcept {
+    CachedArray &operator=(const CachedArray &other) {
         if (this != &other) {
             CC_DELETE_ARRAY(_array);
             _size     = other._size;
@@ -81,11 +80,11 @@ public:
     }
 
     // Subscription operators
-    T &operator[](int index) {
+    T &operator[](uint index) {
         return _array[index];
     }
 
-    const T &operator[](int index) const {
+    const T &operator[](uint index) const {
         return _array[index];
     }
 

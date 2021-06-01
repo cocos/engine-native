@@ -40,7 +40,7 @@ public:
     Rect                 renderArea;
     Color                clearColors[MAX_ATTACHMENTS];
     float                clearDepth   = 1.0F;
-    int                  clearStencil = 0;
+    uint                 clearStencil = 0U;
     uint                 subpassIdx   = 0U;
 
     GLES3CmdBeginRenderPass() : GLESCmd(GLESCmdType::BEGIN_RENDER_PASS) {}
