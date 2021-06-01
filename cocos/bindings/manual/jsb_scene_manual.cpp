@@ -80,6 +80,55 @@ static bool js_scene_Node_initWithData(se::State& s) // constructor_overloaded.c
 SE_BIND_FUNC(js_scene_Node_initWithData)
 
 static bool js_scene_SubModel_setRenderingSubMesh(se::State &s) {
+    auto* cobj = static_cast<cc::scene::SubModel*>(s.nativeThisObject());
+    SE_PRECONDITION2(cobj, false, "js_scene_SubModel_setRenderingSubMesh : Invalid Native Object");
+    const auto& args = s.args();
+    size_t      argc = args.size();
+
+    if (argc == 1) {
+        if (args[0].isObject()) {
+            se::Object* dataObj = args[0].toObject();
+            if (!dataObj->isArray()) {
+                return false;
+            }
+            uint32_t length = 0;
+            dataObj->getArrayLength(&length);
+            std::vector<cc::scene::FlatBuffer> flatBuffers;
+            flatBuffers.resize(length);
+            se::Value value;
+            for (uint32_t i = 0; i < length; ++i) {
+                if (dataObj->getArrayElement(i, &value)) {
+                    if (value.isObject()) {
+                        cc::scene::FlatBuffer currBuffer;
+                        se::Value bufferVal;
+                        se::Object*           valObj = value.toObject();
+                        valObj->getProperty("buffer", &bufferVal);
+                        // data
+                        CC_UNUSED size_t bufferLength = 0;
+                        uint8_t*         address    = nullptr;
+                        bufferVal.toObject()->getTypedArrayData(&address, &bufferLength);
+                        currBuffer.data = address;
+                        currBuffer.size = bufferLength;
+                        // stride
+                        se::Value strideVal;
+                        valObj->getProperty("stride", &strideVal);
+                        currBuffer.stride = strideVal.toUint32();
+                        // count
+                        se::Value countVal;
+                        valObj->getProperty("count", &countVal);
+                        currBuffer.count = countVal.toUint32();
+                        flatBuffers[i]   = currBuffer;
+                    }
+                }
+            }
+            cc::scene::RenderingSubMesh* submesh = new cc::scene::RenderingSubMesh();
+            submesh->flatBuffers                 = flatBuffers;
+            cobj->setRenderingSubMesh(submesh);
+            return true;
+        }
+    }
+
+    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
 SE_BIND_FUNC(js_scene_SubModel_setRenderingSubMesh)
