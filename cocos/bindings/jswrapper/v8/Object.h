@@ -378,13 +378,13 @@ public:
     std::string toString() const;
 
     // Private API used in wrapper
-    static Object *       createJsObject(Class *cls, v8::Local<v8::Object> obj);
-    v8::Local<v8::Object> getJsObject() const;
-    ObjectWrap &          getWrap();
-    Class *               getClass() const;
+    static Object *       _createJSObject(Class *cls, v8::Local<v8::Object> obj);
+    v8::Local<v8::Object> _getJSObject() const;
+    ObjectWrap &          _getWrap();
+    Class *               _getClass() const;
 
-    void setFinalizeCallback(V8FinalizeFunc finalizeCb);
-    bool isNativeFunction() const;
+    void _setFinalizeCallback(V8FinalizeFunc finalizeCb);
+    bool _isNativeFunction() const;
     //
 
     #if CC_DEBUG
