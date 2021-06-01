@@ -31,7 +31,7 @@ NS_CC_MATH_BEGIN
 
 Mat4::Mat4() {
     // As JS defautl mat4 is zero, so change it to zero.
-    *this = ZERO;
+    *this = IDENTITY;
 }
 
 Mat4::Mat4(float m11, float m12, float m13, float m14, float m21, float m22, float m23, float m24,
@@ -46,8 +46,6 @@ Mat4::Mat4(const float *mat) {
 Mat4::Mat4(const Mat4 &copy) {
     memcpy(m, copy.m, MATRIX_SIZE);
 }
-
-Mat4::~Mat4() = default;
 
 void Mat4::createLookAt(const Vec3 &eyePosition, const Vec3 &targetPosition, const Vec3 &up, Mat4 *dst) {
     createLookAt(eyePosition.x, eyePosition.y, eyePosition.z, targetPosition.x, targetPosition.y, targetPosition.z,
@@ -421,10 +419,10 @@ void Mat4::add(const Mat4 &m1, const Mat4 &m2, Mat4 *dst) {
 }
 
 void Mat4::fromRT(const Vec4 &rotation, const Vec3 &translation, Mat4 *dst) {
-    const auto x = rotation.x;
-    const auto y = rotation.y;
-    const auto z = rotation.z;
-    const auto w = rotation.w;
+    const auto x  = rotation.x;
+    const auto y  = rotation.y;
+    const auto z  = rotation.z;
+    const auto w  = rotation.w;
     const auto x2 = x + x;
     const auto y2 = y + y;
     const auto z2 = z + z;
@@ -468,7 +466,7 @@ bool Mat4::decompose(Vec3 *scale, Quaternion *rotation, Vec3 *translation) const
     // Nothing left to do.
     if (scale == nullptr && rotation == nullptr) {
         return true;
-}
+    }
 
     // Extract the scale.
     // This is simply the length of each axis (row/column) in the matrix.
@@ -486,7 +484,7 @@ bool Mat4::decompose(Vec3 *scale, Quaternion *rotation, Vec3 *translation) const
     float det = determinant();
     if (det < 0) {
         scaleZ = -scaleZ;
-}
+    }
 
     if (scale) {
         scale->x = scaleX;
@@ -497,12 +495,12 @@ bool Mat4::decompose(Vec3 *scale, Quaternion *rotation, Vec3 *translation) const
     // Nothing left to do.
     if (rotation == nullptr) {
         return true;
-}
+    }
 
     // Scale too close to zero, can't decompose rotation.
     if (scaleX < MATH_TOLERANCE || scaleY < MATH_TOLERANCE || std::abs(scaleZ) < MATH_TOLERANCE) {
         return false;
-}
+    }
 
     float rn;
 
@@ -662,7 +660,7 @@ bool Mat4::inverse() {
     // Close to zero, can't invert.
     if (std::abs(det) <= MATH_TOLERANCE) {
         return false;
-}
+    }
 
     // Support the case where m == dst.
     Mat4 inverse;

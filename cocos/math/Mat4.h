@@ -157,7 +157,7 @@ public:
     /**
      * Destructor.
      */
-    ~Mat4();
+    ~Mat4() = default;
 
     /**
      * Creates a view matrix based on the specified input parameters.
