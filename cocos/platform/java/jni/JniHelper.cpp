@@ -134,7 +134,7 @@ void JniHelper::init(JNIEnv *env, jobject activity) {
 
     pthread_key_create(&g_key, cbDetachCurrentThread);
     auto ok = JniHelper::setClassLoaderFrom(activity);
-    assert(ok);
+    CC_ASSERT(ok);
 }
 
 JNIEnv *JniHelper::cacheEnv() {
