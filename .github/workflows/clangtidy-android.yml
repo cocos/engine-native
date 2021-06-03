@@ -55,7 +55,7 @@ jobs:
               - exclude: 'cocos/base/etc1.*'
               - exclude: 'cocos/base/etc2.*'
               - exclude: 'cocos/bindings/manual/jsb_global.cpp'
-              - exclude: 'cocos/bindings/manual/jsb_conversions.h'
+              - exclude: 'cocos/bindings/manual/jsb_conversions.*'
             allChanges:
               - added|modified|deleted: '**'
             skipedDebug:
