@@ -122,7 +122,7 @@ void Data::clear() {
 }
 
 unsigned char *Data::takeBuffer(ssize_t *size) {
-    auto buffer = getBytes();
+    auto *buffer = getBytes();
     if (size) {
         *size = getSize();
     }
