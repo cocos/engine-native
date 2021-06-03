@@ -3,7 +3,7 @@
     "bundleName": "com.cocos.ohos.demo1",
     "vendor": "example",
     "version": {
-      "code": 1,
+      "code": 1000000,
       "name": "1.0"
     },
     "apiVersion": {
@@ -28,7 +28,8 @@
     "distro": {
       "deliveryWithInstall": true,
       "moduleName": "entry",
-      "moduleType": "entry"
+      "moduleType": "entry",
+      "installationFree": true
     },
     "abilities": [
       {
@@ -55,7 +56,7 @@
         "name": "com.example.cocosdemo.MainAbility",
         "icon": "$media:icon",
         "description": "$string:mainability_description",
-        "label": "CocosDemo",
+        "label": "$string:app_name",
         "type": "page",
         "launchType": "standard",
         "configChanges": [
