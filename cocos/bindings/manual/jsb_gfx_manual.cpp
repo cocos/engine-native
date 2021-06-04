@@ -491,12 +491,5 @@ bool register_all_gfx_manual(se::Object *obj) {
     }
     se::Object *ns = nsVal.toObject();
 
-    {
-        se::Value jsret;
-        nativevalue_to_se(cc::gfx::Device::getInstance(), jsret, nullptr);
-        ns->setProperty("deviceInstance", jsret);
-        // ns->defineProperty("deviceInstance", _SE(js_gfx_get_deviceInstance), nullptr);
-    }
-
     return true;
 }

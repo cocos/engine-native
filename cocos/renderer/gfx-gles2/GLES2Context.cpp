@@ -193,7 +193,7 @@ bool GLES2Context::doInit(const ContextInfo &info) {
         EGLint        depth{0};
         EGLint        stencil{0};
         const uint8_t attrNums         = 8;
-        int           params[attrNums] = {0};
+        EGLint        params[attrNums] = {0};
         bool          matched          = false;
         const bool    qualityPreferred = info.performance == Performance::HIGH_QUALITY;
         uint64_t      lastScore        = qualityPreferred ? std::numeric_limits<uint64_t>::min() : std::numeric_limits<uint64_t>::max();
@@ -215,17 +215,14 @@ bool GLES2Context::doInit(const ContextInfo &info) {
             /*------------------------------------------ANGLE's priority-----------------------------------------------*/
             // Favor EGLConfigLists by RGB, then Depth, then Non-linear Depth, then Stencil, then Alpha
             uint64_t currScore{0};
-            currScore |= (static_cast<uint64_t>(std::min(std::max(params[6], 0), 15))) << 29;
-            currScore |= (static_cast<uint64_t>(std::min(std::max(params[7], 0), 31))) << 24;
-            currScore |= std::min(std::abs(params[0] - redSize) +
-                                      std::abs(params[1] - greenSize) +
-                                      std::abs(params[2] - blueSize),
-                                  127)
-                         << 17;
-            currScore |= std::min(std::abs(params[4] - depthSize), 63) << 11;
-            currScore |= std::min(std::abs(1 - bNonLinearDepth), 1) << 10;
-            currScore |= std::min(std::abs(params[5] - stencilSize), 31) << 6;
-            currScore |= std::min(std::abs(params[3] - alphaSize), 31) << 0;
+            EGLint   colorScore = std::abs(params[0] - redSize) + std::abs(params[1] - greenSize) + std::abs(params[2] - blueSize);
+            currScore |= static_cast<uint64_t>(std::min(std::max(params[6], 0), 15)) << 29;
+            currScore |= static_cast<uint64_t>(std::min(std::max(params[7], 0), 31)) << 24;
+            currScore |= static_cast<uint64_t>(std::min(colorScore, 127)) << 17;
+            currScore |= static_cast<uint64_t>(std::min(std::abs(params[4] - depthSize), 63)) << 11;
+            currScore |= static_cast<uint64_t>(std::min(std::abs(1 - bNonLinearDepth), 1)) << 10;
+            currScore |= static_cast<uint64_t>(std::min(std::abs(params[5] - stencilSize), 31)) << 6;
+            currScore |= static_cast<uint64_t>(std::min(std::abs(params[3] - alphaSize), 31)) << 0;
             /*------------------------------------------ANGLE's priority-----------------------------------------------*/
 
             // if msaaEnabled, sampleBuffers and sampleCount should be greater than 0, until iterate to the last one(can't find).

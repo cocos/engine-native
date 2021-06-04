@@ -1052,7 +1052,7 @@ private:
         PIPELINE_STATE,
     };
     struct Buffer {
-        VkBuffer      vkBuffer;
+        VkBuffer      VkBuffer;
         VmaAllocation vmaAllocation;
     };
     struct Image {
@@ -1068,7 +1068,7 @@ private:
             Image       image;
             VkImageView vkImageView;
 
-            CCVKGPURenderPass *         gpuRenderPass;
+            CCVKGPURenderPass *         gpuRenderPass = nullptr;
             CCVKGPUFramebuffer *        gpuFramebuffer;
             CCVKGPUSampler *            gpuSampler;
             CCVKGPUShader *             gpuShader;
