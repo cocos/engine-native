@@ -31,9 +31,6 @@
 
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
     #include "android/native_window.h"
-#elif CC_PLATFORM == CC_PLATFORM_OHOS
-    #include <native_layer.h>
-    #include <native_layer_jni.h>
 #endif
 
 #define FORCE_DISABLE_VALIDATION 1
@@ -96,7 +93,7 @@ GLES2Context::GLES2Context() = default;
 
 GLES2Context::~GLES2Context() = default;
 
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS || CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_MAC_OSX || CC_PLATFORM == CC_PLATFORM_OHOS)
+#if (CC_PLATFORM == CC_PLATFORM_WINDOWS || CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_MAC_OSX)
 
 bool GLES2Context::doInit(const ContextInfo &info) {
     _vsyncMode    = info.vsyncMode;
@@ -279,7 +276,7 @@ bool GLES2Context::doInit(const ContextInfo &info) {
          * ANativeWindow buffers to match, using EGL_NATIVE_VISUAL_ID.
          */
 
-    #if (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
+    #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
         EGLint nFmt = 0;
 
         if (eglGetConfigAttrib(_eglDisplay, _eglConfig, EGL_NATIVE_VISUAL_ID, &nFmt) == EGL_FALSE) {
@@ -290,12 +287,7 @@ bool GLES2Context::doInit(const ContextInfo &info) {
         auto width  = static_cast<int32_t>(GLES2Device::getInstance()->getWidth());
         auto height = static_cast<int32_t>(GLES2Device::getInstance()->getHeight());
 
-        #if CC_PLATFORM == CC_PLATFORM_ANDROID
         ANativeWindow_setBuffersGeometry(window, width, height, nFmt);
-        #elif CC_PLATFORM == CC_PLATFORM_OHOS
-        NativeLayerHandle(window, NativeLayerOps::SET_WIDTH_AND_HEIGHT, width, height);
-        NativeLayerHandle(window, NativeLayerOps::SET_FORMAT, nFmt);
-        #endif
     #endif
 
         EGL_CHECK(_eglSurface = eglCreateWindowSurface(_eglDisplay, _eglConfig, window, nullptr));
@@ -427,7 +419,7 @@ void GLES2Context::doDestroy() {
 }
 
 void GLES2Context::releaseSurface(uintptr_t /*windowHandle*/) {
-    #if (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
+    #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
     if (_eglSurface != EGL_NO_SURFACE) {
         eglDestroySurface(_eglDisplay, _eglSurface);
         _eglSurface = EGL_NO_SURFACE;
@@ -436,7 +428,7 @@ void GLES2Context::releaseSurface(uintptr_t /*windowHandle*/) {
 }
 
 void GLES2Context::acquireSurface(uintptr_t windowHandle) {
-    #if (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
+    #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
     {
         _windowHandle = windowHandle;
         auto *window  = reinterpret_cast<EGLNativeWindowType>(_windowHandle); // NOLINT(performance-no-int-to-ptr)
@@ -448,15 +440,9 @@ void GLES2Context::acquireSurface(uintptr_t windowHandle) {
         }
 
         // Device's size will be updated after recreate window (in resize event) and is incorrect for now.
-        #if CC_PLATFORM == CC_PLATFORM_ANDROID
         int32_t width  = ANativeWindow_getWidth(window);
         int32_t height = ANativeWindow_getHeight(window);
         ANativeWindow_setBuffersGeometry(window, width, height, nFmt);
-        #else
-        int32_t width  = NativeLayerHandle(window, NativeLayerOps::GET_WIDTH);
-        int32_t height = NativeLayerHandle(window, NativeLayerOps::GET_HEIGHT);
-        NativeLayerHandle(window, NativeLayerOps::SET_WIDTH_AND_HEIGHT, width, height);
-        #endif
         GLES2Device::getInstance()->resize(width, height);
 
         EGL_CHECK(_eglSurface = eglCreateWindowSurface(_eglDisplay, _eglConfig, window, nullptr));
