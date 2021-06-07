@@ -29,6 +29,21 @@ namespace cc {
 namespace scene {
 
 void SpotLight::update() {
+    if(_node && (_node->getFlagsChanged() || _needUpdate)) {
+        _pos = _node->getWorldPosition();
+        _dir = cc::Vec3(_node->getWorldRotation() * _forward).getNormalized();
+        _aabb.set(_pos, cc::Vec3(_range, _range, _range));
+        _matView = _node->getWorldRT();
+        _matView.inverse();
+
+        Mat4::createPerspective(_angle, 1.0, 0.001, _range, &_matProj);
+
+        _matViewProj = _matView * _matProj;
+
+        _frustum.update(_matViewProj, _matViewProjInv);
+
+        _needUpdate = true;
+    }
 }
 
 } // namespace scene

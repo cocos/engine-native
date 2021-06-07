@@ -36,6 +36,7 @@ namespace scene {
 // This struct defines the memory layout shared between JS and C++.
 // TODO(minggo) add more data.
 struct NodeLayout {
+    uint32_t       dirtyFlag{0};
     uint32_t flagsChanged{0};
     uint32_t layer{0};
     cc::Vec3 worldScale;
@@ -65,11 +66,17 @@ public:
 
     inline uint32_t    getFlagsChanged() const { return _nodeLayout->flagsChanged; }
     inline uint32_t    getLayer() const { return _nodeLayout->layer; }
+    inline uint32_t          getDirtyFlag() const { return _nodeLayout->dirtyFlag; }
     inline const Mat4 &getWorldMatrix() const { return _nodeLayout->worldMatrix; }
     inline const Vec3 &getWorldPosition() const { return _nodeLayout->worldPosition; }
     inline const Vec4 &getWorldRotation() const { return _nodeLayout->worldRotation; }
     inline const Vec3 &getWorldScale() const { return _nodeLayout->worldScale; }
-
+    inline const Mat4 &getWorldRT() {
+        updateWorldTransform();
+        Mat4 out;
+        Mat4::fromRT(getWorldRotation(), getWorldPosition(), &out);
+        return out;
+    };
 private:
     NodeLayout *_nodeLayout{nullptr};
     bool        _dirtyFlags{false};

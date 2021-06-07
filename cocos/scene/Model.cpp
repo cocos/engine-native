@@ -24,7 +24,10 @@
  ****************************************************************************/
 
 #include "scene/Model.h"
+#include "./SubModel.h"
+#include "renderer/pipeline/Define.h"
 
+Mat4 m4_1;
 namespace cc {
 namespace scene {
 
@@ -33,9 +36,38 @@ Model::~Model() {
 }
 
 void Model::updateTransform() {
+    Node *node = getTransform();
+    if (node->getFlagsChanged() || node->getDirtyFlag()) {
+        node->updateWorldTransform();
+        _transformUpdated = true;
+        if (_worldBounds) {
+            _modelBounds.transform(node->getWorldMatrix(), node->getWorldPosition(), node->getWorldRotation(), node->getWorldScale(), _worldBounds);
+        }
+    }
 }
 
-void Model::updateUBOs(uint32_t /*stamp*/) {
+void Model::updateUBOs(uint32_t stamp) {
+    for (SubModel *subModel : _subModels) {
+        subModel->update();
+    }
+
+    _updateStamp = stamp;
+    if (!_transformUpdated) {
+        return;
+    }
+    _transformUpdated = false;
+    Mat4 worldMatrix  = getTransform()->getWorldMatrix();
+    int  idx          = _instmatWorldIdx;
+    if (idx >= 0) {
+        // getInstanceAttributes()
+    } else if (_localBuffer) {
+        memcpy(_localData + pipeline::UBOLocal::MAT_WORLD_OFFSET, worldMatrix.m, sizeof(Mat4));
+        m4_1 = worldMatrix.getInversed();
+        float det = m4_1.determinant();
+        float factor = 1.0 / sqrt(det);
+        m4_1.scale(factor);
+        memcpy(_localData + pipeline::UBOLocal::MAT_WORLD_IT_OFFSET, worldMatrix.m, sizeof(Mat4));
+    }
 }
 
 void Model::addSubModel(SubModel *subModel) {

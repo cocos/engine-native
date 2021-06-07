@@ -51,7 +51,7 @@ public:
     Model &operator=(Model &&) = delete;
 
     virtual void updateTransform();
-    virtual void updateUBOs(uint32_t);
+    virtual void updateUBOs(uint32_t = 0);
 
     void addSubModel(SubModel *subModel);
 

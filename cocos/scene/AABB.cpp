@@ -24,7 +24,25 @@
  ****************************************************************************/
 
 #include "AABB.h"
-#include <algorithm>
+
+Vec3 _v3_tmp;
+Vec3 _v3_tmp2;
+Vec3 _v3_tmp3;
+Vec3 _v3_tmp4;
+Mat3 _m3_tmp;
+void transform_extent_m4(Vec3 &out, Vec3 extent, Mat4 m4) {
+    _m3_tmp.m[0] = abs(m4.m[0]);
+    _m3_tmp.m[1] = abs(m4.m[1]);
+    _m3_tmp.m[2] = abs(m4.m[2]);
+    _m3_tmp.m[3] = abs(m4.m[3]);
+    _m3_tmp.m[4] = abs(m4.m[4]);
+    _m3_tmp.m[5] = abs(m4.m[5]);
+    _m3_tmp.m[6] = abs(m4.m[6]);
+    _m3_tmp.m[7] = abs(m4.m[7]);
+    _m3_tmp.m[8] = abs(m4.m[8]);
+    out.transformMat3(extent, _m3_tmp);
+};
+
 
 namespace cc {
 namespace scene {
@@ -85,6 +103,16 @@ void AABB::merge(const AABB &aabb) {
     cc::Vec3 subP = maxP - minP;
     center        = addP * 0.5F;
     halfExtents   = subP * 0.5F;
+}
+
+void AABB::set(cc::Vec3 _center, cc::Vec3 _halfExtents) {
+    center = _center;
+    halfExtents = _halfExtents;
+}
+
+void AABB::transform(Mat4 _m, Vec3 _pos, Quaternion _rot, Vec3 _scale, AABB *out) {
+    out->center.transformMat4(center, _m);
+    transform_extent_m4(out->halfExtents, out->halfExtents, _m);
 }
 
 } // namespace scene

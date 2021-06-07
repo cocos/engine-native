@@ -67,6 +67,7 @@ protected:
     LightType _type{LightType::UNKNOWN};
     Vec3      _color;
     Vec3      _colorTemperatureRGB;
+    Vec3  _forward= Vec3(0, 0, -1);
 };
 
 } // namespace scene

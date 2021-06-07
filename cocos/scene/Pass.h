@@ -87,6 +87,7 @@ private:
     gfx::DescriptorSet *     _descriptorSet{nullptr};
     gfx::PipelineLayout *    _pipelineLayout{nullptr};
     gfx::Buffer *            _rootBuffer{nullptr};
+    float *                   _rootBlock{nullptr};
     // TODO(minggo): rootBlock
 };
 

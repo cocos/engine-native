@@ -418,7 +418,7 @@ void Mat4::add(const Mat4 &m1, const Mat4 &m2, Mat4 *dst) {
 #endif
 }
 
-void Mat4::fromRT(const Vec4 &rotation, const Vec3 &translation, Mat4 *dst) {
+void Mat4::fromRT(const Quaternion &rotation, const Vec3 &translation, Mat4 *dst) {
     const auto x  = rotation.x;
     const auto y  = rotation.y;
     const auto z  = rotation.z;

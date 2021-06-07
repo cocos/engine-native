@@ -76,6 +76,10 @@ private:
     Vec3    _pos;
     AABB    _aabb;
     Frustum _frustum;
+    Mat4    _matView;
+    Mat4    _matProj;
+    Mat4    _matViewProj;
+    Mat4    _matViewProjInv;
 };
 
 } // namespace scene

@@ -27,6 +27,10 @@
 
 #include "math/Vec3.h"
 #include "scene/Frustum.h"
+#include "math/Quaternion.h"
+#include "math/Mat3.h"
+#include <algorithm>
+using namespace cc;
 
 namespace cc {
 namespace scene {
@@ -40,6 +44,8 @@ struct AABB final {
     int  aabbPlane(const Plane &) const;
     void getBoundary(cc::Vec3 *minPos, cc::Vec3 *maxPos) const;
     void merge(const AABB &aabb);
+    void set(cc::Vec3 _center, cc::Vec3 _halfExtents);
+    void transform(Mat4 _m, Vec3 _pos, Quaternion _rot, Vec3 _scale, AABB *out);
 };
 
 } // namespace scene
