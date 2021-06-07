@@ -1258,8 +1258,6 @@ endif()
 cocos_source_files(
     NO_WERROR    cocos/bindings/dop/BufferPool.cpp
                  cocos/bindings/dop/BufferPool.h
-    NO_WERROR    cocos/bindings/dop/ObjectPool.cpp
-                 cocos/bindings/dop/ObjectPool.h
     NO_WERROR    cocos/bindings/dop/jsb_dop.cpp
                  cocos/bindings/dop/jsb_dop.h
                  cocos/bindings/dop/PoolType.h
