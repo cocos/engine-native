@@ -148,7 +148,7 @@ void JSB_WebSocketDelegate::onMessage(WebSocket* ws, const WebSocket::Data& data
             }
             else
             {// Normal string
-                dataVal.setString(data.bytes);
+                dataVal.setString(std::string(data.bytes, data.len));
             }
 
             if (dataVal.isNullOrUndefined())

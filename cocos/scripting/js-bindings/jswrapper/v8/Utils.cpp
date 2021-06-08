@@ -67,7 +67,7 @@ namespace se {
                     break;
                 case Value::Type::String:
                 {
-                    v8::MaybeLocal<v8::String> str = v8::String::NewFromUtf8(isolate, v.toString().c_str(), v8::NewStringType::kNormal);
+                    v8::MaybeLocal<v8::String> str = v8::String::NewFromUtf8(isolate, v.toString().data(), v8::NewStringType::kNormal, (int) v.toString().length());
                     if (!str.IsEmpty())
                         *outJsVal = str.ToLocalChecked();
                     else
