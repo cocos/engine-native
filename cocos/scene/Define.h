@@ -117,6 +117,7 @@ struct FlatBuffer {
 };
 
 struct RenderingSubMesh {
+    RenderingSubMesh() = default;
     std::vector<FlatBuffer> flatBuffers;
 };
 

@@ -36,18 +36,43 @@
     #define JSB_FREE(ptr) delete ptr
 #endif
 
-static bool js_scene_Model_setInstancedBuffer(se::State& s) {
+static bool js_scene_Model_setInstancedAttrBlock(se::State& s) {
     auto* cobj = static_cast<cc::scene::Model*>(s.nativeThisObject());
-    SE_PRECONDITION2(cobj, false, "js_scene_Model_setInstancedBuffer : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_scene_Model_setInstancedAttrBlock : Invalid Native Object");
     const auto& args = s.args();
     size_t      argc = args.size();
 
-    if (argc == 1) {
+    if (argc == 3) {
         SE_PRECONDITION2(args[0].isObject() && args[0].toObject()->isArrayBuffer(), false, "js_gfx_Device_createBuffer: expected Array Buffer!");
+        
+        // instanced buffer
+        uint8_t* instanceBuff{nullptr};
+        args[0].toObject()->getArrayBufferData(&instanceBuff, nullptr);
+        cobj->setInstancedBuffer(instanceBuff);
 
-        uint8_t* data{nullptr};
-        args[0].toObject()->getArrayBufferData(&data, nullptr);
-        cobj->setInstancedBuffer(data);
+        // views
+        se::Object* dataObj = args[1].toObject();
+        if (!dataObj->isArray()) {
+            return false;
+        }
+        std::vector<uint8_t*> viewsData;
+        uint32_t length = 0;
+        dataObj->getArrayLength(&length);
+        viewsData.resize(length);
+        se::Value value;
+        for (uint32_t i = 0; i < length; i++) {
+            dataObj->getArrayElement(i, &value);
+            uint8_t* viewBuff{nullptr};
+            value.toObject()->getArrayBufferData(&viewBuff, nullptr);
+            viewsData[i] = viewBuff;
+        }
+
+        // attrs
+        CC_UNUSED bool ok = true;
+        HolderType<std::vector<cc::gfx::Attribute>, true> arg2 = {};
+        ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_scene_Model_setInstancedAttrBlock : Error processing arguments");
+        cobj->setInstanceAttributes(arg2.value());
 
         return true;
     }
@@ -55,7 +80,7 @@ static bool js_scene_Model_setInstancedBuffer(se::State& s) {
     SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
-SE_BIND_FUNC(js_scene_Model_setInstancedBuffer)
+SE_BIND_FUNC(js_scene_Model_setInstancedAttrBlock)
 
 static bool js_scene_Node_initWithData(se::State& s) // constructor_overloaded.c
 {
@@ -143,7 +168,7 @@ bool register_all_scene_manual(se::Object *obj) {
     }
     se::Object* ns = nsVal.toObject();
 
-    __jsb_cc_scene_Model_proto->defineFunction("setInstancedBuffer", _SE(js_scene_Model_setInstancedBuffer));
+    __jsb_cc_scene_Model_proto->defineFunction("setInstancedAttrBlock", _SE(js_scene_Model_setInstancedAttrBlock));
     __jsb_cc_scene_Node_proto->defineFunction("initWithData", _SE(js_scene_Node_initWithData));
 
     __jsb_cc_scene_SubModel_proto->defineFunction("setRenderingSubMesh", _SE(js_scene_SubModel_setRenderingSubMesh));

@@ -41,7 +41,7 @@ struct NodeLayout {
     uint32_t layer{0};
     cc::Vec3 worldScale;
     cc::Vec3 worldPosition;
-    cc::Vec4 worldRotation;
+    cc::Quaternion worldRotation;
     cc::Mat4 worldMatrix;
 };
 
@@ -69,7 +69,7 @@ public:
     inline uint32_t          getDirtyFlag() const { return _nodeLayout->dirtyFlag; }
     inline const Mat4 &getWorldMatrix() const { return _nodeLayout->worldMatrix; }
     inline const Vec3 &getWorldPosition() const { return _nodeLayout->worldPosition; }
-    inline const Vec4 &getWorldRotation() const { return _nodeLayout->worldRotation; }
+    inline const Quaternion &getWorldRotation() const { return _nodeLayout->worldRotation; }
     inline const Vec3 &getWorldScale() const { return _nodeLayout->worldScale; }
     inline const Mat4 &getWorldRT() {
         updateWorldTransform();

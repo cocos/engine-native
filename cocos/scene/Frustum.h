@@ -29,6 +29,14 @@
 #include "math/Vec3.h"
 #include <vector>
 
+namespace cc {
+namespace scene {
+
+struct Plane final {
+    float d{0.F};
+    Vec3  n;
+};
+
 const std::vector<cc::Vec3*> _vecVal{
     new cc::Vec3(1, 1, 1),
     new cc::Vec3(-1, 1, 1),
@@ -38,14 +46,6 @@ const std::vector<cc::Vec3*> _vecVal{
     new cc::Vec3(-1, 1, -1),
     new cc::Vec3(-1, -1, -1),
     new cc::Vec3(1, -1, -1)};
-
-namespace cc {
-namespace scene {
-
-struct Plane final {
-    float d{0.F};
-    Vec3  n;
-};
 
 struct Frustum final {
     std::array<Vec3, 8>  vertices;
@@ -75,7 +75,7 @@ struct Frustum final {
         planes[5].n.set(m.m[3] - m.m[2], m.m[7] - m.m[6], m.m[11] - m.m[10]);
         planes[5].d = -(m.m[15] - m.m[14]);
         
-        for (Plane plane: planes) {
+        for (Plane &plane: planes) {
             int invDist = 1 / plane.n.length();
             plane.n *= invDist;
             plane.d *= invDist;
