@@ -3,7 +3,6 @@
 
 namespace cc {
 
-ReflectionComp::ReflectionComp() = default;
 ReflectionComp::~ReflectionComp() {
     CC_SAFE_DESTROY(_clearPass);
     CC_SAFE_DESTROY(_clearFramebuffer);
@@ -48,7 +47,7 @@ struct ConstantBuffer {
 
 void ReflectionComp::init(gfx::Device *dev, gfx::Texture *lightTex, gfx::Texture *worldPositionTex, gfx::Texture *denoiseTex, const Mat4 &matViewProj,
                           uint groupSizeX, uint groupSizeY) {
-    _initlized        = true;
+    _initialized      = true;
     _device           = dev;
     _lightingTex      = lightTex;
     _matViewProj      = matViewProj;
@@ -378,66 +377,6 @@ T &ReflectionComp::getAppropriateShaderSource(ShaderSources<T> &sources) {
         default: break;
     }
     return sources.glsl4;
-}
-
-gfx::DescriptorSet *ReflectionComp::getDescriptorSet() {
-    return _compDescriptorSet;
-}
-
-gfx::PipelineState *ReflectionComp::getPipelineState() {
-    return _compPipelineState;
-}
-
-gfx::DescriptorSet *ReflectionComp::getDenoiseDescriptorSet() {
-    return _compDenoiseDescriptorSet;
-}
-
-gfx::PipelineState *ReflectionComp::getDenoisePipelineState() {
-    return _compDenoisePipelineState;
-}
-
-gfx::Texture *ReflectionComp::getReflectionTex() {
-    return _reflectionTex;
-}
-
-int ReflectionComp::getGroupSizeX() const {
-    return _groupSizeX;
-}
-
-int ReflectionComp::getGroupSizeY() const {
-    return _groupSizeY;
-}
-
-bool ReflectionComp::isInitlized() const {
-    return _initlized;
-}
-
-gfx::RenderPass *ReflectionComp::getClearPass() {
-    return _clearPass;
-}
-
-gfx::Framebuffer *ReflectionComp::getClearFramebuffer() {
-    return _clearFramebuffer;
-}
-
-gfx::GlobalBarrier *ReflectionComp::getBarrierPre() {
-    return _barrierPre;
-}
-
-gfx::TextureBarrierList &ReflectionComp::getBarrierBeforeDenoise() {
-    return _barrierBeforeDenoise;
-}
-
-gfx::TextureBarrierList &ReflectionComp::getBarrierAfterDenoise() {
-    return _barrierAfterDenoise;
-}
-
-gfx::DispatchInfo ReflectionComp::getDispatchInfo() {
-    return _dispatchInfo;
-}
-
-gfx::DispatchInfo ReflectionComp::getDenioseDispatchInfo() {
-    return _denoiseDispatchInfo;
 }
 
 } // namespace cc

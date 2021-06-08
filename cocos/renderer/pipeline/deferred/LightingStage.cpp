@@ -295,15 +295,19 @@ void LightingStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
     };
 
     _reflectionPass        = _device->createRenderPass(reflectionPassInfo);
-    _relfectionRenderQueue = CC_NEW(RenderQueue(std::move(info)));
+    _reflectionRenderQueue = CC_NEW(RenderQueue(std::move(info)));
 }
 
 void LightingStage::destroy() {
     CC_SAFE_DELETE(_planarShadowQueue);
-    CC_SAFE_DELETE(_relfectionRenderQueue);
+    CC_SAFE_DELETE(_reflectionRenderQueue);
     RenderStage::destroy();
-    _reflectionPass->destroy();
-    _reflectionPass = nullptr;
+
+    if (_reflectionPass != nullptr) {
+        _reflectionPass->destroy();
+        CC_SAFE_DELETE(_reflectionPass);
+    }
+
     CC_SAFE_DELETE(_reflectionComp);
 }
 
@@ -402,15 +406,13 @@ void LightingStage::render(scene::Camera *camera) {
         uint   p = 0;
         size_t k = 0;
         for (const auto &ro : renderObjects) {
-            const auto *model         = ro.model;
-            const auto&  subModelID    = model->getSubModels();
-            auto *const   subModelCount = subModelID[0];
+            const auto *model = ro.model;
             for (auto *subModel : model->getSubModels()) {
                 for (auto *pass : subModel->getPasses()) {
                     if (pass->getPhase() != _reflectionPhaseID) continue;
                     // dispatch for reflection
                     gfx::Texture *denoiseTex = subModel->getDescriptorSet()->getTexture(uint(ModelLocalBindings::STORAGE_REFLECTION));
-                    if (!_reflectionComp->isInitlized()) {
+                    if (!_reflectionComp->isInitialized()) {
                         _reflectionComp->init(_pipeline->getDevice(),
                                               pipeline->getDeferredRenderData()->lightingRenderTarget,
                                               pipeline->getDeferredRenderData()->gbufferFrameBuffer->getColorTextures()[1],
@@ -418,20 +420,20 @@ void LightingStage::render(scene::Camera *camera) {
                                               camera->matViewProj, 8, 8);
                     }
                     gfx::Rect clearRenderArea = {0, 0, _reflectionComp->getReflectionTex()->getWidth(), _reflectionComp->getReflectionTex()->getHeight()};
-                    cmdBuff->beginRenderPass(_reflectionComp->getClearPass(), _reflectionComp->getClearFramebuffer(), clearRenderArea, &clearColor, 0, 0);
+                    cmdBuff->beginRenderPass(const_cast<gfx::RenderPass *>(_reflectionComp->getClearPass()), const_cast<gfx::Framebuffer *>(_reflectionComp->getClearFramebuffer()), clearRenderArea, &clearColor, 0, 0);
                     cmdBuff->endRenderPass();
 
                     cmdBuff->pipelineBarrier(_reflectionComp->getBarrierPre());
-                    cmdBuff->bindPipelineState(_reflectionComp->getPipelineState());
-                    cmdBuff->bindDescriptorSet(0, _reflectionComp->getDescriptorSet());
+                    cmdBuff->bindPipelineState(const_cast<gfx::PipelineState *>(_reflectionComp->getPipelineState()));
+                    cmdBuff->bindDescriptorSet(0, const_cast<gfx::DescriptorSet *>(_reflectionComp->getDescriptorSet()));
                     cmdBuff->bindDescriptorSet(1, subModel->getDescriptorSet());
 
                     cmdBuff->dispatch(_reflectionComp->getDispatchInfo());
 
-                    cmdBuff->pipelineBarrier(nullptr, _reflectionComp->getBarrierBeforeDenoise(), {_reflectionComp->getReflectionTex(), denoiseTex});
+                    cmdBuff->pipelineBarrier(nullptr, const_cast<gfx::TextureBarrierList &>(_reflectionComp->getBarrierBeforeDenoise()), {const_cast<gfx::Texture *>(_reflectionComp->getReflectionTex()), denoiseTex});
 
-                    cmdBuff->bindPipelineState(_reflectionComp->getDenoisePipelineState());
-                    cmdBuff->bindDescriptorSet(0, _reflectionComp->getDenoiseDescriptorSet());
+                    cmdBuff->bindPipelineState(const_cast<gfx::PipelineState *>(_reflectionComp->getDenoisePipelineState()));
+                    cmdBuff->bindDescriptorSet(0, const_cast<gfx::DescriptorSet *>(_reflectionComp->getDenoiseDescriptorSet()));
                     cmdBuff->bindDescriptorSet(1, subModel->getDescriptorSet());
                     cmdBuff->dispatch(_reflectionComp->getDenioseDispatchInfo());
                     cmdBuff->pipelineBarrier(nullptr, _reflectionComp->getBarrierAfterDenoise(), {denoiseTex});
@@ -446,25 +448,23 @@ void LightingStage::render(scene::Camera *camera) {
     cmdBuff->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), pipeline->getDescriptorSet());
 
     // reflection
-    _relfectionRenderQueue->clear();
+    _reflectionRenderQueue->clear();
 
     m = 0;
     p = 0;
     k = 0;
     for (const auto &ro : renderObjects) {
-        const auto *model         = ro.model;
-        const auto&  subModelID    = model->getSubModels();
-        auto *const   subModelCount = subModelID[0];
+        const auto *model = ro.model;
         for (auto *subModel : model->getSubModels()) {
             for (auto *pass : subModel->getPasses()) {
                 if (pass->getPhase() != _reflectionPhaseID) continue;
-                _relfectionRenderQueue->insertRenderPass(ro, m, p);
+                _reflectionRenderQueue->insertRenderPass(ro, m, p);
             }
         }
     }
 
-    _relfectionRenderQueue->sort();
-    _relfectionRenderQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
+    _reflectionRenderQueue->sort();
+    _reflectionRenderQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
 
     cmdBuff->endRenderPass();
 }
