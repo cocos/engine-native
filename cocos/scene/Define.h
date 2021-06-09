@@ -55,6 +55,16 @@ enum class ShadowType {
     SHADOWMAP = 1
 };
 
+enum class TransformBit {
+    NONE = 0,
+    POSITION = (1 << 0),
+    ROTATION = (1 << 1),
+    SCALE = (1 << 2),
+    RS = ROTATION | SCALE,
+    TRS      = POSITION | ROTATION | SCALE,
+    TRS_MASK = ~TRS,
+};
+
 struct Shadow {
     bool       enabled{false};
     bool       dirty{false};

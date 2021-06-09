@@ -455,6 +455,46 @@ void Mat4::fromRT(const Quaternion &rotation, const Vec3 &translation, Mat4 *dst
     dst->m[15] = 1;
 }
 
+void Mat4::fromRTS(const Quaternion& rotation, const Vec3& translation, const Vec3& scale, Mat4* dst) {
+    const auto x  = rotation.x;
+    const auto y  = rotation.y;
+    const auto z  = rotation.z;
+    const auto w  = rotation.w;
+    const auto x2 = x + x;
+    const auto y2 = y + y;
+    const auto z2 = z + z;
+
+    const auto xx = x * x2;
+    const auto xy = x * y2;
+    const auto xz = x * z2;
+    const auto yy = y * y2;
+    const auto yz = y * z2;
+    const auto zz = z * z2;
+    const auto wx = w * x2;
+    const auto wy = w * y2;
+    const auto wz = w * z2;
+    const auto sx = scale.x;
+    const auto sy = scale.y;
+    const auto sz = scale.z;
+
+    dst->m[0] = (1 - (yy + zz)) * sx;
+    dst->m[1] = (xy + wz) * sx;
+    dst->m[2] = (xz - wy) * sx;
+    dst->m[3] = 0;
+    dst->m[4] = (xy - wz) * sy;
+    dst->m[5] = (1 - (xx + zz)) * sy;
+    dst->m[6] = (yz + wx) * sy;
+    dst->m[7] = 0;
+    dst->m[8] = (xz + wy) * sz;
+    dst->m[9] = (yz - wx) * sz;
+    dst->m[10] = (1 - (xx + yy)) * sz;
+    dst->m[11] = 0;
+    dst->m[12] = translation.x;
+    dst->m[13] = translation.y;
+    dst->m[14] = translation.z;
+    dst->m[15] = 1;
+}
+
 bool Mat4::decompose(Vec3 *scale, Quaternion *rotation, Vec3 *translation) const {
     if (translation) {
         // Extract the translation.

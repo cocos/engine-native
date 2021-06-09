@@ -26,9 +26,11 @@
 #pragma once
 
 #include "math/Mat4.h"
+#include "math/Mat3.h"
 #include "math/Quaternion.h"
 #include "math/Vec3.h"
 #include "math/Vec4.h"
+#include <vector>
 
 namespace cc {
 namespace scene {
@@ -42,6 +44,9 @@ struct NodeLayout {
     cc::Vec3 worldScale;
     cc::Vec3 worldPosition;
     cc::Quaternion worldRotation;
+    cc::Vec3 localScale;
+    cc::Vec3 localPosition;
+    cc::Quaternion localRotation;
     cc::Mat4 worldMatrix;
 };
 
@@ -57,25 +62,47 @@ public:
     void initWithData(uint8_t *data);
     void updateWorldTransform();
 
-    //    inline void setFlagsChanged(bool value) { _flagsChanged = value; }
-    //    inline void setLayer(uint32_t layer) { _layer = layer; }
-    //    inline void setWorldMatrix(const Mat4 &matrix) { _worldMatrix = matrix; }
-    //    inline void setWorldPosition(const Vec3 &pos) { _worldPosition = pos; }
-    //    inline void setWorldRotation(const Quaternion &rotation) { _worldRotation = rotation; }
-    //    inline void setWorldScale(const Vec3 &scale) { _worldScale = scale; }
+    inline void setFlagsChanged(uint32_t value) { _nodeLayout->flagsChanged = value; }
+    inline void setDirtyFlag(uint32_t value) { _nodeLayout->dirtyFlag = value; }
+    inline void setLayer(uint32_t layer) { _nodeLayout->layer = layer; }
+    inline void setWorldMatrix(const Mat4 &matrix) { _nodeLayout->worldMatrix.set(matrix); }
+    inline void setWorldPosition(const Vec3 &pos) { _nodeLayout->worldPosition.set(pos); }
+    inline void setWorldPosition(float x, float y, float z) { _nodeLayout->worldPosition.set(x, y, z); }
+    inline void setWorldRotation(const Quaternion &rotation) { _nodeLayout->worldRotation.set(rotation); }
+    inline void setWorldRotation(float x, float y, float z, float w) { _nodeLayout->worldRotation.set(x, y, z, w); }
+    inline void setWorldScale(const Vec3 &scale) { _nodeLayout->worldScale.set(scale); }
+    inline void setLocalPosition(const Vec3 &pos) { _nodeLayout->localPosition.set(pos); }
+    inline void setLocalPosition(float x, float y, float z) { _nodeLayout->localPosition.set(x, y, z); }
+    inline void setLocalRotation(const Quaternion &rotation) { _nodeLayout->localRotation.set(rotation); }
+    inline void setLocalRotation(float x, float y, float z, float w) { _nodeLayout->localRotation.set(x, y, z, w); }
+    inline void setLocalScale(const Vec3 &scale) { _nodeLayout->localScale.set(scale); }
 
     inline uint32_t    getFlagsChanged() const { return _nodeLayout->flagsChanged; }
     inline uint32_t    getLayer() const { return _nodeLayout->layer; }
     inline uint32_t          getDirtyFlag() const { return _nodeLayout->dirtyFlag; }
-    inline const Mat4 &getWorldMatrix() const { return _nodeLayout->worldMatrix; }
-    inline const Vec3 &getWorldPosition() const { return _nodeLayout->worldPosition; }
-    inline const Quaternion &getWorldRotation() const { return _nodeLayout->worldRotation; }
-    inline const Vec3 &getWorldScale() const { return _nodeLayout->worldScale; }
+    inline const Vec3 &getPosition() const { return _nodeLayout->localPosition; }
+    inline const Vec3 &getScale() const { return _nodeLayout->localScale; }
+    inline const Quaternion &getRotation() const { return _nodeLayout->localRotation; }
+    inline const Mat4 &getWorldMatrix() {
+        updateWorldTransform();
+        return _nodeLayout->worldMatrix;
+    }
+    inline const Vec3 &getWorldPosition() {
+        updateWorldTransform();
+        return _nodeLayout->worldPosition;
+    }
+    inline const Quaternion &getWorldRotation() {
+        updateWorldTransform();
+        return _nodeLayout->worldRotation;
+    }
+    inline const Vec3 &getWorldScale() {
+        updateWorldTransform();
+        return _nodeLayout->worldScale;
+    }
     inline const Mat4 &getWorldRT() {
         updateWorldTransform();
-        Mat4 out;
-        Mat4::fromRT(getWorldRotation(), getWorldPosition(), &out);
-        return out;
+        Mat4::fromRT(getWorldRotation(), getWorldPosition(), &_rtMat);
+        return _rtMat;
     };
 private:
     NodeLayout *_nodeLayout{nullptr};
@@ -83,7 +110,11 @@ private:
     bool        _hasChangeFlags{false};
     Node *      _parent{nullptr};
     Vec3        _lPos;
-    Quaternion  _lScale;
+    Quaternion  _lRot;
+    Vec3        _pos;
+    Quaternion  _rot;
+    Mat4                       _rtMat;
+    static std::vector<Node*> array_a;
 };
 
 } // namespace scene

@@ -36,7 +36,7 @@ Model::~Model() {
 }
 
 void Model::_uploadMat4AsVec4x3(Mat4 &mat, uint8_t *v1, uint8_t *v2, uint8_t *v3) {
-    v1[0] = mat.m[0]; v1[1] = mat.m[1]; v1[2] = mat.m[2]; v1[3] = mat.[12];
+    v1[0] = mat.m[0]; v1[1] = mat.m[1]; v1[2] = mat.m[2]; v1[3] = mat.m[12];
     v2[0] = mat.m[4]; v2[1] = mat.m[5]; v2[2] = mat.m[6]; v2[3] = mat.m[13];
     v3[0] = mat.m[8]; v3[1] = mat.m[9]; v3[2] = mat.m[10]; v3[3] = mat.m[14];
 }
@@ -52,6 +52,7 @@ void Model::updateTransform() {
     }
 }
 
+std::array<float, pipeline::UBOLocal::COUNT> bufferView;
 void Model::updateUBOs(uint32_t stamp) {
     for (SubModel *subModel : _subModels) {
         subModel->update();
@@ -68,12 +69,13 @@ void Model::updateUBOs(uint32_t stamp) {
         std::vector<uint8_t *> attrs = _instanceAttributeBlock->views;
         _uploadMat4AsVec4x3(worldMatrix, attrs[idx], attrs[idx + 1], attrs[idx + 2]);
     } else if (_localBuffer) {
-        memcpy(_localData + pipeline::UBOLocal::MAT_WORLD_OFFSET, worldMatrix.m, sizeof(Mat4));
+        memcpy(bufferView.data() + pipeline::UBOLocal::MAT_WORLD_OFFSET, worldMatrix.m, sizeof(Mat4));
         m4_1 = worldMatrix.getInversed();
         float det = m4_1.determinant();
         float factor = 1.0 / sqrt(det);
         m4_1.scale(factor);
-        memcpy(_localData + pipeline::UBOLocal::MAT_WORLD_IT_OFFSET, worldMatrix.m, sizeof(Mat4));
+        memcpy(bufferView.data() + pipeline::UBOLocal::MAT_WORLD_IT_OFFSET, worldMatrix.m, sizeof(Mat4));
+        _localBuffer->update(bufferView.data(), pipeline::UBOLocal::SIZE);
     }
 }
 
