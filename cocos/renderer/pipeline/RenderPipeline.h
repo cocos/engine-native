@@ -37,6 +37,7 @@ namespace cc {
 namespace gfx {
 class CommandBuffer;
 class DescriptorSet;
+class DescriptorSetLayout;
 } // namespace gfx
 namespace pipeline {
 class DefineMap;
