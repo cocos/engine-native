@@ -86,7 +86,7 @@ void GlobalDSManager::bindBuffer(uint binding, gfx::Buffer* buffer) {
     }
 
     for (auto &pair : _descriptorSetMap) {
-        pair.second->bindBuffer(binding, buffer);
+        if (pair.second) pair.second->bindBuffer(binding, buffer);
     }
 }
 
@@ -96,7 +96,7 @@ void GlobalDSManager::bindSampler(uint binding, gfx::Sampler* sampler) {
     }
 
     for (auto &pair : _descriptorSetMap) {
-        pair.second->bindSampler(binding, sampler);
+        if (pair.second) pair.second->bindSampler(binding, sampler);
     }
 }
 
@@ -106,7 +106,7 @@ void GlobalDSManager::bindTexture(uint binding, gfx::Texture* texture) {
     }
 
     for (auto &pair : _descriptorSetMap) {
-        pair.second->bindTexture(binding, texture);
+        if (pair.second) pair.second->bindTexture(binding, texture);
     }
 }
 
@@ -115,17 +115,15 @@ void GlobalDSManager::update() {
         _globalDescriptorSet->update();
     }
 
-        for (auto &pair : _descriptorSetMap) {
-        pair.second->update();
+    for (auto &pair : _descriptorSetMap) {
+        if (pair.second) pair.second->update();
     }
 }
 
 gfx::DescriptorSet *GlobalDSManager::getOrCreateDescriptorSet(uint idx) {
-    auto *device = gfx::Device::getInstance();
-
     // The global descriptorSet is managed by the pipeline and binds the buffer
-    if (_descriptorSetMap.count(idx) <= 0) {
-        auto *descriptorSet = device->createDescriptorSet({_descriptorSetLayout});
+    if (_descriptorSetMap.count(idx) <= 0 || !_descriptorSetMap.at(idx)) {
+        auto *descriptorSet = _device->createDescriptorSet({_descriptorSetLayout});
         _descriptorSetMap.emplace(idx, descriptorSet);
 
         const auto begin = static_cast<uint>(PipelineGlobalBindings::UBO_GLOBAL);
@@ -136,7 +134,7 @@ gfx::DescriptorSet *GlobalDSManager::getOrCreateDescriptorSet(uint idx) {
             descriptorSet->bindTexture(i, _globalDescriptorSet->getTexture(i));
         }
 
-        auto *shadowUBO = device->createBuffer({
+        auto *shadowUBO = _device->createBuffer({
             gfx::BufferUsageBit::UNIFORM | gfx::BufferUsageBit::TRANSFER_DST,
             gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE,
             UBOShadow::SIZE,
