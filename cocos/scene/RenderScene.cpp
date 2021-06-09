@@ -30,6 +30,21 @@ namespace cc {
 namespace scene {
 
 void RenderScene::update() {
+    if (_directionalLight) {
+        _directionalLight->update();
+    }
+    for (SphereLight *light: _sphereLights) {
+        light->update();
+    }
+    for (SpotLight* spotLight: _spotLights) {
+        spotLight->update();
+    }
+    for (Model* model: _models) {
+        if (model->getEnabled()) {
+            model->updateTransform();
+            model->updateUBOs();
+        }
+    }
 }
 
 void RenderScene::addSphereLight(SphereLight *light) {

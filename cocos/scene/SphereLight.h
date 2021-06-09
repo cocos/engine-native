@@ -56,6 +56,7 @@ public:
     inline float       getSize() const { return _size; }
 
 private:
+    bool  _needUpdate{false};
     float _illuminance{0.F};
     float _range{0.F};
     float _size{0.F};

@@ -73,6 +73,11 @@ public:
         }
         *_worldBounds = aabb;
     }
+    inline void setInstancedAttrBlock(uint8_t *buffer, InstancedAttributeBlock *block, const std::vector<gfx::Attribute>& attributes) {
+        _instancedBuffer = buffer;
+        _instanceAttributeBlock = block;
+        _instanceAttributes = attributes;
+    }
 
     inline bool                               getCastShadow() const { return _castShadow; }
     inline bool                               getEnabled() const { return _enabled; }
@@ -110,6 +115,7 @@ private:
     InstancedAttributeBlock *   _instanceAttributeBlock{nullptr};
     std::vector<SubModel *>     _subModels;
     std::vector<gfx::Attribute> _instanceAttributes;
+    void _uploadMat4AsVec4x3(Mat4 &mat, uint8_t *v1, uint8_t *v2, uint8_t *v3);
 };
 
 } // namespace scene

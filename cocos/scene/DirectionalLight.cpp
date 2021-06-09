@@ -29,6 +29,11 @@ namespace cc {
 namespace scene {
 
 void DirectionalLight::update() {
+    if (_node && _node->getFlagsChanged()) {
+        Vec3 direction = _forward;
+        direction.transformQuat(_node->getWorldRotation());
+        setDirection(direction);
+    }
 }
 
 } // namespace scene

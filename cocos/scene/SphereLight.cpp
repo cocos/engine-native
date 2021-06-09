@@ -29,6 +29,12 @@ namespace cc {
 namespace scene {
 
 void SphereLight::update() {
+    if (_node && (_node->getFlagsChanged() || _needUpdate)) {
+        _pos = _node->getWorldPosition();
+        float range = _range;
+        _aabb.set(_pos, cc::Vec3(_range, _range, _range));
+        _needUpdate = false;
+    }
 }
 
 } // namespace scene
