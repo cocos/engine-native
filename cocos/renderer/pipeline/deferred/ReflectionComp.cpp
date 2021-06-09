@@ -40,10 +40,12 @@ ReflectionComp::~ReflectionComp() {
     }
 }
 
+namespace {
 struct ConstantBuffer {
     Mat4 matViewProj;
     Vec2 texSize;
 };
+} // namespace
 
 void ReflectionComp::init(gfx::Device *dev, gfx::Texture *lightTex, gfx::Texture *worldPositionTex, gfx::Texture *denoiseTex, const Mat4 &matViewProj,
                           uint groupSizeX, uint groupSizeY) {

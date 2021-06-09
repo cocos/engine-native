@@ -28,21 +28,21 @@ public:
     void initReflectionRes();
     void initDenoiseRes();
 
-    CC_INLINE const gfx::DescriptorSet* getDescriptorSet() { return _compDescriptorSet; }
-    CC_INLINE const gfx::PipelineState* getPipelineState() { return _compPipelineState; }
-    CC_INLINE const gfx::DescriptorSet* getDenoiseDescriptorSet() { return _compDenoiseDescriptorSet; }
-    CC_INLINE const gfx::PipelineState* getDenoisePipelineState() { return _compDenoisePipelineState; }
-    CC_INLINE const gfx::Texture* getReflectionTex() { return _reflectionTex; }
-    CC_INLINE const gfx::RenderPass* getClearPass() { return _clearPass; }
-    CC_INLINE const gfx::Framebuffer* getClearFramebuffer() { return _clearFramebuffer; }
-    CC_INLINE const gfx::GlobalBarrier* getBarrierPre() { return _barrierPre; }
-    CC_INLINE const gfx::TextureBarrierList& getBarrierBeforeDenoise() { return _barrierBeforeDenoise; }
-    CC_INLINE const gfx::TextureBarrierList& getBarrierAfterDenoise() { return _barrierAfterDenoise; }
-    CC_INLINE const gfx::DispatchInfo& getDispatchInfo() { return _dispatchInfo; }
-    CC_INLINE const gfx::DispatchInfo& getDenioseDispatchInfo() { return _denoiseDispatchInfo; }
-    CC_INLINE int                      getGroupSizeX() const { return _groupSizeX; }
-    CC_INLINE int                      getGroupSizeY() const { return _groupSizeY; }
-    CC_INLINE bool                     isInitialized() const { return _initialized; }
+    inline const gfx::DescriptorSet*      getDescriptorSet() { return _compDescriptorSet; }
+    inline const gfx::PipelineState*      getPipelineState() { return _compPipelineState; }
+    inline const gfx::DescriptorSet*      getDenoiseDescriptorSet() { return _compDenoiseDescriptorSet; }
+    inline const gfx::PipelineState*      getDenoisePipelineState() { return _compDenoisePipelineState; }
+    inline const gfx::Texture*            getReflectionTex() { return _reflectionTex; }
+    inline const gfx::RenderPass*         getClearPass() { return _clearPass; }
+    inline const gfx::Framebuffer*        getClearFramebuffer() { return _clearFramebuffer; }
+    inline const gfx::GlobalBarrier*      getBarrierPre() { return _barrierPre; }
+    inline const gfx::TextureBarrierList& getBarrierBeforeDenoise() { return _barrierBeforeDenoise; }
+    inline const gfx::TextureBarrierList& getBarrierAfterDenoise() { return _barrierAfterDenoise; }
+    inline const gfx::DispatchInfo&       getDispatchInfo() { return _dispatchInfo; }
+    inline const gfx::DispatchInfo&       getDenioseDispatchInfo() { return _denoiseDispatchInfo; }
+    inline int                            getGroupSizeX() const { return _groupSizeX; }
+    inline int                            getGroupSizeY() const { return _groupSizeY; }
+    inline bool                           isInitialized() const { return _initialized; }
 
 private:
     template <typename T>
@@ -77,8 +77,8 @@ private:
 
     gfx::GlobalBarrier* _barrierPre{nullptr};
 
-    gfx::TextureBarrierList _barrierBeforeDenoise = {};
-    gfx::TextureBarrierList _barrierAfterDenoise  = {};
+    gfx::TextureBarrierList _barrierBeforeDenoise;
+    gfx::TextureBarrierList _barrierAfterDenoise;
 
     gfx::DispatchInfo _dispatchInfo;
     gfx::DispatchInfo _denoiseDispatchInfo;
