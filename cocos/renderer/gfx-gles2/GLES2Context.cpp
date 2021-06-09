@@ -499,7 +499,7 @@ bool GLES2Context::makeCurrent(bool bound) {
             _isInitialized = true;
         }
 
-    #if CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION && CC_PLATFORM != CC_PLATFORM_MAC_IOS && defined(GL_DEBUG_SOURCE_API_KHR)
+    #if CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION && defined(GL_DEBUG_SOURCE_API_KHR)
         GL_CHECK(glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_KHR));
         if (glDebugMessageControlKHR) {
             GL_CHECK(glDebugMessageControlKHR(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE));
