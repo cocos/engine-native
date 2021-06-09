@@ -83,9 +83,11 @@ CCVKGPUContext *CCVKDevice::gpuContext() const {
     return static_cast<CCVKContext *>(_context)->gpuContext();
 }
 
-bool CCVKDevice::doInit(const DeviceInfo & /*info*/) {
+bool CCVKDevice::doInit(const DeviceInfo &info) {
     ContextInfo ctxInfo;
     ctxInfo.windowHandle = _windowHandle;
+    ctxInfo.msaaEnabled  = info.isAntiAlias;
+    ctxInfo.performance  = Performance::HIGH_QUALITY;
 
     _context = CC_NEW(CCVKContext);
     if (!_context->initialize(ctxInfo)) {
@@ -430,7 +432,6 @@ bool CCVKDevice::doInit(const DeviceInfo & /*info*/) {
     CC_LOG_INFO("VENDOR: %s", _vendor.c_str());
     CC_LOG_INFO("VERSION: %s", _version.c_str());
     CC_LOG_INFO("SCREEN_SIZE: %d x %d", _width, _height);
-    CC_LOG_INFO("NATIVE_SIZE: %d x %d", _nativeWidth, _nativeHeight);
     CC_LOG_INFO("INSTANCE_LAYERS: %s", instanceLayers.c_str());
     CC_LOG_INFO("INSTANCE_EXTENSIONS: %s", instanceExtensions.c_str());
     CC_LOG_INFO("DEVICE_LAYERS: %s", deviceLayers.c_str());
@@ -505,6 +506,8 @@ void CCVKDevice::doDestroy() {
             VmaStats stats;
             vmaCalculateStats(_gpuDevice->memoryAllocator, &stats);
             CC_LOG_INFO("Total device memory leaked: %d bytes.", stats.total.usedBytes);
+            CCASSERT(!_memoryStatus.bufferSize, "Buffer memory leaked");
+            CCASSERT(!_memoryStatus.textureSize, "Texture memory leaked");
 
             vmaDestroyAllocator(_gpuDevice->memoryAllocator);
             _gpuDevice->memoryAllocator = VK_NULL_HANDLE;
@@ -690,12 +693,13 @@ bool CCVKDevice::checkSwapchainStatus() {
         context->swapchainCreateInfo.imageExtent.width  = _width;
         context->swapchainCreateInfo.imageExtent.height = _height;
     } else {
-        _nativeWidth = _width = context->swapchainCreateInfo.imageExtent.width = newWidth;
-        _nativeHeight = _height = context->swapchainCreateInfo.imageExtent.height = newHeight;
+        _width = context->swapchainCreateInfo.imageExtent.width = newWidth;
+        _height = context->swapchainCreateInfo.imageExtent.height = newHeight;
     }
 
     if (newWidth == 0 || newHeight == 0) {
-        return _swapchainReady = false;
+        _swapchainReady = false;
+        return false;
     }
 
     _transform                                = mapSurfaceTransform(preTransform);

@@ -111,8 +111,8 @@ bool CCMTLDevice::doInit(const DeviceInfo &info) {
     // Persistent depth stencil texture
     MTLTextureDescriptor *dssDescriptor = [[MTLTextureDescriptor alloc] init];
     dssDescriptor.pixelFormat = mu::getSupportedDepthStencilFormat(mtlDevice, gpuFamily, _caps.depthBits);
-    dssDescriptor.width = info.nativeWidth;
-    dssDescriptor.height = info.nativeHeight;
+    dssDescriptor.width = info.width;
+    dssDescriptor.height = info.height;
     dssDescriptor.storageMode = MTLStorageModePrivate;
     dssDescriptor.usage = MTLTextureUsageRenderTarget;
     _dssTex = [mtlDevice newTextureWithDescriptor:dssDescriptor];
@@ -224,8 +224,11 @@ void CCMTLDevice::doDestroy() {
         CC_SAFE_DELETE(_gpuStagingBufferPools[i]);
         _gpuStagingBufferPools[i] = nullptr;
     }
-    
+
     cc::gfx::mu::clearUtilResource();
+
+    CCASSERT(!_memoryStatus.bufferSize, "Buffer memory leaked");
+    CCASSERT(!_memoryStatus.textureSize, "Texture memory leaked");
 }
 
 void CCMTLDevice::resize(uint w, uint h) {

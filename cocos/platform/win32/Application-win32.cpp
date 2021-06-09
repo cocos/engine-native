@@ -28,6 +28,12 @@
 #include "platform/Application.h"
 #include "platform/StdC.h" // need it to include Windows.h
 
+#include <MMSystem.h>
+#include <shellapi.h>
+#include <algorithm>
+#include <array>
+#include <memory>
+#include <sstream>
 #include "audio/include/AudioEngine.h"
 #include "base/AutoreleasePool.h"
 #include "base/Scheduler.h"
@@ -35,15 +41,10 @@
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "platform/FileUtils.h"
 #include "platform/win32/View-win32.h"
-#include <MMSystem.h>
-#include <algorithm>
-#include <array>
-#include <memory>
-#include <shellapi.h>
-#include <sstream>
 
 #include "pipeline/Define.h"
 #include "pipeline/RenderPipeline.h"
+#include "platform/Device.h"
 #include "renderer/GFXDeviceManager.h"
 
 extern std::shared_ptr<cc::View> cc_get_application_view();
@@ -87,16 +88,6 @@ bool Application::init() {
 
     auto view     = cc_get_application_view();
     auto viewSize = view->getViewSize();
-
-    gfx::DeviceInfo deviceInfo;
-    deviceInfo.windowHandle       = reinterpret_cast<uintptr_t>(view->getWindowHandler());
-    deviceInfo.width              = viewSize[0];
-    deviceInfo.height             = viewSize[1];
-    deviceInfo.nativeWidth        = viewSize[0];
-    deviceInfo.nativeHeight       = viewSize[1];
-    deviceInfo.bindingMappingInfo = pipeline::bindingMappingInfo;
-
-    gfx::DeviceManager::create(deviceInfo);
 
     return true;
 }
