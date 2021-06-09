@@ -29,19 +29,21 @@
 #include "helper/SharedMemory.h"
 
 namespace cc {
-namespace pipeline {
-class RenderPipeline;
+namespace gfx {
 class DescriptorSet;
 class DescriptorSetLayout;
 class Sampler;
 class Buffer;
 class Texture;
 class Device;
+} // namespace gfx
+namespace pipeline {
+class RenderPipeline;
 
 class GlobalDSManager : public Object {
 public:
     GlobalDSManager() = default;
-    virtual ~GlobalDSManager() = default;
+    ~GlobalDSManager() override = default;
 
     CC_INLINE std::unordered_map<uint, gfx::DescriptorSet *> getDescriptorSetMap() const { return _descriptorSetMap; }
     CC_INLINE gfx::Sampler *getShadowMapSampler() const { return _sampler; }
