@@ -36,11 +36,11 @@
 namespace cc {
 namespace gfx {
 class CommandBuffer;
+class DescriptorSet;
 } // namespace gfx
 namespace pipeline {
 class DefineMap;
 class GlobalDSManager;
-class DescriptorSet;
 struct Camera;
 
 struct CC_DLL RenderPipelineInfo {
