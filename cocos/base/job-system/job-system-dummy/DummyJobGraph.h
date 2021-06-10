@@ -23,28 +23,58 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#if CC_JOB_SYSTEM == CC_JOB_SYSTEM_TASKFLOW
-#include "job-system-taskflow/TFJobGraph.h"
-#include "job-system-taskflow/TFJobSystem.h"
+#pragma once
+
+#include <functional>
+#include "cocos/base/Macros.h"
+#include "cocos/base/TypeDef.h"
+
 namespace cc {
-using JobToken = TFJobToken;
-using JobGraph = TFJobGraph;
-using JobSystem = TFJobSystem;
+
+class DummyJobSystem;
+
+class DummyGraphItf {
+public:
+    virtual size_t addNode(std::function<void()> fn)           = 0;
+    virtual void   link(size_t precede, size_t after) noexcept = 0;
+};
+
+class DummyJobGraph final {
+public:
+    explicit DummyJobGraph(DummyJobSystem * /*system*/) noexcept;
+
+    ~DummyJobGraph() noexcept;
+
+    template <typename Function>
+    uint createJob(Function &&func) noexcept;
+
+    template <typename Function>
+    uint createForEachIndexJob(uint begin, uint end, uint step, Function &&func) noexcept;
+
+    void makeEdge(uint j1, uint j2) noexcept;
+
+    void run() noexcept;
+
+    CC_INLINE void waitForAll() { run(); }
+
+private:
+    DummyGraphItf *_dummyGraph = nullptr;
+};
+
+template <typename Function>
+uint DummyJobGraph::createJob(Function &&func) noexcept {
+    return _dummyGraph->addNode([fn = std::forward<Function>(func)]() {
+        fn();
+    });
+}
+
+template <typename Function>
+uint DummyJobGraph::createForEachIndexJob(uint begin, uint end, uint step, Function &&func) noexcept {
+    return _dummyGraph->addNode([callable = std::forward<Function>(func), first = begin, last = end, step = step]() {
+        for (auto i = first; i < last; i += step) {
+            callable(i);
+        }
+    });
+}
+
 } // namespace cc
-#elif CC_JOB_SYSTEM == CC_JOB_SYSTEM_TBB
-#include "job-system-tbb/TBBJobGraph.h"
-#include "job-system-tbb/TBBJobSystem.h"
-namespace cc {
-using JobToken = TBBJobToken;
-using JobGraph = TBBJobGraph;
-using JobSystem = TBBJobSystem;
-} // namespace cc
-#else 
-#include "job-system-dummy/DummyJobGraph.h"
-#include "job-system-dummy/DummyJobSystem.h"
-namespace cc {
-    using JobToken = size_t;
-    using JobGraph = DummyJobGraph;
-    using JobSystem = DummyJobSystem;
-} // namespace cc
-#endif
