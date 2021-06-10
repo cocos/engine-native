@@ -115,9 +115,7 @@ DummyGraphNode *DummyGraphNode::alloc() {
 
 void DummyGraphNode::free(DummyGraphNode *node) {
     node->_next = freeList;
-    if (freeList) {
-        freeList = node;
-    }
+    freeList    = node;
 }
 
 void DummyGraphNode::freeAll() {
