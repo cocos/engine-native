@@ -35,6 +35,8 @@
 #include "gfx-base/GFXTexture.h"
 
 namespace cc::pipeline {
+std::unordered_map<uint, cc::gfx::RenderPass*> ShadowFlow::renderPassHashMap;
+
 RenderFlowInfo ShadowFlow::initInfo = {
     "ShadowFlow",
     static_cast<uint>(ForwardFlowPriority::SHADOW),
@@ -236,10 +238,12 @@ void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const scene::Li
 }
 
 void ShadowFlow::destroy() {
-    if (_renderPass) {
-        _renderPass->destroy();
-        _renderPass = nullptr;
+    
+    for (auto rpPair: renderPassHashMap) {
+        rpPair.second->destroy();
     }
+    renderPassHashMap.clear();
+    _renderPass = nullptr;
 
     for (auto *texture : _usedTextures) {
         CC_DELETE(texture);
