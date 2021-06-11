@@ -46,7 +46,6 @@ public:
 private:
     inline bool excuted(DummyGraphNode *n) const;
 
-private:
     int                           _generation = 0;
     std::vector<DummyGraphNode *> _nodes;
 };
@@ -130,7 +129,7 @@ DummyGraph::~DummyGraph() noexcept {
 }
 
 void DummyGraph::clear() noexcept {
-    for (auto node : _nodes) {
+    for (auto *node : _nodes) {
         DummyGraphNode::free(node);
     }
     _nodes.clear();
@@ -156,7 +155,7 @@ void DummyGraph::run() noexcept { //NOLINT(bugprone-exception-escape)
     }
     _generation++;
 }
-void DummyGraph::walk(DummyGraphNode *node) noexcept { //NOLINT(bugprone-exception-escape)
+void DummyGraph::walk(DummyGraphNode *node) noexcept { //NOLINT(bugprone-exception-escape,misc-no-recursion)
     for (DummyGraphNode *n : node->_predecessors) {
         if (!excuted(n)) {
             walk(n);
