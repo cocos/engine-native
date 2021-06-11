@@ -57,7 +57,9 @@ public:
     inline void setPriority(RenderPriority priority) { _priority = priority; }
     inline void setRasterizerState(gfx::RasterizerState *state) { _rasterizerState = state; }
     inline void setStage(RenderPassStage stage) { _stage = stage; }
-
+    inline void setRootBuffer(gfx::Buffer *buffer) { _rootBuffer = buffer; };
+    inline void setRootBlock(uint8_t *buffer) { _rootBlock = buffer; }
+    
     inline BatchingSchemes          getBatchingScheme() const { return _batchingScheme; }
     inline gfx::BlendState *        getBlendState() const { return _blendState; }
     inline gfx::DepthStencilState * getDepthStencilState() const { return _depthStencilState; }
@@ -87,7 +89,7 @@ private:
     gfx::DescriptorSet *     _descriptorSet{nullptr};
     gfx::PipelineLayout *    _pipelineLayout{nullptr};
     gfx::Buffer *            _rootBuffer{nullptr};
-    float *                   _rootBlock{nullptr};
+    uint8_t *                  _rootBlock{nullptr};
     // TODO(minggo): rootBlock
 };
 

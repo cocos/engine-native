@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include <utility>
 #include <vector>
 #include "math/Mat4.h"
 #include "renderer/gfx-base/GFXBuffer.h"
@@ -34,17 +35,23 @@ namespace cc {
 namespace scene {
 
 struct JointTransform {
-    Mat4 world;
+    Node *          node;
+    Mat4            local;
+    Mat4            world;
+    uint            stamp;
+    JointTransform* parent;
 };
 
 struct JointInfo {
+    AABB                       bound;
+    Node*                      target;
     Mat4                       bindpose;
-    JointTransform *           transform;
-    std::vector<gfx::Buffer *> buffers;
+    JointTransform           transform;
+    std::vector<uint32_t> buffers;
     std::vector<uint32_t>      indices;
 };
 
-class SkinningModel : public Model {
+class SkinningModel:public Model {
 public:
     SkinningModel()                      = default;
     SkinningModel(const SkinningModel &) = delete;
@@ -54,11 +61,16 @@ public:
     SkinningModel &operator=(SkinningModel &&) = delete;
 
     void updateTransform() override;
-    void updateUBOs(uint32_t /*unused*/) override;
+    void updateUBOs() override;
+    inline void setJoints(std::vector<JointInfo> joints){
+        _joints = std::move(joints);
+    };
 
+protected:
+    ModelType _type = ModelType::SKINNING;
 private:
     std::vector<gfx::Buffer *> _buffers;
-    std::vector<JointInfo *>   _joints;
+    std::vector<JointInfo>   _joints;
 };
 
 } // namespace scene

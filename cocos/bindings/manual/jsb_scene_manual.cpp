@@ -36,7 +36,26 @@
     #define JSB_FREE(ptr) delete ptr
 #endif
 
-static bool js_scene_Model_setInstancedAttrBlock(se::State& s) {
+static bool js_scene_Pass_setRootBlock(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::Pass>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_Pass_setRootBlock : Invalid Native Object");
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    CC_UNUSED bool ok   = true;
+    if (argc == 1) {
+        uint8_t* rootBlock{nullptr};
+        args[0].toObject()->getArrayBufferData(&rootBlock, nullptr);
+        cobj->setRootBlock(rootBlock);
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_scene_Pass_setRootBlock) // NOLINT(readability-identifier-naming, google-runtime-references)
+
+static bool js_scene_Model_setInstancedAttrBlock(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
     auto* cobj = static_cast<cc::scene::Model*>(s.nativeThisObject());
     SE_PRECONDITION2(cobj, false, "js_scene_Model_setInstancedAttrBlock : Invalid Native Object");
     const auto& args = s.args();
@@ -44,7 +63,7 @@ static bool js_scene_Model_setInstancedAttrBlock(se::State& s) {
 
     if (argc == 3) {
         SE_PRECONDITION2(args[0].isObject() && args[0].toObject()->isArrayBuffer(), false, "js_gfx_Device_createBuffer: expected Array Buffer!");
-        
+
         // instanced buffer
         uint8_t* instanceBuff{nullptr};
         args[0].toObject()->getArrayBufferData(&instanceBuff, nullptr);
@@ -55,7 +74,7 @@ static bool js_scene_Model_setInstancedAttrBlock(se::State& s) {
             return false;
         }
         std::vector<uint8_t*> viewsData;
-        uint32_t length = 0;
+        uint32_t              length = 0;
         dataObj->getArrayLength(&length);
         viewsData.resize(length);
         se::Value value;
@@ -70,7 +89,7 @@ static bool js_scene_Model_setInstancedAttrBlock(se::State& s) {
         attrBlock.views = viewsData;
 
         // attrs
-        CC_UNUSED bool ok = true;
+        CC_UNUSED bool                                    ok   = true;
         HolderType<std::vector<cc::gfx::Attribute>, true> arg2 = {};
         ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_scene_Model_setInstancedAttrBlock : Error processing arguments");
@@ -82,20 +101,20 @@ static bool js_scene_Model_setInstancedAttrBlock(se::State& s) {
     SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
-SE_BIND_FUNC(js_scene_Model_setInstancedAttrBlock)
+SE_BIND_FUNC(js_scene_Model_setInstancedAttrBlock) // NOLINT(readability-identifier-naming, google-runtime-references)
 
-static bool js_scene_Node_initWithData(se::State& s) // constructor_overloaded.c
+static bool js_scene_Node_initWithData(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
-    auto* cobj = static_cast<cc::scene::Node*>(s.nativeThisObject());
+    auto*          cobj = static_cast<cc::scene::Node*>(s.nativeThisObject());
     CC_UNUSED bool ok   = true;
     const auto&    args = s.args();
     size_t         argc = args.size();
     do {
         if (argc == 1) {
             SE_PRECONDITION2(args[0].isObject() && args[0].toObject()->isTypedArray(), false, "js_scene_Node_initWithData: expected Typed Array!");
-            
+
             uint8_t* data{nullptr};
-            size_t dataBytes = 0;
+            size_t   dataBytes = 0;
             args[0].toObject()->getTypedArrayData(&data, &dataBytes);
             cobj->initWithData(data);
             return true;
@@ -104,9 +123,10 @@ static bool js_scene_Node_initWithData(se::State& s) // constructor_overloaded.c
     SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
-SE_BIND_FUNC(js_scene_Node_initWithData)
+SE_BIND_FUNC(js_scene_Node_initWithData) // NOLINT(readability-identifier-naming, google-runtime-references)
 
-static bool js_scene_SubModel_setRenderingSubMesh(se::State &s) {
+static bool js_scene_SubModel_setRenderingSubMesh(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
     auto* cobj = static_cast<cc::scene::SubModel*>(s.nativeThisObject());
     SE_PRECONDITION2(cobj, false, "js_scene_SubModel_setRenderingSubMesh : Invalid Native Object");
     const auto& args = s.args();
@@ -127,12 +147,12 @@ static bool js_scene_SubModel_setRenderingSubMesh(se::State &s) {
                 if (dataObj->getArrayElement(i, &value)) {
                     if (value.isObject()) {
                         cc::scene::FlatBuffer currBuffer;
-                        se::Value bufferVal;
+                        se::Value             bufferVal;
                         se::Object*           valObj = value.toObject();
                         valObj->getProperty("buffer", &bufferVal);
                         // data
                         CC_UNUSED size_t bufferLength = 0;
-                        uint8_t*         address    = nullptr;
+                        uint8_t*         address      = nullptr;
                         bufferVal.toObject()->getTypedArrayData(&address, &bufferLength);
                         currBuffer.data = address;
                         currBuffer.size = bufferLength;
@@ -148,8 +168,8 @@ static bool js_scene_SubModel_setRenderingSubMesh(se::State &s) {
                     }
                 }
             }
-            cc::scene::RenderingSubMesh* submesh = new cc::scene::RenderingSubMesh();
-            submesh->flatBuffers                 = flatBuffers;
+            auto* submesh        = new cc::scene::RenderingSubMesh();
+            submesh->flatBuffers = flatBuffers;
             cobj->setRenderingSubMesh(submesh);
             return true;
         }
@@ -158,9 +178,10 @@ static bool js_scene_SubModel_setRenderingSubMesh(se::State &s) {
     SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
-SE_BIND_FUNC(js_scene_SubModel_setRenderingSubMesh)
+SE_BIND_FUNC(js_scene_SubModel_setRenderingSubMesh) // NOLINT(readability-identifier-naming, google-runtime-references)
 
-bool register_all_scene_manual(se::Object *obj) {
+bool register_all_scene_manual(se::Object* obj) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
     // Get the ns
     se::Value nsVal;
     if (!obj->getProperty("ns", &nsVal)) {
@@ -174,5 +195,6 @@ bool register_all_scene_manual(se::Object *obj) {
     __jsb_cc_scene_Node_proto->defineFunction("initWithData", _SE(js_scene_Node_initWithData));
 
     __jsb_cc_scene_SubModel_proto->defineFunction("setRenderingSubMesh", _SE(js_scene_SubModel_setRenderingSubMesh));
+    __jsb_cc_scene_Pass_proto->defineFunction("setRootBlock", _SE(js_scene_Pass_setRootBlock));
     return true;
 }

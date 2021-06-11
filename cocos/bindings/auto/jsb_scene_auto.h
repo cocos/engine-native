@@ -26,7 +26,10 @@ bool js_register_cc_scene_Node(se::Object* obj);
 bool register_all_scene(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::scene::Node);
-SE_DECLARE_FUNC(js_scene_Node_updateWorldTransform);
+SE_DECLARE_FUNC(js_scene_Node_getDirtyFlag);
+SE_DECLARE_FUNC(js_scene_Node_getPosition);
+SE_DECLARE_FUNC(js_scene_Node_getRotation);
+SE_DECLARE_FUNC(js_scene_Node_getScale);
 SE_DECLARE_FUNC(js_scene_Node_Node);
 
 extern se::Object* __jsb_cc_scene_Light_proto;
@@ -83,6 +86,8 @@ bool register_all_scene(se::Object* obj);
 template<>
 bool sevalue_to_native(const se::Value &, cc::scene::AABB *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cc::scene::AABB);
+SE_DECLARE_FUNC(js_scene_AABB_set);
+SE_DECLARE_FUNC(js_scene_AABB_transform);
 
 extern se::Object* __jsb_cc_scene_SpotLight_proto;
 extern se::Class* __jsb_cc_scene_SpotLight_class;
@@ -91,6 +96,7 @@ bool js_register_cc_scene_SpotLight(se::Object* obj);
 bool register_all_scene(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::scene::SpotLight);
+SE_DECLARE_FUNC(js_scene_SpotLight_getSpotAngle);
 SE_DECLARE_FUNC(js_scene_SpotLight_setAABB);
 SE_DECLARE_FUNC(js_scene_SpotLight_setAngle);
 SE_DECLARE_FUNC(js_scene_SpotLight_setAspect);
@@ -139,13 +145,13 @@ SE_DECLARE_FUNC(js_scene_Model_getReceiveShadow);
 SE_DECLARE_FUNC(js_scene_Model_getSubModels);
 SE_DECLARE_FUNC(js_scene_Model_getTransform);
 SE_DECLARE_FUNC(js_scene_Model_getTransformUpdated);
+SE_DECLARE_FUNC(js_scene_Model_getType);
 SE_DECLARE_FUNC(js_scene_Model_getUpdatStamp);
 SE_DECLARE_FUNC(js_scene_Model_getVisFlags);
 SE_DECLARE_FUNC(js_scene_Model_getWorldBounds);
 SE_DECLARE_FUNC(js_scene_Model_seVisFlag);
 SE_DECLARE_FUNC(js_scene_Model_setCastShadow);
 SE_DECLARE_FUNC(js_scene_Model_setEnabled);
-SE_DECLARE_FUNC(js_scene_Model_setInstanceAttributes);
 SE_DECLARE_FUNC(js_scene_Model_setInstmatWorldIdx);
 SE_DECLARE_FUNC(js_scene_Model_setLocalBuffer);
 SE_DECLARE_FUNC(js_scene_Model_setNode);
@@ -269,6 +275,7 @@ SE_DECLARE_FUNC(js_scene_Pass_setPipelineLayout);
 SE_DECLARE_FUNC(js_scene_Pass_setPrimitive);
 SE_DECLARE_FUNC(js_scene_Pass_setPriority);
 SE_DECLARE_FUNC(js_scene_Pass_setRasterizerState);
+SE_DECLARE_FUNC(js_scene_Pass_setRootBuffer);
 SE_DECLARE_FUNC(js_scene_Pass_setStage);
 SE_DECLARE_FUNC(js_scene_Pass_update);
 SE_DECLARE_FUNC(js_scene_Pass_Pass);
@@ -283,6 +290,36 @@ template<>
 bool sevalue_to_native(const se::Value &, cc::scene::DrawBatch2D *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cc::scene::DrawBatch2D);
 
+extern se::Object* __jsb_cc_scene_JointTransform_proto;
+extern se::Class* __jsb_cc_scene_JointTransform_class;
+
+bool js_register_cc_scene_JointTransform(se::Object* obj);
+bool register_all_scene(se::Object* obj);
+
+template<>
+bool sevalue_to_native(const se::Value &, cc::scene::JointTransform *, se::Object *ctx);
+JSB_REGISTER_OBJECT_TYPE(cc::scene::JointTransform);
+
+extern se::Object* __jsb_cc_scene_JointInfo_proto;
+extern se::Class* __jsb_cc_scene_JointInfo_class;
+
+bool js_register_cc_scene_JointInfo(se::Object* obj);
+bool register_all_scene(se::Object* obj);
+
+template<>
+bool sevalue_to_native(const se::Value &, cc::scene::JointInfo *, se::Object *ctx);
+JSB_REGISTER_OBJECT_TYPE(cc::scene::JointInfo);
+
+extern se::Object* __jsb_cc_scene_SkinningModel_proto;
+extern se::Class* __jsb_cc_scene_SkinningModel_class;
+
+bool js_register_cc_scene_SkinningModel(se::Object* obj);
+bool register_all_scene(se::Object* obj);
+
+JSB_REGISTER_OBJECT_TYPE(cc::scene::SkinningModel);
+SE_DECLARE_FUNC(js_scene_SkinningModel_setJoints);
+SE_DECLARE_FUNC(js_scene_SkinningModel_SkinningModel);
+
 extern se::Object* __jsb_cc_scene_RenderScene_proto;
 extern se::Class* __jsb_cc_scene_RenderScene_class;
 
@@ -292,6 +329,7 @@ bool register_all_scene(se::Object* obj);
 JSB_REGISTER_OBJECT_TYPE(cc::scene::RenderScene);
 SE_DECLARE_FUNC(js_scene_RenderScene_addBatch);
 SE_DECLARE_FUNC(js_scene_RenderScene_addModel);
+SE_DECLARE_FUNC(js_scene_RenderScene_addSkinningModel);
 SE_DECLARE_FUNC(js_scene_RenderScene_addSphereLight);
 SE_DECLARE_FUNC(js_scene_RenderScene_addSpotLight);
 SE_DECLARE_FUNC(js_scene_RenderScene_getDrawBatch2Ds);

@@ -31,13 +31,15 @@ namespace scene {
 Mat3       _m3_1;
 Mat3       _m4_3;
 Quaternion _qt_1;
+std::vector<Node *> array_a;
 void Node::updateWorldTransform() {
     if(!getDirtyFlag()) {
         return;
     }
     uint32_t i = 0;
     Node *   curr = this;
-    while (curr && curr->_dirtyFlags)
+    array_a.clear();
+    while (curr && curr->getDirtyFlag())
     {
         i++;
         array_a.push_back(curr);
@@ -47,7 +49,7 @@ void Node::updateWorldTransform() {
     uint32_t dirtyBits = 0;
     while (i) {
         child = array_a[--i];
-        dirtyBits |= child->_dirtyFlags;
+        dirtyBits |= child->getDirtyFlag();
         if (curr) {
             if (dirtyBits & static_cast<uint32_t>(TransformBit::POSITION)) {
                 child->_nodeLayout->worldPosition.transformMat4(child->_nodeLayout->localPosition, child->_nodeLayout->worldMatrix);

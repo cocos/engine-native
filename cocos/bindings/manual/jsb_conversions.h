@@ -37,6 +37,7 @@
 #include "cocos/math/Vec3.h"
 #include "extensions/cocos-ext.h"
 #include "network/Downloader.h"
+#include "scene/Frustum.h"
 
 #if USE_SPINE
     #include "cocos/editor-support/spine-creator-support/spine-cocos2dx.h"
@@ -940,7 +941,7 @@ inline bool sevalue_to_native(const se::Value &from, float *to, se::Object * /*c
     *to = from.toFloat();
     return true;
 }
-inline bool sevalue_to_native(const se::Value &from, double *to, se::Object *) {
+inline bool sevalue_to_native(const se::Value &from, double *to, se::Object * /*unused*/) {
     *to = from.toNumber();
     return true;
 }
@@ -957,12 +958,12 @@ inline bool sevalue_to_native(const se::Value &from, cc::Data *to, se::Object * 
 }
 
 template <>
-inline bool sevalue_to_native(const se::Value &from, cc::Value *to, se::Object *) {
+inline bool sevalue_to_native(const se::Value &from, cc::Value *to, se::Object * /*unused*/) {
     return seval_to_ccvalue(from, to);
 }
 
 template <>
-inline bool sevalue_to_native(const se::Value &from, se::Value *to, se::Object *) {
+inline bool sevalue_to_native(const se::Value &from, se::Value *to, se::Object * /*unused*/) {
     *to = from;
     return true;
 }
@@ -980,7 +981,7 @@ template <>
 bool sevalue_to_native(const se::Value &from, cc::Vec2 *to, se::Object * /*unused*/);
 
 template <>
-inline bool sevalue_to_native(const se::Value &from, std::vector<se::Value> *to, se::Object *) {
+inline bool sevalue_to_native(const se::Value &from, std::vector<se::Value> *to, se::Object * /*unused*/) {
     assert(from.isObject() && from.toObject()->isArray());
     auto *array = from.toObject();
     to->clear();

@@ -29,12 +29,9 @@ namespace cc {
 namespace scene {
 
 void SubModel::update() {
-    if (_passes.size() == 0) {
-        return;
-    }
-    for (Pass* pass: _passes) {
-        pass->update();
-    }
+    // for (Pass* pass: _passes) {
+    //     pass->update();
+    // }
     _descriptSet->update();
 }
 

@@ -44,10 +44,10 @@ struct NodeLayout {
     cc::Vec3 worldScale;
     cc::Vec3 worldPosition;
     cc::Quaternion worldRotation;
-    cc::Vec3 localScale;
+    cc::Mat4 worldMatrix;
+    cc::Vec3       localScale;
     cc::Vec3 localPosition;
     cc::Quaternion localRotation;
-    cc::Mat4 worldMatrix;
 };
 
 class Node final {
@@ -83,6 +83,7 @@ public:
     inline const Vec3 &getPosition() const { return _nodeLayout->localPosition; }
     inline const Vec3 &getScale() const { return _nodeLayout->localScale; }
     inline const Quaternion &getRotation() const { return _nodeLayout->localRotation; }
+    inline const NodeLayout *getNodeLayout() const { return _nodeLayout; };
     inline const Mat4 &getWorldMatrix() {
         updateWorldTransform();
         return _nodeLayout->worldMatrix;
@@ -101,7 +102,7 @@ public:
     }
     inline const Mat4 &getWorldRT() {
         updateWorldTransform();
-        Mat4::fromRT(getWorldRotation(), getWorldPosition(), &_rtMat);
+        Mat4::fromRT(_nodeLayout->worldRotation, _nodeLayout->worldPosition, &_rtMat);
         return _rtMat;
     };
 private:
@@ -114,7 +115,6 @@ private:
     Vec3        _pos;
     Quaternion  _rot;
     Mat4                       _rtMat;
-    static std::vector<Node*> array_a;
 };
 
 } // namespace scene

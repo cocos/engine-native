@@ -25,28 +25,28 @@
 
 #include "AABB.h"
 
-Vec3 _v3_tmp;
-Vec3 _v3_tmp2;
-Vec3 _v3_tmp3;
-Vec3 _v3_tmp4;
-Mat3 _m3_tmp;
-void transform_extent_m4(Vec3 &out, Vec3 extent, Mat4 m4) {
-    _m3_tmp.m[0] = abs(m4.m[0]);
-    _m3_tmp.m[1] = abs(m4.m[1]);
-    _m3_tmp.m[2] = abs(m4.m[2]);
-    _m3_tmp.m[3] = abs(m4.m[3]);
-    _m3_tmp.m[4] = abs(m4.m[4]);
-    _m3_tmp.m[5] = abs(m4.m[5]);
-    _m3_tmp.m[6] = abs(m4.m[6]);
-    _m3_tmp.m[7] = abs(m4.m[7]);
-    _m3_tmp.m[8] = abs(m4.m[8]);
-    out.transformMat3(extent, _m3_tmp);
-};
+
 
 
 namespace cc {
 namespace scene {
-
+static Vec3 v3Tmp{};
+static Vec3 v3Tmp2{};
+static Vec3 v3Tmp3{};
+static Vec3 v3Tmp4{};
+static Mat3 m3Tmp{};
+static void transformExtentM4(Vec3 *out, const Vec3& extent, const Mat4& m4) {
+    m3Tmp.m[0] = abs(m4.m[0]);
+    m3Tmp.m[1] = abs(m4.m[1]);
+    m3Tmp.m[2] = abs(m4.m[2]);
+    m3Tmp.m[3] = abs(m4.m[4]);
+    m3Tmp.m[4] = abs(m4.m[5]);
+    m3Tmp.m[5] = abs(m4.m[6]);
+    m3Tmp.m[6] = abs(m4.m[8]);
+    m3Tmp.m[7] = abs(m4.m[9]);
+    m3Tmp.m[8] = abs(m4.m[10]);
+    out->transformMat3(extent, m3Tmp);
+};
 bool AABB::aabbAabb(const AABB &aabb) const {
     Vec3 aMin;
     Vec3 aMax;
@@ -105,14 +105,14 @@ void AABB::merge(const AABB &aabb) {
     halfExtents   = subP * 0.5F;
 }
 
-void AABB::set(cc::Vec3 _center, cc::Vec3 _halfExtents) {
-    center = _center;
-    halfExtents = _halfExtents;
+void AABB::set(const cc::Vec3 &centerVal, const cc::Vec3 &halfExtentVal) {
+    center = centerVal;
+    halfExtents = halfExtentVal;
 }
 
-void AABB::transform(Mat4 _m, Vec3 _pos, Quaternion _rot, Vec3 _scale, AABB *out) {
-    out->center.transformMat4(center, _m);
-    transform_extent_m4(out->halfExtents, out->halfExtents, _m);
+void AABB::transform(const Mat4& m, AABB *out) const {
+    out->center.transformMat4(center, m);
+    transformExtentM4(&out->halfExtents, out->halfExtents, m);
 }
 
 } // namespace scene

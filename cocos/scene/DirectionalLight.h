@@ -46,10 +46,10 @@ public:
     inline void setIlluminance(float illum) { _illuminance = illum; }
 
     inline const Vec3 &getDirection() const { return _dir; }
-    inline float       getIlluminance() const { return _illuminance; }
+    inline float     getIlluminance() const { return _illuminance; }
 
 private:
-    float _illuminance{0.F};
+    float _illuminance    {0.F};
     Vec3  _dir;
 };
 

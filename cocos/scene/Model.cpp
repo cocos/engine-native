@@ -22,43 +22,41 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-
+#include "scene/SubModel.h"
 #include "scene/Model.h"
-#include "./SubModel.h"
 #include "renderer/pipeline/Define.h"
 
-Mat4 m4_1;
+
 namespace cc {
 namespace scene {
-
+static Mat4 m41;
 Model::~Model() {
     delete _worldBounds;
 }
 
-void Model::_uploadMat4AsVec4x3(Mat4 &mat, uint8_t *v1, uint8_t *v2, uint8_t *v3) {
+void Model::uploadMat4AsVec4x3(const Mat4 &mat, uint8_t *v1, uint8_t *v2, uint8_t *v3) {
     v1[0] = mat.m[0]; v1[1] = mat.m[1]; v1[2] = mat.m[2]; v1[3] = mat.m[12];
     v2[0] = mat.m[4]; v2[1] = mat.m[5]; v2[2] = mat.m[6]; v2[3] = mat.m[13];
     v3[0] = mat.m[8]; v3[1] = mat.m[9]; v3[2] = mat.m[10]; v3[3] = mat.m[14];
 }
 
 void Model::updateTransform() {
-    Node *node = getTransform();
+    Node *node = _transform;
     if (node->getFlagsChanged() || node->getDirtyFlag()) {
         node->updateWorldTransform();
         _transformUpdated = true;
         if (_worldBounds) {
-            _modelBounds.transform(node->getWorldMatrix(), node->getWorldPosition(), node->getWorldRotation(), node->getWorldScale(), _worldBounds);
+            _modelBounds.transform(node->getNodeLayout()->worldMatrix, _worldBounds);
         }
     }
 }
 
-std::array<float, pipeline::UBOLocal::COUNT> bufferView;
-void Model::updateUBOs(uint32_t stamp) {
+static std::array<float, pipeline::UBOLocal::COUNT> bufferView;
+void Model::updateUBOs() {
     for (SubModel *subModel : _subModels) {
         subModel->update();
     }
 
-    _updateStamp = stamp;
     if (!_transformUpdated) {
         return;
     }
@@ -67,13 +65,13 @@ void Model::updateUBOs(uint32_t stamp) {
     int  idx          = _instmatWorldIdx;
     if (idx >= 0) {
         std::vector<uint8_t *> attrs = _instanceAttributeBlock->views;
-        _uploadMat4AsVec4x3(worldMatrix, attrs[idx], attrs[idx + 1], attrs[idx + 2]);
+        uploadMat4AsVec4x3(worldMatrix, attrs[idx], attrs[idx + 1], attrs[idx + 2]);
     } else if (_localBuffer) {
         memcpy(bufferView.data() + pipeline::UBOLocal::MAT_WORLD_OFFSET, worldMatrix.m, sizeof(Mat4));
-        m4_1 = worldMatrix.getInversed();
-        float det = m4_1.determinant();
-        float factor = 1.0 / sqrt(det);
-        m4_1.scale(factor);
+        m41 = worldMatrix.getInversed();
+        float det = m41.determinant();
+        float factor = 1 / sqrt(det);
+        m41.scale(factor);
         memcpy(bufferView.data() + pipeline::UBOLocal::MAT_WORLD_IT_OFFSET, worldMatrix.m, sizeof(Mat4));
         _localBuffer->update(bufferView.data(), pipeline::UBOLocal::SIZE);
     }

@@ -40,7 +40,7 @@ public:
     BakedSkinningModel &operator=(BakedSkinningModel &&) = delete;
 
     void updateTransform() override;
-    void updateUBOs(uint32_t /*unused*/) override;
+    void updateUBOs() override;
 };
 
 } // namespace scene

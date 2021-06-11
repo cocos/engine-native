@@ -30,7 +30,7 @@ namespace scene {
 
 void Pass::update() {
     if (_rootBufferDirty && _rootBuffer) {
-        _rootBuffer->update(_rootBlock, sizeof(float) * sizeof(_rootBlock)/sizeof(*_rootBlock));
+        _rootBuffer->update(_rootBlock, _rootBuffer->getSize());
         _rootBufferDirty = false;
     }
     _descriptorSet->update();

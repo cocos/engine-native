@@ -39,7 +39,7 @@ void RenderScene::update() {
     for (SpotLight* spotLight: _spotLights) {
         spotLight->update();
     }
-    for (Model* model: _models) {
+    for (auto model: _models) {
         if (model->getEnabled()) {
             model->updateTransform();
             model->updateUBOs();
@@ -83,6 +83,10 @@ void RenderScene::removeSpotLights() {
 
 void RenderScene::addModel(Model *model) {
     _models.push_back(model);
+}
+
+void RenderScene::addSkinningModel(SkinningModel *skinModel) {
+    _models.push_back(skinModel);
 }
 
 void RenderScene::removeModel(Model *model) {

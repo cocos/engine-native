@@ -27,6 +27,29 @@
 
 namespace cc {
 namespace scene {
+    static Vec3 v3Min;
+    static Vec3 v3Max;
 
+    static void getWorldMatrix(JointInfo* info) {
+
+    }
+
+    void SkinningModel::updateUBOs() {
+        Model::updateUBOs();
+    }
+
+    void SkinningModel::updateTransform() {
+        Model::updateTransform();
+        /*auto root = getTransform();
+        if (root->getFlagsChanged() || root->getDirtyFlag()) {
+            root->updateWorldTransform();
+            _transformUpdated = true;
+        }
+        v3_min.set(INFINITY, INFINITY, INFINITY);
+        v3_max.set(-INFINITY, -INFINITY, -INFINITY);
+        for (auto jointInfo : _joints) {
+            
+        }*/
+    }
 } // namespace scene
 } // namespace cc

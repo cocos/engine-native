@@ -31,6 +31,7 @@
 #include "scene/Model.h"
 #include "scene/SphereLight.h"
 #include "scene/SpotLight.h"
+#include "scene/SkinningModel.h"
 
 namespace cc {
 namespace scene {
@@ -55,6 +56,7 @@ public:
     void removeSpotLights();
 
     void addModel(Model *);
+    void addSkinningModel(SkinningModel *);
     void removeModel(Model *);
     void removeModels();
 
