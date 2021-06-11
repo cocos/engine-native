@@ -276,8 +276,8 @@ public class CocosEditBoxAbility extends AbilitySlice {
      **************************************************************************************/
     private void addItems() {
         mTextFieldHelper = new CocosTextHelper(getTextField());
+        getTextField().setBubbleSize(0, 0);
         mButton = (Button) findComponentById(ResourceTable.Id_editbox_enterBtn);
-
         mButton.setTouchEventListener(new Component.TouchEventListener() {
             @Override
             public boolean onTouchEvent(Component component, TouchEvent touchEvent) {

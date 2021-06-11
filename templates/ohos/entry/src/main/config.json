@@ -5,11 +5,6 @@
     "version": {
       "code": 1000000,
       "name": "1.0"
-    },
-    "apiVersion": {
-      "compatible": 5,
-      "target": 5,
-      "releaseType": "Beta1"
     }
   },
   "deviceConfig": {
@@ -29,7 +24,7 @@
       "deliveryWithInstall": true,
       "moduleName": "entry",
       "moduleType": "entry",
-      "installationFree": true
+      "installationFree": false
     },
     "abilities": [
       {
