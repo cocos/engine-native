@@ -37,10 +37,12 @@ class DummyJobSystem;
 class DummyGraphNode;
 class DummyGraph final {
 public:
-    DummyGraph() noexcept          = default;
+    DummyGraph()                   = default;
     DummyGraph(const DummyGraph &) = delete;
     DummyGraph(DummyGraph &&)      = delete;
-    ~DummyGraph() noexcept;
+    DummyGraph &operator=(const DummyGraph &) = delete;
+    DummyGraph &operator=(DummyGraph &&) = delete;
+    ~DummyGraph();
 
     template <class Fn>
     size_t addNode(Fn &&fn);
@@ -53,7 +55,7 @@ public:
 private:
     bool excuted(DummyGraphNode *n) const;
 
-    int                           _generation = 0;
+    int                           _generation{0};
     std::vector<DummyGraphNode *> _nodes;
 };
 
@@ -67,7 +69,11 @@ template <class Fn>
 class DummyGraphNodeTaskImpl final : public DummyGraphNodeTaskItf {
 public:
     explicit DummyGraphNodeTaskImpl(Fn &&t) noexcept;
-    ~DummyGraphNodeTaskImpl() override = default;
+    DummyGraphNodeTaskImpl(const DummyGraphNodeTaskImpl &) = delete;
+    DummyGraphNodeTaskImpl(DummyGraphNodeTaskImpl &&)      = delete;
+    DummyGraphNodeTaskImpl &operator=(const DummyGraphNodeTaskImpl &) = delete;
+    DummyGraphNodeTaskImpl &operator=(DummyGraphNodeTaskImpl &&) = delete;
+    ~DummyGraphNodeTaskImpl() override                           = default;
     void execute() override { _task(); }
 
 private:
@@ -79,6 +85,8 @@ public:
     DummyGraphNode()                       = default;
     DummyGraphNode(const DummyGraphNode &) = delete;
     DummyGraphNode(DummyGraphNode &&)      = delete;
+    DummyGraphNode &operator=(const DummyGraphNode &) = delete;
+    DummyGraphNode &operator=(DummyGraphNode &&) = delete;
     ~DummyGraphNode();
 
 private:
@@ -91,11 +99,11 @@ private:
     void precede(DummyGraphNode *other);
     void reset();
 
-    DummyGraphNodeTaskItf *              _callback;
+    DummyGraphNodeTaskItf *              _callback{nullptr};
     std::unordered_set<DummyGraphNode *> _successors{};
     std::unordered_set<DummyGraphNode *> _predecessors{};
-    DummyGraphNode *                     _next       = nullptr;
-    int                                  _generation = 0;
+    DummyGraphNode *                     _next{nullptr};
+    int                                  _generation{0};
     friend class DummyGraph;
 };
 
@@ -116,7 +124,10 @@ size_t DummyGraph::addNode(Fn &&fn) {
 class DummyJobGraph final {
 public:
     explicit DummyJobGraph(DummyJobSystem * /*system*/) noexcept;
-
+    DummyJobGraph(const DummyJobGraph &) = delete;
+    DummyJobGraph(DummyJobGraph &&)      = delete;
+    DummyJobGraph &operator=(const DummyJobGraph &) = delete;
+    DummyJobGraph &operator=(DummyJobGraph &&) = delete;
     ~DummyJobGraph() noexcept;
 
     template <typename Function>
@@ -137,16 +148,16 @@ private:
 
 template <typename Function>
 uint DummyJobGraph::createJob(Function &&func) noexcept {
-    return _dummyGraph->addNode(std::forward<Function>(func));
+    return static_cast<uint>(_dummyGraph->addNode(std::forward<Function>(func)));
 }
 
 template <typename Function>
 uint DummyJobGraph::createForEachIndexJob(uint begin, uint end, uint step, Function &&func) noexcept {
-    return _dummyGraph->addNode([callable = std::forward<Function>(func), first = begin, last = end, step = step]() {
+    return static_cast<uint>(_dummyGraph->addNode([callable = std::forward<Function>(func), first = begin, last = end, step = step]() {
         for (auto i = first; i < last; i += step) {
             callable(i);
         }
-    });
+    }));
 }
 
 } // namespace cc

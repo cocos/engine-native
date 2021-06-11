@@ -32,7 +32,7 @@
 namespace cc {
 
 namespace {
-DummyGraphNode *              freeList = nullptr;
+DummyGraphNode *              freeList{nullptr};
 std::vector<DummyGraphNode *> allocatedChunks;
 } // namespace
 
@@ -90,7 +90,7 @@ void DummyGraphNode::freeAll() {
     allocatedChunks.clear();
 }
 
-DummyGraph::~DummyGraph() noexcept {
+DummyGraph::~DummyGraph() {
     clear();
 }
 
@@ -136,11 +136,11 @@ bool DummyGraph::excuted(DummyGraphNode *n) const {
 }
 
 DummyJobGraph::DummyJobGraph(DummyJobSystem * /*unused*/) noexcept {
-    _dummyGraph = new DummyGraph();
+    _dummyGraph = new (std::nothrow) DummyGraph();
 }
 
 DummyJobGraph::~DummyJobGraph() noexcept {
-    delete static_cast<DummyGraph *>(_dummyGraph);
+    delete _dummyGraph;
 }
 
 void DummyJobGraph::makeEdge(uint j1, uint j2) {
@@ -148,9 +148,8 @@ void DummyJobGraph::makeEdge(uint j1, uint j2) {
 }
 
 void DummyJobGraph::run() noexcept {
-    auto *g = reinterpret_cast<DummyGraph *>(_dummyGraph);
-    g->run();
-    g->clear();
+    _dummyGraph->run();
+    _dummyGraph->clear();
 }
 
 } // namespace cc
