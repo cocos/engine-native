@@ -129,9 +129,9 @@ gfx::DescriptorSet *GlobalDSManager::getOrCreateDescriptorSet(uint idx) {
         const auto begin = static_cast<uint>(PipelineGlobalBindings::UBO_GLOBAL);
         const auto end   = static_cast<uint>(PipelineGlobalBindings::COUNT);
         for (uint i = begin; i < end; ++i) {
-            descriptorSet->bindBuffer(i, _globalDescriptorSet->getBuffer(i));
-            descriptorSet->bindSampler(i, _globalDescriptorSet->getSampler(i));
-            descriptorSet->bindTexture(i, _globalDescriptorSet->getTexture(i));
+            if (_globalDescriptorSet->getBuffer(i)) descriptorSet->bindBuffer(i, _globalDescriptorSet->getBuffer(i));
+            if (_globalDescriptorSet->getSampler(i)) descriptorSet->bindSampler(i, _globalDescriptorSet->getSampler(i));
+            if (_globalDescriptorSet->getTexture(i)) descriptorSet->bindTexture(i, _globalDescriptorSet->getTexture(i));
         }
 
         auto *shadowUBO = _device->createBuffer({
