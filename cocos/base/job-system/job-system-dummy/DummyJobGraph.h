@@ -25,7 +25,8 @@
 
 #pragma once
 
-#include <functional>
+#include <unordered_set>
+#include <vector>
 #include "cocos/base/Macros.h"
 #include "cocos/base/TypeDef.h"
 
@@ -33,11 +34,84 @@ namespace cc {
 
 class DummyJobSystem;
 
-class DummyGraphItf {
+class DummyGraphNode;
+class DummyGraph final {
 public:
-    virtual size_t addNode(std::function<void()> fn)           = 0;
-    virtual void   link(size_t precede, size_t after) noexcept = 0;
+    DummyGraph() noexcept          = default;
+    DummyGraph(const DummyGraph &) = delete;
+    DummyGraph(DummyGraph &&)      = delete;
+    ~DummyGraph() noexcept;
+
+    template <class Fn>
+    size_t addNode(Fn &&fn);
+
+    void run();
+    void link(size_t precede, size_t after);
+    void walk(DummyGraphNode *node);
+    void clear();
+
+private:
+    bool excuted(DummyGraphNode *n) const;
+
+    int                           _generation = 0;
+    std::vector<DummyGraphNode *> _nodes;
 };
+
+class DummyGraphNodeTaskItf {
+public:
+    virtual ~DummyGraphNodeTaskItf() = default;
+    virtual void execute()           = 0;
+};
+
+template <class Fn>
+class DummyGraphNodeTaskImpl final : public DummyGraphNodeTaskItf {
+public:
+    explicit DummyGraphNodeTaskImpl(Fn &&t) noexcept;
+    ~DummyGraphNodeTaskImpl() override = default;
+    void execute() override { _task(); }
+
+private:
+    Fn _task;
+};
+
+class DummyGraphNode final {
+public:
+    DummyGraphNode()                       = default;
+    DummyGraphNode(const DummyGraphNode &) = delete;
+    DummyGraphNode(DummyGraphNode &&)      = delete;
+    ~DummyGraphNode();
+
+private:
+    static void            allocChunk();
+    static DummyGraphNode *alloc();
+    static void            free(DummyGraphNode *n);
+    static void            freeAll();
+
+    void succeed(DummyGraphNode *other);
+    void precede(DummyGraphNode *other);
+    void reset();
+
+    DummyGraphNodeTaskItf *              _callback;
+    std::unordered_set<DummyGraphNode *> _successors{};
+    std::unordered_set<DummyGraphNode *> _predecessors{};
+    DummyGraphNode *                     _next       = nullptr;
+    int                                  _generation = 0;
+    friend class DummyGraph;
+};
+
+template <class Fn>
+DummyGraphNodeTaskImpl<Fn>::DummyGraphNodeTaskImpl(Fn &&t) noexcept : _task(t) {}
+
+template <class Fn>
+size_t DummyGraph::addNode(Fn &&fn) {
+    DummyGraphNode *n = DummyGraphNode::alloc();
+    n->_callback      = new DummyGraphNodeTaskImpl(std::forward<Fn>(fn));
+    n->_generation    = _generation;
+    _nodes.emplace_back(n);
+    return _nodes.size() - 1;
+}
+
+// exported declarations
 
 class DummyJobGraph final {
 public:
@@ -51,21 +125,19 @@ public:
     template <typename Function>
     uint createForEachIndexJob(uint begin, uint end, uint step, Function &&func) noexcept;
 
-    void makeEdge(uint j1, uint j2) noexcept;
+    void makeEdge(uint j1, uint j2);
 
     void run() noexcept;
 
     CC_INLINE void waitForAll() { run(); }
 
 private:
-    DummyGraphItf *_dummyGraph = nullptr;
+    DummyGraph *_dummyGraph = nullptr;
 };
 
 template <typename Function>
 uint DummyJobGraph::createJob(Function &&func) noexcept {
-    return _dummyGraph->addNode([fn = std::forward<Function>(func)]() {
-        fn();
-    });
+    return _dummyGraph->addNode(std::forward<Function>(func));
 }
 
 template <typename Function>

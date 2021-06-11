@@ -29,72 +29,38 @@
 
 #define DUMMY_GRAPH_NODE_CHUNK_SIZE 64
 
+namespace cc {
+
 namespace {
+DummyGraphNode *              freeList = nullptr;
+std::vector<DummyGraphNode *> allocatedChunks;
+} // namespace
 
-class DummyGraphNode;
-class DummyGraph : public cc::DummyGraphItf {
-public:
-    DummyGraph() noexcept          = default;
-    DummyGraph(const DummyGraph &) = delete;
-    DummyGraph(DummyGraph &&)      = delete;
-    ~DummyGraph() noexcept;
-    size_t addNode(std::function<void()> fn) override;           //NOLINT(bugprone-exception-escape)
-    void   run() noexcept;                                       //NOLINT(bugprone-exception-escape)
-    void   link(size_t precede, size_t after) noexcept override; //NOLINT(bugprone-exception-escape)
-    void   walk(DummyGraphNode *node) noexcept;                  //NOLINT(bugprone-exception-escape)
-    void   clear() noexcept;                                     //NOLINT(bugprone-exception-escape)
-private:
-    inline bool excuted(DummyGraphNode *n) const;
+DummyGraphNode::~DummyGraphNode() {
+    delete _callback;
+}
 
-    int                           _generation = 0;
-    std::vector<DummyGraphNode *> _nodes;
-};
+void DummyGraphNode::reset() {
+    _successors.clear();
+    _predecessors.clear();
+    delete _callback;
+    _callback = nullptr;
+}
 
-class DummyGraphNode {
-private:
-    DummyGraphNode *_next       = nullptr;
-    int             _generation = 0;
-
-    static void            allocChunk();
-    static DummyGraphNode *alloc();
-    static void            free(DummyGraphNode *n);
-    static void            freeAll();
-
-    std::function<void(DummyGraphNode *)> _callback;
-    std::unordered_set<DummyGraphNode *>  _successors{};                           // 后续
-    std::unordered_set<DummyGraphNode *>  _predecessors{};                         // 前提
-    void                                  succeed(DummyGraphNode *other) noexcept; //NOLINT(bugprone-exception-escape)
-    void                                  precede(DummyGraphNode *other) noexcept; //NOLINT(bugprone-exception-escape)
-
-    inline void reset() noexcept {
-        _successors.clear();
-        _predecessors.clear();
-    }
-
-public:
-    DummyGraphNode() noexcept              = default;
-    DummyGraphNode(const DummyGraphNode &) = delete;
-    DummyGraphNode(DummyGraphNode &&)      = delete;
-    friend class DummyGraph;
-};
-
-void DummyGraphNode::succeed(DummyGraphNode *other) noexcept { //NOLINT(bugprone-exception-escape)
+void DummyGraphNode::succeed(DummyGraphNode *other) {
     // Run after other
     this->_predecessors.emplace(other);
     other->_successors.emplace(this);
 }
 
-void DummyGraphNode::precede(DummyGraphNode *other) noexcept { //NOLINT(bugprone-exception-escape)
+void DummyGraphNode::precede(DummyGraphNode *other) {
     // Run before other
     other->succeed(this);
 }
 
-DummyGraphNode *              freeList = nullptr;
-std::vector<DummyGraphNode *> allocatedChunks;
-
 void DummyGraphNode::allocChunk() {
     assert(freeList == nullptr);
-    freeList = new DummyGraphNode[DUMMY_GRAPH_NODE_CHUNK_SIZE]();
+    freeList = new (std::nothrow) DummyGraphNode[DUMMY_GRAPH_NODE_CHUNK_SIZE]();
     allocatedChunks.emplace_back(freeList);
     for (auto i = 0; i < DUMMY_GRAPH_NODE_CHUNK_SIZE - 1; i++) {
         freeList[i]._next = &freeList[i + 1];
@@ -128,26 +94,18 @@ DummyGraph::~DummyGraph() noexcept {
     clear();
 }
 
-void DummyGraph::clear() noexcept {
+void DummyGraph::clear() {
     for (auto *node : _nodes) {
         DummyGraphNode::free(node);
     }
     _nodes.clear();
 }
 
-size_t DummyGraph::addNode(std::function<void()> fn) {
-    DummyGraphNode *n = DummyGraphNode::alloc();
-    n->_callback      = [=](DummyGraphNode * /*unused*/) { fn(); };
-    n->_generation    = _generation;
-    _nodes.emplace_back(n);
-    return _nodes.size() - 1;
-}
-
-void DummyGraph::link(size_t precede, size_t after) noexcept { //NOLINT(bugprone-exception-escape)
+void DummyGraph::link(size_t precede, size_t after) {
     _nodes[precede]->precede(_nodes[after]);
 }
 
-void DummyGraph::run() noexcept { //NOLINT(bugprone-exception-escape)
+void DummyGraph::run() {
     for (auto *node : _nodes) {
         if (!excuted(node)) {
             walk(node);
@@ -155,14 +113,14 @@ void DummyGraph::run() noexcept { //NOLINT(bugprone-exception-escape)
     }
     _generation++;
 }
-void DummyGraph::walk(DummyGraphNode *node) noexcept { //NOLINT(bugprone-exception-escape,misc-no-recursion)
+void DummyGraph::walk(DummyGraphNode *node) { //NOLINT(misc-no-recursion)
     for (DummyGraphNode *n : node->_predecessors) {
         if (!excuted(n)) {
             walk(n);
         }
     }
     if (!excuted(node)) {
-        node->_callback(node);
+        node->_callback->execute();
         node->_generation++;
     }
 
@@ -173,13 +131,9 @@ void DummyGraph::walk(DummyGraphNode *node) noexcept { //NOLINT(bugprone-excepti
     }
 }
 
-inline bool DummyGraph::excuted(DummyGraphNode *n) const {
+bool DummyGraph::excuted(DummyGraphNode *n) const {
     return n->_generation != _generation;
 }
-
-} // namespace
-
-namespace cc {
 
 DummyJobGraph::DummyJobGraph(DummyJobSystem * /*unused*/) noexcept {
     _dummyGraph = new DummyGraph();
@@ -189,12 +143,12 @@ DummyJobGraph::~DummyJobGraph() noexcept {
     delete static_cast<DummyGraph *>(_dummyGraph);
 }
 
-void DummyJobGraph::makeEdge(uint j1, uint j2) noexcept {
+void DummyJobGraph::makeEdge(uint j1, uint j2) {
     _dummyGraph->link(j1, j2);
 }
 
-void DummyJobGraph::run() noexcept { //NOLINT(bugprone-exception-escape)
-    auto *g = static_cast<DummyGraph *>(_dummyGraph);
+void DummyJobGraph::run() noexcept {
+    auto *g = reinterpret_cast<DummyGraph *>(_dummyGraph);
     g->run();
     g->clear();
 }

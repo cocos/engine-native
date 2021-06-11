@@ -46,7 +46,7 @@ public:
 
     void run() noexcept;
 
-    CC_INLINE void waitForAll() {
+    CC_INLINE void waitForAll() { //NOLINT
         if (_pending) {
             _future.wait();
             _pending = false;
@@ -66,13 +66,13 @@ private:
 template <typename Function>
 uint TFJobGraph::createJob(Function &&func) noexcept {
     _tasks.emplace_back(_flow.emplace(func));
-    return static_cast<uint>(_tasks.size() - 1u);
+    return static_cast<uint>(_tasks.size() - 1U);
 }
 
 template <typename Function>
 uint TFJobGraph::createForEachIndexJob(uint begin, uint end, uint step, Function &&func) noexcept {
     _tasks.emplace_back(_flow.for_each_index(begin, end, step, func));
-    return static_cast<uint>(_tasks.size() - 1u);
+    return static_cast<uint>(_tasks.size() - 1U);
 }
 
 } // namespace cc

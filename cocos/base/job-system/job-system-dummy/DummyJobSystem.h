@@ -30,6 +30,8 @@
 
 namespace cc {
 
+using DummyJobToken = size_t;
+
 class DummyJobGraph;
 
 class DummyJobSystem final {
