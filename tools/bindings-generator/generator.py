@@ -4,17 +4,17 @@
 #
 # Copyright (c) 2011 - Zynga Inc.
 
-from clang import cindex
-import sys
-import configparser
-import yaml
-import re
-import os
-import inspect
-import traceback
-import logging
-from Cheetah.Template import Template
+import sys, yaml, re, os, io
+import inspect, traceback, logging
 
+from Cheetah.Template import Template
+from clang import cindex
+
+if sys.version_info.major >= 3:
+    import configparser
+    def unicode(s): return str(s)
+else:
+    import ConfigParser as configparser
 
 logger = None
 
@@ -750,7 +750,7 @@ class NativeField(object):
             self.signature_name = str(tpl)
         tpl = Template(file=os.path.join(gen.target, "templates", "public_field.c"),
                        searchList=[current_class, self])
-        gen.impl_file.write(str(tpl))
+        gen.impl_file.write(unicode(tpl))
 
 # return True if found default argument.
 def iterate_param_node(param_node, depth=1):
@@ -847,7 +847,7 @@ class NativeFunction(object):
             tpl = Template(file=os.path.join(gen.target, "templates", "function.h"),
                         searchList=[current_class, self])
             if not is_override:
-                gen.head_file.write(str(tpl))
+                gen.head_file.write(unicode(tpl))
         if self.static:
             if 'sfunction' in config['definitions']:
                 tpl = Template(config['definitions']['sfunction'],
@@ -881,7 +881,7 @@ class NativeFunction(object):
                 tpl = Template(file=os.path.join(gen.target, "templates", "ifunction.c"),
                                 searchList=[current_class, self])
         if not is_override:
-            gen.impl_file.write(str(tpl))
+            gen.impl_file.write(unicode(tpl))
 
 
 class NativeOverloadedFunction(object):
@@ -943,7 +943,7 @@ class NativeOverloadedFunction(object):
             tpl = Template(file=os.path.join(gen.target, "templates", "function.h"),
                         searchList=[current_class, self])
             if not is_override:
-                gen.head_file.write(str(tpl))
+                gen.head_file.write(unicode(tpl))
         if static:
             if 'sfunction' in config['definitions']:
                 tpl = Template(config['definitions']['sfunction'],
@@ -977,7 +977,7 @@ class NativeOverloadedFunction(object):
                 tpl = Template(file=os.path.join(gen.target, "templates", "ifunction_overloaded.c"),
                             searchList=[current_class, self])
         if not is_override:
-            gen.impl_file.write(str(tpl))
+            gen.impl_file.write(unicode(tpl))
 
 
 class NativeClass(object):
@@ -1130,8 +1130,8 @@ class NativeClass(object):
                             searchList=[{"current_class": self}])
 
 
-        self.generator.head_file.write(str(prelude_h))
-        self.generator.impl_file.write(str(prelude_c))
+        self.generator.head_file.write(unicode(prelude_h))
+        self.generator.impl_file.write(unicode(prelude_c))
         for m in self.methods_clean():
             m['impl'].generate_code(self)
         for m in self.static_methods_clean():
@@ -1142,7 +1142,7 @@ class NativeClass(object):
         # generate register section
         register = Template(file=os.path.join(self.generator.target, "templates", "register.c"),
                             searchList=[{"current_class": self}])
-        self.generator.impl_file.write(str(register))
+        self.generator.impl_file.write(unicode(register))
 
     def should_export_field(self, field_name):
         return (self.is_struct and not self.generator.should_skip_field(self.class_name, field_name)) or self.generator.should_bind_field(self.class_name, field_name)
@@ -1155,7 +1155,7 @@ class NativeClass(object):
         self.struct_constructor_name = str(tpl)
         tpl = Template(file=os.path.join(self.generator.target, "templates", "struct_constructor.c"),
                             searchList=[self])
-        self.generator.impl_file.write(str(tpl))
+        self.generator.impl_file.write(unicode(tpl))
 
     def _deep_iterate(self, cursor=None, depth=0):
         for node in cursor.get_children():
@@ -1351,7 +1351,7 @@ class NativeEnum(object):
         # generate register section
         register = Template(file=os.path.join(self.generator.target, "templates", "enum.c"),
                             searchList=[{"current_class": self, "generator": self.generator}])
-        self.generator.impl_file.write(str(register))
+        self.generator.impl_file.write(unicode(register))
 
 class Generator(object):
     def __init__(self, opts):
@@ -1666,32 +1666,27 @@ class Generator(object):
         implLicense = ''
 
         licensePattern = re.compile('\/\*{5,}.*?\*{5,}\/\s*', re.S)
-        with open(implfilepath, 'a+') as implReader:
-            implMatch = licensePattern.search(implReader.read())
-            if implMatch: implLicense = implMatch.group()
         with open(headfilepath, 'a+') as headReader:
             headMatch = licensePattern.search(headReader.read())
             if headMatch: headLicense = headMatch.group()
+        with open(implfilepath, 'a+') as implReader:
+            implMatch = licensePattern.search(implReader.read())
+            if implMatch: implLicense = implMatch.group()
 
-        self.impl_file = open(implfilepath, "w+", newline="\n")
-        self.head_file = open(headfilepath, "w+", newline="\n")
+        self.head_file = io.open(headfilepath, "w+", newline="\n")
+        self.impl_file = io.open(implfilepath, "w+", newline="\n")
 
-        layout_h = Template(file=os.path.join(self.target, "templates", "layout_head.h"),
-                            searchList=[self])
-        layout_c = Template(file=os.path.join(self.target, "templates", "layout_head.c"),
-                            searchList=[self])
-
-        self.head_file.write(headLicense + str(layout_h))
-        self.impl_file.write(implLicense + str(layout_c))
+        layout_h = Template(file=os.path.join(self.target, "templates", "layout_head.h"), searchList=[self])
+        layout_c = Template(file=os.path.join(self.target, "templates", "layout_head.c"), searchList=[self])
+        self.head_file.write(headLicense + unicode(layout_h))
+        self.impl_file.write(implLicense + unicode(layout_c))
 
         self._parse_headers()
 
-        layout_h = Template(file=os.path.join(self.target, "templates", "layout_foot.h"),
-                            searchList=[self])
-        layout_c = Template(file=os.path.join(self.target, "templates", "layout_foot.c"),
-                            searchList=[self])
-        self.head_file.write(str(layout_h))
-        self.impl_file.write(str(layout_c))
+        layout_h = Template(file=os.path.join(self.target, "templates", "layout_foot.h"), searchList=[self])
+        layout_c = Template(file=os.path.join(self.target, "templates", "layout_foot.c"), searchList=[self])
+        self.head_file.write(unicode(layout_h))
+        self.impl_file.write(unicode(layout_c))
 
         self.impl_file.close()
         self.head_file.close()

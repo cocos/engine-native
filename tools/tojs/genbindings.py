@@ -1,16 +1,16 @@
 #!/usr/bin/python
 
 # This script is used to generate luabinding glue codes.
-# Android ndk version must be ndk-r9b.
+# Android ndk version must be ndk-r16 or greater.
 
 
-import sys
-import os, os.path
-import shutil
-import configparser
-import subprocess
-import re
+import sys, os, shutil, subprocess, re
 from contextlib import contextmanager
+
+if sys.version_info.major >= 3:
+    import configparser
+else:
+    import ConfigParser as configparser
 
 defaultSections = [
     'cocos',
