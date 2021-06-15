@@ -43,7 +43,6 @@
 #include "VKTexture.h"
 #include "VKTextureBarrier.h"
 #include "VKUtils.h"
-#include "vulkan/vulkan_core.h"
 
 CC_DISABLE_WARNINGS()
 #define VMA_IMPLEMENTATION
