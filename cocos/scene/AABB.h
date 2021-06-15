@@ -46,6 +46,7 @@ struct AABB final {
     void merge(const AABB &aabb);
     void set(const cc::Vec3 &centerVal, const cc::Vec3 &halfExtentVal);
     void transform(const Mat4& m, AABB *out) const;
+    static void fromPoints(const Vec3& minPos, const Vec3& maxPos, AABB* dst);
 };
 
 } // namespace scene

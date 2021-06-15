@@ -45,8 +45,10 @@ void Frustum::update(const Mat4 &m, const Mat4 &inv) {
         plane.n *= invDist;
         plane.d *= invDist;
     }
-    for (int i = 0; i < 8; i++) {
-        vertices[i].transformMat4(VEC_VAL[i], inv);
+    uint32_t i = 0;
+    for(const Vec3 &vec: VEC_VAL) {
+        vertices[i].transformMat4(vec, inv);
+        i++;
     }
 }
 } // namespace scene

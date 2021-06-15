@@ -30,11 +30,11 @@
 
 namespace cc {
 namespace scene {
-static Vec3 v3Tmp{};
-static Vec3 v3Tmp2{};
-static Vec3 v3Tmp3{};
-static Vec3 v3Tmp4{};
-static Mat3 m3Tmp{};
+static Vec3 v3Tmp;
+static Vec3 v3Tmp2;
+static Vec3 v3Tmp3;
+static Vec3 v3Tmp4;
+static Mat3 m3Tmp;
 static void transformExtentM4(Vec3 *out, const Vec3& extent, const Mat4& m4) {
     m3Tmp.m[0] = abs(m4.m[0]);
     m3Tmp.m[1] = abs(m4.m[1]);
@@ -113,6 +113,13 @@ void AABB::set(const cc::Vec3 &centerVal, const cc::Vec3 &halfExtentVal) {
 void AABB::transform(const Mat4& m, AABB *out) const {
     out->center.transformMat4(center, m);
     transformExtentM4(&out->halfExtents, out->halfExtents, m);
+}
+
+void AABB::fromPoints(const Vec3& minPos, const Vec3& maxPos, AABB*  dst){
+    Vec3::add(maxPos, minPos, &v3Tmp);
+    Vec3::subtract(maxPos, minPos, &v3Tmp2);
+    dst->center.set(v3Tmp * 0.5);
+    dst->halfExtents.set(v3Tmp2 * 0.5);
 }
 
 } // namespace scene

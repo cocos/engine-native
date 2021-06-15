@@ -40,7 +40,7 @@ void Model::uploadMat4AsVec4x3(const Mat4 &mat, uint8_t *v1, uint8_t *v2, uint8_
     v3[0] = mat.m[8]; v3[1] = mat.m[9]; v3[2] = mat.m[10]; v3[3] = mat.m[14];
 }
 
-void Model::updateTransform() {
+void Model::updateTransform(uint32_t  /*stamp*/) {
     Node *node = _transform;
     if (node->getFlagsChanged() || node->getDirtyFlag()) {
         node->updateWorldTransform();
@@ -52,11 +52,11 @@ void Model::updateTransform() {
 }
 
 static std::array<float, pipeline::UBOLocal::COUNT> bufferView;
-void Model::updateUBOs() {
+void Model::updateUBOs(uint32_t  stamp) {
     for (SubModel *subModel : _subModels) {
         subModel->update();
     }
-
+    _updateStamp = stamp;
     if (!_transformUpdated) {
         return;
     }

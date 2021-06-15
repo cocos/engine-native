@@ -28,27 +28,27 @@
 
 namespace cc {
 namespace scene {
-Mat3       _m3_1;
-Mat3       _m4_3;
-Quaternion _qt_1;
-std::vector<Node *> array_a;
+Mat3       m31;
+Mat3       m43;
+Quaternion qt1;
+std::vector<Node *> arrayA;
 void Node::updateWorldTransform() {
     if(!getDirtyFlag()) {
         return;
     }
     uint32_t i = 0;
     Node *   curr = this;
-    array_a.clear();
+    arrayA.clear();
     while (curr && curr->getDirtyFlag())
     {
         i++;
-        array_a.push_back(curr);
+        arrayA.push_back(curr);
         curr = curr->_parent;
     }
     Node *child{nullptr};
     uint32_t dirtyBits = 0;
     while (i) {
-        child = array_a[--i];
+        child = arrayA[--i];
         dirtyBits |= child->getDirtyFlag();
         if (curr) {
             if (dirtyBits & static_cast<uint32_t>(TransformBit::POSITION)) {
@@ -63,12 +63,12 @@ void Node::updateWorldTransform() {
                 if (dirtyBits & static_cast<uint32_t>(TransformBit::ROTATION)) {
                     Quaternion::multiply(curr->_nodeLayout->worldRotation, child->_nodeLayout->localRotation, &curr->_nodeLayout->worldRotation);
                 }
-                _qt_1 = child->_nodeLayout->worldRotation;
-                _qt_1.conjugate();
-                Mat3::fromQuat(_m3_1, _qt_1);
-                Mat3::fromMat4(_m4_3, child->_nodeLayout->worldMatrix);
-                Mat3::multiply(_m3_1, _m3_1, _m4_3);
-                child->_nodeLayout->worldScale.set(_m3_1.m[0], _m3_1.m[4], _m3_1.m[8]);
+                qt1 = child->_nodeLayout->worldRotation;
+                qt1.conjugate();
+                Mat3::fromQuat(m31, qt1);
+                Mat3::fromMat4(m43, child->_nodeLayout->worldMatrix);
+                Mat3::multiply(m31, m31, m43);
+                child->_nodeLayout->worldScale.set(m31.m[0], m31.m[4], m31.m[8]);
             } 
         } else if(child) {
             if (dirtyBits & static_cast<uint32_t>(TransformBit::POSITION)) {

@@ -59,8 +59,8 @@ public:
     Model &operator=(const Model &) = delete;
     Model &operator=(Model &&) = delete;
 
-    virtual void updateTransform();
-    virtual void updateUBOs();
+    virtual void updateTransform(uint32_t stamp);
+    virtual void updateUBOs(uint32_t stamp);
 
     void addSubModel(SubModel *subModel);
 
@@ -106,6 +106,8 @@ public:
 protected:
     ModelType _type = ModelType::DEFAULT;
     bool                        _transformUpdated{false};
+    AABB *                      _worldBounds{nullptr};
+    AABB                        _modelBounds;
 private:
     bool                        _enabled{false};
     bool                        _castShadow{false};
@@ -119,8 +121,6 @@ private:
     float *                     _localData{nullptr};
     uint8_t *                   _instancedBuffer{nullptr};
     gfx::Buffer *               _localBuffer{nullptr};
-    AABB *                      _worldBounds{nullptr};
-    AABB                        _modelBounds;
     InstancedAttributeBlock *   _instanceAttributeBlock{nullptr};
     std::vector<SubModel *>     _subModels;
     std::vector<gfx::Attribute> _instanceAttributes;

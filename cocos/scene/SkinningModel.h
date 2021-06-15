@@ -30,7 +30,8 @@
 #include "math/Mat4.h"
 #include "renderer/gfx-base/GFXBuffer.h"
 #include "scene/Model.h"
-
+#include "renderer/gfx-base/GFXDescriptorSet.h"
+#include "renderer/pipeline/Define.h"
 namespace cc {
 namespace scene {
 
@@ -38,8 +39,7 @@ struct JointTransform {
     Node *          node;
     Mat4            local;
     Mat4            world;
-    uint            stamp;
-    JointTransform* parent;
+    int            stamp;
 };
 
 struct JointInfo {
@@ -47,6 +47,7 @@ struct JointInfo {
     Node*                      target;
     Mat4                       bindpose;
     JointTransform           transform;
+    std::vector<JointTransform> parents;
     std::vector<uint32_t> buffers;
     std::vector<uint32_t>      indices;
 };
@@ -60,8 +61,23 @@ public:
     SkinningModel &operator=(const SkinningModel &) = delete;
     SkinningModel &operator=(SkinningModel &&) = delete;
 
-    void updateTransform() override;
-    void updateUBOs() override;
+    inline void setBuffers(std::vector<gfx::Buffer *> buffers) {
+        _buffers = std::move(buffers);
+    }
+    inline void setBufferIndices(std::vector<uint32_t> bufferIndices) {
+        _bufferIndices = std::move(bufferIndices);
+    }
+    inline void updateLocalDescriptors(uint32_t submodelIdx, gfx::DescriptorSet* descriptorset) {
+        gfx::Buffer* buffer = _buffers[_bufferIndices[submodelIdx]];
+        if (buffer) {
+            descriptorset->bindBuffer(pipeline::UBOSkinning::BINDING, buffer);
+        }
+    }
+    inline void setNeedUpdate(bool needUpdate) {
+        _needUpdate = needUpdate;
+    }
+    void updateTransform(uint32_t stamp) override;
+    void updateUBOs(uint32_t stamp) override;
     inline void setJoints(std::vector<JointInfo> joints){
         _joints = std::move(joints);
     };
@@ -69,6 +85,8 @@ public:
 protected:
     ModelType _type = ModelType::SKINNING;
 private:
+    bool _needUpdate = false;
+    std::vector<uint32_t> _bufferIndices;
     std::vector<gfx::Buffer *> _buffers;
     std::vector<JointInfo>   _joints;
 };
