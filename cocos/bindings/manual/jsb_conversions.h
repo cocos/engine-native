@@ -35,6 +35,7 @@
 #include "cocos/math/Geometry.h"
 #include "cocos/math/Vec2.h"
 #include "cocos/math/Vec3.h"
+#include "cocos/math/Quaternion.h"
 #include "extensions/cocos-ext.h"
 #include "network/Downloader.h"
 #include "scene/Frustum.h"
@@ -979,6 +980,9 @@ bool sevalue_to_native(const se::Value &from, cc::Vec3 *to, se::Object * /*unuse
 
 template <>
 bool sevalue_to_native(const se::Value &from, cc::Vec2 *to, se::Object * /*unused*/);
+
+template <>
+bool sevalue_to_native(const se::Value &from, cc::Quaternion *to, se::Object * /*unused*/);
 
 template <>
 inline bool sevalue_to_native(const se::Value &from, std::vector<se::Value> *to, se::Object * /*unused*/) {

@@ -842,6 +842,8 @@ cocos_source_files(
                  cocos/renderer/pipeline/BatchedBuffer.h
                  cocos/renderer/pipeline/Define.h
                  cocos/renderer/pipeline/Define.cpp
+                 cocos/renderer/pipeline/GlobalDescriptorSetManager.h
+                 cocos/renderer/pipeline/GlobalDescriptorSetManager.cpp
                  cocos/renderer/pipeline/InstancedBuffer.cpp
                  cocos/renderer/pipeline/InstancedBuffer.h
                  cocos/renderer/pipeline/PipelineStateManager.cpp
@@ -890,14 +892,14 @@ cocos_source_files(
                  cocos/renderer/pipeline/deferred/LightingStage.h
                  cocos/renderer/pipeline/deferred/PostprocessStage.cpp
                  cocos/renderer/pipeline/deferred/PostprocessStage.h
+                 cocos/renderer/pipeline/deferred/ReflectionComp.cpp
+                 cocos/renderer/pipeline/deferred/ReflectionComp.h
                  cocos/renderer/pipeline/shadow/ShadowFlow.cpp
                  cocos/renderer/pipeline/shadow/ShadowFlow.h
                  cocos/renderer/pipeline/shadow/ShadowStage.cpp
                  cocos/renderer/pipeline/shadow/ShadowStage.h
                  cocos/renderer/pipeline/helper/DefineMap.h
                  cocos/renderer/pipeline/helper/DefineMap.cpp
-                 cocos/renderer/pipeline/helper/SharedMemory.h
-                 cocos/renderer/pipeline/helper/SharedMemory.cpp
 )
 
 ##### scene
@@ -1259,8 +1261,6 @@ endif()
 cocos_source_files(
     NO_WERROR    cocos/bindings/dop/BufferPool.cpp
                  cocos/bindings/dop/BufferPool.h
-    NO_WERROR    cocos/bindings/dop/ObjectPool.cpp
-                 cocos/bindings/dop/ObjectPool.h
     NO_WERROR    cocos/bindings/dop/jsb_dop.cpp
                  cocos/bindings/dop/jsb_dop.h
                  cocos/bindings/dop/PoolType.h

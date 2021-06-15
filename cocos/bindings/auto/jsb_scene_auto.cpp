@@ -26,25 +26,6 @@
 se::Object* __jsb_cc_scene_Node_proto = nullptr;
 se::Class* __jsb_cc_scene_Node_class = nullptr;
 
-static bool js_scene_Node_getDirtyFlag(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::Node>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_Node_getDirtyFlag : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        unsigned int result = cobj->getDirtyFlag();
-        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-        SE_PRECONDITION2(ok, false, "js_scene_Node_getDirtyFlag : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_scene_Node_getDirtyFlag)
-
 static bool js_scene_Node_getPosition(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::Node>(s);
@@ -1620,25 +1601,6 @@ static bool js_scene_Model_getTransformUpdated(se::State& s) // NOLINT(readabili
     return false;
 }
 SE_BIND_FUNC(js_scene_Model_getTransformUpdated)
-
-static bool js_scene_Model_getType(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_Model_getType : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        auto result = static_cast<int>(cobj->getType());
-        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-        SE_PRECONDITION2(ok, false, "js_scene_Model_getType : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_scene_Model_getType)
 
 static bool js_scene_Model_getUpdatStamp(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
