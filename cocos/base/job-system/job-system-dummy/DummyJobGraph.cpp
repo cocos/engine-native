@@ -113,6 +113,7 @@ void DummyGraph::run() {
     }
     _generation++;
 }
+
 void DummyGraph::walk(DummyGraphNode *node) { //NOLINT(misc-no-recursion)
     for (DummyGraphNode *n : node->_predecessors) {
         if (!excuted(n)) {
@@ -135,21 +136,13 @@ bool DummyGraph::excuted(DummyGraphNode *n) const {
     return n->_generation != _generation;
 }
 
-DummyJobGraph::DummyJobGraph(DummyJobSystem * /*unused*/) noexcept {
-    _dummyGraph = new (std::nothrow) DummyGraph();
-}
-
-DummyJobGraph::~DummyJobGraph() noexcept {
-    delete _dummyGraph;
-}
-
 void DummyJobGraph::makeEdge(uint j1, uint j2) {
-    _dummyGraph->link(j1, j2);
+    _dummyGraph.link(j1, j2);
 }
 
 void DummyJobGraph::run() noexcept {
-    _dummyGraph->run();
-    _dummyGraph->clear();
+    _dummyGraph.run();
+    _dummyGraph.clear();
 }
 
 } // namespace cc

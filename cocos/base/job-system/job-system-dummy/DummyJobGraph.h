@@ -74,7 +74,7 @@ public:
     DummyGraphNodeTaskImpl &operator=(const DummyGraphNodeTaskImpl &) = delete;
     DummyGraphNodeTaskImpl &operator=(DummyGraphNodeTaskImpl &&) = delete;
     ~DummyGraphNodeTaskImpl() override                           = default;
-    void execute() override { _task(); }
+    CC_INLINE void execute() override { _task(); }
 
 private:
     Fn _task;
@@ -123,12 +123,12 @@ size_t DummyGraph::addNode(Fn &&fn) {
 
 class DummyJobGraph final {
 public:
-    explicit DummyJobGraph(DummyJobSystem * /*system*/) noexcept;
+    explicit DummyJobGraph(DummyJobSystem * /*system*/) noexcept {}
     DummyJobGraph(const DummyJobGraph &) = delete;
     DummyJobGraph(DummyJobGraph &&)      = delete;
     DummyJobGraph &operator=(const DummyJobGraph &) = delete;
     DummyJobGraph &operator=(DummyJobGraph &&) = delete;
-    ~DummyJobGraph() noexcept;
+    ~DummyJobGraph() noexcept                  = default;
 
     template <typename Function>
     uint createJob(Function &&func) noexcept;
@@ -143,17 +143,17 @@ public:
     CC_INLINE void waitForAll() { run(); }
 
 private:
-    DummyGraph *_dummyGraph = nullptr;
+    DummyGraph _dummyGraph{};
 };
 
 template <typename Function>
 uint DummyJobGraph::createJob(Function &&func) noexcept {
-    return static_cast<uint>(_dummyGraph->addNode(std::forward<Function>(func)));
+    return static_cast<uint>(_dummyGraph.addNode(std::forward<Function>(func)));
 }
 
 template <typename Function>
 uint DummyJobGraph::createForEachIndexJob(uint begin, uint end, uint step, Function &&func) noexcept {
-    return static_cast<uint>(_dummyGraph->addNode([callable = std::forward<Function>(func), first = begin, last = end, step = step]() {
+    return static_cast<uint>(_dummyGraph.addNode([callable = std::forward<Function>(func), first = begin, last = end, step = step]() {
         for (auto i = first; i < last; i += step) {
             callable(i);
         }
