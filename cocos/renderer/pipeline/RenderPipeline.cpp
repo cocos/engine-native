@@ -100,6 +100,7 @@ void RenderPipeline::destroy() {
     }
     _flows.clear();
 
+    _descriptorSet = nullptr;
     _globalDSManager->getGlobalDescriptorSet()->destroy();
     CC_SAFE_DELETE(_globalDSManager);
     CC_SAFE_DESTROY(_pipelineUBO);
