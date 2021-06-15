@@ -26,63 +26,6 @@
 se::Object* __jsb_cc_scene_Node_proto = nullptr;
 se::Class* __jsb_cc_scene_Node_class = nullptr;
 
-static bool js_scene_Node_getPosition(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::Node>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_Node_getPosition : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        const cc::Vec3& result = cobj->getPosition();
-        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-        SE_PRECONDITION2(ok, false, "js_scene_Node_getPosition : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_scene_Node_getPosition)
-
-static bool js_scene_Node_getRotation(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::Node>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_Node_getRotation : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        const cc::Quaternion& result = cobj->getRotation();
-        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-        SE_PRECONDITION2(ok, false, "js_scene_Node_getRotation : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_scene_Node_getRotation)
-
-static bool js_scene_Node_getScale(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::Node>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_Node_getScale : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        const cc::Vec3& result = cobj->getScale();
-        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-        SE_PRECONDITION2(ok, false, "js_scene_Node_getScale : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_scene_Node_getScale)
-
 SE_DECLARE_FINALIZE_FUNC(js_cc_scene_Node_finalize)
 
 static bool js_scene_Node_constructor(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references) constructor.c
@@ -113,10 +56,6 @@ bool js_register_scene_Node(se::Object* obj) // NOLINT(readability-identifier-na
 {
     auto* cls = se::Class::create("Node", obj, nullptr, _SE(js_scene_Node_constructor));
 
-    cls->defineFunction("getDirtyFlag", _SE(js_scene_Node_getDirtyFlag));
-    cls->defineFunction("getPosition", _SE(js_scene_Node_getPosition));
-    cls->defineFunction("getRotation", _SE(js_scene_Node_getRotation));
-    cls->defineFunction("getScale", _SE(js_scene_Node_getScale));
     cls->defineFinalizeFunction(_SE(js_cc_scene_Node_finalize));
     cls->install();
     JSBClassType::registerClass<cc::scene::Node>(cls);
@@ -911,25 +850,6 @@ bool js_register_scene_AABB(se::Object* obj) // NOLINT(readability-identifier-na
 se::Object* __jsb_cc_scene_SpotLight_proto = nullptr;
 se::Class* __jsb_cc_scene_SpotLight_class = nullptr;
 
-static bool js_scene_SpotLight_getSpotAngle(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::SpotLight>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_SpotLight_getSpotAngle : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        float result = cobj->getSpotAngle();
-        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-        SE_PRECONDITION2(ok, false, "js_scene_SpotLight_getSpotAngle : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_scene_SpotLight_getSpotAngle)
-
 static bool js_scene_SpotLight_setAABB(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::SpotLight>(s);
@@ -1150,7 +1070,6 @@ bool js_register_scene_SpotLight(se::Object* obj) // NOLINT(readability-identifi
 {
     auto* cls = se::Class::create("SpotLight", obj, __jsb_cc_scene_Light_proto, _SE(js_scene_SpotLight_constructor));
 
-    cls->defineFunction("getSpotAngle", _SE(js_scene_SpotLight_getSpotAngle));
     cls->defineFunction("setAABB", _SE(js_scene_SpotLight_setAABB));
     cls->defineFunction("setAngle", _SE(js_scene_SpotLight_setAngle));
     cls->defineFunction("setAspect", _SE(js_scene_SpotLight_setAspect));
@@ -1913,7 +1832,6 @@ bool js_register_scene_Model(se::Object* obj) // NOLINT(readability-identifier-n
     cls->defineFunction("getSubModels", _SE(js_scene_Model_getSubModels));
     cls->defineFunction("getTransform", _SE(js_scene_Model_getTransform));
     cls->defineFunction("getTransformUpdated", _SE(js_scene_Model_getTransformUpdated));
-    cls->defineFunction("getType", _SE(js_scene_Model_getType));
     cls->defineFunction("getUpdatStamp", _SE(js_scene_Model_getUpdatStamp));
     cls->defineFunction("getVisFlags", _SE(js_scene_Model_getVisFlags));
     cls->defineFunction("getWorldBounds", _SE(js_scene_Model_getWorldBounds));

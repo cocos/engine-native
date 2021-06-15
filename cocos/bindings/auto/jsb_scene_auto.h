@@ -26,10 +26,6 @@ bool js_register_cc_scene_Node(se::Object* obj);
 bool register_all_scene(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::scene::Node);
-SE_DECLARE_FUNC(js_scene_Node_getDirtyFlag);
-SE_DECLARE_FUNC(js_scene_Node_getPosition);
-SE_DECLARE_FUNC(js_scene_Node_getRotation);
-SE_DECLARE_FUNC(js_scene_Node_getScale);
 SE_DECLARE_FUNC(js_scene_Node_Node);
 
 extern se::Object* __jsb_cc_scene_Light_proto;
@@ -97,7 +93,6 @@ bool js_register_cc_scene_SpotLight(se::Object* obj);
 bool register_all_scene(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::scene::SpotLight);
-SE_DECLARE_FUNC(js_scene_SpotLight_getSpotAngle);
 SE_DECLARE_FUNC(js_scene_SpotLight_setAABB);
 SE_DECLARE_FUNC(js_scene_SpotLight_setAngle);
 SE_DECLARE_FUNC(js_scene_SpotLight_setAspect);
@@ -146,7 +141,6 @@ SE_DECLARE_FUNC(js_scene_Model_getReceiveShadow);
 SE_DECLARE_FUNC(js_scene_Model_getSubModels);
 SE_DECLARE_FUNC(js_scene_Model_getTransform);
 SE_DECLARE_FUNC(js_scene_Model_getTransformUpdated);
-SE_DECLARE_FUNC(js_scene_Model_getType);
 SE_DECLARE_FUNC(js_scene_Model_getUpdatStamp);
 SE_DECLARE_FUNC(js_scene_Model_getVisFlags);
 SE_DECLARE_FUNC(js_scene_Model_getWorldBounds);
