@@ -101,6 +101,7 @@ namespace scene {
     }
 
     void SkinningModel::updateTransform(uint32_t stamp) {
+        Model::updateTransform(stamp);
         if(!_needUpdate) {
             return;
         }
