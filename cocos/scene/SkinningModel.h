@@ -83,9 +83,9 @@ public:
     };
 
 protected:
-    ModelType _type = ModelType::SKINNING;
+    ModelType _type{ ModelType::SKINNING };
 private:
-    bool _needUpdate = false;
+    bool _needUpdate{ false };
     std::vector<uint32_t> _bufferIndices;
     std::vector<gfx::Buffer *> _buffers;
     std::vector<JointInfo>   _joints;

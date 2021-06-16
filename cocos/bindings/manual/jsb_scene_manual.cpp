@@ -125,10 +125,10 @@ static bool js_scene_Node_initWithData(se::State& s) // NOLINT(readability-ident
 }
 SE_BIND_FUNC(js_scene_Node_initWithData) // NOLINT(readability-identifier-naming, google-runtime-references)
 
-static bool js_scene_SubModel_setRenderingSubMesh(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+static bool js_scene_SubModel_setSubMeshBuffers(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     auto* cobj = static_cast<cc::scene::SubModel*>(s.nativeThisObject());
-    SE_PRECONDITION2(cobj, false, "js_scene_SubModel_setRenderingSubMesh : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_scene_SubModel_setSubMeshBuffers : Invalid Native Object");
     const auto& args = s.args();
     size_t      argc = args.size();
 
@@ -168,9 +168,7 @@ static bool js_scene_SubModel_setRenderingSubMesh(se::State& s) // NOLINT(readab
                     }
                 }
             }
-            auto* submesh        = new cc::scene::RenderingSubMesh();
-            submesh->flatBuffers = flatBuffers;
-            cobj->setRenderingSubMesh(submesh);
+            cobj->setSubMeshBuffers(flatBuffers);
             return true;
         }
     }
@@ -178,7 +176,7 @@ static bool js_scene_SubModel_setRenderingSubMesh(se::State& s) // NOLINT(readab
     SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
-SE_BIND_FUNC(js_scene_SubModel_setRenderingSubMesh) // NOLINT(readability-identifier-naming, google-runtime-references)
+SE_BIND_FUNC(js_scene_SubModel_setSubMeshBuffers) // NOLINT(readability-identifier-naming, google-runtime-references)
 
 bool register_all_scene_manual(se::Object* obj) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
@@ -194,7 +192,7 @@ bool register_all_scene_manual(se::Object* obj) // NOLINT(readability-identifier
     __jsb_cc_scene_Model_proto->defineFunction("setInstancedAttrBlock", _SE(js_scene_Model_setInstancedAttrBlock));
     __jsb_cc_scene_Node_proto->defineFunction("initWithData", _SE(js_scene_Node_initWithData));
 
-    __jsb_cc_scene_SubModel_proto->defineFunction("setRenderingSubMesh", _SE(js_scene_SubModel_setRenderingSubMesh));
+    __jsb_cc_scene_SubModel_proto->defineFunction("setSubMeshBuffers", _SE(js_scene_SubModel_setSubMeshBuffers));
     __jsb_cc_scene_Pass_proto->defineFunction("setRootBlock", _SE(js_scene_Pass_setRootBlock));
     return true;
 }

@@ -35,6 +35,10 @@ void SubModel::update() {
     _descriptSet->update();
 }
 
+SubModel::~SubModel() {
+    delete _subMesh;
+}
+
 gfx::Shader *SubModel::getShader(int index) const {
     if (index >= static_cast<int>(_shaders.size())) {
         return nullptr;

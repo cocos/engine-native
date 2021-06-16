@@ -55,6 +55,7 @@ void PhysXBox::updateGeometry() {
     auto &node = getSharedBody().getNode();
     auto &geo = getPxGeometry<physx::PxBoxGeometry>();
     geo.halfExtents = _mHalfExtents;
+    node.updateWorldTransform();
     geo.halfExtents *= node.getWorldScale();
     geo.halfExtents = geo.halfExtents.abs();
     if (geo.halfExtents.minElement() <= 0.0) {

@@ -83,7 +83,6 @@ template<>
 bool sevalue_to_native(const se::Value &, cc::scene::AABB *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cc::scene::AABB);
 SE_DECLARE_FUNC(js_scene_AABB_set);
-SE_DECLARE_FUNC(js_scene_AABB_transform);
 SE_DECLARE_FUNC(js_scene_AABB_fromPoints);
 
 extern se::Object* __jsb_cc_scene_SpotLight_proto;

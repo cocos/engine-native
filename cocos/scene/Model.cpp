@@ -22,14 +22,16 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-#include "scene/SubModel.h"
 #include "scene/Model.h"
+#include "scene/SubModel.h"
 #include "renderer/pipeline/Define.h"
-
 
 namespace cc {
 namespace scene {
-static Mat4 m41;
+namespace {
+    Mat4 m41;
+    std::array<float, pipeline::UBOLocal::COUNT> bufferView;
+}
 Model::~Model() {
     delete _worldBounds;
 }
@@ -51,7 +53,6 @@ void Model::updateTransform(uint32_t  /*stamp*/) {
     }
 }
 
-static std::array<float, pipeline::UBOLocal::COUNT> bufferView;
 void Model::updateUBOs(uint32_t  stamp) {
     for (SubModel *subModel : _subModels) {
         subModel->update();
@@ -61,7 +62,8 @@ void Model::updateUBOs(uint32_t  stamp) {
         return;
     }
     _transformUpdated = false;
-    Mat4 worldMatrix  = getTransform()->getWorldMatrix();
+    getTransform()->updateWorldTransform();
+    const auto& worldMatrix  = getTransform()->getWorldMatrix();
     int  idx          = _instmatWorldIdx;
     if (idx >= 0) {
         std::vector<uint8_t *> attrs = _instanceAttributeBlock->views;

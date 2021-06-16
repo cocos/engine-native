@@ -38,7 +38,7 @@ struct Plane final {
     Vec3  n;
 };
 
-struct Frustum {
+struct Frustum final {
     std::array<Vec3, 8>  vertices;
     std::array<Plane, 6> planes;
     void update(const Mat4 &m, const Mat4 &inv);

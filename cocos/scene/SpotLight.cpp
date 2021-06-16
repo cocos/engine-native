@@ -27,18 +27,21 @@
 
 namespace cc {
 namespace scene {
-Mat4 matView;
-Mat4 matProj;
-Mat4 matViewProj;
-Mat4 matViewProjInv;
+namespace {
+    Mat4 matView;
+    Mat4 matProj;
+    Mat4 matViewProj;
+    Mat4 matViewProjInv;
+}
 void SpotLight::update() {
     if(_node && (_node->getFlagsChanged() || _needUpdate)) {
+        _node->updateWorldRTMatrix();
         _pos = _node->getWorldPosition();
         _dir = _forward;
         _dir.transformQuat(_node->getWorldRotation());
         _dir.normalize();
         _aabb.set(_pos, {_range, _range, _range});
-        matView = _node->getWorldRT();
+        matView = _node->getWorldRTMatrix();
         matView.inverse();
 
         Mat4::createPerspective(_angle, 1.0, 0.001, _range, &matProj);

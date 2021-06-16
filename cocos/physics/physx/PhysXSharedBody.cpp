@@ -171,6 +171,7 @@ void PhysXSharedBody::switchActor(const bool isStaticBefore) {
 void PhysXSharedBody::initStaticActor() {
     if (_mStaticActor == nullptr) {
         PxTransform transform{PxIdentity};
+        getNode().updateWorldTransform();
         pxSetVec3Ext(transform.p, getNode().getWorldPosition());
         pxSetQuatExt(transform.q, getNode().getWorldRotation());
         if (!transform.p.isFinite()) transform.p = PxVec3{PxIdentity};
@@ -183,6 +184,7 @@ void PhysXSharedBody::initStaticActor() {
 void PhysXSharedBody::initDynamicActor() {
     if (_mDynamicActor == nullptr) {
         PxTransform transform{PxIdentity};
+        getNode().updateWorldTransform();
         pxSetVec3Ext(transform.p, getNode().getWorldPosition());
         pxSetQuatExt(transform.q, getNode().getWorldRotation());
         if (!transform.p.isFinite()) transform.p = PxVec3{PxIdentity};
@@ -223,9 +225,11 @@ void PhysXSharedBody::syncSceneToPhysics() {
         if (hasChangedFlags & static_cast<uint32_t>(TransformBit::SCALE)) syncScale();
         auto wp = getImpl().rigidActor->getGlobalPose();
         if (hasChangedFlags & static_cast<uint32_t>(TransformBit::POSITION)) {
+            getNode().updateWorldTransform();
             pxSetVec3Ext(wp.p, getNode().getWorldPosition());
         }
         if (hasChangedFlags & static_cast<uint32_t>(TransformBit::ROTATION)) {
+            getNode().updateWorldTransform();
             pxSetQuatExt(wp.q, getNode().getWorldRotation());
         }
 
@@ -241,6 +245,7 @@ void PhysXSharedBody::syncSceneWithCheck() {
     if (getNode().getFlagsChanged() & static_cast<uint32_t>(TransformBit::SCALE)) syncScale();
     auto wp         = getImpl().rigidActor->getGlobalPose();
     bool needUpdate = false;
+    getNode().updateWorldTransform();
     if (wp.p != getNode().getWorldPosition()) {
         pxSetVec3Ext(wp.p, getNode().getWorldPosition());
         needUpdate = true;

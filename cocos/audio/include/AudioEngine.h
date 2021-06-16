@@ -62,7 +62,7 @@ public:
     unsigned int maxInstances{};
 
     /* Minimum delay in between sounds */
-    float minDelay{};
+    double minDelay{};
 
     /**
      * Default constructor

@@ -61,6 +61,7 @@ public:
 
     void initWithData(uint8_t *data);
     void updateWorldTransform();
+    void updateWorldRTMatrix();
 
     inline void setFlagsChanged(uint32_t value) { _nodeLayout->flagsChanged = value; }
     inline void setDirtyFlag(uint32_t value) { _nodeLayout->dirtyFlag = value; }
@@ -84,27 +85,12 @@ public:
     inline const Vec3 &getScale() const { return _nodeLayout->localScale; }
     inline const Quaternion &getRotation() const { return _nodeLayout->localRotation; }
     inline const NodeLayout *getNodeLayout() const { return _nodeLayout; };
-    inline const Mat4 &getWorldMatrix() {
-        updateWorldTransform();
-        return _nodeLayout->worldMatrix;
-    }
-    inline const Vec3 &getWorldPosition() {
-        updateWorldTransform();
-        return _nodeLayout->worldPosition;
-    }
-    inline const Quaternion &getWorldRotation() {
-        updateWorldTransform();
-        return _nodeLayout->worldRotation;
-    }
-    inline const Vec3 &getWorldScale() {
-        updateWorldTransform();
-        return _nodeLayout->worldScale;
-    }
-    inline const Mat4 &getWorldRT() {
-        updateWorldTransform();
-        Mat4::fromRT(_nodeLayout->worldRotation, _nodeLayout->worldPosition, &_rtMat);
-        return _rtMat;
-    };
+    inline const Mat4 &getWorldMatrix() const { return _nodeLayout->worldMatrix; }
+    inline const Vec3 &getWorldPosition() const { return _nodeLayout->worldPosition; }
+    inline const Quaternion &getWorldRotation() const { return _nodeLayout->worldRotation; }
+    inline const Vec3 &getWorldScale() const { return _nodeLayout->worldScale; }
+    inline const Mat4 &getWorldRTMatrix() const { return _rtMat; };
+    
 private:
     NodeLayout *_nodeLayout{nullptr};
     bool        _dirtyFlags{false};

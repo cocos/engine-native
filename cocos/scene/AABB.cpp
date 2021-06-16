@@ -30,23 +30,26 @@
 
 namespace cc {
 namespace scene {
-static Vec3 v3Tmp;
-static Vec3 v3Tmp2;
-static Vec3 v3Tmp3;
-static Vec3 v3Tmp4;
-static Mat3 m3Tmp;
-static void transformExtentM4(Vec3 *out, const Vec3& extent, const Mat4& m4) {
-    m3Tmp.m[0] = abs(m4.m[0]);
-    m3Tmp.m[1] = abs(m4.m[1]);
-    m3Tmp.m[2] = abs(m4.m[2]);
-    m3Tmp.m[3] = abs(m4.m[4]);
-    m3Tmp.m[4] = abs(m4.m[5]);
-    m3Tmp.m[5] = abs(m4.m[6]);
-    m3Tmp.m[6] = abs(m4.m[8]);
-    m3Tmp.m[7] = abs(m4.m[9]);
-    m3Tmp.m[8] = abs(m4.m[10]);
-    out->transformMat3(extent, m3Tmp);
-};
+namespace{
+    Vec3 v3Tmp;
+    Vec3 v3Tmp2;
+    Vec3 v3Tmp3;
+    Vec3 v3Tmp4;
+    Mat3 m3Tmp;
+
+    void transformExtentM4(Vec3 *out, const Vec3& extent, const Mat4& m4) {
+        m3Tmp.m[0] = abs(m4.m[0]);
+        m3Tmp.m[1] = abs(m4.m[1]);
+        m3Tmp.m[2] = abs(m4.m[2]);
+        m3Tmp.m[3] = abs(m4.m[4]);
+        m3Tmp.m[4] = abs(m4.m[5]);
+        m3Tmp.m[5] = abs(m4.m[6]);
+        m3Tmp.m[6] = abs(m4.m[8]);
+        m3Tmp.m[7] = abs(m4.m[9]);
+        m3Tmp.m[8] = abs(m4.m[10]);
+        out->transformMat3(extent, m3Tmp);
+    };
+}  // namespace
 bool AABB::aabbAabb(const AABB &aabb) const {
     Vec3 aMin;
     Vec3 aMax;
@@ -85,8 +88,8 @@ bool AABB::aabbFrustum(const Frustum &frustum) const {
 }
 
 void AABB::getBoundary(cc::Vec3 *minPos, cc::Vec3 *maxPos) const {
-    *minPos = center - halfExtents;
-    *maxPos = center + halfExtents;
+    Vec3::subtract(center, halfExtents, minPos);
+    Vec3::add(center, halfExtents, maxPos);
 }
 
 void AABB::merge(const AABB &aabb) {
@@ -112,7 +115,12 @@ void AABB::set(const cc::Vec3 &centerVal, const cc::Vec3 &halfExtentVal) {
 
 void AABB::transform(const Mat4& m, AABB *out) const {
     out->center.transformMat4(center, m);
-    transformExtentM4(&out->halfExtents, out->halfExtents, m);
+    transformExtentM4(&out->halfExtents, halfExtents, m);
+}
+
+void AABB::transform(const AABB& src, const Mat4& m, AABB* out) {
+    out->center.transformMat4(src.center, m);
+    transformExtentM4(&out->halfExtents, src.halfExtents, m);
 }
 
 void AABB::fromPoints(const Vec3& minPos, const Vec3& maxPos, AABB*  dst){

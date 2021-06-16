@@ -28,10 +28,12 @@
 
 namespace cc {
 namespace scene {
-Mat3       m31;
-Mat3       m43;
-Quaternion qt1;
-std::vector<Node *> arrayA;
+namespace {
+    Mat3       m31;
+    Mat3       m43;
+    Quaternion qt1;
+    std::vector<Node *> arrayA;
+}
 void Node::updateWorldTransform() {
     if(!getDirtyFlag()) {
         return;
@@ -92,6 +94,11 @@ void Node::updateWorldTransform() {
         curr = child;
     }
 
+}
+
+void Node::updateWorldRTMatrix() {
+    updateWorldTransform();
+    Mat4::fromRT(_nodeLayout->worldRotation, _nodeLayout->worldPosition, &_rtMat);
 }
 
 void Node::initWithData(uint8_t *data) {

@@ -68,7 +68,6 @@ public:
     inline void setEnabled(bool value) { _enabled = value; }
     inline void setInstmatWorldIdx(uint32_t idx) { _instmatWorldIdx = idx; }
     inline void setLocalBuffer(gfx::Buffer *buffer) { _localBuffer = buffer; }
-    inline void setLocalData(float *data) { _localData = data; }
     inline void setNode(Node *node) { _node = node; }
     inline void setReceiveShadow(bool value) { _receiveShadow = value; }
     inline void setTransform(Node *node) { _transform = node; }
@@ -104,7 +103,7 @@ public:
     inline const AABB *                       getWorldBounds() const { return _worldBounds; }
     inline ModelType                          getType() const { return _type; };
 protected:
-    ModelType _type = ModelType::DEFAULT;
+    ModelType _type {ModelType::DEFAULT};
     bool                        _transformUpdated{false};
     AABB *                      _worldBounds{nullptr};
     AABB                        _modelBounds;
@@ -113,7 +112,7 @@ private:
     bool                        _castShadow{false};
     bool                        _receiveShadow{false};
     
-    uint32_t                    _instmatWorldIdx{0};
+    int                    _instmatWorldIdx{0};
     uint32_t                    _visFlags;
     uint32_t                    _updateStamp{0};
     Node *                      _transform{nullptr};

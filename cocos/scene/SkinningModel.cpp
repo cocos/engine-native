@@ -27,31 +27,25 @@
 
 namespace cc {
 namespace scene {
-    static Vec3 v3Min;
-    static Vec3 v3Max;
-    static Mat4 worldMatrix;
-    static AABB ab1;
-    static Vec3 v31;
-    static Vec3 v32;
-    static Mat4 m41;
-    static std::vector<JointTransform> transStacks;
-    static std::array<float, pipeline::UBOSkinning::COUNT> dataArray;
-    static void uploadJointData(uint32_t base, const Mat4& mat, float* dst) {
-            dst[base + 0] = mat.m[0];
-            dst[base + 1] = mat.m[1];
-            dst[base + 2] = mat.m[2];
-            dst[base + 3] = mat.m[12];
-            dst[base + 4] = mat.m[4];
-            dst[base + 5] = mat.m[5];
-            dst[base + 6] = mat.m[6];
-            dst[base + 7] = mat.m[13];
-            dst[base + 8] = mat.m[8];
-            dst[base + 9] = mat.m[9];
-            dst[base + 10] = mat.m[10];
-            dst[base + 11] = mat.m[14];
+namespace {
+    Vec3                                            v3Min;
+    Vec3                                            v3Max;
+    Mat4                                            worldMatrix;
+    AABB                                            ab1;
+    Vec3                                            v31;
+    Vec3                                            v32;
+    Mat4                                            m41;
+    std::vector<JointTransform>                     transStacks;
+    std::array<float, pipeline::UBOSkinning::COUNT> dataArray;
+
+    void uploadJointData(uint32_t base, const Mat4& mat, float* dst) {
+        memcpy(reinterpret_cast<void*>(dst + base), mat.m, sizeof(float) * 12);
+        dst[base + 3] = mat.m[12];
+        dst[base + 7] = mat.m[13];
+        dst[base + 11] = mat.m[14];
     }
-    static void updateWorldMatrix(const JointInfo& info, uint32_t stamp) {
-        uint i = -1;
+    void updateWorldMatrix(const JointInfo& info, uint32_t stamp) {
+        int i = -1;
         worldMatrix.setIdentity();
         auto currTransform = info.transform;
         uint32_t parentSize    = info.parents.size();
@@ -74,11 +68,13 @@ namespace scene {
         while(i > -1) {
             currTransform = transStacks[i--];
             auto* node = currTransform.node;
+            node->updateWorldTransform();
             Mat4::fromRTS(node->getWorldRotation(), node->getWorldPosition(), node->getWorldScale(), &currTransform.local);
             Mat4::multiply(worldMatrix, currTransform.local, &currTransform.world);
+            worldMatrix.set(currTransform.world);
         }
     }
-
+}  // namespace
     void SkinningModel::updateUBOs(uint32_t stamp) {
         Model::updateUBOs(stamp);
         if(!_needUpdate) {
@@ -101,10 +97,6 @@ namespace scene {
     }
 
     void SkinningModel::updateTransform(uint32_t stamp) {
-        Model::updateTransform(stamp);
-        if(!_needUpdate) {
-            return;
-        }
         auto* root = getTransform();
         if (root->getFlagsChanged() || root->getDirtyFlag()) {
             root->updateWorldTransform();

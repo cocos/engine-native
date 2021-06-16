@@ -69,6 +69,7 @@ void PhysXCapsule::updateGeometry() {
     auto &geo  = getPxGeometry<physx::PxCapsuleGeometry>();
     float rs   = 1.F;
     float hs   = 1.F;
+    node.updateWorldTransform();
     switch (_mDirection) {
         case EAxisDirection::X_AXIS:
             hs         = physx::PxAbs(node.getWorldScale().x);

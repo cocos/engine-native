@@ -639,27 +639,6 @@ static bool js_scene_AABB_set(se::State& s) // NOLINT(readability-identifier-nam
 }
 SE_BIND_FUNC(js_scene_AABB_set)
 
-static bool js_scene_AABB_transform(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::AABB>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_AABB_transform : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 2) {
-        HolderType<cc::Mat4, true> arg0 = {};
-        HolderType<cc::scene::AABB*, false> arg1 = {};
-        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
-        SE_PRECONDITION2(ok, false, "js_scene_AABB_transform : Error processing arguments");
-        cobj->transform(arg0.value(), arg1.value());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
-    return false;
-}
-SE_BIND_FUNC(js_scene_AABB_transform)
-
 static bool js_scene_AABB_fromPoints(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     const auto& args = s.args();
@@ -835,7 +814,6 @@ bool js_register_scene_AABB(se::Object* obj) // NOLINT(readability-identifier-na
     cls->defineProperty("center", _SE(js_scene_AABB_get_center), _SE(js_scene_AABB_set_center));
     cls->defineProperty("halfExtents", _SE(js_scene_AABB_get_halfExtents), _SE(js_scene_AABB_set_halfExtents));
     cls->defineFunction("set", _SE(js_scene_AABB_set));
-    cls->defineFunction("transform", _SE(js_scene_AABB_transform));
     cls->defineStaticFunction("fromPoints", _SE(js_scene_AABB_fromPoints));
     cls->defineFinalizeFunction(_SE(js_cc_scene_AABB_finalize));
     cls->install();
