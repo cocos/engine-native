@@ -25,28 +25,39 @@
 
 #pragma once
 
-#include "base/CoreStd.h"
-#include "base/Macros.h"
-#include "cocos/bindings/jswrapper/Object.h"
+#include "cocos/base/Macros.h"
+#include "cocos/base/TypeDef.h"
 
 namespace cc {
-namespace pipeline {
 
-class CC_DLL DefineMap final : public Object {
+using DummyJobToken = size_t;
+
+class DummyJobGraph;
+
+class DummyJobSystem final {
+private:
+    static DummyJobSystem *instance;
+
 public:
-    DefineMap();
-    ~DefineMap() override;
+    static DummyJobSystem *getInstance() {
+        if (!instance) {
+            instance = new DummyJobSystem;
+        }
+        return instance;
+    }
 
-    CC_INLINE se::Object *getObject() const { return _jsbMacros; }
-    CC_INLINE void getValue(const String &name, se::Value *value) const { _jsbMacros->getProperty(name.c_str(), value); }
+    static void destroyInstance() {
+        delete instance;
+        instance = nullptr;
+    }
 
-    template <class T, class RET = void>
-    ENABLE_IF_T3_RET(float, bool, String)
-    setValue(const String &name, const T &value) { se::Value v(value); _jsbMacros->setProperty(name.c_str(), v); }
+    DummyJobSystem() noexcept = default;
+    explicit DummyJobSystem(uint /*threadCount*/) noexcept {}
+
+    CC_INLINE uint threadCount() const { return THREAD_COUNT; } //NOLINT
 
 private:
-    se::Object *_jsbMacros = nullptr;
+    static constexpr uint THREAD_COUNT = 1U; //always one
 };
 
-} // namespace pipeline
 } // namespace cc
