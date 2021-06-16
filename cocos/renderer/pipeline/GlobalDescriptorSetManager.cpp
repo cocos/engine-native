@@ -154,7 +154,7 @@ gfx::DescriptorSet *GlobalDSManager::getOrCreateDescriptorSet(uint idx) {
 
 void GlobalDSManager::destroy() {
     CC_SAFE_DESTROY(_descriptorSetLayout);
-    CC_SAFE_DESTROY(_sampler);
+    CC_SAFE_DESTROY(_globalDescriptorSet);
 }
 
 void GlobalDSManager::setDescriptorSetLayout() {
