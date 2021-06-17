@@ -1184,6 +1184,7 @@ if(CC_USE_VULKAN)
         set_source_files_properties(
             ${CWD}/cocos/renderer/gfx-vulkan/VKDevice.cpp
             PROPERTIES
+                # supress warning on Android
                 COMPILE_FLAGS -Wno-nullability-completeness
         )
     endif()
