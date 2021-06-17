@@ -43,6 +43,6 @@ jobs:
         mkdir build-win32/assets
         cd build-win32
         RES_DIR=$COCOS2DX_ROOT/templates/win32/build-win32
-        cmake ../ -G"Visual Studio Enterprise 2019" -DRES_DIR=$RES_DIR -DCOCOS_X_PATH=$COCOS2DX_ROOT
+        cmake ../ -G"Visual Studio 16 2019" -DRES_DIR=$RES_DIR -DCOCOS_X_PATH=$COCOS2DX_ROOT
         cmake --build . --config Release
         echo "Compile Win32 Release Done!"
