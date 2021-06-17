@@ -42,7 +42,7 @@ jobs:
         echo "set(USE_WEBSOCKET_SERVER ON)" >> build-win32/proj/cfg.cmake
         mkdir build-win32/assets
         cd build-win32
-        RES_DIR=$COCOS2DX_ROOT/templates/win32/build-win32
+        RES_DIR=$GITHUB_WORKSPACE/templates/win32/build-win32
         cmake ../ -G"Visual Studio 16 2019" -DRES_DIR=$RES_DIR -DCOCOS_X_PATH=$GITHUB_WORKSPACE
         cmake --build . --config Release
         echo "Compile Win32 Release Done!"
