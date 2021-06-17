@@ -178,7 +178,7 @@ void ForwardStage::render(scene::Camera *camera) {
     auto *renderPass = !colorTextures.empty() && colorTextures[0] ? framebuffer->getRenderPass() : pipeline->getOrCreateRenderPass(static_cast<gfx::ClearFlagBit>(camera->clearFlag));
 
     cmdBuff->beginRenderPass(renderPass, framebuffer, _renderArea, _clearColors, camera->clearDepth, camera->clearStencil);
-    cmdBuff->bindDescriptorSet(globalSet, _pipeline->getDescriptorSet());
+    cmdBuff->bindDescriptorSet(globalSet, _pipeline->getDescriptorSet(), {_pipeline->getPipelineUBO()->getCameraUBOOffset(camera)});
 
     _renderQueues[0]->recordCommandBuffer(_device, renderPass, cmdBuff);
     _instancedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);

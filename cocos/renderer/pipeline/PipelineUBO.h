@@ -52,10 +52,12 @@ public:
     void destroy();
     void updateGlobalUBO();
     void updateCameraUBO(const scene::Camera *camera);
+    void updateMultiCameraUBO(const vector<scene::Camera*> &cameras);
     void updateShadowUBO(const scene::Camera *camera);
     void updateShadowUBOLight(const scene::Light *light);
     void updateShadowUBORange(uint offset, const Mat4 *data);
     void destroyShadowFrameBuffers();
+    uint getCameraUBOOffset(scene::Camera *camera) const;
 
 private:
     RenderPipeline *_pipeline = nullptr;
@@ -67,6 +69,8 @@ private:
 
     std::vector<gfx::Buffer *> _ubos;
     void                       initCombineSignY();
+    std::vector<std::byte>     _cameraUBOs;
+    std::map<scene::Camera *, uint>_cameraUBOOffsetMap;
 };
 
 } // namespace pipeline
