@@ -20,7 +20,7 @@ jobs:
           git clone --branch $EXT_VERSION --depth 1 https://github.com/cocos-creator/engine-native-external external
     - name: Install deps
       run: |
-        choco install vulkan-sdk
+        choco install --forcex86 vulkan-sdk
         python -m pip install PyYAML Cheetah3
     - name: Generate bindings
       shell: bash
@@ -44,6 +44,6 @@ jobs:
         cd build-win32
         RES_DIR=${GITHUB_WORKSPACE//\\//}/templates/win32/build-win32
         COCOS_X_PATH=${GITHUB_WORKSPACE//\\//}
-        cmake ../ -G"Visual Studio 16 2019" -DRES_DIR=$RES_DIR -DCOCOS_X_PATH=$COCOS_X_PATH
+        cmake ../ -G"Visual Studio 16 2019" -DRES_DIR=$RES_DIR -DCOCOS_X_PATH=$COCOS_X_PATH -Awin32
         cmake --build . --config Release
         echo "Compile Win32 Release Done!"
