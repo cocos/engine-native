@@ -1,0 +1,44 @@
+name: gen simulator
+
+on: [push, pull_request]
+
+jobs:
+  compile_windows:
+    # windows 2019, Visual Studio Enterprise 2019
+    # windows 2016, Visual Studio Enterprise 2017
+    #runs-on: windows-latest
+    runs-on: windows-2019
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: download external libraries
+      run: |
+        node ./utils/download-deps.js
+    - name: install deps
+      run: |
+        choco install vulkan-sdk
+        python -m pip install PyYAML Cheetah3
+    - name: generate bindings
+      shell: bash
+      run: |
+        python -V
+        cd ./tools/tojs
+        echo "Create auto-generated jsbinding glue codes."
+        python ./genbindings.py
+        rm userconf.ini
+    - name: Compile win32
+      shell: bash
+      run: |
+        cd  templates/win32
+        mkdir -p build-win32/proj
+        touch build-win32/proj/cfg.cmake
+        echo "set(CC_USE_GLES3 ON)" >> build-win32/proj/cfg.cmake
+        echo "set(CC_USE_VULKAN ON)" >> build-win32/proj/cfg.cmake
+        echo "set(CC_USE_GLES2 ON)" >> build-win32/proj/cfg.cmake
+        echo "set(USE_WEBSOCKET_SERVER ON)" >> build-win32/proj/cfg.cmake
+        mkdir build-win32/assets
+        cd build-win32
+        RES_DIR=$COCOS2DX_ROOT/templates/win32/build-win32
+        cmake ../ -G"Visual Studio Enterprise 2019" -DRES_DIR=$RES_DIR -DCOCOS_X_PATH=$COCOS2DX_ROOT
+        cmake --build . --config Release
+        echo "Compile Win32 Release Done!"
