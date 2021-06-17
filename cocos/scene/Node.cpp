@@ -28,18 +28,16 @@
 
 namespace cc {
 namespace scene {
-namespace {
-    Mat3       m31;
-    Mat3       m43;
-    Quaternion qt1;
-    std::vector<Node *> arrayA;
-}
 void Node::updateWorldTransform() {
     if(!getDirtyFlag()) {
         return;
     }
     uint32_t i = 0;
     Node *   curr = this;
+    static Mat3                m31;
+    static Mat3                m43;
+    static Quaternion          qt1;
+    static std::vector<Node *> arrayA;
     arrayA.clear();
     while (curr && curr->getDirtyFlag())
     {

@@ -36,15 +36,15 @@ namespace cc {
 namespace scene {
 
 struct JointTransform {
-    Node *          node;
+    Node *          node{nullptr};
     Mat4            local;
     Mat4            world;
-    int            stamp;
+    int             stamp{-1};
 };
 
 struct JointInfo {
     AABB                       bound;
-    Node*                      target;
+    Node*                      target{nullptr};
     Mat4                       bindpose;
     JointTransform           transform;
     std::vector<JointTransform> parents;
@@ -61,9 +61,7 @@ public:
     SkinningModel &operator=(const SkinningModel &) = delete;
     SkinningModel &operator=(SkinningModel &&) = delete;
 
-    inline void setBuffers(std::vector<gfx::Buffer *> buffers) {
-        _buffers = std::move(buffers);
-    }
+    void        setBuffers(std::vector<gfx::Buffer *> buffers);
     inline void setBufferIndices(std::vector<uint32_t> bufferIndices) {
         _bufferIndices = std::move(bufferIndices);
     }
@@ -85,10 +83,14 @@ public:
 protected:
     ModelType _type{ ModelType::SKINNING };
 private:
+    static void uploadJointData(uint32_t base, const Mat4 &mat, float *dst);
+    void updateWorldMatrix(JointInfo *info, uint32_t stamp);
     bool _needUpdate{ false };
+    Mat4                   _worldMatrix;
     std::vector<uint32_t> _bufferIndices;
     std::vector<gfx::Buffer *> _buffers;
     std::vector<JointInfo>   _joints;
+    std::vector<float *>    _dataArray;
 };
 
 } // namespace scene

@@ -30,26 +30,6 @@
 
 namespace cc {
 namespace scene {
-namespace{
-    Vec3 v3Tmp;
-    Vec3 v3Tmp2;
-    Vec3 v3Tmp3;
-    Vec3 v3Tmp4;
-    Mat3 m3Tmp;
-
-    void transformExtentM4(Vec3 *out, const Vec3& extent, const Mat4& m4) {
-        m3Tmp.m[0] = abs(m4.m[0]);
-        m3Tmp.m[1] = abs(m4.m[1]);
-        m3Tmp.m[2] = abs(m4.m[2]);
-        m3Tmp.m[3] = abs(m4.m[4]);
-        m3Tmp.m[4] = abs(m4.m[5]);
-        m3Tmp.m[5] = abs(m4.m[6]);
-        m3Tmp.m[6] = abs(m4.m[8]);
-        m3Tmp.m[7] = abs(m4.m[9]);
-        m3Tmp.m[8] = abs(m4.m[10]);
-        out->transformMat3(extent, m3Tmp);
-    };
-}  // namespace
 bool AABB::aabbAabb(const AABB &aabb) const {
     Vec3 aMin;
     Vec3 aMax;
@@ -118,12 +98,23 @@ void AABB::transform(const Mat4& m, AABB *out) const {
     transformExtentM4(&out->halfExtents, halfExtents, m);
 }
 
-void AABB::transform(const AABB& src, const Mat4& m, AABB* out) {
-    out->center.transformMat4(src.center, m);
-    transformExtentM4(&out->halfExtents, src.halfExtents, m);
+void AABB::transformExtentM4(Vec3 *out, const Vec3 &extent, const Mat4 &m4) {
+    static Mat3 m3Tmp;
+    m3Tmp.m[0] = abs(m4.m[0]);
+    m3Tmp.m[1] = abs(m4.m[1]);
+    m3Tmp.m[2] = abs(m4.m[2]);
+    m3Tmp.m[3] = abs(m4.m[4]);
+    m3Tmp.m[4] = abs(m4.m[5]);
+    m3Tmp.m[5] = abs(m4.m[6]);
+    m3Tmp.m[6] = abs(m4.m[8]);
+    m3Tmp.m[7] = abs(m4.m[9]);
+    m3Tmp.m[8] = abs(m4.m[10]);
+    out->transformMat3(extent, m3Tmp);
 }
 
 void AABB::fromPoints(const Vec3& minPos, const Vec3& maxPos, AABB*  dst){
+    static Vec3 v3Tmp;
+    static Vec3 v3Tmp2;
     Vec3::add(maxPos, minPos, &v3Tmp);
     Vec3::subtract(maxPos, minPos, &v3Tmp2);
     dst->center.set(v3Tmp * 0.5);

@@ -33,7 +33,6 @@ void DirectionalLight::update() {
         _dir = _forward;
         _node->updateWorldTransform();
         _dir.transformQuat(_node->getWorldRotation());
-        setDirection(_dir ); 
     }
 }
 

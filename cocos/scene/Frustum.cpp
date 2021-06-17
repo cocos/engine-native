@@ -28,8 +28,8 @@
 
 namespace cc {
 namespace scene {
-namespace {
-    const std::vector<cc::Vec3> VEC_VAL{
+void Frustum::update(const Mat4 &m, const Mat4 &inv) {
+    static const std::vector<cc::Vec3> VEC_VAL{
         {1, 1, 1},
         {-1, 1, 1},
         {-1, -1, 1},
@@ -37,12 +37,9 @@ namespace {
         {1, 1, -1},
         {-1, 1, -1},
         {-1, -1, -1},
-        {1, -1, -1}
-    };
+        {1, -1, -1}};
 
-    ShapeEnums type{ShapeEnums::SHAPE_FRUSTUM};
-}  // namespace
-void Frustum::update(const Mat4 &m, const Mat4 &inv) {
+    static ShapeEnums type{ShapeEnums::SHAPE_FRUSTUM};
     // left plane
     planes[0].n.set(m.m[3] + m.m[0], m.m[7] + m.m[4], m.m[11] + m.m[8]);
     planes[0].d = -(m.m[15] + m.m[12]);

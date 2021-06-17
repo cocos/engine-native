@@ -30,7 +30,6 @@
 #include "math/Quaternion.h"
 #include "math/Mat3.h"
 #include <algorithm>
-using namespace cc;
 
 namespace cc {
 namespace scene {
@@ -39,6 +38,8 @@ struct AABB final {
     Vec3 center;
     Vec3 halfExtents{1, 1, 1};
 
+    static void fromPoints(const Vec3& minPos, const Vec3& maxPos, AABB* dst);
+    static void transformExtentM4(Vec3 *out, const Vec3 &extent, const Mat4 &m4);
     bool aabbAabb(const AABB &aabb) const;
     bool aabbFrustum(const Frustum &) const;
     int  aabbPlane(const Plane &) const;
@@ -46,8 +47,6 @@ struct AABB final {
     void merge(const AABB &aabb);
     void set(const cc::Vec3 &centerVal, const cc::Vec3 &halfExtentVal);
     void transform(const Mat4& m, AABB *out) const;
-    static void transform(const AABB& src, const Mat4& mat, AABB* out);
-    static void fromPoints(const Vec3& minPos, const Vec3& maxPos, AABB* dst);
 };
 
 } // namespace scene

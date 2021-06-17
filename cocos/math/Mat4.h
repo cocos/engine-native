@@ -888,6 +888,10 @@ public:
     Mat4 getTransposed() const;
 
     /**
+    * Calculates the inverse transpose of a matrix and save the results to out matrix
+    */
+    static void inverseTranspose(const Mat4& mat, Mat4 *dst);
+    /**
      * Calculates the sum of this matrix with the given matrix.
      *
      * Note: this does not modify this matrix.

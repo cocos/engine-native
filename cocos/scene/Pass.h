@@ -59,6 +59,7 @@ public:
     inline void setStage(RenderPassStage stage) { _stage = stage; }
     inline void setRootBuffer(gfx::Buffer *buffer) { _rootBuffer = buffer; };
     inline void setRootBlock(uint8_t *buffer) { _rootBlock = buffer; }
+    inline void setRootBufferDirty(bool val) { _rootBufferDirty = val; }
     
     inline BatchingSchemes          getBatchingScheme() const { return _batchingScheme; }
     inline gfx::BlendState *        getBlendState() const { return _blendState; }
@@ -89,8 +90,7 @@ private:
     gfx::DescriptorSet *     _descriptorSet{nullptr};
     gfx::PipelineLayout *    _pipelineLayout{nullptr};
     gfx::Buffer *            _rootBuffer{nullptr};
-    uint8_t *                  _rootBlock{nullptr};
-    // TODO(minggo): rootBlock
+    uint8_t *                 _rootBlock{nullptr};
 };
 
 } // namespace scene

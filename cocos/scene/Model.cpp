@@ -28,18 +28,18 @@
 
 namespace cc {
 namespace scene {
-namespace {
-    Mat4 m41;
-    std::array<float, pipeline::UBOLocal::COUNT> bufferView;
-}
 Model::~Model() {
     delete _worldBounds;
 }
 
 void Model::uploadMat4AsVec4x3(const Mat4 &mat, uint8_t *v1, uint8_t *v2, uint8_t *v3) {
-    v1[0] = mat.m[0]; v1[1] = mat.m[1]; v1[2] = mat.m[2]; v1[3] = mat.m[12];
-    v2[0] = mat.m[4]; v2[1] = mat.m[5]; v2[2] = mat.m[6]; v2[3] = mat.m[13];
-    v3[0] = mat.m[8]; v3[1] = mat.m[9]; v3[2] = mat.m[10]; v3[3] = mat.m[14];
+    uint    size   = sizeof(uint8_t) * 4;
+    memcpy(v1, mat.m, size);
+    v1[3] = mat.m[12];
+    memcpy(v2, mat.m + 4, size);
+    v2[3] = mat.m[13];
+    memcpy(v3, mat.m + 8, size);
+    v3[3] = mat.m[14];
 }
 
 void Model::updateTransform(uint32_t  /*stamp*/) {
@@ -65,16 +65,15 @@ void Model::updateUBOs(uint32_t  stamp) {
     getTransform()->updateWorldTransform();
     const auto& worldMatrix  = getTransform()->getWorldMatrix();
     int  idx          = _instmatWorldIdx;
+    static Mat4 m41;
+    static std::array<float, pipeline::UBOLocal::COUNT> bufferView;
     if (idx >= 0) {
-        std::vector<uint8_t *> attrs = _instanceAttributeBlock->views;
+        std::vector<uint8_t *> &attrs = _instanceAttributeBlock->views;
         uploadMat4AsVec4x3(worldMatrix, attrs[idx], attrs[idx + 1], attrs[idx + 2]);
     } else if (_localBuffer) {
         memcpy(bufferView.data() + pipeline::UBOLocal::MAT_WORLD_OFFSET, worldMatrix.m, sizeof(Mat4));
-        m41 = worldMatrix.getInversed();
-        float det = m41.determinant();
-        float factor = 1 / sqrt(det);
-        m41.scale(factor);
-        memcpy(bufferView.data() + pipeline::UBOLocal::MAT_WORLD_IT_OFFSET, worldMatrix.m, sizeof(Mat4));
+        Mat4::inverseTranspose(worldMatrix, &m41);
+        memcpy(bufferView.data() + pipeline::UBOLocal::MAT_WORLD_IT_OFFSET, m41.m, sizeof(Mat4));
         _localBuffer->update(bufferView.data(), pipeline::UBOLocal::SIZE);
     }
 }

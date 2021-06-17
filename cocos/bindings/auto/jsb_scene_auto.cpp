@@ -1347,25 +1347,6 @@ static bool js_scene_Model_getInstmatWorldIdx(se::State& s) // NOLINT(readabilit
 }
 SE_BIND_FUNC(js_scene_Model_getInstmatWorldIdx)
 
-static bool js_scene_Model_getLocalBuffer(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_Model_getLocalBuffer : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        cc::gfx::Buffer* result = cobj->getLocalBuffer();
-        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-        SE_PRECONDITION2(ok, false, "js_scene_Model_getLocalBuffer : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_scene_Model_getLocalBuffer)
-
 static bool js_scene_Model_getLocalData(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
@@ -1802,7 +1783,6 @@ bool js_register_scene_Model(se::Object* obj) // NOLINT(readability-identifier-n
     cls->defineFunction("getInstancedAttributeBlock", _SE(js_scene_Model_getInstancedAttributeBlock));
     cls->defineFunction("getInstancedBuffer", _SE(js_scene_Model_getInstancedBuffer));
     cls->defineFunction("getInstmatWorldIdx", _SE(js_scene_Model_getInstmatWorldIdx));
-    cls->defineFunction("getLocalBuffer", _SE(js_scene_Model_getLocalBuffer));
     cls->defineFunction("getLocalData", _SE(js_scene_Model_getLocalData));
     cls->defineFunction("getModelBounds", _SE(js_scene_Model_getModelBounds));
     cls->defineFunction("getNode", _SE(js_scene_Model_getNode));
@@ -5014,6 +4994,25 @@ static bool js_scene_Pass_setRootBuffer(se::State& s) // NOLINT(readability-iden
 }
 SE_BIND_FUNC(js_scene_Pass_setRootBuffer)
 
+static bool js_scene_Pass_setRootBufferDirty(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::Pass>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_Pass_setRootBufferDirty : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<bool, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_scene_Pass_setRootBufferDirty : Error processing arguments");
+        cobj->setRootBufferDirty(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_scene_Pass_setRootBufferDirty)
+
 static bool js_scene_Pass_setStage(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::Pass>(s);
@@ -5102,6 +5101,7 @@ bool js_register_scene_Pass(se::Object* obj) // NOLINT(readability-identifier-na
     cls->defineFunction("setPriority", _SE(js_scene_Pass_setPriority));
     cls->defineFunction("setRasterizerState", _SE(js_scene_Pass_setRasterizerState));
     cls->defineFunction("setRootBuffer", _SE(js_scene_Pass_setRootBuffer));
+    cls->defineFunction("setRootBufferDirty", _SE(js_scene_Pass_setRootBufferDirty));
     cls->defineFunction("setStage", _SE(js_scene_Pass_setStage));
     cls->defineFunction("update", _SE(js_scene_Pass_update));
     cls->defineFinalizeFunction(_SE(js_cc_scene_Pass_finalize));

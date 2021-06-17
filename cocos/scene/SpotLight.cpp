@@ -27,14 +27,12 @@
 
 namespace cc {
 namespace scene {
-namespace {
-    Mat4 matView;
-    Mat4 matProj;
-    Mat4 matViewProj;
-    Mat4 matViewProjInv;
-}
 void SpotLight::update() {
     if(_node && (_node->getFlagsChanged() || _needUpdate)) {
+        static Mat4 matView;
+        static Mat4 matProj;
+        static Mat4 matViewProj;
+        static Mat4 matViewProjInv;
         _node->updateWorldRTMatrix();
         _pos = _node->getWorldPosition();
         _dir = _forward;
@@ -53,6 +51,5 @@ void SpotLight::update() {
         _needUpdate = false;
     }
 }
-
 } // namespace scene
 } // namespace cc
