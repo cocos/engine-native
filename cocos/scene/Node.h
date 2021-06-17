@@ -34,7 +34,6 @@ namespace cc {
 namespace scene {
 
 // This struct defines the memory layout shared between JS and C++.
-// TODO(minggo) add more data.
 struct NodeLayout {
     uint32_t       flagsChanged{0};
     uint32_t       layer{0};

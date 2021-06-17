@@ -31,5 +31,9 @@ namespace scene {
 void Pass::update() {
 }
 
+void Pass::initWithData(uint8_t *data) {
+    _passLayout = reinterpret_cast<PassLayout *>(data);
+}
+
 } // namespace scene
 } // namespace cc

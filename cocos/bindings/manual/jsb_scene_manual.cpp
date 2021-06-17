@@ -59,16 +59,16 @@ SE_BIND_FUNC(js_scene_Model_setInstancedBuffer)
 
 static bool js_scene_Node_initWithData(se::State& s) // constructor_overloaded.c
 {
-    auto* cobj = static_cast<cc::scene::Node*>(s.nativeThisObject());
+    auto*          cobj = static_cast<cc::scene::Node*>(s.nativeThisObject());
     CC_UNUSED bool ok   = true;
     const auto&    args = s.args();
     size_t         argc = args.size();
     do {
         if (argc == 1) {
             SE_PRECONDITION2(args[0].isObject() && args[0].toObject()->isTypedArray(), false, "js_scene_Node_initWithData: expected Typed Array!");
-            
+
             uint8_t* data{nullptr};
-            size_t dataBytes = 0;
+            size_t   dataBytes = 0;
             args[0].toObject()->getTypedArrayData(&data, &dataBytes);
             cobj->initWithData(data);
             return true;
@@ -79,7 +79,29 @@ static bool js_scene_Node_initWithData(se::State& s) // constructor_overloaded.c
 }
 SE_BIND_FUNC(js_scene_Node_initWithData)
 
-static bool js_scene_SubModel_setRenderingSubMesh(se::State &s) {
+static bool js_scene_Pass_initWithData(se::State& s) // constructor_overloaded.c
+{
+    auto*          cobj = static_cast<cc::scene::Pass*>(s.nativeThisObject());
+    CC_UNUSED bool ok   = true;
+    const auto&    args = s.args();
+    size_t         argc = args.size();
+    do {
+        if (argc == 1) {
+            SE_PRECONDITION2(args[0].isObject() && args[0].toObject()->isTypedArray(), false, "js_scene_Pass_initWithData: expected Typed Array!");
+
+            uint8_t* data{nullptr};
+            size_t   dataBytes = 0;
+            args[0].toObject()->getTypedArrayData(&data, &dataBytes);
+            cobj->initWithData(data);
+            return true;
+        }
+    } while (false);
+    SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
+    return false;
+}
+SE_BIND_FUNC(js_scene_Pass_initWithData)
+
+static bool js_scene_SubModel_setRenderingSubMesh(se::State& s) {
     auto* cobj = static_cast<cc::scene::SubModel*>(s.nativeThisObject());
     SE_PRECONDITION2(cobj, false, "js_scene_SubModel_setRenderingSubMesh : Invalid Native Object");
     const auto& args = s.args();
@@ -100,12 +122,12 @@ static bool js_scene_SubModel_setRenderingSubMesh(se::State &s) {
                 if (dataObj->getArrayElement(i, &value)) {
                     if (value.isObject()) {
                         cc::scene::FlatBuffer currBuffer;
-                        se::Value bufferVal;
+                        se::Value             bufferVal;
                         se::Object*           valObj = value.toObject();
                         valObj->getProperty("buffer", &bufferVal);
                         // data
                         CC_UNUSED size_t bufferLength = 0;
-                        uint8_t*         address    = nullptr;
+                        uint8_t*         address      = nullptr;
                         bufferVal.toObject()->getTypedArrayData(&address, &bufferLength);
                         currBuffer.data = address;
                         currBuffer.size = bufferLength;
@@ -133,7 +155,7 @@ static bool js_scene_SubModel_setRenderingSubMesh(se::State &s) {
 }
 SE_BIND_FUNC(js_scene_SubModel_setRenderingSubMesh)
 
-bool register_all_scene_manual(se::Object *obj) {
+bool register_all_scene_manual(se::Object* obj) {
     // Get the ns
     se::Value nsVal;
     if (!obj->getProperty("ns", &nsVal)) {
@@ -145,6 +167,7 @@ bool register_all_scene_manual(se::Object *obj) {
 
     __jsb_cc_scene_Model_proto->defineFunction("setInstancedBuffer", _SE(js_scene_Model_setInstancedBuffer));
     __jsb_cc_scene_Node_proto->defineFunction("initWithData", _SE(js_scene_Node_initWithData));
+    __jsb_cc_scene_Pass_proto->defineFunction("initWithData", _SE(js_scene_Pass_initWithData));
 
     __jsb_cc_scene_SubModel_proto->defineFunction("setRenderingSubMesh", _SE(js_scene_SubModel_setRenderingSubMesh));
     return true;
