@@ -33,7 +33,7 @@ jobs:
     - name: Compile win32
       shell: bash
       run: |
-        cd  templates/win32
+        cd $GITHUB_WORKSPACE/templates/win32
         mkdir -p build-win32/proj
         touch build-win32/proj/cfg.cmake
         echo "set(CC_USE_GLES3 ON)" >> build-win32/proj/cfg.cmake
@@ -46,5 +46,3 @@ jobs:
         cmake ../ -G"Visual Studio 16 2019" -DRES_DIR=$RES_DIR -DCOCOS_X_PATH=$GITHUB_WORKSPACE
         cmake --build . --config Release
         echo "Compile Win32 Release Done!"
-      env:
-        COCOS_X_PATH: "${{env.working-directory}}"
