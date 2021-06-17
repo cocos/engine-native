@@ -12,11 +12,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: download external libraries
+      shell: bash
       run: |
           EXT_VERSION=`grep version external/config.json  |awk -F'"' '{print $4}'`
           rm external/config.json
           git clone --branch $EXT_VERSION --depth 1 https://github.com/cocos-creator/engine-native-external external
     - name: install deps
+      shell: bash
       run: |
         choco install vulkan-sdk
         python -m pip install PyYAML Cheetah3
