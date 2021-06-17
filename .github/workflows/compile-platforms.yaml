@@ -1,4 +1,4 @@
-name: gen simulator
+name: Compile
 
 on: [push, pull_request]
 
