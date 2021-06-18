@@ -387,7 +387,7 @@ void PipelineUBO::updateMultiCameraUBO(const vector<scene::Camera *> &cameras) {
     auto uboAlignment = device->getCapabilities().uboOffsetAlignment;
     auto        uboSize      = static_cast<size_t>(std::ceil(UBOCamera::SIZE / static_cast<float>(uboAlignment))) * uboAlignment;
     auto        cameraCount  = cameras.size();
-    auto        totalUboSize = uboSize * cameraCount;
+    auto        totalUboSize = static_cast<uint>(uboSize * cameraCount);
 
     _cameraUBOs.resize(totalUboSize);
     resetCameraUBOOffset(uboSize);
