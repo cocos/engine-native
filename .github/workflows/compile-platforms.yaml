@@ -54,7 +54,7 @@ jobs:
     container:
       image: plutoo/cocos-cli:latest
       volumes:
-        - "{{github.workspace}}:/data"
+        - "${{github.workspace}}:/data"
     steps:
       - uses: actions/checkout@v2
       - name: Download external libraries
