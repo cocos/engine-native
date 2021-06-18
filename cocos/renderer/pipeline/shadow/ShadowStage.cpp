@@ -81,7 +81,7 @@ void ShadowStage::render(scene::Camera *camera) {
     cmdBuffer->beginRenderPass(renderPass, _framebuffer, _renderArea,
                                _clearColors, camera->clearDepth, camera->clearStencil);
 
-    uint const globalOffsets[] = {_pipeline->getPipelineUBO()->getNextCameraUBOOffset()};
+    uint const globalOffsets[] = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
     cmdBuffer->bindDescriptorSet(globalSet, _pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
     _additiveShadowQueue->recordCommandBuffer(_device, renderPass, cmdBuffer);
 

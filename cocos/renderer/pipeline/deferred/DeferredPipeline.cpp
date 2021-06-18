@@ -135,6 +135,7 @@ void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
         for (auto *const flow : _flows) {
             flow->render(camera);
         }
+        _pipelineUBO->incCameraUBOOffset();
     }
     _commandBuffers[0]->end();
     _device->flushCommands(_commandBuffers);

@@ -58,7 +58,8 @@ public:
     void updateShadowUBORange(uint offset, const Mat4 *data);
     void destroyShadowFrameBuffers();
 
-    uint getNextCameraUBOOffset();
+    uint getCurrentCameraUBOOffset() const;
+    void incCameraUBOOffset();
 
 private:
     RenderPipeline *_pipeline = nullptr;
@@ -71,7 +72,7 @@ private:
     std::vector<gfx::Buffer *> _ubos;
     void                       initCombineSignY();
     std::vector<std::byte>     _cameraUBOs;
-    uint                       _nextCameraIndex{0};
+    uint                       _currentCameraUBOOffset{0};
     uint                       _alignedCameraUBOSize{0};
 };
 

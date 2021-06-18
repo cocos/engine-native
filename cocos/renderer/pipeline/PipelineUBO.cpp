@@ -390,7 +390,7 @@ void PipelineUBO::updateMultiCameraUBO(const vector<scene::Camera *> &cameras) {
     auto        totalUboSize = static_cast<uint>(_alignedCameraUBOSize * cameraCount);
 
     _cameraUBOs.resize(totalUboSize);
-    _nextCameraIndex      = 0;
+    _currentCameraUBOOffset = 0;
     for (uint cameraIdx = 0; cameraIdx < cameraCount; ++cameraIdx) {
         auto *camera = cameras[cameraIdx];
         PipelineUBO::updateCameraUBOView(_pipeline, &_cameraUBO, camera);
@@ -441,8 +441,12 @@ void PipelineUBO::updateShadowUBORange(uint offset, const Mat4 *data) {
     memcpy(_shadowUBO.data() + offset, data->m, sizeof(*data));
 }
 
-uint PipelineUBO::getNextCameraUBOOffset() {
-    return _alignedCameraUBOSize * _nextCameraIndex++;
+uint PipelineUBO::getCurrentCameraUBOOffset() const {
+    return _currentCameraUBOOffset;
+}
+
+void PipelineUBO::incCameraUBOOffset() {
+    _currentCameraUBOOffset += _alignedCameraUBOSize;
 }
 
 } // namespace pipeline
