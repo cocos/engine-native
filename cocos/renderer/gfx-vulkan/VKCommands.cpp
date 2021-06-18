@@ -239,17 +239,18 @@ void cmdFuncCCVKCreateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer) {
 }
 
 void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRenderPass) {
-    static vector<VkAttachmentDescription> attachmentDescriptions;
-    static vector<VkSubpassDescription>    subpassDescriptions;
-    static vector<VkAttachmentReference>   attachmentReferences;
-    static vector<VkSubpassDependency>     subpassDependencies;
-    static vector<ThsvsAccessType>         accessTypeCaches;
-    static vector<CCVKAccessInfo>          beginAccessInfos;
-    static vector<CCVKAccessInfo>          endAccessInfos;
+    static vector<VkSubpassDescriptionDepthStencilResolve> depthStencilResolves;
+    static vector<VkAttachmentDescription2>                attachmentDescriptions;
+    static vector<VkAttachmentReference2>                  attachmentReferences;
+    static vector<VkSubpassDescription2>                   subpassDescriptions;
+    static vector<VkSubpassDependency2>                    subpassDependencies;
+    static vector<ThsvsAccessType>                         accessTypeCaches;
+    static vector<CCVKAccessInfo>                          beginAccessInfos;
+    static vector<CCVKAccessInfo>                          endAccessInfos;
 
     const size_t colorAttachmentCount = gpuRenderPass->colorAttachments.size();
     const size_t hasDepth             = gpuRenderPass->depthStencilAttachment.format != Format::UNKNOWN ? 1 : 0;
-    attachmentDescriptions.resize(colorAttachmentCount + hasDepth);
+    attachmentDescriptions.assign(colorAttachmentCount + hasDepth, {VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2});
     gpuRenderPass->clearValues.resize(colorAttachmentCount + hasDepth);
     gpuRenderPass->beginAccesses.resize(colorAttachmentCount + hasDepth);
     gpuRenderPass->endAccesses.resize(colorAttachmentCount + hasDepth);
@@ -311,36 +312,69 @@ void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
 
     size_t subpassCount = gpuRenderPass->subpasses.size();
     attachmentReferences.clear();
+    gpuRenderPass->sampleCounts.clear();
 
     for (const auto &subpassInfo : gpuRenderPass->subpasses) {
+        VkSampleCountFlagBits sampleCount = VK_SAMPLE_COUNT_1_BIT;
+
         for (uint input : subpassInfo.inputs) {
             VkImageLayout layout = gpuRenderPass->colorAttachments[input].isGeneralLayout ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            attachmentReferences.push_back({input, layout});
+            attachmentReferences.push_back({VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2, nullptr, input, layout, VK_IMAGE_ASPECT_COLOR_BIT});
         }
         for (uint color : subpassInfo.colors) {
-            VkImageLayout layout = gpuRenderPass->colorAttachments[color].isGeneralLayout ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-            attachmentReferences.push_back({color, layout});
+            const ColorAttachment &desc   = gpuRenderPass->colorAttachments[color];
+            VkImageLayout          layout = desc.isGeneralLayout ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+            attachmentReferences.push_back({VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2, nullptr, color, layout, VK_IMAGE_ASPECT_COLOR_BIT});
+            sampleCount = std::max(sampleCount, mapVkSampleCount(desc.sampleCount));
         }
         for (uint resolve : subpassInfo.resolves) {
             VkImageLayout layout = gpuRenderPass->colorAttachments[resolve].isGeneralLayout ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-            attachmentReferences.push_back({resolve, layout});
+            attachmentReferences.push_back({VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2, nullptr, resolve, layout, VK_IMAGE_ASPECT_COLOR_BIT});
         }
 
-        bool isGeneralLayout = subpassInfo.depthStencil >= gpuRenderPass->colorAttachments.size()
-                                   ? gpuRenderPass->depthStencilAttachment.isGeneralLayout
-                                   : gpuRenderPass->colorAttachments[subpassInfo.depthStencil].isGeneralLayout;
+        bool   isGeneralLayout{false};
+        Format dsFormat{Format::UNKNOWN};
+        if (subpassInfo.depthStencil != INVALID_BINDING) {
+            if (subpassInfo.depthStencil >= gpuRenderPass->colorAttachments.size()) {
+                const DepthStencilAttachment &desc = gpuRenderPass->depthStencilAttachment;
+                isGeneralLayout                    = desc.isGeneralLayout;
+                dsFormat                           = desc.format;
+                sampleCount                        = std::max(sampleCount, mapVkSampleCount(desc.sampleCount));
+            } else {
+                const ColorAttachment &desc = gpuRenderPass->colorAttachments[subpassInfo.depthStencil];
+                isGeneralLayout             = desc.isGeneralLayout;
+                dsFormat                    = desc.format;
+                sampleCount                 = std::max(sampleCount, mapVkSampleCount(desc.sampleCount));
+            }
 
-        VkImageLayout layout = isGeneralLayout ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-        attachmentReferences.push_back({subpassInfo.depthStencil, layout});
+            VkImageAspectFlags aspect = GFX_FORMAT_INFOS[static_cast<uint>(dsFormat)].hasStencil
+                                            ? VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT
+                                            : VK_IMAGE_ASPECT_DEPTH_BIT;
+            VkImageLayout      layout = isGeneralLayout ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+            attachmentReferences.push_back({VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2, nullptr, subpassInfo.depthStencil, layout, aspect});
+            gpuRenderPass->sampleCounts.push_back(sampleCount);
+        }
+
+        if (subpassInfo.depthStencilResolve != INVALID_BINDING) {
+            const ColorAttachment &desc = gpuRenderPass->colorAttachments[subpassInfo.depthStencilResolve];
+
+            VkImageAspectFlags aspect = GFX_FORMAT_INFOS[static_cast<uint>(desc.format)].hasStencil
+                                            ? VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT
+                                            : VK_IMAGE_ASPECT_DEPTH_BIT;
+            VkImageLayout      layout = desc.isGeneralLayout ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+            attachmentReferences.push_back({VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2, nullptr, subpassInfo.depthStencilResolve, layout, aspect});
+        }
     }
 
     uint offset{0U};
-    subpassDescriptions.assign(subpassCount, {}); // init to zeros first
+    subpassDescriptions.assign(subpassCount, {VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2}); // init to zeros first
+    depthStencilResolves.resize(subpassCount, {VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE});
+    const VkPhysicalDeviceDepthStencilResolveProperties &prop{device->gpuContext()->physicalDeviceDepthStencilResolveProperties};
     for (uint i = 0U; i < gpuRenderPass->subpasses.size(); ++i) {
         const SubpassInfo subpassInfo = gpuRenderPass->subpasses[i];
 
-        VkSubpassDescription &desc = subpassDescriptions[i];
-        desc.pipelineBindPoint     = VK_PIPELINE_BIND_POINT_GRAPHICS;
+        VkSubpassDescription2 &desc = subpassDescriptions[i];
+        desc.pipelineBindPoint      = VK_PIPELINE_BIND_POINT_GRAPHICS;
 
         if (!subpassInfo.inputs.empty()) {
             desc.inputAttachmentCount = subpassInfo.inputs.size();
@@ -368,6 +402,28 @@ void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
         } else {
             desc.pDepthStencilAttachment = nullptr;
         }
+
+        if (subpassInfo.depthStencilResolve != INVALID_BINDING) {
+            VkSubpassDescriptionDepthStencilResolve &resolveDesc{depthStencilResolves[i]};
+
+            VkResolveModeFlagBits depthResolveMode   = VK_RESOLVE_MODES[static_cast<uint>(subpassInfo.depthResolveMode)];
+            VkResolveModeFlagBits stencilResolveMode = VK_RESOLVE_MODES[static_cast<uint>(subpassInfo.stencilResolveMode)];
+
+            if ((depthResolveMode & prop.supportedDepthResolveModes) == 0) depthResolveMode = VK_RESOLVE_MODE_SAMPLE_ZERO_BIT;
+            if ((stencilResolveMode & prop.supportedStencilResolveModes) == 0) stencilResolveMode = VK_RESOLVE_MODE_SAMPLE_ZERO_BIT;
+
+            if (!prop.independentResolveNone && stencilResolveMode != depthResolveMode) {
+                stencilResolveMode = depthResolveMode;
+            } else if (prop.independentResolveNone && !prop.independentResolve && stencilResolveMode &&
+                       depthResolveMode && stencilResolveMode != depthResolveMode) {
+                stencilResolveMode = VK_RESOLVE_MODE_NONE;
+            }
+
+            resolveDesc.depthResolveMode               = depthResolveMode;
+            resolveDesc.stencilResolveMode             = stencilResolveMode;
+            resolveDesc.pDepthStencilResolveAttachment = attachmentReferences.data() + offset++;
+            desc.pNext                                 = &resolveDesc;
+        }
     }
 
     size_t dependencyCount = gpuRenderPass->dependencies.size();
@@ -389,11 +445,12 @@ void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
         bool          hasWriteAccess{false};
 
         for (uint i = 0U; i < dependencyCount; ++i) {
-            const SubpassDependency &dependency   = gpuRenderPass->dependencies[i];
-            VkSubpassDependency &    vkDependency = subpassDependencies.emplace_back();
-            vkDependency.srcSubpass               = dependency.srcSubpass;
-            vkDependency.dstSubpass               = dependency.dstSubpass;
-            vkDependency.dependencyFlags          = VK_DEPENDENCY_BY_REGION_BIT;
+            const SubpassDependency &dependency = gpuRenderPass->dependencies[i];
+            subpassDependencies.push_back({VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2});
+            VkSubpassDependency2 &vkDependency = subpassDependencies.back();
+            vkDependency.srcSubpass            = dependency.srcSubpass;
+            vkDependency.dstSubpass            = dependency.dstSubpass;
+            vkDependency.dependencyFlags       = VK_DEPENDENCY_BY_REGION_BIT;
 
             thsvsGetAccessInfo(
                 dependency.srcAccesses.size(),
@@ -417,11 +474,14 @@ void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
         // explicitly declare external dependencies if not specified
 
         // wait for resources to become available by the specified access types
-        VkSubpassDependency beginDependency{VK_SUBPASS_EXTERNAL, 0, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT};
-        auto                beginDependencyCheck = [&beginDependency](const VkAttachmentReference &ref, VkPipelineStageFlags dstStage,
+        VkSubpassDependency2 beginDependency{VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2, nullptr,
+                                             VK_SUBPASS_EXTERNAL, 0,
+                                             VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT};
+
+        auto beginDependencyCheck = [&beginDependency](const VkAttachmentReference2 &ref, VkPipelineStageFlags dstStage,
                                                        VkPipelineStageFlags dstAccessRead, VkAccessFlags dstAccessWrite) {
-            const VkAttachmentDescription &desc = attachmentDescriptions[ref.attachment];
-            const CCVKAccessInfo &         info = beginAccessInfos[ref.attachment];
+            const VkAttachmentDescription2 &desc = attachmentDescriptions[ref.attachment];
+            const CCVKAccessInfo &          info = beginAccessInfos[ref.attachment];
             if (desc.loadOp == VK_ATTACHMENT_LOAD_OP_DONT_CARE) return;
             if (desc.initialLayout != ref.layout || info.hasWriteAccess || desc.loadOp == VK_ATTACHMENT_LOAD_OP_CLEAR) {
                 beginDependency.srcStageMask |= info.stageMask;
@@ -432,7 +492,7 @@ void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
                 }
             }
         };
-        VkSubpassDescription &firstSubpass = subpassDescriptions[0];
+        VkSubpassDescription2 &firstSubpass = subpassDescriptions[0];
         for (size_t j = 0U; j < firstSubpass.colorAttachmentCount; ++j) {
             beginDependencyCheck(firstSubpass.pColorAttachments[j], VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
                                  VK_ACCESS_COLOR_ATTACHMENT_READ_BIT, VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT);
@@ -441,14 +501,21 @@ void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
             beginDependencyCheck(*firstSubpass.pDepthStencilAttachment, VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
                                  VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT, VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT);
         }
+        if (gpuRenderPass->subpasses[0].depthStencilResolve != INVALID_BINDING) {
+            beginDependencyCheck(*depthStencilResolves[0].pDepthStencilResolveAttachment, VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+                                 VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT, VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT);
+        }
         if (beginDependency.srcStageMask != VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT) {
             subpassDependencies.push_back(beginDependency);
         }
 
         // make rendering result visible for the specified access types
-        VkSubpassDependency endDependency{static_cast<uint>(subpassCount) - 1, VK_SUBPASS_EXTERNAL, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT};
-        auto                endDependencyCheck = [&endDependency](const VkAttachmentReference &ref, VkPipelineStageFlags srcStage, VkAccessFlags srcAccess) {
-            const VkAttachmentDescription &desc = attachmentDescriptions[ref.attachment];
+        VkSubpassDependency2 endDependency{VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2, nullptr,
+                                           static_cast<uint>(subpassCount) - 1, VK_SUBPASS_EXTERNAL,
+                                           VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT};
+
+        auto endDependencyCheck = [&endDependency](const VkAttachmentReference2 &ref, VkPipelineStageFlags srcStage, VkAccessFlags srcAccess) {
+            const VkAttachmentDescription2 &desc = attachmentDescriptions[ref.attachment];
             if (desc.storeOp == VK_ATTACHMENT_STORE_OP_STORE) {
                 const CCVKAccessInfo &info = endAccessInfos[ref.attachment];
                 endDependency.srcStageMask |= srcStage;
@@ -457,19 +524,22 @@ void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
                 endDependency.dstAccessMask |= info.accessMask;
             }
         };
-        VkSubpassDescription &lastSubpass = subpassDescriptions[subpassCount - 1];
+        VkSubpassDescription2 &lastSubpass = subpassDescriptions[subpassCount - 1];
         for (size_t j = 0U; j < lastSubpass.colorAttachmentCount; ++j) {
             endDependencyCheck(lastSubpass.pColorAttachments[j], VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT);
         }
         if (lastSubpass.pDepthStencilAttachment) {
             endDependencyCheck(*lastSubpass.pDepthStencilAttachment, VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT, VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT);
         }
+        if (gpuRenderPass->subpasses[subpassCount - 1].depthStencilResolve != INVALID_BINDING) {
+            endDependencyCheck(*depthStencilResolves[subpassCount - 1].pDepthStencilResolveAttachment, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT);
+        }
         if (endDependency.dstAccessMask) {
             subpassDependencies.push_back(endDependency);
         }
     }
 
-    VkRenderPassCreateInfo renderPassCreateInfo{VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO};
+    VkRenderPassCreateInfo2 renderPassCreateInfo{VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2};
     renderPassCreateInfo.attachmentCount = attachmentDescriptions.size();
     renderPassCreateInfo.pAttachments    = attachmentDescriptions.data();
     renderPassCreateInfo.subpassCount    = subpassDescriptions.size();
@@ -477,7 +547,7 @@ void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
     renderPassCreateInfo.dependencyCount = subpassDependencies.size();
     renderPassCreateInfo.pDependencies   = subpassDependencies.data();
 
-    VK_CHECK(vkCreateRenderPass(device->gpuDevice()->vkDevice, &renderPassCreateInfo, nullptr, &gpuRenderPass->vkRenderPass));
+    VK_CHECK(device->gpuDevice()->createRenderPass2(device->gpuDevice()->vkDevice, &renderPassCreateInfo, nullptr, &gpuRenderPass->vkRenderPass));
 }
 
 void cmdFuncCCVKCreateFramebuffer(CCVKDevice *device, CCVKGPUFramebuffer *gpuFramebuffer) {
@@ -539,7 +609,9 @@ void cmdFuncCCVKCreateFramebuffer(CCVKDevice *device, CCVKGPUFramebuffer *gpuFra
         for (size_t i = 0U; i < swapchainImageCount; ++i) {
             for (size_t j = 0U; j < colorViewCount; ++j) {
                 if (swapchainImageIndices & (1 << j)) {
-                    attachments[j] = gpuFramebuffer->swapchain->vkSwapchainImageViews[i];
+                    attachments[j] = GFX_FORMAT_INFOS[static_cast<uint>(gpuFramebuffer->gpuRenderPass->colorAttachments[j].format)].hasDepth
+                                         ? gpuFramebuffer->swapchain->depthStencilImageViews[i]
+                                         : gpuFramebuffer->swapchain->vkSwapchainImageViews[i];
                 }
             }
             if (swapchainImageIndices & (1 << colorViewCount)) {
@@ -651,13 +723,21 @@ void cmdFuncCCVKCreateComputePipelineState(CCVKDevice *device, CCVKGPUPipelineSt
 }
 
 void cmdFuncCCVKCreateGraphicsPipelineState(CCVKDevice *device, CCVKGPUPipelineState *gpuPipelineState) {
+    static vector<VkPipelineShaderStageCreateInfo>     stageInfos;
+    static vector<VkVertexInputBindingDescription>     bindingDescriptions;
+    static vector<VkVertexInputAttributeDescription>   attributeDescriptions;
+    static vector<uint>                                offsets;
+    static vector<VkDynamicState>                      dynamicStates;
+    static vector<VkPipelineColorBlendAttachmentState> blendTargets;
+
     VkGraphicsPipelineCreateInfo createInfo{VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO};
 
     ///////////////////// Shader Stage /////////////////////
 
-    const CCVKGPUShaderStageList &          stages     = gpuPipelineState->gpuShader->gpuStages;
-    const size_t                            stageCount = stages.size();
-    vector<VkPipelineShaderStageCreateInfo> stageInfos(stageCount, {VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO});
+    const CCVKGPUShaderStageList &stages     = gpuPipelineState->gpuShader->gpuStages;
+    const size_t                  stageCount = stages.size();
+
+    stageInfos.resize(stageCount, {VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO});
     for (size_t i = 0U; i < stageCount; ++i) {
         stageInfos[i].stage  = mapVkShaderStageFlagBits(stages[i].type);
         stageInfos[i].module = stages[i].vkShader;
@@ -676,7 +756,7 @@ void cmdFuncCCVKCreateGraphicsPipelineState(CCVKDevice *device, CCVKGPUPipelineS
         bindingCount          = std::max(bindingCount, static_cast<size_t>(attr.stream + 1));
     }
 
-    vector<VkVertexInputBindingDescription> bindingDescriptions(bindingCount);
+    bindingDescriptions.resize(bindingCount);
     for (size_t i = 0U; i < bindingCount; ++i) {
         bindingDescriptions[i].binding   = i;
         bindingDescriptions[i].stride    = 0;
@@ -690,11 +770,10 @@ void cmdFuncCCVKCreateGraphicsPipelineState(CCVKDevice *device, CCVKGPUPipelineS
         }
     }
 
-    const AttributeList &                     shaderAttrs     = gpuPipelineState->gpuShader->attributes;
-    const size_t                              shaderAttrCount = shaderAttrs.size();
-    vector<VkVertexInputAttributeDescription> attributeDescriptions(shaderAttrCount);
-    vector<uint>                              offsets(bindingCount, 0);
+    const AttributeList &shaderAttrs     = gpuPipelineState->gpuShader->attributes;
+    const size_t         shaderAttrCount = shaderAttrs.size();
 
+    attributeDescriptions.resize(shaderAttrCount);
     for (size_t i = 0; i < shaderAttrCount; ++i) {
         bool attributeFound = false;
         offsets.assign(bindingCount, 0);
@@ -732,7 +811,7 @@ void cmdFuncCCVKCreateGraphicsPipelineState(CCVKDevice *device, CCVKGPUPipelineS
 
     ///////////////////// Dynamic State /////////////////////
 
-    vector<VkDynamicState> dynamicStates{VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
+    dynamicStates.assign({VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR});
     insertVkDynamicStates(&dynamicStates, gpuPipelineState->dynamicStates);
 
     VkPipelineDynamicStateCreateInfo dynamicState{VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO};
@@ -766,7 +845,7 @@ void cmdFuncCCVKCreateGraphicsPipelineState(CCVKDevice *device, CCVKGPUPipelineS
     ///////////////////// Multisample State /////////////////////
 
     VkPipelineMultisampleStateCreateInfo multisampleState{VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO};
-    multisampleState.rasterizationSamples  = VK_SAMPLE_COUNT_1_BIT;
+    multisampleState.rasterizationSamples  = gpuPipelineState->gpuRenderPass->sampleCounts[gpuPipelineState->subpass];
     multisampleState.alphaToCoverageEnable = gpuPipelineState->bs.isA2C;
     //multisampleState.sampleShadingEnable;
     //multisampleState.minSampleShading;
@@ -807,10 +886,11 @@ void cmdFuncCCVKCreateGraphicsPipelineState(CCVKDevice *device, CCVKGPUPipelineS
 
     ///////////////////// Blend State /////////////////////
 
-    size_t                                      blendTargetCount = gpuPipelineState->bs.targets.size();
-    vector<VkPipelineColorBlendAttachmentState> blendTargets(blendTargetCount);
+    size_t blendTargetCount = gpuPipelineState->gpuRenderPass->subpasses[gpuPipelineState->subpass].colors.size();
+    blendTargets.resize(blendTargetCount, {});
+
     for (size_t i = 0U; i < blendTargetCount; ++i) {
-        BlendTarget &target                 = gpuPipelineState->bs.targets[i];
+        BlendTarget &target                 = i >= gpuPipelineState->bs.targets.size() ? gpuPipelineState->bs.targets[0] : gpuPipelineState->bs.targets[i];
         blendTargets[i].blendEnable         = target.blend;
         blendTargets[i].srcColorBlendFactor = VK_BLEND_FACTORS[static_cast<uint>(target.blendSrc)];
         blendTargets[i].dstColorBlendFactor = VK_BLEND_FACTORS[static_cast<uint>(target.blendDst)];

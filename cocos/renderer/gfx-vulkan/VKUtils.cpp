@@ -535,6 +535,14 @@ const ThsvsAccessType THSVS_ACCESS_TYPES[] = {
     THSVS_ACCESS_HOST_WRITE,                                                 // HOST_WRITE
 };
 
+const VkResolveModeFlagBits VK_RESOLVE_MODES[] = {
+    VK_RESOLVE_MODE_NONE,
+    VK_RESOLVE_MODE_SAMPLE_ZERO_BIT,
+    VK_RESOLVE_MODE_AVERAGE_BIT,
+    VK_RESOLVE_MODE_MIN_BIT,
+    VK_RESOLVE_MODE_MAX_BIT,
+};
+
 const VkImageLayout VK_IMAGE_LAYOUTS[] = {
     VK_IMAGE_LAYOUT_UNDEFINED,
     VK_IMAGE_LAYOUT_GENERAL,

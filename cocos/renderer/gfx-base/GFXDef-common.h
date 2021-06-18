@@ -591,6 +591,14 @@ enum class AccessType {
 
 using AccessTypeList = std::vector<AccessType>;
 
+enum class ResolveMode {
+    NONE,
+    SAMPLE_ZERO,
+    AVERAGE,
+    MIN,
+    MAX,
+};
+
 enum class PipelineBindPoint {
     GRAPHICS,
     COMPUTE,
@@ -1070,7 +1078,11 @@ struct SubpassInfo {
     std::vector<uint> colors;
     std::vector<uint> resolves;
     std::vector<uint> preserves;
-    uint              depthStencil = INVALID_BINDING;
+
+    uint        depthStencil        = INVALID_BINDING;
+    uint        depthStencilResolve = INVALID_BINDING;
+    ResolveMode depthResolveMode    = ResolveMode::NONE;
+    ResolveMode stencilResolveMode  = ResolveMode::NONE;
 };
 
 using SubpassInfoList = vector<SubpassInfo>;
