@@ -58,7 +58,6 @@ public:
     void updateShadowUBORange(uint offset, const Mat4 *data);
     void destroyShadowFrameBuffers();
 
-    void resetCameraUBOOffset(uint alignedCameraUboSize);
     uint getNextCameraUBOOffset();
 
 private:
