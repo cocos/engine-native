@@ -384,19 +384,18 @@ void PipelineUBO::updateCameraUBO(const scene::Camera *camera) {
 void PipelineUBO::updateMultiCameraUBO(const vector<scene::Camera *> &cameras) {
     auto *const ds           = _pipeline->getDescriptorSet();
     auto *      device       = _pipeline->getDevice();
-    auto        uboAlignment = device->getCapabilities().uboOffsetAlignment;
+    auto uboAlignment = device->getCapabilities().uboOffsetAlignment;
     auto        uboSize      = static_cast<size_t>(std::ceil(UBOCamera::SIZE / static_cast<float>(uboAlignment))) * uboAlignment;
-    auto        totalUboSize = uboSize * cameras.size();
     auto        cameraCount  = cameras.size();
+    auto        totalUboSize = uboSize * cameraCount;
 
-    _cameraUBOs.resize(uboSize * cameras.size());
-    _cameraUBOOffsetMap.clear();
+    _cameraUBOs.resize(totalUboSize);
+    resetCameraUBOOffset(uboSize);
     for (uint cameraIdx = 0; cameraIdx < cameraCount; ++cameraIdx) {
         auto *camera = cameras[cameraIdx];
         PipelineUBO::updateCameraUBOView(_pipeline, &_cameraUBO, camera);
         auto offset = cameraIdx * uboSize;
         memcpy(&_cameraUBOs[offset], _cameraUBO.data(), UBOCamera::SIZE);
-        _cameraUBOOffsetMap[camera] = offset;
     }
     auto* uboBuffer = ds->getBuffer(UBOCamera::BINDING);
     if(uboBuffer->getSize() < totalUboSize) {
@@ -442,9 +441,15 @@ void PipelineUBO::updateShadowUBORange(uint offset, const Mat4 *data) {
     memcpy(_shadowUBO.data() + offset, data->m, sizeof(*data));
 }
 
-uint PipelineUBO::getCameraUBOOffset(scene::Camera *camera) const {
-    CC_ASSERT(_cameraUBOOffsetMap.count(camera) > 0);
-    return _cameraUBOOffsetMap.at(camera);
+void PipelineUBO::resetCameraUBOOffset(uint alignedCameraUboSize) {
+    _nextCameraIndex = 0;
+    _alignedCameraUBOSize = alignedCameraUboSize;
+}
+
+uint PipelineUBO::getNextCameraUBOOffset() {
+    auto offset = _nextCameraIndex * _alignedCameraUBOSize;
+    ++_nextCameraIndex;
+    return offset;
 }
 
 } // namespace pipeline
