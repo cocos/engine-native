@@ -111,11 +111,10 @@ void AABB::transformExtentM4(Vec3 *out, const Vec3 &extent, const Mat4 &m4) {
 
 void AABB::fromPoints(const Vec3 &minPos, const Vec3 &maxPos, AABB *dst) {
     Vec3 v3Tmp;
-    Vec3 v3Tmp2;
     Vec3::add(maxPos, minPos, &v3Tmp);
-    Vec3::subtract(maxPos, minPos, &v3Tmp2);
     dst->center.set(v3Tmp * 0.5);
-    dst->halfExtents.set(v3Tmp2 * 0.5);
+    Vec3::subtract(maxPos, minPos, &v3Tmp);
+    dst->halfExtents.set(v3Tmp * 0.5);
 }
 
 } // namespace scene

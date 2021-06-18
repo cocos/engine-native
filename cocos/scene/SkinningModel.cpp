@@ -89,7 +89,6 @@ SkinningModel::~SkinningModel() {
     for (auto* curr : _dataArray) {
         delete curr;
     }
-    _dataArray.clear();
 }
 
 void SkinningModel::setBuffers(std::vector<gfx::Buffer*> buffers) {
