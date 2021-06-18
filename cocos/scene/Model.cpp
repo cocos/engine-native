@@ -35,11 +35,11 @@ Model::~Model() {
 void Model::uploadMat4AsVec4x3(const Mat4 &mat, uint8_t *v1, uint8_t *v2, uint8_t *v3) {
     uint size = sizeof(uint8_t) * 4;
     memcpy(v1, mat.m, size);
-    v1[3] = mat.m[12];
+    v1[3] = static_cast<uint8_t>(mat.m[12]);
     memcpy(v2, mat.m + 4, size);
-    v2[3] = mat.m[13];
+    v2[3] = static_cast<uint8_t>(mat.m[13]);
     memcpy(v3, mat.m + 8, size);
-    v3[3] = mat.m[14];
+    v3[3] = static_cast<uint8_t>(mat.m[14]);
 }
 
 void Model::updateTransform(uint32_t /*stamp*/) {

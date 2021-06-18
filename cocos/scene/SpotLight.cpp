@@ -42,7 +42,7 @@ void SpotLight::update() {
         matView = _node->getWorldRTMatrix();
         matView.inverse();
 
-        Mat4::createPerspective(_angle, 1.0, 0.001, _range, &matProj);
+        Mat4::createPerspective(_angle, 1.0F, 0.001F, _range, &matProj);
 
         Mat4::multiply(matProj, matView, &matViewProj);
 

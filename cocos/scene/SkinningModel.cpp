@@ -33,7 +33,7 @@ void SkinningModel::updateWorldMatrix(JointInfo* info, uint32_t stamp) {
     int i = -1;
     _worldMatrix.setIdentity();
     auto*                        currTransform = &info->transform;
-    auto                         parentSize    = static_cast<uint32_t>(info->parents.size());
+    auto                         parentSize    = static_cast<int>(info->parents.size());
     std::vector<JointTransform*> transStacks;
     while (currTransform->node) {
         if ((currTransform->stamp == stamp || currTransform->stamp + 1 == stamp) && !currTransform->node->getFlagsChanged()) {
