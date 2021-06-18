@@ -527,6 +527,10 @@ bool sevalue_to_native(const se::Value &from, cc::scene::Frustum * to, se::Objec
     if(!field.isNullOrUndefined()) {
         ok &= sevalue_to_native(field, &(to->planes), ctx);
     }
+    json->getProperty("type", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->type), ctx);
+    }
     return ok;
 }
 
@@ -570,6 +574,9 @@ static bool js_scene_Frustum_constructor(se::State& s) // NOLINT(readability-ide
     }
     if (argc > 1 && !args[1].isUndefined()) {
         ok &= sevalue_to_native(args[1], &(cobj->planes), nullptr);
+    }
+    if (argc > 2 && !args[2].isUndefined()) {
+        ok &= sevalue_to_native(args[2], &(cobj->type), nullptr);
     }
 
     if(!ok) {
@@ -4975,25 +4982,6 @@ static bool js_scene_Pass_setRasterizerState(se::State& s) // NOLINT(readability
 }
 SE_BIND_FUNC(js_scene_Pass_setRasterizerState)
 
-static bool js_scene_Pass_setRootBuffer(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::Pass>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_Pass_setRootBuffer : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 1) {
-        HolderType<cc::gfx::Buffer*, false> arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-        SE_PRECONDITION2(ok, false, "js_scene_Pass_setRootBuffer : Error processing arguments");
-        cobj->setRootBuffer(arg0.value());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-    return false;
-}
-SE_BIND_FUNC(js_scene_Pass_setRootBuffer)
-
 static bool js_scene_Pass_setRootBufferDirty(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::Pass>(s);
@@ -5100,7 +5088,6 @@ bool js_register_scene_Pass(se::Object* obj) // NOLINT(readability-identifier-na
     cls->defineFunction("setPrimitive", _SE(js_scene_Pass_setPrimitive));
     cls->defineFunction("setPriority", _SE(js_scene_Pass_setPriority));
     cls->defineFunction("setRasterizerState", _SE(js_scene_Pass_setRasterizerState));
-    cls->defineFunction("setRootBuffer", _SE(js_scene_Pass_setRootBuffer));
     cls->defineFunction("setRootBufferDirty", _SE(js_scene_Pass_setRootBufferDirty));
     cls->defineFunction("setStage", _SE(js_scene_Pass_setStage));
     cls->defineFunction("update", _SE(js_scene_Pass_update));
@@ -5657,25 +5644,6 @@ bool js_register_scene_JointInfo(se::Object* obj) // NOLINT(readability-identifi
 se::Object* __jsb_cc_scene_SkinningModel_proto = nullptr;
 se::Class* __jsb_cc_scene_SkinningModel_class = nullptr;
 
-static bool js_scene_SkinningModel_setBufferIndices(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::SkinningModel>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_SkinningModel_setBufferIndices : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 1) {
-        HolderType<std::vector<unsigned int>, false> arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-        SE_PRECONDITION2(ok, false, "js_scene_SkinningModel_setBufferIndices : Error processing arguments");
-        cobj->setBufferIndices(arg0.value());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-    return false;
-}
-SE_BIND_FUNC(js_scene_SkinningModel_setBufferIndices)
-
 static bool js_scene_SkinningModel_setBuffers(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::SkinningModel>(s);
@@ -5695,24 +5663,26 @@ static bool js_scene_SkinningModel_setBuffers(se::State& s) // NOLINT(readabilit
 }
 SE_BIND_FUNC(js_scene_SkinningModel_setBuffers)
 
-static bool js_scene_SkinningModel_setJoints(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+static bool js_scene_SkinningModel_setIndicesAndJoints(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::SkinningModel>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_SkinningModel_setJoints : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_scene_SkinningModel_setIndicesAndJoints : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 1) {
-        HolderType<std::vector<cc::scene::JointInfo>, false> arg0 = {};
+    if (argc == 2) {
+        HolderType<std::vector<unsigned int>, false> arg0 = {};
+        HolderType<std::vector<cc::scene::JointInfo>, false> arg1 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-        SE_PRECONDITION2(ok, false, "js_scene_SkinningModel_setJoints : Error processing arguments");
-        cobj->setJoints(arg0.value());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_scene_SkinningModel_setIndicesAndJoints : Error processing arguments");
+        cobj->setIndicesAndJoints(arg0.value(), arg1.value());
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
     return false;
 }
-SE_BIND_FUNC(js_scene_SkinningModel_setJoints)
+SE_BIND_FUNC(js_scene_SkinningModel_setIndicesAndJoints)
 
 static bool js_scene_SkinningModel_setNeedUpdate(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
@@ -5784,9 +5754,8 @@ bool js_register_scene_SkinningModel(se::Object* obj) // NOLINT(readability-iden
 {
     auto* cls = se::Class::create("SkinningModel", obj, __jsb_cc_scene_Model_proto, _SE(js_scene_SkinningModel_constructor));
 
-    cls->defineFunction("setBufferIndices", _SE(js_scene_SkinningModel_setBufferIndices));
     cls->defineFunction("setBuffers", _SE(js_scene_SkinningModel_setBuffers));
-    cls->defineFunction("setJoints", _SE(js_scene_SkinningModel_setJoints));
+    cls->defineFunction("setIndicesAndJoints", _SE(js_scene_SkinningModel_setIndicesAndJoints));
     cls->defineFunction("setNeedUpdate", _SE(js_scene_SkinningModel_setNeedUpdate));
     cls->defineFunction("updateLocalDescriptors", _SE(js_scene_SkinningModel_updateLocalDescriptors));
     cls->defineFinalizeFunction(_SE(js_cc_scene_SkinningModel_finalize));

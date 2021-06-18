@@ -38,7 +38,6 @@
 #include "cocos/math/Quaternion.h"
 #include "extensions/cocos-ext.h"
 #include "network/Downloader.h"
-#include "scene/Frustum.h"
 
 #if USE_SPINE
     #include "cocos/editor-support/spine-creator-support/spine-cocos2dx.h"

@@ -268,7 +268,6 @@ SE_DECLARE_FUNC(js_scene_Pass_setPipelineLayout);
 SE_DECLARE_FUNC(js_scene_Pass_setPrimitive);
 SE_DECLARE_FUNC(js_scene_Pass_setPriority);
 SE_DECLARE_FUNC(js_scene_Pass_setRasterizerState);
-SE_DECLARE_FUNC(js_scene_Pass_setRootBuffer);
 SE_DECLARE_FUNC(js_scene_Pass_setRootBufferDirty);
 SE_DECLARE_FUNC(js_scene_Pass_setStage);
 SE_DECLARE_FUNC(js_scene_Pass_update);
@@ -311,9 +310,8 @@ bool js_register_cc_scene_SkinningModel(se::Object* obj);
 bool register_all_scene(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::scene::SkinningModel);
-SE_DECLARE_FUNC(js_scene_SkinningModel_setBufferIndices);
 SE_DECLARE_FUNC(js_scene_SkinningModel_setBuffers);
-SE_DECLARE_FUNC(js_scene_SkinningModel_setJoints);
+SE_DECLARE_FUNC(js_scene_SkinningModel_setIndicesAndJoints);
 SE_DECLARE_FUNC(js_scene_SkinningModel_setNeedUpdate);
 SE_DECLARE_FUNC(js_scene_SkinningModel_updateLocalDescriptors);
 SE_DECLARE_FUNC(js_scene_SkinningModel_SkinningModel);

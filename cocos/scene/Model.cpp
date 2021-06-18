@@ -63,17 +63,17 @@ void Model::updateUBOs(uint32_t stamp) {
     }
     _transformUpdated = false;
     getTransform()->updateWorldTransform();
-    const auto &                                        worldMatrix = getTransform()->getWorldMatrix();
-    int                                                 idx         = _instmatWorldIdx;
-    Mat4                                                m41;
-    static std::array<float, pipeline::UBOLocal::COUNT> bufferView;
+    const auto &                                 worldMatrix = getTransform()->getWorldMatrix();
+    int                                          idx         = _instmatWorldIdx;
+    Mat4                                         mat4;
+    std::array<float, pipeline::UBOLocal::COUNT> bufferView;
     if (idx >= 0) {
         std::vector<uint8_t *> &attrs = _instanceAttributeBlock->views;
         uploadMat4AsVec4x3(worldMatrix, attrs[idx], attrs[idx + 1], attrs[idx + 2]);
     } else if (_localBuffer) {
         memcpy(bufferView.data() + pipeline::UBOLocal::MAT_WORLD_OFFSET, worldMatrix.m, sizeof(Mat4));
-        Mat4::inverseTranspose(worldMatrix, &m41);
-        memcpy(bufferView.data() + pipeline::UBOLocal::MAT_WORLD_IT_OFFSET, m41.m, sizeof(Mat4));
+        Mat4::inverseTranspose(worldMatrix, &mat4);
+        memcpy(bufferView.data() + pipeline::UBOLocal::MAT_WORLD_IT_OFFSET, mat4.m, sizeof(Mat4));
         _localBuffer->update(bufferView.data(), pipeline::UBOLocal::SIZE);
     }
 }

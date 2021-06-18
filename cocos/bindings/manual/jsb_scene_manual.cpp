@@ -36,23 +36,25 @@
     #define JSB_FREE(ptr) delete ptr
 #endif
 
-static bool js_scene_Pass_setRootBlock(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+static bool js_scene_Pass_setRootBufferAndBlock(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::Pass>(s);
     SE_PRECONDITION2(cobj, false, "js_scene_Pass_setRootBlock : Invalid Native Object");
     const auto&    args = s.args();
     size_t         argc = args.size();
     CC_UNUSED bool ok   = true;
-    if (argc == 1) {
+    if (argc == 2) {
+        HolderType<cc::gfx::Buffer*, false> arg0 = {};
         uint8_t* rootBlock{nullptr};
-        args[0].toObject()->getArrayBufferData(&rootBlock, nullptr);
-        cobj->setRootBlock(rootBlock);
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        args[1].toObject()->getArrayBufferData(&rootBlock, nullptr);
+        cobj->setRootBufferAndBlock(arg0.value(), rootBlock);
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
     return false;
 }
-SE_BIND_FUNC(js_scene_Pass_setRootBlock) // NOLINT(readability-identifier-naming, google-runtime-references)
+SE_BIND_FUNC(js_scene_Pass_setRootBufferAndBlock) // NOLINT(readability-identifier-naming, google-runtime-references)
 
 static bool js_scene_Model_setInstancedAttrBlock(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
@@ -193,6 +195,6 @@ bool register_all_scene_manual(se::Object* obj) // NOLINT(readability-identifier
     __jsb_cc_scene_Node_proto->defineFunction("initWithData", _SE(js_scene_Node_initWithData));
 
     __jsb_cc_scene_SubModel_proto->defineFunction("setSubMeshBuffers", _SE(js_scene_SubModel_setSubMeshBuffers));
-    __jsb_cc_scene_Pass_proto->defineFunction("setRootBlock", _SE(js_scene_Pass_setRootBlock));
+    __jsb_cc_scene_Pass_proto->defineFunction("setRootBufferAndBlock", _SE(js_scene_Pass_setRootBufferAndBlock));
     return true;
 }

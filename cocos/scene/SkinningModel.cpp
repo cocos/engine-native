@@ -62,18 +62,18 @@ void SkinningModel::updateWorldMatrix(JointInfo* info, uint32_t stamp) {
 void SkinningModel::updateUBOs(uint32_t stamp) {
     Model::updateUBOs(stamp);
     uint32_t bIdx = 0;
-    Mat4     m41;
+    Mat4     mat4;
     for (const JointInfo& jointInfo : _joints) {
-        Mat4::multiply(jointInfo.transform.world, jointInfo.bindpose, &m41);
+        Mat4::multiply(jointInfo.transform.world, jointInfo.bindpose, &mat4);
         for (uint32_t buffer : jointInfo.buffers) {
-            uploadJointData(jointInfo.indices[bIdx] * 12, m41, _dataArray[buffer]);
+            uploadJointData(jointInfo.indices[bIdx] * 12, mat4, _dataArray[buffer]->data());
             bIdx++;
         }
         bIdx = 0;
     }
     bIdx = 0;
     for (gfx::Buffer* buffer : _buffers) {
-        _buffers[bIdx]->update(_dataArray[bIdx], _buffers[bIdx]->getSize());
+        _buffers[bIdx]->update(_dataArray[bIdx]->data(), _buffers[bIdx]->getSize());
         bIdx++;
     }
 }
@@ -85,10 +85,18 @@ void SkinningModel::uploadJointData(uint32_t base, const Mat4& mat, float* dst) 
     dst[base + 11] = mat.m[14];
 }
 
+SkinningModel::~SkinningModel() {
+    for (auto* curr : _dataArray) {
+        delete curr;
+    }
+    _dataArray.clear();
+}
+
 void SkinningModel::setBuffers(std::vector<gfx::Buffer*> buffers) {
     _buffers = std::move(buffers);
-    for (uint i = 0; i < _buffers.size(); i++) {
-        _dataArray.push_back(new float[pipeline::UBOSkinning::COUNT]);
+    for (auto* buffer : _buffers) {
+        auto* data = new std::array<float, pipeline::UBOSkinning::COUNT>();
+        _dataArray.push_back(data);
     }
 }
 
@@ -98,13 +106,11 @@ void SkinningModel::updateTransform(uint32_t stamp) {
         root->updateWorldTransform();
         _transformUpdated = true;
     }
-    Vec3 v3Min;
-    Vec3 v3Max;
+    Vec3 v3Min{INFINITY, INFINITY, INFINITY};
+    Vec3 v3Max{-INFINITY, -INFINITY, -INFINITY};
     AABB ab1;
     Vec3 v31;
     Vec3 v32;
-    v3Min.set(INFINITY, INFINITY, INFINITY);
-    v3Max.set(-INFINITY, -INFINITY, -INFINITY);
     for (JointInfo& jointInfo : _joints) {
         updateWorldMatrix(&jointInfo, stamp);
         jointInfo.bound.transform(_worldMatrix, &ab1);

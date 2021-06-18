@@ -57,13 +57,14 @@ public:
     SkinningModel()                      = default;
     SkinningModel(const SkinningModel &) = delete;
     SkinningModel(SkinningModel &&)      = delete;
-    ~SkinningModel() override            = default;
+    ~SkinningModel() override;
     SkinningModel &operator=(const SkinningModel &) = delete;
     SkinningModel &operator=(SkinningModel &&) = delete;
 
     void        setBuffers(std::vector<gfx::Buffer *> buffers);
-    inline void setBufferIndices(std::vector<uint32_t> bufferIndices) {
+    inline void setIndicesAndJoints(std::vector<uint32_t> bufferIndices, std::vector<JointInfo> joints) {
         _bufferIndices = std::move(bufferIndices);
+        _joints        = std::move(joints);
     }
     inline void updateLocalDescriptors(uint32_t submodelIdx, gfx::DescriptorSet *descriptorset) {
         gfx::Buffer *buffer = _buffers[_bufferIndices[submodelIdx]];
@@ -74,24 +75,21 @@ public:
     inline void setNeedUpdate(bool needUpdate) {
         _needUpdate = needUpdate;
     }
-    void        updateTransform(uint32_t stamp) override;
-    void        updateUBOs(uint32_t stamp) override;
-    inline void setJoints(std::vector<JointInfo> joints) {
-        _joints = std::move(joints);
-    };
+    void updateTransform(uint32_t stamp) override;
+    void updateUBOs(uint32_t stamp) override;
 
 protected:
     ModelType _type{ModelType::SKINNING};
 
 private:
-    static void                uploadJointData(uint32_t base, const Mat4 &mat, float *dst);
-    void                       updateWorldMatrix(JointInfo *info, uint32_t stamp);
-    bool                       _needUpdate{false};
-    Mat4                       _worldMatrix;
-    std::vector<uint32_t>      _bufferIndices;
-    std::vector<gfx::Buffer *> _buffers;
-    std::vector<JointInfo>     _joints;
-    std::vector<float *>       _dataArray;
+    static void                                                    uploadJointData(uint32_t base, const Mat4 &mat, float *dst);
+    void                                                           updateWorldMatrix(JointInfo *info, uint32_t stamp);
+    bool                                                           _needUpdate{false};
+    Mat4                                                           _worldMatrix;
+    std::vector<uint32_t>                                          _bufferIndices;
+    std::vector<gfx::Buffer *>                                     _buffers;
+    std::vector<JointInfo>                                         _joints;
+    std::vector<std::array<float, pipeline::UBOSkinning::COUNT> *> _dataArray;
 };
 
 } // namespace scene

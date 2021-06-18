@@ -34,11 +34,10 @@ void Node::updateWorldTransform() {
     }
     uint32_t            i    = 0;
     Node *              curr = this;
-    Mat3                m31;
+    Mat3                mat3;
     Mat3                m43;
-    Quaternion          qt1;
+    Quaternion          quat;
     std::vector<Node *> arrayA;
-    arrayA.clear();
     while (curr && curr->getDirtyFlag()) {
         i++;
         arrayA.push_back(curr);
@@ -62,12 +61,12 @@ void Node::updateWorldTransform() {
                 if (dirtyBits & static_cast<uint32_t>(TransformBit::ROTATION)) {
                     Quaternion::multiply(curr->_nodeLayout->worldRotation, child->_nodeLayout->localRotation, &curr->_nodeLayout->worldRotation);
                 }
-                qt1 = child->_nodeLayout->worldRotation;
-                qt1.conjugate();
-                Mat3::fromQuat(m31, qt1);
+                quat = child->_nodeLayout->worldRotation;
+                quat.conjugate();
+                Mat3::fromQuat(mat3, quat);
                 Mat3::fromMat4(m43, child->_nodeLayout->worldMatrix);
-                Mat3::multiply(m31, m31, m43);
-                child->_nodeLayout->worldScale.set(m31.m[0], m31.m[4], m31.m[8]);
+                Mat3::multiply(mat3, mat3, m43);
+                child->_nodeLayout->worldScale.set(mat3.m[0], mat3.m[4], mat3.m[8]);
             }
         } else if (child) {
             if (dirtyBits & static_cast<uint32_t>(TransformBit::POSITION)) {

@@ -57,8 +57,10 @@ public:
     inline void setPriority(RenderPriority priority) { _priority = priority; }
     inline void setRasterizerState(gfx::RasterizerState *state) { _rasterizerState = state; }
     inline void setStage(RenderPassStage stage) { _stage = stage; }
-    inline void setRootBuffer(gfx::Buffer *buffer) { _rootBuffer = buffer; }
-    inline void setRootBlock(uint8_t *buffer) { _rootBlock = buffer; }
+    inline void setRootBufferAndBlock(gfx::Buffer *buffer, uint8_t *block) {
+        _rootBuffer = buffer;
+        _rootBlock  = block;
+    }
     inline void setRootBufferDirty(bool val) { _rootBufferDirty = val; }
 
     inline BatchingSchemes          getBatchingScheme() const { return _batchingScheme; }
