@@ -57,7 +57,7 @@ public:
 
     void recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer);
     void gatherLightPasses(const Camera *camera, gfx::CommandBuffer *cmdBuffer);
-    void destroy();
+    void destroy() const;
 
 private:
     static bool cullSphereLight(const Light *light, const ModelView *model);

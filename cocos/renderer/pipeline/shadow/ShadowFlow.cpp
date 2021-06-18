@@ -235,13 +235,10 @@ void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const Light *li
 }
 
 void ShadowFlow::destroy() {
-    if (_renderPass) {
-        _renderPass->destroy();
-        _renderPass = nullptr;
-    }
+    CC_SAFE_DESTROY(_renderPass)
 
     for (auto *texture : _usedTextures) {
-        CC_DELETE(texture);
+        CC_SAFE_DESTROY(texture);
     }
     _usedTextures.clear();
 

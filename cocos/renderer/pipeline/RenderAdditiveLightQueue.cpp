@@ -43,6 +43,7 @@
 #include "gfx-base/GFXSampler.h"
 #include "gfx-base/GFXTexture.h"
 #include "helper/SharedMemory.h"
+#include "GlobalDescriptorSetManager.h"
 
 namespace cc {
 namespace pipeline {
@@ -144,12 +145,13 @@ void RenderAdditiveLightQueue::gatherLightPasses(const Camera *camera, gfx::Comm
     _batchedQueue->uploadBuffers(cmdBuffer);
 }
 
-void RenderAdditiveLightQueue::destroy() {
+void RenderAdditiveLightQueue::destroy() const {
     for (auto &pair : _pipeline->getGlobalDSManager()->getDescriptorSetMap()) {
         auto *descriptorSet = pair.second;
         if (descriptorSet) {
-            descriptorSet->getBuffer(UBOShadow::BINDING)->destroy();
-            descriptorSet->destroy();
+            auto *shadowBuffer = descriptorSet->getBuffer(UBOShadow::BINDING);
+            CC_SAFE_DESTROY(shadowBuffer);
+            CC_SAFE_DESTROY(descriptorSet);
         }
     }
     _pipeline->getGlobalDSManager()->getDescriptorSetMap().clear();
