@@ -25,9 +25,6 @@
 
 #include "AABB.h"
 
-
-
-
 namespace cc {
 namespace scene {
 bool AABB::aabbAabb(const AABB &aabb) const {
@@ -89,17 +86,17 @@ void AABB::merge(const AABB &aabb) {
 }
 
 void AABB::set(const cc::Vec3 &centerVal, const cc::Vec3 &halfExtentVal) {
-    center = centerVal;
+    center      = centerVal;
     halfExtents = halfExtentVal;
 }
 
-void AABB::transform(const Mat4& m, AABB *out) const {
+void AABB::transform(const Mat4 &m, AABB *out) const {
     out->center.transformMat4(center, m);
     transformExtentM4(&out->halfExtents, halfExtents, m);
 }
 
 void AABB::transformExtentM4(Vec3 *out, const Vec3 &extent, const Mat4 &m4) {
-    static Mat3 m3Tmp;
+    Mat3 m3Tmp;
     m3Tmp.m[0] = abs(m4.m[0]);
     m3Tmp.m[1] = abs(m4.m[1]);
     m3Tmp.m[2] = abs(m4.m[2]);
@@ -112,9 +109,9 @@ void AABB::transformExtentM4(Vec3 *out, const Vec3 &extent, const Mat4 &m4) {
     out->transformMat3(extent, m3Tmp);
 }
 
-void AABB::fromPoints(const Vec3& minPos, const Vec3& maxPos, AABB*  dst){
-    static Vec3 v3Tmp;
-    static Vec3 v3Tmp2;
+void AABB::fromPoints(const Vec3 &minPos, const Vec3 &maxPos, AABB *dst) {
+    Vec3 v3Tmp;
+    Vec3 v3Tmp2;
     Vec3::add(maxPos, minPos, &v3Tmp);
     Vec3::subtract(maxPos, minPos, &v3Tmp2);
     dst->center.set(v3Tmp * 0.5);

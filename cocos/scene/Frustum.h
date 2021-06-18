@@ -27,12 +27,9 @@
 
 #include <array>
 #include "math/Vec3.h"
-#include <vector>
 
 namespace cc {
 namespace scene {
-
-enum class ShapeEnums;
 struct Plane final {
     float d{0.F};
     Vec3  n;
@@ -41,8 +38,7 @@ struct Plane final {
 struct Frustum final {
     std::array<Vec3, 8>  vertices;
     std::array<Plane, 6> planes;
-    void update(const Mat4 &m, const Mat4 &inv);
-
+    void                 update(const Mat4 &m, const Mat4 &inv);
 };
 
 } // namespace scene

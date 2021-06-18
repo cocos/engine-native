@@ -29,23 +29,22 @@
 namespace cc {
 namespace scene {
 void Node::updateWorldTransform() {
-    if(!getDirtyFlag()) {
+    if (!getDirtyFlag()) {
         return;
     }
-    uint32_t i = 0;
-    Node *   curr = this;
-    static Mat3                m31;
-    static Mat3                m43;
-    static Quaternion          qt1;
-    static std::vector<Node *> arrayA;
+    uint32_t            i    = 0;
+    Node *              curr = this;
+    Mat3                m31;
+    Mat3                m43;
+    Quaternion          qt1;
+    std::vector<Node *> arrayA;
     arrayA.clear();
-    while (curr && curr->getDirtyFlag())
-    {
+    while (curr && curr->getDirtyFlag()) {
         i++;
         arrayA.push_back(curr);
         curr = curr->_parent;
     }
-    Node *child{nullptr};
+    Node *   child{nullptr};
     uint32_t dirtyBits = 0;
     while (i) {
         child = arrayA[--i];
@@ -69,8 +68,8 @@ void Node::updateWorldTransform() {
                 Mat3::fromMat4(m43, child->_nodeLayout->worldMatrix);
                 Mat3::multiply(m31, m31, m43);
                 child->_nodeLayout->worldScale.set(m31.m[0], m31.m[4], m31.m[8]);
-            } 
-        } else if(child) {
+            }
+        } else if (child) {
             if (dirtyBits & static_cast<uint32_t>(TransformBit::POSITION)) {
                 child->_nodeLayout->worldPosition.set(child->_nodeLayout->localPosition);
                 child->_nodeLayout->worldMatrix.m[12] = child->_nodeLayout->worldPosition.x;
@@ -86,12 +85,10 @@ void Node::updateWorldTransform() {
                     Mat4::fromRTS(child->_nodeLayout->localRotation, child->_nodeLayout->localPosition, child->_nodeLayout->localScale, &child->_nodeLayout->worldMatrix);
                 }
             }
-        
         }
         child->setDirtyFlag(static_cast<uint32_t>(TransformBit::NONE));
         curr = child;
     }
-
 }
 
 void Node::updateWorldRTMatrix() {

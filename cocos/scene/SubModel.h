@@ -57,8 +57,8 @@ public:
     inline void setPlanarInstanceShader(gfx::Shader *shader) { _planarInstanceShader = shader; }
     inline void setPlanarShader(gfx::Shader *shader) { _planarShader = shader; }
     inline void setPriority(RenderPriority priority) { _priority = priority; }
-    inline void setSubMeshBuffers(const std::vector<cc::scene::FlatBuffer>&  flatBuffers) {
-        if(!_subMesh) {
+    inline void setSubMeshBuffers(const std::vector<cc::scene::FlatBuffer> &flatBuffers) {
+        if (!_subMesh) {
             _subMesh = new RenderingSubMesh();
         }
         _subMesh->flatBuffers = flatBuffers;

@@ -23,8 +23,8 @@
  THE SOFTWARE.
  ****************************************************************************/
 #include "scene/Model.h"
-#include "scene/SubModel.h"
 #include "renderer/pipeline/Define.h"
+#include "scene/SubModel.h"
 
 namespace cc {
 namespace scene {
@@ -33,7 +33,7 @@ Model::~Model() {
 }
 
 void Model::uploadMat4AsVec4x3(const Mat4 &mat, uint8_t *v1, uint8_t *v2, uint8_t *v3) {
-    uint    size   = sizeof(uint8_t) * 4;
+    uint size = sizeof(uint8_t) * 4;
     memcpy(v1, mat.m, size);
     v1[3] = mat.m[12];
     memcpy(v2, mat.m + 4, size);
@@ -42,7 +42,7 @@ void Model::uploadMat4AsVec4x3(const Mat4 &mat, uint8_t *v1, uint8_t *v2, uint8_
     v3[3] = mat.m[14];
 }
 
-void Model::updateTransform(uint32_t  /*stamp*/) {
+void Model::updateTransform(uint32_t /*stamp*/) {
     Node *node = _transform;
     if (node->getFlagsChanged() || node->getDirtyFlag()) {
         node->updateWorldTransform();
@@ -53,7 +53,7 @@ void Model::updateTransform(uint32_t  /*stamp*/) {
     }
 }
 
-void Model::updateUBOs(uint32_t  stamp) {
+void Model::updateUBOs(uint32_t stamp) {
     for (SubModel *subModel : _subModels) {
         subModel->update();
     }
@@ -63,9 +63,9 @@ void Model::updateUBOs(uint32_t  stamp) {
     }
     _transformUpdated = false;
     getTransform()->updateWorldTransform();
-    const auto& worldMatrix  = getTransform()->getWorldMatrix();
-    int  idx          = _instmatWorldIdx;
-    static Mat4 m41;
+    const auto &                                        worldMatrix = getTransform()->getWorldMatrix();
+    int                                                 idx         = _instmatWorldIdx;
+    Mat4                                                m41;
     static std::array<float, pipeline::UBOLocal::COUNT> bufferView;
     if (idx >= 0) {
         std::vector<uint8_t *> &attrs = _instanceAttributeBlock->views;

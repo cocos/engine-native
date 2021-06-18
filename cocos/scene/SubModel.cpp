@@ -29,7 +29,7 @@ namespace cc {
 namespace scene {
 
 void SubModel::update() {
-    for (Pass* pass: _passes) {
+    for (Pass *pass : _passes) {
         pass->update();
     }
     _descriptSet->update();

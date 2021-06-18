@@ -78,10 +78,10 @@ public:
         }
         *_worldBounds = aabb;
     }
-    inline void setInstancedAttrBlock(uint8_t *buffer, InstancedAttributeBlock *block, const std::vector<gfx::Attribute>& attributes) {
-        _instancedBuffer = buffer;
+    inline void setInstancedAttrBlock(uint8_t *buffer, InstancedAttributeBlock *block, const std::vector<gfx::Attribute> &attributes) {
+        _instancedBuffer        = buffer;
         _instanceAttributeBlock = block;
-        _instanceAttributes = attributes;
+        _instanceAttributes     = attributes;
     }
 
     inline bool                               getCastShadow() const { return _castShadow; }
@@ -102,17 +102,19 @@ public:
     inline uint32_t                           getVisFlags() const { return _visFlags; }
     inline const AABB *                       getWorldBounds() const { return _worldBounds; }
     inline ModelType                          getType() const { return _type; };
+
 protected:
-    ModelType _type {ModelType::DEFAULT};
-    bool                        _transformUpdated{false};
-    AABB *                      _worldBounds{nullptr};
-    AABB                        _modelBounds;
+    ModelType _type{ModelType::DEFAULT};
+    bool      _transformUpdated{false};
+    AABB *    _worldBounds{nullptr};
+    AABB      _modelBounds;
+
 private:
-    bool                        _enabled{false};
-    bool                        _castShadow{false};
-    bool                        _receiveShadow{false};
-    
-    int                    _instmatWorldIdx{0};
+    bool _enabled{false};
+    bool _castShadow{false};
+    bool _receiveShadow{false};
+
+    int                         _instmatWorldIdx{0};
     uint32_t                    _visFlags;
     uint32_t                    _updateStamp{0};
     Node *                      _transform{nullptr};
@@ -123,7 +125,7 @@ private:
     InstancedAttributeBlock *   _instanceAttributeBlock{nullptr};
     std::vector<SubModel *>     _subModels;
     std::vector<gfx::Attribute> _instanceAttributes;
-    static void uploadMat4AsVec4x3(const Mat4 &mat, uint8_t *v1, uint8_t *v2, uint8_t *v3);
+    static void                 uploadMat4AsVec4x3(const Mat4 &mat, uint8_t *v1, uint8_t *v2, uint8_t *v3);
 };
 
 } // namespace scene

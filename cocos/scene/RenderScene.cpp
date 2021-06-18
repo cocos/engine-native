@@ -29,17 +29,17 @@
 namespace cc {
 namespace scene {
 
-void RenderScene::update(uint32_t  stamp) {
+void RenderScene::update(uint32_t stamp) {
     if (_directionalLight) {
         _directionalLight->update();
     }
-    for (SphereLight *light: _sphereLights) {
+    for (SphereLight *light : _sphereLights) {
         light->update();
     }
-    for (SpotLight* spotLight: _spotLights) {
+    for (SpotLight *spotLight : _spotLights) {
         spotLight->update();
     }
-    for (auto *model: _models) {
+    for (auto *model : _models) {
         if (model->getEnabled()) {
             model->updateTransform(stamp);
             model->updateUBOs(stamp);

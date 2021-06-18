@@ -47,7 +47,7 @@ public:
     inline void setIlluminance(float illum) { _illuminance = illum; }
     inline void setPosition(const Vec3 &pos) { _pos = pos; }
     inline void setRange(float range) {
-        _range = range;
+        _range      = range;
         _needUpdate = true;
     }
     inline void setSize(float size) { _size = size; }

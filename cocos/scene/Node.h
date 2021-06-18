@@ -25,12 +25,12 @@
 
 #pragma once
 
-#include "math/Mat4.h"
+#include <vector>
 #include "math/Mat3.h"
+#include "math/Mat4.h"
 #include "math/Quaternion.h"
 #include "math/Vec3.h"
 #include "math/Vec4.h"
-#include <vector>
 
 namespace cc {
 namespace scene {
@@ -39,14 +39,14 @@ namespace scene {
 // TODO(minggo) add more data.
 struct NodeLayout {
     uint32_t       dirtyFlag{0};
-    uint32_t flagsChanged{0};
-    uint32_t layer{0};
-    cc::Vec3 worldScale;
-    cc::Vec3 worldPosition;
+    uint32_t       flagsChanged{0};
+    uint32_t       layer{0};
+    cc::Vec3       worldScale;
+    cc::Vec3       worldPosition;
     cc::Quaternion worldRotation;
-    cc::Mat4 worldMatrix;
+    cc::Mat4       worldMatrix;
     cc::Vec3       localScale;
-    cc::Vec3 localPosition;
+    cc::Vec3       localPosition;
     cc::Quaternion localRotation;
 };
 
@@ -78,19 +78,19 @@ public:
     inline void setLocalRotation(float x, float y, float z, float w) { _nodeLayout->localRotation.set(x, y, z, w); }
     inline void setLocalScale(const Vec3 &scale) { _nodeLayout->localScale.set(scale); }
 
-    inline uint32_t    getFlagsChanged() const { return _nodeLayout->flagsChanged; }
-    inline uint32_t    getLayer() const { return _nodeLayout->layer; }
+    inline uint32_t          getFlagsChanged() const { return _nodeLayout->flagsChanged; }
+    inline uint32_t          getLayer() const { return _nodeLayout->layer; }
     inline uint32_t          getDirtyFlag() const { return _nodeLayout->dirtyFlag; }
-    inline const Vec3 &getPosition() const { return _nodeLayout->localPosition; }
-    inline const Vec3 &getScale() const { return _nodeLayout->localScale; }
+    inline const Vec3 &      getPosition() const { return _nodeLayout->localPosition; }
+    inline const Vec3 &      getScale() const { return _nodeLayout->localScale; }
     inline const Quaternion &getRotation() const { return _nodeLayout->localRotation; }
     inline const NodeLayout *getNodeLayout() const { return _nodeLayout; };
-    inline const Mat4 &getWorldMatrix() const { return _nodeLayout->worldMatrix; }
-    inline const Vec3 &getWorldPosition() const { return _nodeLayout->worldPosition; }
+    inline const Mat4 &      getWorldMatrix() const { return _nodeLayout->worldMatrix; }
+    inline const Vec3 &      getWorldPosition() const { return _nodeLayout->worldPosition; }
     inline const Quaternion &getWorldRotation() const { return _nodeLayout->worldRotation; }
-    inline const Vec3 &getWorldScale() const { return _nodeLayout->worldScale; }
-    inline const Mat4 &getWorldRTMatrix() const { return _rtMat; };
-    
+    inline const Vec3 &      getWorldScale() const { return _nodeLayout->worldScale; }
+    inline const Mat4 &      getWorldRTMatrix() const { return _rtMat; };
+
 private:
     NodeLayout *_nodeLayout{nullptr};
     bool        _dirtyFlags{false};
@@ -100,7 +100,7 @@ private:
     Quaternion  _lRot;
     Vec3        _pos;
     Quaternion  _rot;
-    Mat4                       _rtMat;
+    Mat4        _rtMat;
 };
 
 } // namespace scene

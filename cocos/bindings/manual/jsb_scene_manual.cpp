@@ -86,7 +86,7 @@ static bool js_scene_Model_setInstancedAttrBlock(se::State& s) // NOLINT(readabi
         }
 
         cc::scene::InstancedAttributeBlock attrBlock;
-        attrBlock.views = viewsData;
+        attrBlock.views = std::move(viewsData);
 
         // attrs
         CC_UNUSED bool                                    ok   = true;

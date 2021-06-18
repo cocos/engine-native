@@ -45,20 +45,20 @@ public:
 
     inline void setAABB(AABB aabb) { _aabb = std::move(aabb); }
     inline void setAngle(float angle) {
-        _spotAngle = angle;
-        _angle = acos(_spotAngle) * 2;
-        _needUpdate = true;    
+        _spotAngle  = angle;
+        _angle      = acos(_spotAngle) * 2;
+        _needUpdate = true;
     }
     inline void setAspect(float aspect) {
-        _aspect = aspect;
+        _aspect     = aspect;
         _needUpdate = true;
     }
     inline void setDirection(const Vec3 &dir) { _dir = dir; }
     inline void setFrustum(Frustum frustum) { _frustum = std::move(frustum); }
     inline void setIlluminance(float illu) { _illuminance = illu; }
     inline void setNeedUpdate(bool value) { _needUpdate = value; }
-    inline void setRange(float range) { 
-        _range = range;
+    inline void setRange(float range) {
+        _range      = range;
         _needUpdate = true;
     }
     inline void setPosition(const Vec3 &pos) { _pos = pos; }

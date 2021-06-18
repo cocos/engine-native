@@ -28,11 +28,11 @@
 namespace cc {
 namespace scene {
 void SpotLight::update() {
-    if(_node && (_node->getFlagsChanged() || _needUpdate)) {
-        static Mat4 matView;
-        static Mat4 matProj;
-        static Mat4 matViewProj;
-        static Mat4 matViewProjInv;
+    if (_node && (_node->getFlagsChanged() || _needUpdate)) {
+        Mat4 matView;
+        Mat4 matProj;
+        Mat4 matViewProj;
+        Mat4 matViewProjInv;
         _node->updateWorldRTMatrix();
         _pos = _node->getWorldPosition();
         _dir = _forward;
