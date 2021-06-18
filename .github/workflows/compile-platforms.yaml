@@ -66,7 +66,7 @@ jobs:
       - name: Generate bindings
         run: |
           python ./tools/tojs/genbindings.py
-          rm userconf.ini
+          rm ./tools/tojs/userconf.ini
       - name: Compile
         run: |
           COCOS2DX_ROOT=$GITHUB_WORKSPACE          
