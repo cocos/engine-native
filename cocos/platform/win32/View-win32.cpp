@@ -80,7 +80,6 @@ bool View::init() {
     _inited = true;
     // Create window
     uint32_t flags = SDL_WINDOW_SHOWN |
-                     SDL_WINDOW_RESIZABLE |
                      SDL_WINDOW_INPUT_FOCUS;
     _window = SDL_CreateWindow(_title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _width, _height, flags);
     if (_window == NULL) {
