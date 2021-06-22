@@ -63,6 +63,10 @@ public:
     void updateWorldTransform();
     void updateWorldRTMatrix();
 
+    inline void setParent(Node *parent) {
+        _parent = parent;
+    }
+
     inline void setFlagsChanged(uint32_t value) { _nodeLayout->flagsChanged = value; }
     inline void setDirtyFlag(uint32_t value) { _nodeLayout->dirtyFlag = value; }
     inline void setLayer(uint32_t layer) { _nodeLayout->layer = layer; }
@@ -78,6 +82,7 @@ public:
     inline void setLocalRotation(float x, float y, float z, float w) { _nodeLayout->localRotation.set(x, y, z, w); }
     inline void setLocalScale(const Vec3 &scale) { _nodeLayout->localScale.set(scale); }
 
+    inline Node *            getParent() const { return _parent; }
     inline uint32_t          getFlagsChanged() const { return _nodeLayout->flagsChanged; }
     inline uint32_t          getLayer() const { return _nodeLayout->layer; }
     inline uint32_t          getDirtyFlag() const { return _nodeLayout->dirtyFlag; }
@@ -93,13 +98,7 @@ public:
 
 private:
     NodeLayout *_nodeLayout{nullptr};
-    bool        _dirtyFlags{false};
-    bool        _hasChangeFlags{false};
     Node *      _parent{nullptr};
-    Vec3        _lPos;
-    Quaternion  _lRot;
-    Vec3        _pos;
-    Quaternion  _rot;
     Mat4        _rtMat;
 };
 

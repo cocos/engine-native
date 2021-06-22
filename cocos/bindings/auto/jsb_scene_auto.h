@@ -26,6 +26,7 @@ bool js_register_cc_scene_Node(se::Object* obj);
 bool register_all_scene(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::scene::Node);
+SE_DECLARE_FUNC(js_scene_Node_setParent);
 SE_DECLARE_FUNC(js_scene_Node_Node);
 
 extern se::Object* __jsb_cc_scene_Light_proto;

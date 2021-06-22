@@ -933,6 +933,7 @@ cocos_source_files(
                  cocos/scene/Light.cpp
                  cocos/scene/Model.h
                  cocos/scene/Model.cpp
+                 cocos/scene/MorphModel.h
                  cocos/scene/Node.h
                  cocos/scene/Node.cpp
                  cocos/scene/Pass.h

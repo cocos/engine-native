@@ -48,7 +48,7 @@ void Model::updateTransform(uint32_t /*stamp*/) {
         node->updateWorldTransform();
         _transformUpdated = true;
         if (_worldBounds) {
-            _modelBounds.transform(node->getNodeLayout()->worldMatrix, _worldBounds);
+            _modelBounds.transform(node->getWorldMatrix(), _worldBounds);
         }
     }
 }

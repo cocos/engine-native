@@ -52,8 +52,7 @@ void SkinningModel::updateWorldMatrix(JointInfo* info, uint32_t stamp) {
     while (i > -1) {
         currTransform = transStacks[i--];
         auto* node    = currTransform->node;
-        node->updateWorldTransform();
-        Mat4::fromRTS(node->getWorldRotation(), node->getWorldPosition(), node->getWorldScale(), &currTransform->local);
+        Mat4::fromRTS(node->getRotation(), node->getPosition(), node->getScale(), &currTransform->local);
         Mat4::multiply(_worldMatrix, currTransform->local, &currTransform->world);
         _worldMatrix.set(currTransform->world);
     }
