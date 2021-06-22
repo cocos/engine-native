@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 # Generate script bindings for Cocos2D-X-lite
 # ... using Android NDK system headers
 # ... and push these changes to remote repos
