@@ -24,6 +24,8 @@
  ****************************************************************************/
 
 #include "scene/RenderScene.h"
+
+#include <utility>
 #include "base/Log.h"
 
 namespace cc {
@@ -81,6 +83,10 @@ void RenderScene::removeModel(Model *model) {
 
 void RenderScene::removeModels() {
     _models.clear();
+}
+
+void RenderScene::updateBatches(std::vector<DrawBatch2D *> batches) {
+    _drawBatch2Ds = std::move(batches);
 }
 
 void RenderScene::addBatch(DrawBatch2D *drawBatch2D) {

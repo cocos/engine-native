@@ -57,6 +57,7 @@ public:
 
     void initWithData(uint8_t *data);
     void update();
+    void setState(gfx::BlendState *bs, gfx::DepthStencilState *ds, gfx::RasterizerState *rs, gfx::DescriptorSet *descriptorSet);
 
     inline void setBatchingScheme(BatchingSchemes value) { _passLayout->batchingScheme = value; }
     inline void setBlendState(gfx::BlendState *blendState) { _blendState = blendState; }
