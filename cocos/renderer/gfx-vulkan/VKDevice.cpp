@@ -199,6 +199,8 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
 
     VK_CHECK(vkCreateDevice(gpuContext->physicalDevice, &deviceCreateInfo, nullptr, &_gpuDevice->vkDevice));
 
+    volkLoadDevice(_gpuDevice->vkDevice);
+
     ///////////////////// Gather Device Properties /////////////////////
 
     _features[static_cast<uint>(Feature::COLOR_FLOAT)]               = true;
@@ -208,6 +210,7 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
     _features[static_cast<uint>(Feature::TEXTURE_FLOAT_LINEAR)]      = true;
     _features[static_cast<uint>(Feature::TEXTURE_HALF_FLOAT_LINEAR)] = true;
     _features[static_cast<uint>(Feature::FORMAT_R11G11B10F)]         = true;
+    _features[static_cast<uint>(Feature::FORMAT_SRGB)]               = true;
     _features[static_cast<uint>(Feature::MSAA)]                      = true;
     _features[static_cast<uint>(Feature::ELEMENT_INDEX_UINT)]        = true;
     _features[static_cast<uint>(Feature::INSTANCED_ARRAYS)]          = true;
@@ -228,31 +231,6 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
     vkGetPhysicalDeviceFormatProperties(gpuContext->physicalDevice, VK_FORMAT_R8G8B8_UNORM, &formatProperties);
     if (formatProperties.optimalTilingFeatures & requiredFeatures) {
         _features[static_cast<uint>(Feature::FORMAT_RGB8)] = true;
-    }
-    requiredFeatures = VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT;
-    vkGetPhysicalDeviceFormatProperties(gpuContext->physicalDevice, VK_FORMAT_D16_UNORM, &formatProperties);
-    if (formatProperties.optimalTilingFeatures & requiredFeatures) {
-        _features[static_cast<uint>(Feature::FORMAT_D16)] = true;
-    }
-    vkGetPhysicalDeviceFormatProperties(gpuContext->physicalDevice, VK_FORMAT_X8_D24_UNORM_PACK32, &formatProperties);
-    if (formatProperties.optimalTilingFeatures & requiredFeatures) {
-        _features[static_cast<uint>(Feature::FORMAT_D24)] = true;
-    }
-    vkGetPhysicalDeviceFormatProperties(gpuContext->physicalDevice, VK_FORMAT_D32_SFLOAT, &formatProperties);
-    if (formatProperties.optimalTilingFeatures & requiredFeatures) {
-        _features[static_cast<uint>(Feature::FORMAT_D32F)] = true;
-    }
-    vkGetPhysicalDeviceFormatProperties(gpuContext->physicalDevice, VK_FORMAT_D16_UNORM_S8_UINT, &formatProperties);
-    if (formatProperties.optimalTilingFeatures & requiredFeatures) {
-        _features[static_cast<uint>(Feature::FORMAT_D16S8)] = true;
-    }
-    vkGetPhysicalDeviceFormatProperties(gpuContext->physicalDevice, VK_FORMAT_D24_UNORM_S8_UINT, &formatProperties);
-    if (formatProperties.optimalTilingFeatures & requiredFeatures) {
-        _features[static_cast<uint>(Feature::FORMAT_D24S8)] = true;
-    }
-    vkGetPhysicalDeviceFormatProperties(gpuContext->physicalDevice, VK_FORMAT_D32_SFLOAT_S8_UINT, &formatProperties);
-    if (formatProperties.optimalTilingFeatures & requiredFeatures) {
-        _features[static_cast<uint>(Feature::FORMAT_D32FS8)] = true;
     }
 
     String compressedFmts;
@@ -299,6 +277,11 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
     cmdBuffInfo.queue = _queue;
     _cmdBuff          = createCommandBuffer(cmdBuffInfo);
 
+    VmaAllocatorCreateInfo allocatorInfo{};
+    allocatorInfo.physicalDevice = gpuContext->physicalDevice;
+    allocatorInfo.device         = _gpuDevice->vkDevice;
+    allocatorInfo.instance       = gpuContext->vkInstance;
+
     VmaVulkanFunctions vmaVulkanFunc{};
     vmaVulkanFunc.vkAllocateMemory                    = vkAllocateMemory;
     vmaVulkanFunc.vkBindBufferMemory                  = vkBindBufferMemory;
@@ -316,21 +299,32 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
     vmaVulkanFunc.vkInvalidateMappedMemoryRanges      = vkInvalidateMappedMemoryRanges;
     vmaVulkanFunc.vkMapMemory                         = vkMapMemory;
     vmaVulkanFunc.vkUnmapMemory                       = vkUnmapMemory;
-
-    VmaAllocatorCreateInfo allocatorInfo{};
-    allocatorInfo.physicalDevice = gpuContext->physicalDevice;
-    allocatorInfo.device         = _gpuDevice->vkDevice;
-    allocatorInfo.instance       = gpuContext->vkInstance;
+    vmaVulkanFunc.vkCmdCopyBuffer                     = vkCmdCopyBuffer;
 
     if (_gpuDevice->minorVersion > 0) {
         allocatorInfo.flags |= VMA_ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT;
         vmaVulkanFunc.vkGetBufferMemoryRequirements2KHR = vkGetBufferMemoryRequirements2;
         vmaVulkanFunc.vkGetImageMemoryRequirements2KHR  = vkGetImageMemoryRequirements2;
-    } else if (checkExtension(VK_KHR_DEDICATED_ALLOCATION_EXTENSION_NAME) &&
-               checkExtension(VK_KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME)) {
-        allocatorInfo.flags |= VMA_ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT;
-        vmaVulkanFunc.vkGetBufferMemoryRequirements2KHR = vkGetBufferMemoryRequirements2KHR;
-        vmaVulkanFunc.vkGetImageMemoryRequirements2KHR  = vkGetImageMemoryRequirements2KHR;
+        vmaVulkanFunc.vkBindBufferMemory2KHR            = vkBindBufferMemory2;
+        vmaVulkanFunc.vkBindImageMemory2KHR             = vkBindImageMemory2;
+    } else {
+        if (checkExtension(VK_KHR_DEDICATED_ALLOCATION_EXTENSION_NAME) &&
+            checkExtension(VK_KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME)) {
+            allocatorInfo.flags |= VMA_ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT;
+            vmaVulkanFunc.vkGetBufferMemoryRequirements2KHR = vkGetBufferMemoryRequirements2KHR;
+            vmaVulkanFunc.vkGetImageMemoryRequirements2KHR  = vkGetImageMemoryRequirements2KHR;
+        }
+        if (checkExtension(VK_KHR_BIND_MEMORY_2_EXTENSION_NAME)) {
+            vmaVulkanFunc.vkBindBufferMemory2KHR = vkBindBufferMemory2KHR;
+            vmaVulkanFunc.vkBindImageMemory2KHR  = vkBindImageMemory2KHR;
+        }
+    }
+    if (checkExtension(VK_EXT_MEMORY_BUDGET_EXTENSION_NAME)) {
+        if (_gpuDevice->minorVersion > 0) {
+            vmaVulkanFunc.vkGetPhysicalDeviceMemoryProperties2KHR = vkGetPhysicalDeviceMemoryProperties2;
+        } else if (checkExtension(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME)) {
+            vmaVulkanFunc.vkGetPhysicalDeviceMemoryProperties2KHR = vkGetPhysicalDeviceMemoryProperties2KHR;
+        }
     }
 
     allocatorInfo.pVulkanFunctions = &vmaVulkanFunc;

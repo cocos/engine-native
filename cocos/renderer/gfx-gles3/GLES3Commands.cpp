@@ -56,10 +56,12 @@ GLenum mapGLInternalFormat(Format format) {
         case Format::RGB8SN: return GL_RGB8_SNORM;
         case Format::RGB8UI: return GL_RGB8UI;
         case Format::RGB8I: return GL_RGB8I;
+        case Format::SRGB8: return GL_SRGB_EXT;
         case Format::RGBA8: return GL_RGBA8;
         case Format::RGBA8SN: return GL_RGBA8_SNORM;
         case Format::RGBA8UI: return GL_RGBA8UI;
         case Format::RGBA8I: return GL_RGBA8I;
+        case Format::SRGB8_A8: return GL_SRGB_ALPHA_EXT;
         case Format::R16I: return GL_R16I;
         case Format::R16UI: return GL_R16UI;
         case Format::R16F: return GL_R16F;
@@ -312,6 +314,8 @@ GLenum mapGLFormat(Format format) {
         case Format::R5G6B5: return GL_RGB;
         case Format::RGB5A1:
         case Format::RGBA4: return GL_RGBA;
+        case Format::SRGB8: return GL_SRGB_EXT;
+        case Format::SRGB8_A8: return GL_SRGB_ALPHA_EXT;
         case Format::D16: return GL_DEPTH_COMPONENT;
         case Format::D16S8: return GL_DEPTH_STENCIL;
         case Format::D24: return GL_DEPTH_COMPONENT;
@@ -1719,7 +1723,7 @@ void cmdFuncGLES3CreateFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gpu
             }
         } else {
 #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-            gpuFBO->glFramebuffer = static_cast<GLES3Context *>(device->getContext())->getDefaultFramebuffer();
+            outFBO->glFramebuffer = device->getDefaultFramebuffer();
 #endif
         }
     };
@@ -2865,7 +2869,7 @@ void cmdFuncGLES3BlitTexture(GLES3Device *device, GLES3GPUTexture *gpuTextureSrc
         }
 #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
         else
-            srcFramebuffer = static_cast<GLES3Context *>(device->getContext())->getDefaultFramebuffer();
+            srcFramebuffer = device->getDefaultFramebuffer();
 #endif
         if (cache->glReadFramebuffer != srcFramebuffer) {
             GL_CHECK(glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFramebuffer));
@@ -2878,7 +2882,7 @@ void cmdFuncGLES3BlitTexture(GLES3Device *device, GLES3GPUTexture *gpuTextureSrc
         }
 #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
         else
-            dstFramebuffer = static_cast<GLES3Context *>(device->getContext())->getDefaultFramebuffer();
+            dstFramebuffer = device->getDefaultFramebuffer();
 #endif
         if (cache->glDrawFramebuffer != dstFramebuffer) {
             GL_CHECK(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dstFramebuffer));

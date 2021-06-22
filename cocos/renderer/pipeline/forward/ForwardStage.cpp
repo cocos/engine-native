@@ -113,12 +113,13 @@ void ForwardStage::render(scene::Camera *camera) {
         queue->clear();
     }
 
-    uint   m = 0;
-    uint   p = 0;
+
     size_t k = 0;
     for (auto ro : renderObjects) {
         const auto *const model = ro.model;
+        uint              m     = 0;
         for (auto *subModel : model->getSubModels()) {
+            uint p = 0;
             for (auto *pass : subModel->getPasses()) {
                 if (pass->getPhase() != _phaseID) continue;
                 if (pass->getBatchingScheme() == scene::BatchingSchemes::INSTANCING) {
@@ -134,7 +135,9 @@ void ForwardStage::render(scene::Camera *camera) {
                         _renderQueues[k]->insertRenderPass(ro, m, p);
                     }
                 }
+                ++p;
             }
+            ++m;
         }
     }
     for (auto *queue : _renderQueues) {
@@ -178,7 +181,9 @@ void ForwardStage::render(scene::Camera *camera) {
     auto *renderPass = !colorTextures.empty() && colorTextures[0] ? framebuffer->getRenderPass() : pipeline->getOrCreateRenderPass(static_cast<gfx::ClearFlagBit>(camera->clearFlag));
 
     cmdBuff->beginRenderPass(renderPass, framebuffer, _renderArea, _clearColors, camera->clearDepth, camera->clearStencil);
-    cmdBuff->bindDescriptorSet(globalSet, _pipeline->getDescriptorSet());
+
+    uint const globalOffsets[] = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
+    cmdBuff->bindDescriptorSet(globalSet, _pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
 
     _renderQueues[0]->recordCommandBuffer(_device, renderPass, cmdBuff);
     _instancedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);

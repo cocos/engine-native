@@ -93,7 +93,8 @@ function build_android()
 
     echo "Compile Android - cmake ..."
     echo "ANDORID_NDK ${ANDROID_NDK} or ${ANDROID_NDK_HOME}"
-    ./gradlew assembleDebug --quiet
+    #./gradlew assembleDebug --quiet
+    ./gradlew :CocosGame:assembleDebug --quiet
     echo "Compile Android Debug Done!"
     # ./gradlew assembleRelease # --quiet
     # echo "Compile Android Release Done!"
@@ -233,10 +234,6 @@ fi
 cd $COCOS2DX_ROOT/tools/travis-scripts
 generate_bindings_glue_codes
 
-# Compile pull request
-if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
-    run_compile
-fi
 
 cd $COCOS2DX_ROOT
 ## revert change

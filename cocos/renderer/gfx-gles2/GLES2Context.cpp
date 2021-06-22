@@ -382,7 +382,9 @@ bool GLES2Context::doInit(const ContextInfo &info) {
 }
 
 void GLES2Context::doDestroy() {
-    EGL_CHECK(eglMakeCurrent(_eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+    if (_eglDisplay) {
+        EGL_CHECK(eglMakeCurrent(_eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+    }
 
     if (!_vecEGLConfig.empty()) {
         _vecEGLConfig.clear();
@@ -479,8 +481,8 @@ bool GLES2Context::makeCurrent(bool bound) {
     }
 
     if (makeCurrentImpl(bound)) {
+#if (CC_PLATFORM != CC_PLATFORM_MAC_IOS)
         if (!_isInitialized) {
-#if (CC_PLATFORM == CC_PLATFORM_WINDOWS || CC_PLATFORM == CC_PLATFORM_ANDROID)
             // Turn on or off the vertical sync depending on the input bool value.
             int interval = 1;
             switch (_vsyncMode) {
@@ -496,11 +498,10 @@ bool GLES2Context::makeCurrent(bool bound) {
                 CC_LOG_ERROR("wglSwapInterval() - FAILED.");
                 return false;
             }
-#endif
             _isInitialized = true;
         }
 
-#if CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION && CC_PLATFORM != CC_PLATFORM_MAC_IOS && defined(GL_DEBUG_SOURCE_API_KHR)
+    #if CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION && defined(GL_DEBUG_SOURCE_API_KHR)
         GL_CHECK(glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_KHR));
         if (glDebugMessageControlKHR) {
             GL_CHECK(glDebugMessageControlKHR(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE));
@@ -508,6 +509,8 @@ bool GLES2Context::makeCurrent(bool bound) {
         if (glDebugMessageCallbackKHR) {
             GL_CHECK(glDebugMessageCallbackKHR(GLES2EGLDebugProc, NULL));
         }
+    #endif
+
 #endif
 
         //////////////////////////////////////////////////////////////////////////
