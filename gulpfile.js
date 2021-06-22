@@ -61,7 +61,7 @@ function execSync(cmd, workPath) {
 function downloadSimulatorDLL(callback) {
     var Download = require('download');
     var destPath = Path.join('simulator', 'win32');
-    Download('http://192.168.52.109/TestBuilds/Fireball/simulator/dlls/dll.zip', destPath, {
+    Download('http://ftp.cocos.org/TestBuilds/Fireball/simulator/dlls/dll.zip', destPath, {
         mode: '755',
         extract: true,
         strip: 0,
@@ -113,7 +113,7 @@ function uploadZipFile(zipFileName, path, cb) {
     var remotePath = Path.join('TestBuilds', 'Fireball', 'cocos2d-x', branch, zipFileName);
     var zipFilePath = Path.join(path, zipFileName);
     upload2Ftp(zipFilePath, remotePath, {
-        host: '192.168.52.109',
+        host: 'ftp.cocos.org',
         user: process.env.ftpUser,
         password: process.env.ftpPass
     }, cb);
