@@ -26,12 +26,12 @@ jobs:
 
       - name: Make PR
         run: |
-          cd tools/travis-scripts && sh generate-pr.sh
+          cd tools/travis-scripts && bash generate-pr.sh
         env:
           TRAVIS_OS_NAME: linux
           TRAVIS_PULL_REQUEST: "1"
           TRAVIS_BRANCH: ${{github.base_ref}}
-          TRAVIS_COMMIT: $${github.sha}}
+          TRAVIS_COMMIT: ${{github.sha}}
           TRAVIS_COMMIT_MESSAGE: ${{github.event.head_commit.message}}
           GH_EMAIL: cocos-robot@cocos.com
           GH_PASSWORD: ${{ secrets.PR_TOKEN }}
