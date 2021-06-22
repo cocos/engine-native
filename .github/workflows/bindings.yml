@@ -29,7 +29,7 @@ jobs:
           cd tools/travis-scripts && bash generate-pr.sh
         env:
           TRAVIS_OS_NAME: linux
-          TRAVIS_PULL_REQUEST: "1"
+          TRAVIS_PULL_REQUEST: "false"
           TRAVIS_BRANCH: ${{github.base_ref}}
           TRAVIS_COMMIT: ${{github.sha}}
           TRAVIS_COMMIT_MESSAGE: ${{github.event.head_commit.message}}
