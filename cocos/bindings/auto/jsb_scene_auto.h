@@ -345,7 +345,6 @@ SE_DECLARE_FUNC(js_scene_RenderScene_removeSpotLight);
 SE_DECLARE_FUNC(js_scene_RenderScene_removeSpotLights);
 SE_DECLARE_FUNC(js_scene_RenderScene_setMainLight);
 SE_DECLARE_FUNC(js_scene_RenderScene_update);
-SE_DECLARE_FUNC(js_scene_RenderScene_updateBatches);
 SE_DECLARE_FUNC(js_scene_RenderScene_RenderScene);
 
 extern se::Object* __jsb_cc_scene_RenderWindow_proto;

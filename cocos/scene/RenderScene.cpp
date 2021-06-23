@@ -104,8 +104,8 @@ void RenderScene::removeModels() {
     _models.clear();
 }
 
-void RenderScene::updateBatches(std::vector<DrawBatch2D *> batches) {
-    _drawBatch2Ds = std::move(batches);
+void RenderScene::updateBatches(std::vector<DrawBatch2D *> &&batches) {
+    _drawBatch2Ds = batches;
 }
 
 void RenderScene::addBatch(DrawBatch2D *drawBatch2D) {

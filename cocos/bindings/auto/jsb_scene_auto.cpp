@@ -6196,25 +6196,6 @@ static bool js_scene_RenderScene_update(se::State& s) // NOLINT(readability-iden
 }
 SE_BIND_FUNC(js_scene_RenderScene_update)
 
-static bool js_scene_RenderScene_updateBatches(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::RenderScene>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_RenderScene_updateBatches : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 1) {
-        HolderType<std::vector<cc::scene::DrawBatch2D *>, false> arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-        SE_PRECONDITION2(ok, false, "js_scene_RenderScene_updateBatches : Error processing arguments");
-        cobj->updateBatches(arg0.value());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-    return false;
-}
-SE_BIND_FUNC(js_scene_RenderScene_updateBatches)
-
 SE_DECLARE_FINALIZE_FUNC(js_cc_scene_RenderScene_finalize)
 
 static bool js_scene_RenderScene_constructor(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references) constructor.c
@@ -6265,7 +6246,6 @@ bool js_register_scene_RenderScene(se::Object* obj) // NOLINT(readability-identi
     cls->defineFunction("removeSpotLights", _SE(js_scene_RenderScene_removeSpotLights));
     cls->defineFunction("setMainLight", _SE(js_scene_RenderScene_setMainLight));
     cls->defineFunction("update", _SE(js_scene_RenderScene_update));
-    cls->defineFunction("updateBatches", _SE(js_scene_RenderScene_updateBatches));
     cls->defineFinalizeFunction(_SE(js_cc_scene_RenderScene_finalize));
     cls->install();
     JSBClassType::registerClass<cc::scene::RenderScene>(cls);
