@@ -45,7 +45,7 @@ static bool js_scene_Pass_setRootBufferAndBlock(se::State& s) // NOLINT(readabil
     CC_UNUSED bool ok   = true;
     if (argc == 2) {
         HolderType<cc::gfx::Buffer*, false> arg0 = {};
-        uint8_t* rootBlock{nullptr};
+        uint8_t*                            rootBlock{nullptr};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         args[1].toObject()->getArrayBufferData(&rootBlock, nullptr);
         cobj->setRootBufferAndBlock(arg0.value(), rootBlock);
@@ -146,7 +146,7 @@ static bool js_scene_Node_initWithData(se::State& s) // NOLINT(readability-ident
 }
 SE_BIND_FUNC(js_scene_Node_initWithData) // NOLINT(readability-identifier-naming, google-runtime-references)
 
-static bool js_scene_Pass_initWithData(se::State& s) // constructor_overloaded.c
+static bool js_scene_Pass_initWithData(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     auto*          cobj = static_cast<cc::scene::Pass*>(s.nativeThisObject());
     CC_UNUSED bool ok   = true;
@@ -166,7 +166,7 @@ static bool js_scene_Pass_initWithData(se::State& s) // constructor_overloaded.c
     SE_REPORT_ERROR("wrong number of arguments: %d", (int)argc);
     return false;
 }
-SE_BIND_FUNC(js_scene_Pass_initWithData)
+SE_BIND_FUNC(js_scene_Pass_initWithData) // NOLINT(readability-identifier-naming, google-runtime-references)
 
 static bool js_scene_SubModel_setSubMeshBuffers(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
