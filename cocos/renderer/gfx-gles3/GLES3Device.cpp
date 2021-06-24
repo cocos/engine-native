@@ -128,6 +128,14 @@ bool GLES3Device::doInit(const DeviceInfo &info) {
         _features[static_cast<uint>(Feature::TEXTURE_HALF_FLOAT_LINEAR)] = true;
     }
 
+    if (checkExtension("multiview")) {
+        _features[static_cast<uint>(Feature::MULTIVIEW)] = true;
+    }
+
+    if (checkExtension("viewport_array")) {
+        _features[static_cast<uint>(Feature::MULTIVIEWPORT)] = true;
+    }
+
     String fbfLevelStr = "NONE";
     if (checkExtension("framebuffer_fetch")) {
         String nonCoherent = "framebuffer_fetch_non";

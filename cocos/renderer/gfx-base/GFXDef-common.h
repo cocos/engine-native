@@ -154,6 +154,7 @@ enum class Feature {
     MULTITHREADED_SUBMISSION,
     COMPUTE_SHADER,
     MULTIVIEW,
+    MULTIVIEWPORT,
     COUNT,
 };
 
