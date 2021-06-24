@@ -141,8 +141,8 @@ bool ForwardPipeline::activeRenderer() {
     auto *const sharedData = _pipelineSceneData->getSharedData();
 
     gfx::SamplerInfo info{
-        gfx::Filter::LINEAR,
-        gfx::Filter::LINEAR,
+        gfx::Filter::POINT,
+        gfx::Filter::POINT,
         gfx::Filter::NONE,
         gfx::Address::CLAMP,
         gfx::Address::CLAMP,

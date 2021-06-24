@@ -51,7 +51,7 @@ void GlobalDSManager::activate(gfx::Device* device, RenderPipeline* pipeline) {
     _device = device;
     _pipeline = pipeline;
 
-    const gfx::SamplerInfo info{
+    const gfx::SamplerInfo linearInfo{
         gfx::Filter::LINEAR,
         gfx::Filter::LINEAR,
         gfx::Filter::NONE,
@@ -63,8 +63,23 @@ void GlobalDSManager::activate(gfx::Device* device, RenderPipeline* pipeline) {
         {},
         {},
     };
-    const auto shadowMapSamplerHash = SamplerLib::genSamplerHash(info);
-    _sampler                        = SamplerLib::getSampler(shadowMapSamplerHash);
+    const auto linearHash = SamplerLib::genSamplerHash(linearInfo);
+    _linearSampler        = SamplerLib::getSampler(linearHash);
+
+    const gfx::SamplerInfo pointInfo{
+        gfx::Filter::POINT,
+        gfx::Filter::POINT,
+        gfx::Filter::NONE,
+        gfx::Address::CLAMP,
+        gfx::Address::CLAMP,
+        gfx::Address::CLAMP,
+        {},
+        {},
+        {},
+        {},
+    };
+    const auto pointHash = SamplerLib::genSamplerHash(pointInfo);
+    _pointSampler        = SamplerLib::getSampler(pointHash);
 
     setDescriptorSetLayout();
     if (_descriptorSetLayout) {
