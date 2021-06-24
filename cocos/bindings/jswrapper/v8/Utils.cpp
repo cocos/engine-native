@@ -62,7 +62,7 @@ void seToJsValue(v8::Isolate *isolate, const Value &v, v8::Local<v8::Value> *out
             *outJsVal = v8::Number::New(isolate, v.toNumber());
             break;
         case Value::Type::String: {
-            v8::MaybeLocal<v8::String> str = v8::String::NewFromUtf8(isolate, v.toString().c_str(), v8::NewStringType::kNormal);
+            v8::MaybeLocal<v8::String> str = v8::String::NewFromUtf8(isolate, v.toString().data(), v8::NewStringType::kNormal, static_cast<int>(v.toString().length()));
             if (!str.IsEmpty())
                 *outJsVal = str.ToLocalChecked();
             else

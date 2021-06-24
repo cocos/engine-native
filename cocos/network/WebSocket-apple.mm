@@ -147,10 +147,9 @@ static std::vector<cc::network::WebSocket *> *__websocketInstances = nullptr;
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessageWithString:(nonnull NSString *)string {
     if (!_isDestroyed) {
-        std::string message = [string UTF8String];
         cc::network::WebSocket::Data data;
-        data.bytes = (char *)message.c_str();
-        data.len = message.length() + 1;
+        data.bytes = static_cast<char*>([string cStringUsingEncoding:NSUTF8StringEncoding]);
+        data.len = [string length];
         data.isBinary = false;
         data.issued = 0;
         data.ext = nullptr;
@@ -244,7 +243,7 @@ bool WebSocket::init(const Delegate &delegate,
 
 void WebSocket::send(const std::string &message) {
     if ([_impl getReadyState] == State::OPEN) {
-        NSString *str = [[NSString alloc] initWithUTF8String:message.c_str()];
+        NSString *str = [[NSString alloc] initWithBytes:message.data() length:message.length() encoding:NSUTF8StringEncoding];
         [_impl sendString:str];
     } else {
         NSLog(@"Couldn't send message since websocket wasn't opened!");
