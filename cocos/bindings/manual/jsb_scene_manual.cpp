@@ -102,19 +102,19 @@ static bool js_scene_Model_setInstancedAttrBlock(se::State& s) // NOLINT(readabi
         for (uint32_t i = 0; i < length; i++) {
             dataObj->getArrayElement(i, &value);
             uint8_t* viewBuff{nullptr};
-            value.toObject()->getTypedArrayData(&viewBuff, nullptr);
+            value.toObject()->getArrayBufferData(&viewBuff, nullptr);
             viewsData[i] = viewBuff;
         }
 
-        auto *attrBlock = new cc::scene::InstancedAttributeBlock;
-        attrBlock->views = std::move(viewsData);
+        cc::scene::InstancedAttributeBlock attrBlock;
+        attrBlock.views = std::move(viewsData);
 
         // attrs
         CC_UNUSED bool                                    ok   = true;
         HolderType<std::vector<cc::gfx::Attribute>, true> arg2 = {};
         ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_scene_Model_setInstancedAttrBlock : Error processing arguments");
-        cobj->setInstancedAttrBlock(instanceBuff, attrBlock, arg2.value());
+        cobj->setInstancedAttrBlock(instanceBuff, &attrBlock, arg2.value());
 
         return true;
     }
