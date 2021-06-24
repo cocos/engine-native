@@ -66,7 +66,7 @@ void InstancedBuffer::merge(const scene::Model *model, const scene::SubModel *su
 }
 
 void InstancedBuffer::merge(const scene::Model *model, const scene::SubModel *subModel, uint passIdx, gfx::Shader *shaderImplant) {
-    uint        stride          = model->getInstancedBufferSize();
+    auto        stride          = model->getInstancedBufferSize();
     const auto *instancedBuffer = model->getInstancedBuffer();
 
     if (!stride) return; // we assume per-instance attributes are always present

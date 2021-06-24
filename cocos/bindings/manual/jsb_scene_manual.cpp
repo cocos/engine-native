@@ -115,7 +115,7 @@ static bool js_scene_Model_setInstancedAttrBlock(se::State& s) // NOLINT(readabi
         HolderType<std::vector<cc::gfx::Attribute>, true> arg2 = {};
         ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_scene_Model_setInstancedAttrBlock : Error processing arguments");
-        cobj->setInstancedAttrBlock(instanceBuff, instanceBufferSize, std::move(attrBlock), arg2.value());
+        cobj->setInstancedAttrBlock(instanceBuff, static_cast<uint32_t>(instanceBufferSize), std::move(attrBlock), arg2.value());
 
         return true;
     }
