@@ -48,6 +48,7 @@ public:
     virtual void bindPipelineState(PipelineState *pso)                                                                                                                                                        = 0;
     virtual void bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets)                                                                               = 0;
     virtual void bindInputAssembler(InputAssembler *ia)                                                                                                                                                       = 0;
+    virtual void setViewports(const Viewport *vp, uint count)                                                                                                                                                 = 0;
     virtual void setViewport(const Viewport &vp)                                                                                                                                                              = 0;
     virtual void setScissor(const Rect &rect)                                                                                                                                                                 = 0;
     virtual void setLineWidth(float width)                                                                                                                                                                    = 0;
