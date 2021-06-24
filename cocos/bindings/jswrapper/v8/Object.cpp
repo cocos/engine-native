@@ -428,7 +428,9 @@ bool Object::getTypedArrayData(uint8_t **ptr, size_t *length) const {
     v8::Local<v8::TypedArray> arr          = v8::Local<v8::TypedArray>::Cast(obj);
     const auto &              backingStore = arr->Buffer()->GetBackingStore();
     *ptr                                   = static_cast<uint8_t *>(backingStore->Data()) + arr->ByteOffset();
-    *length                                = arr->ByteLength();
+    if (length) {
+        *length = arr->ByteLength();
+    }
     return true;
 }
 

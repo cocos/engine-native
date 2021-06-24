@@ -2353,25 +2353,25 @@ bool register_all_pipeline(se::Object* obj)
     se::Object* ns = nsVal.toObject();
 
     js_register_pipeline_RenderQueueDesc(ns);
-    js_register_pipeline_RenderFlow(ns);
-    js_register_pipeline_RenderStage(ns);
-    js_register_pipeline_LightingStage(ns);
-    js_register_pipeline_RenderPipeline(ns);
-    js_register_pipeline_RenderStageInfo(ns);
-    js_register_pipeline_ForwardPipeline(ns);
-    js_register_pipeline_GbufferStage(ns);
-    js_register_pipeline_RenderPipelineInfo(ns);
-    js_register_pipeline_ForwardStage(ns);
-    js_register_pipeline_ShadowStage(ns);
     js_register_pipeline_GlobalDSManager(ns);
+    js_register_pipeline_RenderPipelineInfo(ns);
+    js_register_pipeline_RenderPipeline(ns);
+    js_register_pipeline_ForwardPipeline(ns);
     js_register_pipeline_RenderFlowInfo(ns);
-    js_register_pipeline_PostprocessStage(ns);
+    js_register_pipeline_RenderFlow(ns);
     js_register_pipeline_ForwardFlow(ns);
+    js_register_pipeline_RenderStageInfo(ns);
+    js_register_pipeline_RenderStage(ns);
+    js_register_pipeline_ForwardStage(ns);
+    js_register_pipeline_ShadowFlow(ns);
+    js_register_pipeline_ShadowStage(ns);
     js_register_pipeline_InstancedBuffer(ns);
     js_register_pipeline_DeferredPipeline(ns);
     js_register_pipeline_GbufferFlow(ns);
+    js_register_pipeline_GbufferStage(ns);
     js_register_pipeline_LightingFlow(ns);
-    js_register_pipeline_ShadowFlow(ns);
+    js_register_pipeline_LightingStage(ns);
+    js_register_pipeline_PostprocessStage(ns);
     return true;
 }
 
