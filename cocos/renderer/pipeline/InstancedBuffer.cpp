@@ -126,7 +126,7 @@ void InstancedBuffer::merge(const scene::Model *model, const scene::SubModel *su
             attribute.name,
             attribute.format,
             attribute.isNormalized,
-            vertexBuffers.size(), // stream
+            static_cast<uint>(vertexBuffers.size()), // stream
             true,
             attribute.location
             });
