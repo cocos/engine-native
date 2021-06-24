@@ -153,6 +153,7 @@ enum class Feature {
     STENCIL_COMPARE_MASK,
     MULTITHREADED_SUBMISSION,
     COMPUTE_SHADER,
+    MULTIVIEW,
     COUNT,
 };
 
@@ -1071,6 +1072,7 @@ struct SubpassInfo {
     std::vector<uint> resolves;
     std::vector<uint> preserves;
     uint              depthStencil = INVALID_BINDING;
+    uint              viewMask     = INVALID_BINDING;
 };
 
 using SubpassInfoList = vector<SubpassInfo>;
@@ -1078,6 +1080,7 @@ using SubpassInfoList = vector<SubpassInfo>;
 struct SubpassDependency {
     uint                    srcSubpass = 0U;
     uint                    dstSubpass = 0U;
+    uint                    viewOffset = 0U;
     std::vector<AccessType> srcAccesses;
     std::vector<AccessType> dstAccesses;
 };
@@ -1214,6 +1217,7 @@ struct PipelineStateInfo {
     DynamicStateFlags dynamicStates = DynamicStateFlagBit::NONE;
     PipelineBindPoint bindPoint     = PipelineBindPoint::GRAPHICS;
     uint              subpass       = 0U;
+    uint              viewports     = 1U;
 };
 
 struct CommandBufferInfo {
