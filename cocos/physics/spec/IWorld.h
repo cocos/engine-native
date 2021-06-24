@@ -140,8 +140,8 @@ inline bool nativevalue_to_se(const std::vector<std::shared_ptr<cc::physics::Tri
     se::HandleObject array(se::Object::createArrayObject(from.size() * cc::physics::TriggerEventPair::COUNT));
     for (size_t i = 0; i < from.size(); i++) {
         auto t = i * cc::physics::TriggerEventPair::COUNT;
-        array->setArrayElement(static_cast<uint>(t + 0), se::Value(reinterpret_cast<uint8_t>(&from[i]->shapeA)));
-        array->setArrayElement(static_cast<uint>(t + 1), se::Value(reinterpret_cast<uint8_t>(&from[i]->shapeB)));
+        array->setArrayElement(static_cast<uint>(t + 0), se::Value(from[i]->shapeA));
+        array->setArrayElement(static_cast<uint>(t + 1), se::Value(from[i]->shapeB));
         array->setArrayElement(static_cast<uint>(t + 2), se::Value(static_cast<uint8_t>(from[i]->state)));
     }
     to.setObject(array);
@@ -177,8 +177,8 @@ inline bool nativevalue_to_se(const std::vector<std::shared_ptr<cc::physics::Con
     se::HandleObject array(se::Object::createArrayObject(from.size() * cc::physics::ContactEventPair::COUNT));
     for (size_t i = 0; i < from.size(); i++) {
         auto t = i * cc::physics::ContactEventPair::COUNT;
-        array->setArrayElement(static_cast<uint>(t + 0), se::Value(reinterpret_cast<uint8_t>(&from[i]->shapeA)));
-        array->setArrayElement(static_cast<uint>(t + 1), se::Value(reinterpret_cast<uint8_t>(&from[i]->shapeB)));
+        array->setArrayElement(static_cast<uint>(t + 0), se::Value(from[i]->shapeA));
+        array->setArrayElement(static_cast<uint>(t + 1), se::Value(from[i]->shapeB));
         array->setArrayElement(static_cast<uint>(t + 2), se::Value(static_cast<uint8_t>(from[i]->state)));
         array->setArrayElement(static_cast<uint>(t + 3), [&]() -> se::Value {
             auto obj = se::Value();
@@ -193,7 +193,7 @@ inline bool nativevalue_to_se(const std::vector<std::shared_ptr<cc::physics::Con
 template <>
 inline bool nativevalue_to_se(const cc::physics::RaycastResult &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
-    obj->setProperty("shape", se::Value(reinterpret_cast<uint8_t>(&from.shape)));
+    obj->setProperty("shape", se::Value(from.shape));
     obj->setProperty("distance", se::Value(from.distance));
     se::Value tmp;
     if (nativevalue_to_se(from.hitPoint, tmp, ctx)) obj->setProperty("hitPoint", tmp);
