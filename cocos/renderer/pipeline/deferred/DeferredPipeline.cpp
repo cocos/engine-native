@@ -267,9 +267,13 @@ bool DeferredPipeline::activeRenderer() {
         gfx::Address::CLAMP,
         gfx::Address::CLAMP,
         gfx::Address::CLAMP,
+        {},
+        {},
+        {},
+        {},
     };
-    const auto  samplerHash = SamplerLib::genSamplerHash(info);
-    auto *const sampler     = SamplerLib::getSampler(samplerHash);
+    const uint  samplerHash = SamplerLib::genSamplerHash(info);
+    gfx::Sampler *const sampler     = SamplerLib::getSampler(samplerHash);
 
     // Main light sampler binding
     this->_descriptorSet->bindSampler(SHADOWMAP::BINDING, sampler);

@@ -152,8 +152,8 @@ bool ForwardPipeline::activeRenderer() {
         {},
         {},
     };
-    const auto shadowMapSamplerHash = SamplerLib::genSamplerHash(info);
-    auto *const shadowMapSampler     = SamplerLib::getSampler(shadowMapSamplerHash);
+    const uint shadowMapSamplerHash = SamplerLib::genSamplerHash(info);
+    gfx::Sampler *const shadowMapSampler     = SamplerLib::getSampler(shadowMapSamplerHash);
 
     // Main light sampler binding
     this->_descriptorSet->bindSampler(SHADOWMAP::BINDING, shadowMapSampler);
