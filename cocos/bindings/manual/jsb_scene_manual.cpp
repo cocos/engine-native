@@ -103,7 +103,6 @@ static bool js_scene_Model_setInstancedAttrBlock(se::State& s) // NOLINT(readabi
         for (uint32_t i = 0; i < length; i++) {
             dataObj->getArrayElement(i, &value);
             uint8_t* viewBuff{nullptr};
-            size_t   viewBuffSize;
             value.toObject()->getTypedArrayData(&viewBuff, nullptr);
             viewsData[i] = viewBuff;
         }
