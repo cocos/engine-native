@@ -134,7 +134,7 @@ void jsToSeValue(v8::Isolate *isolate, v8::Local<v8::Value> jsval, Value *v) {
 }
 
 template <typename T>
-void setReturnValue(const Value &data, const T &argv) {
+void setReturnValueTemplate(const Value &data, const T &argv) {
     if (data.getType() == Value::Type::Undefined) {
         argv.GetReturnValue().Set(v8::Undefined(argv.GetIsolate()));
     } else if (data.getType() == Value::Type::Null) {
@@ -152,14 +152,12 @@ void setReturnValue(const Value &data, const T &argv) {
     }
 }
 
-template <>
 void setReturnValue(const Value &data, const v8::FunctionCallbackInfo<v8::Value> &argv) {
-    setReturnValue(data, argv);
+    setReturnValueTemplate(data, argv);
 }
 
-template <>
 void setReturnValue(const Value &data, const v8::PropertyCallbackInfo<v8::Value> &argv) {
-    setReturnValue(data, argv);
+    setReturnValueTemplate(data, argv);
 }
 
 const char *keyPrivateData = "__cc_private_data";

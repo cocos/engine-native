@@ -344,7 +344,7 @@ static bool webSocketConstructor(se::State &s) { // NOLINT (google-runtime-refer
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting 1<= and <=3", argc);
     return false;
 }
-SE_BIND_CTOR(webSocketConstructor, jsbWebSocketClass, WebSocket_finalize)
+SE_BIND_CTOR(webSocketConstructor, jsbWebSocketClass, webSocketFinalize)
 
 static bool webSocketSend(const se::State &s) {
     const auto &args = s.args();
@@ -497,11 +497,11 @@ WEBSOCKET_DEFINE_READONLY_INT_FIELD(Websocket_CLOSING, static_cast<int>(cc::netw
 WEBSOCKET_DEFINE_READONLY_INT_FIELD(Websocket_CLOSED, static_cast<int>(cc::network::WebSocket::State::CLOSED))
 
 bool register_all_websocket(se::Object *obj) { // NOLINT (readability-identifier-naming)
-    se::Class *cls = se::Class::create("WebSocket", obj, nullptr, _SE(WebSocket_constructor));
-    cls->defineFinalizeFunction(_SE(WebSocket_finalize));
+    se::Class *cls = se::Class::create("WebSocket", obj, nullptr, _SE(webSocketConstructor));
+    cls->defineFinalizeFunction(_SE(webSocketFinalize));
 
-    cls->defineFunction("send", _SE(WebSocket_send));
-    cls->defineFunction("close", _SE(WebSocket_close));
+    cls->defineFunction("send", _SE(webSocketSend));
+    cls->defineFunction("close", _SE(webSocketClose));
     cls->defineProperty("readyState", _SE(webSocketGetReadyState), nullptr);
     cls->defineProperty("bufferedAmount", _SE(webSocketGetBufferedAmount), nullptr);
     cls->defineProperty("extensions", _SE(webSocketGetExtensions), nullptr);
