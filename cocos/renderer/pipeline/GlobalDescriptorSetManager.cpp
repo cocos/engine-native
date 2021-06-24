@@ -63,7 +63,7 @@ void GlobalDSManager::activate(gfx::Device* device, RenderPipeline* pipeline) {
         {},
         {},
     };
-    const auto linearHash = SamplerLib::genSamplerHash(linearInfo);
+    const uint linearHash = SamplerLib::genSamplerHash(linearInfo);
     _linearSampler        = SamplerLib::getSampler(linearHash);
 
     const gfx::SamplerInfo pointInfo{
@@ -78,7 +78,7 @@ void GlobalDSManager::activate(gfx::Device* device, RenderPipeline* pipeline) {
         {},
         {},
     };
-    const auto pointHash = SamplerLib::genSamplerHash(pointInfo);
+    const uint pointHash = SamplerLib::genSamplerHash(pointInfo);
     _pointSampler        = SamplerLib::getSampler(pointHash);
 
     setDescriptorSetLayout();

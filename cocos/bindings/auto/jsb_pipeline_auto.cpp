@@ -1960,6 +1960,25 @@ static bool js_pipeline_GlobalDSManager_getGlobalDescriptorSet(se::State& s)
 }
 SE_BIND_FUNC(js_pipeline_GlobalDSManager_getGlobalDescriptorSet)
 
+static bool js_pipeline_GlobalDSManager_getLinearSampler(se::State& s)
+{
+    cc::pipeline::GlobalDSManager* cobj = SE_THIS_OBJECT<cc::pipeline::GlobalDSManager>(s);
+    SE_PRECONDITION2(cobj, false, "js_pipeline_GlobalDSManager_getLinearSampler : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::gfx::Sampler* result = cobj->getLinearSampler();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_pipeline_GlobalDSManager_getLinearSampler : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_pipeline_GlobalDSManager_getLinearSampler)
+
 static bool js_pipeline_GlobalDSManager_getOrCreateDescriptorSet(se::State& s)
 {
     cc::pipeline::GlobalDSManager* cobj = SE_THIS_OBJECT<cc::pipeline::GlobalDSManager>(s);
@@ -1982,24 +2001,24 @@ static bool js_pipeline_GlobalDSManager_getOrCreateDescriptorSet(se::State& s)
 }
 SE_BIND_FUNC(js_pipeline_GlobalDSManager_getOrCreateDescriptorSet)
 
-static bool js_pipeline_GlobalDSManager_getShadowMapSampler(se::State& s)
+static bool js_pipeline_GlobalDSManager_getPointSampler(se::State& s)
 {
     cc::pipeline::GlobalDSManager* cobj = SE_THIS_OBJECT<cc::pipeline::GlobalDSManager>(s);
-    SE_PRECONDITION2(cobj, false, "js_pipeline_GlobalDSManager_getShadowMapSampler : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_pipeline_GlobalDSManager_getPointSampler : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        cc::gfx::Sampler* result = cobj->getShadowMapSampler();
+        cc::gfx::Sampler* result = cobj->getPointSampler();
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-        SE_PRECONDITION2(ok, false, "js_pipeline_GlobalDSManager_getShadowMapSampler : Error processing arguments");
+        SE_PRECONDITION2(ok, false, "js_pipeline_GlobalDSManager_getPointSampler : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
         return true;
     }
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
     return false;
 }
-SE_BIND_FUNC(js_pipeline_GlobalDSManager_getShadowMapSampler)
+SE_BIND_FUNC(js_pipeline_GlobalDSManager_getPointSampler)
 
 static bool js_pipeline_GlobalDSManager_update(se::State& s)
 {
@@ -2053,8 +2072,9 @@ bool js_register_pipeline_GlobalDSManager(se::Object* obj)
     cls->defineFunction("getDescriptorSetLayout", _SE(js_pipeline_GlobalDSManager_getDescriptorSetLayout));
     cls->defineFunction("getDescriptorSetMap", _SE(js_pipeline_GlobalDSManager_getDescriptorSetMap));
     cls->defineFunction("getGlobalDescriptorSet", _SE(js_pipeline_GlobalDSManager_getGlobalDescriptorSet));
+    cls->defineFunction("getLinearSampler", _SE(js_pipeline_GlobalDSManager_getLinearSampler));
     cls->defineFunction("getOrCreateDescriptorSet", _SE(js_pipeline_GlobalDSManager_getOrCreateDescriptorSet));
-    cls->defineFunction("getShadowMapSampler", _SE(js_pipeline_GlobalDSManager_getShadowMapSampler));
+    cls->defineFunction("getPointSampler", _SE(js_pipeline_GlobalDSManager_getPointSampler));
     cls->defineFunction("update", _SE(js_pipeline_GlobalDSManager_update));
     cls->defineFinalizeFunction(_SE(js_cc_pipeline_GlobalDSManager_finalize));
     cls->install();
