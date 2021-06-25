@@ -30,6 +30,7 @@
 #include "gfx-base/GFXBuffer.h"
 #include "gfx-base/GFXInputAssembler.h"
 #include "pipeline/RenderPipeline.h"
+#include "frame-graph/FrameGraph.h"
 
 namespace cc {
 namespace pipeline {
@@ -69,6 +70,8 @@ public:
     void                          updateQuadVertexData(const gfx::Rect &renderArea);
     void                          genQuadVertexData(gfx::SurfaceTransform surfaceTransform, const gfx::Rect &renderArea, float *data);
 
+    framegraph::FrameGraph &getFrameGraph() const { return _fg; }
+
 private:
     bool activeRenderer();
     bool createQuadInputAssembler(gfx::Buffer **quadIB, gfx::Buffer **quadVB, gfx::InputAssembler **quadIA);
@@ -94,6 +97,8 @@ private:
     gfx::RenderPass *   _lightingRenderPass = nullptr;
     uint                _width;
     uint                _height;
+
+    framegraph::FrameGraph _fg;
 };
 
 } // namespace pipeline

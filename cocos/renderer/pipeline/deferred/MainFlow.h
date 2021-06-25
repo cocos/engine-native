@@ -23,50 +23,30 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "LightingFlow.h"
-#include "../SceneCulling.h"
-#include "DeferredPipeline.h"
-#include "LightingStage.h"
-#include "gfx-base/GFXDescriptorSet.h"
-#include "gfx-base/GFXDevice.h"
-#include "gfx-base/GFXFramebuffer.h"
+#pragma once
+
+#include "../RenderFlow.h"
 
 namespace cc {
 namespace pipeline {
-RenderFlowInfo LightingFlow::initInfo = {
-    "LightingFlow",
-    static_cast<uint>(DeferredFlowPriority::LIGHTING),
-    static_cast<uint>(RenderFlowTag::SCENE),
-    {},
+
+class GbufferStage;
+
+class CC_DLL MainFlow : public RenderFlow {
+public:
+    static const RenderFlowInfo &getInitializeInfo();
+
+    MainFlow() = default;
+    ~MainFlow() override;
+
+    bool initialize(const RenderFlowInfo &info) override;
+    void activate(RenderPipeline *pipeline) override;
+    void destroy() override;
+    void render(scene::Camera *camera) override;
+
+private:
+    static RenderFlowInfo initInfo;
 };
-const RenderFlowInfo &LightingFlow::getInitializeInfo() { return LightingFlow::initInfo; }
-
-LightingFlow::~LightingFlow() = default;
-
-bool LightingFlow::initialize(const RenderFlowInfo &info) {
-    RenderFlow::initialize(info);
-
-    if (_stages.empty()) {
-        auto *stage = CC_NEW(LightingStage);
-        stage->initialize(LightingStage::getInitializeInfo());
-        _stages.emplace_back(stage);
-    }
-
-    return true;
-}
-
-void LightingFlow::activate(RenderPipeline *pipeline) {
-    RenderFlow::activate(pipeline);
-}
-
-void LightingFlow::render(scene::Camera *camera) {
-    auto *pipeline = dynamic_cast<DeferredPipeline *>(_pipeline);
-    RenderFlow::render(camera);
-}
-
-void LightingFlow::destroy() {
-    RenderFlow::destroy();
-}
 
 } // namespace pipeline
 } // namespace cc

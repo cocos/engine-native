@@ -41,6 +41,8 @@ RenderStageInfo PostprocessStage::initInfo = {
     0,
     {{true, RenderQueueSortMode::BACK_TO_FRONT, {"default"}}},
 };
+const RenderStageInfo &PostprocessStage::getInitializeInfo() { return PostprocessStage::initInfo; }
+
 
 PostprocessStage::PostprocessStage() {
     _uiPhase = CC_NEW(UIPhase);

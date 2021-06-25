@@ -26,8 +26,7 @@
 #include "DeferredPipeline.h"
 #include "../SceneCulling.h"
 #include "../shadow/ShadowFlow.h"
-#include "GbufferFlow.h"
-#include "LightingFlow.h"
+#include "MainFlow.h"
 #include "gfx-base/GFXBuffer.h"
 #include "gfx-base/GFXCommandBuffer.h"
 #include "gfx-base/GFXDescriptorSet.h"
@@ -98,13 +97,9 @@ bool DeferredPipeline::initialize(const RenderPipelineInfo &info) {
         shadowFlow->initialize(ShadowFlow::getInitializeInfo());
         _flows.emplace_back(shadowFlow);
 
-        auto *gbufferFlow = CC_NEW(GbufferFlow);
-        gbufferFlow->initialize(GbufferFlow::getInitializeInfo());
-        _flows.emplace_back(gbufferFlow);
-
-        auto *lightingFlow = CC_NEW(LightingFlow);
-        lightingFlow->initialize(LightingFlow::getInitializeInfo());
-        _flows.emplace_back(lightingFlow);
+        auto *mainFlow = CC_NEW(MainFlow);
+        mainFlow->initialize(MainFlow::getInitializeInfo());
+        _flows.emplace_back(mainFlow);
     }
 
     return true;
