@@ -45,10 +45,6 @@ GLES3Framebuffer::~GLES3Framebuffer() {
 void GLES3Framebuffer::doInit(const FramebufferInfo &info) {
     _gpuFBO                          = CC_NEW(GLES3GPUFramebuffer);
     _gpuFBO->gpuRenderPass           = static_cast<GLES3RenderPass *>(_renderPass)->gpuRenderPass();
-    _gpuFBO->depthStencilMipmapLevel = info.depthStencilMipmapLevel;
-    for (uint mipLevel : info.colorMipmapLevels) {
-        _gpuFBO->colorMipmapLevels.push_back(mipLevel);
-    }
 
     _gpuFBO->gpuColorTextures.resize(_colorTextures.size());
     for (size_t i = 0; i < _colorTextures.size(); ++i) {

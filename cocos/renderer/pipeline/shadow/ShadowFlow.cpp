@@ -161,7 +161,6 @@ void ShadowFlow::resizeShadowMap(const scene::Light *light, scene::Shadow **shad
             _renderPass,
             renderTargets,
             depth,
-            {},
         });
     }
 
@@ -237,7 +236,6 @@ void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const scene::Li
         _renderPass,
         renderTargets,
         depth,
-        {}, //colorMipmapLevels
     });
 
     pipeline->getPipelineSceneData()->setShadowFramebuffer(light, framebuffer);

@@ -118,6 +118,9 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
     vector<const char *> requestedExtensions{
         VK_KHR_SWAPCHAIN_EXTENSION_NAME,
     };
+    if (_gpuDevice->minorVersion < 2) {
+        requestedExtensions.push_back(VK_KHR_CREATE_RENDERPASS_2_EXTENSION_NAME);
+    }
     if (_gpuDevice->minorVersion < 1) {
         requestedExtensions.push_back(VK_KHR_DEDICATED_ALLOCATION_EXTENSION_NAME);
         requestedExtensions.push_back(VK_KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME);
@@ -217,16 +220,10 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
     _features[static_cast<uint>(Feature::TEXTURE_HALF_FLOAT_LINEAR)] = true;
     _features[static_cast<uint>(Feature::FORMAT_R11G11B10F)]         = true;
     _features[static_cast<uint>(Feature::FORMAT_SRGB)]               = true;
-    _features[static_cast<uint>(Feature::MSAA)]                      = true;
     _features[static_cast<uint>(Feature::ELEMENT_INDEX_UINT)]        = true;
     _features[static_cast<uint>(Feature::INSTANCED_ARRAYS)]          = true;
     _features[static_cast<uint>(Feature::MULTIPLE_RENDER_TARGETS)]   = true;
     _features[static_cast<uint>(Feature::BLEND_MINMAX)]              = true;
-    _features[static_cast<uint>(Feature::DEPTH_BOUNDS)]              = deviceFeatures.depthBounds;
-    _features[static_cast<uint>(Feature::LINE_WIDTH)]                = true;
-    _features[static_cast<uint>(Feature::STENCIL_COMPARE_MASK)]      = true;
-    _features[static_cast<uint>(Feature::STENCIL_WRITE_MASK)]        = true;
-    _features[static_cast<uint>(Feature::MULTITHREADED_SUBMISSION)]  = true;
     _features[static_cast<uint>(Feature::COMPUTE_SHADER)]            = true;
 
     _gpuDevice->useMultiDrawIndirect        = deviceFeatures.multiDrawIndirect;

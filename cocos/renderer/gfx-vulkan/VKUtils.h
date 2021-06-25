@@ -55,7 +55,6 @@ extern VkAttachmentLoadOp    mapVkLoadOp(LoadOp loadOp);
 extern VkAttachmentStoreOp   mapVkStoreOp(StoreOp storeOp);
 extern VkBufferUsageFlagBits mapVkBufferUsageFlagBits(BufferUsage usage);
 extern VkImageType           mapVkImageType(TextureType type);
-extern VkSampleCountFlagBits mapVkSampleCount(SampleCount count);
 extern VkFormatFeatureFlags  mapVkFormatFeatureFlags(TextureUsage usage);
 extern VkImageUsageFlagBits  mapVkImageUsageFlagBits(TextureUsage usage);
 extern VkImageAspectFlags    mapVkImageAspectFlags(Format format);

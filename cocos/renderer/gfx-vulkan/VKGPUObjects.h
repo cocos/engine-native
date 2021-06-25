@@ -60,6 +60,8 @@ public:
     VkSurfaceKHR vkSurface = VK_NULL_HANDLE;
 
     VkSwapchainCreateInfoKHR swapchainCreateInfo{VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR};
+
+    VkSampleCountFlagBits getSampleCountForAttachments(Format format, SampleCount sampleCount) const;
 };
 
 struct CCVKAccessInfo {
@@ -494,7 +496,7 @@ public:
             }
         }
 
-        uint leakedSetCount = 0U;
+        size_t leakedSetCount = 0U;
         for (DescriptorSetPool &pool : _pools) {
             leakedSetCount += pool.activeSets.size();
             vkDestroyDescriptorPool(_device->vkDevice, pool.vkPool, nullptr);

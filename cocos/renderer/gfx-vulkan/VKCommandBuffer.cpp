@@ -154,7 +154,7 @@ void CCVKCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo
     VkRenderPassBeginInfo passBeginInfo{VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO};
     passBeginInfo.renderPass      = gpuRenderPass->vkRenderPass;
     passBeginInfo.framebuffer     = framebuffer;
-    passBeginInfo.clearValueCount = clearValues.size();
+    passBeginInfo.clearValueCount = utils::toUint(clearValues.size());
     passBeginInfo.pClearValues    = clearValues.data();
     passBeginInfo.renderArea      = {{0, 0}, {device->getWidth(), device->getHeight()}};
     vkCmdBeginRenderPass(_gpuCommandBuffer->vkCommandBuffer, &passBeginInfo,
@@ -229,13 +229,13 @@ void CCVKCommandBuffer::bindInputAssembler(InputAssembler *ia) {
 
     if (_curGPUInputAssember != gpuInputAssembler) {
         // buffers may be rebuilt(e.g. resize event) without IA's acknowledge
-        size_t vbCount = gpuInputAssembler->gpuVertexBuffers.size();
+        uint vbCount = utils::toUint(gpuInputAssembler->gpuVertexBuffers.size());
         if (gpuInputAssembler->vertexBuffers.size() < vbCount) {
             gpuInputAssembler->vertexBuffers.resize(vbCount);
             gpuInputAssembler->vertexBufferOffsets.resize(vbCount);
         }
 
-        for (size_t i = 0U; i < vbCount; ++i) {
+        for (uint i = 0U; i < vbCount; ++i) {
             gpuInputAssembler->vertexBuffers[i]       = gpuInputAssembler->gpuVertexBuffers[i]->vkBuffer;
             gpuInputAssembler->vertexBufferOffsets[i] = gpuInputAssembler->gpuVertexBuffers[i]->startOffset;
         }
@@ -525,7 +525,7 @@ void CCVKCommandBuffer::bindDescriptorSets(VkPipelineBindPoint bindPoint) {
     CCVKGPUDevice *        gpuDevice            = device->gpuDevice();
     CCVKGPUPipelineLayout *pipelineLayout       = _curGPUPipelineState->gpuPipelineLayout;
     vector<uint> &         dynamicOffsetOffsets = pipelineLayout->dynamicOffsetOffsets;
-    uint                   descriptorSetCount   = pipelineLayout->setLayouts.size();
+    uint                   descriptorSetCount   = utils::toUint(pipelineLayout->setLayouts.size());
     _curDynamicOffsets.resize(pipelineLayout->dynamicOffsetCount);
 
     uint dirtyDescriptorSetCount = descriptorSetCount - _firstDirtyDescriptorSet;
