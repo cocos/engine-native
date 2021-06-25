@@ -161,7 +161,7 @@ gulp.task('gen-simulator', async function () {
     console.log('make project\n');
     console.log('=====================================\n');
     await new Promise((resolve, reject) => {
-        let cmakeProcess = spawn(cmakeBin, ['-G', isWin32 ? 'Visual Studio 15 2017' : 'Xcode', absolutePath('./tools/simulator/frameworks/runtime-src/')], {
+        let cmakeProcess = spawn(cmakeBin, ['-G', isWin32 ? 'Visual Studio 16 2019' : 'Xcode', absolutePath('./tools/simulator/frameworks/runtime-src/')], {
             cwd: simulatorProject,
         });
         cmakeProcess.on('close', () => {

@@ -89,6 +89,18 @@ Value::Value(uint32_t v)
     setUint32(v);
 }
 
+Value::Value(int64_t v)
+: _type(Type::Undefined),
+  _autoRootUnroot(false) {
+    setInt64(v);
+}
+
+Value::Value(uint64_t v)
+: _type(Type::Undefined),
+  _autoRootUnroot(false) {
+    setUint64(v);
+}
+
 Value::Value(int16_t v)
 : _type(Type::Undefined),
   _autoRootUnroot(false) {
@@ -286,6 +298,16 @@ void Value::setUint32(uint32_t v) {
     _u._number = (double)v;
 }
 
+void Value::setInt64(int64_t v) {
+    reset(Type::BigInt);
+    _u._bigInt = (int64_t)v;
+}
+
+void Value::setUint64(uint64_t v) {
+    reset(Type::BigInt);
+    _u._bigInt = (uint64_t)v;
+}
+
 void Value::setInt16(int16_t v) {
     reset(Type::Number);
     _u._number = (double)v;
@@ -396,6 +418,14 @@ int32_t Value::toInt32() const {
 
 uint32_t Value::toUint32() const {
     return static_cast<uint32_t>(toNumber());
+}
+
+int64_t Value::toInt64() const {
+    return static_cast<int64_t>(toNumber());
+}
+
+uint64_t Value::toUint64() const {
+    return static_cast<uint64_t>(toNumber());
 }
 
 unsigned int Value::toUint() const {

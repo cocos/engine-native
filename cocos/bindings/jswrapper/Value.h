@@ -47,7 +47,8 @@ public:
         Number,
         Boolean,
         String,
-        Object
+        Object,
+        BigInt
     };
 
     static Value Null;
@@ -102,6 +103,19 @@ public:
          *  @brief The constructor with a uint32_t arguement.
          */
     explicit Value(uint32_t v);
+
+    /**
+         *  @brief The constructor with a int64_t arguement.
+         * TODO: accomplish the function without losing data
+         */
+    explicit Value(int64_t v);
+
+    /**
+         *  @brief The constructor with a uint64_t arguement.
+         * TODO: accomplish the function without losing data
+         */
+    explicit Value(uint64_t v);
+
 
     /**
          *  @brief The constructor with a long arguement.
@@ -215,6 +229,18 @@ public:
     void setUint32(uint32_t v);
 
     /**
+         *  @brief Sets se::Value to a int32_t value.
+         *  @param[in] v The int32_t value to be set.
+         */
+    void setInt64(int64_t v);
+
+    /**
+         *  @brief Sets se::Value to a uint32_t value.
+         *  @param[in] v The uint32_t value to be set.
+         */
+    void setUint64(uint64_t v);
+
+    /**
          *  @brief Sets se::Value to a long value.
          *  @param[in] v The long value to be set.
          */
@@ -305,6 +331,18 @@ public:
          *  @return uint32_t integer.
          */
     uint32_t toUint32() const;
+
+    /**
+         *  @brief Converts se::Value to int64_t.
+         *  @return int64_t integer.
+         */
+    int64_t toInt64() const;
+
+    /**
+         *  @brief Converts se::Value to uint64_t.
+         *  @return uint64_t integer.
+         */
+    uint64_t toUint64() const;
 
     unsigned int toUint() const;
 
@@ -420,6 +458,7 @@ private:
         double _number;
         std::string *_string;
         Object *_object;
+        uint64_t     _bigInt;
     } _u;
 
     Type _type;

@@ -81,7 +81,9 @@ void seToJsValue(v8::Isolate *isolate, const Value &v, v8::Local<v8::Value> *out
         case Value::Type::Undefined:
             *outJsVal = v8::Undefined(isolate);
             break;
-
+        case Value::Type::BigInt: 
+            *outJsVal = v8::BigInt::New(isolate, v.toInt64());
+            break;
         default:
             assert(false);
             break;
