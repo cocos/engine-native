@@ -74,6 +74,7 @@ using TextureBarrierList = vector<TextureBarrier *>;
 using BufferDataList     = vector<const uint8_t *>;
 using CommandBufferList  = vector<CommandBuffer *>;
 
+constexpr uint MAX_VIEWPORTS    = 4U;
 constexpr uint MAX_ATTACHMENTS  = 4U;
 constexpr uint INVALID_BINDING  = static_cast<uint>(-1);
 constexpr uint SUBPASS_EXTERNAL = static_cast<uint>(-1);

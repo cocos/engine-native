@@ -251,6 +251,15 @@ void CCVKCommandBuffer::bindInputAssembler(InputAssembler *ia) {
     }
 }
 
+void CCVKCommandBuffer::setViewports(const Viewport *vp, uint count) {
+    CCASSERT(count <= 4, "Viewport count is too much!");
+    VkViewport viewport[4];
+    for (uint i = 0;i < count; ++i) {
+        viewport[i] = {static_cast<float>(vp[i].left), static_cast<float>(vp[i].top), static_cast<float>(vp[i].width), static_cast<float>(vp[i].height), vp[i].minDepth, vp[i].maxDepth};
+    }
+    vkCmdSetViewport(_gpuCommandBuffer->vkCommandBuffer, 0, count, viewport);
+}
+
 void CCVKCommandBuffer::setViewport(const Viewport &vp) {
     if (_curDynamicStates.viewport != vp) {
         _curDynamicStates.viewport = vp;

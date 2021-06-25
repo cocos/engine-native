@@ -149,6 +149,9 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
     _gpuDevice->extensions.resize(availableExtensionCount);
     VK_CHECK(vkEnumerateDeviceExtensionProperties(gpuContext->physicalDevice, nullptr, &availableExtensionCount, _gpuDevice->extensions.data()));
 
+    //add multiview support
+    requestedExtensions.push_back("VK_KHR_multiview");
+
     // just filter out the unsupported layers & extensions
     for (const char *layer : requestedLayers) {
         if (isLayerSupported(layer, _gpuDevice->layers)) {
@@ -222,6 +225,7 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
     _features[static_cast<uint>(Feature::STENCIL_WRITE_MASK)]        = true;
     _features[static_cast<uint>(Feature::MULTITHREADED_SUBMISSION)]  = true;
     _features[static_cast<uint>(Feature::COMPUTE_SHADER)]            = true;
+    _features[static_cast<uint>(Feature::MULTIVIEW)]                 = true;
 
     _gpuDevice->useMultiDrawIndirect        = deviceFeatures.multiDrawIndirect;
     _gpuDevice->useDescriptorUpdateTemplate = _gpuDevice->minorVersion > 0 || checkExtension(VK_KHR_DESCRIPTOR_UPDATE_TEMPLATE_EXTENSION_NAME);
