@@ -67,7 +67,7 @@ bool js_gfx_Device_copyBuffersToTexture(se::State &s) { // NOLINT(readability-id
                             assert(false);
                         }
                     } else {
-                        ptr = reinterpret_cast<uint8_t *>(address.toUIntptr_t());
+                        ptr = reinterpret_cast<uint8_t *>(value.toUIntptr_t());
                     }
 
                     arg0[i] = ptr;
