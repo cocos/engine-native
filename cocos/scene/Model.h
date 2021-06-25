@@ -73,11 +73,8 @@ public:
     inline void setReceiveShadow(bool value) { _receiveShadow = value; }
     inline void setTransform(Node *node) { _transform = node; }
     inline void seVisFlag(uint32_t flags) { _visFlags = flags; }
-    inline void setWolrdBounds(const AABB &aabb) {
-        if (!_worldBounds) {
-            _worldBounds = new AABB();
-        }
-        *_worldBounds = aabb;
+    inline void setWolrdBounds(AABB *aabb) {
+        _worldBounds = aabb;
     }
     inline void setInstancedAttrBlock(uint8_t *buffer, uint32_t size, InstancedAttributeBlock &&block, const std::vector<gfx::Attribute> &attributes) {
         _instancedBuffer        = {buffer, size};

@@ -80,11 +80,9 @@ extern se::Class* __jsb_cc_scene_AABB_class;
 bool js_register_cc_scene_AABB(se::Object* obj);
 bool register_all_scene(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cc::scene::AABB *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cc::scene::AABB);
-SE_DECLARE_FUNC(js_scene_AABB_set);
-SE_DECLARE_FUNC(js_scene_AABB_fromPoints);
+SE_DECLARE_FUNC(js_scene_AABB_initWithData);
+SE_DECLARE_FUNC(js_scene_AABB_AABB);
 
 extern se::Object* __jsb_cc_scene_SpotLight_proto;
 extern se::Class* __jsb_cc_scene_SpotLight_class;
