@@ -225,7 +225,6 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
     _features[static_cast<uint>(Feature::STENCIL_WRITE_MASK)]        = true;
     _features[static_cast<uint>(Feature::MULTITHREADED_SUBMISSION)]  = true;
     _features[static_cast<uint>(Feature::COMPUTE_SHADER)]            = true;
-    _features[static_cast<uint>(Feature::MULTIVIEW)]                 = true;
 
     _gpuDevice->useMultiDrawIndirect        = deviceFeatures.multiDrawIndirect;
     _gpuDevice->useDescriptorUpdateTemplate = _gpuDevice->minorVersion > 0 || checkExtension(VK_KHR_DESCRIPTOR_UPDATE_TEMPLATE_EXTENSION_NAME);
@@ -247,6 +246,9 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
         compressedFmts += "astc ";
     }
 
+    if (std::find(_extensions.begin(), _extensions.end(), "VK_KHR_multiview") != _extensions.end()) {
+        _features[static_cast<uint>(Feature::MULTIVIEW)] = true;
+    }
     const VkPhysicalDeviceLimits &limits = gpuContext->physicalDeviceProperties.limits;
     _caps.maxVertexAttributes            = limits.maxVertexInputAttributes;
     _caps.maxVertexUniformVectors        = limits.maxPerStageDescriptorUniformBuffers;
