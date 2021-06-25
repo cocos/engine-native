@@ -42,10 +42,10 @@ class AABB final {
 public:
     static void fromPoints(const Vec3 &minPos, const Vec3 &maxPos, AABB *dst);
     static void transformExtentM4(Vec3 *out, const Vec3 &extent, const Mat4 &m4);
-    AABB()             = default;
+    AABB();
     AABB(const AABB &) = delete;
     AABB(AABB &&)      = delete;
-    ~AABB()            = default;
+    ~AABB();
     AABB &operator=(const AABB &) = delete;
     AABB &operator=(AABB &&) = delete;
 
@@ -65,6 +65,7 @@ public:
     inline const Vec3 &getHalfExtents() const { return _aabbLayout->halfExtents; }
 
 private:
+    bool        _customLayout{true};
     AABBLayout *_aabbLayout{nullptr};
 };
 

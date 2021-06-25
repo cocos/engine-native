@@ -73,8 +73,11 @@ public:
     inline void setReceiveShadow(bool value) { _receiveShadow = value; }
     inline void setTransform(Node *node) { _transform = node; }
     inline void seVisFlag(uint32_t flags) { _visFlags = flags; }
-    inline void setWolrdBounds(AABB *aabb) {
-        _worldBounds = aabb;
+    inline void setBounds(AABB *world) {
+        _worldBounds = world;
+        if (!_modelBounds) {
+            _modelBounds = new AABB();
+        }
     }
     inline void setInstancedAttrBlock(uint8_t *buffer, uint32_t size, InstancedAttributeBlock &&block, const std::vector<gfx::Attribute> &attributes) {
         _instancedBuffer        = {buffer, size};
@@ -91,7 +94,7 @@ public:
     inline uint32_t                           getInstancedBufferSize() const { return std::get<1>(_instancedBuffer); }
     inline gfx::Buffer *                      getLocalBuffer() const { return _localBuffer; }
     inline float *                            getLocalData() const { return _localData; }
-    inline const AABB &                       getModelBounds() const { return _modelBounds; }
+    inline AABB *                             getModelBounds() const { return _modelBounds; }
     inline Node *                             getNode() const { return _node; }
     inline bool                               getReceiveShadow() const { return _receiveShadow; }
     inline const std::vector<SubModel *> &    getSubModels() const { return _subModels; }
@@ -99,14 +102,14 @@ public:
     inline bool                               getTransformUpdated() const { return _transformUpdated; }
     inline uint32_t                           getUpdatStamp() const { return _updateStamp; }
     inline uint32_t                           getVisFlags() const { return _visFlags; }
-    inline const AABB *                       getWorldBounds() const { return _worldBounds; }
+    inline AABB *                             getWorldBounds() const { return _worldBounds; }
     inline ModelType                          getType() const { return _type; };
 
 protected:
     ModelType _type{ModelType::DEFAULT};
     bool      _transformUpdated{false};
     AABB *    _worldBounds{nullptr};
-    AABB      _modelBounds;
+    AABB *    _modelBounds;
 
 private:
     bool _enabled{false};
