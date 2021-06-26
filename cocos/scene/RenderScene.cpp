@@ -24,12 +24,29 @@
  ****************************************************************************/
 
 #include "scene/RenderScene.h"
+
+#include <utility>
 #include "base/Log.h"
 
 namespace cc {
 namespace scene {
 
-void RenderScene::update() {
+void RenderScene::update(uint32_t stamp) {
+    if (_directionalLight) {
+        _directionalLight->update();
+    }
+    for (SphereLight *light : _sphereLights) {
+        light->update();
+    }
+    for (SpotLight *spotLight : _spotLights) {
+        spotLight->update();
+    }
+    for (auto *model : _models) {
+        if (model->getEnabled()) {
+            model->updateTransform(stamp);
+            model->updateUBOs(stamp);
+        }
+    }
 }
 
 void RenderScene::addSphereLight(SphereLight *light) {
@@ -70,6 +87,10 @@ void RenderScene::addModel(Model *model) {
     _models.push_back(model);
 }
 
+void RenderScene::addSkinningModel(SkinningModel *skinModel) {
+    _models.push_back(skinModel);
+}
+
 void RenderScene::removeModel(Model *model) {
     auto iter = std::find(_models.begin(), _models.end(), model);
     if (iter != _models.end()) {
@@ -81,6 +102,10 @@ void RenderScene::removeModel(Model *model) {
 
 void RenderScene::removeModels() {
     _models.clear();
+}
+
+void RenderScene::updateBatches(std::vector<DrawBatch2D *> &&batches) {
+    _drawBatch2Ds = batches;
 }
 
 void RenderScene::addBatch(DrawBatch2D *drawBatch2D) {

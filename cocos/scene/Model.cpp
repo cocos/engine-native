@@ -22,20 +22,63 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-
 #include "scene/Model.h"
+#include "renderer/pipeline/Define.h"
+#include "scene/SubModel.h"
 
 namespace cc {
 namespace scene {
-
 Model::~Model() {
     delete _worldBounds;
 }
 
-void Model::updateTransform() {
+void Model::uploadMat4AsVec4x3(const Mat4 &mat, float *v1, float *v2, float *v3) {
+    uint size = sizeof(float) * 4;
+    memcpy(v1, mat.m, size);
+    memcpy(v2, mat.m + 4, size);
+    memcpy(v3, mat.m + 8, size);
+    v1[3] = mat.m[12];
+    v2[3] = mat.m[13];
+    v3[3] = mat.m[14];
 }
 
-void Model::updateUBOs(uint32_t /*stamp*/) {
+void Model::updateTransform(uint32_t /*stamp*/) {
+    Node *node = _transform;
+    if (node->getFlagsChanged() || node->getDirtyFlag()) {
+        node->updateWorldTransform();
+        _transformUpdated = true;
+        if (_worldBounds) {
+            _modelBounds.transform(node->getWorldMatrix(), _worldBounds);
+        }
+    }
+}
+
+void Model::updateUBOs(uint32_t stamp) {
+    for (SubModel *subModel : _subModels) {
+        subModel->update();
+    }
+    _updateStamp = stamp;
+    if (!_transformUpdated) {
+        return;
+    }
+    _transformUpdated = false;
+    getTransform()->updateWorldTransform();
+    const auto &                                 worldMatrix = getTransform()->getWorldMatrix();
+    int                                          idx         = _instMatWorldIdx;
+    Mat4                                         mat4;
+    std::array<float, pipeline::UBOLocal::COUNT> bufferView;
+    if (idx >= 0) {
+        const std::vector<uint8_t *> &attrs = _instanceAttributeBlock.views;
+        uploadMat4AsVec4x3(worldMatrix,
+                           reinterpret_cast<float *>(attrs[idx]),
+                           reinterpret_cast<float *>(attrs[idx + 1]),
+                           reinterpret_cast<float *>(attrs[idx + 2]));
+    } else if (_localBuffer) {
+        memcpy(bufferView.data() + pipeline::UBOLocal::MAT_WORLD_OFFSET, worldMatrix.m, sizeof(Mat4));
+        Mat4::inverseTranspose(worldMatrix, &mat4);
+        memcpy(bufferView.data() + pipeline::UBOLocal::MAT_WORLD_IT_OFFSET, mat4.m, sizeof(Mat4));
+        _localBuffer->update(bufferView.data(), pipeline::UBOLocal::SIZE);
+    }
 }
 
 void Model::addSubModel(SubModel *subModel) {

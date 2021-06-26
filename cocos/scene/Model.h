@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include <tuple>
 #include <vector>
 #include "renderer/gfx-base/GFXBuffer.h"
 #include "renderer/gfx-base/GFXDef-common.h"
@@ -34,11 +35,20 @@
 namespace cc {
 namespace scene {
 
+enum class ModelType {
+    DEFAULT,
+    SKINNING,
+    BAKED_SKINNING,
+    BATCH_2D,
+    PARTICLE_BATCH,
+    LINE,
+};
+
 // SubModel.h -> Define.h -> Model.h, so do not include SubModel.h here.
 class SubModel;
 
 struct InstancedAttributeBlock {
-    std::vector<uint8_t *> views;
+    std::vector<uint8_t *> views{};
 };
 
 class Model {
@@ -50,19 +60,15 @@ public:
     Model &operator=(const Model &) = delete;
     Model &operator=(Model &&) = delete;
 
-    virtual void updateTransform();
-    virtual void updateUBOs(uint32_t);
+    virtual void updateTransform(uint32_t stamp);
+    virtual void updateUBOs(uint32_t stamp);
 
     void addSubModel(SubModel *subModel);
 
     inline void setCastShadow(bool value) { _castShadow = value; }
     inline void setEnabled(bool value) { _enabled = value; }
-    inline void setInstanceAttributes(const std::vector<gfx::Attribute>& attributes) { _instanceAttributes = attributes; }
-    inline void setInstmatWorldIdx(uint32_t idx) { _instmatWorldIdx = idx; }
-    inline void setInstancedAttributeBlock(InstancedAttributeBlock *block) { _instanceAttributeBlock = block; }
-    inline void setInstancedBuffer(uint8_t *buffer) { _instancedBuffer = buffer; }
+    inline void setInstMatWorldIdx(int32_t idx) { _instMatWorldIdx = idx; }
     inline void setLocalBuffer(gfx::Buffer *buffer) { _localBuffer = buffer; }
-    inline void setLocalData(float *data) { _localData = data; }
     inline void setNode(Node *node) { _node = node; }
     inline void setReceiveShadow(bool value) { _receiveShadow = value; }
     inline void setTransform(Node *node) { _transform = node; }
@@ -73,13 +79,19 @@ public:
         }
         *_worldBounds = aabb;
     }
+    inline void setInstancedAttrBlock(uint8_t *buffer, uint32_t size, InstancedAttributeBlock &&block, const std::vector<gfx::Attribute> &attributes) {
+        _instancedBuffer        = {buffer, size};
+        _instanceAttributeBlock = std::move(block);
+        _instanceAttributes     = attributes;
+    }
 
     inline bool                               getCastShadow() const { return _castShadow; }
     inline bool                               getEnabled() const { return _enabled; }
-    inline uint32_t                           getInstmatWorldIdx() const { return _instmatWorldIdx; }
+    inline int32_t                            getInstMatWorldIdx() const { return _instMatWorldIdx; }
     inline const std::vector<gfx::Attribute> &getInstanceAttributes() const { return _instanceAttributes; }
-    inline InstancedAttributeBlock *          getInstancedAttributeBlock() const { return _instanceAttributeBlock; }
-    inline uint8_t *                          getInstancedBuffer() const { return _instancedBuffer; }
+    inline InstancedAttributeBlock *          getInstancedAttributeBlock() { return &_instanceAttributeBlock; }
+    inline uint8_t *                          getInstancedBuffer() const { return std::get<0>(_instancedBuffer); }
+    inline uint32_t                           getInstancedBufferSize() const { return std::get<1>(_instancedBuffer); }
     inline gfx::Buffer *                      getLocalBuffer() const { return _localBuffer; }
     inline float *                            getLocalData() const { return _localData; }
     inline const AABB &                       getModelBounds() const { return _modelBounds; }
@@ -88,28 +100,34 @@ public:
     inline const std::vector<SubModel *> &    getSubModels() const { return _subModels; }
     inline Node *                             getTransform() const { return _transform; }
     inline bool                               getTransformUpdated() const { return _transformUpdated; }
-    inline uint32_t                           getUpdatStamp() const { return _updateStamp; }
+    inline int32_t                            getUpdatStamp() const { return _updateStamp; }
     inline uint32_t                           getVisFlags() const { return _visFlags; }
     inline const AABB *                       getWorldBounds() const { return _worldBounds; }
+    inline ModelType                          getType() const { return _type; };
+
+protected:
+    ModelType _type{ModelType::DEFAULT};
+    bool      _transformUpdated{false};
+    AABB *    _worldBounds{nullptr};
+    AABB      _modelBounds;
 
 private:
-    bool                        _enabled{false};
-    bool                        _castShadow{false};
-    bool                        _receiveShadow{false};
-    bool                        _transformUpdated{false};
-    uint32_t                    _instmatWorldIdx{0};
-    uint32_t                    _visFlags;
-    uint32_t                    _updateStamp{0};
-    Node *                      _transform{nullptr};
-    Node *                      _node{nullptr};
-    float *                     _localData{nullptr};
-    uint8_t *                   _instancedBuffer{nullptr};
-    gfx::Buffer *               _localBuffer{nullptr};
-    AABB *                      _worldBounds{nullptr};
-    AABB                        _modelBounds;
-    InstancedAttributeBlock *   _instanceAttributeBlock{nullptr};
-    std::vector<SubModel *>     _subModels;
-    std::vector<gfx::Attribute> _instanceAttributes;
+    bool _enabled{false};
+    bool _castShadow{false};
+    bool _receiveShadow{false};
+
+    int32_t                         _instMatWorldIdx{-1};
+    uint32_t                        _visFlags;
+    int32_t                         _updateStamp{-1};
+    Node *                          _transform{nullptr};
+    Node *                          _node{nullptr};
+    float *                         _localData{nullptr};
+    std::tuple<uint8_t *, uint32_t> _instancedBuffer{nullptr, 0};
+    gfx::Buffer *                   _localBuffer{nullptr};
+    InstancedAttributeBlock         _instanceAttributeBlock{};
+    std::vector<SubModel *>         _subModels;
+    std::vector<gfx::Attribute>     _instanceAttributes;
+    static void                     uploadMat4AsVec4x3(const Mat4 &mat, float *v1, float *v2, float *v3);
 };
 
 } // namespace scene

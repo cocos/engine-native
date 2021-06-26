@@ -42,9 +42,6 @@ namespace cc {
 namespace gfx {
 
 #if CC_DEBUG > 0 && defined(GL_DEBUG_SOURCE_API_KHR)
-
-    #define GLES3_EGL_DEBUG_PROC_DEFINED 1
-
 void GL_APIENTRY GLES3EGLDebugProc(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
     String sourceDesc;
     switch (source) {
@@ -86,8 +83,6 @@ void GL_APIENTRY GLES3EGLDebugProc(GLenum source, GLenum type, GLuint id, GLenum
         CC_LOG_DEBUG(msg.c_str());
     }
 }
-#else
-    #define GLES3_EGL_DEBUG_PROC_DEFINED 0
 #endif
 
 GLES3Context::GLES3Context()  = default;
@@ -171,9 +166,7 @@ bool GLES3Context::doInit(const ContextInfo &info) {
 
         int          numConfig = 0;
         unsigned int success   = false;
-        do {
-            EGL_CHECK(success = eglChooseConfig(_eglDisplay, defaultAttribs, nullptr, 0, &numConfig));
-        } while (false);
+        EGL_CHECK(success = eglChooseConfig(_eglDisplay, defaultAttribs, nullptr, 0, &numConfig));
         if (success) {
             _vecEGLConfig.resize(numConfig);
         } else {
@@ -182,9 +175,7 @@ bool GLES3Context::doInit(const ContextInfo &info) {
         }
 
         int count = numConfig;
-        do {
-            EGL_CHECK(success = eglChooseConfig(_eglDisplay, defaultAttribs, _vecEGLConfig.data(), count, &numConfig));
-        } while (false);
+        EGL_CHECK(success = eglChooseConfig(_eglDisplay, defaultAttribs, _vecEGLConfig.data(), count, &numConfig));
         if (success == EGL_FALSE || !numConfig) {
             CC_LOG_ERROR("eglChooseConfig configuration failed.");
             return false;
@@ -402,7 +393,9 @@ bool GLES3Context::doInit(const ContextInfo &info) {
 }
 
 void GLES3Context::doDestroy() {
-    EGL_CHECK(eglMakeCurrent(_eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+    if (_eglDisplay) {
+        EGL_CHECK(eglMakeCurrent(_eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+    }
 
     if (!_vecEGLConfig.empty()) {
         _vecEGLConfig.clear();
@@ -525,7 +518,7 @@ bool GLES3Context::makeCurrent(bool bound) {
             _isInitialized = true;
         }
 
-    #if CC_DEBUG > 0 && GLES3_EGL_DEBUG_PROC_DEFINED && !FORCE_DISABLE_VALIDATION
+    #if CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION
         GL_CHECK(glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_KHR));
         if (glDebugMessageControlKHR) {
             GL_CHECK(glDebugMessageControlKHR(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE));
@@ -607,11 +600,9 @@ bool GLES3Context::makeCurrent(bool bound) {
         GL_CHECK(glBindFramebuffer(GL_READ_FRAMEBUFFER, 0));
         GL_CHECK(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
         GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
-#ifdef GL_FRAMEBUFFER_FETCH_NONCOHERENT_QCOM // OHOS
         if (GLES3Device::getInstance()->extensionRegistry()->mFBF == FBFSupportLevel::NON_COHERENT_QCOM) {
             GL_CHECK(glEnable(GL_FRAMEBUFFER_FETCH_NONCOHERENT_QCOM));
         }
-#endif
 
         CC_LOG_DEBUG("eglMakeCurrent() - SUCCEEDED, Context: 0x%p", this);
         return true;

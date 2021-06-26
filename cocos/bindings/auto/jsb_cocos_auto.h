@@ -69,12 +69,12 @@ bool js_register_cc_CanvasRenderingContext2D(se::Object* obj);
 bool register_all_engine(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::CanvasRenderingContext2D);
-SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D__fillImageData);
 SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_beginPath);
 SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_clearRect);
 SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_closePath);
 SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_createLinearGradient);
 SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_fill);
+SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_fillImageData);
 SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_lineTo);
 SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_moveTo);
 SE_DECLARE_FUNC(js_engine_CanvasRenderingContext2D_rect);

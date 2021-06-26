@@ -98,7 +98,6 @@ bool GLES3Device::doInit(const DeviceInfo &info) {
     _features[static_cast<uint>(Feature::TEXTURE_FLOAT)]           = true;
     _features[static_cast<uint>(Feature::TEXTURE_HALF_FLOAT)]      = true;
     _features[static_cast<uint>(Feature::FORMAT_R11G11B10F)]       = true;
-    _features[static_cast<uint>(Feature::FORMAT_D24S8)]            = true;
     _features[static_cast<uint>(Feature::INSTANCED_ARRAYS)]        = true;
     _features[static_cast<uint>(Feature::MULTIPLE_RENDER_TARGETS)] = true;
     _features[static_cast<uint>(Feature::BLEND_MINMAX)]            = true;
@@ -107,6 +106,10 @@ bool GLES3Device::doInit(const DeviceInfo &info) {
     uint minorVersion = static_cast<GLES3Context *>(_context)->minorVer();
     if (minorVersion) {
         _features[static_cast<uint>(Feature::COMPUTE_SHADER)] = true;
+    }
+
+    if (checkExtension("EXT_sRGB")) {
+        _features[static_cast<uint>(Feature::FORMAT_SRGB)] = true;
     }
 
     if (checkExtension("color_buffer_float")) {
@@ -140,9 +143,7 @@ bool GLES3Device::doInit(const DeviceInfo &info) {
             } else if (*it == CC_TOSTR(GL_QCOM_shader_framebuffer_fetch_noncoherent)) {
                 _gpuExtensionRegistry->mFBF = FBFSupportLevel::NON_COHERENT_QCOM;
                 fbfLevelStr                 = "NON_COHERENT_QCOM";
-#ifdef GL_FRAMEBUFFER_FETCH_NONCOHERENT_QCOM //OHOS
                 GL_CHECK(glEnable(GL_FRAMEBUFFER_FETCH_NONCOHERENT_QCOM));
-#endif
             }
         } else if (checkExtension(CC_TOSTR(GL_EXT_shader_framebuffer_fetch))) {
             // we only care about EXT_shader_framebuffer_fetch, the ARM version does not support MRT
@@ -152,7 +153,7 @@ bool GLES3Device::doInit(const DeviceInfo &info) {
     }
 
     // PVRVFrame has issues on their PLS support
-#if CC_PLATFORM != CC_PLATFORM_WINDOWS && CC_PLATFORM != CC_PLATFORM_MAC_OSX && defined(GL_MAX_SHADER_PIXEL_LOCAL_STORAGE_SIZE_EXT) // OHOS
+#if CC_PLATFORM != CC_PLATFORM_WINDOWS && CC_PLATFORM != CC_PLATFORM_MAC_OSX
     if (checkExtension("pixel_local_storage")) {
         if (checkExtension("pixel_local_storage2")) {
             _gpuExtensionRegistry->mPLS = PLSSupportLevel::LEVEL2;
@@ -187,11 +188,6 @@ bool GLES3Device::doInit(const DeviceInfo &info) {
     _features[static_cast<uint>(Feature::STENCIL_COMPARE_MASK)] = true;
     _features[static_cast<uint>(Feature::STENCIL_WRITE_MASK)]   = true;
     _features[static_cast<uint>(Feature::FORMAT_RGB8)]          = true;
-    _features[static_cast<uint>(Feature::FORMAT_D16)]           = true;
-    _features[static_cast<uint>(Feature::FORMAT_D24)]           = true;
-    _features[static_cast<uint>(Feature::FORMAT_D32F)]          = true;
-    _features[static_cast<uint>(Feature::FORMAT_D24S8)]         = true;
-    _features[static_cast<uint>(Feature::FORMAT_D32FS8)]        = true;
 
     _renderer = reinterpret_cast<const char *>(glGetString(GL_RENDERER));
     _vendor   = reinterpret_cast<const char *>(glGetString(GL_VENDOR));

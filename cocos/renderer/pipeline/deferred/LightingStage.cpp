@@ -197,7 +197,7 @@ void LightingStage::gatherLights(scene::Camera *camera) {
         offset                       = idx * elementLen + fieldLen * 2;
         _lightBufferData[offset]     = light->getSize();
         _lightBufferData[offset + 1] = light->getRange();
-        _lightBufferData[offset + 2] = light->getAngle();
+        _lightBufferData[offset + 2] = light->getSpotAngle();
 
         // dir
         const auto &direction        = light->getDirection();
@@ -354,7 +354,8 @@ void LightingStage::render(scene::Camera *camera) {
     cmdBuff->beginRenderPass(renderPass, frameBuffer, renderArea, &clearColor,
                              camera->clearDepth, camera->clearStencil);
 
-    cmdBuff->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), pipeline->getDescriptorSet());
+    uint const globalOffsets[] = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
+    cmdBuff->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
 
     // get pso and draw quad
     scene::Pass *pass   = sceneData->getSharedData()->deferredLightPass;
