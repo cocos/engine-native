@@ -56,11 +56,7 @@ int AABB::aabbPlane(const Plane &plane) const {
 }
 
 void AABB::initWithData(uint8_t *data) {
-    if (_aabbLayout) {
-        CC_SAFE_DELETE(_aabbLayout);
-    }
-    _customLayout = false;
-    _aabbLayout   = reinterpret_cast<AABBLayout *>(data);
+    _aabbLayout = reinterpret_cast<AABBLayout *>(data);
 }
 
 bool AABB::aabbFrustum(const Frustum &frustum) const {
@@ -119,13 +115,7 @@ void AABB::transformExtentM4(Vec3 *out, const Vec3 &extent, const Mat4 &m4) {
 }
 
 AABB::AABB() {
-    _aabbLayout = new AABBLayout();
-}
-
-AABB::~AABB() {
-    if (_customLayout) {
-        CC_SAFE_DELETE(_aabbLayout);
-    }
+    _aabbLayout = &_embedLayout;
 }
 
 void AABB::fromPoints(const Vec3 &minPos, const Vec3 &maxPos, AABB *dst) {
