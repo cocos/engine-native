@@ -161,6 +161,13 @@ void GLES3CommandBuffer::bindInputAssembler(InputAssembler *ia) {
     _isStateInvalid      = true;
 }
 
+void GLES3CommandBuffer::setViewports(const Viewport* vp, uint count) {
+    for (uint i = 0; i < count; ++i) {
+        _curViewports[i] = vp[i];
+    }
+    _isStateInvalid = true;
+}
+
 void GLES3CommandBuffer::setViewport(const Viewport &vp) {
     if ((_curDynamicStates.viewport.left != vp.left) ||
         (_curDynamicStates.viewport.top != vp.top) ||

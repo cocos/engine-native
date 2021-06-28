@@ -58,6 +58,9 @@ void EmptyCommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSe
 void EmptyCommandBuffer::bindInputAssembler(InputAssembler *ia) {
 }
 
+void EmptyCommandBuffer::setViewports(const Viewport *vp, uint count) {
+}
+
 void EmptyCommandBuffer::setViewport(const Viewport &vp) {
 }
 

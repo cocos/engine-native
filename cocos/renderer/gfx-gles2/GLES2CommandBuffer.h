@@ -47,7 +47,7 @@ public:
     void bindPipelineState(PipelineState *pso) override;
     void bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) override;
     void bindInputAssembler(InputAssembler *ia) override;
-    void setViewports(const Viewport *vp, uint count) override{}; 
+    void setViewports(const Viewport *vp, uint count) override;
     void setViewport(const Viewport &vp) override;
     void setScissor(const Rect &rect) override;
     void setLineWidth(float width) override;
@@ -81,6 +81,7 @@ protected:
     vector<vector<uint>>            _curDynamicOffsets;
     GLES2GPUInputAssembler *        _curGPUInputAssember = nullptr;
     DynamicStates                   _curDynamicStates;
+    Viewport                        _curViewports[MAX_VIEWPORTS];
 
     bool _isStateInvalid = false;
 };
