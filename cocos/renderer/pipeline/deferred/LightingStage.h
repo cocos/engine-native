@@ -50,11 +50,15 @@ public:
     void activate(RenderPipeline *pipeline, RenderFlow *flow) override;
     void destroy() override;
     void render(scene::Camera *camera) override;
-
-    void initLightingBuffer();
+    void renderFG(scene::Camera *camera);
 
 private:
     void gatherLights(scene::Camera *camera);
+    void initLightingBuffer();
+    void fgLightingPass(scene::Camera *camera);
+    void fgSsprPass(scene::Camera *camera);
+
+    void putTransparentObj2Queue();
 
     static RenderStageInfo initInfo;
     PlanarShadowQueue *    _planarShadowQueue{nullptr};

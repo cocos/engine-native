@@ -46,6 +46,14 @@ struct CC_DLL DeferredRenderData {
     gfx::Texture *    depthTex             = nullptr;
 };
 
+enum DeferredInsertPoint {
+    IP_GBUFFER = 100,
+    IP_LIGHTING = 200,
+    IP_SSPR = 300,
+    IP_POSTPROCESS = 400,
+    IP_INVALID
+};
+
 class CC_DLL DeferredPipeline : public RenderPipeline {
 public:
     DeferredPipeline()           = default;
@@ -55,6 +63,7 @@ public:
     void destroy() override;
     bool activate() override;
     void render(const vector<scene::Camera *> &cameras) override;
+    void renderFG(const vector<scene::Camera *> &cameras);
     void resize(uint width, uint height) override;
 
     gfx::RenderPass *getOrCreateRenderPass(gfx::ClearFlags clearFlags);
@@ -71,6 +80,8 @@ public:
     void                          genQuadVertexData(gfx::SurfaceTransform surfaceTransform, const gfx::Rect &renderArea, float *data);
 
     framegraph::FrameGraph &getFrameGraph() const { return _fg; }
+    gfx::Color getClearcolor(scene::Camera *camera);
+    void preapreFrameGraph();
 
 private:
     bool activeRenderer();
@@ -99,6 +110,12 @@ private:
     uint                _height;
 
     framegraph::FrameGraph _fg;
+
+    // deferred resource name declear
+    static framegraph::StringHandle _gbuffer[4];
+    static framegraph::StringHandle _depth;
+    static framegraph::StringHandle _lightingOut;
+    static framegraph::StringHandle _backBuffer;        // buffer get from swapchain, used for queuepresent
 };
 
 } // namespace pipeline

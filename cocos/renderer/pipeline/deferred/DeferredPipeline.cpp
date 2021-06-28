@@ -52,6 +52,11 @@ namespace {
     (dst)[(offset) + 3] = (src).w;
 } // namespace
 
+DeferredPipeline::framegraph::StringHandle _gbuffer[4] = {"gbufferAlbedo", "gbufferPosition", "gbufferNormal", "gbufferEmissive"};
+DeferredPipeline::framegraph::StringHandle _depth = "depth";
+DeferredPipeline::framegraph::StringHandle _lightingOut = "lightingOutput";
+DeferredPipeline::framegraph::StringHandle _backBuffer = "backBuffer";
+
 gfx::RenderPass *DeferredPipeline::getOrCreateRenderPass(gfx::ClearFlags clearFlags) {
     if (_renderPasses.find(clearFlags) != _renderPasses.end()) {
         return _renderPasses[clearFlags];
@@ -137,6 +142,32 @@ void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
     _device->getQueue()->submit(_commandBuffers);
 }
 
+void DeferredPipeline::preapreFrameGraph() {
+    _fg.getBlackboard().put(_backBuffer, _fg.importExternal(camera->window->frameBuffer->getColorTextures()[0]));
+}
+
+void DeferredPipeline::renderFG(const vector<scene::Camera *> &cameras) {
+    _commandBuffers[0]->begin();
+    _pipelineUBO->updateGlobalUBO();
+    preapreFrameGraph();
+    for (auto *camera : cameras) {
+        _fg.reset();
+        preapreFrameGraph();
+        sceneCulling(this, camera);
+        for (auto *const flow : _flows) {
+            flow->render(camera);
+        }
+        _pipelineUBO->incCameraUBOOffset();
+
+        _fg.compile();
+        _fg.execute();
+    }
+
+    _commandBuffers[0]->end();
+    _device->flushCommands(_commandBuffers);
+    _device->getQueue()->submit(_commandBuffers)
+}
+
 void DeferredPipeline::updateQuadVertexData(const gfx::Rect &renderArea) {
     if (_lastUsedRenderArea == renderArea) {
         return;
@@ -216,7 +247,6 @@ bool DeferredPipeline::createQuadInputAssembler(gfx::Buffer **quadIB, gfx::Buffe
 
 gfx::Rect DeferredPipeline::getRenderArea(scene::Camera *camera) {
     gfx::Rect renderArea;
-    
     uint w = camera->window->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->height : camera->width;
     uint h = camera->window->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->width : camera->height;
 
@@ -278,6 +308,12 @@ bool DeferredPipeline::activeRenderer() {
         return false;
     }
 
+    _width  = _device->getWidth();
+    _height = _device->getHeight();
+
+    bool b_fg = false;
+    if (b_fg) return true;
+
     gfx::RenderPassInfo gbufferPass;
 
     gfx::ColorAttachment color = {
@@ -328,9 +364,6 @@ bool DeferredPipeline::activeRenderer() {
     };
 
     _lightingRenderPass = _device->createRenderPass(lightPass);
-
-    _width  = _device->getWidth();
-    _height = _device->getHeight();
 
     generateDeferredRenderData();
 
@@ -473,6 +506,26 @@ void DeferredPipeline::destroyDeferredData() {
 
     CC_DELETE(_deferredRenderData);
     _deferredRenderData = nullptr;
+}
+
+gfx::Color DeferredPipeline::getClearcolor(scene::Camera *camera) {
+    auto *const sceneData     = getPipelineSceneData();
+    auto *const sharedData    = sceneData->getSharedData();
+    gfx::Color clearColor = {0.0, 0.0, 0.0, 1.0};
+    if (camera->clearFlag & static_cast<uint>(gfx::ClearFlagBit::COLOR)) {
+        if (sharedData->isHDR) {
+            srgbToLinear(&clearColor, camera->clearColor);
+            const auto scale = sharedData->fpScale / camera->exposure;
+            clearColor.x *= scale;
+            clearColor.y *= scale;
+            clearColor.z *= scale;
+        } else {
+            clearColor = camera->clearColor;
+        }
+    }
+
+    clearColor.w = 0;
+    return clearColor;
 }
 
 } // namespace pipeline

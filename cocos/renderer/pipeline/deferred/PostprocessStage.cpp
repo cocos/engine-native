@@ -84,6 +84,65 @@ void PostprocessStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
 void PostprocessStage::destroy() {
 }
 
+void PostprocessStage::renderFG(scene::Camera *camera) {
+    auto *      pipeline      = static_cast<DeferredPipeline *>(_pipeline);
+
+    struct renderData {
+        framegraph::TextureHandle lightingOut;      // read from lighting output
+        framegraph::TextureHandle depth;            // read from depth
+        framegraph::TextureHandle backBuffer;       // write to back buffer
+    };
+
+    auto postSetup = [&] (framegraph::PassNodeBuilder *builder, renderData *data) {
+        data.lightingOut = builder.read(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_lightingOut));
+        builder.writeToBlackboard(DeferredPipeline::_lightingOut, data.lightingOut);
+
+        data.depth = builder.read(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_depth));
+        builder.writeToBlackboard(DeferredPipeline::_depth, data.depth);
+
+        data.backBuffer = builder.read(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_backBuffer));
+        builder.writeToBlackboard(DeferredPipeline::_backBuffer, data.backBuffer)
+    };
+
+    auto postExec = [&] (renderData const &data, const framegraph::DevicePassResourceTable &table) {
+        // bind descriptor
+        gfx::Texture *lightingOut    = (gfx::Texture *)(able.getRead(data.lightingOut));
+
+        gfx::SamplerInfo info{
+            gfx::Filter::LINEAR,
+            gfx::Filter::LINEAR,
+            gfx::Filter::NONE,
+            gfx::Address::CLAMP,
+            gfx::Address::CLAMP,
+            gfx::Address::CLAMP,
+        };
+        const auto  samplerHash = SamplerLib::genSamplerHash(info);
+        auto *const sampler     = SamplerLib::getSampler(samplerHash);
+        pipeline->getDescriptorSet()->bindSampler(static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP), sampler);
+        pipeline->getDescriptorSet()->bindTexture(static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP), lightingOut);
+
+        uint const globalOffsets[] = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
+        cmdBf->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), pp->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
+
+        // post proces
+        auto *const  sceneData     = _pipeline->getPipelineSceneData();
+        scene::Pass *pv            = sceneData->getSharedData()->deferredPostPass;
+        gfx::Shader *sd            = sceneData->getSharedData()->deferredPostPassShader;
+
+        gfx::InputAssembler *ia  = pp->getQuadIAOffScreen();
+
+        gfx::RenderPass *rp = table.getDevicePass()->getRenderPass().get();
+        gfx::PipelineState * pso = PipelineStateManager::getOrCreatePipelineState(pv, sd, ia, rp);
+        assert(pso != nullptr);
+
+        cmdBf->bindPipelineState(pso);
+        cmdBf->bindInputAssembler(ia);
+        cmdBf->draw(ia);
+    };
+
+    pipeline->getFrameGraph()->addPass<renderData>(IP_POSTPROCESS, postSetup, postExec);
+}
+
 void PostprocessStage::render(scene::Camera *camera) {
     auto *pp = dynamic_cast<DeferredPipeline *>(_pipeline);
     assert(pp != nullptr);

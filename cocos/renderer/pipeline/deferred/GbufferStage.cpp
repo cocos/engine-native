@@ -94,6 +94,127 @@ void GbufferStage::destroy() {
     RenderStage::destroy();
 }
 
+void GbufferStage::dispenseRenderObject2Queues() {
+    _instancedQueue->clear();
+    _batchedQueue->clear();
+
+    const auto &renderObjects = _pipeline->getPipelineSceneData()->getRenderObjects();
+    for (auto *queue : _renderQueues) {
+        queue->clear();
+    }
+
+    uint   subModelIdx = 0;
+    uint   passIdx     = 0;
+    size_t k           = 0;
+    for (auto ro : renderObjects) {
+        const auto *const model = ro.model;
+
+        subModelIdx = 0;
+        for (auto *subModel : model->getSubModels()) {
+            passIdx = 0;
+            for (auto *pass : subModel->getPasses()) {
+                if (pass->getPhase() != _phaseID) continue;
+                if (pass->getBatchingScheme() == scene::BatchingSchemes::INSTANCING) {
+                    auto *instancedBuffer = InstancedBuffer::get(pass);
+                    instancedBuffer->merge(model, subModel, passIdx);
+                    _instancedQueue->add(instancedBuffer);
+                } else if (pass->getBatchingScheme() == scene::BatchingSchemes::VB_MERGING) {
+                    auto *batchedBuffer = BatchedBuffer::get(pass);
+                    batchedBuffer->merge(subModel, passIdx, model);
+                    _batchedQueue->add(batchedBuffer);
+                } else {
+                    for (k = 0; k < _renderQueues.size(); k++) {
+                        _renderQueues[k]->insertRenderPass(ro, subModelIdx, passIdx);
+                    }
+                }
+
+                ++passIdx;
+            }
+
+            ++subModelIdx;
+        }
+    }
+
+    for (auto *queue : _renderQueues) {
+        queue->sort();
+    }
+}
+
+void GbufferStage::renderFG(scene::Camera *camera) {
+    struct renderData {
+        framegraph::TextureHandle gbuffer[4];
+        framegraph::TextureHandle depth;
+    };
+
+    auto *      pipeline      = static_cast<DeferredPipeline *>(_pipeline);
+    auto gbufferSetup = [&](framegraph::PassNodeBuilder &builder, renderData &data) {
+        // gbuffer setup
+        gfx::Color clearColor = {0.0, 0.0, 0.0, 0.0};
+        for (int i = 0; i < 4; ++i) {
+            framegraph::RenderTargetAttachment::Descriptor colorAttachmentInfo;
+            colorAttachmentInfo.usage       = framegraph::RenderTargetAttachment::Usage::COLOR;
+            colorAttachmentInfo.loadOp      = gfx::LoadOp::CLEAR;
+            colorAttachmentInfo.clearColor  = clearColor;
+            colorAttachmentInfo.endAccesses = {gfx::AccessType::TRANSFER_READ};
+
+            framegraph::Texture::Descriptor colorTexInfo;
+            colorTexInfo.format = gfx::Format::RGBA8;
+            colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
+            colorTexInfo.width  = device->getWidth();
+            colorTexInfo.height = device->getHeight();
+
+            builder.create(data.gbuffer[i], DeferredPipeline::_gbuffer[i], colorTexInfo);
+            data.colorTex = builder.write(data.gbuffer[i], colorAttachmentInfo);
+            builder.writeToBlackboard(DeferredPipeline::_gbuffer[i], data.gbuffer[i]);
+        }
+
+        // depth setup
+        framegraph::RenderTargetAttachment::Descriptor depthInfo;
+        depthInfo.usage = framegraph::RenderTargetAttachment::Usage::DEPTH_STENCIL;
+        depthInfo.loadOp = gfx::LoadOp::CLEAR;
+        depthInfo.clearDepth = camera->clearDepth;
+        depthInfo.clearStencil = camera->clearStencil;
+        depthInfo.endAccesses = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
+
+        framegraph::Texture::Descriptor depthTexInfo;
+        depthTexInfo.format = _device->getDepthStencilFormat();
+        depthTexInfo.usage  = gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT;
+        depthTexInfo.width  = device->getWidth();
+        depthTexInfo.height = device->getHeight();
+
+        builder.create(data.depth, DeferredPipeline::_depth, depthTexInfo);
+        data.colorTex = builder.write(data.depth, depthInfo);
+        builder.writeToBlackboard(DeferredPipeline::_depth, data.depth);
+
+        // viewport setup
+        builder.setViewport(camera->viewPort, pipeline->getRenderArea(camera));
+    };
+
+    auto gbufferExec = [&] (DrawData const &data, const framegraph::DevicePassResourceTable &table) {
+        dispenseRenderObject2Queues();
+        auto *cmdBuff = pipeline->getCommandBuffers()[0];
+
+        _instancedQueue->uploadBuffers(cmdBuff);
+        _batchedQueue->uploadBuffers(cmdBuff);
+
+        // render area is not oriented
+        _renderArea = pipeline->getRenderArea(camera);
+        pipeline->updateQuadVertexData(_renderArea);
+        gfx::RenderPass *renderPass = table.getDevicePass()->getRenderPass().get();
+
+        // descriptorset bindings
+        uint const globalOffsets[] = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
+        cmdBuff->bindDescriptorSet(globalSet, _pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
+
+        // record commands
+        _renderQueues[0]->recordCommandBuffer(_device, renderPass, cmdBuff);
+        _instancedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
+        _batchedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
+    };
+
+    _pipeline->getFrameGraph()->addPass<renderData>(IP_GBUFFER, gbufferSetup, gbufferExec);
+}
+
 void GbufferStage::render(scene::Camera *camera) {
     _instancedQueue->clear();
     _batchedQueue->clear();
