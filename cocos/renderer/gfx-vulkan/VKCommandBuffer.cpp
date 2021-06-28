@@ -252,7 +252,6 @@ void CCVKCommandBuffer::bindInputAssembler(InputAssembler *ia) {
 }
 
 void CCVKCommandBuffer::setViewports(const Viewport *vp, uint count) {
-    CCASSERT(count <= MAX_VIEWPORTS, "Invalid viewport counts");
     VkViewport viewport[MAX_VIEWPORTS];
     for (uint i = 0;i < count; ++i) {
         viewport[i] = {static_cast<float>(vp[i].left), static_cast<float>(vp[i].top), static_cast<float>(vp[i].width), static_cast<float>(vp[i].height), vp[i].minDepth, vp[i].maxDepth};

@@ -203,6 +203,15 @@ void CommandBufferValidator::bindInputAssembler(InputAssembler *ia) {
     _actor->bindInputAssembler(static_cast<InputAssemblerValidator *>(ia)->getActor());
 }
 
+void CommandBufferValidator::setViewports(const Viewport *vp, uint count) {
+    CCASSERT(vp, "Invalid viewport");
+    CCASSERT(count <= MAX_VIEWPORTS, "Invalid viewport counts");
+
+    /////////// execute ///////////
+
+    _actor->setViewports(vp, count);
+}
+
 void CommandBufferValidator::setViewport(const Viewport &vp) {
     _curStates.viewport = vp;
 
