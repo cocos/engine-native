@@ -109,7 +109,7 @@ protected:
     ModelType _type{ModelType::DEFAULT};
     bool      _transformUpdated{false};
     AABB *    _worldBounds{nullptr};
-    AABB *    _modelBounds;
+    AABB *    _modelBounds{nullptr};
 
 private:
     bool _enabled{false};

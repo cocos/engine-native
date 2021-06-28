@@ -64,7 +64,7 @@ private:
     float _range{0.F};
     float _size{0.F};
     Vec3  _pos;
-    AABB *_aabb;
+    AABB *_aabb{nullptr};
 };
 
 } // namespace scene

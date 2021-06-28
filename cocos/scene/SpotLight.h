@@ -86,7 +86,7 @@ private:
     float   _aspect{0.F};
     Vec3    _dir;
     Vec3    _pos;
-    AABB *  _aabb;
+    AABB *  _aabb{nullptr};
     Frustum _frustum;
 };
 
