@@ -42,7 +42,7 @@
 namespace cc {
 namespace pipeline {
 bool         castBoundsInitialized = false;
-scene::AABB *castWorldBounds;
+scene::AABB castWorldBounds;
 
 RenderObject genRenderObject(const scene::Model *model, const scene::Camera *camera) {
     float depth = 0;
@@ -191,13 +191,13 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
             if ((model->getNode() && ((visibility & node->getLayer()) == node->getLayer())) ||
                 (visibility & model->getVisFlags())) {
                 // shadow render Object
-                auto *modelWorldBounds = model->getWorldBounds();
+                const auto *modelWorldBounds = model->getWorldBounds();
                 if (isShadowMap && model->getCastShadow() && modelWorldBounds) {
                     if (!castBoundsInitialized) {
-                        castWorldBounds       = modelWorldBounds;
+                        castWorldBounds.set(modelWorldBounds->getCenter(), modelWorldBounds->getHalfExtents());
                         castBoundsInitialized = true;
                     }
-                    castWorldBounds->merge(*modelWorldBounds);
+                    castWorldBounds.merge(*modelWorldBounds);
                     shadowObjects.emplace_back(genRenderObject(model, camera));
                 }
                 // frustum culling
@@ -211,7 +211,7 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
     }
 
     if (isShadowMap) {
-        sceneData->getSphere()->define(*castWorldBounds);
+        sceneData->getSphere()->define(castWorldBounds);
         sceneData->setShadowObjects(std::move(shadowObjects));
     }
 
