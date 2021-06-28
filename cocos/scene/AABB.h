@@ -63,7 +63,7 @@ public:
     inline void        setHalfExtents(float x, float y, float z) { _aabbLayout->halfExtents.set(x, y, z); }
     inline void        setHalfExtents(const Vec3 &halfExtents) { _aabbLayout->halfExtents.set(halfExtents); }
     inline const Vec3 &getHalfExtents() const { return _aabbLayout->halfExtents; }
-
+    inline AABBLayout* getLayout() { return _aabbLayout; }
 private:
     bool        _customLayout{true};
     AABBLayout *_aabbLayout{nullptr};

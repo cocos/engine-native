@@ -1265,25 +1265,6 @@ static bool js_scene_Model_getLocalData(se::State& s) // NOLINT(readability-iden
 }
 SE_BIND_FUNC(js_scene_Model_getLocalData)
 
-static bool js_scene_Model_getModelBounds(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_Model_getModelBounds : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        cc::scene::AABB* result = cobj->getModelBounds();
-        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-        SE_PRECONDITION2(ok, false, "js_scene_Model_getModelBounds : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_scene_Model_getModelBounds)
-
 static bool js_scene_Model_getNode(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
@@ -1416,25 +1397,6 @@ static bool js_scene_Model_getVisFlags(se::State& s) // NOLINT(readability-ident
     return false;
 }
 SE_BIND_FUNC(js_scene_Model_getVisFlags)
-
-static bool js_scene_Model_getWorldBounds(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_Model_getWorldBounds : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        cc::scene::AABB* result = cobj->getWorldBounds();
-        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-        SE_PRECONDITION2(ok, false, "js_scene_Model_getWorldBounds : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_scene_Model_getWorldBounds)
 
 static bool js_scene_Model_seVisFlag(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
@@ -1684,7 +1646,6 @@ bool js_register_scene_Model(se::Object* obj) // NOLINT(readability-identifier-n
     cls->defineFunction("getInstancedBuffer", _SE(js_scene_Model_getInstancedBuffer));
     cls->defineFunction("getInstancedBufferSize", _SE(js_scene_Model_getInstancedBufferSize));
     cls->defineFunction("getLocalData", _SE(js_scene_Model_getLocalData));
-    cls->defineFunction("getModelBounds", _SE(js_scene_Model_getModelBounds));
     cls->defineFunction("getNode", _SE(js_scene_Model_getNode));
     cls->defineFunction("getReceiveShadow", _SE(js_scene_Model_getReceiveShadow));
     cls->defineFunction("getSubModels", _SE(js_scene_Model_getSubModels));
@@ -1692,7 +1653,6 @@ bool js_register_scene_Model(se::Object* obj) // NOLINT(readability-identifier-n
     cls->defineFunction("getTransformUpdated", _SE(js_scene_Model_getTransformUpdated));
     cls->defineFunction("getUpdatStamp", _SE(js_scene_Model_getUpdatStamp));
     cls->defineFunction("getVisFlags", _SE(js_scene_Model_getVisFlags));
-    cls->defineFunction("getWorldBounds", _SE(js_scene_Model_getWorldBounds));
     cls->defineFunction("seVisFlag", _SE(js_scene_Model_seVisFlag));
     cls->defineFunction("setBounds", _SE(js_scene_Model_setBounds));
     cls->defineFunction("setCastShadow", _SE(js_scene_Model_setCastShadow));
