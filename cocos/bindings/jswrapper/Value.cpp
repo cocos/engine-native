@@ -187,6 +187,9 @@ Value &Value::operator=(const Value &v) {
             case Type::Object: {
                 setObject(v._u._object, v._autoRootUnroot);
             } break;
+            case Type::BigInt:
+                _u._bigInt = v._u._bigInt;
+                break;
             default:
                 break;
         }
@@ -226,6 +229,9 @@ Value &Value::operator=(Value &&v) {
                 v._u._object = nullptr; // Reset to nullptr here to avoid 'release' operation in v.reset(Type::Undefined) since it's a move operation here.
                 v._autoRootUnroot = false;
             } break;
+            case Type::BigInt:
+                _u._bigInt = v._u._bigInt;
+                break;
             default:
                 break;
         }
@@ -300,7 +306,7 @@ void Value::setUint32(uint32_t v) {
 
 void Value::setInt64(int64_t v) {
     reset(Type::BigInt);
-    _u._bigInt = (int64_t)v;
+    _u._bigInt = (uint64_t)v;
 }
 
 void Value::setUint64(uint64_t v) {
@@ -421,11 +427,11 @@ uint32_t Value::toUint32() const {
 }
 
 int64_t Value::toInt64() const {
-    return static_cast<int64_t>(toNumber());
+    return static_cast<int64_t>(toBigInt());
 }
 
 uint64_t Value::toUint64() const {
-    return static_cast<uint64_t>(toNumber());
+    return static_cast<uint64_t>(toBigInt());
 }
 
 unsigned int Value::toUint() const {
@@ -446,6 +452,10 @@ intptr_t Value::toUIntptr_t() const {
 
 float Value::toFloat() const {
     return static_cast<float>(toNumber());
+}
+
+uint64_t Value::toBigInt() const {
+    return _u._bigInt;
 }
 
 double Value::toNumber() const {

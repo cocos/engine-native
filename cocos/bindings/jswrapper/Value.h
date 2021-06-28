@@ -229,14 +229,14 @@ public:
     void setUint32(uint32_t v);
 
     /**
-         *  @brief Sets se::Value to a int32_t value.
-         *  @param[in] v The int32_t value to be set.
+         *  @brief Sets se::Value to a int64_t value.
+         *  @param[in] v The int64_t value to be set.
          */
     void setInt64(int64_t v);
 
     /**
-         *  @brief Sets se::Value to a uint32_t value.
-         *  @param[in] v The uint32_t value to be set.
+         *  @brief Sets se::Value to a uint64_t value.
+         *  @param[in] v The uint64_t value to be set.
          */
     void setUint64(uint64_t v);
 
@@ -374,6 +374,12 @@ public:
          *  @return double number.
          */
     double toNumber() const;
+    
+    /**
+         *  @brief Converts se::Value to uint64_t number.
+         *  @return uint64_t number.
+         */
+    uint64_t toBigInt() const;
 
     /**
          *  @brief Converts se::Value to boolean.
@@ -408,10 +414,16 @@ public:
     inline Type getType() const { return _type; }
 
     /**
-         *  @brief Tests whether se::Value stores a number.
+         *  @brief Tests whether se::Value stores a number. use private
          *  @return true if se::Value stores a number, otherwise false.
          */
     inline bool isNumber() const { return _type == Type::Number; }
+
+    /**
+         *  @brief Tests whether se::Value stores a big int.
+         *  @return true if se::Value stores a big int, otherwise false.
+         */
+    inline bool isBigInt() const { return _type == Type::BigInt; }
 
     /**
          *  @brief Tests whether se::Value stores a string.
@@ -454,10 +466,10 @@ private:
     void reset(Type type);
 
     union {
-        bool _boolean;
-        double _number;
+        bool         _boolean;
+        double       _number;
         std::string *_string;
-        Object *_object;
+        Object *     _object;
         uint64_t     _bigInt;
     } _u;
 

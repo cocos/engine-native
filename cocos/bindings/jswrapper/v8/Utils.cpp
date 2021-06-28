@@ -82,7 +82,7 @@ void seToJsValue(v8::Isolate *isolate, const Value &v, v8::Local<v8::Value> *out
             *outJsVal = v8::Undefined(isolate);
             break;
         case Value::Type::BigInt: 
-            *outJsVal = v8::BigInt::New(isolate, v.toInt64());
+            *outJsVal = v8::BigInt::NewFromUnsigned(isolate, v.toBigInt());
             break;
         default:
             assert(false);
@@ -143,6 +143,8 @@ void setReturnValueTemplate(const Value &data, const T &argv) {
         argv.GetReturnValue().Set(v8::Null(argv.GetIsolate()));
     } else if (data.getType() == Value::Type::Number) {
         argv.GetReturnValue().Set(v8::Number::New(argv.GetIsolate(), data.toNumber()));
+    } else if (data.getType() == Value::Type::BigInt) {
+        argv.GetReturnValue().Set(v8::BigInt::NewFromUnsigned(argv.GetIsolate(), data.toBigInt()));    
     } else if (data.getType() == Value::Type::String) {
         v8::MaybeLocal<v8::String> value = v8::String::NewFromUtf8(argv.GetIsolate(), data.toString().c_str(), v8::NewStringType::kNormal);
         assert(!value.IsEmpty());

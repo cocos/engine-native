@@ -1404,13 +1404,13 @@ inline bool nativevalue_to_se(const std::array<float, N> &from, se::Value &to, s
 
 template <>
 inline bool nativevalue_to_se(const int64_t &from, se::Value &to, se::Object * /*ctx*/) {
-    to.setLong(static_cast<long>(from));
+    to.setInt64(from);
     return true;
 }
 
 template <>
 inline bool nativevalue_to_se(const uint64_t &from, se::Value &to, se::Object * /*ctx*/) {
-    to.setUlong(static_cast<unsigned long>(from));
+    to.setUint64(from);
     return true;
 }
 
