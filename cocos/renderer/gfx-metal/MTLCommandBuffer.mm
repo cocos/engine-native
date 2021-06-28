@@ -247,6 +247,9 @@ void CCMTLCommandBuffer::bindInputAssembler(InputAssembler *ia) {
     }
 }
 
+void CCMTLCommandBuffer::setViewports(const Viewport *vp, uint count) {
+}
+
 void CCMTLCommandBuffer::setViewport(const Viewport &vp) {
     _renderEncoder.setViewport(vp);
 }
