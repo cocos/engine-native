@@ -163,7 +163,7 @@ void GLES2CommandBuffer::bindInputAssembler(InputAssembler *ia) {
     _isStateInvalid      = true;
 }
 
-void GLES2CommandBuffer::setViewport(const Viewport &vp) {
+void GLES2CommandBuffer::setViewports(const Viewport *vp, uint count) {
     for (uint i = 0; i < count; ++i) {
         _curViewports[i] = vp[i];
     }
