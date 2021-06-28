@@ -67,7 +67,7 @@ void ShadowMapBatchedQueue::gatherLightPasses(const scene::Light *light, gfx::Co
                 case scene::LightType::SPOT: {
                     const auto *spotLight = static_cast<const scene::SpotLight *>(light);
                     if (model->getWorldBounds() &&
-                        (model->getWorldBounds()->aabbAabb(*spotLight->getAABB()) ||
+                        (model->getWorldBounds()->aabbAabb(spotLight->getAABB()) ||
                          model->getWorldBounds()->aabbFrustum(spotLight->getFrustum()))) {
                         add(model, cmdBuffer);
                     }

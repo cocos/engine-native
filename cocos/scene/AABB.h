@@ -50,7 +50,7 @@ public:
     AABB &operator=(AABB &&) = delete;
 
     void               initWithData(uint8_t *data);
-    bool               aabbAabb(const AABB &aabb) const;
+    bool               aabbAabb(AABB *aabb) const;
     bool               aabbFrustum(const Frustum &) const;
     int                aabbPlane(const Plane &) const;
     void               getBoundary(cc::Vec3 *minPos, cc::Vec3 *maxPos) const;

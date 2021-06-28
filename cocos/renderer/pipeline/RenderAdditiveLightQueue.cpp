@@ -193,11 +193,11 @@ void RenderAdditiveLightQueue::gatherValidLights(const scene::Camera *camera) {
 }
 
 bool RenderAdditiveLightQueue::cullSphereLight(const scene::SphereLight *light, const scene::Model *model) {
-    return model->getWorldBounds() && !model->getWorldBounds()->aabbAabb(*light->getAABB());
+    return model->getWorldBounds() && !model->getWorldBounds()->aabbAabb(light->getAABB());
 }
 
 bool RenderAdditiveLightQueue::cullSpotLight(const scene::SpotLight *light, const scene::Model *model) {
-    return model->getWorldBounds() && (!model->getWorldBounds()->aabbAabb(*light->getAABB()) || !model->getWorldBounds()->aabbFrustum(light->getFrustum()));
+    return model->getWorldBounds() && (!model->getWorldBounds()->aabbAabb(light->getAABB()) || !model->getWorldBounds()->aabbFrustum(light->getFrustum()));
 }
 
 void RenderAdditiveLightQueue::addRenderQueue(const scene::Pass *pass, const scene::SubModel *subModel, const scene::Model *model, uint lightPassIdx) {
