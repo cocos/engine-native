@@ -164,7 +164,7 @@ void SendHttpResponse(InspectorSocket *socket, const std::string &response) {
 
 void SendVersionResponse(InspectorSocket *socket) {
     std::map<std::string, std::string> response;
-    response["Browser"]          = "Cocos2d-x Games"; //cjh
+    response["Browser"]          = "Cocos Games"; //cjh
     response["Protocol-Version"] = "1.1";
     SendHttpResponse(socket, MapToString(response));
 }
