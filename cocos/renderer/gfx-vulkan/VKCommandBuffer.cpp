@@ -264,8 +264,7 @@ void CCVKCommandBuffer::setViewport(const Viewport &vp) {
     if (_curDynamicStates.viewport != vp) {
         _curDynamicStates.viewport = vp;
 
-        VkViewport viewport{static_cast<float>(vp.left), static_cast<float>(vp.top), static_cast<float>(vp.width), static_cast<float>(vp.height), vp.minDepth, vp.maxDepth};
-        vkCmdSetViewport(_gpuCommandBuffer->vkCommandBuffer, 0, 1, &viewport);
+        setViewports(&vp, 1);
     }
 }
 
