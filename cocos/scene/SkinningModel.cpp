@@ -117,8 +117,8 @@ void SkinningModel::updateTransform(uint32_t stamp) {
         Vec3::max(v3Max, v32, &v3Max);
     }
     if (_worldBounds) {
-        AABB::fromPoints(v3Min, v3Max, _modelBounds);
-        _modelBounds->transform(root->getNodeLayout()->worldMatrix, _worldBounds);
+        AABB::fromPoints(v3Min, v3Max, &_modelBounds);
+        _modelBounds.transform(root->getNodeLayout()->worldMatrix, _worldBounds);
     }
 }
 } // namespace scene
