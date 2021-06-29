@@ -878,7 +878,7 @@ SE_BIND_PROP_GET(XMLHttpRequest_getResponse)
 
 static bool XMLHttpRequest_getTimeout(se::State &s) {
     XMLHttpRequest *cobj = (XMLHttpRequest *)s.nativeThisObject();
-    s.rval().setUlong(cobj->getTimeout());
+    s.rval().setUint32(cobj->getTimeout());
     return true;
 }
 SE_BIND_PROP_GET(XMLHttpRequest_getTimeout)
@@ -888,8 +888,8 @@ static bool XMLHttpRequest_setTimeout(se::State &s) {
     int argc = (int)args.size();
     if (argc > 0) {
         XMLHttpRequest *cobj = (XMLHttpRequest *)s.nativeThisObject();
-        unsigned long timeoutInMilliseconds = 0;
-        bool ok = seval_to_ulong(args[0], &timeoutInMilliseconds);
+        uint32_t timeoutInMilliseconds = 0;
+        bool ok = seval_to_uint32(args[0], &timeoutInMilliseconds);
         SE_PRECONDITION2(ok, false, "args[0] isn't a number");
         if (timeoutInMilliseconds < 50) {
             SE_LOGE("The timeout value (%lu ms) is too small, please note that timeout unit is milliseconds!", timeoutInMilliseconds);

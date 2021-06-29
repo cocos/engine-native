@@ -113,18 +113,6 @@ Value::Value(uint16_t v)
     setUint16(v);
 }
 
-Value::Value(long v)
-: _type(Type::Undefined),
-  _autoRootUnroot(false) {
-    setLong(v);
-}
-
-Value::Value(unsigned long v)
-: _type(Type::Undefined),
-  _autoRootUnroot(false) {
-    setUlong(v);
-}
-
 Value::Value(float v)
 : _type(Type::Undefined),
   _autoRootUnroot(false) {
@@ -324,19 +312,9 @@ void Value::setUint16(uint16_t v) {
     _u._number = (double)v;
 }
 
-void Value::setLong(long v) {
-    reset(Type::Number);
-    _u._number = (double)v;
-}
-
 void Value::setUIntptr_t(uintptr_t v) {
-    reset(Type::Number);
-    _u._number = (double)v;
-}
-
-void Value::setUlong(unsigned long v) {
-    reset(Type::Number);
-    _u._number = (double)v;
+    reset(Type::BigInt);
+    _u._bigInt = (uint64_t)v;
 }
 
 void Value::setFloat(float v) {
@@ -438,16 +416,8 @@ unsigned int Value::toUint() const {
     return static_cast<unsigned int>(toNumber());
 }
 
-long Value::toLong() const {
-    return static_cast<long>(toNumber());
-}
-
-unsigned long Value::toUlong() const {
-    return static_cast<unsigned long>(toNumber());
-}
-
-intptr_t Value::toUIntptr_t() const {
-    return static_cast<uintptr_t>(toNumber());
+uintptr_t Value::toUIntptr_t() const {
+    return static_cast<uintptr_t>(toBigInt());
 }
 
 float Value::toFloat() const {

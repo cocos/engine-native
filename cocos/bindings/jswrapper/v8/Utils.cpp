@@ -132,7 +132,15 @@ void jsToSeValue(v8::Isolate *isolate, v8::Local<v8::Value> jsval, Value *v) {
         } else {
             v->setUndefined();
         }
+    } else if (jsval->IsBigInt()) {
+        v8::MaybeLocal<v8::BigInt> jsBigInt = jsval->ToBigInt(isolate->GetCurrentContext());
+        if (!jsBigInt.IsEmpty()) {
+            v->setUint64(jsBigInt.ToLocalChecked()->Uint64Value());
+        } else {
+            v->setUndefined();
+        }
     }
+
 }
 
 template <typename T>

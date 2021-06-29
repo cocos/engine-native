@@ -175,30 +175,10 @@ bool seval_to_double(const se::Value &v, double *ret) {
     return false;
 }
 
-bool seval_to_long(const se::Value &v, long *ret) {
-    assert(ret != nullptr);
-    if (v.isNumber()) {
-        *ret = v.toLong();
-        return true;
-    }
-    *ret = 0L;
-    return false;
-}
-
-bool seval_to_ulong(const se::Value &v, unsigned long *ret) {
-    assert(ret != nullptr);
-    if (v.isNumber()) {
-        *ret = v.toUlong();
-        return true;
-    }
-    *ret = 0UL;
-    return false;
-}
-
 bool seval_to_longlong(const se::Value &v, long long *ret) {
     assert(ret != nullptr);
     if (v.isNumber()) {
-        *ret = static_cast<long long>(v.toLong());
+        *ret = static_cast<long long>(v.toInt64());
         return true;
     }
     *ret = 0LL;
@@ -208,7 +188,7 @@ bool seval_to_longlong(const se::Value &v, long long *ret) {
 bool seval_to_size(const se::Value &v, size_t *ret) {
     assert(ret != nullptr);
     if (v.isNumber()) {
-        *ret = static_cast<size_t>(v.toLong());
+        *ret = static_cast<size_t>(v.toUint64());
         return true;
     }
     *ret = 0;
@@ -276,7 +256,7 @@ bool seval_to_Uint8Array(const se::Value &v, uint8_t *ret) {
 
 bool seval_to_uintptr_t(const se::Value &v, uintptr_t *ret) {
     assert(ret != nullptr);
-    if (v.isNumber()) {
+    if (v.isBigInt()) {
         *ret = v.toUIntptr_t();
         return true;
     }
@@ -731,18 +711,9 @@ bool double_to_seval(double v, se::Value *ret) {
     return true;
 }
 
-bool long_to_seval(long v, se::Value *ret) {
-    ret->setLong(v);
-    return true;
-}
-
-bool ulong_to_seval(unsigned long v, se::Value *ret) {
-    ret->setUlong(v);
-    return true;
-}
 
 bool longlong_to_seval(long long v, se::Value *ret) {
-    ret->setLong(static_cast<long>(v));
+    ret->setInt64(v);
     return true;
 }
 
@@ -752,7 +723,7 @@ bool uintptr_t_to_seval(uintptr_t v, se::Value *ret) {
 }
 
 bool size_to_seval(size_t v, se::Value *ret) {
-    ret->setLong(static_cast<unsigned long>(v));
+    ret->setUint64(v);
     return true;
 }
 

@@ -169,8 +169,6 @@ bool seval_to_uint16(const se::Value &v, uint16_t *ret);                        
 bool seval_to_boolean(const se::Value &v, bool *ret);                                    // NOLINT(readability-identifier-naming)
 bool seval_to_float(const se::Value &v, float *ret);                                     // NOLINT(readability-identifier-naming)
 bool seval_to_double(const se::Value &v, double *ret);                                   // NOLINT(readability-identifier-naming)
-bool seval_to_long(const se::Value &v, long *ret);                                       // NOLINT(readability-identifier-naming)
-bool seval_to_ulong(const se::Value &v, unsigned long *ret);                             // NOLINT(readability-identifier-naming)
 bool seval_to_longlong(const se::Value &v, long long *ret);                              // NOLINT(readability-identifier-naming)
 bool seval_to_size(const se::Value &v, size_t *ret);                                     // NOLINT(readability-identifier-naming)
 bool seval_to_std_string(const se::Value &v, std::string *ret);                          // NOLINT(readability-identifier-naming)

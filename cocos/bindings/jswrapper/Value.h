@@ -116,17 +116,6 @@ public:
          */
     explicit Value(uint64_t v);
 
-
-    /**
-         *  @brief The constructor with a long arguement.
-         */
-    explicit Value(long v);
-
-    /**
-         *  @brief The constructor with a unsigned long arguement.
-         */
-    explicit Value(unsigned long v);
-
     /**
          *  @brief The constructor with a float arguement.
          */
@@ -241,22 +230,10 @@ public:
     void setUint64(uint64_t v);
 
     /**
-         *  @brief Sets se::Value to a long value.
-         *  @param[in] v The long value to be set.
-         */
-    void setLong(long v);
-
-    /**
              *  @brief Sets se::Value to a uintptr_t value.
              *  @param[in] v The uintptr_t value to be set.
              */
     void setUIntptr_t(uintptr_t v);
-
-    /**
-         *  @brief Sets se::Value to a unsigned long value.
-         *  @param[in] v The unsigned long value to be set.
-         */
-    void setUlong(unsigned long v);
 
     /**
          *  @brief Sets se::Value to a float value.
@@ -347,22 +324,10 @@ public:
     unsigned int toUint() const;
 
     /**
-         *  @brief Converts se::Value to long.
-         *  @return long integer.
-         */
-    long toLong() const;
-
-    /**
          *  @brief Converts se::Value to unsigned long.
-         *  @return unsigned long integer.
+         *  @return uintptr_t.
          */
-    unsigned long toUlong() const;
-
-    /**
-         *  @brief Converts se::Value to unsigned long.
-         *  @return intptr_t.
-         */
-    intptr_t toUIntptr_t() const;
+    uintptr_t toUIntptr_t() const;
     /**
          *  @brief Converts se::Value to float number.
          *  @return float number.
