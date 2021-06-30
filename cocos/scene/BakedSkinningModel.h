@@ -25,12 +25,24 @@
 
 #pragma once
 
-#include "scene/Model.h"
+#include <utility>
+
+#include "scene/MorphModel.h"
 
 namespace cc {
 namespace scene {
-
-class BakedSkinningModel : public Model {
+struct BakedAnimInfo {
+    gfx::Buffer *buffer{nullptr};
+    uint8_t *    data;
+    bool         dirty;
+};
+struct BakedJointInfo {
+    std::vector<AABB *> boundsInfo;
+    uint8_t *           jointTextureInfo;
+    BakedAnimInfo       animInfo;
+    gfx::Buffer *       buffer{nullptr};
+};
+class BakedSkinningModel : public MorphModel {
 public:
     BakedSkinningModel()                           = default;
     BakedSkinningModel(const BakedSkinningModel &) = delete;
@@ -39,8 +51,16 @@ public:
     BakedSkinningModel &operator=(const BakedSkinningModel &) = delete;
     BakedSkinningModel &operator=(BakedSkinningModel &&) = delete;
 
-    void updateTransform(uint32_t stamp) override;
-    void updateUBOs(uint32_t stamp) override;
+    void        updateTransform(uint32_t stamp) override;
+    void        updateUBOs(uint32_t stamp) override;
+    inline void setJointMedium(bool isUploadAnim, BakedJointInfo jointMedium) {
+        _isUploadAnim = isUploadAnim;
+        _jointMedium  = std::move(jointMedium);
+    }
+
+private:
+    BakedJointInfo _jointMedium;
+    bool           _isUploadAnim = false;
 };
 
 } // namespace scene

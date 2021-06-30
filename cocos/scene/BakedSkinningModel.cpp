@@ -26,6 +26,16 @@
 
 namespace cc {
 namespace scene {
+void BakedSkinningModel::updateTransform(uint32_t stamp) {
+    MorphModel::updateTransform(stamp);
+    if (!_isUploadAnim) {
+        return;
+    }
+}
+
+void BakedSkinningModel::updateUBOs(uint32_t stamp) {
+    MorphModel::updateUBOs(stamp);
+}
 
 } // namespace scene
 } // namespace cc
