@@ -136,6 +136,7 @@ void DeviceAgent::acquire() {
         {
             actor->acquire();
         });
+    _mainMessageQueue->kickAndWait();
 }
 
 void DeviceAgent::present() {
