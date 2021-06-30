@@ -5003,6 +5003,25 @@ bool js_register_scene_Pass(se::Object* obj) // NOLINT(readability-identifier-na
 se::Object* __jsb_cc_scene_BakedAnimInfo_proto = nullptr;
 se::Class* __jsb_cc_scene_BakedAnimInfo_class = nullptr;
 
+static bool js_scene_BakedAnimInfo_getDirty(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::BakedAnimInfo>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_BakedAnimInfo_getDirty : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        bool result = cobj->getDirty();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_scene_BakedAnimInfo_getDirty : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_scene_BakedAnimInfo_getDirty)
+
 
 template<>
 bool sevalue_to_native(const se::Value &from, cc::scene::BakedAnimInfo * to, se::Object *ctx)
@@ -5107,6 +5126,7 @@ bool js_register_scene_BakedAnimInfo(se::Object* obj) // NOLINT(readability-iden
 {
     auto* cls = se::Class::create("BakedAnimInfo", obj, nullptr, _SE(js_scene_BakedAnimInfo_constructor));
 
+    cls->defineFunction("getDirty", _SE(js_scene_BakedAnimInfo_getDirty));
     cls->defineFinalizeFunction(_SE(js_cc_scene_BakedAnimInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cc::scene::BakedAnimInfo>(cls);
@@ -5244,26 +5264,24 @@ bool js_register_scene_BakedJointInfo(se::Object* obj) // NOLINT(readability-ide
 se::Object* __jsb_cc_scene_BakedSkinningModel_proto = nullptr;
 se::Class* __jsb_cc_scene_BakedSkinningModel_class = nullptr;
 
-static bool js_scene_BakedSkinningModel_setJointMedium(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+static bool js_scene_BakedSkinningModel_setAnimInfoIdx(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::BakedSkinningModel>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_BakedSkinningModel_setJointMedium : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_scene_BakedSkinningModel_setAnimInfoIdx : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 2) {
-        HolderType<bool, false> arg0 = {};
-        HolderType<cc::scene::BakedJointInfo, false> arg1 = {};
+    if (argc == 1) {
+        HolderType<int32_t, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
-        SE_PRECONDITION2(ok, false, "js_scene_BakedSkinningModel_setJointMedium : Error processing arguments");
-        cobj->setJointMedium(arg0.value(), arg1.value());
+        SE_PRECONDITION2(ok, false, "js_scene_BakedSkinningModel_setAnimInfoIdx : Error processing arguments");
+        cobj->setAnimInfoIdx(arg0.value());
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
     return false;
 }
-SE_BIND_FUNC(js_scene_BakedSkinningModel_setJointMedium)
+SE_BIND_FUNC(js_scene_BakedSkinningModel_setAnimInfoIdx)
 
 SE_DECLARE_FINALIZE_FUNC(js_cc_scene_BakedSkinningModel_finalize)
 
@@ -5293,9 +5311,9 @@ SE_BIND_FINALIZE_FUNC(js_cc_scene_BakedSkinningModel_finalize)
 
 bool js_register_scene_BakedSkinningModel(se::Object* obj) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
-    auto* cls = se::Class::create("BakedSkinningModel", obj, __jsb_cc_scene_MorphModel_proto, _SE(js_scene_BakedSkinningModel_constructor));
+    auto* cls = se::Class::create("BakedSkinningModel", obj, __jsb_cc_scene_Model_proto, _SE(js_scene_BakedSkinningModel_constructor));
 
-    cls->defineFunction("setJointMedium", _SE(js_scene_BakedSkinningModel_setJointMedium));
+    cls->defineFunction("setAnimInfoIdx", _SE(js_scene_BakedSkinningModel_setAnimInfoIdx));
     cls->defineFinalizeFunction(_SE(js_cc_scene_BakedSkinningModel_finalize));
     cls->install();
     JSBClassType::registerClass<cc::scene::BakedSkinningModel>(cls);
@@ -7586,13 +7604,13 @@ bool register_all_scene(se::Object* obj)
 
     js_register_scene_RenderScene(ns);
     js_register_scene_Camera(ns);
-    js_register_scene_Model(ns);
     js_register_scene_Fog(ns);
     js_register_scene_Node(ns);
     js_register_scene_Frustum(ns);
     js_register_scene_DrawBatch2D(ns);
     js_register_scene_Light(ns);
     js_register_scene_SphereLight(ns);
+    js_register_scene_Model(ns);
     js_register_scene_BakedSkinningModel(ns);
     js_register_scene_Plane(ns);
     js_register_scene_JointTransform(ns);

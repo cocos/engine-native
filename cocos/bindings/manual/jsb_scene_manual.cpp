@@ -222,6 +222,64 @@ static bool js_scene_SubModel_setSubMeshBuffers(se::State& s) // NOLINT(readabil
 }
 SE_BIND_FUNC(js_scene_SubModel_setSubMeshBuffers) // NOLINT(readability-identifier-naming, google-runtime-references)
 
+static bool js_scene_BakedSkinningModel_setJointMedium(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::BakedSkinningModel>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_BakedSkinningModel_setJointMedium : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 2) {
+        HolderType<bool, false> arg0 = {};
+        cc::scene::BakedJointInfo result;
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        se::Object *json = args[1].toObject();
+        auto* data = reinterpret_cast<cc::scene::BakedJointInfo*>(json->getPrivateData());
+        if (data) {
+            result = *data;
+            return true;
+        }
+        se::Value field;
+        bool ok = true;
+        json->getProperty("boundsInfo", &field);
+        if(!field.isNullOrUndefined()) {
+            ok &= sevalue_to_native(field, &(result.boundsInfo), s.thisObject());
+        }
+        json->getProperty("buffer", &field);
+        if(!field.isNullOrUndefined()) {
+            ok &= sevalue_to_native(field, &(result.buffer), s.thisObject());
+        }
+        json->getProperty("jointTextureInfo", &field);
+        uint8_t* jointTextureInfo{nullptr};
+        field.toObject()->getArrayBufferData(&jointTextureInfo, nullptr);
+        result.jointTextureInfo = jointTextureInfo;
+        // animInfo
+        cc::scene::BakedAnimInfo animInfo;
+        json->getProperty("animInfo", &field);
+        if(!field.isNullOrUndefined()) {
+            se::Object* jsonAnimInfo = field.toObject();
+            se::Value   animField;
+            jsonAnimInfo->getProperty("buffer", &animField);
+            if (!animField.isNullOrUndefined()) {
+                ok &= sevalue_to_native(animField, &(animInfo.buffer), s.thisObject());
+            }
+            jsonAnimInfo->getProperty("data", &animField);
+            uint8_t* infoData{nullptr};
+            animField.toObject()->getArrayBufferData(&infoData, nullptr);
+            animInfo.data = infoData;
+            jsonAnimInfo->getProperty("dirty", &animField);
+            uint8_t* dirtyData{nullptr};
+            animField.toObject()->getArrayBufferData(&dirtyData, nullptr);
+            animInfo.dirty = dirtyData;
+        }
+        result.animInfo = animInfo;
+        cobj->setJointMedium(arg0.value(), std::move(result));
+        return true;
+    }
+    return false;
+}
+SE_BIND_FUNC(js_scene_BakedSkinningModel_setJointMedium) // NOLINT(readability-identifier-naming, google-runtime-references)
+
 bool register_all_scene_manual(se::Object* obj) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     // Get the ns
@@ -240,5 +298,6 @@ bool register_all_scene_manual(se::Object* obj) // NOLINT(readability-identifier
     __jsb_cc_scene_SubModel_proto->defineFunction("setSubMeshBuffers", _SE(js_scene_SubModel_setSubMeshBuffers));
     __jsb_cc_scene_Pass_proto->defineFunction("setRootBufferAndBlock", _SE(js_scene_Pass_setRootBufferAndBlock));
     __jsb_cc_scene_RenderScene_proto->defineFunction("updateBatches", _SE(js_scene_RenderScene_updateBatches));
+    __jsb_cc_scene_BakedSkinningModel_proto->defineFunction("setJointMedium", _SE(js_scene_BakedSkinningModel_setJointMedium));
     return true;
 }

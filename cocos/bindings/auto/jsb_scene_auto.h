@@ -282,6 +282,7 @@ bool register_all_scene(se::Object* obj);
 template<>
 bool sevalue_to_native(const se::Value &, cc::scene::BakedAnimInfo *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cc::scene::BakedAnimInfo);
+SE_DECLARE_FUNC(js_scene_BakedAnimInfo_getDirty);
 
 extern se::Object* __jsb_cc_scene_BakedJointInfo_proto;
 extern se::Class* __jsb_cc_scene_BakedJointInfo_class;
@@ -300,7 +301,7 @@ bool js_register_cc_scene_BakedSkinningModel(se::Object* obj);
 bool register_all_scene(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::scene::BakedSkinningModel);
-SE_DECLARE_FUNC(js_scene_BakedSkinningModel_setJointMedium);
+SE_DECLARE_FUNC(js_scene_BakedSkinningModel_setAnimInfoIdx);
 SE_DECLARE_FUNC(js_scene_BakedSkinningModel_BakedSkinningModel);
 
 extern se::Object* __jsb_cc_scene_DrawBatch2D_proto;
