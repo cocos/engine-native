@@ -67,7 +67,7 @@ bool js_gfx_Device_copyBuffersToTexture(se::State &s) { // NOLINT(readability-id
                             assert(false);
                         }
                     } else { 
-                        unsigned long address = 0; //NO LINT(google-runtime-int)
+                        unsigned long address = 0; //NOLINT(google-runtime-int)
                         seval_to_ulong(value, &address);
                         ptr = reinterpret_cast<uint8_t *>(address);
                     }
