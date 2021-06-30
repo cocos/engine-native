@@ -66,7 +66,7 @@ bool js_gfx_Device_copyBuffersToTexture(se::State &s) { // NOLINT(readability-id
                         } else {
                             assert(false);
                         }
-                    } else {
+                    } else { //NO LINT(google-runtime-int)
                         unsigned long address = 0;
                         seval_to_ulong(value, &address);
                         ptr = reinterpret_cast<uint8_t *>(address);
@@ -116,7 +116,7 @@ bool js_gfx_Device_copyTexImagesToTexture(se::State &s) { // NOLINT(readability-
                         value.toObject()->getTypedArrayData(&address, &dataLength);
                         arg0[i] = address;
                     } else {
-                        arg0[i] = (uint8_t *)value.toUIntptr_t();
+                        arg0[i] = reinterpret_cast<uint8_t *>(value.toUIntptr_t());
                     }
                 }
             }
