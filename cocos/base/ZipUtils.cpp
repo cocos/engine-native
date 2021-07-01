@@ -53,9 +53,9 @@
 
 namespace cc {
 
-unsigned int ZipUtils::s_uEncryptedPvrKeyParts[4] = {0, 0, 0, 0};
-unsigned int ZipUtils::s_uEncryptionKey[1024];
-bool         ZipUtils::s_bEncryptionKeyIsValid = false;
+unsigned int ZipUtils::encryptedPvrKeyParts[4] = {0, 0, 0, 0};
+unsigned int ZipUtils::encryptionKey[1024];
+bool         ZipUtils::encryptionKeyIsValid = false;
 
 // --------------------- ZipUtils ---------------------
 
@@ -72,13 +72,13 @@ inline void ZipUtils::decodeEncodedPvr(unsigned int *data, ssize_t len) {
     CCASSERT(s_uEncryptedPvrKeyParts[3] != 0, "ZipUtils: CCZ file is encrypted but key part 3 is not set. Did you call ZipUtils::setPvrEncryptionKeyPart(...)?");
 
     // create long key
-    if (!s_bEncryptionKeyIsValid) {
+    if (!ZipUtils::encryptionKeyIsValid) {
         unsigned int y{0};
         unsigned int p{0};
         unsigned int e{0};
         unsigned int rounds = 6;
         unsigned int sum    = 0;
-        unsigned int z      = s_uEncryptionKey[enclen - 1];
+        unsigned int z      = ZipUtils::encryptionKey[enclen - 1];
 
         do {
 #define DELTA 0x9e3779b9
@@ -88,16 +88,16 @@ inline void ZipUtils::decodeEncodedPvr(unsigned int *data, ssize_t len) {
             e = (sum >> 2) & 3;
 
             for (p = 0; p < enclen - 1; p++) {
-                y = s_uEncryptionKey[p + 1];
-                z = s_uEncryptionKey[p] += MX;
+                y = ZipUtils::encryptionKey[p + 1];
+                z = ZipUtils::encryptionKey[p] += MX;
             }
 
-            y = s_uEncryptionKey[0];
-            z = s_uEncryptionKey[enclen - 1] += MX;
+            y = ZipUtils::encryptionKey[0];
+            z = ZipUtils::encryptionKey[enclen - 1] += MX;
 
         } while (--rounds);
 
-        s_bEncryptionKeyIsValid = true;
+        ZipUtils::encryptionKeyIsValid = true;
     }
 
     int b = 0;
@@ -105,7 +105,7 @@ inline void ZipUtils::decodeEncodedPvr(unsigned int *data, ssize_t len) {
 
     // encrypt first part completely
     for (; i < len && i < securelen; i++) {
-        data[i] ^= s_uEncryptionKey[b++];
+        data[i] ^= ZipUtils::encryptionKey[b++];
 
         if (b >= enclen) {
             b = 0;
@@ -114,7 +114,7 @@ inline void ZipUtils::decodeEncodedPvr(unsigned int *data, ssize_t len) {
 
     // encrypt second section partially
     for (; i < len; i += distance) {
-        data[i] ^= s_uEncryptionKey[b++];
+        data[i] ^= ZipUtils::encryptionKey[b++];
 
         if (b >= enclen) {
             b = 0;
@@ -461,7 +461,7 @@ public:
     FileListContainer fileList;
 };
 
-ZipFile *ZipFile::createWithBuffer(const void *buffer, uLong size) {
+ZipFile *ZipFile::createWithBuffer(const void *buffer, uint32_t size) {
     auto *zip = new (std::nothrow) ZipFile();
     if (zip && zip->initWithBuffer(buffer, size)) {
         return zip;
@@ -628,7 +628,7 @@ int ZipFile::getCurrentFileInfo(std::string *filename, unz_file_info *info) {
     return ret;
 }
 
-bool ZipFile::initWithBuffer(const void *buffer, uLong size) {
+bool ZipFile::initWithBuffer(const void *buffer, uint32_t size) {
     if (!buffer || size == 0) return false;
 
     zlib_filefunc_def memoryFile = {nullptr};
