@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 
+set(CMAKE_GENERATOR_PLATFORM x64)
 set(APP_NAME "CocosGame" CACHE STRING "Project Name")
 project(${APP_NAME} CXX)
 
