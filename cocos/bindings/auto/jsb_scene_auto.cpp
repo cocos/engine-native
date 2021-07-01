@@ -5283,6 +5283,27 @@ static bool js_scene_BakedSkinningModel_setAnimInfoIdx(se::State& s) // NOLINT(r
 }
 SE_BIND_FUNC(js_scene_BakedSkinningModel_setAnimInfoIdx)
 
+static bool js_scene_BakedSkinningModel_setJointMedium(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::BakedSkinningModel>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_BakedSkinningModel_setJointMedium : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 2) {
+        HolderType<bool, false> arg0 = {};
+        HolderType<cc::scene::BakedJointInfo, true> arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_scene_BakedSkinningModel_setJointMedium : Error processing arguments");
+        cobj->setJointMedium(arg0.value(), std::move(arg1.value()));
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    return false;
+}
+SE_BIND_FUNC(js_scene_BakedSkinningModel_setJointMedium)
+
 SE_DECLARE_FINALIZE_FUNC(js_cc_scene_BakedSkinningModel_finalize)
 
 static bool js_scene_BakedSkinningModel_constructor(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references) constructor.c
@@ -5314,6 +5335,7 @@ bool js_register_scene_BakedSkinningModel(se::Object* obj) // NOLINT(readability
     auto* cls = se::Class::create("BakedSkinningModel", obj, __jsb_cc_scene_Model_proto, _SE(js_scene_BakedSkinningModel_constructor));
 
     cls->defineFunction("setAnimInfoIdx", _SE(js_scene_BakedSkinningModel_setAnimInfoIdx));
+    cls->defineFunction("setJointMedium", _SE(js_scene_BakedSkinningModel_setJointMedium));
     cls->defineFinalizeFunction(_SE(js_cc_scene_BakedSkinningModel_finalize));
     cls->install();
     JSBClassType::registerClass<cc::scene::BakedSkinningModel>(cls);
