@@ -95,7 +95,7 @@ public:
          * @return The length of the deflated buffer.
          * @since v0.99.5
          */
-    static int inflateGZipFile(const char *filename, unsigned char **out);
+    static int inflateGZipFile(const char *path, unsigned char **out);
 
     /**
          * Test a file is a GZip format file or not.
@@ -103,7 +103,7 @@ public:
          * @return True is a GZip format file. false is not.
          * @since v3.0
          */
-    static bool isGZipFile(const char *filename);
+    static bool isGZipFile(const char *path);
 
     /**
          * Test the buffer is GZip format or not.
@@ -119,7 +119,7 @@ public:
          * @return The length of the deflated buffer.
          * @since v0.99.5
          */
-    static int inflateCCZFile(const char *filename, unsigned char **out);
+    static int inflateCCZFile(const char *path, unsigned char **out);
 
     /**
          * Inflates a buffer with CCZ format into memory.
@@ -135,7 +135,7 @@ public:
          * @return True is a CCZ format file. false is not.
          * @since v3.0
          */
-    static bool isCCZFile(const char *filename);
+    static bool isCCZFile(const char *path);
 
     /**
          * Test the buffer is CCZ format or not.
