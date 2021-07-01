@@ -66,10 +66,10 @@ inline void ZipUtils::decodeEncodedPvr(unsigned int *data, ssize_t len) {
 
     // check if key was set
     // make sure to call caw_setkey_part() for all 4 key parts
-    CCASSERT(s_uEncryptedPvrKeyParts[0] != 0, "ZipUtils: CCZ file is encrypted but key part 0 is not set. Did you call ZipUtils::setPvrEncryptionKeyPart(...)?");
-    CCASSERT(s_uEncryptedPvrKeyParts[1] != 0, "ZipUtils: CCZ file is encrypted but key part 1 is not set. Did you call ZipUtils::setPvrEncryptionKeyPart(...)?");
-    CCASSERT(s_uEncryptedPvrKeyParts[2] != 0, "ZipUtils: CCZ file is encrypted but key part 2 is not set. Did you call ZipUtils::setPvrEncryptionKeyPart(...)?");
-    CCASSERT(s_uEncryptedPvrKeyParts[3] != 0, "ZipUtils: CCZ file is encrypted but key part 3 is not set. Did you call ZipUtils::setPvrEncryptionKeyPart(...)?");
+    CCASSERT(ZipUtils::encryptedPvrKeyParts[0] != 0, "ZipUtils: CCZ file is encrypted but key part 0 is not set. Did you call ZipUtils::setPvrEncryptionKeyPart(...)?");
+    CCASSERT(ZipUtils::encryptedPvrKeyParts[1] != 0, "ZipUtils: CCZ file is encrypted but key part 1 is not set. Did you call ZipUtils::setPvrEncryptionKeyPart(...)?");
+    CCASSERT(ZipUtils::encryptedPvrKeyParts[2] != 0, "ZipUtils: CCZ file is encrypted but key part 2 is not set. Did you call ZipUtils::setPvrEncryptionKeyPart(...)?");
+    CCASSERT(ZipUtils::encryptedPvrKeyParts[3] != 0, "ZipUtils: CCZ file is encrypted but key part 3 is not set. Did you call ZipUtils::setPvrEncryptionKeyPart(...)?");
 
     // create long key
     if (!ZipUtils::encryptionKeyIsValid) {
@@ -82,7 +82,7 @@ inline void ZipUtils::decodeEncodedPvr(unsigned int *data, ssize_t len) {
 
         do {
 #define DELTA 0x9e3779b9
-#define MX    (((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (s_uEncryptedPvrKeyParts[(p & 3) ^ e] ^ z)))
+#define MX    (((z >> 5 ^ y << 2) + (y >> 3 ^ z << 4)) ^ ((sum ^ y) + (ZipUtils::encryptedPvrKeyParts[(p & 3) ^ e] ^ z)))
 
             sum += DELTA;
             e = (sum >> 2) & 3;
@@ -427,9 +427,9 @@ void ZipUtils::setPvrEncryptionKeyPart(int index, unsigned int value) {
     CCASSERT(index >= 0, "key part index cannot be less than 0");
     CCASSERT(index <= 3, "key part index cannot be greater than 3");
 
-    if (s_uEncryptedPvrKeyParts[index] != value) {
-        s_uEncryptedPvrKeyParts[index] = value;
-        s_bEncryptionKeyIsValid        = false;
+    if (ZipUtils::encryptedPvrKeyParts[index] != value) {
+        ZipUtils::encryptedPvrKeyParts[index] = value;
+        ZipUtils::encryptionKeyIsValid        = false;
     }
 }
 
