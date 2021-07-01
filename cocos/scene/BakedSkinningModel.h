@@ -36,7 +36,7 @@ struct BakedAnimInfo {
     uint8_t *    data{nullptr};
     uint8_t *    dirty{nullptr};
     inline bool  getDirty() const {
-        return static_cast<bool>(*dirty);
+        return static_cast<bool>(*reinterpret_cast<int32_t*>(dirty));
     }
 };
 struct BakedJointInfo {
@@ -67,7 +67,7 @@ public:
 private:
     ModelType      _type{ModelType::BAKED_SKINNING};
     BakedJointInfo _jointMedium;
-    bool           _isUploadAnim = false;
+    bool           _isUploadAnim{false};
     int32_t        _instAnimInfoIdx{-1};
 };
 

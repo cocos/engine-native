@@ -228,31 +228,30 @@ static bool js_scene_BakedSkinningModel_setJointMedium(se::State& s) // NOLINT(r
     SE_PRECONDITION2(cobj, false, "js_scene_BakedSkinningModel_setJointMedium : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
-    CC_UNUSED bool ok = true;
+    bool ok = true;
     if (argc == 2) {
         HolderType<bool, false> arg0 = {};
-        cc::scene::BakedJointInfo result;
+        cc::scene::BakedJointInfo bakedJointInfo;
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         se::Object *json = args[1].toObject();
         auto* data = reinterpret_cast<cc::scene::BakedJointInfo*>(json->getPrivateData());
         if (data) {
-            result = *data;
+            bakedJointInfo = *data;
             return true;
         }
         se::Value field;
-        bool ok = true;
         json->getProperty("boundsInfo", &field);
         if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &(result.boundsInfo), s.thisObject());
+            ok &= sevalue_to_native(field, &(bakedJointInfo.boundsInfo), s.thisObject());
         }
         json->getProperty("buffer", &field);
         if(!field.isNullOrUndefined()) {
-            ok &= sevalue_to_native(field, &(result.buffer), s.thisObject());
+            ok &= sevalue_to_native(field, &(bakedJointInfo.buffer), s.thisObject());
         }
         json->getProperty("jointTextureInfo", &field);
         uint8_t* jointTextureInfo{nullptr};
         field.toObject()->getArrayBufferData(&jointTextureInfo, nullptr);
-        result.jointTextureInfo = jointTextureInfo;
+        bakedJointInfo.jointTextureInfo = jointTextureInfo;
         // animInfo
         cc::scene::BakedAnimInfo animInfo;
         json->getProperty("animInfo", &field);
@@ -272,8 +271,8 @@ static bool js_scene_BakedSkinningModel_setJointMedium(se::State& s) // NOLINT(r
             animField.toObject()->getArrayBufferData(&dirtyData, nullptr);
             animInfo.dirty = dirtyData;
         }
-        result.animInfo = animInfo;
-        cobj->setJointMedium(arg0.value(), std::move(result));
+        bakedJointInfo.animInfo = animInfo;
+        cobj->setJointMedium(arg0.value(), std::move(bakedJointInfo));
         return true;
     }
     return false;
