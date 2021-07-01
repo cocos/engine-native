@@ -122,7 +122,7 @@ void ShadowFlow::resizeShadowMap(scene::Shadow **shadowInfo) {
     const auto height    = static_cast<uint>((*shadowInfo)->size.y);
     const auto format    = supportsHalfFloatTexture(device) ? gfx::Format::RGBA16F : gfx::Format::RGBA8I;
 
-    for (auto &pair : sceneData->getShadowFramebufferMap()) {
+    for (const auto &pair : sceneData->getShadowFramebufferMap()) {
         gfx::Framebuffer *framebuffer = pair.second;
 
         if (!framebuffer) {
