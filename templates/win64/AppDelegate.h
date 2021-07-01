@@ -16,7 +16,7 @@ public:
 
 private:
     std::shared_ptr<cc::View> _view;
-    std::shared_ptr<Game> _game;
+    std::shared_ptr<Game>     _game;
 
-    bool _quit = false;
+    bool _quit{false};
 };

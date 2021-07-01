@@ -698,7 +698,7 @@ static bool js_destroyImage(se::State &s) { //NOLINT
     size_t         argc = args.size();
     CC_UNUSED bool ok   = true;
     if (argc == 1) {
-        char *data = reinterpret_cast<char *>(args[0].toUIntptr_t()); //NOLINT
+        auto *data = reinterpret_cast<char *>(args[0].toUIntptr_t());
         SE_PRECONDITION2(ok, false, "js_destroyImage : Error processing arguments");
         free(data);
         return true;
