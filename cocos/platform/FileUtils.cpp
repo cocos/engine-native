@@ -384,7 +384,7 @@ bool FileUtils::writeValueVectorToFile(const ValueVector &vecData, const std::st
 /*
  * Generate tinyxml2::XMLElement for Object through a tinyxml2::XMLDocument
  */
-static tinyxml2::XMLElement *generateElementForObject(const Value &value, tinyxml2::XMLDocument *doc) {
+static tinyxml2::XMLElement *generateElementForObject(const Value &value, tinyxml2::XMLDocument *doc) { // NOLINT(misc-no-recursion)
     // object is String
     if (value.getType() == Value::Type::STRING) {
         tinyxml2::XMLElement *node    = doc->NewElement("string");
@@ -432,7 +432,7 @@ static tinyxml2::XMLElement *generateElementForObject(const Value &value, tinyxm
 /*
  * Generate tinyxml2::XMLElement for Dictionary through a tinyxml2::XMLDocument
  */
-static tinyxml2::XMLElement *generateElementForDict(const ValueMap &dict, tinyxml2::XMLDocument *doc) {
+static tinyxml2::XMLElement *generateElementForDict(const ValueMap &dict, tinyxml2::XMLDocument *doc) { // NOLINT(misc-no-recursion)
     tinyxml2::XMLElement *rootNode = doc->NewElement("dict");
 
     for (const auto &iter : dict) {
@@ -452,7 +452,7 @@ static tinyxml2::XMLElement *generateElementForDict(const ValueMap &dict, tinyxm
 /*
  * Generate tinyxml2::XMLElement for Array through a tinyxml2::XMLDocument
  */
-static tinyxml2::XMLElement *generateElementForArray(const ValueVector &array, tinyxml2::XMLDocument *pDoc) {
+static tinyxml2::XMLElement *generateElementForArray(const ValueVector &array, tinyxml2::XMLDocument *pDoc) { // NOLINT(misc-no-recursion)
     tinyxml2::XMLElement *rootNode = pDoc->NewElement("array");
 
     for (const auto &value : array) {
@@ -486,8 +486,7 @@ void FileUtils::setDelegate(FileUtils *delegate) {
     FileUtils::sharedFileUtils = delegate;
 }
 
-FileUtils::FileUtils() {
-}
+FileUtils::FileUtils() = default;
 
 FileUtils::~FileUtils() = default;
 
@@ -860,7 +859,7 @@ std::vector<std::string> FileUtils::listFiles(const std::string &dirPath) const 
     return files;
 }
 
-void FileUtils::listFilesRecursively(const std::string &dirPath, std::vector<std::string> *files) const {
+void FileUtils::listFilesRecursively(const std::string &dirPath, std::vector<std::string> *files) const { // NOLINT(misc-no-recursion)
     std::string fullpath = fullPathForFilename(dirPath);
     if (!fullpath.empty() && isDirectoryExist(fullpath)) {
         tinydir_dir dir;
