@@ -32,6 +32,9 @@
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXFramebuffer.h"
 #include "scene/SubModel.h"
+#include "frame-graph/PassNodeBuilder.h"
+#include "frame-graph/DevicePass.h"
+#include "frame-graph/Resource.h"
 
 namespace cc {
 namespace pipeline {
@@ -93,20 +96,20 @@ void PostprocessStage::renderFG(scene::Camera *camera) {
         framegraph::TextureHandle backBuffer;       // write to back buffer
     };
 
-    auto postSetup = [&] (framegraph::PassNodeBuilder *builder, renderData *data) {
-        data.lightingOut = builder.read(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_lightingOut));
+    auto postSetup = [&] (framegraph::PassNodeBuilder &builder, renderData &data) {
+        data.lightingOut = builder.read(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_lightingOut)));
         builder.writeToBlackboard(DeferredPipeline::_lightingOut, data.lightingOut);
 
-        data.depth = builder.read(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_depth));
+        data.depth = builder.read(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_depth)));
         builder.writeToBlackboard(DeferredPipeline::_depth, data.depth);
 
-        data.backBuffer = builder.read(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_backBuffer));
-        builder.writeToBlackboard(DeferredPipeline::_backBuffer, data.backBuffer)
+        data.backBuffer = builder.read(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_backBuffer)));
+        builder.writeToBlackboard(DeferredPipeline::_backBuffer, data.backBuffer);
     };
 
     auto postExec = [&] (renderData const &data, const framegraph::DevicePassResourceTable &table) {
         // bind descriptor
-        gfx::Texture *lightingOut    = (gfx::Texture *)(able.getRead(data.lightingOut));
+        gfx::Texture *lightingOut    = (gfx::Texture *)(table.getRead(data.lightingOut));
 
         gfx::SamplerInfo info{
             gfx::Filter::LINEAR,
@@ -121,17 +124,18 @@ void PostprocessStage::renderFG(scene::Camera *camera) {
         pipeline->getDescriptorSet()->bindSampler(static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP), sampler);
         pipeline->getDescriptorSet()->bindTexture(static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP), lightingOut);
 
+        auto *cmdBf = pipeline->getCommandBuffers()[0];
         uint const globalOffsets[] = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
-        cmdBf->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), pp->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
+        cmdBf->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
 
         // post proces
         auto *const  sceneData     = _pipeline->getPipelineSceneData();
         scene::Pass *pv            = sceneData->getSharedData()->deferredPostPass;
         gfx::Shader *sd            = sceneData->getSharedData()->deferredPostPassShader;
 
-        gfx::InputAssembler *ia  = pp->getQuadIAOffScreen();
+        gfx::InputAssembler *ia = pipeline->getQuadIAOffScreen();
 
-        gfx::RenderPass *rp = table.getDevicePass()->getRenderPass().get();
+        gfx::RenderPass *rp;// = table.getDevicePass()->getRenderPass().get();
         gfx::PipelineState * pso = PipelineStateManager::getOrCreatePipelineState(pv, sd, ia, rp);
         assert(pso != nullptr);
 
@@ -140,7 +144,8 @@ void PostprocessStage::renderFG(scene::Camera *camera) {
         cmdBf->draw(ia);
     };
 
-    pipeline->getFrameGraph()->addPass<renderData>(IP_POSTPROCESS, postSetup, postExec);
+    pipeline->getFrameGraph().addPass<renderData>(IP_POSTPROCESS, DeferredPipeline::_passPostprocess, postSetup, postExec);
+    pipeline->getFrameGraph().presentFromBlackboard(DeferredPipeline::_backBuffer);
 }
 
 void PostprocessStage::render(scene::Camera *camera) {

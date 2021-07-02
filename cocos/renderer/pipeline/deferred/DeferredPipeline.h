@@ -31,6 +31,7 @@
 #include "gfx-base/GFXInputAssembler.h"
 #include "pipeline/RenderPipeline.h"
 #include "frame-graph/FrameGraph.h"
+#include "frame-graph/Handle.h"
 
 namespace cc {
 namespace pipeline {
@@ -79,9 +80,9 @@ public:
     void                          updateQuadVertexData(const gfx::Rect &renderArea);
     void                          genQuadVertexData(gfx::SurfaceTransform surfaceTransform, const gfx::Rect &renderArea, float *data);
 
-    framegraph::FrameGraph &getFrameGraph() const { return _fg; }
+    framegraph::FrameGraph &getFrameGraph() { return _fg; }
     gfx::Color getClearcolor(scene::Camera *camera);
-    void preapreFrameGraph();
+    void prepareFrameGraph(scene::Camera *camera);
 
 private:
     bool activeRenderer();
@@ -111,11 +112,18 @@ private:
 
     framegraph::FrameGraph _fg;
 
+public:
     // deferred resource name declear
     static framegraph::StringHandle _gbuffer[4];
     static framegraph::StringHandle _depth;
     static framegraph::StringHandle _lightingOut;
     static framegraph::StringHandle _backBuffer;        // buffer get from swapchain, used for queuepresent
+
+    // deferred pass name declear
+    static framegraph::StringHandle _passGbuffer;
+    static framegraph::StringHandle _passLighting;
+    static framegraph::StringHandle _passSspr;
+    static framegraph::StringHandle _passPostprocess;
 };
 
 } // namespace pipeline

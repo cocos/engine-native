@@ -52,10 +52,26 @@ namespace {
     (dst)[(offset) + 3] = (src).w;
 } // namespace
 
-DeferredPipeline::framegraph::StringHandle _gbuffer[4] = {"gbufferAlbedo", "gbufferPosition", "gbufferNormal", "gbufferEmissive"};
-DeferredPipeline::framegraph::StringHandle _depth = "depth";
-DeferredPipeline::framegraph::StringHandle _lightingOut = "lightingOutput";
-DeferredPipeline::framegraph::StringHandle _backBuffer = "backBuffer";
+void srgbToLinear(gfx::Color *out, const gfx::Color &gamma) {
+    out->x = gamma.x * gamma.x;
+    out->y = gamma.y * gamma.y;
+    out->z = gamma.z * gamma.z;
+}
+
+framegraph::StringHandle DeferredPipeline::_gbuffer[4] = {
+    framegraph::FrameGraph::stringToHandle("gbufferAlbedo"),
+    framegraph::FrameGraph::stringToHandle("gbufferPosition"),
+    framegraph::FrameGraph::stringToHandle("gbufferNormal"),
+    framegraph::FrameGraph::stringToHandle("gbufferEmissive")
+};
+framegraph::StringHandle DeferredPipeline::_depth = framegraph::FrameGraph::stringToHandle("depth");
+framegraph::StringHandle DeferredPipeline::_lightingOut = framegraph::FrameGraph::stringToHandle("lightingOutput");
+framegraph::StringHandle DeferredPipeline::_backBuffer = framegraph::FrameGraph::stringToHandle("backBuffer");
+
+framegraph::StringHandle DeferredPipeline::_passGbuffer = framegraph::FrameGraph::stringToHandle("deferredGbufferPass");
+framegraph::StringHandle DeferredPipeline::_passLighting = framegraph::FrameGraph::stringToHandle("deferredLightingPass");
+framegraph::StringHandle DeferredPipeline::_passSspr = framegraph::FrameGraph::stringToHandle("deferredSSPRPass");
+framegraph::StringHandle DeferredPipeline::_passPostprocess = framegraph::FrameGraph::stringToHandle("deferredPostPass");
 
 gfx::RenderPass *DeferredPipeline::getOrCreateRenderPass(gfx::ClearFlags clearFlags) {
     if (_renderPasses.find(clearFlags) != _renderPasses.end()) {
@@ -142,17 +158,16 @@ void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
     _device->getQueue()->submit(_commandBuffers);
 }
 
-void DeferredPipeline::preapreFrameGraph() {
-    _fg.getBlackboard().put(_backBuffer, _fg.importExternal(camera->window->frameBuffer->getColorTextures()[0]));
+void DeferredPipeline::prepareFrameGraph(scene::Camera *camera) {
+    //_fg.getBlackboard().put(_backBuffer, _fg.importExternal(_backBuffer, camera->window->frameBuffer->getColorTextures()[0]));
 }
 
 void DeferredPipeline::renderFG(const vector<scene::Camera *> &cameras) {
     _commandBuffers[0]->begin();
     _pipelineUBO->updateGlobalUBO();
-    preapreFrameGraph();
     for (auto *camera : cameras) {
         _fg.reset();
-        preapreFrameGraph();
+        prepareFrameGraph(camera);
         sceneCulling(this, camera);
         for (auto *const flow : _flows) {
             flow->render(camera);
@@ -165,7 +180,7 @@ void DeferredPipeline::renderFG(const vector<scene::Camera *> &cameras) {
 
     _commandBuffers[0]->end();
     _device->flushCommands(_commandBuffers);
-    _device->getQueue()->submit(_commandBuffers)
+    _device->getQueue()->submit(_commandBuffers);
 }
 
 void DeferredPipeline::updateQuadVertexData(const gfx::Rect &renderArea) {

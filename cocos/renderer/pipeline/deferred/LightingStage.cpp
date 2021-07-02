@@ -341,16 +341,18 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         framegraph::Texture::Descriptor colorTexInfo;
         colorTexInfo.format = gfx::Format::RGBA16F;
         colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
-        colorTexInfo.width  = device->getWidth();
-        colorTexInfo.height = device->getHeight();
+        colorTexInfo.width  = _device->getWidth();
+        colorTexInfo.height = _device->getHeight();
 
         builder.create(data.lightOutput, DeferredPipeline::_lightingOut, colorTexInfo);
-        data.colorTex = builder.write(data.lightOutput, colorAttachmentInfo);
+        data.lightOutput = builder.write(data.lightOutput, colorAttachmentInfo);
         builder.writeToBlackboard(DeferredPipeline::_lightingOut, data.lightOutput);
 
         // set render area
-        builder.setViewport(camera->viewPort, pipeline->getRenderArea());
-    }
+        auto renderArea = pipeline->getRenderArea(camera);
+        gfx::Viewport viewport{ renderArea.x, renderArea.y, renderArea.width, renderArea.height, 0.F, 1.F};
+        builder.setViewport(viewport, renderArea);
+    };
 
     auto lightingExec = [&] (renderData const &data, const framegraph::DevicePassResourceTable &table) {
         auto *const sceneData     = _pipeline->getPipelineSceneData();
@@ -385,10 +387,10 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         pipeline->getDescriptorSet()->bindSampler(static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_NORMALMAP), sampler);
         pipeline->getDescriptorSet()->bindSampler(static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_EMISSIVEMAP), sampler);
 
-        gfx::Texture *gbufferAlbedo    = (gfx::Texture *)(able.getRead(data.gbuffer[0]));
-        gfx::Texture *gbufferPosition  = (gfx::Texture *)(able.getRead(data.gbuffer[1]));
-        gfx::Texture *gbufferNormal    = (gfx::Texture *)(able.getRead(data.gbuffer[2]));
-        gfx::Texture *gbufferEmissive   = (gfx::Texture *)(able.getRead(data.gbuffer[3]));
+        gfx::Texture *gbufferAlbedo    = (gfx::Texture *)(table.getRead(data.gbuffer[0]));
+        gfx::Texture *gbufferPosition  = (gfx::Texture *)(table.getRead(data.gbuffer[1]));
+        gfx::Texture *gbufferNormal    = (gfx::Texture *)(table.getRead(data.gbuffer[2]));
+        gfx::Texture *gbufferEmissive   = (gfx::Texture *)(table.getRead(data.gbuffer[3]));
 
         pipeline->getDescriptorSet()->bindTexture(static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_ALBEDOMAP), gbufferAlbedo);
         pipeline->getDescriptorSet()->bindTexture(static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_POSITIONMAP), gbufferPosition);
@@ -401,7 +403,7 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         scene::Pass *pass   = sceneData->getSharedData()->deferredLightPass;
         gfx::Shader *shader = sceneData->getSharedData()->deferredPostPassShader;
 
-        gfx::RenderPass *renderPass = table.getDevicePass()->getRenderPass().get();
+        gfx::RenderPass *renderPass;// = table.getDevicePass()->getRenderPass().get();
         gfx::InputAssembler *inputAssembler = pipeline->getQuadIAOffScreen();
         gfx::PipelineState *pState         = PipelineStateManager::getOrCreatePipelineState(
             pass, shader, inputAssembler, renderPass);
@@ -417,16 +419,20 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
             queue->sort();
             queue->recordCommandBuffer(_device, renderPass, cmdBuff);
         }
-        _planarShadowQueue->recordCommandBuffer(_device, renderPass, cmdBuff)
+
+        _planarShadowQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
     };
 
-    pipeline->getFrameGraph()->addPass<renderData>(IP_LIGHTING, lightingSetup, lightingExec);
+    pipeline->getFrameGraph().addPass<renderData>(IP_LIGHTING, DeferredPipeline::_passLighting, lightingSetup, lightingExec);
 }
 
 void LightingStage::putTransparentObj2Queue() {
     for (auto *queue : _renderQueues) {
         queue->clear();
     }
+
+    auto *const sceneData     = _pipeline->getPipelineSceneData();
+    const auto &renderObjects = sceneData->getRenderObjects();
 
     uint   m = 0;
     uint   p = 0;
@@ -450,9 +456,9 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
 
     };
 
-    auto ssprSetup = [&](framegraph::PassNodeBuilder &builder, DrawData &data) {};
+    auto ssprSetup = [&](framegraph::PassNodeBuilder &builder, RenderData &data) {};
 
-    auto ssprExec = [&](DrawData const &data, const framegraph::DevicePassResourceTable &table) {};
+    auto ssprExec = [&](RenderData const &data, const framegraph::DevicePassResourceTable &table) {};
 
 }
 
