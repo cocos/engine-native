@@ -80,11 +80,10 @@ extern se::Class* __jsb_cc_scene_AABB_class;
 bool js_register_cc_scene_AABB(se::Object* obj);
 bool register_all_scene(se::Object* obj);
 
-template<>
-bool sevalue_to_native(const se::Value &, cc::scene::AABB *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cc::scene::AABB);
-SE_DECLARE_FUNC(js_scene_AABB_set);
-SE_DECLARE_FUNC(js_scene_AABB_fromPoints);
+SE_DECLARE_FUNC(js_scene_AABB_getLayout);
+SE_DECLARE_FUNC(js_scene_AABB_initWithData);
+SE_DECLARE_FUNC(js_scene_AABB_AABB);
 
 extern se::Object* __jsb_cc_scene_SpotLight_proto;
 extern se::Class* __jsb_cc_scene_SpotLight_class;
@@ -135,7 +134,6 @@ SE_DECLARE_FUNC(js_scene_Model_getInstancedAttributeBlock);
 SE_DECLARE_FUNC(js_scene_Model_getInstancedBuffer);
 SE_DECLARE_FUNC(js_scene_Model_getInstancedBufferSize);
 SE_DECLARE_FUNC(js_scene_Model_getLocalData);
-SE_DECLARE_FUNC(js_scene_Model_getModelBounds);
 SE_DECLARE_FUNC(js_scene_Model_getNode);
 SE_DECLARE_FUNC(js_scene_Model_getReceiveShadow);
 SE_DECLARE_FUNC(js_scene_Model_getSubModels);
@@ -143,8 +141,8 @@ SE_DECLARE_FUNC(js_scene_Model_getTransform);
 SE_DECLARE_FUNC(js_scene_Model_getTransformUpdated);
 SE_DECLARE_FUNC(js_scene_Model_getUpdatStamp);
 SE_DECLARE_FUNC(js_scene_Model_getVisFlags);
-SE_DECLARE_FUNC(js_scene_Model_getWorldBounds);
 SE_DECLARE_FUNC(js_scene_Model_seVisFlag);
+SE_DECLARE_FUNC(js_scene_Model_setBounds);
 SE_DECLARE_FUNC(js_scene_Model_setCastShadow);
 SE_DECLARE_FUNC(js_scene_Model_setEnabled);
 SE_DECLARE_FUNC(js_scene_Model_setInstMatWorldIdx);
@@ -152,7 +150,6 @@ SE_DECLARE_FUNC(js_scene_Model_setLocalBuffer);
 SE_DECLARE_FUNC(js_scene_Model_setNode);
 SE_DECLARE_FUNC(js_scene_Model_setReceiveShadow);
 SE_DECLARE_FUNC(js_scene_Model_setTransform);
-SE_DECLARE_FUNC(js_scene_Model_setWolrdBounds);
 SE_DECLARE_FUNC(js_scene_Model_updateTransform);
 SE_DECLARE_FUNC(js_scene_Model_updateUBOs);
 SE_DECLARE_FUNC(js_scene_Model_Model);
@@ -276,6 +273,38 @@ SE_DECLARE_FUNC(js_scene_Pass_setState);
 SE_DECLARE_FUNC(js_scene_Pass_update);
 SE_DECLARE_FUNC(js_scene_Pass_Pass);
 
+extern se::Object* __jsb_cc_scene_BakedAnimInfo_proto;
+extern se::Class* __jsb_cc_scene_BakedAnimInfo_class;
+
+bool js_register_cc_scene_BakedAnimInfo(se::Object* obj);
+bool register_all_scene(se::Object* obj);
+
+template<>
+bool sevalue_to_native(const se::Value &, cc::scene::BakedAnimInfo *, se::Object *ctx);
+JSB_REGISTER_OBJECT_TYPE(cc::scene::BakedAnimInfo);
+SE_DECLARE_FUNC(js_scene_BakedAnimInfo_getDirty);
+
+extern se::Object* __jsb_cc_scene_BakedJointInfo_proto;
+extern se::Class* __jsb_cc_scene_BakedJointInfo_class;
+
+bool js_register_cc_scene_BakedJointInfo(se::Object* obj);
+bool register_all_scene(se::Object* obj);
+
+template<>
+bool sevalue_to_native(const se::Value &, cc::scene::BakedJointInfo *, se::Object *ctx);
+JSB_REGISTER_OBJECT_TYPE(cc::scene::BakedJointInfo);
+
+extern se::Object* __jsb_cc_scene_BakedSkinningModel_proto;
+extern se::Class* __jsb_cc_scene_BakedSkinningModel_class;
+
+bool js_register_cc_scene_BakedSkinningModel(se::Object* obj);
+bool register_all_scene(se::Object* obj);
+
+JSB_REGISTER_OBJECT_TYPE(cc::scene::BakedSkinningModel);
+SE_DECLARE_FUNC(js_scene_BakedSkinningModel_setAnimInfoIdx);
+SE_DECLARE_FUNC(js_scene_BakedSkinningModel_setJointMedium);
+SE_DECLARE_FUNC(js_scene_BakedSkinningModel_BakedSkinningModel);
+
 extern se::Object* __jsb_cc_scene_DrawBatch2D_proto;
 extern se::Class* __jsb_cc_scene_DrawBatch2D_class;
 
@@ -326,6 +355,7 @@ bool js_register_cc_scene_RenderScene(se::Object* obj);
 bool register_all_scene(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::scene::RenderScene);
+SE_DECLARE_FUNC(js_scene_RenderScene_addBakedSkinningModel);
 SE_DECLARE_FUNC(js_scene_RenderScene_addBatch);
 SE_DECLARE_FUNC(js_scene_RenderScene_addModel);
 SE_DECLARE_FUNC(js_scene_RenderScene_addSkinningModel);

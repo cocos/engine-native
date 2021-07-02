@@ -64,7 +64,7 @@ RenderAdditiveLightQueue::RenderAdditiveLightQueue(RenderPipeline *pipeline) : _
     _firstLightBufferView    = device->createBuffer({_lightBuffer, 0, UBOForwardLight::SIZE});
     _lightBufferData.resize(_lightBufferElementCount * _lightBufferCount);
     _dynamicOffsets.resize(1, 0);
-    _phaseID                        = getPhaseID("forward-add");
+    _phaseID = getPhaseID("forward-add");
     _shadowUBO.fill(0.F);
 }
 
@@ -94,9 +94,9 @@ void RenderAdditiveLightQueue::recordCommandBuffer(gfx::Device *device, gfx::Ren
         cmdBuffer->bindInputAssembler(ia);
 
         for (size_t i = 0; i < dynamicOffsets.size(); ++i) {
-            const auto light                = lights[i];
-            auto *      globalDescriptorSet = _pipeline->getGlobalDSManager()->getOrCreateDescriptorSet(light);
-            _dynamicOffsets[0]              = dynamicOffsets[i];
+            const auto light               = lights[i];
+            auto *     globalDescriptorSet = _pipeline->getGlobalDSManager()->getOrCreateDescriptorSet(light);
+            _dynamicOffsets[0]             = dynamicOffsets[i];
             cmdBuffer->bindDescriptorSet(globalSet, globalDescriptorSet);
             cmdBuffer->bindDescriptorSet(localSet, descriptorSet, _dynamicOffsets);
             cmdBuffer->draw(ia);
@@ -317,8 +317,8 @@ void RenderAdditiveLightQueue::updateLightDescriptorSet(const scene::Camera *cam
     const scene::Light *mainLight          = scene->getMainLight();
 
     for (uint i = 0; i < _validLights.size(); ++i) {
-        const auto * light  = _validLights[i];
-        auto *descriptorSet = _pipeline->getGlobalDSManager()->getOrCreateDescriptorSet(i);
+        const auto *light         = _validLights[i];
+        auto *      descriptorSet = _pipeline->getGlobalDSManager()->getOrCreateDescriptorSet(i);
         if (!descriptorSet) {
             continue;
         }
@@ -359,7 +359,7 @@ void RenderAdditiveLightQueue::updateLightDescriptorSet(const scene::Camera *cam
                 memcpy(_shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
 
                 // shadow info
-                float shadowNFLSInfos[4] = {0.1F, spotLight->getSpotAngle(), linear, static_cast<float>(shadowInfo->selfShadow)};
+                float shadowNFLSInfos[4] = {0.1F, spotLight->getRange(), linear, static_cast<float>(shadowInfo->selfShadow)};
                 memcpy(_shadowUBO.data() + UBOShadow::SHADOW_NEAR_FAR_LINEAR_SELF_INFO_OFFSET, &shadowNFLSInfos, sizeof(shadowNFLSInfos));
 
                 float shadowWHPBInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, static_cast<float>(shadowInfo->pcfType), shadowInfo->bias};

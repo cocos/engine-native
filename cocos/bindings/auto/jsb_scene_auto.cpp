@@ -645,174 +645,49 @@ bool js_register_scene_Frustum(se::Object* obj) // NOLINT(readability-identifier
 se::Object* __jsb_cc_scene_AABB_proto = nullptr;
 se::Class* __jsb_cc_scene_AABB_class = nullptr;
 
-static bool js_scene_AABB_set(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+static bool js_scene_AABB_getLayout(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::AABB>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_AABB_set : Invalid Native Object");
+    SE_PRECONDITION2(cobj, false, "js_scene_AABB_getLayout : Invalid Native Object");
     const auto& args = s.args();
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
-    if (argc == 2) {
-        HolderType<cc::Vec3, true> arg0 = {};
-        HolderType<cc::Vec3, true> arg1 = {};
+    if (argc == 0) {
+        cc::scene::AABBLayout* result = cobj->getLayout();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_scene_AABB_getLayout : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_scene_AABB_getLayout)
+
+static bool js_scene_AABB_initWithData(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::AABB>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_AABB_initWithData : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned char*, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
-        SE_PRECONDITION2(ok, false, "js_scene_AABB_set : Error processing arguments");
-        cobj->set(arg0.value(), arg1.value());
+        SE_PRECONDITION2(ok, false, "js_scene_AABB_initWithData : Error processing arguments");
+        cobj->initWithData(arg0.value());
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
     return false;
 }
-SE_BIND_FUNC(js_scene_AABB_set)
-
-static bool js_scene_AABB_fromPoints(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 3) {
-        HolderType<cc::Vec3, true> arg0 = {};
-        HolderType<cc::Vec3, true> arg1 = {};
-        HolderType<cc::scene::AABB*, false> arg2 = {};
-        ok &= sevalue_to_native(args[0], &arg0, nullptr);
-        ok &= sevalue_to_native(args[1], &arg1, nullptr);
-        ok &= sevalue_to_native(args[2], &arg2, nullptr);
-        SE_PRECONDITION2(ok, false, "js_scene_AABB_fromPoints : Error processing arguments");
-        cc::scene::AABB::fromPoints(arg0.value(), arg1.value(), arg2.value());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
-    return false;
-}
-SE_BIND_FUNC(js_scene_AABB_fromPoints)
-
-static bool js_scene_AABB_get_center(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::AABB>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_AABB_get_center : Invalid Native Object");
-
-    CC_UNUSED bool ok = true;
-    se::Value jsret;
-    ok &= nativevalue_to_se(cobj->center, jsret, s.thisObject() /*ctx*/);
-    s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->center, s.thisObject(), s.rval());
-    return true;
-}
-SE_BIND_PROP_GET(js_scene_AABB_get_center)
-
-static bool js_scene_AABB_set_center(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    const auto& args = s.args();
-    auto* cobj = SE_THIS_OBJECT<cc::scene::AABB>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_AABB_set_center : Invalid Native Object");
-
-    CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->center, s.thisObject());
-    SE_PRECONDITION2(ok, false, "js_scene_AABB_set_center : Error processing new value");
-    return true;
-}
-SE_BIND_PROP_SET(js_scene_AABB_set_center)
-
-static bool js_scene_AABB_get_halfExtents(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::AABB>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_AABB_get_halfExtents : Invalid Native Object");
-
-    CC_UNUSED bool ok = true;
-    se::Value jsret;
-    ok &= nativevalue_to_se(cobj->halfExtents, jsret, s.thisObject() /*ctx*/);
-    s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->halfExtents, s.thisObject(), s.rval());
-    return true;
-}
-SE_BIND_PROP_GET(js_scene_AABB_get_halfExtents)
-
-static bool js_scene_AABB_set_halfExtents(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    const auto& args = s.args();
-    auto* cobj = SE_THIS_OBJECT<cc::scene::AABB>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_AABB_set_halfExtents : Invalid Native Object");
-
-    CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->halfExtents, s.thisObject());
-    SE_PRECONDITION2(ok, false, "js_scene_AABB_set_halfExtents : Error processing new value");
-    return true;
-}
-SE_BIND_PROP_SET(js_scene_AABB_set_halfExtents)
-
-
-template<>
-bool sevalue_to_native(const se::Value &from, cc::scene::AABB * to, se::Object *ctx)
-{
-    assert(from.isObject());
-    se::Object *json = from.toObject();
-    auto* data = reinterpret_cast<cc::scene::AABB*>(json->getPrivateData());
-    if (data) {
-        *to = *data;
-        return true;
-    }
-    se::Value field;
-    bool ok = true;
-    json->getProperty("center", &field);
-    if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->center), ctx);
-    }
-    json->getProperty("halfExtents", &field);
-    if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->halfExtents), ctx);
-    }
-    return ok;
-}
+SE_BIND_FUNC(js_scene_AABB_initWithData)
 
 SE_DECLARE_FINALIZE_FUNC(js_cc_scene_AABB_finalize)
 
-static bool js_scene_AABB_constructor(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+static bool js_scene_AABB_constructor(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references) constructor.c
 {
-    CC_UNUSED bool ok = true;
-    const auto& args = s.args();
-    size_t argc = args.size();
-
-    if(argc == 0)
-    {
-        cc::scene::AABB* cobj = JSB_ALLOC(cc::scene::AABB);
-        s.thisObject()->setPrivateData(cobj);
-        se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
-        return true;
-    }
-
-    if(argc == 1 && args[0].isObject())
-    {
-        se::Object *json = args[0].toObject();
-        se::Value field;
-
-        cc::scene::AABB* cobj = JSB_ALLOC(cc::scene::AABB);
-        ok &= sevalue_to_native(args[0], cobj, s.thisObject());
-        if(!ok) {
-            JSB_FREE(cobj);
-            SE_REPORT_ERROR("argument convertion error");
-            return false;
-        }
-
-        s.thisObject()->setPrivateData(cobj);
-        se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
-        return true;
-    }
-
     cc::scene::AABB* cobj = JSB_ALLOC(cc::scene::AABB);
-    if (argc > 0 && !args[0].isUndefined()) {
-        ok &= sevalue_to_native(args[0], &(cobj->center), nullptr);
-    }
-    if (argc > 1 && !args[1].isUndefined()) {
-        ok &= sevalue_to_native(args[1], &(cobj->halfExtents), nullptr);
-    }
-
-    if(!ok) {
-        JSB_FREE(cobj);
-        SE_REPORT_ERROR("Argument convertion error");
-        return false;
-    }
-
     s.thisObject()->setPrivateData(cobj);
     se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
     return true;
@@ -838,10 +713,8 @@ bool js_register_scene_AABB(se::Object* obj) // NOLINT(readability-identifier-na
 {
     auto* cls = se::Class::create("AABB", obj, nullptr, _SE(js_scene_AABB_constructor));
 
-    cls->defineProperty("center", _SE(js_scene_AABB_get_center), _SE(js_scene_AABB_set_center));
-    cls->defineProperty("halfExtents", _SE(js_scene_AABB_get_halfExtents), _SE(js_scene_AABB_set_halfExtents));
-    cls->defineFunction("set", _SE(js_scene_AABB_set));
-    cls->defineStaticFunction("fromPoints", _SE(js_scene_AABB_fromPoints));
+    cls->defineFunction("getLayout", _SE(js_scene_AABB_getLayout));
+    cls->defineFunction("initWithData", _SE(js_scene_AABB_initWithData));
     cls->defineFinalizeFunction(_SE(js_cc_scene_AABB_finalize));
     cls->install();
     JSBClassType::registerClass<cc::scene::AABB>(cls);
@@ -863,7 +736,7 @@ static bool js_scene_SpotLight_setAABB(se::State& s) // NOLINT(readability-ident
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cc::scene::AABB, false> arg0 = {};
+        HolderType<cc::scene::AABB*, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_scene_SpotLight_setAABB : Error processing arguments");
         cobj->setAABB(arg0.value());
@@ -1106,7 +979,7 @@ static bool js_scene_SphereLight_setAABB(se::State& s) // NOLINT(readability-ide
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cc::scene::AABB, false> arg0 = {};
+        HolderType<cc::scene::AABB*, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_scene_SphereLight_setAABB : Error processing arguments");
         cobj->setAABB(arg0.value());
@@ -1412,25 +1285,6 @@ static bool js_scene_Model_getLocalData(se::State& s) // NOLINT(readability-iden
 }
 SE_BIND_FUNC(js_scene_Model_getLocalData)
 
-static bool js_scene_Model_getModelBounds(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_Model_getModelBounds : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        const cc::scene::AABB& result = cobj->getModelBounds();
-        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-        SE_PRECONDITION2(ok, false, "js_scene_Model_getModelBounds : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_scene_Model_getModelBounds)
-
 static bool js_scene_Model_getNode(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
@@ -1564,25 +1418,6 @@ static bool js_scene_Model_getVisFlags(se::State& s) // NOLINT(readability-ident
 }
 SE_BIND_FUNC(js_scene_Model_getVisFlags)
 
-static bool js_scene_Model_getWorldBounds(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_Model_getWorldBounds : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 0) {
-        const cc::scene::AABB* result = cobj->getWorldBounds();
-        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-        SE_PRECONDITION2(ok, false, "js_scene_Model_getWorldBounds : Error processing arguments");
-        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_scene_Model_getWorldBounds)
-
 static bool js_scene_Model_seVisFlag(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
@@ -1601,6 +1436,25 @@ static bool js_scene_Model_seVisFlag(se::State& s) // NOLINT(readability-identif
     return false;
 }
 SE_BIND_FUNC(js_scene_Model_seVisFlag)
+
+static bool js_scene_Model_setBounds(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_Model_setBounds : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<cc::scene::AABB*, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_scene_Model_setBounds : Error processing arguments");
+        cobj->setBounds(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_scene_Model_setBounds)
 
 static bool js_scene_Model_setCastShadow(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
@@ -1735,25 +1589,6 @@ static bool js_scene_Model_setTransform(se::State& s) // NOLINT(readability-iden
 }
 SE_BIND_FUNC(js_scene_Model_setTransform)
 
-static bool js_scene_Model_setWolrdBounds(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_Model_setWolrdBounds : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    CC_UNUSED bool ok = true;
-    if (argc == 1) {
-        HolderType<cc::scene::AABB, true> arg0 = {};
-        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
-        SE_PRECONDITION2(ok, false, "js_scene_Model_setWolrdBounds : Error processing arguments");
-        cobj->setWolrdBounds(arg0.value());
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-    return false;
-}
-SE_BIND_FUNC(js_scene_Model_setWolrdBounds)
-
 static bool js_scene_Model_updateTransform(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
@@ -1831,7 +1666,6 @@ bool js_register_scene_Model(se::Object* obj) // NOLINT(readability-identifier-n
     cls->defineFunction("getInstancedBuffer", _SE(js_scene_Model_getInstancedBuffer));
     cls->defineFunction("getInstancedBufferSize", _SE(js_scene_Model_getInstancedBufferSize));
     cls->defineFunction("getLocalData", _SE(js_scene_Model_getLocalData));
-    cls->defineFunction("getModelBounds", _SE(js_scene_Model_getModelBounds));
     cls->defineFunction("getNode", _SE(js_scene_Model_getNode));
     cls->defineFunction("getReceiveShadow", _SE(js_scene_Model_getReceiveShadow));
     cls->defineFunction("getSubModels", _SE(js_scene_Model_getSubModels));
@@ -1839,8 +1673,8 @@ bool js_register_scene_Model(se::Object* obj) // NOLINT(readability-identifier-n
     cls->defineFunction("getTransformUpdated", _SE(js_scene_Model_getTransformUpdated));
     cls->defineFunction("getUpdatStamp", _SE(js_scene_Model_getUpdatStamp));
     cls->defineFunction("getVisFlags", _SE(js_scene_Model_getVisFlags));
-    cls->defineFunction("getWorldBounds", _SE(js_scene_Model_getWorldBounds));
     cls->defineFunction("seVisFlag", _SE(js_scene_Model_seVisFlag));
+    cls->defineFunction("setBounds", _SE(js_scene_Model_setBounds));
     cls->defineFunction("setCastShadow", _SE(js_scene_Model_setCastShadow));
     cls->defineFunction("setEnabled", _SE(js_scene_Model_setEnabled));
     cls->defineFunction("setInstMatWorldIdx", _SE(js_scene_Model_setInstMatWorldIdx));
@@ -1848,7 +1682,6 @@ bool js_register_scene_Model(se::Object* obj) // NOLINT(readability-identifier-n
     cls->defineFunction("setNode", _SE(js_scene_Model_setNode));
     cls->defineFunction("setReceiveShadow", _SE(js_scene_Model_setReceiveShadow));
     cls->defineFunction("setTransform", _SE(js_scene_Model_setTransform));
-    cls->defineFunction("setWolrdBounds", _SE(js_scene_Model_setWolrdBounds));
     cls->defineFunction("updateTransform", _SE(js_scene_Model_updateTransform));
     cls->defineFunction("updateUBOs", _SE(js_scene_Model_updateUBOs));
     cls->defineFinalizeFunction(_SE(js_cc_scene_Model_finalize));
@@ -5167,6 +5000,352 @@ bool js_register_scene_Pass(se::Object* obj) // NOLINT(readability-identifier-na
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
+se::Object* __jsb_cc_scene_BakedAnimInfo_proto = nullptr;
+se::Class* __jsb_cc_scene_BakedAnimInfo_class = nullptr;
+
+static bool js_scene_BakedAnimInfo_getDirty(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::BakedAnimInfo>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_BakedAnimInfo_getDirty : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        bool result = cobj->getDirty();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_scene_BakedAnimInfo_getDirty : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_scene_BakedAnimInfo_getDirty)
+
+
+template<>
+bool sevalue_to_native(const se::Value &from, cc::scene::BakedAnimInfo * to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    auto* data = reinterpret_cast<cc::scene::BakedAnimInfo*>(json->getPrivateData());
+    if (data) {
+        *to = *data;
+        return true;
+    }
+    se::Value field;
+    bool ok = true;
+    json->getProperty("buffer", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->buffer), ctx);
+    }
+    json->getProperty("data", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->data), ctx);
+    }
+    json->getProperty("dirty", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->dirty), ctx);
+    }
+    return ok;
+}
+
+SE_DECLARE_FINALIZE_FUNC(js_cc_scene_BakedAnimInfo_finalize)
+
+static bool js_scene_BakedAnimInfo_constructor(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    CC_UNUSED bool ok = true;
+    const auto& args = s.args();
+    size_t argc = args.size();
+
+    if(argc == 0)
+    {
+        cc::scene::BakedAnimInfo* cobj = JSB_ALLOC(cc::scene::BakedAnimInfo);
+        s.thisObject()->setPrivateData(cobj);
+        se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+        return true;
+    }
+
+    if(argc == 1 && args[0].isObject())
+    {
+        se::Object *json = args[0].toObject();
+        se::Value field;
+
+        cc::scene::BakedAnimInfo* cobj = JSB_ALLOC(cc::scene::BakedAnimInfo);
+        ok &= sevalue_to_native(args[0], cobj, s.thisObject());
+        if(!ok) {
+            JSB_FREE(cobj);
+            SE_REPORT_ERROR("argument convertion error");
+            return false;
+        }
+
+        s.thisObject()->setPrivateData(cobj);
+        se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+        return true;
+    }
+
+    cc::scene::BakedAnimInfo* cobj = JSB_ALLOC(cc::scene::BakedAnimInfo);
+    if (argc > 0 && !args[0].isUndefined()) {
+        ok &= sevalue_to_native(args[0], &(cobj->buffer), nullptr);
+    }
+    if (argc > 1 && !args[1].isUndefined()) {
+        ok &= sevalue_to_native(args[1], &(cobj->data), nullptr);
+    }
+    if (argc > 2 && !args[2].isUndefined()) {
+        ok &= sevalue_to_native(args[2], &(cobj->dirty), nullptr);
+    }
+
+    if(!ok) {
+        JSB_FREE(cobj);
+        SE_REPORT_ERROR("Argument convertion error");
+        return false;
+    }
+
+    s.thisObject()->setPrivateData(cobj);
+    se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+    return true;
+}
+SE_BIND_CTOR(js_scene_BakedAnimInfo_constructor, __jsb_cc_scene_BakedAnimInfo_class, js_cc_scene_BakedAnimInfo_finalize)
+
+
+
+static bool js_cc_scene_BakedAnimInfo_finalize(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::scene::BakedAnimInfo>(s));
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
+    {
+        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
+        auto* cobj = SE_THIS_OBJECT<cc::scene::BakedAnimInfo>(s);
+        JSB_FREE(cobj);
+    }
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_cc_scene_BakedAnimInfo_finalize)
+
+bool js_register_scene_BakedAnimInfo(se::Object* obj) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto* cls = se::Class::create("BakedAnimInfo", obj, nullptr, _SE(js_scene_BakedAnimInfo_constructor));
+
+    cls->defineFunction("getDirty", _SE(js_scene_BakedAnimInfo_getDirty));
+    cls->defineFinalizeFunction(_SE(js_cc_scene_BakedAnimInfo_finalize));
+    cls->install();
+    JSBClassType::registerClass<cc::scene::BakedAnimInfo>(cls);
+
+    __jsb_cc_scene_BakedAnimInfo_proto = cls->getProto();
+    __jsb_cc_scene_BakedAnimInfo_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+se::Object* __jsb_cc_scene_BakedJointInfo_proto = nullptr;
+se::Class* __jsb_cc_scene_BakedJointInfo_class = nullptr;
+
+
+template<>
+bool sevalue_to_native(const se::Value &from, cc::scene::BakedJointInfo * to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    auto* data = reinterpret_cast<cc::scene::BakedJointInfo*>(json->getPrivateData());
+    if (data) {
+        *to = *data;
+        return true;
+    }
+    se::Value field;
+    bool ok = true;
+    json->getProperty("boundsInfo", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->boundsInfo), ctx);
+    }
+    json->getProperty("jointTextureInfo", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->jointTextureInfo), ctx);
+    }
+    json->getProperty("animInfo", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->animInfo), ctx);
+    }
+    json->getProperty("buffer", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->buffer), ctx);
+    }
+    return ok;
+}
+
+SE_DECLARE_FINALIZE_FUNC(js_cc_scene_BakedJointInfo_finalize)
+
+static bool js_scene_BakedJointInfo_constructor(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    CC_UNUSED bool ok = true;
+    const auto& args = s.args();
+    size_t argc = args.size();
+
+    if(argc == 0)
+    {
+        cc::scene::BakedJointInfo* cobj = JSB_ALLOC(cc::scene::BakedJointInfo);
+        s.thisObject()->setPrivateData(cobj);
+        se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+        return true;
+    }
+
+    if(argc == 1 && args[0].isObject())
+    {
+        se::Object *json = args[0].toObject();
+        se::Value field;
+
+        cc::scene::BakedJointInfo* cobj = JSB_ALLOC(cc::scene::BakedJointInfo);
+        ok &= sevalue_to_native(args[0], cobj, s.thisObject());
+        if(!ok) {
+            JSB_FREE(cobj);
+            SE_REPORT_ERROR("argument convertion error");
+            return false;
+        }
+
+        s.thisObject()->setPrivateData(cobj);
+        se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+        return true;
+    }
+
+    cc::scene::BakedJointInfo* cobj = JSB_ALLOC(cc::scene::BakedJointInfo);
+    if (argc > 0 && !args[0].isUndefined()) {
+        ok &= sevalue_to_native(args[0], &(cobj->boundsInfo), nullptr);
+    }
+    if (argc > 1 && !args[1].isUndefined()) {
+        ok &= sevalue_to_native(args[1], &(cobj->jointTextureInfo), nullptr);
+    }
+    if (argc > 2 && !args[2].isUndefined()) {
+        ok &= sevalue_to_native(args[2], &(cobj->animInfo), nullptr);
+    }
+    if (argc > 3 && !args[3].isUndefined()) {
+        ok &= sevalue_to_native(args[3], &(cobj->buffer), nullptr);
+    }
+
+    if(!ok) {
+        JSB_FREE(cobj);
+        SE_REPORT_ERROR("Argument convertion error");
+        return false;
+    }
+
+    s.thisObject()->setPrivateData(cobj);
+    se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+    return true;
+}
+SE_BIND_CTOR(js_scene_BakedJointInfo_constructor, __jsb_cc_scene_BakedJointInfo_class, js_cc_scene_BakedJointInfo_finalize)
+
+
+
+static bool js_cc_scene_BakedJointInfo_finalize(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::scene::BakedJointInfo>(s));
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
+    {
+        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
+        auto* cobj = SE_THIS_OBJECT<cc::scene::BakedJointInfo>(s);
+        JSB_FREE(cobj);
+    }
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_cc_scene_BakedJointInfo_finalize)
+
+bool js_register_scene_BakedJointInfo(se::Object* obj) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto* cls = se::Class::create("BakedJointInfo", obj, nullptr, _SE(js_scene_BakedJointInfo_constructor));
+
+    cls->defineFinalizeFunction(_SE(js_cc_scene_BakedJointInfo_finalize));
+    cls->install();
+    JSBClassType::registerClass<cc::scene::BakedJointInfo>(cls);
+
+    __jsb_cc_scene_BakedJointInfo_proto = cls->getProto();
+    __jsb_cc_scene_BakedJointInfo_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
+se::Object* __jsb_cc_scene_BakedSkinningModel_proto = nullptr;
+se::Class* __jsb_cc_scene_BakedSkinningModel_class = nullptr;
+
+static bool js_scene_BakedSkinningModel_setAnimInfoIdx(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::BakedSkinningModel>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_BakedSkinningModel_setAnimInfoIdx : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<int32_t, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_scene_BakedSkinningModel_setAnimInfoIdx : Error processing arguments");
+        cobj->setAnimInfoIdx(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_scene_BakedSkinningModel_setAnimInfoIdx)
+
+static bool js_scene_BakedSkinningModel_setJointMedium(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::BakedSkinningModel>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_BakedSkinningModel_setJointMedium : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 2) {
+        HolderType<bool, false> arg0 = {};
+        HolderType<cc::scene::BakedJointInfo, true> arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_scene_BakedSkinningModel_setJointMedium : Error processing arguments");
+        cobj->setJointMedium(arg0.value(), std::move(arg1.value()));
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    return false;
+}
+SE_BIND_FUNC(js_scene_BakedSkinningModel_setJointMedium)
+
+SE_DECLARE_FINALIZE_FUNC(js_cc_scene_BakedSkinningModel_finalize)
+
+static bool js_scene_BakedSkinningModel_constructor(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references) constructor.c
+{
+    cc::scene::BakedSkinningModel* cobj = JSB_ALLOC(cc::scene::BakedSkinningModel);
+    s.thisObject()->setPrivateData(cobj);
+    se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+    return true;
+}
+SE_BIND_CTOR(js_scene_BakedSkinningModel_constructor, __jsb_cc_scene_BakedSkinningModel_class, js_cc_scene_BakedSkinningModel_finalize)
+
+
+
+static bool js_cc_scene_BakedSkinningModel_finalize(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::scene::BakedSkinningModel>(s));
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
+    {
+        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
+        auto* cobj = SE_THIS_OBJECT<cc::scene::BakedSkinningModel>(s);
+        JSB_FREE(cobj);
+    }
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_cc_scene_BakedSkinningModel_finalize)
+
+bool js_register_scene_BakedSkinningModel(se::Object* obj) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto* cls = se::Class::create("BakedSkinningModel", obj, __jsb_cc_scene_Model_proto, _SE(js_scene_BakedSkinningModel_constructor));
+
+    cls->defineFunction("setAnimInfoIdx", _SE(js_scene_BakedSkinningModel_setAnimInfoIdx));
+    cls->defineFunction("setJointMedium", _SE(js_scene_BakedSkinningModel_setJointMedium));
+    cls->defineFinalizeFunction(_SE(js_cc_scene_BakedSkinningModel_finalize));
+    cls->install();
+    JSBClassType::registerClass<cc::scene::BakedSkinningModel>(cls);
+
+    __jsb_cc_scene_BakedSkinningModel_proto = cls->getProto();
+    __jsb_cc_scene_BakedSkinningModel_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
 se::Object* __jsb_cc_scene_DrawBatch2D_proto = nullptr;
 se::Class* __jsb_cc_scene_DrawBatch2D_class = nullptr;
 
@@ -5837,6 +6016,25 @@ bool js_register_scene_SkinningModel(se::Object* obj) // NOLINT(readability-iden
 se::Object* __jsb_cc_scene_RenderScene_proto = nullptr;
 se::Class* __jsb_cc_scene_RenderScene_class = nullptr;
 
+static bool js_scene_RenderScene_addBakedSkinningModel(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::RenderScene>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_RenderScene_addBakedSkinningModel : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<cc::scene::BakedSkinningModel*, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_scene_RenderScene_addBakedSkinningModel : Error processing arguments");
+        cobj->addBakedSkinningModel(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_scene_RenderScene_addBakedSkinningModel)
+
 static bool js_scene_RenderScene_addBatch(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::RenderScene>(s);
@@ -6246,6 +6444,7 @@ bool js_register_scene_RenderScene(se::Object* obj) // NOLINT(readability-identi
 {
     auto* cls = se::Class::create("RenderScene", obj, nullptr, _SE(js_scene_RenderScene_constructor));
 
+    cls->defineFunction("addBakedSkinningModel", _SE(js_scene_RenderScene_addBakedSkinningModel));
     cls->defineFunction("addBatch", _SE(js_scene_RenderScene_addBatch));
     cls->defineFunction("addModel", _SE(js_scene_RenderScene_addModel));
     cls->defineFunction("addSkinningModel", _SE(js_scene_RenderScene_addSkinningModel));
@@ -7426,25 +7625,28 @@ bool register_all_scene(se::Object* obj)
     se::Object* ns = nsVal.toObject();
 
     js_register_scene_RenderScene(ns);
+    js_register_scene_Camera(ns);
     js_register_scene_Fog(ns);
     js_register_scene_Node(ns);
     js_register_scene_Frustum(ns);
     js_register_scene_DrawBatch2D(ns);
     js_register_scene_Light(ns);
     js_register_scene_SphereLight(ns);
+    js_register_scene_Model(ns);
+    js_register_scene_BakedSkinningModel(ns);
     js_register_scene_Plane(ns);
     js_register_scene_JointTransform(ns);
     js_register_scene_RenderWindow(ns);
     js_register_scene_Shadow(ns);
     js_register_scene_SubModel(ns);
+    js_register_scene_BakedJointInfo(ns);
     js_register_scene_AABB(ns);
     js_register_scene_Ambient(ns);
-    js_register_scene_Model(ns);
     js_register_scene_SkinningModel(ns);
     js_register_scene_DirectionalLight(ns);
     js_register_scene_JointInfo(ns);
     js_register_scene_Root(ns);
-    js_register_scene_Camera(ns);
+    js_register_scene_BakedAnimInfo(ns);
     js_register_scene_Pass(ns);
     js_register_scene_Skybox(ns);
     js_register_scene_PipelineSharedSceneData(ns);

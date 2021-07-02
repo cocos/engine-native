@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Game.h"
-#include <string>
 #include <memory>
+#include <string>
+#include "Game.h"
 
 namespace cc {
-    class View;
+class View;
 };
 
 class AppDelegate {
@@ -16,7 +16,7 @@ public:
 
 private:
     std::shared_ptr<cc::View> _view;
-    std::shared_ptr<Game> _game;
+    std::shared_ptr<Game>     _game;
 
-    bool _quit = false;
+    bool _quit{false};
 };
