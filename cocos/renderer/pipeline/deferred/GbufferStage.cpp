@@ -36,6 +36,9 @@
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXFramebuffer.h"
 #include "gfx-base/GFXQueue.h"
+#include "frame-graph/DevicePassResourceTable.h"
+#include "frame-graph/DevicePass.h"
+#include "frame-graph/Resource.h"
 
 namespace cc {
 namespace pipeline {
@@ -160,11 +163,11 @@ void GbufferStage::renderFG(scene::Camera *camera) {
             framegraph::Texture::Descriptor colorTexInfo;
             colorTexInfo.format = gfx::Format::RGBA8;
             colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
-            colorTexInfo.width  = device->getWidth();
-            colorTexInfo.height = device->getHeight();
+            colorTexInfo.width  = _device->getWidth();
+            colorTexInfo.height = _device->getHeight();
 
             builder.create(data.gbuffer[i], DeferredPipeline::_gbuffer[i], colorTexInfo);
-            data.colorTex = builder.write(data.gbuffer[i], colorAttachmentInfo);
+            data.gbuffer[i] = builder.write(data.gbuffer[i], colorAttachmentInfo);
             builder.writeToBlackboard(DeferredPipeline::_gbuffer[i], data.gbuffer[i]);
         }
 
@@ -179,18 +182,20 @@ void GbufferStage::renderFG(scene::Camera *camera) {
         framegraph::Texture::Descriptor depthTexInfo;
         depthTexInfo.format = _device->getDepthStencilFormat();
         depthTexInfo.usage  = gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT;
-        depthTexInfo.width  = device->getWidth();
-        depthTexInfo.height = device->getHeight();
+        depthTexInfo.width  = _device->getWidth();
+        depthTexInfo.height = _device->getHeight();
 
         builder.create(data.depth, DeferredPipeline::_depth, depthTexInfo);
-        data.colorTex = builder.write(data.depth, depthInfo);
+        data.depth = builder.write(data.depth, depthInfo);
         builder.writeToBlackboard(DeferredPipeline::_depth, data.depth);
 
         // viewport setup
-        builder.setViewport(camera->viewPort, pipeline->getRenderArea(camera));
+        auto renderArea = pipeline->getRenderArea(camera);
+        gfx::Viewport viewport{ renderArea.x, renderArea.y, renderArea.width, renderArea.height, 0.F, 1.F};
+        builder.setViewport(viewport, renderArea);
     };
 
-    auto gbufferExec = [&] (DrawData const &data, const framegraph::DevicePassResourceTable &table) {
+    auto gbufferExec = [&] (renderData const &data, const framegraph::DevicePassResourceTable &table) {
         dispenseRenderObject2Queues();
         auto *cmdBuff = pipeline->getCommandBuffers()[0];
 
@@ -212,7 +217,7 @@ void GbufferStage::renderFG(scene::Camera *camera) {
         _batchedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
     };
 
-    _pipeline->getFrameGraph()->addPass<renderData>(IP_GBUFFER, gbufferSetup, gbufferExec);
+    pipeline->getFrameGraph().addPass<renderData>(IP_GBUFFER, DeferredPipeline::_passGbuffer, gbufferSetup, gbufferExec);
 }
 
 void GbufferStage::render(scene::Camera *camera) {
@@ -233,11 +238,14 @@ void GbufferStage::render(scene::Camera *camera) {
     size_t k           = 0;
     for (auto ro : renderObjects) {
         const auto *const model = ro.model;
-
-        subModelIdx = 0;
-        for (auto *subModel : model->getSubModels()) {
-            passIdx = 0;
-            for (auto *pass : subModel->getPasses()) {
+        const auto& subModels = model->getSubModels();
+        auto subModelCount = subModels.size();
+        for (subModelIdx = 0; subModelIdx < subModelCount; ++subModelIdx) {
+            const auto& subModel = subModels[subModelIdx];
+            const auto& passes = subModel->getPasses();
+            auto passCount = passes.size();
+            for (passIdx = 0; passIdx < passCount; ++passIdx) {
+                const auto pass          = passes[passIdx];
                 if (pass->getPhase() != _phaseID) continue;
                 if (pass->getBatchingScheme() == scene::BatchingSchemes::INSTANCING) {
                     auto *instancedBuffer = InstancedBuffer::get(pass);
@@ -252,11 +260,7 @@ void GbufferStage::render(scene::Camera *camera) {
                         _renderQueues[k]->insertRenderPass(ro, subModelIdx, passIdx);
                     }
                 }
-
-                ++passIdx;
             }
-
-            ++subModelIdx;
         }
     }
     for (auto *queue : _renderQueues) {
