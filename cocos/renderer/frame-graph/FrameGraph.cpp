@@ -380,8 +380,6 @@ void FrameGraph::computeStoreActionAndMemoryless() noexcept {
 
             renderTargets.emplace(resourceNode.virtualResource);
         }
-
-        lastPassNode = passNode.get();
     }
 
     for (VirtualResource *const renderTarget : renderTargets) {

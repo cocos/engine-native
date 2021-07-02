@@ -101,13 +101,15 @@ static bool js_network_Downloader_setOnFileTaskSuccess(se::State &s) {
                     args.resize(1);
                     ok &= DownloadTask_to_seval(larg0, &args[0]);
                     se::Value rval;
-                    se::Object *thisObj = jsThis.isObject() ? jsThis.toObject() : nullptr;
                     se::Object *funcObj = jsFunc.toObject();
+                    se::Object *thisObj = jsThis.isObject() ? jsThis.toObject() : nullptr;
                     bool succeed = funcObj->call(args, thisObj, &rval);
                     if (!succeed) {
                         se::ScriptEngine::getInstance()->clearException();
                     }
-                    thisObj->unroot();
+                    if (thisObj) {
+                        thisObj->unroot();
+                    }
                 };
                 arg0 = lambda;
             } else {
@@ -154,7 +156,9 @@ static bool js_network_Downloader_setOnTaskError(se::State &s) {
                     if (!succeed) {
                         se::ScriptEngine::getInstance()->clearException();
                     }
-                    thisObj->unroot();
+                    if (thisObj) {
+                        thisObj->unroot();
+                    }
                 };
                 arg0 = lambda;
             } else {
