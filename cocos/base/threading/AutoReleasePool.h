@@ -32,7 +32,7 @@ public:
     AutoReleasePool();
     AutoReleasePool(const AutoReleasePool &) = delete;
     AutoReleasePool(AutoReleasePool &&)      = delete;
-    ~AutoReleasePool()                       = default;
+    ~AutoReleasePool();
     AutoReleasePool &operator=(const AutoReleasePool &) = delete;
     AutoReleasePool &operator=(AutoReleasePool &&) = delete;
 

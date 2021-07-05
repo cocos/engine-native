@@ -257,7 +257,6 @@ void MessageQueue::consumerThreadLoop() noexcept {
     while (!_reader.terminateConsumerThread) {
         AutoReleasePool autoReleasePool;
         flushMessages();
-        autoReleasePool.drain();
     }
 
     _workerAttached = false;
