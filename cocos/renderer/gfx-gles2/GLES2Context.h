@@ -86,13 +86,13 @@ protected:
     uint _defaultColorBuffer        = 0;
     uint _defaultDepthStencilBuffer = 0;
 #else
-    NativeDisplayType           _nativeDisplay    = 0; // NOLINT(modernize-use-nullptr) portability issues
-    EGLDisplay                  _eglDisplay       = EGL_NO_DISPLAY;
-    EGLConfig                   _eglConfig        = EGL_NO_CONFIG_KHR;
-    EGLSurface                  _eglSurface       = EGL_NO_SURFACE;
-    EGLContext                  _eglContext       = EGL_NO_CONTEXT;
-    EGLContext                  _eglSharedContext = EGL_NO_CONTEXT;
-    std::vector<EGLConfig>      _vecEGLConfig;
+    NativeDisplayType        _nativeDisplay    = 0; // NOLINT(modernize-use-nullptr) portability issues
+    EGLDisplay               _eglDisplay       = EGL_NO_DISPLAY;
+    EGLConfig                _eglConfig        = EGL_NO_CONFIG_KHR;
+    EGLSurface               _eglSurface       = EGL_NO_SURFACE;
+    EGLContext               _eglContext       = EGL_NO_CONTEXT;
+    EGLContext               _eglSharedContext = EGL_NO_CONTEXT;
+    std::vector<EGLConfig>   _vecEGLConfig;
 #endif
     int         _majorVersion = 0;
     int         _minorVersion = 0;

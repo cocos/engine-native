@@ -35,7 +35,7 @@
 #include "gfx-base/GFXTexture.h"
 
 namespace cc::pipeline {
-std::unordered_map<uint, cc::gfx::RenderPass*> ShadowFlow::renderPassHashMap;
+std::unordered_map<uint, cc::gfx::RenderPass *> ShadowFlow::renderPassHashMap;
 
 RenderFlowInfo ShadowFlow::initInfo = {
     "ShadowFlow",
@@ -175,9 +175,9 @@ void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const scene::Li
     const auto  width         = static_cast<uint>(shadowMapSize.x);
     const auto  height        = static_cast<uint>(shadowMapSize.y);
     const auto  format        = supportsHalfFloatTexture(device)
-                            ? (shadowInfo->packing ? gfx::Format::RGBA8 : gfx::Format::RGBA16F)
-                            : gfx::Format::RGBA8;
-    
+                                    ? (shadowInfo->packing ? gfx::Format::RGBA8 : gfx::Format::RGBA16F)
+                                    : gfx::Format::RGBA8;
+
     const gfx::ColorAttachment colorAttachment = {
         format,
         gfx::SampleCount::X1,
@@ -201,10 +201,10 @@ void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const scene::Li
     gfx::RenderPassInfo rpInfo;
     rpInfo.colorAttachments.emplace_back(colorAttachment);
     rpInfo.depthStencilAttachment = depthStencilAttachment;
-    
+
     uint rpHash = cc::gfx::RenderPass::computeHash(rpInfo);
-    auto iter = renderPassHashMap.find(rpHash);
-    if(iter != renderPassHashMap.end()) {
+    auto iter   = renderPassHashMap.find(rpHash);
+    if (iter != renderPassHashMap.end()) {
         _renderPass = iter->second;
     } else {
         _renderPass = device->createRenderPass(rpInfo);
@@ -242,8 +242,7 @@ void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const scene::Li
 }
 
 void ShadowFlow::destroy() {
-    
-    for (auto rpPair: renderPassHashMap) {
+    for (auto rpPair : renderPassHashMap) {
         rpPair.second->destroy();
     }
     renderPassHashMap.clear();

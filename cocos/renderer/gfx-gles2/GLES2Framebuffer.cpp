@@ -42,7 +42,7 @@ GLES2Framebuffer::~GLES2Framebuffer() {
     destroy();
 }
 
-void GLES2Framebuffer::doInit(const FramebufferInfo &info) {
+void GLES2Framebuffer::doInit(const FramebufferInfo & /*info*/) {
     _gpuFBO                = CC_NEW(GLES2GPUFramebuffer);
     _gpuFBO->gpuRenderPass = static_cast<GLES2RenderPass *>(_renderPass)->gpuRenderPass();
 
