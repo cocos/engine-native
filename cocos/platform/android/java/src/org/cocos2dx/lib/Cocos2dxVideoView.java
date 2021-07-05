@@ -557,7 +557,7 @@ public class Cocos2dxVideoView extends SurfaceView {
                 mRetriever.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
             } else {
                 mMediaPlayer.setDataSource(mVideoUri.toString());
-                mRetriever.setDataSource(mVideoUri.toString());
+                mRetriever.setDataSource(mVideoUri.toString(), new HashMap<String, String>());
             }
             mCurrentState = State.INITIALIZED;
 
