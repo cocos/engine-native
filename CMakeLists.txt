@@ -460,7 +460,7 @@ cocos_source_files(
 ##### threading
 cocos_source_files(
                  cocos/base/threading/AutoReleasePool.h
-                 cocos/base/threading/AutoReleasePool.cpp
+                 cocos/base/threading/AutoReleasePool.mm
                  cocos/base/threading/ConditionVariable.h
                  cocos/base/threading/ConditionVariable.cpp
                  cocos/base/threading/Event.h

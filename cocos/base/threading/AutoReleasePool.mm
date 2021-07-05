@@ -23,18 +23,20 @@
  THE SOFTWARE.
  ****************************************************************************/
 #include "AutoReleasePool.h"
+#if (CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX)
 #import <Foundation/NSAutoReleasePool.h>
+#endif
 
 namespace cc {
 
 AutoReleasePool::AutoReleasePool() {
-#if (CC_PLATFORM == CC_PLATFORM_MAC_IOS) || (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
+#if (CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX)
     _nsReleasePool = [[NSAutoreleasePool alloc] init];
 #endif
 }
 
 void AutoReleasePool::drain() {
-#if (CC_PLATFORM == CC_PLATFORM_MAC_IOS) || (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
+#if (CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX)
     if (_nsReleasePool) {
         [static_cast<NSAutoreleasePool *>(_nsReleasePool) drain];
         _nsReleasePool = nullptr;
