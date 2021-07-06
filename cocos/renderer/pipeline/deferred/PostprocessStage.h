@@ -42,7 +42,6 @@ public:
     void activate(RenderPipeline *pipeline, RenderFlow *flow) override;
     void destroy() override;
     void render(scene::Camera *camera) override;
-    void renderFG(scene::Camera *camera);
 
 private:
     gfx::Rect _renderArea;

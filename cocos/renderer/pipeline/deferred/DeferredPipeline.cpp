@@ -73,43 +73,6 @@ framegraph::StringHandle DeferredPipeline::_passLighting = framegraph::FrameGrap
 framegraph::StringHandle DeferredPipeline::_passSspr = framegraph::FrameGraph::stringToHandle("deferredSSPRPass");
 framegraph::StringHandle DeferredPipeline::_passPostprocess = framegraph::FrameGraph::stringToHandle("deferredPostPass");
 
-gfx::RenderPass *DeferredPipeline::getOrCreateRenderPass(gfx::ClearFlags clearFlags) {
-    if (_renderPasses.find(clearFlags) != _renderPasses.end()) {
-        return _renderPasses[clearFlags];
-    }
-
-    auto *                      device = gfx::Device::getInstance();
-    gfx::ColorAttachment        colorAttachment;
-    gfx::DepthStencilAttachment depthStencilAttachment;
-    colorAttachment.format                = device->getColorFormat();
-    depthStencilAttachment.format         = device->getDepthStencilFormat();
-    depthStencilAttachment.stencilStoreOp = gfx::StoreOp::DISCARD;
-    depthStencilAttachment.depthStoreOp   = gfx::StoreOp::DISCARD;
-
-    if (!hasFlag(clearFlags, gfx::ClearFlagBit::COLOR)) {
-        if (hasFlag(clearFlags, static_cast<gfx::ClearFlagBit>(skyboxFlag))) {
-            colorAttachment.loadOp = gfx::LoadOp::DISCARD;
-        } else {
-            colorAttachment.loadOp        = gfx::LoadOp::LOAD;
-            colorAttachment.beginAccesses = {gfx::AccessType::PRESENT};
-        }
-    }
-
-    if (static_cast<gfx::ClearFlagBit>(clearFlags & gfx::ClearFlagBit::DEPTH_STENCIL) != gfx::ClearFlagBit::DEPTH_STENCIL) {
-        if (!hasFlag(clearFlags, gfx::ClearFlagBit::DEPTH)) depthStencilAttachment.depthLoadOp = gfx::LoadOp::LOAD;
-        if (!hasFlag(clearFlags, gfx::ClearFlagBit::STENCIL)) depthStencilAttachment.stencilLoadOp = gfx::LoadOp::LOAD;
-        depthStencilAttachment.beginAccesses = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
-    }
-
-    auto *renderPass          = device->createRenderPass({
-        {colorAttachment},
-        depthStencilAttachment,
-    });
-    _renderPasses[clearFlags] = renderPass;
-
-    return renderPass;
-}
-
 bool DeferredPipeline::initialize(const RenderPipelineInfo &info) {
     RenderPipeline::initialize(info);
 
@@ -142,41 +105,27 @@ bool DeferredPipeline::activate() {
     return true;
 }
 
+void DeferredPipeline::prepareFrameGraph() {
+    // repare for the backbuffer
+    _fg.getBlackboard().put(_backBuffer, _fg.importExternal(_backBuffer, _fgBackBuffer));
+}
+
 void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
     _commandBuffers[0]->begin();
     _pipelineUBO->updateGlobalUBO();
     _pipelineUBO->updateMultiCameraUBO(cameras);
     for (auto *camera : cameras) {
-        sceneCulling(this, camera);
-        for (auto *const flow : _flows) {
-            flow->render(camera);
-        }
-        _pipelineUBO->incCameraUBOOffset();
-    }
-    _commandBuffers[0]->end();
-    _device->flushCommands(_commandBuffers);
-    _device->getQueue()->submit(_commandBuffers);
-}
-
-void DeferredPipeline::prepareFrameGraph(scene::Camera *camera) {
-    // repare for the backbuffer
-    _fg.getBlackboard().put(_backBuffer, _fg.importExternal(_backBuffer, _fgBackBuffer));
-}
-
-void DeferredPipeline::renderFG(const vector<scene::Camera *> &cameras) {
-    _commandBuffers[0]->begin();
-    _pipelineUBO->updateGlobalUBO();
-    for (auto *camera : cameras) {
         _fg.reset();
-        prepareFrameGraph(camera);
+        prepareFrameGraph();
         sceneCulling(this, camera);
         for (auto *const flow : _flows) {
             flow->render(camera);
         }
-        _pipelineUBO->incCameraUBOOffset();
 
         _fg.compile();
+        _fg.exportGraphViz("fg_vis.dot");
         _fg.execute();
+        _pipelineUBO->incCameraUBOOffset();
     }
 
     _commandBuffers[0]->end();
@@ -327,73 +276,6 @@ bool DeferredPipeline::activeRenderer() {
     _width  = _device->getWidth();
     _height = _device->getHeight();
 
-    bool b_fg = false;
-    if (b_fg) return true;
-
-    gfx::RenderPassInfo gbufferPass;
-
-    gfx::ColorAttachment color = {
-        gfx::Format::RGBA16F,
-        gfx::SampleCount::X1,
-        gfx::LoadOp::CLEAR,
-        gfx::StoreOp::STORE,
-        {},
-        {gfx::AccessType::COLOR_ATTACHMENT_WRITE},
-    };
-
-    for (int i = 0; i < 4; i++) {
-        gbufferPass.colorAttachments.push_back(color);
-    }
-
-    gfx::DepthStencilAttachment depth = {
-        _device->getDepthStencilFormat(),
-        gfx::SampleCount::X1,
-        gfx::LoadOp::CLEAR,
-        gfx::StoreOp::STORE,
-        gfx::LoadOp::CLEAR,
-        gfx::StoreOp::STORE,
-    };
-
-    gbufferPass.depthStencilAttachment = depth;
-    _gbufferRenderPass                 = _device->createRenderPass(gbufferPass);
-
-    gfx::ColorAttachment cAttch = {
-        gfx::Format::RGBA8,
-        gfx::SampleCount::X1,
-        gfx::LoadOp::CLEAR,
-        gfx::StoreOp::STORE,
-        {},
-        {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE},
-    };
-
-    gfx::RenderPassInfo lightPass;
-    lightPass.colorAttachments.push_back(cAttch);
-
-    lightPass.depthStencilAttachment = {
-        _device->getDepthStencilFormat(),
-        gfx::SampleCount::X1,
-        gfx::LoadOp::LOAD,
-        gfx::StoreOp::DISCARD,
-        gfx::LoadOp::DISCARD,
-        gfx::StoreOp::DISCARD,
-        {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE},
-    };
-
-    _lightingRenderPass = _device->createRenderPass(lightPass);
-
-    generateDeferredRenderData();
-
-    _descriptorSet->bindSampler(
-        static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_ALBEDOMAP), sampler);
-    _descriptorSet->bindSampler(
-        static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_POSITIONMAP), sampler);
-    _descriptorSet->bindSampler(
-        static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_NORMALMAP), sampler);
-    _descriptorSet->bindSampler(
-        static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_EMISSIVEMAP), sampler);
-    _descriptorSet->bindSampler(
-        static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP), sampler);
-
     return true;
 }
 
@@ -404,63 +286,6 @@ void DeferredPipeline::resize(uint width, uint height) {
     _width  = width;
     _height = height;
     destroyDeferredData();
-    generateDeferredRenderData();
-}
-
-void DeferredPipeline::generateDeferredRenderData() {
-    _deferredRenderData = CC_NEW(DeferredRenderData);
-
-    gfx::TextureInfo info = {
-        gfx::TextureType::TEX2D,
-        gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
-        gfx::Format::RGBA8,
-        _width,
-        _height,
-    };
-
-    for (int i = 0; i < 4; i++) {
-        gfx::Texture *tex = _device->createTexture(info);
-        _deferredRenderData->gbufferRenderTargets.push_back(tex);
-    }
-
-    info.usage                    = gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT;
-    info.format                   = _device->getDepthStencilFormat();
-    _deferredRenderData->depthTex = _device->createTexture(info);
-
-    gfx::FramebufferInfo gbufferInfo = {
-        _gbufferRenderPass,
-        _deferredRenderData->gbufferRenderTargets,
-        _deferredRenderData->depthTex,
-    };
-
-    _deferredRenderData->gbufferFrameBuffer = _device->createFramebuffer(gbufferInfo);
-
-    gfx::TextureInfo rtInfo = {
-        gfx::TextureType::TEX2D,
-        gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
-        gfx::Format::RGBA16F,
-        _width,
-        _height,
-    };
-    _deferredRenderData->lightingRenderTarget = _device->createTexture(rtInfo);
-
-    gfx::FramebufferInfo lightingInfo;
-    lightingInfo.renderPass = _lightingRenderPass;
-    lightingInfo.colorTextures.push_back(_deferredRenderData->lightingRenderTarget);
-    lightingInfo.depthStencilTexture       = _deferredRenderData->depthTex;
-    _deferredRenderData->lightingFrameBuff = _device->createFramebuffer(lightingInfo);
-
-    _descriptorSet->bindTexture(
-        static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_ALBEDOMAP), _deferredRenderData->gbufferFrameBuffer->getColorTextures()[0]);
-    _descriptorSet->bindTexture(
-        static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_POSITIONMAP), _deferredRenderData->gbufferFrameBuffer->getColorTextures()[1]);
-    _descriptorSet->bindTexture(
-        static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_NORMALMAP), _deferredRenderData->gbufferFrameBuffer->getColorTextures()[2]);
-    _descriptorSet->bindTexture(
-        static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_EMISSIVEMAP), _deferredRenderData->gbufferFrameBuffer->getColorTextures()[3]);
-
-    _descriptorSet->bindTexture(
-        static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP), _deferredRenderData->lightingFrameBuff->getColorTextures()[0]);
 }
 
 void DeferredPipeline::destroy() {
@@ -490,38 +315,6 @@ void DeferredPipeline::destroy() {
 }
 
 void DeferredPipeline::destroyDeferredData() {
-    if (_deferredRenderData->gbufferFrameBuffer) {
-        _deferredRenderData->gbufferFrameBuffer->destroy();
-        CC_DELETE(_deferredRenderData->gbufferFrameBuffer);
-        _deferredRenderData->gbufferFrameBuffer = nullptr;
-    }
-
-    if (_deferredRenderData->lightingFrameBuff) {
-        _deferredRenderData->lightingFrameBuff->destroy();
-        CC_DELETE(_deferredRenderData->lightingFrameBuff);
-        _deferredRenderData->lightingFrameBuff = nullptr;
-    }
-
-    if (_deferredRenderData->lightingRenderTarget) {
-        _deferredRenderData->lightingRenderTarget->destroy();
-        CC_DELETE(_deferredRenderData->lightingRenderTarget);
-        _deferredRenderData->lightingRenderTarget = nullptr;
-    }
-
-    if (_deferredRenderData->depthTex) {
-        _deferredRenderData->depthTex->destroy();
-        CC_DELETE(_deferredRenderData->depthTex);
-        _deferredRenderData->depthTex = nullptr;
-    }
-
-    for (auto *renderTarget : _deferredRenderData->gbufferRenderTargets) {
-        renderTarget->destroy();
-        CC_DELETE(renderTarget);
-    }
-    _deferredRenderData->gbufferRenderTargets.clear();
-
-    CC_DELETE(_deferredRenderData);
-    _deferredRenderData = nullptr;
 }
 
 gfx::Color DeferredPipeline::getClearcolor(scene::Camera *camera) {

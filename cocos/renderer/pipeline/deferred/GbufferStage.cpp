@@ -43,6 +43,8 @@
 namespace cc {
 namespace pipeline {
 namespace {
+const String StageName = "GbufferStage";
+
 void srgbToLinear(gfx::Color *out, const gfx::Color &gamma) {
     out->x = gamma.x * gamma.x;
     out->y = gamma.y * gamma.y;
@@ -57,7 +59,7 @@ void linearToSrgb(gfx::Color *out, const gfx::Color &linear) {
 } // namespace
 
 RenderStageInfo GbufferStage::initInfo = {
-    "GbufferStage",
+    StageName,
     static_cast<uint>(DeferredStagePriority::GBUFFER),
     static_cast<uint>(RenderFlowTag::SCENE),
     {{false, RenderQueueSortMode::FRONT_TO_BACK, {"default"}},
@@ -111,11 +113,14 @@ void GbufferStage::dispenseRenderObject2Queues() {
     size_t k           = 0;
     for (auto ro : renderObjects) {
         const auto *const model = ro.model;
-
-        subModelIdx = 0;
-        for (auto *subModel : model->getSubModels()) {
-            passIdx = 0;
-            for (auto *pass : subModel->getPasses()) {
+        const auto& subModels = model->getSubModels();
+        auto subModelCount = subModels.size();
+        for (subModelIdx = 0; subModelIdx < subModelCount; ++subModelIdx) {
+            const auto& subModel = subModels[subModelIdx];
+            const auto& passes = subModel->getPasses();
+            auto passCount = passes.size();
+            for (passIdx = 0; passIdx < passCount; ++passIdx) {
+                const auto pass          = passes[passIdx];
                 if (pass->getPhase() != _phaseID) continue;
                 if (pass->getBatchingScheme() == scene::BatchingSchemes::INSTANCING) {
                     auto *instancedBuffer = InstancedBuffer::get(pass);
@@ -130,11 +135,7 @@ void GbufferStage::dispenseRenderObject2Queues() {
                         _renderQueues[k]->insertRenderPass(ro, subModelIdx, passIdx);
                     }
                 }
-
-                ++passIdx;
             }
-
-            ++subModelIdx;
         }
     }
 
@@ -142,14 +143,36 @@ void GbufferStage::dispenseRenderObject2Queues() {
         queue->sort();
     }
 }
+void GbufferStage::recordCommands(DeferredPipeline *pipeline, gfx::RenderPass *renderPass)
+{
+    dispenseRenderObject2Queues();
+    auto *cmdBuff  = pipeline->getCommandBuffers()[0];
 
-void GbufferStage::renderFG(scene::Camera *camera) {
+    _instancedQueue->uploadBuffers(cmdBuff);
+    _batchedQueue->uploadBuffers(cmdBuff);
+
+    // descriptorset bindings
+    uint const globalOffsets[] = {pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
+    cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
+
+    // record commands
+    _renderQueues[0]->recordCommandBuffer(_device, renderPass, cmdBuff);
+    _instancedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
+    _batchedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
+}
+
+void GbufferStage::render(scene::Camera *camera) {
     struct renderData {
         framegraph::TextureHandle gbuffer[4];
         framegraph::TextureHandle depth;
     };
 
-    auto *      pipeline      = static_cast<DeferredPipeline *>(_pipeline);
+    auto *pipeline = static_cast<DeferredPipeline *>(_pipeline);
+    _renderArea = pipeline->getRenderArea(camera);
+
+    // render area is not oriented, copy buffer must be called outsize of renderpass, it shouldnot be called in execute lambda expression
+    pipeline->updateQuadVertexData(_renderArea);
+
     auto gbufferSetup = [&](framegraph::PassNodeBuilder &builder, renderData &data) {
         // gbuffer setup
         gfx::Color clearColor = {0.0, 0.0, 0.0, 0.0};
@@ -158,7 +181,7 @@ void GbufferStage::renderFG(scene::Camera *camera) {
             colorAttachmentInfo.usage       = framegraph::RenderTargetAttachment::Usage::COLOR;
             colorAttachmentInfo.loadOp      = gfx::LoadOp::CLEAR;
             colorAttachmentInfo.clearColor  = clearColor;
-            colorAttachmentInfo.endAccesses = {gfx::AccessType::TRANSFER_READ};
+            colorAttachmentInfo.endAccesses = {gfx::AccessType::COLOR_ATTACHMENT_READ};
 
             framegraph::Texture::Descriptor colorTexInfo;
             colorTexInfo.format = gfx::Format::RGBA8;
@@ -190,107 +213,21 @@ void GbufferStage::renderFG(scene::Camera *camera) {
         builder.writeToBlackboard(DeferredPipeline::_depth, data.depth);
 
         // viewport setup
-        auto renderArea = pipeline->getRenderArea(camera);
-        gfx::Viewport viewport{ renderArea.x, renderArea.y, renderArea.width, renderArea.height, 0.F, 1.F};
-        builder.setViewport(viewport, renderArea);
+        gfx::Viewport viewport{ _renderArea.x, _renderArea.y, _renderArea.width, _renderArea.height, 0.F, 1.F};
+        builder.setViewport(viewport, _renderArea);
     };
 
     auto gbufferExec = [&] (renderData const &data, const framegraph::DevicePassResourceTable &table) {
-        dispenseRenderObject2Queues();
-        auto *cmdBuff = pipeline->getCommandBuffers()[0];
-
-        _instancedQueue->uploadBuffers(cmdBuff);
-        _batchedQueue->uploadBuffers(cmdBuff);
-
-        // render area is not oriented
-        _renderArea = pipeline->getRenderArea(camera);
-        pipeline->updateQuadVertexData(_renderArea);
+        DeferredPipeline *pipeline = static_cast<DeferredPipeline *>(RenderPipeline::getInstance());
+        assert(pipeline != nullptr);
+        GbufferStage *stage = static_cast<GbufferStage *>(pipeline->getRenderstageByName(StageName));
+        assert(stage != nullptr);
         gfx::RenderPass *renderPass = table.getDevicePass()->getRenderPass().get();
-
-        // descriptorset bindings
-        uint const globalOffsets[] = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
-        cmdBuff->bindDescriptorSet(globalSet, _pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
-
-        // record commands
-        _renderQueues[0]->recordCommandBuffer(_device, renderPass, cmdBuff);
-        _instancedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
-        _batchedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
+        assert(renderPass != nullptr);
+        stage->recordCommands(pipeline, renderPass);
     };
 
     pipeline->getFrameGraph().addPass<renderData>(IP_GBUFFER, DeferredPipeline::_passGbuffer, gbufferSetup, gbufferExec);
 }
-
-void GbufferStage::render(scene::Camera *camera) {
-    _instancedQueue->clear();
-    _batchedQueue->clear();
-    auto *      pipeline      = static_cast<DeferredPipeline *>(_pipeline);
-    const auto &renderObjects = _pipeline->getPipelineSceneData()->getRenderObjects();
-    if (renderObjects.empty()) {
-        return;
-    }
-
-    for (auto *queue : _renderQueues) {
-        queue->clear();
-    }
-
-    uint   subModelIdx = 0;
-    uint   passIdx     = 0;
-    size_t k           = 0;
-    for (auto ro : renderObjects) {
-        const auto *const model = ro.model;
-        const auto& subModels = model->getSubModels();
-        auto subModelCount = subModels.size();
-        for (subModelIdx = 0; subModelIdx < subModelCount; ++subModelIdx) {
-            const auto& subModel = subModels[subModelIdx];
-            const auto& passes = subModel->getPasses();
-            auto passCount = passes.size();
-            for (passIdx = 0; passIdx < passCount; ++passIdx) {
-                const auto pass          = passes[passIdx];
-                if (pass->getPhase() != _phaseID) continue;
-                if (pass->getBatchingScheme() == scene::BatchingSchemes::INSTANCING) {
-                    auto *instancedBuffer = InstancedBuffer::get(pass);
-                    instancedBuffer->merge(model, subModel, passIdx);
-                    _instancedQueue->add(instancedBuffer);
-                } else if (pass->getBatchingScheme() == scene::BatchingSchemes::VB_MERGING) {
-                    auto *batchedBuffer = BatchedBuffer::get(pass);
-                    batchedBuffer->merge(subModel, passIdx, model);
-                    _batchedQueue->add(batchedBuffer);
-                } else {
-                    for (k = 0; k < _renderQueues.size(); k++) {
-                        _renderQueues[k]->insertRenderPass(ro, subModelIdx, passIdx);
-                    }
-                }
-            }
-        }
-    }
-    for (auto *queue : _renderQueues) {
-        queue->sort();
-    }
-
-    auto *cmdBuff = pipeline->getCommandBuffers()[0];
-
-    _instancedQueue->uploadBuffers(cmdBuff);
-    _batchedQueue->uploadBuffers(cmdBuff);
-
-    // render area is not oriented
-    _renderArea = pipeline->getRenderArea(camera);
-    pipeline->updateQuadVertexData(_renderArea);
-    auto *const deferredData = pipeline->getDeferredRenderData();
-    auto *      framebuffer  = deferredData->gbufferFrameBuffer;
-    auto *      renderPass   = framebuffer->getRenderPass();
-
-    cmdBuff->beginRenderPass(renderPass, framebuffer, _renderArea, _clearColors, camera->clearDepth, camera->clearStencil);
-
-    uint const globalOffsets[] = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
-    cmdBuff->bindDescriptorSet(globalSet, _pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
-
-    _renderQueues[0]->recordCommandBuffer(_device, renderPass, cmdBuff);
-    _instancedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
-    _batchedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
-    //_renderQueues[1]->recordCommandBuffer(_device, renderPass, cmdBuff);
-
-    cmdBuff->endRenderPass();
-}
-
 } // namespace pipeline
 } // namespace cc

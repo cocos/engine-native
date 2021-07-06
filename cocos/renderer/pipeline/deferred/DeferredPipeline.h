@@ -64,10 +64,7 @@ public:
     void destroy() override;
     bool activate() override;
     void render(const vector<scene::Camera *> &cameras) override;
-    void renderFG(const vector<scene::Camera *> &cameras);
     void resize(uint width, uint height) override;
-
-    gfx::RenderPass *getOrCreateRenderPass(gfx::ClearFlags clearFlags);
 
     inline gfx::Buffer *          getLightsUBO() const { return _lightsUBO; }
     inline const LightList &      getValidLights() const { return _validLights; }
@@ -76,13 +73,12 @@ public:
     inline const UintList &       getLightIndices() const { return _lightIndices; }
     gfx::InputAssembler *         getQuadIAOffScreen() { return _quadIAOffscreen; }
     gfx::Rect                     getRenderArea(scene::Camera *camera);
-    inline DeferredRenderData *   getDeferredRenderData() { return _deferredRenderData; };
     void                          updateQuadVertexData(const gfx::Rect &renderArea);
     void                          genQuadVertexData(gfx::SurfaceTransform surfaceTransform, const gfx::Rect &renderArea, float *data);
 
     framegraph::FrameGraph &getFrameGraph() { return _fg; }
     gfx::Color getClearcolor(scene::Camera *camera);
-    void prepareFrameGraph(scene::Camera *camera);
+    void prepareFrameGraph();
 
 private:
     bool activeRenderer();
@@ -104,7 +100,6 @@ private:
     gfx::Buffer *        _quadVBOffscreen = nullptr;
     gfx::InputAssembler *_quadIAOffscreen = nullptr;
 
-    DeferredRenderData *_deferredRenderData = nullptr;
     gfx::RenderPass *   _gbufferRenderPass  = nullptr;
     gfx::RenderPass *   _lightingRenderPass = nullptr;
     uint                _width;
