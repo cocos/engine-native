@@ -513,17 +513,15 @@ private:
     T                    _data{};
 };
 
-struct ZipFilePrivateT {
+class ZipFilePrivate {
 public:
-    unzFile                      zipFile;
+    Locked<unzFile>              zipFile;
     std::unique_ptr<ourmemory_s> memfs;
 
     // std::unordered_map is faster if available on the platform
     using FileListContainer = std::unordered_map<std::string, struct ZipEntryInfo>;
     FileListContainer fileList;
 };
-
-class ZipFilePrivate : public Locked<ZipFilePrivateT> {};
 
 ZipFile *ZipFile::createWithBuffer(const void *buffer, uint32_t size) {
     auto *zip = new (std::nothrow) ZipFile();
@@ -536,22 +534,22 @@ ZipFile *ZipFile::createWithBuffer(const void *buffer, uint32_t size) {
 
 ZipFile::ZipFile()
 : _data(new ZipFilePrivate) {
-    auto data     = _data->lock();
-    data->zipFile = nullptr;
+    auto zipFile = _data->zipFile.lock();
+    *zipFile     = nullptr;
 }
 
 ZipFile::ZipFile(const std::string &zipFile, const std::string &filter)
 : _data(new ZipFilePrivate) {
-    auto data     = _data->lock();
-    data->zipFile = unzOpen(FileUtils::getInstance()->getSuitableFOpen(zipFile).c_str());
+    auto zipFileL = _data->zipFile.lock();
+    *zipFileL     = unzOpen(FileUtils::getInstance()->getSuitableFOpen(zipFile).c_str());
     setFilter(filter);
 }
 
 ZipFile::~ZipFile() {
     if (_data) {
-        auto data = _data->lock();
-        if (data->zipFile) {
-            unzClose(data->zipFile);
+        auto zipFile = _data->zipFile.lock();
+        if (*zipFile) {
+            unzClose(*zipFile);
         }
     }
 
@@ -562,34 +560,34 @@ bool ZipFile::setFilter(const std::string &filter) {
     bool ret = false;
     do {
         CC_BREAK_IF(!_data);
-        auto data = _data->lock();
-        CC_BREAK_IF(!data->zipFile);
+        auto zipFile = _data->zipFile.lock();
+        CC_BREAK_IF(!(*zipFile));
 
         // clear existing file list
-        data->fileList.clear();
+        _data->fileList.clear();
 
         // UNZ_MAXFILENAMEINZIP + 1 - it is done so in unzLocateFile
         char            szCurrentFileName[UNZ_MAXFILENAMEINZIP + 1];
         unz_file_info64 fileInfo;
 
         // go through all files and store position information about the required files
-        int err = unzGoToFirstFile64(data->zipFile, &fileInfo,
+        int err = unzGoToFirstFile64(*zipFile, &fileInfo,
                                      szCurrentFileName, sizeof(szCurrentFileName) - 1);
         while (err == UNZ_OK) {
             unz_file_pos posInfo;
-            int          posErr = unzGetFilePos(data->zipFile, &posInfo);
+            int          posErr = unzGetFilePos(*zipFile, &posInfo);
             if (posErr == UNZ_OK) {
                 std::string currentFileName = szCurrentFileName;
                 // cache info about filtered files only (like 'assets/')
                 if (filter.empty() || currentFileName.substr(0, filter.length()) == filter) {
                     ZipEntryInfo entry;
-                    entry.pos                       = posInfo;
-                    entry.uncompressed_size         = static_cast<uLong>(fileInfo.uncompressed_size);
-                    data->fileList[currentFileName] = entry;
+                    entry.pos                        = posInfo;
+                    entry.uncompressed_size          = static_cast<uLong>(fileInfo.uncompressed_size);
+                    _data->fileList[currentFileName] = entry;
                 }
             }
             // next file - also get the information about it
-            err = unzGoToNextFile64(data->zipFile, &fileInfo,
+            err = unzGoToNextFile64(*zipFile, &fileInfo,
                                     szCurrentFileName, sizeof(szCurrentFileName) - 1);
         }
         ret = true;
@@ -603,8 +601,7 @@ bool ZipFile::fileExists(const std::string &fileName) const {
     bool ret = false;
     do {
         CC_BREAK_IF(!_data);
-        auto data = _data->lock();
-        ret       = data->fileList.find(fileName) != data->fileList.end();
+        ret = _data->fileList.find(fileName) != _data->fileList.end();
     } while (false);
 
     return ret;
@@ -616,31 +613,31 @@ unsigned char *ZipFile::getFileData(const std::string &fileName, ssize_t *size) 
         *size = 0;
     }
 
-    auto data = _data->lock();
+    auto zipFile = _data->zipFile.lock();
 
     do {
-        CC_BREAK_IF(!data->zipFile);
+        CC_BREAK_IF(!(*zipFile));
         CC_BREAK_IF(fileName.empty());
 
-        auto it = data->fileList.find(fileName);
-        CC_BREAK_IF(it == data->fileList.end());
+        auto it = _data->fileList.find(fileName);
+        CC_BREAK_IF(it == _data->fileList.end());
 
         ZipEntryInfo fileInfo = it->second;
 
-        int nRet = unzGoToFilePos(data->zipFile, &fileInfo.pos);
+        int nRet = unzGoToFilePos(*zipFile, &fileInfo.pos);
         CC_BREAK_IF(UNZ_OK != nRet);
 
-        nRet = unzOpenCurrentFile(data->zipFile);
+        nRet = unzOpenCurrentFile(*zipFile);
         CC_BREAK_IF(UNZ_OK != nRet);
 
         buffer              = static_cast<unsigned char *>(malloc(fileInfo.uncompressed_size));
-        int CC_UNUSED nSize = unzReadCurrentFile(data->zipFile, buffer, static_cast<unsigned int>(fileInfo.uncompressed_size));
+        int CC_UNUSED nSize = unzReadCurrentFile(*zipFile, buffer, static_cast<unsigned int>(fileInfo.uncompressed_size));
         CCASSERT(nSize == 0 || nSize == (int)fileInfo.uncompressed_size, "the file size is wrong");
 
         if (size) {
             *size = fileInfo.uncompressed_size;
         }
-        unzCloseCurrentFile(data->zipFile);
+        unzCloseCurrentFile(*zipFile);
     } while (false);
 
     return buffer;
@@ -649,25 +646,25 @@ unsigned char *ZipFile::getFileData(const std::string &fileName, ssize_t *size) 
 bool ZipFile::getFileData(const std::string &fileName, ResizableBuffer *buffer) {
     bool res = false;
     do {
-        auto data = _data->lock();
-        CC_BREAK_IF(!data->zipFile);
+        auto zipFile = _data->zipFile.lock();
+        CC_BREAK_IF(!(*zipFile));
         CC_BREAK_IF(fileName.empty());
 
-        auto it = data->fileList.find(fileName);
-        CC_BREAK_IF(it == data->fileList.end());
+        auto it = _data->fileList.find(fileName);
+        CC_BREAK_IF(it == _data->fileList.end());
 
         ZipEntryInfo fileInfo = it->second;
 
-        int nRet = unzGoToFilePos(data->zipFile, &fileInfo.pos);
+        int nRet = unzGoToFilePos(*zipFile, &fileInfo.pos);
         CC_BREAK_IF(UNZ_OK != nRet);
 
-        nRet = unzOpenCurrentFile(data->zipFile);
+        nRet = unzOpenCurrentFile(*zipFile);
         CC_BREAK_IF(UNZ_OK != nRet);
 
         buffer->resize(fileInfo.uncompressed_size);
-        int CC_UNUSED nSize = unzReadCurrentFile(data->zipFile, buffer->buffer(), static_cast<unsigned int>(fileInfo.uncompressed_size));
+        int CC_UNUSED nSize = unzReadCurrentFile(*zipFile, buffer->buffer(), static_cast<unsigned int>(fileInfo.uncompressed_size));
         CCASSERT(nSize == 0 || nSize == (int)fileInfo.uncompressed_size, "the file size is wrong");
-        unzCloseCurrentFile(data->zipFile);
+        unzCloseCurrentFile(*zipFile);
         res = true;
     } while (false);
 
@@ -675,8 +672,8 @@ bool ZipFile::getFileData(const std::string &fileName, ResizableBuffer *buffer) 
 }
 
 std::string ZipFile::getFirstFilename() {
-    auto data = _data->lock();
-    if (unzGoToFirstFile(data->zipFile) != UNZ_OK) return EMPTY_FILE_NAME;
+    auto zipFile = _data->zipFile.lock();
+    if (unzGoToFirstFile(*zipFile) != UNZ_OK) return EMPTY_FILE_NAME;
     std::string   path;
     unz_file_info info;
     getCurrentFileInfo(&path, &info);
@@ -684,8 +681,8 @@ std::string ZipFile::getFirstFilename() {
 }
 
 std::string ZipFile::getNextFilename() {
-    auto data = _data->lock();
-    if (unzGoToNextFile(data->zipFile) != UNZ_OK) return EMPTY_FILE_NAME;
+    auto zipFile = _data->zipFile.lock();
+    if (unzGoToNextFile(*zipFile) != UNZ_OK) return EMPTY_FILE_NAME;
     std::string   path;
     unz_file_info info;
     getCurrentFileInfo(&path, &info);
@@ -694,8 +691,8 @@ std::string ZipFile::getNextFilename() {
 
 int ZipFile::getCurrentFileInfo(std::string *filename, unz_file_info *info) {
     char path[FILENAME_MAX + 1];
-    auto data = _data->lock();
-    int  ret  = unzGetCurrentFileInfo(data->zipFile, info, path, sizeof(path), nullptr, 0, nullptr, 0);
+    auto zipFile = _data->zipFile.lock();
+    int  ret     = unzGetCurrentFileInfo(*zipFile, info, path, sizeof(path), nullptr, 0, nullptr, 0);
     if (ret != UNZ_OK) {
         *filename = EMPTY_FILE_NAME;
     } else {
@@ -706,15 +703,15 @@ int ZipFile::getCurrentFileInfo(std::string *filename, unz_file_info *info) {
 
 bool ZipFile::initWithBuffer(const void *buffer, uint32_t size) {
     if (!buffer || size == 0) return false;
-    auto              data       = _data->lock();
+    auto              zipFile    = _data->zipFile.lock();
     zlib_filefunc_def memoryFile = {nullptr};
 
     std::unique_ptr<ourmemory_t> memfs(new (std::nothrow) ourmemory_t{static_cast<char *>(const_cast<void *>(buffer)), static_cast<uint32_t>(size), 0, 0, 0});
     if (!memfs) return false;
     fill_memory_filefunc(&memoryFile, memfs.get());
 
-    data->zipFile = unzOpen2(nullptr, &memoryFile);
-    if (!data->zipFile) return false;
+    *zipFile = unzOpen2(nullptr, &memoryFile);
+    if (!(*zipFile)) return false;
 
     setFilter(EMPTY_FILE_NAME);
     return true;
