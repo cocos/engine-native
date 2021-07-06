@@ -36,7 +36,7 @@ namespace se {
 
 class CC_DLL ObjectPool final : public cc::Object {
 public:
-    CC_INLINE static const cc::vector<ObjectPool *> &getPoolMap() { return ObjectPool::poolMap; }
+    inline static const cc::vector<ObjectPool *> &getPoolMap() { return ObjectPool::poolMap; }
 
     ObjectPool(ObjectPoolType type, Object *jsArr);
     ~ObjectPool() override;
