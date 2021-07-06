@@ -475,7 +475,7 @@ cocos_source_files(
 if(APPLE)
 cocos_source_files(
                  cocos/base/threading/AutoReleasePool.h
-                 cocos/base/threading/AutoReleasePool.mm
+                 cocos/base/threading/AutoReleasePool-apple.mm
 )
 else()
 cocos_source_files(
