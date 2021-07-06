@@ -459,8 +459,6 @@ cocos_source_files(
 
 ##### threading
 cocos_source_files(
-                 cocos/base/threading/AutoReleasePool.h
-                 cocos/base/threading/AutoReleasePool.mm
                  cocos/base/threading/ConditionVariable.h
                  cocos/base/threading/ConditionVariable.cpp
                  cocos/base/threading/Event.h
@@ -474,6 +472,17 @@ cocos_source_files(
                  cocos/base/threading/ThreadSafeLinearAllocator.h
                  cocos/base/threading/ThreadSafeLinearAllocator.cpp
 )
+if(APPLE)
+cocos_source_files(
+                 cocos/base/threading/AutoReleasePool.h
+                 cocos/base/threading/AutoReleasePool.mm
+)
+else()
+cocos_source_files(
+                 cocos/base/threading/AutoReleasePool.h
+                 cocos/base/threading/AutoReleasePool.cpp
+)
+endif()
 
 ##### job system
 cocos_source_files(
