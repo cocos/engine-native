@@ -704,12 +704,14 @@ bool WebSocketImpl::init(const cc::network::WebSocket::Delegate &delegate,
         wsHelper->createWebSocketThread();
     }
 
+#if WS_ENABLE_LIBUV
     if (wsContext && wsPolling) {
         auto *loop = lws_uv_getloop(wsContext, 0);
         if (loop) {
             uv_stop(loop);
         }
     }
+#endif
 
     return true;
 }
@@ -1389,4 +1391,5 @@ const std::string &WebSocket::getProtocol() const {
 WebSocket::Delegate *WebSocket::getDelegate() const {
     return _impl->getDelegate();
 }
+
 NS_NETWORK_END
