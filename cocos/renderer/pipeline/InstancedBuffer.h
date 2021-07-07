@@ -62,6 +62,7 @@ public:
     static constexpr uint MAX_CAPACITY = 1024;
     static InstancedBuffer *get(uint pass);
     static InstancedBuffer *get(uint pass, uint extraKey);
+    static void destroyInstancedBuffer();
 
     explicit InstancedBuffer(const PassView *pass);
     ~InstancedBuffer() override;

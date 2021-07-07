@@ -46,6 +46,25 @@ InstancedBuffer *InstancedBuffer::get(uint pass, uint extraKey) {
     return buffer;
 }
 
+void InstancedBuffer::destroyInstancedBuffer() {
+    for (auto &pair : buffers) {
+        const map<uint, InstancedBuffer *> instanceItem = pair.second;
+        for (auto &item : instanceItem) {
+            InstancedBuffer *instanceBuffer = item.second;
+            if (instanceBuffer) {
+                for (auto &instance : instanceBuffer->_instances) {
+                    CC_SAFE_DESTROY(instance.vb);
+                    CC_SAFE_DESTROY(instance.ia);
+                    CC_FREE(instance.data);
+                }
+
+                instanceBuffer->_instances.clear();
+            }
+        }
+    }
+    buffers.clear();
+}
+
 InstancedBuffer::InstancedBuffer(const PassView *pass)
 : _pass(pass),
   _device(gfx::Device::getInstance()) {
@@ -55,8 +74,8 @@ InstancedBuffer::~InstancedBuffer() = default;
 
 void InstancedBuffer::destroy() {
     for (auto &instance : _instances) {
-        instance.vb->destroy();
-        instance.ia->destroy();
+        CC_SAFE_DESTROY(instance.vb);
+        CC_SAFE_DESTROY(instance.ia);
         CC_FREE(instance.data);
     }
     _instances.clear();
