@@ -65,7 +65,6 @@ public:
 
     void addSubModel(SubModel *subModel);
 
-    inline void clearSubModels() { _subModels.clear(); }
     inline void setCastShadow(bool value) { _castShadow = value; }
     inline void setEnabled(bool value) { _enabled = value; }
     inline void setInstMatWorldIdx(int32_t idx) { _instMatWorldIdx = idx; }

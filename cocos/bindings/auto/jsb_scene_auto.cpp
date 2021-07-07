@@ -1133,21 +1133,6 @@ static bool js_scene_Model_addSubModel(se::State& s) // NOLINT(readability-ident
 }
 SE_BIND_FUNC(js_scene_Model_addSubModel)
 
-static bool js_scene_Model_clearSubModels(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
-    SE_PRECONDITION2(cobj, false, "js_scene_Model_clearSubModels : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    if (argc == 0) {
-        cobj->clearSubModels();
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_scene_Model_clearSubModels)
-
 static bool js_scene_Model_getCastShadow(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::Model>(s);
@@ -1673,7 +1658,6 @@ bool js_register_scene_Model(se::Object* obj) // NOLINT(readability-identifier-n
     auto* cls = se::Class::create("Model", obj, nullptr, _SE(js_scene_Model_constructor));
 
     cls->defineFunction("addSubModel", _SE(js_scene_Model_addSubModel));
-    cls->defineFunction("clearSubModels", _SE(js_scene_Model_clearSubModels));
     cls->defineFunction("getCastShadow", _SE(js_scene_Model_getCastShadow));
     cls->defineFunction("getEnabled", _SE(js_scene_Model_getEnabled));
     cls->defineFunction("getInstMatWorldIdx", _SE(js_scene_Model_getInstMatWorldIdx));
@@ -6298,7 +6282,7 @@ static bool js_scene_RenderScene_removeModel(se::State& s) // NOLINT(readability
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<cc::scene::Model*, false> arg0 = {};
+        HolderType<unsigned int, false> arg0 = {};
         ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_scene_RenderScene_removeModel : Error processing arguments");
         cobj->removeModel(arg0.value());
