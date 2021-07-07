@@ -46,6 +46,7 @@
 
 #include <map>
 #include "base/Data.h"
+#include "base/Locked.h"
 #include "platform/FileUtils.h"
 
 // minizip 1.2.0 is same with other platforms
@@ -453,70 +454,10 @@ struct ZipEntryInfo {
     uLong        uncompressed_size;
 };
 
-template <class T>
-class LockRef {
-public:
-    LockRef(T *t, std::recursive_mutex *mtx) : _data(t), _mtx(mtx) {
-        _mtx->lock();
-    }
-    LockRef(LockRef &&t) noexcept {
-        _data   = t._data;
-        _mtx    = t._mtx;
-        t._data = nullptr;
-        t._mtx  = nullptr;
-    }
-
-    LockRef &operator=(LockRef &&t) noexcept {
-        _data   = t._data;
-        _mtx    = t._mtx;
-        t._data = nullptr;
-        t._mtx  = nullptr;
-        return *this;
-    }
-
-    LockRef(const T &t) = delete;
-    LockRef &operator=(const LockRef &) = delete;
-
-    ~LockRef() {
-        if (_mtx) {
-            _mtx->unlock();
-        }
-    }
-
-    T *operator->() {
-        return _data;
-    }
-    T &operator*() {
-        return *_data;
-    }
-
-private:
-    T *                   _data;
-    std::recursive_mutex *_mtx;
-};
-
-template <class T>
-class Locked {
-public:
-    Locked()               = default;
-    Locked(const Locked &) = delete;
-    Locked(Locked &&)      = delete;
-    Locked &   operator=(const Locked &) = delete;
-    Locked &   operator=(Locked &&) = delete;
-    LockRef<T> lock() {
-        LockRef<T> ref(&_data, &_mutex);
-        return std::move(ref);
-    }
-
-private:
-    std::recursive_mutex _mutex;
-    T                    _data{};
-};
-
 class ZipFilePrivate {
 public:
-    Locked<unzFile>              zipFile;
-    std::unique_ptr<ourmemory_s> memfs;
+    Locked<unzFile, std::recursive_mutex> zipFile;
+    std::unique_ptr<ourmemory_s>          memfs;
 
     // std::unordered_map is faster if available on the platform
     using FileListContainer = std::unordered_map<std::string, struct ZipEntryInfo>;
