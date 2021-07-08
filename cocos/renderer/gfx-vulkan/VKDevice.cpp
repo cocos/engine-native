@@ -448,9 +448,7 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
 }
 
 void CCVKDevice::doDestroy() {
-    if (_gpuDevice && _gpuDevice->vkDevice) {
-        VK_CHECK(vkDeviceWaitIdle(_gpuDevice->vkDevice));
-    }
+    waitAllFences();
 
     for (CCVKTexture *texture : _depthStencilTextures) {
         CC_SAFE_DESTROY(texture)
@@ -610,6 +608,9 @@ void CCVKDevice::waitAllFences() {
     }
     if(!fences.empty()) {
         VK_CHECK(vkWaitForFences(_gpuDevice->vkDevice, fences.size(), fences.data(), VK_TRUE, DEFAULT_TIMEOUT));
+    }
+    for(auto* fencePool : _gpuFencePools) {
+        fencePool->reset();
     }
 }
 
@@ -806,6 +807,8 @@ bool CCVKDevice::checkSwapchainStatus() {
 
 void CCVKDevice::destroySwapchain() {
     if (_gpuSwapchain->vkSwapchain != VK_NULL_HANDLE) {
+        waitAllFences();
+
         _gpuSwapchain->swapchainImageAccessTypes.clear();
         _gpuSwapchain->depthStencilImageAccessTypes.clear();
 
