@@ -608,7 +608,7 @@ void CCVKDevice::waitAllFences() {
     for(auto* fencePool : _gpuFencePools) {
         fences.insert(fences.end(), fencePool->data(), fencePool->data() + fencePool->size());
     }
-    if(fences.size() > 0) {
+    if(!fences.empty()) {
         VK_CHECK(vkWaitForFences(_gpuDevice->vkDevice, fences.size(), fences.data(), VK_TRUE, DEFAULT_TIMEOUT));
     }
 }
