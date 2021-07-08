@@ -539,6 +539,7 @@ void CCVKContext::releaseSurface(uintptr_t /*windowHandle*/) {
     if (_gpuContext && _gpuContext->vkSurface == VK_NULL_HANDLE) return;
 
     CCVKDevice *device = CCVKDevice::getInstance();
+    device->waitAllFences();
     device->destroySwapchain();
     device->_swapchainReady = false;
 

@@ -807,7 +807,6 @@ bool CCVKDevice::checkSwapchainStatus() {
 
 void CCVKDevice::destroySwapchain() {
     if (_gpuSwapchain->vkSwapchain != VK_NULL_HANDLE) {
-        waitAllFences();
 
         _gpuSwapchain->swapchainImageAccessTypes.clear();
         _gpuSwapchain->depthStencilImageAccessTypes.clear();
