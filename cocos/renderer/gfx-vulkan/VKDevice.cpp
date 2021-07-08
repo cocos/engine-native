@@ -557,8 +557,9 @@ void CCVKDevice::acquire() {
                                    acquireSemaphore, VK_NULL_HANDLE, &_gpuSwapchain->curImageIndex));
 
 #if !defined(VK_USE_PLATFORM_METAL_EXT)
-    assert(_gpuDevice->curBackBufferIndex == _gpuSwapchain->curImageIndex); // MoltenVK seems to be not consistent
-#endif                                                                      // defined(VK_USE_PLATFORM_METAL_EXT)
+    // MoltenVK seems to be not consistent on this index
+    CCASSERT(_gpuDevice->curBackBufferIndex == _gpuSwapchain->curImageIndex, "wrong image index?");
+#endif // defined(VK_USE_PLATFORM_METAL_EXT)
 
     queue->gpuQueue()->nextWaitSemaphore   = acquireSemaphore;
     queue->gpuQueue()->nextSignalSemaphore = _gpuSemaphorePool->alloc();
@@ -742,7 +743,8 @@ bool CCVKDevice::checkSwapchainStatus() {
     VK_CHECK(vkGetSwapchainImagesKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain, &imageCount, nullptr));
     _gpuSwapchain->swapchainImages.resize(imageCount);
     VK_CHECK(vkGetSwapchainImagesKHR(_gpuDevice->vkDevice, _gpuSwapchain->vkSwapchain, &imageCount, _gpuSwapchain->swapchainImages.data()));
-    assert(imageCount == context->swapchainCreateInfo.minImageCount); // assert if swapchain image count assumption is broken
+
+    CCASSERT(imageCount == context->swapchainCreateInfo.minImageCount, "swapchain image count assumption is broken");
 
     _gpuSwapchain->vkSwapchainImageViews.resize(imageCount);
     for (uint i = 0U; i < imageCount; i++) {

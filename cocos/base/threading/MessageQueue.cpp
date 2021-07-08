@@ -148,7 +148,7 @@ void MessageQueue::terminateConsumerThread() noexcept {
     event.wait();
 }
 
-void MessageQueue::finishWriting(bool wait) noexcept {
+void MessageQueue::finishWriting() noexcept {
     if (!_immediateMode) {
         bool *const flushingFinished = &_reader.flushingFinished;
 
@@ -158,11 +158,7 @@ void MessageQueue::finishWriting(bool wait) noexcept {
                               *flushingFinished = true;
                           });
 
-        if (wait) {
-            kickAndWait();
-        } else {
-            kick();
-        }
+        kick();
     }
 }
 

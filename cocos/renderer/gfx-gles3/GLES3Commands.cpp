@@ -2584,8 +2584,8 @@ void cmdFuncGLES3Dispatch(GLES3Device *device, const GLES3GPUDispatchInfo &info)
 }
 
 void cmdFuncGLES3MemoryBarrier(GLES3Device * /*device*/, GLbitfield barriers, GLbitfield barriersByRegion) {
-    if (barriers) glMemoryBarrier(barriers);
-    if (barriersByRegion) glMemoryBarrierByRegion(barriersByRegion);
+    if (barriers) GL_CHECK(glMemoryBarrier(barriers));
+    if (barriersByRegion) GL_CHECK(glMemoryBarrierByRegion(barriersByRegion));
 }
 
 void cmdFuncGLES3UpdateBuffer(GLES3Device *device, GLES3GPUBuffer *gpuBuffer, const void *buffer, uint offset, uint size) {

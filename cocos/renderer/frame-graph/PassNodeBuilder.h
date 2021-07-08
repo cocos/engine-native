@@ -53,7 +53,7 @@ public:
     TextureHandle             write(const TextureHandle &output, const RenderTargetAttachment::Descriptor &attachmentDesc) const noexcept;
 
     inline void sideEffect() const noexcept;
-    inline void subpass(bool clearActionIgnoreable, bool const end) const noexcept;
+    inline void subpass(bool clearActionIgnoreable, bool end) const noexcept;
     inline void setViewport(const gfx::Viewport &viewport, const gfx::Rect &scissor) noexcept;
 
     void   writeToBlackboard(const StringHandle &name, const Handle &handle) const noexcept;
@@ -80,7 +80,7 @@ void PassNodeBuilder::sideEffect() const noexcept {
     _passNode.sideEffect();
 }
 
-void PassNodeBuilder::subpass(bool clearActionIgnoreable, bool const end) const noexcept {
+void PassNodeBuilder::subpass(bool clearActionIgnoreable, bool end) const noexcept {
     _passNode.subpass(clearActionIgnoreable, end);
 }
 
