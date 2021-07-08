@@ -603,6 +603,16 @@ CCVKGPUFencePool *        CCVKDevice::gpuFencePool() { return _gpuFencePools[_gp
 CCVKGPURecycleBin *       CCVKDevice::gpuRecycleBin() { return _gpuRecycleBins[_gpuDevice->curBackBufferIndex]; }
 CCVKGPUStagingBufferPool *CCVKDevice::gpuStagingBufferPool() { return _gpuStagingBufferPools[_gpuDevice->curBackBufferIndex]; }
 
+void CCVKDevice::waitAllFences() {
+    vector<VkFence> fences;
+    for(auto* fencePool : _gpuFencePools) {
+        fences.insert(fences.end(), fencePool->data(), fencePool->data() + fencePool->size());
+    }
+    if(fences.size() > 0) {
+        VK_CHECK(vkWaitForFences(_gpuDevice->vkDevice, fences.size(), fences.data(), VK_TRUE, DEFAULT_TIMEOUT));
+    }
+}
+
 CommandBuffer *CCVKDevice::createCommandBuffer(const CommandBufferInfo & /*info*/, bool /*hasAgent*/) {
     return CC_NEW(CCVKCommandBuffer);
 }
@@ -714,7 +724,7 @@ bool CCVKDevice::checkSwapchainStatus() {
 
     CC_LOG_INFO("Resizing surface: %dx%d, surface rotation: %d degrees", newWidth, newHeight, (uint)_transform * 90);
 
-    VK_CHECK(vkDeviceWaitIdle(_gpuDevice->vkDevice));
+    waitAllFences();
 
     VkSwapchainKHR vkSwapchain = VK_NULL_HANDLE;
     VK_CHECK(vkCreateSwapchainKHR(_gpuDevice->vkDevice, &context->swapchainCreateInfo, nullptr, &vkSwapchain));

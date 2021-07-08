@@ -213,7 +213,6 @@ void DeviceAgent::acquireSurface(uintptr_t windowHandle) {
         {
             actor->acquireSurface(windowHandle);
         });
-    _mainMessageQueue->kickAndWait();
 }
 
 CommandBuffer *DeviceAgent::createCommandBuffer(const CommandBufferInfo &info, bool /*hasAgent*/) {
