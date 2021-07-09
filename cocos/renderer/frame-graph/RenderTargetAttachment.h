@@ -51,7 +51,6 @@ struct RenderTargetAttachment final {
         float   clearDepth{1.F};
         uint8_t clearStencil{0U};
 
-        bool isGeneralLayout{false};
         std::vector<gfx::AccessType> beginAccesses;
         std::vector<gfx::AccessType> endAccesses;
     };

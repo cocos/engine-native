@@ -153,7 +153,8 @@ private:
     friend class SIOClientImpl;
 
 private:
-    CC_DISALLOW_COPY_AND_ASSIGN(SocketIO)
+    DISABLE_COPY_SEMANTICS(SocketIO)
+    DISABLE_MOVE_SEMANTICS(SocketIO)
 };
 
 //c++11 style callbacks entities will be created using CC_CALLBACK (which uses std::bind)
