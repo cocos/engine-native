@@ -311,8 +311,9 @@ void RenderAdditiveLightQueue::updateLightDescriptorSet(const scene::Camera *cam
     auto *              shadowInfo         = sceneData->getSharedData()->shadow;
     const auto *const   scene              = camera->scene;
     auto *              device             = gfx::Device::getInstance();
-    const auto          linear             = device->hasFeature(cc::gfx::Feature::TEXTURE_HALF_FLOAT) ? 1.0F : 0.0F;
-    const auto          packing            = linear ? 0.0F : 1.0F;
+    const bool          hFTexture          = supportsHalfFloatTexture(device);
+    const float         linear             = hFTexture ? 1.0F : 0.0F;
+    const float         packing            = hFTexture ? 0.0F : 1.0F;
     const scene::Light *mainLight          = scene->getMainLight();
 
     for (uint i = 0; i < _validLights.size(); ++i) {

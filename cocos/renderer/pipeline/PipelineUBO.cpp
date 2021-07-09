@@ -168,6 +168,7 @@ void PipelineUBO::updateShadowUBOView(const RenderPipeline *pipeline, std::array
     auto *const shadowInfo = sceneData->getSharedData()->shadow;
     auto &      shadowUBO  = *bufferView;
     auto *      sphere     = sceneData->getSphere();
+    const bool  hFTexture  = supportsHalfFloatTexture(device);
 
     if (shadowInfo->enabled) {
         if (mainLight && shadowInfo->shadowType == scene::ShadowType::SHADOWMAP) {
@@ -205,14 +206,14 @@ void PipelineUBO::updateShadowUBOView(const RenderPipeline *pipeline, std::array
             matShadowViewProj.multiply(matShadowView);
             memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
 
-            const auto linear             = supportsHalfFloatTexture(device) ? 1.0F : 0.0F;
+            const float linear            = hFTexture ? 1.0F : 0.0F;
             float      shadowNFLSInfos[4] = {shadowInfo->nearValue, farClamp, linear, 1.0F - shadowInfo->saturation};
             memcpy(shadowUBO.data() + UBOShadow::SHADOW_NEAR_FAR_LINEAR_SATURATION_INFO_OFFSET, &shadowNFLSInfos, sizeof(shadowNFLSInfos));
 
             float shadowWHPBInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, static_cast<float>(shadowInfo->pcfType), shadowInfo->bias};
             memcpy(shadowUBO.data() + UBOShadow::SHADOW_WIDTH_HEIGHT_PCF_BIAS_INFO_OFFSET, &shadowWHPBInfos, sizeof(shadowWHPBInfos));
 
-            const auto packing            = linear ? 0.0F : 1.0F;
+            const float packing           = hFTexture ? 0.0F : 1.0F;
             float      shadowLPNNInfos[4] = {0.0F, packing, shadowInfo->normalBias, 0.0F};
             memcpy(shadowUBO.data() + UBOShadow::SHADOW_LIGHT_PACKING_NBIAS_NULL_INFO_OFFSET, &shadowLPNNInfos, sizeof(shadowLPNNInfos));
         } else if (mainLight && shadowInfo->shadowType == scene::ShadowType::PLANAR) {
@@ -230,8 +231,9 @@ void PipelineUBO::updateShadowUBOLightView(const RenderPipeline *pipeline, std::
     auto *      device             = gfx::Device::getInstance();
     auto *      sphere             = sceneData->getSphere();
     auto &      shadowUBO          = *bufferView;
-    const auto  linear             = device->hasFeature(cc::gfx::Feature::TEXTURE_HALF_FLOAT) ? 1.0F : 0.0F;
-    const auto  packing            = linear ? 0.0F : 1.0F;
+    const bool  hFTexture          = supportsHalfFloatTexture(device);
+    const float linear             = hFTexture ? 1.0F : 0.0F;
+    const float packing            = hFTexture ? 0.0F : 1.0F;
     switch (light->getType()) {
         case scene::LightType::DIRECTIONAL: {
             const auto *directionalLight = static_cast<const scene::DirectionalLight *>(light);
