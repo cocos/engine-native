@@ -87,14 +87,14 @@ struct alignas(64) ReaderContext final {
 // Both the messages and their submitting data should be allocated from here.
 class alignas(64) MessageQueue final {
 public:
+    static constexpr uint32_t MEMORY_CHUNK_SIZE = 4096 * 16;
+
     MessageQueue();
     ~MessageQueue()                    = default;
     MessageQueue(MessageQueue const &) = delete;
     MessageQueue(MessageQueue &&)      = delete;
     MessageQueue &operator=(MessageQueue const &) = delete;
     MessageQueue &operator=(MessageQueue &&) = delete;
-    
-    static uint32_t getChunckSize();
 
     // message allocation
     template <typename T>

@@ -30,7 +30,6 @@
 namespace cc {
 
 namespace {
-uint32_t constexpr MEMORY_CHUNK_SIZE               = 4096 * 16;
 uint32_t constexpr MEMORY_CHUNK_POOL_CAPACITY      = 64;
 uint32_t constexpr SWITCH_CHUNK_MEMORY_REQUIREMENT = sizeof(MemoryChunkSwitchMessage) + sizeof(DummyMessage);
 } // namespace
@@ -98,10 +97,6 @@ MessageQueue::MessageQueue() {
     pullMessages();
     _reader.lastMessage = msg;
     --_reader.newMessageCount;
-}
-
-uint32_t MessageQueue::getChunckSize() {
-    return MEMORY_CHUNK_SIZE;
 }
 
 void MessageQueue::kick() noexcept {

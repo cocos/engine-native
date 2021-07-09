@@ -41,6 +41,8 @@ class CommandBufferAgent;
 class CC_DLL DeviceAgent final : public Agent<Device> {
 public:
     static DeviceAgent *getInstance();
+    static constexpr uint MAX_CPU_FRAME_AHEAD = 1;
+    static constexpr uint MAX_FRAME_INDEX = MAX_CPU_FRAME_AHEAD + 1;
 
     ~DeviceAgent() override;
 

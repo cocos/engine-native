@@ -356,7 +356,7 @@ void CommandBufferAgent::copyBuffersToTexture(const uint8_t *const *buffers, Tex
         bufferCount += regions[i].texSubres.layerCount;
     }
     uint totalSize = sizeof(BufferTextureCopy) * count + sizeof(uint8_t *) * bufferCount;
-    for (uint i = 0U, n = 0U; i < count; i++) {
+    for (uint i = 0U; i < count; i++) {
         const BufferTextureCopy &region = regions[i];
 
         uint size = formatSize(texture->getFormat(), region.texExtent.width, region.texExtent.height, 1);
