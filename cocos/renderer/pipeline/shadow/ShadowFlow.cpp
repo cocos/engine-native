@@ -35,7 +35,7 @@
 #include "gfx-base/GFXTexture.h"
 
 namespace cc::pipeline {
-std::unordered_map<uint, cc::gfx::RenderPass*> ShadowFlow::renderPassHashMap;
+std::unordered_map<uint, cc::gfx::RenderPass *> ShadowFlow::renderPassHashMap;
 
 RenderFlowInfo ShadowFlow::initInfo = {
     "ShadowFlow",
@@ -161,7 +161,6 @@ void ShadowFlow::resizeShadowMap(scene::Shadow **shadowInfo) {
             _renderPass,
             renderTargets,
             depth,
-            {},
         });
     }
 
@@ -200,10 +199,10 @@ void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const scene::Li
     gfx::RenderPassInfo rpInfo;
     rpInfo.colorAttachments.emplace_back(colorAttachment);
     rpInfo.depthStencilAttachment = depthStencilAttachment;
-    
+
     uint rpHash = cc::gfx::RenderPass::computeHash(rpInfo);
-    auto iter = renderPassHashMap.find(rpHash);
-    if(iter != renderPassHashMap.end()) {
+    auto iter   = renderPassHashMap.find(rpHash);
+    if (iter != renderPassHashMap.end()) {
         _renderPass = iter->second;
     } else {
         _renderPass = device->createRenderPass(rpInfo);
@@ -235,15 +234,13 @@ void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const scene::Li
         _renderPass,
         renderTargets,
         depth,
-        {}, //colorMipmapLevels
     });
 
     pipeline->getPipelineSceneData()->setShadowFramebuffer(light, framebuffer);
 }
 
 void ShadowFlow::destroy() {
-    
-    for (auto rpPair: renderPassHashMap) {
+    for (auto rpPair : renderPassHashMap) {
         rpPair.second->destroy();
     }
     renderPassHashMap.clear();

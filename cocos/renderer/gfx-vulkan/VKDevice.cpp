@@ -59,6 +59,12 @@ namespace gfx {
 
 //#define DISABLE_PRE_TRANSFORM
 
+static VkResult VKAPI_PTR vkCreateRenderPass2KHRFallback(
+    VkDevice                       device,
+    const VkRenderPassCreateInfo2 *pCreateInfo,
+    const VkAllocationCallbacks *  pAllocator,
+    VkRenderPass *                 pRenderPass);
+
 CCVKDevice *CCVKDevice::instance = nullptr;
 
 CCVKDevice *CCVKDevice::getInstance() {
@@ -112,6 +118,9 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
     vector<const char *> requestedExtensions{
         VK_KHR_SWAPCHAIN_EXTENSION_NAME,
     };
+    if (_gpuDevice->minorVersion < 2) {
+        requestedExtensions.push_back(VK_KHR_CREATE_RENDERPASS_2_EXTENSION_NAME);
+    }
     if (_gpuDevice->minorVersion < 1) {
         requestedExtensions.push_back(VK_KHR_DEDICATED_ALLOCATION_EXTENSION_NAME);
         requestedExtensions.push_back(VK_KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME);
@@ -211,20 +220,22 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
     _features[static_cast<uint>(Feature::TEXTURE_HALF_FLOAT_LINEAR)] = true;
     _features[static_cast<uint>(Feature::FORMAT_R11G11B10F)]         = true;
     _features[static_cast<uint>(Feature::FORMAT_SRGB)]               = true;
-    _features[static_cast<uint>(Feature::MSAA)]                      = true;
     _features[static_cast<uint>(Feature::ELEMENT_INDEX_UINT)]        = true;
     _features[static_cast<uint>(Feature::INSTANCED_ARRAYS)]          = true;
     _features[static_cast<uint>(Feature::MULTIPLE_RENDER_TARGETS)]   = true;
     _features[static_cast<uint>(Feature::BLEND_MINMAX)]              = true;
-    _features[static_cast<uint>(Feature::DEPTH_BOUNDS)]              = deviceFeatures.depthBounds;
-    _features[static_cast<uint>(Feature::LINE_WIDTH)]                = true;
-    _features[static_cast<uint>(Feature::STENCIL_COMPARE_MASK)]      = true;
-    _features[static_cast<uint>(Feature::STENCIL_WRITE_MASK)]        = true;
-    _features[static_cast<uint>(Feature::MULTITHREADED_SUBMISSION)]  = true;
     _features[static_cast<uint>(Feature::COMPUTE_SHADER)]            = true;
 
     _gpuDevice->useMultiDrawIndirect        = deviceFeatures.multiDrawIndirect;
     _gpuDevice->useDescriptorUpdateTemplate = _gpuDevice->minorVersion > 0 || checkExtension(VK_KHR_DESCRIPTOR_UPDATE_TEMPLATE_EXTENSION_NAME);
+
+    if (_gpuDevice->minorVersion > 1) {
+        _gpuDevice->createRenderPass2 = vkCreateRenderPass2;
+    } else if (checkExtension(VK_KHR_CREATE_RENDERPASS_2_EXTENSION_NAME)) {
+        _gpuDevice->createRenderPass2 = vkCreateRenderPass2KHR;
+    } else {
+        _gpuDevice->createRenderPass2 = vkCreateRenderPass2KHRFallback;
+    }
 
     VkFormatFeatureFlags requiredFeatures = VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
     VkFormatProperties   formatProperties;
@@ -437,9 +448,7 @@ bool CCVKDevice::doInit(const DeviceInfo &info) {
 }
 
 void CCVKDevice::doDestroy() {
-    if (_gpuDevice && _gpuDevice->vkDevice) {
-        VK_CHECK(vkDeviceWaitIdle(_gpuDevice->vkDevice));
-    }
+    waitAllFences();
 
     for (CCVKTexture *texture : _depthStencilTextures) {
         CC_SAFE_DESTROY(texture)
@@ -592,6 +601,19 @@ CCVKGPUFencePool *        CCVKDevice::gpuFencePool() { return _gpuFencePools[_gp
 CCVKGPURecycleBin *       CCVKDevice::gpuRecycleBin() { return _gpuRecycleBins[_gpuDevice->curBackBufferIndex]; }
 CCVKGPUStagingBufferPool *CCVKDevice::gpuStagingBufferPool() { return _gpuStagingBufferPools[_gpuDevice->curBackBufferIndex]; }
 
+void CCVKDevice::waitAllFences() {
+    vector<VkFence> fences;
+    for(auto* fencePool : _gpuFencePools) {
+        fences.insert(fences.end(), fencePool->data(), fencePool->data() + fencePool->size());
+    }
+    if(!fences.empty()) {
+        VK_CHECK(vkWaitForFences(_gpuDevice->vkDevice, fences.size(), fences.data(), VK_TRUE, DEFAULT_TIMEOUT));
+        for(auto* fencePool : _gpuFencePools) {
+            fencePool->reset();
+        }
+    }
+}
+
 CommandBuffer *CCVKDevice::createCommandBuffer(const CommandBufferInfo & /*info*/, bool /*hasAgent*/) {
     return CC_NEW(CCVKCommandBuffer);
 }
@@ -703,10 +725,12 @@ bool CCVKDevice::checkSwapchainStatus() {
 
     CC_LOG_INFO("Resizing surface: %dx%d, surface rotation: %d degrees", newWidth, newHeight, (uint)_transform * 90);
 
+    waitAllFences();
+
     VkSwapchainKHR vkSwapchain = VK_NULL_HANDLE;
     VK_CHECK(vkCreateSwapchainKHR(_gpuDevice->vkDevice, &context->swapchainCreateInfo, nullptr, &vkSwapchain));
 
-    VK_CHECK(vkDeviceWaitIdle(_gpuDevice->vkDevice));
+
 
     destroySwapchain();
 
@@ -783,6 +807,7 @@ bool CCVKDevice::checkSwapchainStatus() {
 
 void CCVKDevice::destroySwapchain() {
     if (_gpuSwapchain->vkSwapchain != VK_NULL_HANDLE) {
+
         _gpuSwapchain->swapchainImageAccessTypes.clear();
         _gpuSwapchain->depthStencilImageAccessTypes.clear();
 
@@ -814,6 +839,103 @@ void CCVKDevice::releaseSurface(uintptr_t windowHandle) {
 
 void CCVKDevice::acquireSurface(uintptr_t windowHandle) {
     static_cast<CCVKContext *>(_context)->acquireSurface(windowHandle);
+}
+
+//////////////////////////// Function Fallbacks /////////////////////////////////////////
+
+static VkResult VKAPI_PTR vkCreateRenderPass2KHRFallback(
+    VkDevice                       device,
+    const VkRenderPassCreateInfo2 *pCreateInfo,
+    const VkAllocationCallbacks *  pAllocator,
+    VkRenderPass *                 pRenderPass) {
+    static vector<VkAttachmentDescription> attachmentDescriptions;
+    static vector<VkSubpassDescription>    subpassDescriptions;
+    static vector<VkAttachmentReference>   attachmentReferences;
+    static vector<VkSubpassDependency>     subpassDependencies;
+
+    attachmentDescriptions.resize(pCreateInfo->attachmentCount);
+    for (uint i = 0; i < pCreateInfo->attachmentCount; ++i) {
+        VkAttachmentDescription &       desc{attachmentDescriptions[i]};
+        const VkAttachmentDescription2 &desc2{pCreateInfo->pAttachments[i]};
+        desc.flags          = desc2.flags;
+        desc.format         = desc2.format;
+        desc.samples        = desc2.samples;
+        desc.loadOp         = desc2.loadOp;
+        desc.storeOp        = desc2.storeOp;
+        desc.stencilLoadOp  = desc2.stencilLoadOp;
+        desc.stencilStoreOp = desc2.stencilStoreOp;
+        desc.initialLayout  = desc2.initialLayout;
+        desc.finalLayout    = desc2.finalLayout;
+    }
+
+    subpassDescriptions.resize(pCreateInfo->subpassCount);
+    attachmentReferences.clear();
+    size_t input{std::numeric_limits<size_t>::max()};
+    size_t color{std::numeric_limits<size_t>::max()};
+    size_t resolve{std::numeric_limits<size_t>::max()};
+    size_t depth{std::numeric_limits<size_t>::max()};
+    for (uint i = 0; i < pCreateInfo->subpassCount; ++i) {
+        const VkSubpassDescription2 &desc2{pCreateInfo->pSubpasses[i]};
+        if (desc2.inputAttachmentCount) {
+            input = attachmentReferences.size();
+            for (uint j = 0; j < desc2.inputAttachmentCount; ++j) {
+                attachmentReferences.push_back({desc2.pInputAttachments[j].attachment, desc2.pInputAttachments[j].layout});
+            }
+        }
+        if (desc2.colorAttachmentCount) {
+            input = attachmentReferences.size();
+            for (uint j = 0; j < desc2.colorAttachmentCount; ++j) {
+                attachmentReferences.push_back({desc2.pColorAttachments[j].attachment, desc2.pColorAttachments[j].layout});
+            }
+            if (desc2.pResolveAttachments) {
+                resolve = attachmentReferences.size();
+                for (uint j = 0; j < desc2.colorAttachmentCount; ++j) {
+                    attachmentReferences.push_back({desc2.pResolveAttachments[j].attachment, desc2.pResolveAttachments[j].layout});
+                }
+            }
+        }
+        if (desc2.pDepthStencilAttachment) {
+            depth = attachmentReferences.size();
+            attachmentReferences.push_back({desc2.pDepthStencilAttachment->attachment, desc2.pDepthStencilAttachment->layout});
+        }
+    }
+    for (uint i = 0; i < pCreateInfo->subpassCount; ++i) {
+        VkSubpassDescription &       desc{subpassDescriptions[i]};
+        const VkSubpassDescription2 &desc2{pCreateInfo->pSubpasses[i]};
+        desc.flags                   = desc2.flags;
+        desc.pipelineBindPoint       = desc2.pipelineBindPoint;
+        desc.inputAttachmentCount    = desc2.inputAttachmentCount;
+        desc.pInputAttachments       = input > attachmentReferences.size() ? nullptr : &attachmentReferences[input];
+        desc.colorAttachmentCount    = desc2.colorAttachmentCount;
+        desc.pColorAttachments       = color > attachmentReferences.size() ? nullptr : &attachmentReferences[color];
+        desc.pResolveAttachments     = resolve > attachmentReferences.size() ? nullptr : &attachmentReferences[resolve];
+        desc.pDepthStencilAttachment = depth > attachmentReferences.size() ? nullptr : &attachmentReferences[depth];
+        desc.preserveAttachmentCount = desc2.preserveAttachmentCount;
+        desc.pPreserveAttachments    = desc2.pPreserveAttachments;
+    }
+
+    subpassDependencies.resize(pCreateInfo->dependencyCount);
+    for (uint i = 0; i < pCreateInfo->dependencyCount; ++i) {
+        VkSubpassDependency &       desc{subpassDependencies[i]};
+        const VkSubpassDependency2 &desc2{pCreateInfo->pDependencies[i]};
+        desc.srcSubpass      = desc2.srcSubpass;
+        desc.dstSubpass      = desc2.dstSubpass;
+        desc.srcStageMask    = desc2.srcStageMask;
+        desc.dstStageMask    = desc2.dstStageMask;
+        desc.srcAccessMask   = desc2.srcAccessMask;
+        desc.dstAccessMask   = desc2.dstAccessMask;
+        desc.dependencyFlags = desc2.dependencyFlags;
+    }
+
+    VkRenderPassCreateInfo renderPassCreateInfo{VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO};
+    renderPassCreateInfo.attachmentCount = attachmentDescriptions.size();
+    renderPassCreateInfo.pAttachments    = attachmentDescriptions.data();
+    renderPassCreateInfo.subpassCount    = subpassDescriptions.size();
+    renderPassCreateInfo.pSubpasses      = subpassDescriptions.data();
+    renderPassCreateInfo.dependencyCount = subpassDependencies.size();
+    renderPassCreateInfo.pDependencies   = subpassDependencies.data();
+
+    return vkCreateRenderPass(device, &renderPassCreateInfo, pAllocator, pRenderPass);
 }
 
 } // namespace gfx

@@ -410,7 +410,7 @@ cocos_source_files(
     cocos/base/etc2.cpp
     cocos/base/etc2.h
     cocos/base/IndexHandle.h
-    cocos/base/LinearAllocatorPool.h
+    cocos/base/Locked.h
     cocos/base/Log.cpp
     cocos/base/Log.h
     cocos/base/Macros.h
@@ -472,6 +472,17 @@ cocos_source_files(
                  cocos/base/threading/ThreadSafeLinearAllocator.h
                  cocos/base/threading/ThreadSafeLinearAllocator.cpp
 )
+if(APPLE)
+cocos_source_files(
+                 cocos/base/threading/AutoReleasePool.h
+                 cocos/base/threading/AutoReleasePool-apple.mm
+)
+else()
+cocos_source_files(
+                 cocos/base/threading/AutoReleasePool.h
+                 cocos/base/threading/AutoReleasePool.cpp
+)
+endif()
 
 ##### job system
 cocos_source_files(
@@ -2098,10 +2109,17 @@ source_group(TREE ${CWD} PREFIX "Source Files" FILES ${COCOS2D_SOURCE_LIST})
 
 
 if(MSVC)
-    file(GLOB_RECURSE WIN32_DLLS
-        ${CWD}/external/win32/libs/*.dll
-        ${CWD}/external/win32/libs/Debug/*.dll
-    )
+    if(${CMAKE_SIZEOF_VOID_P} STREQUAL "4")
+        file(GLOB_RECURSE WIN32_DLLS
+            ${CWD}/external/win32/libs/*.dll
+            ${CWD}/external/win32/libs/Debug/*.dll
+        )
+    else()
+        file(GLOB_RECURSE WIN32_DLLS
+            ${CWD}/external/win64/libs/*.dll
+            ${CWD}/external/win64/libs/Debug/*.dll
+        )
+    endif()
     target_compile_options(cocos2d PUBLIC /MP)
 endif()
 

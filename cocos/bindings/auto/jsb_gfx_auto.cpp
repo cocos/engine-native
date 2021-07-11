@@ -10316,6 +10316,87 @@ static bool js_gfx_SubpassInfo_set_depthStencil(se::State& s) // NOLINT(readabil
 }
 SE_BIND_PROP_SET(js_gfx_SubpassInfo_set_depthStencil)
 
+static bool js_gfx_SubpassInfo_get_depthStencilResolve(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::gfx::SubpassInfo>(s);
+    SE_PRECONDITION2(cobj, false, "js_gfx_SubpassInfo_get_depthStencilResolve : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= nativevalue_to_se(cobj->depthStencilResolve, jsret, s.thisObject() /*ctx*/);
+    s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->depthStencilResolve, s.thisObject(), s.rval());
+    return true;
+}
+SE_BIND_PROP_GET(js_gfx_SubpassInfo_get_depthStencilResolve)
+
+static bool js_gfx_SubpassInfo_set_depthStencilResolve(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    const auto& args = s.args();
+    auto* cobj = SE_THIS_OBJECT<cc::gfx::SubpassInfo>(s);
+    SE_PRECONDITION2(cobj, false, "js_gfx_SubpassInfo_set_depthStencilResolve : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= sevalue_to_native(args[0], &cobj->depthStencilResolve, s.thisObject());
+    SE_PRECONDITION2(ok, false, "js_gfx_SubpassInfo_set_depthStencilResolve : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_gfx_SubpassInfo_set_depthStencilResolve)
+
+static bool js_gfx_SubpassInfo_get_depthResolveMode(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::gfx::SubpassInfo>(s);
+    SE_PRECONDITION2(cobj, false, "js_gfx_SubpassInfo_get_depthResolveMode : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= nativevalue_to_se(cobj->depthResolveMode, jsret, s.thisObject() /*ctx*/);
+    s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->depthResolveMode, s.thisObject(), s.rval());
+    return true;
+}
+SE_BIND_PROP_GET(js_gfx_SubpassInfo_get_depthResolveMode)
+
+static bool js_gfx_SubpassInfo_set_depthResolveMode(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    const auto& args = s.args();
+    auto* cobj = SE_THIS_OBJECT<cc::gfx::SubpassInfo>(s);
+    SE_PRECONDITION2(cobj, false, "js_gfx_SubpassInfo_set_depthResolveMode : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= sevalue_to_native(args[0], &cobj->depthResolveMode, s.thisObject());
+    SE_PRECONDITION2(ok, false, "js_gfx_SubpassInfo_set_depthResolveMode : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_gfx_SubpassInfo_set_depthResolveMode)
+
+static bool js_gfx_SubpassInfo_get_stencilResolveMode(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::gfx::SubpassInfo>(s);
+    SE_PRECONDITION2(cobj, false, "js_gfx_SubpassInfo_get_stencilResolveMode : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= nativevalue_to_se(cobj->stencilResolveMode, jsret, s.thisObject() /*ctx*/);
+    s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->stencilResolveMode, s.thisObject(), s.rval());
+    return true;
+}
+SE_BIND_PROP_GET(js_gfx_SubpassInfo_get_stencilResolveMode)
+
+static bool js_gfx_SubpassInfo_set_stencilResolveMode(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
+{
+    const auto& args = s.args();
+    auto* cobj = SE_THIS_OBJECT<cc::gfx::SubpassInfo>(s);
+    SE_PRECONDITION2(cobj, false, "js_gfx_SubpassInfo_set_stencilResolveMode : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= sevalue_to_native(args[0], &cobj->stencilResolveMode, s.thisObject());
+    SE_PRECONDITION2(ok, false, "js_gfx_SubpassInfo_set_stencilResolveMode : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_gfx_SubpassInfo_set_stencilResolveMode)
+
 
 template<>
 bool sevalue_to_native(const se::Value &from, cc::gfx::SubpassInfo * to, se::Object *ctx)
@@ -10348,6 +10429,18 @@ bool sevalue_to_native(const se::Value &from, cc::gfx::SubpassInfo * to, se::Obj
     json->getProperty("depthStencil", &field);
     if(!field.isNullOrUndefined()) {
         ok &= sevalue_to_native(field, &(to->depthStencil), ctx);
+    }
+    json->getProperty("depthStencilResolve", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->depthStencilResolve), ctx);
+    }
+    json->getProperty("depthResolveMode", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->depthResolveMode), ctx);
+    }
+    json->getProperty("stencilResolveMode", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->stencilResolveMode), ctx);
     }
     return ok;
 }
@@ -10402,6 +10495,15 @@ static bool js_gfx_SubpassInfo_constructor(se::State& s) // NOLINT(readability-i
     if (argc > 4 && !args[4].isUndefined()) {
         ok &= sevalue_to_native(args[4], &(cobj->depthStencil), nullptr);
     }
+    if (argc > 5 && !args[5].isUndefined()) {
+        ok &= sevalue_to_native(args[5], &(cobj->depthStencilResolve), nullptr);
+    }
+    if (argc > 6 && !args[6].isUndefined()) {
+        ok &= sevalue_to_native(args[6], &(cobj->depthResolveMode), nullptr);
+    }
+    if (argc > 7 && !args[7].isUndefined()) {
+        ok &= sevalue_to_native(args[7], &(cobj->stencilResolveMode), nullptr);
+    }
 
     if(!ok) {
         JSB_FREE(cobj);
@@ -10439,6 +10541,9 @@ bool js_register_gfx_SubpassInfo(se::Object* obj) // NOLINT(readability-identifi
     cls->defineProperty("resolves", _SE(js_gfx_SubpassInfo_get_resolves), _SE(js_gfx_SubpassInfo_set_resolves));
     cls->defineProperty("preserves", _SE(js_gfx_SubpassInfo_get_preserves), _SE(js_gfx_SubpassInfo_set_preserves));
     cls->defineProperty("depthStencil", _SE(js_gfx_SubpassInfo_get_depthStencil), _SE(js_gfx_SubpassInfo_set_depthStencil));
+    cls->defineProperty("depthStencilResolve", _SE(js_gfx_SubpassInfo_get_depthStencilResolve), _SE(js_gfx_SubpassInfo_set_depthStencilResolve));
+    cls->defineProperty("depthResolveMode", _SE(js_gfx_SubpassInfo_get_depthResolveMode), _SE(js_gfx_SubpassInfo_set_depthResolveMode));
+    cls->defineProperty("stencilResolveMode", _SE(js_gfx_SubpassInfo_get_stencilResolveMode), _SE(js_gfx_SubpassInfo_set_stencilResolveMode));
     cls->defineFinalizeFunction(_SE(js_cc_gfx_SubpassInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cc::gfx::SubpassInfo>(cls);
@@ -11442,60 +11547,6 @@ static bool js_gfx_FramebufferInfo_set_depthStencilTexture(se::State& s) // NOLI
 }
 SE_BIND_PROP_SET(js_gfx_FramebufferInfo_set_depthStencilTexture)
 
-static bool js_gfx_FramebufferInfo_get_colorMipmapLevels(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::gfx::FramebufferInfo>(s);
-    SE_PRECONDITION2(cobj, false, "js_gfx_FramebufferInfo_get_colorMipmapLevels : Invalid Native Object");
-
-    CC_UNUSED bool ok = true;
-    se::Value jsret;
-    ok &= nativevalue_to_se(cobj->colorMipmapLevels, jsret, s.thisObject() /*ctx*/);
-    s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->colorMipmapLevels, s.thisObject(), s.rval());
-    return true;
-}
-SE_BIND_PROP_GET(js_gfx_FramebufferInfo_get_colorMipmapLevels)
-
-static bool js_gfx_FramebufferInfo_set_colorMipmapLevels(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    const auto& args = s.args();
-    auto* cobj = SE_THIS_OBJECT<cc::gfx::FramebufferInfo>(s);
-    SE_PRECONDITION2(cobj, false, "js_gfx_FramebufferInfo_set_colorMipmapLevels : Invalid Native Object");
-
-    CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->colorMipmapLevels, s.thisObject());
-    SE_PRECONDITION2(ok, false, "js_gfx_FramebufferInfo_set_colorMipmapLevels : Error processing new value");
-    return true;
-}
-SE_BIND_PROP_SET(js_gfx_FramebufferInfo_set_colorMipmapLevels)
-
-static bool js_gfx_FramebufferInfo_get_depthStencilMipmapLevel(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::gfx::FramebufferInfo>(s);
-    SE_PRECONDITION2(cobj, false, "js_gfx_FramebufferInfo_get_depthStencilMipmapLevel : Invalid Native Object");
-
-    CC_UNUSED bool ok = true;
-    se::Value jsret;
-    ok &= nativevalue_to_se(cobj->depthStencilMipmapLevel, jsret, s.thisObject() /*ctx*/);
-    s.rval() = jsret;
-    SE_HOLD_RETURN_VALUE(cobj->depthStencilMipmapLevel, s.thisObject(), s.rval());
-    return true;
-}
-SE_BIND_PROP_GET(js_gfx_FramebufferInfo_get_depthStencilMipmapLevel)
-
-static bool js_gfx_FramebufferInfo_set_depthStencilMipmapLevel(se::State& s) // NOLINT(readability-identifier-naming, google-runtime-references)
-{
-    const auto& args = s.args();
-    auto* cobj = SE_THIS_OBJECT<cc::gfx::FramebufferInfo>(s);
-    SE_PRECONDITION2(cobj, false, "js_gfx_FramebufferInfo_set_depthStencilMipmapLevel : Invalid Native Object");
-
-    CC_UNUSED bool ok = true;
-    ok &= sevalue_to_native(args[0], &cobj->depthStencilMipmapLevel, s.thisObject());
-    SE_PRECONDITION2(ok, false, "js_gfx_FramebufferInfo_set_depthStencilMipmapLevel : Error processing new value");
-    return true;
-}
-SE_BIND_PROP_SET(js_gfx_FramebufferInfo_set_depthStencilMipmapLevel)
-
 
 template<>
 bool sevalue_to_native(const se::Value &from, cc::gfx::FramebufferInfo * to, se::Object *ctx)
@@ -11520,14 +11571,6 @@ bool sevalue_to_native(const se::Value &from, cc::gfx::FramebufferInfo * to, se:
     json->getProperty("depthStencilTexture", &field);
     if(!field.isNullOrUndefined()) {
         ok &= sevalue_to_native(field, &(to->depthStencilTexture), ctx);
-    }
-    json->getProperty("colorMipmapLevels", &field);
-    if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->colorMipmapLevels), ctx);
-    }
-    json->getProperty("depthStencilMipmapLevel", &field);
-    if(!field.isNullOrUndefined()) {
-        ok &= sevalue_to_native(field, &(to->depthStencilMipmapLevel), ctx);
     }
     return ok;
 }
@@ -11576,12 +11619,6 @@ static bool js_gfx_FramebufferInfo_constructor(se::State& s) // NOLINT(readabili
     if (argc > 2 && !args[2].isUndefined()) {
         ok &= sevalue_to_native(args[2], &(cobj->depthStencilTexture), nullptr);
     }
-    if (argc > 3 && !args[3].isUndefined()) {
-        ok &= sevalue_to_native(args[3], &(cobj->colorMipmapLevels), nullptr);
-    }
-    if (argc > 4 && !args[4].isUndefined()) {
-        ok &= sevalue_to_native(args[4], &(cobj->depthStencilMipmapLevel), nullptr);
-    }
 
     if(!ok) {
         JSB_FREE(cobj);
@@ -11617,8 +11654,6 @@ bool js_register_gfx_FramebufferInfo(se::Object* obj) // NOLINT(readability-iden
     cls->defineProperty("renderPass", _SE(js_gfx_FramebufferInfo_get_renderPass), _SE(js_gfx_FramebufferInfo_set_renderPass));
     cls->defineProperty("colorTextures", _SE(js_gfx_FramebufferInfo_get_colorTextures), _SE(js_gfx_FramebufferInfo_set_colorTextures));
     cls->defineProperty("depthStencilTexture", _SE(js_gfx_FramebufferInfo_get_depthStencilTexture), _SE(js_gfx_FramebufferInfo_set_depthStencilTexture));
-    cls->defineProperty("colorMipmapLevels", _SE(js_gfx_FramebufferInfo_get_colorMipmapLevels), _SE(js_gfx_FramebufferInfo_set_colorMipmapLevels));
-    cls->defineProperty("depthStencilMipmapLevel", _SE(js_gfx_FramebufferInfo_get_depthStencilMipmapLevel), _SE(js_gfx_FramebufferInfo_set_depthStencilMipmapLevel));
     cls->defineFinalizeFunction(_SE(js_cc_gfx_FramebufferInfo_finalize));
     cls->install();
     JSBClassType::registerClass<cc::gfx::FramebufferInfo>(cls);

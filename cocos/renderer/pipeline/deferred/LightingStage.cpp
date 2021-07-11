@@ -360,7 +360,7 @@ void LightingStage::render(scene::Camera *camera) {
 
     // get pso and draw quad
     scene::Pass *pass   = sceneData->getSharedData()->deferredLightPass;
-    gfx::Shader *shader = sceneData->getSharedData()->deferredPostPassShader;
+    gfx::Shader *shader = sceneData->getSharedData()->deferredLightPassShader;
 
     gfx::InputAssembler *inputAssembler = pipeline->getQuadIAOffScreen();
     gfx::PipelineState * pState         = PipelineStateManager::getOrCreatePipelineState(
@@ -453,7 +453,6 @@ void LightingStage::render(scene::Camera *camera) {
 
     m = 0;
     p = 0;
-    k = 0;
     for (const auto &ro : renderObjects) {
         const auto *model = ro.model;
         for (auto *subModel : model->getSubModels()) {
