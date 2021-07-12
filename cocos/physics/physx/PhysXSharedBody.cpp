@@ -85,7 +85,7 @@ PhysXSharedBody *PhysXSharedBody::getSharedBody(const scene::Node *node, PhysXWo
 }
 
 PhysXSharedBody::~PhysXSharedBody() {
-    sharedBodesMap.erase(_mNodeHandle);
+    sharedBodesMap.erase(_mNode);
     if (_mStaticActor != nullptr) PX_RELEASE(_mStaticActor);
     if (_mDynamicActor != nullptr) PX_RELEASE(_mDynamicActor);
 }
