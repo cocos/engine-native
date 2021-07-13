@@ -43,8 +43,8 @@
 #include "cocos/network/HttpClient.h"
 #include "platform/Application.h"
 
-using namespace cc;
-using namespace cc::network;
+using namespace cc;          //NOLINT
+using namespace cc::network; //NOLINT
 
 namespace {
 // NOLINTNEXTLINE(readability-identifier-naming)
@@ -487,7 +487,7 @@ void XMLHttpRequest::sendRequest() {
     }
     setHttpRequestHeader();
 
-    _httpRequest->setResponseCallback(CC_CALLBACK_2(XMLHttpRequest::onResponse, this));
+    _httpRequest->setResponseCallback(CC_CALLBACK_2(XMLHttpRequest::onResponse, this)); //NOLINT
     cc::network::HttpClient::getInstance()->sendImmediate(_httpRequest);
 
     if (onloadstart != nullptr) {
@@ -569,7 +569,7 @@ void XMLHttpRequest::setHttpRequestHeader() {
     }
 }
 
-se::Class *__jsb_XMLHttpRequest_class = nullptr; //NOLINT(readability-identifier-naming)
+se::Class *__jsb_XMLHttpRequest_class = nullptr; //NOLINT(readability-identifier-naming, bugprone-reserved-identifier)
 
 static bool XMLHttpRequest_finalize(se::State &s) { //NOLINT(readability-identifier-naming, google-runtime-references)
     auto *request = static_cast<XMLHttpRequest *>(s.nativeThisObject());
