@@ -114,10 +114,11 @@ bool CCMTLTexture::createMTLTexture() {
     descriptor.sampleCount = mu::toMTLSampleCount(SampleCount::X1);
     descriptor.mipmapLevelCount = _levelCount;
     descriptor.arrayLength = _type == TextureType::CUBE ? 1 : _layerCount;
-    if (hasFlag(_usage, TextureUsage::COLOR_ATTACHMENT) ||
-        hasFlag(_usage, TextureUsage::DEPTH_STENCIL_ATTACHMENT) ||
-        hasFlag(_usage, TextureUsage::INPUT_ATTACHMENT)) {
-        descriptor.resourceOptions = MTLResourceStorageModePrivate;
+    
+    if(isSubset(_usage, TextureUsage::COLOR_ATTACHMENT | TextureUsage::DEPTH_STENCIL_ATTACHMENT | TextureUsage::INPUT_ATTACHMENT) && mu::isImageBlockSupported()) {
+        descriptor.storageMode = MTLStorageModeMemoryless;
+    } else if (hasFlag(_usage, TextureUsage::COLOR_ATTACHMENT) || hasFlag(_usage, TextureUsage::DEPTH_STENCIL_ATTACHMENT) || hasFlag(_usage, TextureUsage::INPUT_ATTACHMENT)) {
+        descriptor.storageMode = MTLStorageModePrivate;
     }
 
     id<MTLDevice> mtlDevice = id<MTLDevice>(CCMTLDevice::getInstance()->getMTLDevice());

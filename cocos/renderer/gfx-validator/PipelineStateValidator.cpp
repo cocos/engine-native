@@ -53,13 +53,6 @@ void PipelineStateValidator::doInit(const PipelineStateInfo &info) {
     if (info.renderPass) {
         actorInfo.renderPass = static_cast<RenderPassValidator *>(info.renderPass)->getActor();
 
-        const auto &subpasses            = info.renderPass->getSubpasses();
-        size_t      colorAttachmentCount = info.subpass >= subpasses.size()
-                                               ? info.renderPass->getColorAttachments().size()
-                                               : subpasses[info.subpass].colors.size();
-        //CCASSERT(colorAttachmentCount == info.blendState.targets.size(), "Wrong number of blend targets"); // be more lenient on this
-    }
-
     _actor->initialize(actorInfo);
 }
 

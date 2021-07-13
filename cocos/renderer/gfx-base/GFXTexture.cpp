@@ -62,7 +62,7 @@ void Texture::initialize(const TextureInfo &info) {
     _depth      = info.depth;
     _layerCount = info.layerCount;
     _levelCount = info.levelCount;
-    _samples    = info.samples;
+    _samples    = SampleCount::X1;
     _flags      = info.flags;
     _size       = formatSize(_format, _width, _height, _depth);
 

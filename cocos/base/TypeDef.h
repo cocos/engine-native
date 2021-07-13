@@ -60,6 +60,10 @@ using FlagBits = uint32_t;
         using ValueType = std::underlying_type<T>::type;                                                                                                                          \
         return (static_cast<ValueType>(flags) & static_cast<ValueType>(flagsToTest)) == static_cast<ValueType>(flagsToTest);                                                      \
     }                                                                                                                                                                             \
+    inline bool isSubset(const T flags, const T flagsToTest) {                                                                                                                    \
+        using ValueType = std::underlying_type<T>::type;                                                                                                                          \
+        return ((static_cast<ValueType>(flags) ^ static_cast<ValueType>(flagsToTest)) & (~static_cast<ValueType>(flagsToTest))) == 0;                                               \
+    }                                                                                                                                                                             \
     inline T addFlags(const T flags, const T flagsToAdd) { return (flags | flagsToAdd); }                                                                                         \
     inline T removeFlags(const T flags, const T flagsToRemove) { return (flags & ~flagsToRemove); }                                                                               \
     CC_ENUM_CONVERSION_OPERATOR(T)
