@@ -2609,6 +2609,25 @@ void cmdFuncGLES2CopyBuffersToTexture(GLES2Device *device, const uint8_t *const 
     }
 }
 
+CC_GLES2_API void cmdFuncGLES2CopyTextureToBuffers(GLES2Device *device, GLES2GPUTexture *gpuTexture, uint8_t *const *buffers, const BufferTextureCopy *regions, uint count) {
+    GLuint  framebuffer = 0;
+    auto    glFormat    = mapGLFormat(gpuTexture->format);
+    auto    glType      = formatToGLType(gpuTexture->format);
+    glGenFramebuffers(1, &framebuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    for(uint32_t i = 0; i < count; ++i) {
+        auto region = regions[i];
+        auto w          = region.texExtent.width;
+        auto h          = region.texExtent.height;
+        auto memSize    = static_cast<GLsizei>(formatSize(gpuTexture->format, w, h, 1));
+        uint8_t* copyDst = buffers[i];
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, gpuTexture->glTarget, gpuTexture->glTexture, region.texSubres.mipLevel);
+        glReadPixels(region.texOffset.x, region.texOffset.y, region.texExtent.width, region.texExtent.height, glFormat, glType, copyDst);
+    }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glDeleteFramebuffers(1, &framebuffer);
+}
+
 void cmdFuncGLES2BlitTexture(GLES2Device *device, GLES2GPUTexture *gpuTextureSrc, GLES2GPUTexture *gpuTextureDst, const TextureBlit *regions, uint count, Filter filter) {
     GLES2GPUStateCache *cache = device->stateCache();
 
