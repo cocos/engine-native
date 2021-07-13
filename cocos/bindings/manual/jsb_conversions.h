@@ -929,6 +929,14 @@ inline bool sevalue_to_native(const se::Value &from, int64_t *to, se::Object * /
     return true;
 }
 
+#if CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX
+template <>
+inline bool sevalue_to_native(const se::Value &from, unsigned long *to, se::Object * /*ctx*/) {
+    *to = static_cast<unsigned long>(from.toDouble());
+    return true;
+}
+#endif
+
 template <>
 inline bool sevalue_to_native(const se::Value &from, float *to, se::Object * /*ctx*/) {
     *to = from.toFloat();
@@ -1306,6 +1314,7 @@ inline bool nativevalue_to_se(const T &from, se::Value &to, se::Object *ctx) { /
         return native_ptr_to_seval(from, &to);
     } else if CC_CONSTEXPR (std::is_same<T, int64_t>::value || std::is_same<T, uint64_t>::value) {
         to.setInt64(static_cast<int64_t>(from));
+        return true;
     } else if CC_CONSTEXPR (std::is_arithmetic<T>::value) {
         to.setDouble(static_cast<double>(from));
         return true;
@@ -1454,7 +1463,6 @@ inline bool nativevalue_to_se(const uint8_t &from, se::Value &to, se::Object * /
     to.setUint8(from);
     return true;
 }
-
 
 template <>
 inline bool nativevalue_to_se(const std::string &from, se::Value &to, se::Object * /*ctx*/) {

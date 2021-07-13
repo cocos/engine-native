@@ -108,7 +108,6 @@ void jsToSeValue(v8::Isolate *isolate, v8::Local<v8::Value> jsval, Value *v) {
     } else if (jsval->IsBigInt()) {
         v8::MaybeLocal<v8::BigInt> jsBigInt = jsval->ToBigInt(isolate->GetCurrentContext());
         if (!jsBigInt.IsEmpty()) {
-            bool lossLess;
             auto bigInt = jsBigInt.ToLocalChecked();
             v->setInt64(bigInt->Int64Value());
         } else {
