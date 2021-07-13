@@ -46,8 +46,9 @@ SE_DECLARE_FUNC(js_pipeline_GlobalDSManager_bindTexture);
 SE_DECLARE_FUNC(js_pipeline_GlobalDSManager_getDescriptorSetLayout);
 SE_DECLARE_FUNC(js_pipeline_GlobalDSManager_getDescriptorSetMap);
 SE_DECLARE_FUNC(js_pipeline_GlobalDSManager_getGlobalDescriptorSet);
+SE_DECLARE_FUNC(js_pipeline_GlobalDSManager_getLinearSampler);
 SE_DECLARE_FUNC(js_pipeline_GlobalDSManager_getOrCreateDescriptorSet);
-SE_DECLARE_FUNC(js_pipeline_GlobalDSManager_getShadowMapSampler);
+SE_DECLARE_FUNC(js_pipeline_GlobalDSManager_getPointSampler);
 SE_DECLARE_FUNC(js_pipeline_GlobalDSManager_update);
 SE_DECLARE_FUNC(js_pipeline_GlobalDSManager_GlobalDSManager);
 
@@ -181,6 +182,7 @@ bool register_all_pipeline(se::Object* obj);
 JSB_REGISTER_OBJECT_TYPE(cc::pipeline::InstancedBuffer);
 SE_DECLARE_FUNC(js_pipeline_InstancedBuffer_destroy);
 SE_DECLARE_FUNC(js_pipeline_InstancedBuffer_setDynamicOffset);
+SE_DECLARE_FUNC(js_pipeline_InstancedBuffer_destroyInstancedBuffer);
 SE_DECLARE_FUNC(js_pipeline_InstancedBuffer_get);
 SE_DECLARE_FUNC(js_pipeline_InstancedBuffer_InstancedBuffer);
 
