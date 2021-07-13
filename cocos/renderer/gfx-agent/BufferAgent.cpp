@@ -116,7 +116,7 @@ void BufferAgent::doResize(uint size, uint /*count*/) {
 }
 
 void BufferAgent::doDestroy() {
-    auto *mq              = DeviceAgent::getInstance()->getMessageQueue();
+    auto *    mq = DeviceAgent::getInstance()->getMessageQueue();
     uint8_t **oldStagingBuffers{nullptr};
     if (!_stagingBuffers.empty()) {
         oldStagingBuffers = mq->allocate<uint8_t *>(DeviceAgent::MAX_FRAME_INDEX);
@@ -146,14 +146,14 @@ void BufferAgent::update(const void *buffer, uint size) {
 
 void BufferAgent::update(const void *buffer, uint size, MessageQueue *mq) {
     uint8_t *actorBuffer{nullptr};
-    bool needToFreeActorBuffer{false};
+    bool     needToFreeActorBuffer{false};
 
     uint frameIndex = DeviceAgent::getInstance()->getCurrentIndex();
 
     if (!_stagingBuffers.empty()) { // for frequent updates on big buffers
         actorBuffer = _stagingBuffers[frameIndex];
     } else if (size > STAGING_BUFFER_THRESHOLD) { // less frequent updates on big buffers
-        actorBuffer = reinterpret_cast<uint8_t *>(malloc(size));
+        actorBuffer           = reinterpret_cast<uint8_t *>(malloc(size));
         needToFreeActorBuffer = true;
     } else { // for small enough buffers
         actorBuffer = mq->allocate<uint8_t>(size);

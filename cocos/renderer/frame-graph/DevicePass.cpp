@@ -66,7 +66,7 @@ void DevicePass::execute() {
 
     begin(cmdBuff);
 
-    for (size_t i = 0; i <_subpasses.size(); ++i) {
+    for (size_t i = 0; i < _subpasses.size(); ++i) {
         Subpass &subPass = _subpasses[i];
         for (LogicPass &pass : subPass.logicPasses) {
             gfx::Viewport &viewport = pass.customViewport ? pass.viewport : _viewport;

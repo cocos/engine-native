@@ -23,12 +23,8 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "base/CoreStd.h"
-#include "base/job-system/JobSystem.h"
-#include "base/threading/MessageQueue.h"
-#include "base/threading/ThreadSafeLinearAllocator.h"
-#include "BufferAgent.h"
 #include "CommandBufferAgent.h"
+#include "BufferAgent.h"
 #include "DescriptorSetAgent.h"
 #include "DeviceAgent.h"
 #include "FramebufferAgent.h"
@@ -37,6 +33,10 @@
 #include "QueueAgent.h"
 #include "RenderPassAgent.h"
 #include "TextureAgent.h"
+#include "base/CoreStd.h"
+#include "base/job-system/JobSystem.h"
+#include "base/threading/MessageQueue.h"
+#include "base/threading/ThreadSafeLinearAllocator.h"
 
 namespace cc {
 namespace gfx {

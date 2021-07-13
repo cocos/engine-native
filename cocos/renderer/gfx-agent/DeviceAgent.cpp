@@ -107,7 +107,6 @@ void DeviceAgent::doDestroy() {
 
     _mainMessageQueue->terminateConsumerThread();
     CC_SAFE_DELETE(_mainMessageQueue);
-
 }
 
 void DeviceAgent::resize(uint width, uint height) {

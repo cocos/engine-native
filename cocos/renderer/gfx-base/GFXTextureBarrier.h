@@ -44,7 +44,10 @@ protected:
 
     virtual void doInit(const TextureBarrierInfo &info) {}
 
-    void initialize(const TextureBarrierInfo &info) { _info = info; doInit(info); }
+    void initialize(const TextureBarrierInfo &info) {
+        _info = info;
+        doInit(info);
+    }
 
     TextureBarrierInfo _info;
 };
