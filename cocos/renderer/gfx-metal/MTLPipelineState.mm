@@ -283,14 +283,14 @@ void CCMTLPipelineState::setMTLFunctionsAndFormats(MTLRenderPipelineDescriptor *
                 if(inputs.find(input) == inputs.end()) {
                     inputs.insert(input);
                     mtlPixelFormat = mu::toMTLPixelFormat(colorAttachments[input].format);
-                    descriptor.colorAttachments[i].pixelFormat = mtlPixelFormat;
+                    descriptor.colorAttachments[input].pixelFormat = mtlPixelFormat;
                 }
             }
             
             for (size_t i = 0; i < subpass.colors.size(); ++i) {
                 uint output = subpass.colors[i];
                 mtlPixelFormat = mu::toMTLPixelFormat(colorAttachments[output].format);
-                descriptor.colorAttachments[i].pixelFormat = mtlPixelFormat;
+                descriptor.colorAttachments[output].pixelFormat = mtlPixelFormat;
             }
         }
         const uint curIndex = static_cast<CCMTLRenderPass*>(_renderPass)->getCurrentSubpassIndex();
