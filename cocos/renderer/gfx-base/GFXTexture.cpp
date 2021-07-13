@@ -90,13 +90,6 @@ void Texture::initialize(const TextureViewInfo &info) {
     doInit(info);
 }
 
-void Texture::destroy() {
-    doDestroy();
-
-    _format = Format::UNKNOWN;
-    _width = _height = _depth = _size = 0;
-}
-
 void Texture::resize(uint width, uint height) {
     if (_width != width || _height != height) {
         uint size = formatSize(_format, width, height, _depth);
@@ -108,6 +101,13 @@ void Texture::resize(uint width, uint height) {
 
         resizeObjectID();
     }
+}
+
+void Texture::destroy() {
+    doDestroy();
+
+    _format = Format::UNKNOWN;
+    _width = _height = _depth = _size = 0;
 }
 
 } // namespace gfx
