@@ -33,7 +33,7 @@ using ulong    = uint32_t;
 using FlagBits = uint32_t;
 
 #define CC_ENUM_CONVERSION_OPERATOR(T) \
-    std::underlying_type<T>::type toNumber(const T v) { return static_cast<std::underlying_type<T>::type>(v); }
+    inline std::underlying_type<T>::type toNumber(const T v) { return static_cast<std::underlying_type<T>::type>(v); }
 
 #define CC_ENUM_BITWISE_OPERATORS(T)                                                                                                                                              \
     inline T    operator~(const T v) { return static_cast<T>(~static_cast<std::underlying_type<T>::type>(v)); }                                                                   \
