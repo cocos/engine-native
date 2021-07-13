@@ -148,7 +148,7 @@ void CCVKCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo
         for (size_t i = 0U; i < attachmentCount - 1; ++i) {
             clearValues[i].color = {{colors[i].x, colors[i].y, colors[i].z, colors[i].w}};
         }
-        clearValues[attachmentCount - 1].depthStencil = {depth, static_cast<uint>(stencil)};
+        clearValues[attachmentCount - 1].depthStencil = {depth, stencil};
     }
     auto *                device = CCVKDevice::getInstance();
     VkRenderPassBeginInfo passBeginInfo{VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO};
@@ -203,7 +203,7 @@ void CCVKCommandBuffer::bindPipelineState(PipelineState *pso) {
     CCVKGPUPipelineState *gpuPipelineState = static_cast<CCVKPipelineState *>(pso)->gpuPipelineState();
 
     if (_curGPUPipelineState != gpuPipelineState) {
-        vkCmdBindPipeline(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_BIND_POINTS[static_cast<uint>(gpuPipelineState->bindPoint)], gpuPipelineState->vkPipeline);
+        vkCmdBindPipeline(_gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_BIND_POINTS[toNumber(gpuPipelineState->bindPoint)], gpuPipelineState->vkPipeline);
         _curGPUPipelineState = gpuPipelineState;
     }
 }
@@ -530,7 +530,7 @@ void CCVKCommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, co
     vkCmdBlitImage(_gpuCommandBuffer->vkCommandBuffer,
                    srcImage, srcImageLayout,
                    dstImage, dstImageLayout,
-                   count, _blitRegions.data(), VK_FILTERS[static_cast<uint>(filter)]);
+                   count, _blitRegions.data(), VK_FILTERS[toNumber(filter)]);
 
     if (!dstTexture) {
         VkImageMemoryBarrier barrier{VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER};
