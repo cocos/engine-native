@@ -181,7 +181,8 @@ void CCMTLCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fb
         for (size_t slot = 0U; slot < colorAttachmentCount; slot++) {
             mtlRenderPassDescriptor.colorAttachments[slot].clearColor = mu::toMTLClearColor(colors[slot]);
             mtlRenderPassDescriptor.colorAttachments[slot].loadAction = mu::toMTLLoadAction(colorAttachments[slot].loadOp);
-            mtlRenderPassDescriptor.colorAttachments[slot].storeAction = mu::toMTLStoreAction(colorAttachments[slot].storeOp);
+            mtlRenderPassDescriptor.colorAttachments[slot].storeAction = mu::isFramebufferFetchSupported() ?
+                                                                         mu::toMTLStoreAction(colorAttachments[slot].storeOp) : MTLStoreActionStore;
         }
         
         mtlRenderPassDescriptor.depthAttachment.clearDepth     = depth;
@@ -198,6 +199,7 @@ void CCMTLCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fb
         }
     } else {
         _renderEncoder.initialize(_mtlCommandBuffer, mtlRenderPassDescriptor);
+        //[_renderEncoder.getMTLEncoder() memoryBarrierWithScope:MTLBarrierScopeTextures afterStages:MTLRenderStageFragment beforeStages:MTLRenderStageFragment];
     }
 
     Rect scissorArea = renderArea;
@@ -309,11 +311,21 @@ void CCMTLCommandBuffer::setStencilCompareMask(StencilFace /*face*/, uint /*ref*
 void CCMTLCommandBuffer::nextSubpass() {
     if(_curRenderPass) {
         auto *ccRenderpass = static_cast<CCMTLRenderPass*>(_curRenderPass);
+
         ccRenderpass->nextSubpass();
         // with framebuffer fetch enabled we can get texture as attachments by color[n] (except mac before m1),
         // otherwise setFragmentTexture manually.
         bool setTexNeeded = !mu::isFramebufferFetchSupported();
         if(setTexNeeded) {
+            auto *mtlRenderPassDescriptor = ccRenderpass->getMTLRenderPassDescriptor();
+            const auto &colorAttachments     = _curRenderPass->getColorAttachments();
+            const auto  colorAttachmentCount = colorAttachments.size();
+            for (size_t slot = 0U; slot < colorAttachmentCount; slot++) {
+                mtlRenderPassDescriptor.colorAttachments[slot].loadAction = MTLLoadActionLoad;// mu::toMTLLoadAction(colorAttachments[slot].loadOp);
+                mtlRenderPassDescriptor.colorAttachments[slot].storeAction = mu::toMTLStoreAction(colorAttachments[slot].storeOp);
+            }
+            _renderEncoder.endEncoding();
+            _renderEncoder.initialize(_mtlCommandBuffer, ccRenderpass->getMTLRenderPassDescriptor());
             uint curSubpassIndex = ccRenderpass->getCurrentSubpassIndex();
             const TextureList &colorTextures = _curFBO->getColorTextures();
             const SubpassInfoList& subpasses = _curRenderPass->getSubpasses();

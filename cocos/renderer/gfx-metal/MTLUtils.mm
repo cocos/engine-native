@@ -882,6 +882,9 @@ MTLSamplerMipFilter mu::toMTLSamplerMipFilter(Filter filter) {
 
 bool mu::isImageBlockSupported() {
     //implicit imageblocks
+    if(!mu::isFramebufferFetchSupported()) {
+        return false;
+    }
 #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS) || TARGET_CPU_ARM64
     return true;
 #else
@@ -934,7 +937,6 @@ String mu::compileGLSLShader2Msl(const String &src,
         options.set_msl_version(2, 3, 0);
 #endif
     }
-    //options.set_msl_version(2, 3, 0);
     msl.set_msl_options(options);
 
     // TODO: bindings from shader just kind of validation, cannot be directly input
