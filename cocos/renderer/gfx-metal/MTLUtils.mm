@@ -1026,7 +1026,7 @@ String mu::compileGLSLShader2Msl(const String &src,
         }
     }
     
-
+    if(executionModel == spv::ExecutionModelFragment) {
         gpuShader->outputs.resize(resources.stage_outputs.size());
         for(size_t i = 0; i < resources.stage_outputs.size(); i++) {
             const auto& stageOutput = resources.stage_outputs[i];
@@ -1037,19 +1037,18 @@ String mu::compileGLSLShader2Msl(const String &src,
             gpuShader->outputs[i].set = set;
             gpuShader->outputs[i].binding = attachmentIndex;
         }
-    
-    
-    if(executionModel == spv::ExecutionModelFragment && !resources.subpass_inputs.empty()) {
-        // msl: [color[0]] is always reserved for unspecified output target
-        gpuShader->inputs.resize(resources.subpass_inputs.size());
-        for(size_t i = 0; i < resources.subpass_inputs.size(); i++) {
-            const auto& attachment = resources.subpass_inputs[i];
-            gpuShader->inputs[i].name = attachment.name;
-            auto set = msl.get_decoration(attachment.id, spv::DecorationDescriptorSet);
-            auto index = msl.get_decoration(attachment.id, spv::DecorationInputAttachmentIndex);
-            msl.set_decoration(attachment.id, spv::DecorationBinding,index);
-            gpuShader->inputs[i].binding = index;
-            gpuShader->inputs[i].set = set;
+        
+        if(!resources.subpass_inputs.empty()) {
+            gpuShader->inputs.resize(resources.subpass_inputs.size());
+            for(size_t i = 0; i < resources.subpass_inputs.size(); i++) {
+                const auto& attachment = resources.subpass_inputs[i];
+                gpuShader->inputs[i].name = attachment.name;
+                auto set = msl.get_decoration(attachment.id, spv::DecorationDescriptorSet);
+                auto index = msl.get_decoration(attachment.id, spv::DecorationInputAttachmentIndex);
+                msl.set_decoration(attachment.id, spv::DecorationBinding,index);
+                gpuShader->inputs[i].binding = index;
+                gpuShader->inputs[i].set = set;
+            }
         }
     }
 
