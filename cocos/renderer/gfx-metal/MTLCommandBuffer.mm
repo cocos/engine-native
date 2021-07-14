@@ -75,11 +75,6 @@ void CCMTLCommandBuffer::doDestroy() {
     _curRenderPass = nullptr;
     _curFBO = nullptr;
     _curSubpassIndex = 0;
-    
-    if (_autoreleasePool) {
-        [_autoreleasePool release];
-        _autoreleasePool = nullptr;
-    }
 }
 
 bool CCMTLCommandBuffer::isRenderingEntireDrawable(const Rect &rect, const CCMTLRenderPass *renderPass) {

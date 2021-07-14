@@ -41,11 +41,11 @@ public:
     CCMTLShader &operator=(const CCMTLShader &)=delete;
     CCMTLShader &operator=(CCMTLShader &&)=delete;
 
-    CC_INLINE id<MTLFunction> getVertMTLFunction() const { return _vertFunction; }
-    CC_INLINE id<MTLFunction> getFragmentMTLFunction() const { return _fragFunction; }
-    CC_INLINE id<MTLFunction> getComputeMTLFunction() const { return _cmptFunction; }
-    CC_INLINE const unordered_map<uint, uint> &getFragmentSamplerBindings() const { return _mtlFragmentSamplerBindings; }
-    CC_INLINE const CCMTLGPUShader *gpuShader() const { return _gpuShader; }
+    inline id<MTLFunction> getVertMTLFunction() const { return _vertFunction; }
+    inline id<MTLFunction> getFragmentMTLFunction() const { return _fragFunction; }
+    inline id<MTLFunction> getComputeMTLFunction() const { return _cmptFunction; }
+    inline const unordered_map<uint, uint> &getFragmentSamplerBindings() const { return _mtlFragmentSamplerBindings; }
+    inline const CCMTLGPUShader *gpuShader() const { return _gpuShader; }
 
     uint getAvailableBufferBindingIndex(ShaderStageFlagBit stage, uint stream);
     

@@ -205,35 +205,28 @@ bool CCMTLPipelineState::createMTLRenderPipelineState() {
 //TODO: reconstruction
 void CCMTLPipelineState::setVertexDescriptor(MTLRenderPipelineDescriptor *descriptor) {
     auto activeAttributes = static_cast<CCMTLShader *>(_shader)->getAttributes();
-    auto &attributes = _inputState.attributes;
-    const size_t attrCount = attributes.size();
-    uint bindingCount = 1U;
-    for (size_t i = 0; i < attrCount; i++) {
-        const Attribute& attr = attributes[i];
-        bindingCount = std::max(bindingCount, attr.stream + 1);
-    }
-
     vector<std::tuple<int /**vertexBufferBindingIndex*/, uint /**stream*/>> layouts;
     unordered_map<int /**vertexBufferBindingIndex*/, std::tuple<uint /**stride*/, bool /**isInstanced*/>> map;
-    vector<uint> streamOffsets(bindingCount, 0u);
+    vector<uint> streamOffsets(CCMTLDevice::getInstance()->getCapabilities().maxVertexAttributes, 0u);
     vector<bool> activeAttribIdx(activeAttributes.size(), false);
-    for (size_t i = 0; i < activeAttributes.size(); i++) {
-        auto bufferIndex = static_cast<CCMTLShader *>(_shader)->getAvailableBufferBindingIndex(ShaderStageFlagBit::VERTEX, activeAttributes[i].stream);
-        
-        for (const Attribute& attr : attributes) {
-            if(activeAttributes[i].name == attr.name) {
-                descriptor.vertexDescriptor.attributes[activeAttributes[i].location].format = mu::toMTLVertexFormat(attr.format, attr.isNormalized);
-                descriptor.vertexDescriptor.attributes[activeAttributes[i].location].offset = streamOffsets[attr.stream];
-                descriptor.vertexDescriptor.attributes[activeAttributes[i].location].bufferIndex = bufferIndex;
-                auto tuple = std::make_tuple(bufferIndex, attr.stream);
+    for (const auto &inputAttrib : _inputState.attributes) {
+        auto bufferIndex = static_cast<CCMTLShader *>(_shader)->getAvailableBufferBindingIndex(ShaderStageFlagBit::VERTEX, inputAttrib.stream);
+
+        for (auto i = 0; i < activeAttributes.size(); i++) {
+            const auto &activeAttribute = activeAttributes[i];
+            if (inputAttrib.name == activeAttribute.name) {
+                descriptor.vertexDescriptor.attributes[activeAttribute.location].format = mu::toMTLVertexFormat(inputAttrib.format, inputAttrib.isNormalized);
+                descriptor.vertexDescriptor.attributes[activeAttribute.location].offset = streamOffsets[inputAttrib.stream];
+                descriptor.vertexDescriptor.attributes[activeAttribute.location].bufferIndex = bufferIndex;
+                auto tuple = std::make_tuple(bufferIndex, inputAttrib.stream);
                 if (std::find(layouts.begin(), layouts.end(), tuple) == layouts.end())
                     layouts.emplace_back(tuple);
                 activeAttribIdx[i] = true;
-                streamOffsets[attr.stream] += GFX_FORMAT_INFOS[(int)attr.format].size;
-                map[bufferIndex] = std::make_tuple(streamOffsets[attr.stream], attr.isInstanced);
                 break;
             }
         }
+        streamOffsets[inputAttrib.stream] += GFX_FORMAT_INFOS[(int)inputAttrib.format].size;
+        map[bufferIndex] = std::make_tuple(streamOffsets[inputAttrib.stream], inputAttrib.isInstanced);
     }
 
     for (auto i = 0; i < activeAttribIdx.size(); i++) {
