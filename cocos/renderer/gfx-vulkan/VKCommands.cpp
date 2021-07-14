@@ -1164,7 +1164,8 @@ void cmdFuncCCVKCopyBuffersToTexture(CCVKDevice *device, const uint8_t *const *b
 }
 
 CC_VULKAN_API void cmdFuncCCVKCopyTextureToBuffers(CCVKDevice *device, CCVKGPUTexture *srcTexture, CCVKGPUBuffer *destBuffer, const BufferTextureCopy *regions, uint count, const CCVKGPUCommandBuffer *gpuCommandBuffer) {
-
+    (void)device; // fix clang-tidy error
+    
     ThsvsImageBarrier barrier{};
     barrier.image                       = srcTexture->vkImage;
     barrier.discardContents             = false;
@@ -1200,9 +1201,9 @@ CC_VULKAN_API void cmdFuncCCVKCopyTextureToBuffers(CCVKDevice *device, CCVKGPUTe
 
         offset += regionSize;
     }
-    vkCmdCopyImageToBuffer(gpuCommandBuffer->vkCommandBuffer, srcTexture->vkImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, 
-          destBuffer->vkBuffer, utils::toUint(stagingRegions.size()), stagingRegions.data());
-    
+    vkCmdCopyImageToBuffer(gpuCommandBuffer->vkCommandBuffer, srcTexture->vkImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                           destBuffer->vkBuffer, utils::toUint(stagingRegions.size()), stagingRegions.data());
+
     if (srcTexture->transferAccess != THSVS_ACCESS_TRANSFER_READ) {
         std::swap(barrier.prevAccessCount, barrier.nextAccessCount);
         std::swap(barrier.pPrevAccesses, barrier.pNextAccesses);
