@@ -132,7 +132,7 @@ bool js_gfx_Device_copyTextureToBuffers(se::State &s) { // NOLINT(readability-id
         }
         ok &= seval_to_native_ptr(args[0], &arg0);
         ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
-        SE_PRECONDITION2(ok, false, "js_gfx_Device_copyBuffersToTexture : Error processing arguments");
+        SE_PRECONDITION2(ok, false, "js_gfx_Device_copyTextureToBuffers : Error processing arguments");
         cobj->copyTextureToBuffers(arg0, arg1.data(), arg2.data(), cc::utils::toUint(arg2.size()));
         return true;
     }
