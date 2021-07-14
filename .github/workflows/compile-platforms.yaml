@@ -35,7 +35,7 @@ jobs:
         env:
           COCOS_ENGINE_DEV: 1
         run: |
-          cd $GITHUB_WORKSPACE/templates/win32
+          cd $GITHUB_WORKSPACE/templates/windows
           mkdir -p build-win32/proj
           touch build-win32/proj/cfg.cmake
           echo "set(CC_USE_GLES3 ON)" >> build-win32/proj/cfg.cmake
