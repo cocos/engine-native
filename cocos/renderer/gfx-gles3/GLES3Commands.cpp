@@ -2813,19 +2813,18 @@ CC_GLES3_API void cmdFuncGLES3CopyTextureToBuffers(GLES3Device *device, GLES3GPU
     GLuint framebuffer = 0;
     auto   glFormat    = mapGLFormat(gpuTexture->format);
     auto   glType      = formatToGLType(gpuTexture->format);
-    GL_CHECK(glGenFramebuffers(1, &framebuffer));
-    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, framebuffer));
+   
     for (uint32_t i = 0; i < count; ++i) {
         auto     region  = regions[i];
         auto     w       = region.texExtent.width;
         auto     h       = region.texExtent.height;
         auto     memSize = static_cast<GLsizei>(formatSize(gpuTexture->format, w, h, 1));
         uint8_t *copyDst = buffers[i];
-        GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, gpuTexture->glTarget, gpuTexture->glTexture, region.texSubres.mipLevel));
+        framebuffer      = device->framebufferCacheMap()->getFramebufferFromTexture(gpuTexture, region.texSubres);
+        GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, framebuffer));
         GL_CHECK(glReadPixels(region.texOffset.x, region.texOffset.y, region.texExtent.width, region.texExtent.height, glFormat, glType, copyDst));
+        GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
     }
-    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
-    GL_CHECK(glDeleteFramebuffers(1, &framebuffer));
 }
 void cmdFuncGLES3BlitTexture(GLES3Device *device, GLES3GPUTexture *gpuTextureSrc, GLES3GPUTexture *gpuTextureDst,
                              const TextureBlit *regions, uint count, Filter filter) {
