@@ -27,6 +27,7 @@
 
 #include "bindings/event/CustomEventTypes.h"
 #include "bindings/event/EventDispatcher.h"
+
 #include "gfx-agent/DeviceAgent.h"
 #include "gfx-empty/EmptyDevice.h"
 #include "gfx-validator/DeviceValidator.h"
@@ -90,6 +91,7 @@ public:
     static void destroy() {
         CC_SAFE_DESTROY(Device::instance);
     }
+
     static void addCustomEvent() {
         Device *device = Device::instance;
         EventDispatcher::addCustomEventListener(EVENT_DESTROY_WINDOW, [device](const CustomEvent &e) -> void {
