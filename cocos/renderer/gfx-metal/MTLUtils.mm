@@ -1031,7 +1031,7 @@ String mu::compileGLSLShader2Msl(const String &src,
         for(size_t i = 0; i < resources.stage_outputs.size(); i++) {
             const auto& stageOutput = resources.stage_outputs[i];
             auto set = msl.get_decoration(stageOutput.id, spv::DecorationDescriptorSet);
-            auto attachmentIndex = i;
+            auto attachmentIndex = static_cast<uint32_t>(i);
             msl.set_decoration(stageOutput.id, spv::DecorationLocation, attachmentIndex);
             gpuShader->outputs[i].name = stageOutput.name;
             gpuShader->outputs[i].set = set;
@@ -1055,9 +1055,10 @@ String mu::compileGLSLShader2Msl(const String &src,
     // Compile to MSL, ready to give to metal driver.
     String output = msl.compile();
     if(executionModel == spv::ExecutionModelFragment) {
+        // add custom function constant to achieve delay binding for color attachment.
         auto customCodingPos = output.find("using namespace metal;");
-        
-        for(int i = resources.stage_outputs.size() - 1; i >=0; --i) {
+        int32_t maxIndex = static_cast<int32_t>(resources.stage_outputs.size() - 1);
+        for(int i = maxIndex; i >=0; --i) {
             String indexStr = std::to_string(i);
             output.insert(customCodingPos, "\nconstant int indexOffset" + indexStr + " [[ function_constant(" + indexStr + ") ]];\n");
             output.replace(output.find("color(" + indexStr + ")"), 8, "color(indexOffset" + indexStr + ")");
