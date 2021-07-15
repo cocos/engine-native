@@ -114,7 +114,7 @@ bool CCMTLTexture::createMTLTexture() {
     descriptor.mipmapLevelCount = _levelCount;
     descriptor.arrayLength = _type == TextureType::CUBE ? 1 : _layerCount;
     
-    if(isSubset(_usage, TextureUsage::COLOR_ATTACHMENT | TextureUsage::DEPTH_STENCIL_ATTACHMENT | TextureUsage::INPUT_ATTACHMENT) && mu::isImageBlockSupported()) {
+    if(hasAllFlags(TextureUsage::COLOR_ATTACHMENT | TextureUsage::DEPTH_STENCIL_ATTACHMENT | TextureUsage::INPUT_ATTACHMENT, _usage) && mu::isImageBlockSupported()) {
         //xcode OS version warning
         if (@available(macOS 11.0, *)) {
             descriptor.storageMode = MTLStorageModeMemoryless;
