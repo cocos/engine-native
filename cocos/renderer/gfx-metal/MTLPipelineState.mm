@@ -263,7 +263,7 @@ void CCMTLPipelineState::setMTLFunctionsAndFormats(MTLRenderPipelineDescriptor *
     std::vector<int> bindingOffsets;
     
     const CCMTLGPUShader* gpuShader = ccShader->gpuShader();
-    uint outputNum = gpuShader->outputs.size();
+    uint32_t outputNum = static_cast<uint32_t>(gpuShader->outputs.size());
     bindingIndices.reserve(outputNum);
     bindingOffsets.reserve(outputNum);
     MTLPixelFormat mtlPixelFormat;
@@ -299,8 +299,9 @@ void CCMTLPipelineState::setMTLFunctionsAndFormats(MTLRenderPipelineDescriptor *
         bindingOffsets.emplace_back(0);
     }
 
-    descriptor.vertexFunction = ((CCMTLShader *)_shader)->getVertMTLFunction();
-    descriptor.fragmentFunction = ((CCMTLShader *)_shader)->getSpecializedFragFunction(bindingIndices.data(), bindingOffsets.data(), bindingIndices.size());
+    auto *ccMTLShader = static_cast<CCMTLShader*>(_shader);
+    descriptor.vertexFunction = ccMTLShader->getVertMTLFunction();
+    descriptor.fragmentFunction = ccMTLShader->getSpecializedFragFunction(bindingIndices.data(), bindingOffsets.data(), static_cast<uint32_t>(bindingIndices.size()));
 
     mtlPixelFormat = mu::toMTLPixelFormat(_renderPass->getDepthStencilAttachment().format);
     if (mtlPixelFormat != MTLPixelFormatInvalid) {
