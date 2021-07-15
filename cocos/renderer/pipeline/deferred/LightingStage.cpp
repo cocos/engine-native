@@ -152,6 +152,7 @@ void LightingStage::gatherLights(scene::Camera *camera) {
         _lightBufferData[offset + 2] = 0;
 
         ++i;
+        ++idx;
     }
 
     i = 0;
@@ -209,6 +210,7 @@ void LightingStage::gatherLights(scene::Camera *camera) {
         _lightBufferData[offset + 2] = direction.z;
 
         ++i;
+        ++idx;
     }
 
     // the count of lights is set to cc_lightDir[0].w
@@ -356,9 +358,9 @@ void LightingStage::render(scene::Camera *camera) {
     cmdBuff->beginRenderPass(renderPass, frameBuffer, renderArea, &clearColor,
                              camera->clearDepth, camera->clearStencil);
 
-    uint const globalOffsets[] = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
-    cmdBuff->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
-
+    // uint const globalOffsets[] = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
+    // cmdBuff->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
+    cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet());
     // get pso and draw quad
     scene::Pass *pass   = sceneData->getSharedData()->deferredLightPass;
     gfx::Shader *shader = sceneData->getSharedData()->deferredLightPassShader;
