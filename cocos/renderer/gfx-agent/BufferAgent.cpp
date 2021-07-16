@@ -24,8 +24,7 @@
 ****************************************************************************/
 
 #include "base/CoreStd.h"
-#include "base/LinearAllocatorPool.h"
-#include "base/threading/MessageQueue.h"
+#include "base/memory/Memory.h"
 
 #include "BufferAgent.h"
 #include "DeviceAgent.h"
@@ -49,6 +48,13 @@ BufferAgent::~BufferAgent() {
 }
 
 void BufferAgent::doInit(const BufferInfo &info) {
+    uint size = getSize();
+    if (size > STAGING_BUFFER_THRESHOLD && hasFlag(_memUsage, MemoryUsageBit::HOST)) {
+        for (size_t i = 0; i < DeviceAgent::MAX_FRAME_INDEX; ++i) {
+            _stagingBuffers.push_back(reinterpret_cast<uint8_t *>(malloc(size)));
+        }
+    }
+
     ENQUEUE_MESSAGE_2(
         DeviceAgent::getInstance()->getMessageQueue(),
         BufferInit,
@@ -63,6 +69,8 @@ void BufferAgent::doInit(const BufferViewInfo &info) {
     BufferViewInfo actorInfo = info;
     actorInfo.buffer         = static_cast<BufferAgent *>(info.buffer)->getActor();
 
+    // buffer views don't need staging buffers
+
     ENQUEUE_MESSAGE_2(
         DeviceAgent::getInstance()->getMessageQueue(),
         BufferViewInit,
@@ -74,9 +82,32 @@ void BufferAgent::doInit(const BufferViewInfo &info) {
 }
 
 void BufferAgent::doResize(uint size, uint /*count*/) {
+    auto *mq = DeviceAgent::getInstance()->getMessageQueue();
+
+    if (!_stagingBuffers.empty()) {
+        auto *oldStagingBuffers = mq->allocate<uint8_t *>(DeviceAgent::MAX_FRAME_INDEX);
+        for (size_t i = 0; i < DeviceAgent::MAX_FRAME_INDEX; ++i) {
+            oldStagingBuffers[i] = _stagingBuffers[i];
+        }
+        _stagingBuffers.clear();
+        ENQUEUE_MESSAGE_1(
+            mq, BufferFreeStagingBuffer,
+            stagingBuffers, oldStagingBuffers,
+            {
+                for (size_t i = 0; i < DeviceAgent::MAX_FRAME_INDEX; ++i) {
+                    free(stagingBuffers[i]);
+                }
+            });
+    }
+
+    if (size > STAGING_BUFFER_THRESHOLD && hasFlag(_memUsage, MemoryUsageBit::HOST)) {
+        for (size_t i = 0; i < DeviceAgent::MAX_FRAME_INDEX; ++i) {
+            _stagingBuffers.push_back(reinterpret_cast<uint8_t *>(malloc(size)));
+        }
+    }
+
     ENQUEUE_MESSAGE_2(
-        DeviceAgent::getInstance()->getMessageQueue(),
-        BufferResize,
+        mq, BufferResize,
         actor, getActor(),
         size, size,
         {
@@ -85,27 +116,59 @@ void BufferAgent::doResize(uint size, uint /*count*/) {
 }
 
 void BufferAgent::doDestroy() {
-    ENQUEUE_MESSAGE_1(
-        DeviceAgent::getInstance()->getMessageQueue(),
-        BufferDestroy,
+    auto *    mq = DeviceAgent::getInstance()->getMessageQueue();
+    uint8_t **oldStagingBuffers{nullptr};
+    if (!_stagingBuffers.empty()) {
+        oldStagingBuffers = mq->allocate<uint8_t *>(DeviceAgent::MAX_FRAME_INDEX);
+        for (size_t i = 0; i < DeviceAgent::MAX_FRAME_INDEX; ++i) {
+            oldStagingBuffers[i] = _stagingBuffers[i];
+        }
+        _stagingBuffers.clear();
+    }
+
+    ENQUEUE_MESSAGE_2(
+        mq, BufferDestroy,
         actor, getActor(),
+        stagingBuffers, oldStagingBuffers,
         {
             actor->destroy();
+            if (stagingBuffers) {
+                for (size_t i = 0; i < DeviceAgent::MAX_FRAME_INDEX; ++i) {
+                    free(stagingBuffers[i]);
+                }
+            }
         });
 }
 
 void BufferAgent::update(const void *buffer, uint size) {
-    auto *actorBuffer = DeviceAgent::getInstance()->getMainAllocator()->allocate<uint8_t>(size);
+    update(buffer, size, DeviceAgent::getInstance()->getMessageQueue());
+}
+
+void BufferAgent::update(const void *buffer, uint size, MessageQueue *mq) {
+    uint8_t *actorBuffer{nullptr};
+    bool     needToFreeActorBuffer{false};
+
+    uint frameIndex = DeviceAgent::getInstance()->getCurrentIndex();
+
+    if (!_stagingBuffers.empty()) { // for frequent updates on big buffers
+        actorBuffer = _stagingBuffers[frameIndex];
+    } else if (size > STAGING_BUFFER_THRESHOLD) { // less frequent updates on big buffers
+        actorBuffer           = reinterpret_cast<uint8_t *>(malloc(size));
+        needToFreeActorBuffer = true;
+    } else { // for small enough buffers
+        actorBuffer = mq->allocate<uint8_t>(size);
+    }
     memcpy(actorBuffer, buffer, size);
 
-    ENQUEUE_MESSAGE_3(
-        DeviceAgent::getInstance()->getMessageQueue(),
-        BufferUpdate,
+    ENQUEUE_MESSAGE_4(
+        mq, BufferUpdate,
         actor, getActor(),
         buffer, actorBuffer,
         size, size,
+        needToFreeActorBuffer, needToFreeActorBuffer,
         {
             actor->update(buffer, size);
+            if (needToFreeActorBuffer) free(buffer);
         });
 }
 

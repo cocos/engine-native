@@ -63,7 +63,7 @@ void writeCommand(int8_t cmd) {
     write(pipeWrite, &cmd, sizeof(cmd));
 }
 
-int readCommand(int8_t &cmd) { //NOLINT(google-runtime-references)
+int readCommand(int8_t &cmd) {
     return read(pipeRead, &cmd, sizeof(cmd));
 }
 
@@ -142,7 +142,7 @@ void glThreadEntry() {
             std::this_thread::yield();
         }
 
-        if (game) {
+        if (game && cc::cocosApp.animating) {
             // Handle java events send by UI thread. Input events are handled here too.
             cc::JniHelper::callStaticVoidMethod("com.cocos.lib.CocosHelper",
                                                 "flushTasksOnGameThread");

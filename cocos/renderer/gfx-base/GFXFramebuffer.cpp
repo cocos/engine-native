@@ -38,14 +38,14 @@ Framebuffer::Framebuffer()
 Framebuffer::~Framebuffer() = default;
 
 uint Framebuffer::computeHash(const FramebufferInfo &info) {
-	uint seed = static_cast<uint>(info.colorTextures.size() + 2);
-	for (const Texture *attachment : info.colorTextures) {
-		uint id = attachment ? attachment->getObjectID() : 0;
-		seed ^= id + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-	}
-	uint depthID = info.depthStencilTexture ? info.depthStencilTexture->getObjectID() : 0;
-	seed ^= depthID + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-	return seed;
+    uint seed = static_cast<uint>(info.colorTextures.size() + 2);
+    for (const Texture *attachment : info.colorTextures) {
+        uint id = attachment ? attachment->getObjectID() : 0;
+        seed ^= id + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    }
+    uint depthID = info.depthStencilTexture ? info.depthStencilTexture->getObjectID() : 0;
+    seed ^= depthID + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    return seed;
 }
 
 void Framebuffer::initialize(const FramebufferInfo &info) {

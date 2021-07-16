@@ -89,14 +89,13 @@ protected:
 
     CCMTLGPUPipelineState *_gpuPipelineState = nullptr;
 
-    vector<CCMTLGPUDescriptorSet *> _GPUDescriptorSets;
+    vector<CCMTLGPUDescriptorSet *> _GPUDescriptorSets; // NOLINT(bugprone-reserved-identifier)
     vector<vector<uint>> _dynamicOffsets;
     uint _firstDirtyDescriptorSet = UINT_MAX;
 
     bool _indirectDrawSuppotred = false;
     bool _commandBufferBegan = false;
     bool _isSecondary = false;
-    NSAutoreleasePool *_autoreleasePool = nullptr;
     CCMTLDevice *_mtlDevice = nullptr;
     id<MTLCommandQueue> _mtlCommandQueue = nil;
     id<MTLCommandBuffer> _mtlCommandBuffer = nil;
@@ -105,6 +104,12 @@ protected:
     id<MTLParallelRenderCommandEncoder> _parallelEncoder = nil;
     CCMTLInputAssembler *_inputAssembler = nullptr;
     MTLPrimitiveType _mtlPrimitiveType = MTLPrimitiveType::MTLPrimitiveTypeTriangle;
+    
+    //state cache
+    RenderPass *_curRenderPass = nullptr;
+    Framebuffer *_curFBO = nullptr;
+    uint _curSubpassIndex = 0;
+    
 };
 
 } // namespace gfx

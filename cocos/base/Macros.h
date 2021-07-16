@@ -169,20 +169,6 @@ It should work same as apples CFSwapInt32LittleToHost(..)
 #define CC_BREAK_IF(cond) \
     if (cond) break
 
-/** @def CC_DISALLOW_COPY_AND_ASSIGN(TypeName)
-* A macro to disallow the copy constructor and operator= functions.
-* This should be used in the private: declarations for a class
-*/
-#if defined(__GNUC__) && ((__GNUC__ >= 5) || ((__GNUG__ == 4) && (__GNUC_MINOR__ >= 4))) || (defined(__clang__) && (__clang_major__ >= 3)) || (_MSC_VER >= 1800)
-    #define CC_DISALLOW_COPY_AND_ASSIGN(TypeName) \
-        TypeName(const TypeName &) = delete;      \
-        TypeName &operator=(const TypeName &) = delete;
-#else
-    #define CC_DISALLOW_COPY_AND_ASSIGN(TypeName) \
-        TypeName(const TypeName &);               \
-        TypeName &operator=(const TypeName &);
-#endif
-
 /** @def CC_DEPRECATED_ATTRIBUTE
 * Only certain compilers support __attribute__((deprecated)).
 */
@@ -414,6 +400,22 @@ It should work same as apples CFSwapInt32LittleToHost(..)
         _Pragma("clang diagnostic pop")
 #endif
 
+#define ENABLE_COPY_SEMANTICS(cls) \
+    cls(const cls &) = default;    \
+    cls &operator=(const cls &) = default;
+
+#define DISABLE_COPY_SEMANTICS(cls) \
+    cls(const cls &) = delete;      \
+    cls &operator=(const cls &) = delete;
+
+#define ENABLE_MOVE_SEMANTICS(cls) \
+    cls(cls &&)  = default;        \
+    cls &operator=(cls &&) = default;
+
+#define DISABLE_MOVE_SEMANTICS(cls) \
+    cls(cls &&)  = delete;          \
+    cls &operator=(cls &&) = delete;
+
 #if (CC_COMPILER == CC_COMPILER_MSVC)
     #define CC_ALIGN(N)        __declspec(align(N))
     #define CC_CACHE_ALIGN     __declspec(align(CC_CACHELINE_SIZE))
@@ -521,7 +523,7 @@ It should work same as apples CFSwapInt32LittleToHost(..)
 /* Stack-alignment
  If macro __CC_SIMD_ALIGN_STACK defined, means there requests
  special code to ensure stack align to a 16-bytes boundary.
- 
+
  Note:
  This macro can only guarantee callee stack pointer (esp) align
  to a 16-bytes boundary, but not that for frame pointer (ebp).

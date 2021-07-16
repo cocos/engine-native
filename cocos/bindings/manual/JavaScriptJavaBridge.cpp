@@ -437,7 +437,7 @@ bool JavaScriptJavaBridge::convertReturnValue(ReturnValue retValue, ValueType ty
             ret->setInt32(retValue.intValue);
             break;
         case JavaScriptJavaBridge::ValueType::LONG:
-            ret->setLong(retValue.longValue); //NOLINT(bugprone-narrowing-conversions)
+            ret->setDouble(static_cast<double>(retValue.longValue));
             break;
         case JavaScriptJavaBridge::ValueType::FLOAT:
             ret->setFloat(retValue.floatValue);
@@ -462,21 +462,21 @@ bool JavaScriptJavaBridge::convertReturnValue(ReturnValue retValue, ValueType ty
 
 se::Class *__jsb_JavaScriptJavaBridge_class = nullptr; // NOLINT
 
-static bool JavaScriptJavaBridge_finalize(se::State &s) { //NOLINT(readability-identifier-naming,google-runtime-references)
+static bool JavaScriptJavaBridge_finalize(se::State &s) { //NOLINT(readability-identifier-naming)
     auto *cobj = static_cast<JavaScriptJavaBridge *>(s.nativeThisObject());
     delete cobj;
     return true;
 }
 SE_BIND_FINALIZE_FUNC(JavaScriptJavaBridge_finalize)
 
-static bool JavaScriptJavaBridge_constructor(se::State &s) { //NOLINT(readability-identifier-naming,google-runtime-references)
+static bool JavaScriptJavaBridge_constructor(se::State &s) { //NOLINT(readability-identifier-naming)
     auto *cobj = new (std::nothrow) JavaScriptJavaBridge();
     s.thisObject()->setPrivateData(cobj);
     return true;
 }
 SE_BIND_CTOR(JavaScriptJavaBridge_constructor, __jsb_JavaScriptJavaBridge_class, JavaScriptJavaBridge_finalize)
 
-static bool JavaScriptJavaBridge_callStaticMethod(se::State &s) { //NOLINT(readability-identifier-naming,google-runtime-references)
+static bool JavaScriptJavaBridge_callStaticMethod(se::State &s) { //NOLINT(readability-identifier-naming)
     const auto &args = s.args();
     auto        argc = static_cast<int>(args.size());
 

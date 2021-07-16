@@ -334,6 +334,7 @@ bool CCVKContext::doInit(const ContextInfo &info) {
         if (_minorVersion >= 1 || checkExtension(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME)) {
             _gpuContext->physicalDeviceFeatures2.pNext        = &_gpuContext->physicalDeviceVulkan11Features;
             _gpuContext->physicalDeviceVulkan11Features.pNext = &_gpuContext->physicalDeviceVulkan12Features;
+            _gpuContext->physicalDeviceProperties2.pNext      = &_gpuContext->physicalDeviceDepthStencilResolveProperties;
             if (_minorVersion >= 1) {
                 vkGetPhysicalDeviceProperties2(_gpuContext->physicalDevice, &_gpuContext->physicalDeviceProperties2);
                 vkGetPhysicalDeviceFeatures2(_gpuContext->physicalDevice, &_gpuContext->physicalDeviceFeatures2);
@@ -538,13 +539,7 @@ void CCVKContext::releaseSurface(uintptr_t /*windowHandle*/) {
     if (_gpuContext && _gpuContext->vkSurface == VK_NULL_HANDLE) return;
 
     CCVKDevice *device = CCVKDevice::getInstance();
-
-    uint fenceCount = device->gpuFencePool()->size();
-    if (fenceCount) {
-        VK_CHECK(vkWaitForFences(device->gpuDevice()->vkDevice, fenceCount,
-                                 device->gpuFencePool()->data(), VK_TRUE, DEFAULT_TIMEOUT));
-    }
-
+    device->waitAllFences();
     device->destroySwapchain();
     device->_swapchainReady = false;
 

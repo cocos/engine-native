@@ -410,7 +410,7 @@ cocos_source_files(
     cocos/base/etc2.cpp
     cocos/base/etc2.h
     cocos/base/IndexHandle.h
-    cocos/base/LinearAllocatorPool.h
+    cocos/base/Locked.h
     cocos/base/Log.cpp
     cocos/base/Log.h
     cocos/base/Macros.h
@@ -472,6 +472,17 @@ cocos_source_files(
                  cocos/base/threading/ThreadSafeLinearAllocator.h
                  cocos/base/threading/ThreadSafeLinearAllocator.cpp
 )
+if(APPLE)
+cocos_source_files(
+                 cocos/base/threading/AutoReleasePool.h
+                 cocos/base/threading/AutoReleasePool-apple.mm
+)
+else()
+cocos_source_files(
+                 cocos/base/threading/AutoReleasePool.h
+                 cocos/base/threading/AutoReleasePool.cpp
+)
+endif()
 
 ##### job system
 cocos_source_files(
@@ -2052,6 +2063,7 @@ if(APPLE)
         "-framework Metal"
         "-framework MetalKit"
         "-framework QuartzCore"
+        "-framework MetalPerformanceShaders"
         "-lsqlite3"
         "-framework Security"
         "-framework SystemConfiguration"
@@ -2073,6 +2085,7 @@ if(APPLE)
     elseif(IOS)
         target_link_libraries(cocos2d PUBLIC
             "-framework QuartzCore"
+            "-framework MetalPerformanceShaders"
             "-framework UIKit"
             "-framework AVKit"
             "-framework WebKit"

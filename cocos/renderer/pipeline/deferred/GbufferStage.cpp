@@ -120,7 +120,7 @@ void GbufferStage::dispenseRenderObject2Queues() {
             const auto& passes = subModel->getPasses();
             auto passCount = passes.size();
             for (passIdx = 0; passIdx < passCount; ++passIdx) {
-                const auto pass          = passes[passIdx];
+                const auto& pass          = passes[passIdx];
                 if (pass->getPhase() != _phaseID) continue;
                 if (pass->getBatchingScheme() == scene::BatchingSchemes::INSTANCING) {
                     auto *instancedBuffer = InstancedBuffer::get(pass);

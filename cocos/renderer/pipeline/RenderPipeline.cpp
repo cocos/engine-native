@@ -31,6 +31,7 @@
 #include "gfx-base/GFXDescriptorSetLayout.h"
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXTexture.h"
+#include "InstancedBuffer.h"
 
 namespace cc {
 namespace pipeline {
@@ -101,8 +102,8 @@ void RenderPipeline::destroy() {
     }
     _flows.clear();
 
-    _globalDSManager->getGlobalDescriptorSet()->destroy();
-    CC_SAFE_DELETE(_globalDSManager);
+    _descriptorSet = nullptr;
+    CC_SAFE_DESTROY(_globalDSManager);
     CC_SAFE_DESTROY(_pipelineUBO);
     CC_SAFE_DESTROY(_pipelineSceneData);
 
@@ -117,6 +118,7 @@ void RenderPipeline::destroy() {
 
     SamplerLib::destroyAll();
     PipelineStateManager::destroyAll();
+    InstancedBuffer::destroyInstancedBuffer();
 }
 
 void RenderPipeline::setPipelineSharedSceneData(scene::PipelineSharedSceneData *data) {

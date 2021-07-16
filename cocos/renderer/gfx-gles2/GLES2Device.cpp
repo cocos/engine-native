@@ -42,6 +42,10 @@
 #include "GLES2Shader.h"
 #include "GLES2Texture.h"
 
+// when capturing GLES commands (RENDERDOC_HOOK_EGL=1, default value)
+// renderdoc doesn't support this extension during replay
+#define ALLOW_MULTISAMPLED_RENDER_TO_TEXTURE_ON_DESKTOP 0
+
 namespace cc {
 namespace gfx {
 
@@ -86,7 +90,7 @@ bool GLES2Device::doInit(const DeviceInfo &info) {
     _gpuStateCache          = CC_NEW(GLES2GPUStateCache);
     _gpuBlitManager         = CC_NEW(GLES2GPUBlitManager);
     _gpuStagingBufferPool   = CC_NEW(GLES2GPUStagingBufferPool);
-    _gpuExtensionRegistry   = CC_NEW(GLES2GPUExtensionRegistry);
+    _gpuConstantRegistry    = CC_NEW(GLES2GPUConstantRegistry);
     _gpuFramebufferCacheMap = CC_NEW(GLES2GPUFramebufferCacheMap(_gpuStateCache));
 
     bindRenderContext(true);
@@ -94,57 +98,67 @@ bool GLES2Device::doInit(const DeviceInfo &info) {
     String extStr = reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS));
     _extensions   = StringUtil::split(extStr, " ");
 
+    _multithreadedSubmission = false;
+
     if (checkExtension("EXT_sRGB")) {
-        _features[static_cast<uint>(Feature::FORMAT_SRGB)] = true;
+        _features[toNumber(Feature::FORMAT_SRGB)] = true;
     }
 
     if (checkExtension("GL_OES_texture_float")) {
-        _features[static_cast<uint>(Feature::TEXTURE_FLOAT)] = true;
+        _features[toNumber(Feature::TEXTURE_FLOAT)] = true;
     }
 
     if (checkExtension("GL_OES_texture_half_float")) {
-        _features[static_cast<uint>(Feature::TEXTURE_HALF_FLOAT)] = true;
+        _features[toNumber(Feature::TEXTURE_HALF_FLOAT)] = true;
     }
 
-    _features[static_cast<uint>(Feature::FORMAT_R11G11B10F)] = true;
-
-    _features[static_cast<uint>(Feature::MSAA)] = _renderContext->multiSampleCount() > 0;
+    _features[toNumber(Feature::FORMAT_R11G11B10F)] = true;
 
     if (checkExtension("GL_OES_element_index_uint")) {
-        _features[static_cast<uint>(Feature::ELEMENT_INDEX_UINT)] = true;
+        _features[toNumber(Feature::ELEMENT_INDEX_UINT)] = true;
     }
 
     if (checkExtension("color_buffer_float")) {
-        _features[static_cast<uint>(Feature::COLOR_FLOAT)] = true;
+        _features[toNumber(Feature::COLOR_FLOAT)] = true;
     }
 
     if (checkExtension("color_buffer_half_float")) {
-        _features[static_cast<uint>(Feature::COLOR_HALF_FLOAT)] = true;
+        _features[toNumber(Feature::COLOR_HALF_FLOAT)] = true;
     }
 
     if (checkExtension("texture_float_linear")) {
-        _features[static_cast<uint>(Feature::TEXTURE_FLOAT_LINEAR)] = true;
+        _features[toNumber(Feature::TEXTURE_FLOAT_LINEAR)] = true;
     }
 
     if (checkExtension("texture_half_float_linear")) {
-        _features[static_cast<uint>(Feature::TEXTURE_HALF_FLOAT_LINEAR)] = true;
+        _features[toNumber(Feature::TEXTURE_HALF_FLOAT_LINEAR)] = true;
     }
 
     if (checkExtension("draw_buffers")) {
-        _features[static_cast<uint>(Feature::MULTIPLE_RENDER_TARGETS)] = true;
+        _features[toNumber(Feature::MULTIPLE_RENDER_TARGETS)] = true;
         glGetIntegerv(GL_MAX_DRAW_BUFFERS_EXT, reinterpret_cast<GLint *>(&_caps.maxColorRenderTargets));
     }
 
     if (checkExtension("blend_minmax")) {
-        _features[static_cast<uint>(Feature::BLEND_MINMAX)] = true;
+        _features[toNumber(Feature::BLEND_MINMAX)] = true;
     }
 
-    _gpuExtensionRegistry->useVAO                = checkExtension("vertex_array_object");
-    _gpuExtensionRegistry->useDrawInstanced      = checkExtension("draw_instanced");
-    _gpuExtensionRegistry->useInstancedArrays    = checkExtension("instanced_arrays");
-    _gpuExtensionRegistry->useDiscardFramebuffer = checkExtension("discard_framebuffer");
+    _gpuConstantRegistry->useVAO                = checkExtension("vertex_array_object");
+    _gpuConstantRegistry->useDrawInstanced      = checkExtension("draw_instanced");
+    _gpuConstantRegistry->useInstancedArrays    = checkExtension("instanced_arrays");
+    _gpuConstantRegistry->useDiscardFramebuffer = checkExtension("discard_framebuffer");
 
-    _features[static_cast<uint>(Feature::INSTANCED_ARRAYS)] = _gpuExtensionRegistry->useInstancedArrays;
+    _features[toNumber(Feature::INSTANCED_ARRAYS)] = _gpuConstantRegistry->useInstancedArrays;
+
+#if CC_PLATFORM != CC_PLATFORM_WINDOWS && CC_PLATFORM != CC_PLATFORM_MAC_OSX || ALLOW_MULTISAMPLED_RENDER_TO_TEXTURE_ON_DESKTOP
+    if (checkExtension("multisampled_render_to_texture")) {
+        if (checkExtension("multisampled_render_to_texture2")) {
+            _gpuConstantRegistry->mMSRT = MSRTSupportLevel::LEVEL2;
+        } else {
+            _gpuConstantRegistry->mMSRT = MSRTSupportLevel::LEVEL1;
+        }
+    }
+#endif
 
     String fbfLevelStr = "NONE";
     if (checkExtension("framebuffer_fetch")) {
@@ -156,46 +170,42 @@ bool GLES2Device::doInit(const DeviceInfo &info) {
 
         if (it != _extensions.end()) {
             if (*it == CC_TOSTR(GL_EXT_shader_framebuffer_fetch_non_coherent)) {
-                _gpuExtensionRegistry->mFBF = FBFSupportLevel::NON_COHERENT_EXT;
-                fbfLevelStr                 = "NON_COHERENT_EXT";
+                _gpuConstantRegistry->mFBF = FBFSupportLevel::NON_COHERENT_EXT;
+                fbfLevelStr                = "NON_COHERENT_EXT";
             } else if (*it == CC_TOSTR(GL_QCOM_shader_framebuffer_fetch_noncoherent)) {
-                _gpuExtensionRegistry->mFBF = FBFSupportLevel::NON_COHERENT_QCOM;
-                fbfLevelStr                 = "NON_COHERENT_QCOM";
+                _gpuConstantRegistry->mFBF = FBFSupportLevel::NON_COHERENT_QCOM;
+                fbfLevelStr                = "NON_COHERENT_QCOM";
                 GL_CHECK(glEnable(GL_FRAMEBUFFER_FETCH_NONCOHERENT_QCOM));
             }
         } else if (checkExtension(CC_TOSTR(GL_EXT_shader_framebuffer_fetch))) {
             // we only care about EXT_shader_framebuffer_fetch, the ARM version does not support MRT
-            _gpuExtensionRegistry->mFBF = FBFSupportLevel::COHERENT;
-            fbfLevelStr                 = "COHERENT";
+            _gpuConstantRegistry->mFBF = FBFSupportLevel::COHERENT;
+            fbfLevelStr                = "COHERENT";
         }
     }
 
     String compressedFmts;
 
     if (checkExtension("compressed_ETC1")) {
-        _features[static_cast<uint>(Feature::FORMAT_ETC1)] = true;
+        _features[toNumber(Feature::FORMAT_ETC1)] = true;
         compressedFmts += "etc1 ";
     }
 
     if (checkForETC2()) {
-        _features[static_cast<uint>(Feature::FORMAT_ETC2)] = true;
+        _features[toNumber(Feature::FORMAT_ETC2)] = true;
         compressedFmts += "etc2 ";
     }
 
     if (checkExtension("texture_compression_pvrtc")) {
-        _features[static_cast<uint>(Feature::FORMAT_PVRTC)] = true;
+        _features[toNumber(Feature::FORMAT_PVRTC)] = true;
         compressedFmts += "pvrtc ";
     }
 
     if (checkExtension("texture_compression_astc")) {
-        _features[static_cast<uint>(Feature::FORMAT_ASTC)] = true;
+        _features[toNumber(Feature::FORMAT_ASTC)] = true;
         compressedFmts += "astc ";
     }
-    _features[static_cast<uint>(Feature::DEPTH_BOUNDS)]         = true;
-    _features[static_cast<uint>(Feature::LINE_WIDTH)]           = true;
-    _features[static_cast<uint>(Feature::STENCIL_COMPARE_MASK)] = true;
-    _features[static_cast<uint>(Feature::STENCIL_WRITE_MASK)]   = true;
-    _features[static_cast<uint>(Feature::FORMAT_RGB8)]          = true;
+    _features[toNumber(Feature::FORMAT_RGB8)] = true;
 
     _renderer = reinterpret_cast<const char *>(glGetString(GL_RENDERER));
     _vendor   = reinterpret_cast<const char *>(glGetString(GL_VENDOR));
@@ -207,8 +217,9 @@ bool GLES2Device::doInit(const DeviceInfo &info) {
     CC_LOG_INFO("VERSION: %s", _version.c_str());
     CC_LOG_INFO("SCREEN_SIZE: %d x %d", _width, _height);
     CC_LOG_INFO("COMPRESSED_FORMATS: %s", compressedFmts.c_str());
-    CC_LOG_INFO("USE_VAO: %s", _gpuExtensionRegistry->useVAO ? "true" : "false");
+    CC_LOG_INFO("USE_VAO: %s", _gpuConstantRegistry->useVAO ? "true" : "false");
     CC_LOG_INFO("FRAMEBUFFER_FETCH: %s", fbfLevelStr.c_str());
+    CC_LOG_DEBUG("EXTENSIONS: %s", extStr.c_str());
 
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, reinterpret_cast<GLint *>(&_caps.maxVertexAttributes));
     glGetIntegerv(GL_MAX_VERTEX_UNIFORM_VECTORS, reinterpret_cast<GLint *>(&_caps.maxVertexUniformVectors));
@@ -230,7 +241,7 @@ void GLES2Device::doDestroy() {
     _gpuBlitManager->destroy();
 
     CC_SAFE_DELETE(_gpuFramebufferCacheMap)
-    CC_SAFE_DELETE(_gpuExtensionRegistry)
+    CC_SAFE_DELETE(_gpuConstantRegistry)
     CC_SAFE_DELETE(_gpuStagingBufferPool)
     CC_SAFE_DELETE(_gpuBlitManager)
     CC_SAFE_DELETE(_gpuStateCache)
@@ -280,7 +291,7 @@ void GLES2Device::bindRenderContext(bool bound) {
     _context = bound ? _renderContext : nullptr;
 
     if (bound) {
-        _threadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
+        _gpuConstantRegistry->currentBoundThreadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
         _gpuStateCache->reset();
     }
 }
@@ -298,14 +309,10 @@ void GLES2Device::bindDeviceContext(bool bound) {
     _context = bound ? _deviceContext : nullptr;
 
     if (bound) {
-        _threadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
+        _gpuConstantRegistry->currentBoundThreadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
         _gpuStateCache->reset();
     }
 }
-
-#if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
-uint GLES2Device::getDefaultFramebuffer() const { return static_cast<GLES2Context *>(_context)->getDefaultFramebuffer(); }
-#endif
 
 CommandBuffer *GLES2Device::createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) {
     if (hasAgent || info.type == CommandBufferType::PRIMARY) return CC_NEW(GLES2PrimaryCommandBuffer);
@@ -370,6 +377,10 @@ TextureBarrier *GLES2Device::createTextureBarrier() {
 
 void GLES2Device::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) {
     cmdFuncGLES2CopyBuffersToTexture(this, buffers, static_cast<GLES2Texture *>(dst)->gpuTexture(), regions, count);
+}
+
+void GLES2Device::copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint count) {
+    cmdFuncGLES2CopyTextureToBuffers(this, static_cast<GLES2Texture *>(src)->gpuTexture(), buffers, region, count);
 }
 
 bool GLES2Device::checkForETC2() {

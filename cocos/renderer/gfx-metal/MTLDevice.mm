@@ -118,6 +118,7 @@ bool CCMTLDevice::doInit(const DeviceInfo &info) {
     _dssTex = [mtlDevice newTextureWithDescriptor:dssDescriptor];
     [dssDescriptor release];
     _caps.stencilBits = 8;
+    
 
     ContextInfo ctxInfo;
     ctxInfo.windowHandle = _windowHandle;
@@ -168,16 +169,10 @@ bool CCMTLDevice::doInit(const DeviceInfo &info) {
     _features[static_cast<uint>(Feature::TEXTURE_HALF_FLOAT)] = true;
     _features[static_cast<uint>(Feature::FORMAT_R11G11B10F)] = true;
     _features[static_cast<uint>(Feature::FORMAT_SRGB)] = true;
-    _features[static_cast<uint>(Feature::MSAA)] = true;
     _features[static_cast<uint>(Feature::INSTANCED_ARRAYS)] = true;
     _features[static_cast<uint>(Feature::MULTIPLE_RENDER_TARGETS)] = true;
     _features[static_cast<uint>(Feature::BLEND_MINMAX)] = true;
     _features[static_cast<uint>(Feature::ELEMENT_INDEX_UINT)] = true;
-    _features[static_cast<uint>(Feature::DEPTH_BOUNDS)] = false;
-    _features[static_cast<uint>(Feature::LINE_WIDTH)] = false;
-    _features[static_cast<uint>(Feature::STENCIL_COMPARE_MASK)] = false;
-    _features[static_cast<uint>(Feature::STENCIL_WRITE_MASK)] = false;
-    _features[static_cast<uint>(Feature::MULTITHREADED_SUBMISSION)] = true;
     _features[static_cast<uint>(Feature::COMPUTE_SHADER)] = true;
 
     _features[static_cast<uint>(Feature::FORMAT_RGB8)] = false;
@@ -290,16 +285,13 @@ void CCMTLDevice::onPresentCompleted() {
 void *CCMTLDevice::getCurrentDrawable() {
     if (!_activeDrawable)    {
         CAMetalLayer *layer = (CAMetalLayer*)getMTLLayer();
-        _activeDrawable = [[layer nextDrawable] retain];
+        _activeDrawable = [layer nextDrawable];
     }
     return _activeDrawable;
 }
 
 void CCMTLDevice::disposeCurrentDrawable() {
-    if (_activeDrawable) {
-        [(id<CAMetalDrawable>)_activeDrawable release];
-        _activeDrawable = nil;
-    }
+    _activeDrawable = nil;
 }
 
 Queue *CCMTLDevice::createQueue() {
@@ -370,6 +362,9 @@ void CCMTLDevice::copyBuffersToTexture(const uint8_t *const *buffers, Texture *t
     // getting rid of this interface all together may become a better option.
     _cmdBuff->begin();
     static_cast<CCMTLCommandBuffer *>(_cmdBuff)->copyBuffersToTexture(buffers, texture, regions, count);
+}
+
+void CCMTLDevice::copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint count) {
 }
 
 void CCMTLDevice::onMemoryWarning() {

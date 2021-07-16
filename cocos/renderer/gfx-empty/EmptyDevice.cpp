@@ -101,7 +101,7 @@ void EmptyDevice::present() {
     std::this_thread::sleep_for(std::chrono::milliseconds(16));
 }
 
-CommandBuffer *EmptyDevice::createCommandBuffer(const CommandBufferInfo & /*info*/, bool /*Emptyhas*/) {
+CommandBuffer *EmptyDevice::createCommandBuffer(const CommandBufferInfo & /*info*/, bool /*hasAgent*/) {
     return CC_NEW(EmptyCommandBuffer());
 }
 
@@ -162,6 +162,9 @@ TextureBarrier *EmptyDevice::createTextureBarrier() {
 }
 
 void EmptyDevice::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) {
+}
+
+void EmptyDevice::copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint count) {
 }
 
 } // namespace gfx

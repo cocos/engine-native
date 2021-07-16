@@ -108,7 +108,8 @@ LightingStage::~LightingStage() {
 bool LightingStage::initialize(const RenderStageInfo &info) {
     RenderStage::initialize(info);
     _renderQueueDescriptors = info.renderQueues;
-    _phaseID                = getPhaseID("deferred");
+    _phaseID                = getPhaseID("default");
+    _defPhaseID             = getPhaseID("deferred");
     _reflectionPhaseID      = getPhaseID("reflection");
     initStrHandle();
     return true;
@@ -182,6 +183,7 @@ void LightingStage::gatherLights(scene::Camera *camera) {
         _lightBufferData[offset + 2] = 0;
 
         ++i;
+        ++idx;
     }
 
     i = 0;
@@ -239,6 +241,7 @@ void LightingStage::gatherLights(scene::Camera *camera) {
         _lightBufferData[offset + 2] = direction.z;
 
         ++i;
+        ++idx;
     }
 
     // the count of lights is set to cc_lightDir[0].w
@@ -369,7 +372,6 @@ void LightingStage::recordCommands(DeferredPipeline *pipeline, gfx::RenderPass *
 
     uint const globalOffsets[] = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
     cmdBuff->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
-
     // get pso and draw quad
     scene::Pass *pass   = sceneData->getSharedData()->deferredLightPass;
     gfx::Shader *shader = sceneData->getSharedData()->deferredLightPassShader;

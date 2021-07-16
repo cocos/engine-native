@@ -25,56 +25,68 @@
 
 #pragma once
 
-#include "Resource.h"
+#include <memory>
 
 namespace cc {
-namespace framegraph {
 
-struct RenderTargetAttachment final {
-    using StoreOp = gfx::StoreOp;
-    using LoadOp  = gfx::LoadOp;
-    using Color   = gfx::Color;
+template <class T, class LK>
+class UniqueLockedRef {
+public:
+    UniqueLockedRef(T *t, LK *mtx) : _data(t), _mtx(mtx) {
+        _mtx->lock();
+    }
+    UniqueLockedRef(UniqueLockedRef &&t) noexcept {
+        _data   = t._data;
+        _mtx    = t._mtx;
+        t._data = nullptr;
+        t._mtx  = nullptr;
+    }
 
-    enum class Usage : uint8_t {
-        COLOR,
-        DEPTH,
-        STENCIL,
-        DEPTH_STENCIL,
-    };
+    UniqueLockedRef &operator=(UniqueLockedRef &&t) noexcept {
+        _data   = t._data;
+        _mtx    = t._mtx;
+        t._data = nullptr;
+        t._mtx  = nullptr;
+        return *this;
+    }
 
-    struct Descriptor final {
-        Usage   usage{Usage::COLOR};
-        uint8_t slot{0xff};
-        uint8_t writeMask{0xff};
-        LoadOp  loadOp{LoadOp::DISCARD};
-        Color   clearColor;
-        float   clearDepth{1.F};
-        uint8_t clearStencil{0U};
+    UniqueLockedRef(const T &t) = delete;
+    UniqueLockedRef &operator=(const UniqueLockedRef &) = delete;
 
-        std::vector<gfx::AccessType> beginAccesses;
-        std::vector<gfx::AccessType> endAccesses;
-    };
+    ~UniqueLockedRef() {
+        if (_mtx) {
+            _mtx->unlock();
+        }
+    }
 
-    struct Sorter {
-        inline bool operator()(const RenderTargetAttachment &a1, const RenderTargetAttachment &a2) const noexcept;
-    };
+    T *operator->() {
+        return _data;
+    }
+    T &operator*() {
+        return *_data;
+    }
 
-    static constexpr uint8_t DEPTH_STENCIL_SLOT_START{13};
-
-    TextureHandle textureHandle{};
-    Descriptor    desc;
-    uint8_t       level{0};
-    uint8_t       layer{0};
-    uint8_t       index{0};
-    StoreOp       storeOp{StoreOp::DISCARD};
+private:
+    T * _data{};
+    LK *_mtx{};
 };
 
-inline bool RenderTargetAttachment::Sorter::operator()(const RenderTargetAttachment &a1, const RenderTargetAttachment &a2) const noexcept {
-    if (a1.desc.usage == a2.desc.usage) {
-        return a1.desc.slot < a2.desc.slot;
+template <class T, class LK>
+class Locked {
+public:
+    Locked()                       = default;
+    Locked(const Locked &)         = delete;
+    Locked(Locked &&)              = delete;
+    Locked &               operator=(const Locked &) = delete;
+    Locked &               operator=(Locked &&) = delete;
+    UniqueLockedRef<T, LK> lock() {
+        UniqueLockedRef<T, LK> ref(&_data, &_mutex);
+        return std::move(ref);
     }
-    return a1.desc.usage < a2.desc.usage;
-}
 
-} // namespace framegraph
+private:
+    LK _mutex{};
+    T  _data{};
+};
+
 } // namespace cc

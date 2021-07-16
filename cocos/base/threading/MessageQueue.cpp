@@ -25,11 +25,11 @@
 
 #include "MessageQueue.h"
 #include <cassert>
+#include "AutoReleasePool.h"
 
 namespace cc {
 
 namespace {
-uint32_t constexpr MEMORY_CHUNK_SIZE               = 4096 * 16;
 uint32_t constexpr MEMORY_CHUNK_POOL_CAPACITY      = 64;
 uint32_t constexpr SWITCH_CHUNK_MEMORY_REQUIREMENT = sizeof(MemoryChunkSwitchMessage) + sizeof(DummyMessage);
 } // namespace
@@ -143,7 +143,7 @@ void MessageQueue::terminateConsumerThread() noexcept {
     event.wait();
 }
 
-void MessageQueue::finishWriting(bool wait) noexcept {
+void MessageQueue::finishWriting() noexcept {
     if (!_immediateMode) {
         bool *const flushingFinished = &_reader.flushingFinished;
 
@@ -153,11 +153,7 @@ void MessageQueue::finishWriting(bool wait) noexcept {
                               *flushingFinished = true;
                           });
 
-        if (wait) {
-            kickAndWait();
-        } else {
-            kick();
-        }
+        kick();
     }
 }
 
@@ -253,6 +249,7 @@ Message *MessageQueue::readMessage() noexcept {
 
 void MessageQueue::consumerThreadLoop() noexcept {
     while (!_reader.terminateConsumerThread) {
+        AutoReleasePool autoReleasePool;
         flushMessages();
     }
 
