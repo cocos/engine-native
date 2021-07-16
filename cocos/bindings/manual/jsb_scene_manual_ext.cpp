@@ -47,7 +47,7 @@ void fastSetPasses(void *buffer) {
         uint32_t                           passSize;
         AlignedPtr<cc::scene::Pass>        passes[0];
     };
-    assert(offsetof(Heap, passes) == 12);
+    static_assert(offsetof(Heap, passes) == 12);
 
     Heap *heap   = reinterpret_cast<Heap *>(buffer);
     auto &passes = heap->selfPtr.get()->passes;
@@ -135,11 +135,11 @@ bool register_all_drawbatch2d_ext_manual(se::Object *obj) { //NOLINT
     globalThis                         = se::ScriptEngine::getInstance()->getGlobalObject();
     msgQueue                           = se::Object::createArrayObject(1);
     {
-        uint8_t* data{nullptr};
+        uint8_t *data{nullptr};
         msgArrayBuffer->getArrayBufferData(&data, nullptr);
-        uint32_t* int32Data = reinterpret_cast<uint32_t*>(data);
-        int32Data[0] = 8;
-        int32Data[1] = 0;
+        auto *int32Data = reinterpret_cast<uint32_t *>(data);
+        int32Data[0]    = 8;
+        int32Data[1]    = 0;
     }
     msgQueue->setArrayElement(0, se::Value(msgArrayBuffer));
     globalThis->setProperty("__fastMQ__", se::Value(msgQueue));
