@@ -75,8 +75,10 @@ template <typename F>
 uint64_t convertPtr(F *in) {
     return static_cast<uint64_t>(reinterpret_cast<intptr_t>(in));
 }
-uint8_t *        mqPtr{nullptr};
-constexpr size_t BUFFER_SIZE = 10 * 1024 * 1024;
+bool             mqInitialized{false};
+se::Object *     msgQueue{nullptr};
+se::Object *     globalThis{nullptr};
+constexpr size_t BUFFER_SIZE{1 * 1024 * 1024}; // 1MB
 
 } // namespace
 
@@ -85,47 +87,59 @@ constexpr size_t BUFFER_SIZE = 10 * 1024 * 1024;
  *  which sync data to native objects.
  */
 void jsbFlushFastMQ() {
-    if (mqPtr == nullptr) {
+    if (!mqInitialized) {
         return;
     }
-    auto *u32Ptr   = reinterpret_cast<uint32_t *>(mqPtr);
-    auto  offset   = *u32Ptr;
-    auto  commands = *(u32Ptr + 1);
-    assert(offset < BUFFER_SIZE);
-    if (commands == 0) return;
+    se::AutoHandleScope scope;
+    se::Value           maxIdx;
+    se::Value           currentArrayBuffer;
+    se::Object *        arrayBufferObj;
 
-    using FastFunction = void (*)(void *);
+    globalThis->getProperty("__fastMQIdx__", &maxIdx);
+    auto     maxSize = maxIdx.toUint32();
+    uint8_t *mqPtr{nullptr};
 
-    uint8_t *p = mqPtr + 8;
-    for (uint32_t i = 0; i < commands; i++) {
-        auto *   base   = reinterpret_cast<uint32_t *>(p);
-        uint32_t len    = *base;
-        auto *   fnAddr = reinterpret_cast<uint64_t *>(base + 1);
-        auto *   fn     = reinterpret_cast<FastFunction *>(fnAddr);
-        (*fn)(p + 12);
-        p += len;
+    for (auto i = 0; i <= maxSize; i++) {
+        msgQueue->getArrayElement(i, &currentArrayBuffer);
+        arrayBufferObj = currentArrayBuffer.toObject();
+        arrayBufferObj->getArrayBufferData(&mqPtr, nullptr);
+        auto *u32Ptr   = reinterpret_cast<uint32_t *>(mqPtr);
+        auto  offset   = *u32Ptr;
+        auto  commands = *(u32Ptr + 1);
+        assert(offset < BUFFER_SIZE);
+        if (commands == 0) return;
+
+        using FastFunction = void (*)(void *);
+
+        uint8_t *p = mqPtr + 8;
+        for (uint32_t i = 0; i < commands; i++) {
+            auto *   base   = reinterpret_cast<uint32_t *>(p);
+            uint32_t len    = *base;
+            auto *   fnAddr = reinterpret_cast<uint64_t *>(base + 1);
+            auto *   fn     = reinterpret_cast<FastFunction *>(fnAddr);
+            (*fn)(p + 12);
+            p += len;
+        }
+        // reset
+        *u32Ptr       = 8;
+        *(u32Ptr + 1) = 0;
     }
-    // reset
-    *u32Ptr       = 8;
-    *(u32Ptr + 1) = 0;
+    globalThis->setProperty("__fastMQIdx__", se::Value(0));
 }
 
 bool register_all_drawbatch2d_ext_manual(se::Object *obj) { //NOLINT
     // allocate global message queue
 
     se::AutoHandleScope scope;
-    auto                globalThis = se::ScriptEngine::getInstance()->getGlobalObject();
-    se::Object *        msgQueue   = se::Object::createArrayBufferObject(nullptr, BUFFER_SIZE);
-    {
-        uint8_t * ptr    = nullptr;
-        uint32_t *intptr = nullptr;
-        msgQueue->getArrayBufferData(&ptr, nullptr);
-        intptr        = reinterpret_cast<uint32_t *>(ptr);
-        *intptr       = 8; // offset
-        *(intptr + 1) = 0; // msg count
-        mqPtr         = ptr;
-    }
+    auto *              msgArrayBuffer = se::Object::createArrayBufferObject(nullptr, BUFFER_SIZE);
+    globalThis                         = se::ScriptEngine::getInstance()->getGlobalObject();
+    msgQueue                           = se::Object::createArrayObject(1);
+
+    msgQueue->setArrayElement(0, se::Value(msgArrayBuffer));
     globalThis->setProperty("__fastMQ__", se::Value(msgQueue));
+    globalThis->setProperty("__fastMQIdx__", se::Value(0));
+
+    mqInitialized = true;
 
     // register function table, serialize to queue
 

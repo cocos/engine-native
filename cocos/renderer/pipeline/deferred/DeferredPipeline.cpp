@@ -39,8 +39,6 @@
 #include "gfx-base/GFXTexture.h"
 #include "platform/Application.h"
 
-extern void jsbFlushFastMQ();
-
 namespace cc {
 namespace pipeline {
 namespace {
@@ -129,8 +127,6 @@ bool DeferredPipeline::activate() {
 }
 
 void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
-    jsbFlushFastMQ();
-
     _commandBuffers[0]->begin();
     _pipelineUBO->updateGlobalUBO();
     _pipelineUBO->updateMultiCameraUBO(cameras);

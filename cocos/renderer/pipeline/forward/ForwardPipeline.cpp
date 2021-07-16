@@ -38,8 +38,6 @@
 #include "platform/Application.h"
 #include "scene/RenderScene.h"
 
-extern void jsbFlushFastMQ();
-
 namespace cc {
 namespace pipeline {
 namespace {
@@ -124,8 +122,6 @@ bool ForwardPipeline::activate() {
 }
 
 void ForwardPipeline::render(const vector<scene::Camera *> &cameras) {
-    jsbFlushFastMQ();
-
     _commandBuffers[0]->begin();
     _pipelineUBO->updateGlobalUBO();
     _pipelineUBO->updateMultiCameraUBO(cameras);
