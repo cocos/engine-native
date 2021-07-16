@@ -134,7 +134,13 @@ bool register_all_drawbatch2d_ext_manual(se::Object *obj) { //NOLINT
     auto *              msgArrayBuffer = se::Object::createArrayBufferObject(nullptr, BUFFER_SIZE);
     globalThis                         = se::ScriptEngine::getInstance()->getGlobalObject();
     msgQueue                           = se::Object::createArrayObject(1);
-
+    {
+        uint8_t* data{nullptr};
+        msgArrayBuffer->getArrayBufferData(&data, nullptr);
+        uint32_t* int32Data = reinterpret_cast<uint32_t*>(data);
+        int32Data[0] = 8;
+        int32Data[1] = 0;
+    }
     msgQueue->setArrayElement(0, se::Value(msgArrayBuffer));
     globalThis->setProperty("__fastMQ__", se::Value(msgQueue));
     globalThis->setProperty("__fastMQIdx__", se::Value(0));
