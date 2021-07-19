@@ -392,7 +392,7 @@ uint CCMTLDevice::preferredPixelFormat() {
     return static_cast<uint>([((CAMetalLayer*)_mtlLayer) pixelFormat]);
 }
 
-bool CCMTLDevice::dependencyCheck(Buffer* buf) {
+bool CCMTLDevice::checkDependency(Buffer* buf) {
     auto iter = _bufferDependency.find(buf);
     bool found = iter != _bufferDependency.end();
     static_cast<CCMTLBuffer*>(buf)->setPostRelied(found);

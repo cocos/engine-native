@@ -530,7 +530,7 @@ void CCMTLCommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size)
     id<MTLBuffer> dstBuffer = static_cast<CCMTLBuffer *>(buff)->getMTLBuffer();
     
     auto* mtlDevice = CCMTLDevice::getInstance();
-    bool postRelied = mtlDevice->dependencyCheck(buff);
+    bool postRelied = mtlDevice->checkDependency(buff);
     
     if(buff->getMemUsage() == cc::gfx::MemoryUsageBit::DEVICE || postRelied) {
         CCMTLGPUBuffer stagingBuffer;

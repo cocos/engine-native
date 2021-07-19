@@ -66,7 +66,7 @@ public:
     void resize(uint width, uint height) override;
     void acquire() override;
     void present() override;
-    bool dependencyCheck(Buffer* mtlBuffer);
+    bool checkDependency(Buffer* mtlBuffer);
 
     void onPresentCompleted();
     void* getCurrentDrawable();
