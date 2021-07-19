@@ -54,9 +54,9 @@ public:
     inline MTLIndexType        getIndexType() const { return _indexType; }
     inline bool                isDrawIndirectByIndex() const { return _isDrawIndirectByIndex; }
     inline const DrawInfoList &getDrawInfos() const { return _drawInfos; }
-    
-    inline bool isPostRelied() const {return _postRelied;}
-    inline void setPostRelied(bool b) {_postRelied = b;}
+
+    inline bool isPostRelied() const { return _postRelied; }
+    inline void setPostRelied(bool b) { _postRelied = b; }
 
 protected:
     void doInit(const BufferInfo &info) override;
@@ -72,7 +72,7 @@ protected:
     MTLResourceOptions _mtlResourceOptions      = MTLResourceStorageModePrivate;
     bool               _isIndirectDrawSupported = false;
     uint               _bufferViewOffset        = 0;
-    bool _postRelied                            = false;
+    bool               _postRelied              = false;
 
     bool                                              _isDrawIndirectByIndex = false;
     vector<MTLDrawIndexedPrimitivesIndirectArguments> _indexedPrimitivesIndirectArguments;
