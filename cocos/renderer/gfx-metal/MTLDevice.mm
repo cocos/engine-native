@@ -265,7 +265,8 @@ void CCMTLDevice::present() {
     _numTriangles = queue->_numTriangles;
     
     for (auto iter = _bufferDependency.begin(); iter != _bufferDependency.end();) {
-        if(!(*iter)->isPostRelied()) {
+        auto* ccBuf = static_cast<CCMTLBuffer*>(*iter);
+        if(!ccBuf->isPostRelied()) {
             iter = _bufferDependency.erase(iter);
         } else {
             iter++;
@@ -394,7 +395,7 @@ uint CCMTLDevice::preferredPixelFormat() {
 bool CCMTLDevice::dependencyCheck(Buffer* buf) {
     auto iter = _bufferDependency.find(buf);
     bool found = iter != _bufferDependency.end();
-    buf->setPostRelied(found);
+    static_cast<CCMTLBuffer*>(buf)->setPostRelied(found);
     if (!found) {
         _bufferDependency.insert(buf);
     }

@@ -50,8 +50,6 @@ public:
     inline uint        getCount() const { return _count; }
     inline uint        getSize() const { return _size; }
     inline BufferFlags getFlags() const { return _flags; }
-    inline bool isPostRelied() const {return _postRelied;}
-    inline void setPostRelied(bool b) {_postRelied = b;}
 
 protected:
     virtual void doInit(const BufferInfo &info)     = 0;
@@ -67,7 +65,6 @@ protected:
     uint        _offset       = 0U;
     BufferFlags _flags        = BufferFlagBit::NONE;
     bool        _isBufferView = false;
-    bool _postRelied = false;
 };
 
 } // namespace gfx
