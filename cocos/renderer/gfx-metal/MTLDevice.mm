@@ -192,8 +192,8 @@ void CCMTLDevice::doDestroy() {
 //        _memoryAlarmListenerId = 0;
 //    }
     
-    if(!_bufferDependency.empty()) {
-        _bufferDependency.clear();
+    if(!_bufferUsedMap.empty()) {
+        _bufferUsedMap.clear();
     }
     if (_autoreleasePool) {
         [(NSAutoreleasePool*)_autoreleasePool drain];
@@ -264,10 +264,10 @@ void CCMTLDevice::present() {
     _numInstances = queue->_numInstances;
     _numTriangles = queue->_numTriangles;
     
-    for (auto iter = _bufferDependency.begin(); iter != _bufferDependency.end();) {
+    for (auto iter = _bufferUsedMap.begin(); iter != _bufferUsedMap.end();) {
         auto* ccBuf = static_cast<CCMTLBuffer*>(*iter);
         if(!ccBuf->isPostRelied()) {
-            iter = _bufferDependency.erase(iter);
+            iter = _bufferUsedMap.erase(iter);
         } else {
             iter++;
         }
@@ -392,14 +392,14 @@ uint CCMTLDevice::preferredPixelFormat() {
     return static_cast<uint>([((CAMetalLayer*)_mtlLayer) pixelFormat]);
 }
 
-bool CCMTLDevice::checkDependency(Buffer* buf) {
-    auto iter = _bufferDependency.find(buf);
-    bool found = iter != _bufferDependency.end();
-    static_cast<CCMTLBuffer*>(buf)->setPostRelied(found);
-    if (!found) {
-        _bufferDependency.insert(buf);
+bool CCMTLDevice::checkInUse(Buffer* buf) {
+    auto iter = _bufferUsedMap.find(buf);
+    bool postRelied = iter != _bufferUsedMap.end();
+    static_cast<CCMTLBuffer*>(buf)->setPostRelied(postRelied);
+    if (!postRelied) {
+        _bufferUsedMap.insert(buf);
     }
-    return found;
+    return postRelied;
 }
 
 } // namespace gfx
