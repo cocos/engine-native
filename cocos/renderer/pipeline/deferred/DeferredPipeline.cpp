@@ -29,6 +29,7 @@
 #include "MainFlow.h"
 #include "gfx-base/GFXBuffer.h"
 #include "gfx-base/GFXCommandBuffer.h"
+#include "gfx-base/GFXDef.h"
 #include "gfx-base/GFXDescriptorSet.h"
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXFramebuffer.h"
@@ -93,10 +94,10 @@ bool DeferredPipeline::initialize(const RenderPipelineInfo &info) {
     return true;
 }
 
-bool DeferredPipeline::activate() {
+bool DeferredPipeline::activate(gfx::Swapchain *swapchain) {
     _macros.setValue("CC_PIPELINE_TYPE", static_cast<float>(1.0));
 
-    if (!RenderPipeline::activate()) {
+    if (!RenderPipeline::activate(swapchain)) {
         CC_LOG_ERROR("RenderPipeline active failed.");
         return false;
     }
@@ -158,7 +159,7 @@ void DeferredPipeline::initFrameGraphExternalTexture() {
     gfx::TextureInfo depthInfo = {
         gfx::TextureType::TEX2D,
         gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT,
-        _device->getDepthStencilFormat(),
+        gfx::Format::DEPTH_STENCIL,
         _width,
         _height,
     };
@@ -201,7 +202,7 @@ void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
     static gfx::TextureBarrier *present{_device->createTextureBarrier({{gfx::AccessType::COLOR_ATTACHMENT_WRITE}, {gfx::AccessType::PRESENT}})};
     static gfx::Texture *       backBuffer{nullptr};
     _commandBuffers[0]->begin();
-    _pipelineUBO->updateGlobalUBO();
+    _pipelineUBO->updateGlobalUBO(cameras[0]->window->swapchain);
     _pipelineUBO->updateMultiCameraUBO(cameras);
 
     for (auto *camera : cameras) {
@@ -250,12 +251,10 @@ gfx::InputAssembler *DeferredPipeline::getIAByRenderArea(const gfx::Rect &rect) 
 }
 
 void DeferredPipeline::genQuadVertexData(gfx::SurfaceTransform /*surfaceTransform*/, const gfx::Rect &renderArea, float *vbData) {
-    auto width = float(_width);
-    auto height = float(_height);
-    auto minX = float(renderArea.x) / width;
-    auto maxX = float(renderArea.x + renderArea.width) / width;
-    auto minY = float(renderArea.y) / height;
-    auto maxY = float(renderArea.y + renderArea.height) / height;
+    float minX = static_cast<float>(renderArea.x) / static_cast<float>(_width);
+    float maxX = static_cast<float>(renderArea.x + renderArea.width) / static_cast<float>(_width);
+    float minY = static_cast<float>(renderArea.y) / static_cast<float>(_height);
+    float maxY = static_cast<float>(renderArea.y + renderArea.height) / static_cast<float>(_height);
     if (_device->getCapabilities().screenSpaceSignY > 0) {
         std::swap(minY, maxY);
     }
@@ -304,14 +303,16 @@ bool DeferredPipeline::createQuadInputAssembler(gfx::Buffer *quadIB, gfx::Buffer
 
 gfx::Rect DeferredPipeline::getRenderArea(scene::Camera *camera, bool onScreen) {
     gfx::Rect renderArea;
-    uint w;
-    uint h;
+
+    float w;
+    float h;
     if (onScreen) {
-        w = camera->window->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->height : camera->width;
-        h = camera->window->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->width : camera->height;
+        gfx::Swapchain *swapchain = camera->window->swapchain;
+        w = static_cast<float>(swapchain && toNumber(swapchain->getSurfaceTransform()) % 2 ? camera->height : camera->width);
+        h = static_cast<float>(swapchain && toNumber(swapchain->getSurfaceTransform()) % 2 ? camera->width : camera->height);
     } else {
-        w = camera->width;
-        h = camera->height;
+        w = static_cast<float>(camera->width);
+        h = static_cast<float>(camera->height);
     }
 
     const auto &viewport = camera->viewPort;

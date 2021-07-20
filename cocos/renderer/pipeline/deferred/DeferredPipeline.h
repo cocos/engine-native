@@ -64,7 +64,7 @@ public:
 
     bool initialize(const RenderPipelineInfo &info) override;
     void destroy() override;
-    bool activate() override;
+    bool activate(gfx::Swapchain *swapchain) override;
     void render(const vector<scene::Camera *> &cameras) override;
     void resize(uint width, uint height) override;
 

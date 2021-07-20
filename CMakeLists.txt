@@ -46,6 +46,9 @@ elseif(OHOS)
     cc_set_if_undefined(CC_USE_GLES2 OFF)
 endif()
 
+set(CC_USE_GLES3 OFF)
+set(CC_USE_GLES2 OFF)
+
 if(USE_PHYSICS_PHYSX)
     if (ANDROID AND CMAKE_ANDROID_ARCH_ABI MATCHES x86)
         set(USE_PHYSICS_PHYSX OFF)
@@ -709,6 +712,8 @@ cocos_source_files(
                  cocos/renderer/gfx-agent/RenderPassAgent.cpp
                  cocos/renderer/gfx-agent/SamplerAgent.h
                  cocos/renderer/gfx-agent/SamplerAgent.cpp
+                 cocos/renderer/gfx-agent/SwapchainAgent.h
+                 cocos/renderer/gfx-agent/SwapchainAgent.cpp
                  cocos/renderer/gfx-agent/ShaderAgent.h
                  cocos/renderer/gfx-agent/ShaderAgent.cpp
                  cocos/renderer/gfx-agent/TextureAgent.h
@@ -740,6 +745,8 @@ cocos_source_files(
                  cocos/renderer/gfx-validator/SamplerValidator.cpp
                  cocos/renderer/gfx-validator/ShaderValidator.h
                  cocos/renderer/gfx-validator/ShaderValidator.cpp
+                 cocos/renderer/gfx-validator/SwapchainValidator.h
+                 cocos/renderer/gfx-validator/SwapchainValidator.cpp
                  cocos/renderer/gfx-validator/TextureValidator.h
                  cocos/renderer/gfx-validator/TextureValidator.cpp
                  cocos/renderer/gfx-validator/ValidationUtils.h

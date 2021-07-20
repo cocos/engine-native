@@ -126,8 +126,8 @@ void PostprocessStage::render(scene::Camera *camera) {
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
             gfx::Format::RGBA16F,
-            camera->window->frameBuffer->getColorTextures()[0]->getWidth(),
-            camera->window->frameBuffer->getColorTextures()[0]->getHeight(),
+            camera->window->getWidth(),
+            camera->window->getHeight(),
         };
 
         auto *output = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(textureInfo);

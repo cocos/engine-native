@@ -56,7 +56,7 @@ public:
     RenderPipeline();
     ~RenderPipeline() override;
 
-    virtual bool activate();
+    virtual bool activate(gfx::Swapchain *swapchain);
     virtual void destroy();
     virtual bool initialize(const RenderPipelineInfo &info);
     virtual void render(const vector<scene::Camera *> &cameras);
