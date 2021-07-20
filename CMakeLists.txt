@@ -73,7 +73,7 @@ if("$ENV{COCOS_ENGINE_DEV}" EQUAL "1")
     endif()
     message(STATUS "Enable NO_WERROR")
 else()
-    set(WERROR_FLAGS "-Werror")
+    set(WERROR_FLAGS "")
     message(STATUS "Ignore NO_WERROR")
 endif()
 
