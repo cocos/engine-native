@@ -64,8 +64,10 @@ public:
     RenderElem     getRendElement();
     void           addDenoiseIndex() {_denoiseIndex = (_denoiseIndex + 1) % _reflectionElems.size();}
     RenderQueue    *getReflectRenderQueue() {return _reflectionRenderQueue;}
+    uint           getSsprTexWidth() { return _ssprTexWidth; }
+    uint           getSsprTexHeight() { return _ssprTexHeight; }
+    Mat4           &getMatViewProj() { return _matViewProj; }
 
-    Mat4          matViewProj;
 private:
     void gatherLights(scene::Camera *camera);
     void initLightingBuffer();
@@ -99,6 +101,10 @@ private:
     std::vector<RenderElem> _reflectionElems;
     uint _denoiseIndex = 0;         // use to get corrrect texture string handle
 
+    // SSPR texture size
+    uint _ssprTexWidth = 0;
+    uint _ssprTexHeight = 0;
+    Mat4 _matViewProj;
 };
 
 } // namespace pipeline

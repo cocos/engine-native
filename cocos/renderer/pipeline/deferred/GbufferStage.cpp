@@ -176,21 +176,14 @@ void GbufferStage::render(scene::Camera *camera) {
     auto gbufferSetup = [&](framegraph::PassNodeBuilder &builder, renderData &data) {
         // gbuffer setup
         gfx::Color clearColor = {0.0, 0.0, 0.0, 0.0};
+
+        framegraph::RenderTargetAttachment::Descriptor colorInfo;
+        colorInfo.usage       = framegraph::RenderTargetAttachment::Usage::COLOR;
+        colorInfo.loadOp      = gfx::LoadOp::CLEAR;
+        colorInfo.clearColor  = clearColor;
+        colorInfo.endAccesses = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_READ};
         for (int i = 0; i < 4; ++i) {
-            framegraph::RenderTargetAttachment::Descriptor colorAttachmentInfo;
-            colorAttachmentInfo.usage       = framegraph::RenderTargetAttachment::Usage::COLOR;
-            colorAttachmentInfo.loadOp      = gfx::LoadOp::CLEAR;
-            colorAttachmentInfo.clearColor  = clearColor;
-            colorAttachmentInfo.endAccesses = {gfx::AccessType::COLOR_ATTACHMENT_READ};
-
-            framegraph::Texture::Descriptor colorTexInfo;
-            colorTexInfo.format = gfx::Format::RGBA8;
-            colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
-            colorTexInfo.width  = _device->getWidth();
-            colorTexInfo.height = _device->getHeight();
-
-            builder.create(data.gbuffer[i], DeferredPipeline::_gbuffer[i], colorTexInfo);
-            data.gbuffer[i] = builder.write(data.gbuffer[i], colorAttachmentInfo);
+            data.gbuffer[i] = builder.write(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_gbuffer[i])), colorInfo);
             builder.writeToBlackboard(DeferredPipeline::_gbuffer[i], data.gbuffer[i]);
         }
 
@@ -202,14 +195,7 @@ void GbufferStage::render(scene::Camera *camera) {
         depthInfo.clearStencil = camera->clearStencil;
         depthInfo.endAccesses = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
 
-        framegraph::Texture::Descriptor depthTexInfo;
-        depthTexInfo.format = _device->getDepthStencilFormat();
-        depthTexInfo.usage  = gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT;
-        depthTexInfo.width  = _device->getWidth();
-        depthTexInfo.height = _device->getHeight();
-
-        builder.create(data.depth, DeferredPipeline::_depth, depthTexInfo);
-        data.depth = builder.write(data.depth, depthInfo);
+        data.depth = builder.write(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_depth)), depthInfo);
         builder.writeToBlackboard(DeferredPipeline::_depth, data.depth);
 
         // viewport setup

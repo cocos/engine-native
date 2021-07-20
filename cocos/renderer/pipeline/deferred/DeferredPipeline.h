@@ -79,6 +79,7 @@ public:
     framegraph::FrameGraph &getFrameGraph() { return _fg; }
     gfx::Color getClearcolor(scene::Camera *camera);
     void prepareFrameGraph();
+    void initFrameGraphExternalTexture();
 
 private:
     bool activeRenderer();
@@ -110,8 +111,8 @@ private:
 
 public:
     // deferred resource name declear
-    static framegraph::StringHandle _gbuffer[4];
-    static framegraph::StringHandle _depth;
+    static framegraph::StringHandle _gbuffer[4];        // deal as external resource
+    static framegraph::StringHandle _depth;             // deal as external resource
     static framegraph::StringHandle _lightingOut;
     static framegraph::StringHandle _backBuffer;        // buffer get from swapchain, used for queuepresent
 
@@ -120,6 +121,10 @@ public:
     static framegraph::StringHandle _passLighting;
     static framegraph::StringHandle _passSspr;
     static framegraph::StringHandle _passPostprocess;
+
+    // external resources of framegraph
+    framegraph::Texture *_gbufferTex[4] = {nullptr};
+    framegraph::Texture *_depthTex = nullptr;
 };
 
 } // namespace pipeline
