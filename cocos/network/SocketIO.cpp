@@ -392,9 +392,9 @@ void SIOClientImpl::handshakeResponse(HttpClient * /*sender*/, HttpResponse *res
         CC_LOG_INFO("%s completed", response->getHttpRequest()->getTag());
     }
 
-    int32_t statusCode       = response->getResponseCode();
+    auto statusCode       = response->getResponseCode();
     char statusString[64] = {};
-    sprintf(statusString, "HTTP Status Code: %d, tag = %s", statusCode, response->getHttpRequest()->getTag());
+    sprintf(statusString, "HTTP Status Code: %ld, tag = %s", statusCode, response->getHttpRequest()->getTag());
     CC_LOG_INFO("response code: %ld", statusCode);
 
     if (!response->isSucceed() || statusCode >= 400) {
@@ -746,7 +746,7 @@ void SIOClientImpl::onMessage(WebSocket * /*ws*/, const WebSocket::Data &data) {
                         pos2      = sData.find(',');
                         if (pos2 > pos) {
                             eventname = sData.substr(pos + 2, pos2 - (pos + 3));
-                            sData    = sData.substr(pos2 + 9, sData.size() - (pos2 + 11));
+                            sData     = sData.substr(pos2 + 9, sData.size() - (pos2 + 11));
                         }
 
                         c->fireEvent(eventname, sData);
