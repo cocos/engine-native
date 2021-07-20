@@ -746,7 +746,7 @@ void SIOClientImpl::onMessage(WebSocket * /*ws*/, const WebSocket::Data &data) {
                         pos2      = sData.find(',');
                         if (pos2 > pos) {
                             eventname = sData.substr(pos + 2, pos2 - (pos + 3));
-                            sData     = sData.substr(pos2 + 9, sData.size() - (pos2 + 11));
+                            sData    = sData.substr(pos2 + 9, sData.size() - (pos2 + 11));
                         }
 
                         c->fireEvent(eventname, sData);
