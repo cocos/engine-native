@@ -102,12 +102,77 @@ bool DeferredPipeline::activate() {
         return false;
     }
 
+    initFrameGraphExternalTexture();
     return true;
 }
 
+void DeferredPipeline::initFrameGraphExternalTexture() {
+    // gbuffer descriptorset setup
+    gfx::SamplerInfo sinfo{
+        gfx::Filter::LINEAR,
+        gfx::Filter::LINEAR,
+        gfx::Filter::NONE,
+        gfx::Address::CLAMP,
+        gfx::Address::CLAMP,
+        gfx::Address::CLAMP,
+    };
+    const auto  samplerHash = SamplerLib::genSamplerHash(sinfo);
+    auto *const sampler     = SamplerLib::getSampler(samplerHash);
+
+    // create external gbuffer and depth
+    gfx::TextureInfo info = {
+        gfx::TextureType::TEX2D,
+        gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
+        gfx::Format::RGBA8,
+        _device->getWidth(),
+        _device->getHeight(),
+    };
+
+    gfx::TextureInfo infoPos = {
+        gfx::TextureType::TEX2D,
+        gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
+        gfx::Format::RGBA16F,       // POSITON cannot use RGBA8
+        _device->getWidth(),
+        _device->getHeight(),
+    };
+
+    for (uint i = 0; i < 4; ++i) {
+        if (i != 1) {
+            _gbufferTex[i] = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(info);
+            _gbufferTex[i]->createPersistent();
+        } else {
+            _gbufferTex[i] = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(infoPos);
+            _gbufferTex[i]->createPersistent();
+        }
+
+        // bind global descriptor
+        gfx::Texture *tex = (gfx::Texture *)(_gbufferTex[i]->getDevObj());
+        _descriptorSet->bindSampler(static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_ALBEDOMAP) + i, sampler);
+        _descriptorSet->bindTexture(static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_ALBEDOMAP) + i, tex);
+    }
+    _descriptorSet->update();
+
+    gfx::TextureInfo depthInfo = {
+        gfx::TextureType::TEX2D,
+        gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT,
+        _device->getDepthStencilFormat(),
+        _device->getWidth(),
+        _device->getHeight(),
+    };
+
+    _depthTex = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(depthInfo);
+    _depthTex->createPersistent();
+}
+
 void DeferredPipeline::prepareFrameGraph() {
-    // repare for the backbuffer
+    // repare for the backbuffer, if the gfx::Texture is nullptr, cocos will use swapchain texture when create framebuffer
     _fg.getBlackboard().put(_backBuffer, _fg.importExternal(_backBuffer, _fgBackBuffer));
+
+    for (uint i = 0; i < 4; ++i) {
+        _fg.getBlackboard().put(_gbuffer[i], _fg.importExternal(_gbuffer[i], *_gbufferTex[i]));
+    }
+
+    _fg.getBlackboard().put(_depth, _fg.importExternal(_depth, *_depthTex));
 }
 
 void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
@@ -123,7 +188,7 @@ void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
         }
 
         _fg.compile();
-        _fg.exportGraphViz("fg_vis.dot");
+        //_fg.exportGraphViz("fg_vis.dot");
         _fg.execute();
         _pipelineUBO->incCameraUBOOffset();
     }
@@ -294,6 +359,18 @@ void DeferredPipeline::resize(uint width, uint height) {
 
 void DeferredPipeline::destroy() {
     destroyQuadInputAssembler();
+
+    for (int i = 0; i < 4; ++i) {
+        if (_gbufferTex[i]) {
+            delete _gbufferTex[i];
+            _gbufferTex[i] = nullptr;
+        }
+    }
+
+    if (_depthTex) {
+        delete _depthTex;
+        _depthTex = nullptr;
+    }
 
     if (_descriptorSet) {
         _descriptorSet->getBuffer(UBOGlobal::BINDING)->destroy();

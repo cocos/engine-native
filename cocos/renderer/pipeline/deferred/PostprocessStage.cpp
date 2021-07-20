@@ -1,3 +1,4 @@
+
 /****************************************************************************
  Copyright (c) 2020-2021 Huawei Technologies Co., Ltd.
 
@@ -38,8 +39,11 @@
 
 namespace cc {
 namespace pipeline {
+
+static const String StageName = "PostprocessStage";
+
 RenderStageInfo PostprocessStage::initInfo = {
-    "PostprocessStage",
+    StageName,
     static_cast<uint>(DeferredStagePriority::POSTPROCESS),
     0,
     {{true, RenderQueueSortMode::BACK_TO_FRONT, {"default"}}},
@@ -54,6 +58,7 @@ PostprocessStage::PostprocessStage() {
 bool PostprocessStage::initialize(const RenderStageInfo &info) {
     RenderStage::initialize(info);
     _renderQueueDescriptors = info.renderQueues;
+
     return true;
 }
 
@@ -82,9 +87,15 @@ void PostprocessStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
         RenderQueueCreateInfo info = {descriptor.isTransparent, phase, sortFunc};
         _renderQueues.emplace_back(CC_NEW(RenderQueue(std::move(info))));
     }
+
+    gfx::DescriptorSetLayout *_globalSetlayout = _device->createDescriptorSetLayout({globalDescriptorSetLayout.bindings});
+    _globalSet = _device->createDescriptorSet({ _globalSetlayout });
 }
 
 void PostprocessStage::destroy() {
+    CC_SAFE_DELETE(_globalSetlayout);
+    CC_SAFE_DELETE(_globalSet);
+    CC_SAFE_DELETE(_uiPhase);
 }
 
 void PostprocessStage::render(scene::Camera *camera) {
@@ -99,14 +110,14 @@ void PostprocessStage::render(scene::Camera *camera) {
         builder.writeToBlackboard(DeferredPipeline::_lightingOut, data.lightingOut);
 
         // depth is as an attachment
-        framegraph::RenderTargetAttachment::Descriptor depthAttachInfo;
-        depthAttachInfo.usage       = framegraph::RenderTargetAttachment::Usage::DEPTH_STENCIL;
-        depthAttachInfo.loadOp      = gfx::LoadOp::LOAD;
-        depthAttachInfo.clearColor  = gfx::Color();
-        depthAttachInfo.endAccesses = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
+        //framegraph::RenderTargetAttachment::Descriptor depthAttachInfo;
+        //depthAttachInfo.usage       = framegraph::RenderTargetAttachment::Usage::DEPTH_STENCIL;
+        //depthAttachInfo.loadOp      = gfx::LoadOp::LOAD;
+        //depthAttachInfo.clearColor  = gfx::Color();
+        //depthAttachInfo.endAccesses = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
 
-        data.depth = builder.write(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_depth)), depthAttachInfo);
-        builder.writeToBlackboard(DeferredPipeline::_depth, data.depth);
+        //data.depth = builder.write(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_depth)), depthAttachInfo);
+        //builder.writeToBlackboard(DeferredPipeline::_depth, data.depth);
 
         // backbuffer is as an attachment
         framegraph::RenderTargetAttachment::Descriptor colorAttachmentInfo;
@@ -122,6 +133,8 @@ void PostprocessStage::render(scene::Camera *camera) {
     auto postExec = [&] (renderData const &data, const framegraph::DevicePassResourceTable &table) {
         DeferredPipeline *pipeline = static_cast<DeferredPipeline *>(RenderPipeline::getInstance());
         assert(pipeline != nullptr);
+        PostprocessStage *stage = (PostprocessStage *)pipeline->getRenderstageByName(StageName);
+        assert(stage != nullptr);
         gfx::RenderPass *renderPass = table.getDevicePass()->getRenderPass().get();
         assert(renderPass != nullptr);
 
@@ -136,14 +149,19 @@ void PostprocessStage::render(scene::Camera *camera) {
             gfx::Address::CLAMP,
             gfx::Address::CLAMP,
         };
+
+        stage->getGlobalSet()->bindBuffer(0, pipeline->getDescriptorSet()->getBuffer(0));
+        stage->getGlobalSet()->bindBuffer(1, pipeline->getDescriptorSet()->getBuffer(1));
+
         const auto  samplerHash = SamplerLib::genSamplerHash(info);
         auto *const sampler     = SamplerLib::getSampler(samplerHash);
-        pipeline->getDescriptorSet()->bindSampler(static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP), sampler);
-        pipeline->getDescriptorSet()->bindTexture(static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP), lightingOut);
+        stage->getGlobalSet()->bindSampler(static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP), sampler);
+        stage->getGlobalSet()->bindTexture(static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP), lightingOut);
+        stage->getGlobalSet()->update();
 
         auto *cmdBf = pipeline->getCommandBuffers()[0];
         uint const globalOffsets[] = {pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
-        cmdBf->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
+        cmdBf->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), stage->getGlobalSet(), 0, nullptr);
 
         // post proces
         auto *const  sceneData     = pipeline->getPipelineSceneData();

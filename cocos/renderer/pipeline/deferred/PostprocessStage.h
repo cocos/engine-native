@@ -43,12 +43,17 @@ public:
     void destroy() override;
     void render(scene::Camera *camera) override;
 
+    gfx::DescriptorSet *getGlobalSet() { return _globalSet; }
+
 private:
     gfx::Rect _renderArea;
     UIPhase * _uiPhase = nullptr;
     uint      _phaseID = 0;
 
     static RenderStageInfo initInfo;
+
+    gfx::DescriptorSetLayout *_globalSetlayout = nullptr;
+    gfx::DescriptorSet       *_globalSet = nullptr;
 };
 } // namespace pipeline
 } // namespace cc
