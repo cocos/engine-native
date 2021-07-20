@@ -67,6 +67,7 @@ public:
     uint           getSsprTexWidth() { return _ssprTexWidth; }
     uint           getSsprTexHeight() { return _ssprTexHeight; }
     Mat4           &getMatViewProj() { return _matViewProj; }
+    gfx::Sampler   *getSsprSampler() { return _ssprSample; }
 
 private:
     void gatherLights(scene::Camera *camera);
@@ -105,6 +106,8 @@ private:
     uint _ssprTexWidth = 0;
     uint _ssprTexHeight = 0;
     Mat4 _matViewProj;
+
+    gfx::Sampler *_ssprSample = nullptr;
 };
 
 } // namespace pipeline

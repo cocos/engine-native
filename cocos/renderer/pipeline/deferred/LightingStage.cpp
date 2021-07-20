@@ -308,30 +308,15 @@ void LightingStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
     _reflectionComp            = new ReflectionComp();
     _reflectionComp->init(_device, 8, 8);
 
-    gfx::ColorAttachment cAttch = {
-        gfx::Format::RGBA8,
-        gfx::SampleCount::X1,
-        gfx::LoadOp::LOAD,
-        gfx::StoreOp::STORE,
-        {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE},
-        {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE},
-    };
-
-    gfx::RenderPassInfo reflectionPassInfo;
-    reflectionPassInfo.colorAttachments.push_back(cAttch);
-
-    reflectionPassInfo.depthStencilAttachment = {
-        _device->getDepthStencilFormat(),
-        gfx::SampleCount::X1,
-        gfx::LoadOp::LOAD,
-        gfx::StoreOp::DISCARD,
-        gfx::LoadOp::DISCARD,
-        gfx::StoreOp::DISCARD,
-        {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE},
-    };
-
-    _reflectionPass        = _device->createRenderPass(reflectionPassInfo);
     _reflectionRenderQueue = CC_NEW(RenderQueue(std::move(info)));
+
+    gfx::SamplerInfo samplerInfo;
+    samplerInfo.minFilter = gfx::Filter::LINEAR;
+    samplerInfo.magFilter = gfx::Filter::LINEAR;
+    samplerInfo.addressU = gfx::Address::CLAMP;
+    samplerInfo.addressV = gfx::Address::CLAMP;
+    samplerInfo.addressW = gfx::Address::CLAMP;
+    _ssprSample = pipeline->getDevice()->createSampler(samplerInfo);
 }
 
 void LightingStage::destroy() {
@@ -345,6 +330,7 @@ void LightingStage::destroy() {
     }
 
     CC_SAFE_DELETE(_reflectionComp);
+    CC_SAFE_DELETE(_ssprSample);
 }
 
 void LightingStage::recordCommands(DeferredPipeline *pipeline, gfx::RenderPass *renderPass) {
@@ -637,20 +623,12 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
         reflectionComp->getDenoiseDescriptorSet()->bindSampler(0, reflectionComp->getSampler());
         reflectionComp->getDenoiseDescriptorSet()->update();
 
-        gfx::SamplerInfo samplerInfo;
-        samplerInfo.minFilter = gfx::Filter::LINEAR;
-        samplerInfo.magFilter = gfx::Filter::LINEAR;
-        samplerInfo.addressU = gfx::Address::CLAMP;
-        samplerInfo.addressV = gfx::Address::CLAMP;
-        samplerInfo.addressW = gfx::Address::CLAMP;
-        gfx::Sampler *sample = pipeline->getDevice()->createSampler(samplerInfo);
-
         stage->getRendElement().set->bindTexture(static_cast<uint>(ModelLocalBindings::STORAGE_REFLECTION), denoiseTex);
-        stage->getRendElement().set->bindSampler(static_cast<uint>(ModelLocalBindings::STORAGE_REFLECTION), sample);
+        stage->getRendElement().set->bindSampler(static_cast<uint>(ModelLocalBindings::STORAGE_REFLECTION), stage->getSsprSampler());
 
         // for render stage usage
         stage->getRendElement().set->bindTexture(static_cast<uint>(ModelLocalBindings::SAMPLER_REFLECTION), denoiseTex);
-        stage->getRendElement().set->bindSampler(static_cast<uint>(ModelLocalBindings::SAMPLER_REFLECTION), sample);
+        stage->getRendElement().set->bindSampler(static_cast<uint>(ModelLocalBindings::SAMPLER_REFLECTION), stage->getSsprSampler());
         stage->getRendElement().set->update();
 
         cmdBuff->bindPipelineState(const_cast<gfx::PipelineState *>(reflectionComp->getDenoisePipelineState()));
@@ -713,16 +691,8 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
         gfx::DescriptorSet *descLocal = elem.set;       // submodel's descriptorset
         gfx::Texture *denoiseTex  = (gfx::Texture *)(table.getRead(data.denoise));
 
-        gfx::SamplerInfo samplerInfo ;
-        samplerInfo.minFilter = gfx::Filter::LINEAR;
-        samplerInfo.magFilter = gfx::Filter::LINEAR;
-        samplerInfo.addressU = gfx::Address::CLAMP;
-        samplerInfo.addressV = gfx::Address::CLAMP;
-        samplerInfo.addressW = gfx::Address::CLAMP;
-        gfx::Sampler *sample = pipeline->getDevice()->createSampler(samplerInfo);
-
         descLocal->bindTexture(static_cast<uint>(ModelLocalBindings::SAMPLER_REFLECTION), denoiseTex);
-        descLocal->bindSampler(static_cast<uint>(ModelLocalBindings::SAMPLER_REFLECTION), sample);
+        descLocal->bindSampler(static_cast<uint>(ModelLocalBindings::SAMPLER_REFLECTION), stage->getSsprSampler());
         descLocal->update();
         cmdBuff->bindDescriptorSet(static_cast<uint>(SetIndex::LOCAL), descLocal);
 
@@ -758,14 +728,14 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
 
     uint insertPoint = IP_SSPR;
     DeferredPipeline *pipeline = static_cast<DeferredPipeline *>(RenderPipeline::getInstance());
-    for (int i = 0; i < _reflectionElems.size(); ++i) {
+    for (uint i = 0; i < _reflectionElems.size(); ++i) {
         // add clear and comp passes here
-        //pipeline->getFrameGraph().addPass<DataClear>(insertPoint++, _ssprClearPass[i], clearSetup, clearExec);
+        pipeline->getFrameGraph().addPass<DataClear>(insertPoint++, _ssprClearPass[i], clearSetup, clearExec);
         pipeline->getFrameGraph().addPass<DataCompReflect>(insertPoint++, _ssprCompReflectPass[i], compReflectSetup, compReflectExec);
         pipeline->getFrameGraph().addPass<DataCompDenoise>(insertPoint++, _ssprCompDenoisePass[i], compDenoiseSetup, compDenoiseExec);
     }
 
-    for (int i = 0; i < _reflectionElems.size(); ++i) {
+    for (uint i = 0; i < _reflectionElems.size(); ++i) {
         // add graphic pass here
         pipeline->getFrameGraph().addPass<DataRender>(insertPoint++, _ssprRenderPass[i], renderSetup, renderExec);
     }

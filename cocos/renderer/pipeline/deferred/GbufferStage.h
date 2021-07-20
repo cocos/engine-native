@@ -38,7 +38,7 @@ class RenderAdditiveLightQueue;
 class PlanarShadowQueue;
 struct DeferredRenderData;
 class DeferredPipeline;
-class RenderPass;
+struct RenderPass;
 
 class CC_DLL GbufferStage : public RenderStage {
 public:
