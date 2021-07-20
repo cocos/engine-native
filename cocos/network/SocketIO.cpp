@@ -392,9 +392,9 @@ void SIOClientImpl::handshakeResponse(HttpClient * /*sender*/, HttpResponse *res
         CC_LOG_INFO("%s completed", response->getHttpRequest()->getTag());
     }
 
-    auto statusCode       = response->getResponseCode();
+    int32_t statusCode       = response->getResponseCode();
     char statusString[64] = {};
-    sprintf(statusString, "HTTP Status Code: %ld, tag = %s", statusCode, response->getHttpRequest()->getTag());
+    sprintf(statusString, "HTTP Status Code: %d, tag = %s", statusCode, response->getHttpRequest()->getTag());
     CC_LOG_INFO("response code: %ld", statusCode);
 
     if (!response->isSucceed() || statusCode >= 400) {

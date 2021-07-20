@@ -563,7 +563,7 @@ cocos_source_files(
 if(USE_SOCKET)
     cocos_source_files(
                      cocos/network/WebSocket.h
-                     cocos/network/SocketIO.cpp
+        NO_WERROR    cocos/network/SocketIO.cpp
                      cocos/network/SocketIO.h
     )
 endif()
