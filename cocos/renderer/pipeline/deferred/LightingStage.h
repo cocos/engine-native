@@ -97,7 +97,6 @@ private:
     ReflectionComp * _reflectionComp{nullptr};
     RenderQueue *    _reflectionRenderQueue{nullptr};
     uint             _reflectionPhaseID{0};
-    gfx::RenderPass *_reflectionPass{nullptr};
 
     std::vector<RenderElem> _reflectionElems;
     uint _denoiseIndex = 0;         // use to get corrrect texture string handle

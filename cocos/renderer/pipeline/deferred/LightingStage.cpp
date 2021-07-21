@@ -324,11 +324,6 @@ void LightingStage::destroy() {
     CC_SAFE_DELETE(_reflectionRenderQueue);
     RenderStage::destroy();
 
-    if (_reflectionPass != nullptr) {
-        _reflectionPass->destroy();
-        CC_SAFE_DELETE(_reflectionPass);
-    }
-
     CC_SAFE_DELETE(_reflectionComp);
     CC_SAFE_DELETE(_ssprSample);
 }
@@ -494,9 +489,10 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
 
         framegraph::Texture::Descriptor colorTexInfo;
         colorTexInfo.format = gfx::Format::RGBA8;
-        colorTexInfo.usage  = gfx::TextureUsageBit::STORAGE | gfx::TextureUsageBit::SAMPLED | gfx::TextureUsageBit::TRANSFER_SRC | gfx::TextureUsageBit::TRANSFER_DST;
+        colorTexInfo.usage  = gfx::TextureUsageBit::STORAGE;
         colorTexInfo.width  = _ssprTexWidth;
         colorTexInfo.height = _ssprTexHeight;
+        colorTexInfo.flags  = gfx::TextureFlagBit::IMMUTABLE;
 
         data.reflection = builder.create<framegraph::Texture>(_reflectTexHandle, colorTexInfo);
         data.reflection = builder.write(data.reflection, colorAttachmentInfo);
@@ -527,9 +523,10 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
         if (!data.reflection.isValid()) {
             framegraph::Texture::Descriptor colorTexInfo;
             colorTexInfo.format = gfx::Format::RGBA8;
-            colorTexInfo.usage  = gfx::TextureUsageBit::STORAGE | gfx::TextureUsageBit::SAMPLED | gfx::TextureUsageBit::TRANSFER_SRC | gfx::TextureUsageBit::TRANSFER_DST;
+            colorTexInfo.usage  = gfx::TextureUsageBit::STORAGE;
             colorTexInfo.width  = _ssprTexWidth;
             colorTexInfo.height = _ssprTexHeight;
+            colorTexInfo.flags  = gfx::TextureFlagBit::IMMUTABLE;
             data.reflection = builder.create<framegraph::Texture>(_reflectTexHandle, colorTexInfo);
         }
 
@@ -597,6 +594,7 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
         colorTexInfo.usage  = gfx::TextureUsageBit::STORAGE | gfx::TextureUsageBit::SAMPLED | gfx::TextureUsageBit::TRANSFER_SRC;
         colorTexInfo.width  = _ssprTexWidth;
         colorTexInfo.height = _ssprTexHeight;
+        colorTexInfo.flags  = gfx::TextureFlagBit::IMMUTABLE;
         data.denoise = builder.create<framegraph::Texture>(_denoiseTexHandle[_denoiseIndex], colorTexInfo);
 
         data.denoise = builder.write(data.denoise);
