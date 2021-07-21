@@ -394,8 +394,8 @@ cocos_source_files(
     cocos/base/Agent.h
     cocos/base/astc.cpp
     cocos/base/astc.h
-    cocos/base/AutoreleasePool.cpp
-    cocos/base/AutoreleasePool.h
+    cocos/base/AutoReleasePool.cpp
+    cocos/base/AutoReleasePool.h
     cocos/base/base64.cpp
     cocos/base/base64.h
     cocos/base/CachedArray.h
