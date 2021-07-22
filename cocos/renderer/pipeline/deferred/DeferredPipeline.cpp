@@ -434,7 +434,7 @@ void DeferredPipeline::destroy() {
     }
 
     for (auto &it : _renderPasses) {
-        CC_SAFE_DESTROY(it.second);
+        CC_DESTROY(it.second);
     }
     _renderPasses.clear();
 
