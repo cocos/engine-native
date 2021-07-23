@@ -46,7 +46,7 @@
 #include "gfx-gles-common/GLESCommandPool.h"
 
 // when capturing GLES commands (RENDERDOC_HOOK_EGL=1, default value)
-// renderdoc doesn't support this extension during replay
+// RenderDoc doesn't support this extension during replay
 #define ALLOW_MULTISAMPLED_RENDER_TO_TEXTURE_ON_DESKTOP 0
 
 namespace cc {

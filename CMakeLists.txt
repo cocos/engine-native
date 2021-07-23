@@ -997,6 +997,8 @@ if(CC_USE_GLES3)
                      cocos/renderer/gfx-gles3/GLES3Sampler.h
                      cocos/renderer/gfx-gles3/GLES3Shader.cpp
                      cocos/renderer/gfx-gles3/GLES3Shader.h
+                     cocos/renderer/gfx-gles3/GLES3Swapchain.cpp
+                     cocos/renderer/gfx-gles3/GLES3Swapchain.h
                      cocos/renderer/gfx-gles3/GLES3Std.cpp
                      cocos/renderer/gfx-gles3/GLES3Std.h
                      cocos/renderer/gfx-gles3/GLES3Texture.cpp
@@ -1069,6 +1071,8 @@ if(CC_USE_VULKAN)
 
     cocos_source_files(
                      cocos/renderer/gfx-vulkan/GFXVulkan.h
+                     cocos/renderer/gfx-vulkan/SPIRVUtils.h
+                     cocos/renderer/gfx-vulkan/SPIRVUtils.cpp
                      cocos/renderer/gfx-vulkan/vk_mem_alloc.h
                      cocos/renderer/gfx-vulkan/VKBuffer.cpp
                      cocos/renderer/gfx-vulkan/VKBuffer.h
@@ -1102,7 +1106,6 @@ if(CC_USE_VULKAN)
                      cocos/renderer/gfx-vulkan/VKSampler.h
                      cocos/renderer/gfx-vulkan/VKShader.cpp
                      cocos/renderer/gfx-vulkan/VKShader.h
-                     cocos/renderer/gfx-vulkan/VKSPIRV.h
                      cocos/renderer/gfx-vulkan/VKStd.cpp
                      cocos/renderer/gfx-vulkan/VKStd.h
                      cocos/renderer/gfx-vulkan/VKSwapchain.cpp

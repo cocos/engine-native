@@ -25,18 +25,10 @@
 
 #include "VKStd.h"
 
-#include "VKBuffer.h"
+#include "SPIRVUtils.h"
 #include "VKCommands.h"
 #include "VKDevice.h"
-#include "VKQueue.h"
-#include "VKSPIRV.h"
-#include "gfx-base/GFXDef-common.h"
-#include "gfx-base/GFXDef.h"
-#include "gfx-base/GFXSampler.h"
-#include "gfx-vulkan/VKGPUObjects.h"
-#include "vulkan/vulkan_core.h"
-
-#include <algorithm>
+#include "VKGPUObjects.h"
 
 namespace cc {
 namespace gfx {
@@ -149,7 +141,7 @@ void cmdFuncCCVKCreateTexture(CCVKDevice *device, CCVKGPUTexture *gpuTexture) {
             createInfo.usage = usageFlags | VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT;
             allocInfo.usage  = VMA_MEMORY_USAGE_GPU_LAZILY_ALLOCATED;
             VkResult result  = vmaCreateImage(device->gpuDevice()->memoryAllocator, &createInfo, &allocInfo,
-                                             &gpuTexture->vkImage, &gpuTexture->vmaAllocation, &res);
+                                              pVkImage, pVmaAllocation, &res);
             if (!result) {
                 gpuTexture->memoryless = true;
                 return;
@@ -689,13 +681,18 @@ void cmdFuncCCVKCreateFramebuffer(CCVKDevice *device, CCVKGPUFramebuffer *gpuFra
 }
 
 void cmdFuncCCVKCreateShader(CCVKDevice *device, CCVKGPUShader *gpuShader) {
+    static SPIRVUtils spirv(static_cast<int>(device->gpuDevice()->minorVersion));
+
     for (CCVKGPUShaderStage &stage : gpuShader->gpuStages) {
-        vector<unsigned int>     spirv = glsl2spirv(stage.type, "#version 450\n" + stage.source, static_cast<int>(device->gpuDevice()->minorVersion));
+        spirv.compileGLSL(stage.type, "#version 450\n" + stage.source);
+        if (stage.type == ShaderStageFlagBit::VERTEX) spirv.compressInputLocations(gpuShader->attributes);
+
         VkShaderModuleCreateInfo createInfo{VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO};
-        createInfo.codeSize = spirv.size() * sizeof(unsigned int);
-        createInfo.pCode    = spirv.data();
+        createInfo.codeSize = spirv.getOutputSize();
+        createInfo.pCode    = spirv.getOutputData();
         VK_CHECK(vkCreateShaderModule(device->gpuDevice()->vkDevice, &createInfo, nullptr, &stage.vkShader));
     }
+
     CC_LOG_INFO("Shader '%s' compilation succeeded.", gpuShader->name.c_str());
 }
 

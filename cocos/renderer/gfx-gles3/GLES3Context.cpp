@@ -259,10 +259,6 @@ bool GLES3Context::doInit(const ContextInfo &info) {
             return false;
         }
 
-        CC_LOG_INFO("Chosen EGLConfig: color [%s], depth stencil [%s].",
-                    GFX_FORMAT_INFOS[static_cast<uint>(_colorFmt)].name.c_str(),
-                    GFX_FORMAT_INFOS[static_cast<uint>(_depthStencilFmt)].name.c_str());
-
         /* EGL_NATIVE_VISUAL_ID is an attribute of the EGLConfig that is
          * guaranteed to be accepted by ANativeWindow_setBuffersGeometry().
          * As soon as we picked a EGLConfig, we can safely reconfigure the
