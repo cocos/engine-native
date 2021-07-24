@@ -261,13 +261,13 @@ void PhysXRigidBody::setMask(uint32_t m) {
 
 cc::Vec3 PhysXRigidBody::getPosition() {
     cc::Vec3 pos;
-    pxSetVec3Ext(pos, getSharedBody().getImpl().rigidDynamic->getGlobalPose().p);
+    pxSetVec3Ext(pos, getSharedBody().getImpl().rigidActor->getGlobalPose().p);
     return pos;
 }
 
 cc::Vec4 PhysXRigidBody::getRotation() {
     cc::Vec4 rot;
-    pxSetQuatExt(rot, getSharedBody().getImpl().rigidDynamic->getGlobalPose().q);
+    pxSetQuatExt(rot, getSharedBody().getImpl().rigidActor->getGlobalPose().q);
     return rot;
 }
 
