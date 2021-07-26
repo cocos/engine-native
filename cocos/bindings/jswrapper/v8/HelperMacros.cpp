@@ -29,3 +29,37 @@
 unsigned int                                      __jsbInvocationCount;        // NOLINT(readability-identifier-naming)
 std::map<char const *, std::tuple<int, uint64_t>> __jsbFunctionInvokedRecords; // NOLINT(readability-identifier-naming)
 #endif
+
+void printJSBInvokeAtFrame(int n) {
+#if defined(RECORD_JSB_INVOKING)
+    static int cnt = 0;
+    cnt += 1;
+    if(cnt % n == 0) {
+    printJSBInvoke();
+    }
+#endif
+}
+
+void clearRecordJSBInvoke() {
+    #if defined(RECORD_JSB_INVOKING)
+    __jsbInvocationCount = 0;
+    __jsbFunctionInvokedRecords.clear();
+    #endif
+}
+
+void printJSBInvoke() {
+    #if defined(RECORD_JSB_INVOKING)
+    static std::vector<std::pair<const char *, std::tuple<int, uint64_t>>> pairs;
+    for (const auto &it : __jsbFunctionInvokedRecords) {
+        pairs.emplace_back(it); //NOLINT
+    }
+
+    std::sort(pairs.begin(), pairs.end(), cmp);
+    cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::LEVEL_DEBUG, "Start print JSB function record info....... %d times", __jsbInvocationCount);
+    for (const auto &pair : pairs) {
+        cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::LEVEL_DEBUG, "\t%s takes %.3lf ms, invoked %u times,", pair.first, std::get<1>(pair.second) / 1000000.0, std::get<0>(pair.second));
+    }
+    pairs.clear();
+    cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::LEVEL_DEBUG, "End print JSB function record info.......\n");
+    #endif
+}

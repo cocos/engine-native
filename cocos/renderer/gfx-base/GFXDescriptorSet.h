@@ -62,8 +62,6 @@ public:
     inline Texture *getTexture(uint binding) const { return getTexture(binding, 0U); }
     inline Sampler *getSampler(uint binding) const { return getSampler(binding, 0U); }
 
-    inline bool isDirty() const { return _isDirty; }
-
 protected:
     virtual void doInit(const DescriptorSetInfo &info) = 0;
     virtual void doDestroy()                           = 0;

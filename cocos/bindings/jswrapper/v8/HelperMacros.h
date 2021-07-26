@@ -36,10 +36,9 @@
 #include "base/Log.h"
 
 #define RECORD_JSB_INVOKING
-
-#ifndef CC_DEBUG
-    #undef RECORD_JSB_INVOKING
-#endif
+//#ifndef CC_DEBUG
+//    #undef RECORD_JSB_INVOKING
+//#endif
 
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
@@ -91,29 +90,12 @@ inline bool cmp(const std::pair<const char *, std::tuple<int, uint64_t>> &a, con
     return std::get<1>(a.second) > std::get<1>(b.second);
 }
 
-inline void clearRecordJSBInvoke() {
-    #if defined(RECORD_JSB_INVOKING)
-    __jsbInvocationCount = 0;
-    __jsbFunctionInvokedRecords.clear();
-    #endif
-}
+void clearRecordJSBInvoke();
 
-inline void printJSBInvoke() {
-    #if defined(RECORD_JSB_INVOKING)
-    static std::vector<std::pair<const char *, std::tuple<int, uint64_t>>> pairs;
-    for (const auto &it : __jsbFunctionInvokedRecords) {
-        pairs.emplace_back(it); //NOLINT
-    }
+void printJSBInvoke();
 
-    std::sort(pairs.begin(), pairs.end(), cmp);
-    cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::LEVEL_DEBUG, "Start print JSB function record info....... %d times", __jsbInvocationCount);
-    for (const auto &pair : pairs) {
-        cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::LEVEL_DEBUG, "\t%s takes %.3lf ms, invoked %u times,", pair.first, std::get<1>(pair.second) / 1000000.0, std::get<0>(pair.second));
-    }
-    pairs.clear();
-    cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::LEVEL_DEBUG, "End print JSB function record info.......\n");
-    #endif
-}
+void printJSBInvokeAtFrame(int n);
+
 
     #ifdef __GNUC__
         #define SE_UNUSED __attribute__((unused))

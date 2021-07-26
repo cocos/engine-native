@@ -38,6 +38,8 @@
 #include "platform/android/View.h"
 #include "platform/java/jni/JniHelper.h"
 
+#include "cocos/bindings/jswrapper/v8/HelperMacros.h"
+
 #define LOGV(...) __android_log_print(ANDROID_LOG_INFO, "CocosActivity JNI", __VA_ARGS__)
 
 cc::Application *cocos_main(int, int) __attribute__((weak)); //NOLINT
@@ -148,7 +150,8 @@ void glThreadEntry() {
                                                 "flushTasksOnGameThread");
             game->tick();
         }
-
+        printJSBInvokeAtFrame(60);
+        clearRecordJSBInvoke();
         if (cc::cocosApp.destroyRequested) break;
     }
 
