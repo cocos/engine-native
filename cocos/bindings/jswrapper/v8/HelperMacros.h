@@ -35,10 +35,10 @@
 #include "../config.h"
 #include "base/Log.h"
 
-#define RECORD_JSB_INVOKING
-//#ifndef CC_DEBUG
-//    #undef RECORD_JSB_INVOKING
-//#endif
+//#define RECORD_JSB_INVOKING
+#ifndef CC_DEBUG
+    #undef RECORD_JSB_INVOKING
+#endif
 
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
@@ -95,7 +95,6 @@ void clearRecordJSBInvoke();
 void printJSBInvoke();
 
 void printJSBInvokeAtFrame(int n);
-
 
     #ifdef __GNUC__
         #define SE_UNUSED __attribute__((unused))
