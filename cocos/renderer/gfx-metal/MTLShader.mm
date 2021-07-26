@@ -37,6 +37,10 @@ CCMTLShader::CCMTLShader() : Shader() {
     _typedID = generateObjectID<decltype(this)>();
 }
 
+CCMTLShader::~CCMTLShader() {
+    destroy();
+}
+
 void CCMTLShader::doInit(const ShaderInfo &info) {
     _gpuShader = CC_NEW(CCMTLGPUShader);
     _specializedFragFuncs = [[NSMutableDictionary alloc] init];
@@ -199,6 +203,7 @@ id<MTLFunction> CCMTLShader::getSpecializedFragFunction(uint* index, int* val, u
         
         NSError *      error   = nil;
         id<MTLFunction> specFragFunc = [_fragLibrary newFunctionWithName:@"main0" constantValues:constantValues error:&error];
+        [constantValues release];
         if (!specFragFunc) {
             CC_LOG_ERROR("Can not specialize shader: %s", [[error localizedDescription] UTF8String]);
         }

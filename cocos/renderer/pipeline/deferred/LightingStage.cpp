@@ -69,10 +69,8 @@ const RenderStageInfo &LightingStage::getInitializeInfo() { return LightingStage
 LightingStage::LightingStage() = default;
 
 LightingStage::~LightingStage() {
-    _deferredLitsBufs->destroy();
-    _deferredLitsBufs = nullptr;
-    _deferredLitsBufView->destroy();
-    _deferredLitsBufView = nullptr;
+    CC_SAFE_DESTROY(_deferredLitsBufs);
+    CC_SAFE_DESTROY(_deferredLitsBufView);
 }
 
 bool LightingStage::initialize(const RenderStageInfo &info) {
@@ -302,15 +300,13 @@ void LightingStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
 }
 
 void LightingStage::destroy() {
-    CC_SAFE_DELETE(_planarShadowQueue);
+    CC_SAFE_DESTROY(_descriptorSet);
+    CC_SAFE_DESTROY(_descLayout);
+    CC_SAFE_DESTROY(_planarShadowQueue);
     CC_SAFE_DELETE(_reflectionRenderQueue);
     RenderStage::destroy();
 
-    if (_reflectionPass != nullptr) {
-        _reflectionPass->destroy();
-        CC_SAFE_DELETE(_reflectionPass);
-    }
-
+    CC_SAFE_DESTROY(_reflectionPass);
     CC_SAFE_DELETE(_reflectionComp);
 }
 
@@ -334,7 +330,7 @@ void LightingStage::render(scene::Camera *camera) {
     cmdBuff->bindDescriptorSet(static_cast<uint>(SetIndex::LOCAL), _descriptorSet, dynamicOffsets);
 
     // draw quad
-    gfx::Rect renderArea = pipeline->getRenderArea(camera);
+    gfx::Rect renderArea = pipeline->getRenderArea(camera, false);
 
     gfx::Color clearColor = {0.0, 0.0, 0.0, 1.0};
     if (camera->clearFlag & static_cast<uint>(gfx::ClearFlagBit::COLOR)) {

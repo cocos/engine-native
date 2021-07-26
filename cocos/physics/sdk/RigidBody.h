@@ -36,6 +36,7 @@ public:
     RigidBody();
     ~RigidBody() override;
     inline uintptr_t getImpl() override { return _impl->getImpl(); };
+    inline uintptr_t getNodeHandle() override { return _impl->getNodeHandle(); };
     void             initialize(scene::Node* node, ERigidBodyType t, uint32_t g) override;
     void             onEnable() override;
     void             onDisable() override;
@@ -48,6 +49,7 @@ public:
     void             setLinearDamping(float v) override;
     void             setAngularDamping(float v) override;
     void             useGravity(bool v) override;
+    void             useCCD(bool v) override;
     void             setLinearFactor(float x, float y, float z) override;
     void             setAngularFactor(float x, float y, float z) override;
     void             setAllowSleep(bool v) override;
