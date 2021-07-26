@@ -24,7 +24,6 @@
 ****************************************************************************/
 
 #include "PipelineSceneData.h"
-#include "gfx-base/GFXCommandBuffer.h"
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXFramebuffer.h"
 
@@ -37,6 +36,8 @@ void PipelineSceneData::activate(gfx::Device *device, RenderPipeline *pipeline)
     _pipeline = pipeline;
 
     _sphere = CC_NEW(scene::Sphere);
+    _cameraBoundingSphere = CC_NEW(scene::Sphere);
+    _dirLightFrustum      = CC_NEW(scene::Frustum);
 }
 
 void PipelineSceneData::setPipelineSharedSceneData(scene::PipelineSharedSceneData *data)
@@ -46,7 +47,9 @@ void PipelineSceneData::setPipelineSharedSceneData(scene::PipelineSharedSceneDat
 
 void PipelineSceneData::destroy()
 {
-    CC_SAFE_DELETE(_sphere);
+    CC_SAFE_DELETE(_sphere)
+    CC_SAFE_DELETE(_cameraBoundingSphere)
+    CC_SAFE_DELETE(_dirLightFrustum)
 
     for (auto &pair : _shadowFrameBufferMap) {
         pair.second->destroy();

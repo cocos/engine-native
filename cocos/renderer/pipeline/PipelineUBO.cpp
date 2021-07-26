@@ -86,11 +86,11 @@ void PipelineUBO::updateCameraUBOView(const RenderPipeline *pipeline, std::array
     auto *device        = gfx::Device::getInstance();
     auto &uboCameraView = *bufferView;
 
-    const auto shadingWidth  = std::floor(device->getWidth());
-    const auto shadingHeight = std::floor(device->getHeight());
+    const auto shadingWidth  = std::floorf(static_cast<float>(device->getWidth()));
+    const auto shadingHeight = std::floorf(static_cast<float>(device->getHeight()));
 
-    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 0] = static_cast<float>(camera->width / shadingWidth * shadingScale);
-    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 1] = static_cast<float>(camera->height / shadingHeight * shadingScale);
+    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 0] = static_cast<float>(camera->width) / shadingWidth * shadingScale;
+    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 1] = static_cast<float>(camera->height) / shadingHeight * shadingScale;
     uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 2] = 1.0F / uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET];
     uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 3] = 1.0F / uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 1];
 
@@ -101,8 +101,8 @@ void PipelineUBO::updateCameraUBOView(const RenderPipeline *pipeline, std::array
     uboCameraView[UBOCamera::EXPOSURE_OFFSET + 3] = fpScale / exposure;
 
     if (mainLight) {
-        TO_VEC3(uboCameraView, mainLight->getDirection(), UBOCamera::MAIN_LIT_DIR_OFFSET);
-        TO_VEC3(uboCameraView, mainLight->getColor(), UBOCamera::MAIN_LIT_COLOR_OFFSET);
+        TO_VEC3(uboCameraView, mainLight->getDirection(), UBOCamera::MAIN_LIT_DIR_OFFSET)
+        TO_VEC3(uboCameraView, mainLight->getColor(), UBOCamera::MAIN_LIT_COLOR_OFFSET)
         if (mainLight->getUseColorTemperature()) {
             const auto &colorTempRGB = mainLight->getColorTemperatureRGB();
             uboCameraView[UBOCamera::MAIN_LIT_COLOR_OFFSET + 0] *= colorTempRGB.x;
@@ -116,8 +116,8 @@ void PipelineUBO::updateCameraUBOView(const RenderPipeline *pipeline, std::array
             uboCameraView[UBOCamera::MAIN_LIT_COLOR_OFFSET + 3] = mainLight->getIlluminance() * exposure;
         }
     } else {
-        TO_VEC3(uboCameraView, Vec3::UNIT_Z, UBOCamera::MAIN_LIT_DIR_OFFSET);
-        TO_VEC4(uboCameraView, Vec4::ZERO, UBOCamera::MAIN_LIT_COLOR_OFFSET);
+        TO_VEC3(uboCameraView, Vec3::UNIT_Z, UBOCamera::MAIN_LIT_DIR_OFFSET)
+        TO_VEC4(uboCameraView, Vec4::ZERO, UBOCamera::MAIN_LIT_COLOR_OFFSET)
     }
 
     Vec4 skyColor = ambient->skyColor;
@@ -126,7 +126,7 @@ void PipelineUBO::updateCameraUBOView(const RenderPipeline *pipeline, std::array
     } else {
         skyColor.w = ambient->skyIllum * exposure;
     }
-    TO_VEC4(uboCameraView, skyColor, UBOCamera::AMBIENT_SKY_OFFSET);
+    TO_VEC4(uboCameraView, skyColor, UBOCamera::AMBIENT_SKY_OFFSET)
 
     uboCameraView[UBOCamera::AMBIENT_GROUND_OFFSET + 0] = ambient->groundAlbedo.x;
     uboCameraView[UBOCamera::AMBIENT_GROUND_OFFSET + 1] = ambient->groundAlbedo.y;
@@ -138,7 +138,7 @@ void PipelineUBO::updateCameraUBOView(const RenderPipeline *pipeline, std::array
 
     memcpy(uboCameraView.data() + UBOCamera::MAT_VIEW_OFFSET, camera->matView.m, sizeof(cc::Mat4));
     memcpy(uboCameraView.data() + UBOCamera::MAT_VIEW_INV_OFFSET, camera->node->getWorldMatrix().m, sizeof(cc::Mat4));
-    TO_VEC3(uboCameraView, camera->position, UBOCamera::CAMERA_POS_OFFSET);
+    TO_VEC3(uboCameraView, camera->position, UBOCamera::CAMERA_POS_OFFSET)
 
     memcpy(uboCameraView.data() + UBOCamera::MAT_PROJ_OFFSET, camera->matProj.m, sizeof(cc::Mat4));
     memcpy(uboCameraView.data() + UBOCamera::MAT_PROJ_INV_OFFSET, camera->matProjInv.m, sizeof(cc::Mat4));
@@ -147,7 +147,7 @@ void PipelineUBO::updateCameraUBOView(const RenderPipeline *pipeline, std::array
     uboCameraView[UBOCamera::CAMERA_POS_OFFSET + 3] = getCombineSignY();
 
     if (fog->enabled) {
-        TO_VEC4(uboCameraView, fog->color, UBOCamera::GLOBAL_FOG_COLOR_OFFSET);
+        TO_VEC4(uboCameraView, fog->color, UBOCamera::GLOBAL_FOG_COLOR_OFFSET)
 
         uboCameraView[UBOCamera::GLOBAL_FOG_BASE_OFFSET + 0] = fog->start;
         uboCameraView[UBOCamera::GLOBAL_FOG_BASE_OFFSET + 1] = fog->end;
@@ -179,7 +179,7 @@ void PipelineUBO::updateShadowUBOView(const RenderPipeline *pipeline, std::array
             float x;
             float y;
             float farClamp;
-            if (shadowInfo->autoAdapt) {
+            if (!shadowInfo->fixedArea) {
                 Vec3 tmpCenter;
                 getShadowWorldMatrix(sphere, node->getWorldRotation(), mainLight->getDirection(), &matShadowCamera, &tmpCenter);
 
@@ -225,7 +225,7 @@ void PipelineUBO::updateShadowUBOView(const RenderPipeline *pipeline, std::array
     }
 }
 
-void PipelineUBO::updateShadowUBOLightView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> *bufferView, const scene::Light *light) {
+void PipelineUBO::updateShadowUBOLightView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> *bufferView, const scene::Light *light, const scene::Camera *camera) {
     auto *const sceneData          = pipeline->getPipelineSceneData();
     auto *      shadowInfo         = sceneData->getSharedData()->shadow;
     auto *      device             = gfx::Device::getInstance();
@@ -242,7 +242,7 @@ void PipelineUBO::updateShadowUBOLightView(const RenderPipeline *pipeline, std::
             float x;
             float y;
             float farClamp;
-            if (shadowInfo->autoAdapt) {
+            if (!shadowInfo->fixedArea) {
                 Vec3 tmpCenter;
                 getShadowWorldMatrix(sphere, directionalLight->getNode()->getWorldRotation(), directionalLight->getDirection(), &matShadowCamera, &tmpCenter);
 
@@ -291,6 +291,10 @@ void PipelineUBO::updateShadowUBOLightView(const RenderPipeline *pipeline, std::
 
             float shadowLPNNInfos[4] = {1.0F, packing, shadowInfo->normalBias, 0.0F};
             memcpy(shadowUBO.data() + UBOShadow::SHADOW_LIGHT_PACKING_NBIAS_NULL_INFO_OFFSET, &shadowLPNNInfos, sizeof(shadowLPNNInfos));
+        } break;
+        case scene::LightType::SPHERE: {
+        } break;
+        case scene::LightType::UNKNOWN: {
         } break;
         default:
             break;
@@ -353,7 +357,7 @@ void PipelineUBO::activate(gfx::Device *device, RenderPipeline *pipeline) {
 
 void PipelineUBO::destroy() {
     for (auto &ubo : _ubos) {
-        CC_SAFE_DESTROY(ubo);
+        CC_SAFE_DESTROY(ubo)
     }
     _ubos.clear();
 }
@@ -383,10 +387,10 @@ void PipelineUBO::updateCameraUBO(const scene::Camera *camera) {
 void PipelineUBO::updateMultiCameraUBO(const vector<scene::Camera *> &cameras) {
     auto *const ds           = _pipeline->getDescriptorSet();
     auto *      device       = _pipeline->getDevice();
-    auto        uboAlignment = device->getCapabilities().uboOffsetAlignment;
+    const uint  uboAlignment = device->getCapabilities().uboOffsetAlignment;
     _alignedCameraUBOSize    = static_cast<uint>(std::ceil(UBOCamera::SIZE / static_cast<float>(uboAlignment))) * uboAlignment;
-    auto cameraCount         = cameras.size();
-    auto totalUboSize        = static_cast<uint>(_alignedCameraUBOSize * cameraCount);
+    const uint cameraCount   = cameras.size();
+    const uint totalUboSize  = _alignedCameraUBOSize * cameraCount;
 
     _cameraUBOs.resize(totalUboSize);
     _currentCameraUBOOffset = 0;
@@ -429,10 +433,10 @@ void PipelineUBO::updateShadowUBO(const scene::Camera *camera) {
     cmdBuffer->updateBuffer(ds->getBuffer(UBOShadow::BINDING), _shadowUBO.data(), UBOShadow::SIZE);
 }
 
-void PipelineUBO::updateShadowUBOLight(const scene::Light *light) {
+void PipelineUBO::updateShadowUBOLight(const scene::Light *light, const scene::Camera *camera) {
     auto *const ds        = _pipeline->getDescriptorSet();
     auto *const cmdBuffer = _pipeline->getCommandBuffers()[0];
-    PipelineUBO::updateShadowUBOLightView(_pipeline, &_shadowUBO, light);
+    PipelineUBO::updateShadowUBOLightView(_pipeline, &_shadowUBO, light, camera);
     cmdBuffer->updateBuffer(ds->getBuffer(UBOShadow::BINDING), _shadowUBO.data(), UBOShadow::SIZE);
 }
 

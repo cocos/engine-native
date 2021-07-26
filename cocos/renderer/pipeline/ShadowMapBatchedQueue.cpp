@@ -48,14 +48,14 @@ ShadowMapBatchedQueue::ShadowMapBatchedQueue(RenderPipeline *pipeline)
     _batchedQueue   = CC_NEW(RenderBatchedQueue);
 }
 
-void ShadowMapBatchedQueue::gatherLightPasses(const scene::Light *light, gfx::CommandBuffer *cmdBuffer) {
+void ShadowMapBatchedQueue::gatherLightPasses(const scene::Light *light, gfx::CommandBuffer *cmdBuffer, const scene::Camera *camera) {
     clear();
 
     const auto *sceneData     = _pipeline->getPipelineSceneData();
     const auto *shadowInfo    = sceneData->getSharedData()->shadow;
     const auto &shadowObjects = sceneData->getShadowObjects();
     if (light && shadowInfo->enabled && shadowInfo->shadowType == scene::ShadowType::SHADOWMAP) {
-        _pipeline->getPipelineUBO()->updateShadowUBOLight(light);
+        _pipeline->getPipelineUBO()->updateShadowUBOLight(light, camera);
 
         for (const auto ro : shadowObjects) {
             const auto *model = ro.model;
@@ -72,8 +72,16 @@ void ShadowMapBatchedQueue::gatherLightPasses(const scene::Light *light, gfx::Co
                         add(model, cmdBuffer);
                     }
                 } break;
-                default:
-                    break;
+
+                case scene::LightType::SPHERE: {
+                } break;
+
+                case scene::LightType::UNKNOWN: {
+                } break;
+
+                default: {
+                    
+                } break;
             }
         }
     }
@@ -137,9 +145,9 @@ void ShadowMapBatchedQueue::recordCommandBuffer(gfx::Device *device, gfx::Render
 }
 
 void ShadowMapBatchedQueue::destroy() {
-    CC_SAFE_DELETE(_batchedQueue);
+    CC_SAFE_DELETE(_batchedQueue)
 
-    CC_SAFE_DELETE(_instancedQueue);
+    CC_SAFE_DELETE(_instancedQueue)
 
     _buffer = nullptr;
 }

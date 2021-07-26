@@ -59,11 +59,9 @@ void Sphere::mergePoint(const Vec3 &point) {
         return;
     }
 
-    auto offset   = point - _center;
-    auto distance = offset.length();
-
-    if (distance > _radius) {
-        auto half = (distance - _radius) * 0.5F;
+    Vec3 offset   = point - _center;
+    if (const float distance = offset.length(); distance > _radius) {
+        const float half = (distance - _radius) * 0.5F;
         _radius += half;
         offset.scale(half / distance);
         _center += offset;
@@ -108,13 +106,25 @@ int Sphere::spherePlane(const Plane &plane) {
     return 1;
 }
 
-bool Sphere::sphereFrustum(const Frustum &frustum) {
+bool Sphere::sphereFrustum(const Frustum &frustum) const {
     const auto &planes = frustum.planes;
     const auto *self   = this;
     return std::all_of(planes.begin(),
                        planes.end(),
                        // frustum plane normal points to the inside
                        [self](const Plane &plane) { return self->interset(plane) != -1; });
+}
+
+void Sphere::mergeFrustum(const Frustum &frustum){
+    const std::vector<Vec3> vertices{frustum.vertices.begin(), frustum.vertices.end()};
+
+    mergePoints(vertices);
+}
+
+void Sphere::mergePoints(const std::vector<Vec3> &vertices) {
+    for (const Vec3 &vertex : vertices) {
+        mergePoint(vertex);
+    }
 }
 
 } // namespace scene

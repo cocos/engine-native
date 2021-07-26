@@ -39,6 +39,88 @@ const std::vector<cc::Vec3> VEC_VALS{
     {-1, -1, -1},
     {1, -1, -1}};
 } // namespace
+
+// Define from 3 vertices.
+void Plane::define(const Vec3 &v0, const Vec3 &v1, const Vec3 &v2) {
+    const Vec3 dist1 = v1 - v0;
+    const Vec3 dist2 = v2 - v0;
+
+    define(dist1.crossProduct(dist2), v0);
+}
+
+// Define from a normal vector and a point on the plane.
+void Plane::define(const Vec3 &normal, const Vec3 &point) {
+    n = normal.getNormalized();
+    d = -normal.dot(point);
+}
+
+// Return signed distance to a point.
+float Plane::distance(const Vec3 &point) const {
+    return n.dot(point) + d;
+}
+
+void Frustum::createOrtho(const float width, const float height, const float near, const float far, const Mat4& transform) {
+    const float halfWidth  = width * 0.5F;
+    const float halfHeight = height * 0.5F;
+
+    vertices[0] = transform * Vec3(halfWidth, halfHeight, near);
+    vertices[1] = transform * Vec3(-halfWidth, halfHeight, near);
+    vertices[2] = transform * Vec3(-halfWidth, -halfHeight, near);
+    vertices[3] = transform * Vec3(halfWidth, -halfHeight, near);
+    vertices[4] = transform * Vec3(halfWidth, halfHeight, far);
+    vertices[5] = transform * Vec3(-halfWidth, halfHeight, far);
+    vertices[6] = transform * Vec3(-halfWidth, -halfHeight, far);
+    vertices[7] = transform * Vec3(halfWidth, -halfHeight, far);
+
+    updatePlanes();
+}
+
+void Frustum::split(float start, float end, float aspect, float fov, const Mat4& transform) {
+    const float h = tanf(fov * 0.5F);
+    const float w = h * aspect;
+    const Vec3  nearTemp(start * w, start * h, start);
+    const Vec3  farTemp(end * w, end * h, end);
+
+    vertices[0] = transform * Vec3(nearTemp.x, nearTemp.y, nearTemp.z);
+    vertices[1] = transform * Vec3(nearTemp.x, nearTemp.y, nearTemp.z);
+    vertices[2] = transform * Vec3(nearTemp.x, nearTemp.y, nearTemp.z);
+    vertices[3] = transform * Vec3(nearTemp.x, nearTemp.y, nearTemp.z);
+    vertices[4] = transform * Vec3(farTemp.x, farTemp.y, farTemp.z);
+    vertices[5] = transform * Vec3(farTemp.x, farTemp.y, farTemp.z);
+    vertices[6] = transform * Vec3(farTemp.x, farTemp.y, farTemp.z);
+    vertices[7] = transform * Vec3(farTemp.x, farTemp.y, farTemp.z);
+
+    updatePlanes();
+}
+
+void Frustum::zero() {
+    vertices[0] = Mat4::ZERO * vertices[0];
+    vertices[1] = Mat4::ZERO * vertices[1];
+    vertices[2] = Mat4::ZERO * vertices[2];
+    vertices[3] = Mat4::ZERO * vertices[3];
+    vertices[4] = Mat4::ZERO * vertices[4];
+    vertices[5] = Mat4::ZERO * vertices[5];
+    vertices[6] = Mat4::ZERO * vertices[6];
+    vertices[7] = Mat4::ZERO * vertices[7];
+
+    updatePlanes();
+}
+
+void Frustum::updatePlanes() {
+    // left plane
+    planes[0].define(vertices[1], vertices[5], vertices[6]);
+    // right plane
+    planes[1].define(vertices[3], vertices[7], vertices[4]);
+    // bottom plane
+    planes[2].define(vertices[6], vertices[7], vertices[3]);
+    // top plane
+    planes[3].define(vertices[0], vertices[4], vertices[5]);
+    // near plane
+    planes[4].define(vertices[2], vertices[3], vertices[0]);
+    // far plane
+    planes[5].define(vertices[7], vertices[6], vertices[5]);
+}
+
 void Frustum::update(const Mat4 &m, const Mat4 &inv) {
     // left plane
     planes[0].n.set(m.m[3] + m.m[0], m.m[7] + m.m[4], m.m[11] + m.m[8]);

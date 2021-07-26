@@ -56,15 +56,19 @@ public:
     inline void                                                                setRenderObjects(RenderObjectList &&ro) { _renderObjects = std::forward<RenderObjectList>(ro); }
     inline void                                                                setShadowObjects(RenderObjectList &&ro) { _shadowObjects = std::forward<RenderObjectList>(ro); }
     inline scene::Sphere *                                                     getSphere() const { return _sphere; }
+    inline scene::Sphere *                                                     getCameraBoundingSphere() const { return _cameraBoundingSphere; }
+    inline scene::Frustum *                                                    getDirLightFrustum() const { return _dirLightFrustum; }
 
 private:
     RenderObjectList _renderObjects;
     RenderObjectList _shadowObjects;
 
-    scene::PipelineSharedSceneData *_sharedSceneData = nullptr;
-    RenderPipeline *                _pipeline        = nullptr;
-    gfx::Device *                   _device          = nullptr;
-    scene::Sphere *                 _sphere          = nullptr;
+    scene::PipelineSharedSceneData *_sharedSceneData      = nullptr;
+    RenderPipeline *                _pipeline             = nullptr;
+    gfx::Device *                   _device               = nullptr;
+    scene::Sphere *                 _sphere               = nullptr;
+    scene::Sphere *                 _cameraBoundingSphere = nullptr;
+    scene::Frustum *                _dirLightFrustum      = nullptr;
 
     std::unordered_map<const scene::Light *, gfx::Framebuffer *> _shadowFrameBufferMap;
 };

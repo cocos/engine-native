@@ -51,17 +51,17 @@ public:
     /**
      * The x-coordinate.
      */
-    float x;
+    float x{};
 
     /**
      * The y-coordinate.
      */
-    float y;
+    float y{};
 
     /**
      * The z-coordinate.
      */
-    float z;
+    float z{};
 
     /**
      * Constructs a new vector initialized to all zeros.
@@ -187,6 +187,13 @@ public:
      * @param v The vector to compute the cross product with.
      */
     void cross(const Vec3 &v);
+
+    /**
+     * Sets this vector to the cross product between itself and the specified vector.
+     *
+     * @param v The vector to compute the cross product with.
+     */
+    Vec3 crossProduct(const Vec3 &v) const;
 
     /**
      * Computes the cross product of the specified vectors and stores the result in dst.
@@ -580,6 +587,8 @@ public:
     static const Vec3 UNIT_Y;
     /** equals to Vec3(0,0,1) */
     static const Vec3 UNIT_Z;
+    /** equals to Vec3(0,0,-1) */
+    static const Vec3 FORWARD;
 };
 
 /**
