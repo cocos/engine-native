@@ -99,10 +99,8 @@ const RenderStageInfo &LightingStage::getInitializeInfo() { return LightingStage
 LightingStage::LightingStage() = default;
 
 LightingStage::~LightingStage() {
-    _deferredLitsBufs->destroy();
-    _deferredLitsBufs = nullptr;
-    _deferredLitsBufView->destroy();
-    _deferredLitsBufView = nullptr;
+    CC_SAFE_DESTROY(_deferredLitsBufs);
+    CC_SAFE_DESTROY(_deferredLitsBufView);
 }
 
 bool LightingStage::initialize(const RenderStageInfo &info) {
@@ -320,7 +318,9 @@ void LightingStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
 }
 
 void LightingStage::destroy() {
-    CC_SAFE_DELETE(_planarShadowQueue);
+    CC_SAFE_DESTROY(_descriptorSet);
+    CC_SAFE_DESTROY(_descLayout);
+    CC_SAFE_DESTROY(_planarShadowQueue);
     CC_SAFE_DELETE(_reflectionRenderQueue);
     RenderStage::destroy();
 

@@ -73,6 +73,7 @@ public:
     inline const UintList &       getLightIndices() const { return _lightIndices; }
     gfx::InputAssembler *         getQuadIAOffScreen() { return _quadIAOffscreen; }
     gfx::Rect                     getRenderArea(scene::Camera *camera, bool onScreen);
+    inline DeferredRenderData *   getDeferredRenderData() { return _deferredRenderData; };
     void                          updateQuadVertexData(const gfx::Rect &renderArea);
     void                          genQuadVertexData(gfx::SurfaceTransform surfaceTransform, const gfx::Rect &renderArea, float *data);
 

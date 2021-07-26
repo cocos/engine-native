@@ -313,20 +313,9 @@ gfx::Rect DeferredPipeline::getRenderArea(scene::Camera *camera, bool onScreen) 
 }
 
 void DeferredPipeline::destroyQuadInputAssembler() {
-    if (_quadIB) {
-        _quadIB->destroy();
-        _quadIB = nullptr;
-    }
-
-    if (_quadVBOffscreen) {
-        _quadVBOffscreen->destroy();
-        _quadVBOffscreen = nullptr;
-    }
-
-    if (_quadIAOffscreen) {
-        _quadIAOffscreen->destroy();
-        _quadIAOffscreen = nullptr;
-    }
+    CC_SAFE_DESTROY(_quadIB);
+    CC_SAFE_DESTROY(_quadVBOffscreen);
+    CC_SAFE_DESTROY(_quadIAOffscreen);
 }
 
 bool DeferredPipeline::activeRenderer() {
@@ -345,7 +334,7 @@ bool DeferredPipeline::activeRenderer() {
         {},
         {},
     };
-    const uint  samplerHash = SamplerLib::genSamplerHash(info);
+    const uint          samplerHash = SamplerLib::genSamplerHash(info);
     gfx::Sampler *const sampler     = SamplerLib::getSampler(samplerHash);
 
     // Main light sampler binding
@@ -387,6 +376,7 @@ void DeferredPipeline::resize(uint width, uint height) {
 
 void DeferredPipeline::destroy() {
     destroyQuadInputAssembler();
+    destroyDeferredData();
 
     for (int i = 0; i < 4; ++i) {
         if (_gbufferTex[i]) {
@@ -411,14 +401,14 @@ void DeferredPipeline::destroy() {
     }
 
     for (auto &it : _renderPasses) {
-        it.second->destroy();
+        CC_DESTROY(it.second);
     }
     _renderPasses.clear();
 
     _commandBuffers.clear();
 
-    _gbufferRenderPass  = nullptr;
-    _lightingRenderPass = nullptr;
+    CC_SAFE_DESTROY(_gbufferRenderPass);
+    CC_SAFE_DESTROY(_lightingRenderPass);
 
     RenderPipeline::destroy();
 }
