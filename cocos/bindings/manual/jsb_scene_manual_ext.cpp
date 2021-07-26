@@ -89,7 +89,7 @@ std::vector<uint8_t *> msgQueuePtrs;
  *  which sync data to native objects.
  */
 void jsbFlushFastMQ() {
-    if (!mqInitialized && msgInfoPtr[1] > 0) {
+    if (!mqInitialized || !msgInfoPtr || msgInfoPtr[1] == 0) {
         return;
     }
 

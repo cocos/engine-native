@@ -37,6 +37,10 @@
 
 #define RECORD_JSB_INVOKING
 
+#ifndef CC_DEBUG
+    #undef RECORD_JSB_INVOKING
+#endif
+
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
     #if defined(RECORD_JSB_INVOKING)
