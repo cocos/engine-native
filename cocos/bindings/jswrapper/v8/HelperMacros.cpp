@@ -23,10 +23,9 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#pragma once
 #include "HelperMacros.h"
 
 #if defined(RECORD_JSB_INVOKING)
-unsigned int                                      __jsbInvocationCount;
-std::map<char const *, std::tuple<int, uint64_t>> __jsbFunctionInvokedRecords;
+unsigned int                                      __jsbInvocationCount;        // NOLINT(readability-identifier-naming)
+std::map<char const *, std::tuple<int, uint64_t>> __jsbFunctionInvokedRecords; // NOLINT(readability-identifier-naming)
 #endif
