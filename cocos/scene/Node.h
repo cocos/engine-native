@@ -67,6 +67,15 @@ public:
     void setWorldRotation(float x, float y, float z, float w);
     void setParent(Node *parent);
 
+    inline void addChild(Node *node) { _children.emplace_back(node); }
+
+    inline void removeChild(Node *node) {
+        auto iter = std::find(_children.begin(), _children.end(), node);
+        if (iter != _children.end()) {
+            _children.erase(iter);
+        }
+    }
+
     inline void setFlagsChanged(uint32_t value) { *(reinterpret_cast<uint32_t *>(_flagChunk) + _flagOffest) = value; }
     inline void setDirtyFlag(uint32_t value) { _nodeLayout->dirtyFlag = value; }
     inline void setLayer(uint32_t layer) { _nodeLayout->layer = layer; }

@@ -151,18 +151,15 @@ void Node::setWorldRotation(float x, float y, float z, float w) {
 }
 
 void Node::setParent(Node *parent) {
-    if (parent != nullptr && _parent == parent) {
+    if (_parent == parent) {
         return;
     }
     if (_parent != nullptr) {
-        auto iter = std::find(_parent->_children.begin(), _parent->_children.end(), this);
-        if (iter != _parent->_children.end()) {
-            _parent->_children.erase(iter);
-        }
+        _parent->removeChild(this);
     }
     _parent = parent;
     if (_parent) {
-        _parent->_children.emplace_back(this);
+        _parent->addChild(this);
     }
 }
 
