@@ -150,6 +150,22 @@ void Node::setWorldRotation(float x, float y, float z, float w) {
     invalidateChildren(TransformBit::ROTATION);
 }
 
+void Node::setParent(Node *parent) {
+    if (parent != nullptr && _parent == parent) {
+        return;
+    }
+    if (_parent != nullptr) {
+        auto iter = std::find(_parent->_children.begin(), _parent->_children.end(), this);
+        if (iter != _parent->_children.end()) {
+            _parent->_children.erase(iter);
+        }
+    }
+    _parent = parent;
+    if (_parent) {
+        _parent->_children.emplace_back(this);
+    }
+}
+
 void Node::initWithData(uint8_t *data, uint8_t *flagChunk, uint32_t offset) {
     _nodeLayout = reinterpret_cast<NodeLayout *>(data);
     _flagChunk  = flagChunk;

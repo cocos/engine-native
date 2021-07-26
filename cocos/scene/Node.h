@@ -34,7 +34,7 @@
 
 namespace cc {
 namespace scene {
-
+enum class TransformBit;
 // This struct defines the memory layout shared between JS and C++.
 struct NodeLayout {
     uint32_t       dirtyFlag{0};
@@ -47,7 +47,7 @@ struct NodeLayout {
     cc::Vec3       localPosition;
     cc::Quaternion localRotation;
 };
-extern enum class TransformBit;
+
 class Node final {
 public:
     Node()             = default;
@@ -57,27 +57,15 @@ public:
     Node &operator=(const Node &) = delete;
     Node &operator=(Node &&) = delete;
 
-    void        initWithData(uint8_t *, uint8_t *, uint32_t);
-    void        updateWorldTransform();
-    void        updateWorldRTMatrix();
-    inline void setParent(Node *parent) {
-        if (parent != nullptr && _parent == parent) {
-            return;
-        }
-        if (_parent != nullptr) {
-            auto iter = std::find(_parent->_children.begin(), _parent->_children.end(), this);
-            if (iter != _parent->_children.end()) {
-                _parent->_children.erase(iter);
-            }
-        }
-        _parent = parent;
-        if (_parent) {
-            _parent->_children.emplace_back(this);
-        }
-    }
+    void initWithData(uint8_t *, uint8_t *, uint32_t);
     void invalidateChildren(TransformBit dirtyBit);
+
+    void updateWorldTransform();
+    void updateWorldRTMatrix();
+
     void setWorldPosition(float x, float y, float z);
     void setWorldRotation(float x, float y, float z, float w);
+    void setParent(Node *parent);
 
     inline void setFlagsChanged(uint32_t value) { *(reinterpret_cast<uint32_t *>(_flagChunk) + _flagOffest) = value; }
     inline void setDirtyFlag(uint32_t value) { _nodeLayout->dirtyFlag = value; }
