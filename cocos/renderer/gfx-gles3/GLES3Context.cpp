@@ -140,7 +140,7 @@ bool GLES3Context::doInit(const ContextInfo &info) {
         _colorFmt        = Format::RGBA8;
         _depthStencilFmt = Format::D24S8;
 
-        bool   msaaEnabled = false; //info.msaaEnabled;
+        bool   msaaEnabled = info.msaaEnabled;
         EGLint redSize{8};
         EGLint greenSize{8};
         EGLint blueSize{8};
