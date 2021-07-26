@@ -47,7 +47,7 @@ struct NodeLayout {
     cc::Vec3       localPosition;
     cc::Quaternion localRotation;
 };
-
+extern enum class TransformBit;
 class Node final {
 public:
     Node()             = default;
@@ -57,22 +57,34 @@ public:
     Node &operator=(const Node &) = delete;
     Node &operator=(Node &&) = delete;
 
-    void initWithData(uint8_t *, uint8_t *, uint32_t);
-    void updateWorldTransform();
-    void updateWorldRTMatrix();
-
+    void        initWithData(uint8_t *, uint8_t *, uint32_t);
+    void        updateWorldTransform();
+    void        updateWorldRTMatrix();
     inline void setParent(Node *parent) {
+        if (parent != nullptr && _parent == parent) {
+            return;
+        }
+        if (_parent != nullptr) {
+            auto iter = std::find(_parent->_children.begin(), _parent->_children.end(), this);
+            if (iter != _parent->_children.end()) {
+                _parent->_children.erase(iter);
+            }
+        }
         _parent = parent;
+        if (_parent) {
+            _parent->_children.emplace_back(this);
+        }
     }
+    void invalidateChildren(TransformBit dirtyBit);
+    void setWorldPosition(float x, float y, float z);
+    void setWorldRotation(float x, float y, float z, float w);
 
     inline void setFlagsChanged(uint32_t value) { *(reinterpret_cast<uint32_t *>(_flagChunk) + _flagOffest) = value; }
     inline void setDirtyFlag(uint32_t value) { _nodeLayout->dirtyFlag = value; }
     inline void setLayer(uint32_t layer) { _nodeLayout->layer = layer; }
     inline void setWorldMatrix(const Mat4 &matrix) { _nodeLayout->worldMatrix.set(matrix); }
-    inline void setWorldPosition(const Vec3 &pos) { _nodeLayout->worldPosition.set(pos); }
-    inline void setWorldPosition(float x, float y, float z) { _nodeLayout->worldPosition.set(x, y, z); }
-    inline void setWorldRotation(const Quaternion &rotation) { _nodeLayout->worldRotation.set(rotation); }
-    inline void setWorldRotation(float x, float y, float z, float w) { _nodeLayout->worldRotation.set(x, y, z, w); }
+    inline void setWorldPosition(const Vec3 &pos) { setWorldPosition(pos.x, pos.y, pos.z); }
+    inline void setWorldRotation(const Quaternion &rotation) { setWorldRotation(rotation.x, rotation.y, rotation.z, rotation.w); }
     inline void setWorldScale(const Vec3 &scale) { _nodeLayout->worldScale.set(scale); }
     inline void setLocalPosition(const Vec3 &pos) { _nodeLayout->localPosition.set(pos); }
     inline void setLocalPosition(float x, float y, float z) { _nodeLayout->localPosition.set(x, y, z); }
@@ -95,11 +107,13 @@ public:
     inline const Mat4 &      getWorldRTMatrix() const { return _rtMat; };
 
 private:
-    NodeLayout *_nodeLayout{nullptr};
-    Node *      _parent{nullptr};
-    Mat4        _rtMat;
-    uint8_t *   _flagChunk{nullptr};
-    uint32_t    _flagOffest{0};
+    NodeLayout *        _nodeLayout{nullptr};
+    Node *              _parent{nullptr};
+    Mat4                _rtMat;
+    uint8_t *           _flagChunk{nullptr};
+    uint32_t            _flagOffest{0};
+    std::vector<Node *> _children;
+    std::vector<Node *> _computeNodes;
 };
 
 } // namespace scene
