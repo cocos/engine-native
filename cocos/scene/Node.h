@@ -57,7 +57,7 @@ public:
     Node &operator=(const Node &) = delete;
     Node &operator=(Node &&) = delete;
 
-    void initWithData(uint8_t *, uint8_t *, uint32_t);
+    void initWithData(uint8_t *, uint8_t *);
     void updateWorldTransform();
     void updateWorldRTMatrix();
 
@@ -65,7 +65,7 @@ public:
         _parent = parent;
     }
 
-    inline void setFlagsChanged(uint32_t value) { *(reinterpret_cast<uint32_t *>(_flagChunk) + _flagOffest) = value; }
+    inline void setFlagsChanged(uint32_t value) { *_flagChunk = value; }
     inline void setDirtyFlag(uint32_t value) { _nodeLayout->dirtyFlag = value; }
     inline void setLayer(uint32_t layer) { _nodeLayout->layer = layer; }
     inline void setWorldMatrix(const Mat4 &matrix) { _nodeLayout->worldMatrix.set(matrix); }
@@ -80,8 +80,9 @@ public:
     inline void setLocalRotation(float x, float y, float z, float w) { _nodeLayout->localRotation.set(x, y, z, w); }
     inline void setLocalScale(const Vec3 &scale) { _nodeLayout->localScale.set(scale); }
 
-    inline Node *            getParent() const { return _parent; }
-    inline uint32_t          getFlagsChanged() const { return *(reinterpret_cast<uint32_t *>(_flagChunk) + _flagOffest); }
+    inline Node *getParent() const { return _parent; }
+
+    inline uint32_t          getFlagsChanged() const { return *_flagChunk; }
     inline uint32_t          getLayer() const { return _nodeLayout->layer; }
     inline uint32_t          getDirtyFlag() const { return _nodeLayout->dirtyFlag; }
     inline const Vec3 &      getPosition() const { return _nodeLayout->localPosition; }
@@ -98,8 +99,7 @@ private:
     NodeLayout *_nodeLayout{nullptr};
     Node *      _parent{nullptr};
     Mat4        _rtMat;
-    uint8_t *   _flagChunk{nullptr};
-    uint32_t    _flagOffest{0};
+    uint32_t *  _flagChunk{nullptr};
 };
 
 } // namespace scene

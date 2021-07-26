@@ -76,6 +76,9 @@ void DescriptorSetAgent::doDestroy() {
 }
 
 void DescriptorSetAgent::update() {
+    // Avoid enqueue unnecessary command
+    if (!_isDirty) return;
+
     _isDirty = false;
 
     ENQUEUE_MESSAGE_1(

@@ -26,19 +26,46 @@
 
 #pragma once
 
+#include <algorithm>
+#include <chrono>
 #include <map>
 #include <string>
+#include <tuple>
 #include <vector>
 #include "../config.h"
 #include "base/Log.h"
 
-//#define RECORD_JSB_INVOKING
+#define RECORD_JSB_INVOKING
 
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
-    #if defined(CC_DEBUG) & defined(RECORD_JSB_INVOKING)
-extern unsigned int                        __jsbInvocationCount;
-extern std::map<std::string, unsigned int> __jsbFunctionInvokedRecords;
+    #if defined(RECORD_JSB_INVOKING)
+extern unsigned int                                      __jsbInvocationCount;        // NOLINT
+extern std::map<const char *, std::tuple<int, uint64_t>> __jsbFunctionInvokedRecords; // NOLINT
+
+class JsbInvokeScopeT {
+public:
+    explicit JsbInvokeScopeT(const char *functionName) : _functionName(functionName) {
+        _start = std::chrono::high_resolution_clock::now();
+        __jsbInvocationCount++;
+    }
+    ~JsbInvokeScopeT() {
+        auto &ref = __jsbFunctionInvokedRecords[_functionName];
+        std::get<0>(ref) += 1;
+        std::get<1>(ref) += std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - _start).count();
+    }
+
+private:
+    const char *                                                _functionName;
+    std::chrono::time_point<std::chrono::high_resolution_clock> _start;
+};
+        #define JsbInvokeScope(arg) JsbInvokeScopeT invokeScope(arg); // NOLINT(readability-identifier-naming)
+    #else
+        // NOLINTNEXTLINE(readability-identifier-naming)
+        #define JsbInvokeScope(arg) \
+            do {                    \
+            } while (0)
+
     #endif
 
 template <typename T, typename STATE>
@@ -56,37 +83,31 @@ constexpr typename std::enable_if<!std::is_enum<T>::value, char *>::type SE_UNDE
     return typeid(T).name();
 }
 
-inline bool cmp(const std::pair<std::string, int> &a, const std::pair<std::string, int> &b) {
-    return a.second < b.second;
-}
-
-inline void recordJSBInvoke(const std::string &funcName) {
-    #if defined(CC_DEBUG) & defined(RECORD_JSB_INVOKING)
-    ++__jsbInvocationCount;
-    ++__jsbFunctionInvokedRecords[funcName];
-    #endif
+inline bool cmp(const std::pair<const char *, std::tuple<int, uint64_t>> &a, const std::pair<const char *, std::tuple<int, uint64_t>> &b) {
+    return std::get<1>(a.second) > std::get<1>(b.second);
 }
 
 inline void clearRecordJSBInvoke() {
-    #if defined(CC_DEBUG) & defined(RECORD_JSB_INVOKING)
+    #if defined(RECORD_JSB_INVOKING)
     __jsbInvocationCount = 0;
     __jsbFunctionInvokedRecords.clear();
     #endif
 }
 
 inline void printJSBInvoke() {
-    #if defined(CC_DEBUG) & defined(RECORD_JSB_INVOKING)
-    static std::vector<std::pair<std::string, int>> pairs;
-    for (const auto &it : __jsbFunctionInvokedRecords)
-        pairs.push_back(it);
+    #if defined(RECORD_JSB_INVOKING)
+    static std::vector<std::pair<const char *, std::tuple<int, uint64_t>>> pairs;
+    for (const auto &it : __jsbFunctionInvokedRecords) {
+        pairs.emplace_back(it); //NOLINT
+    }
 
     std::sort(pairs.begin(), pairs.end(), cmp);
-    CC_LOG_DEBUG("Start print JSB function record info....... %d times", __jsbInvocationCount);
+    cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::LEVEL_DEBUG, "Start print JSB function record info....... %d times", __jsbInvocationCount);
     for (const auto &pair : pairs) {
-        CC_LOG_DEBUG("%s is invoked %u times.", pair.first.c_str(), pair.second);
+        cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::LEVEL_DEBUG, "\t%s takes %.3lf ms, invoked %u times,", pair.first, std::get<1>(pair.second) / 1000000.0, std::get<0>(pair.second));
     }
     pairs.clear();
-    CC_LOG_DEBUG("End print JSB function record info.......\n");
+    cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::LEVEL_DEBUG, "End print JSB function record info.......\n");
     #endif
 }
 
@@ -111,11 +132,11 @@ inline void printJSBInvoke() {
 
     #define SE_BIND_FUNC(funcName)                                                                        \
         void funcName##Registry(const v8::FunctionCallbackInfo<v8::Value> &_v8args) {                     \
-            recordJSBInvoke(#funcName);                                                                   \
-            bool               ret      = false;                                                          \
-            v8::Isolate *      _isolate = _v8args.GetIsolate();                                           \
-            v8::HandleScope    _hs(_isolate);                                                             \
-            se::ValueArray     args;                                                                      \
+            JsbInvokeScope(#funcName);                                                                    \
+            bool            ret      = false;                                                             \
+            v8::Isolate *   _isolate = _v8args.GetIsolate();                                              \
+            v8::HandleScope _hs(_isolate);                                                                \
+            se::ValueArray  args;                                                                         \
             args.reserve(10);                                                                             \
             se::internal::jsToSeArgs(_v8args, &args);                                                     \
             void *    nativeThisObject = se::internal::getPrivate(_isolate, _v8args.This());              \
@@ -129,7 +150,7 @@ inline void printJSBInvoke() {
 
     #define SE_BIND_FINALIZE_FUNC(funcName)                                                               \
         void funcName##Registry(void *nativeThisObject) {                                                 \
-            recordJSBInvoke(#funcName);                                                                   \
+            JsbInvokeScope(#funcName);                                                                    \
             if (nativeThisObject == nullptr)                                                              \
                 return;                                                                                   \
             auto se = se::ScriptEngine::getInstance();                                                    \
@@ -148,7 +169,7 @@ inline void printJSBInvoke() {
     // v8 doesn't need to create a new JSObject in SE_BIND_CTOR while SpiderMonkey needs.
     #define SE_BIND_CTOR(funcName, cls, finalizeCb)                                                       \
         void funcName##Registry(const v8::FunctionCallbackInfo<v8::Value> &_v8args) {                     \
-            recordJSBInvoke(#funcName);                                                                   \
+            JsbInvokeScope(#funcName);                                                                    \
             v8::Isolate *   _isolate = _v8args.GetIsolate();                                              \
             v8::HandleScope _hs(_isolate);                                                                \
             bool            ret = true;                                                                   \
@@ -172,7 +193,7 @@ inline void printJSBInvoke() {
 
     #define SE_BIND_PROP_GET(funcName)                                                                                   \
         void funcName##Registry(v8::Local<v8::Name> /*_property*/, const v8::PropertyCallbackInfo<v8::Value> &_v8args) { \
-            recordJSBInvoke(#funcName);                                                                                  \
+            JsbInvokeScope(#funcName);                                                                                   \
             v8::Isolate *   _isolate = _v8args.GetIsolate();                                                             \
             v8::HandleScope _hs(_isolate);                                                                               \
             bool            ret              = true;                                                                     \
@@ -187,7 +208,7 @@ inline void printJSBInvoke() {
 
     #define SE_BIND_PROP_SET(funcName)                                                                                                           \
         void funcName##Registry(v8::Local<v8::Name> /*_property*/, v8::Local<v8::Value> _value, const v8::PropertyCallbackInfo<void> &_v8args) { \
-            recordJSBInvoke(#funcName);                                                                                                          \
+            JsbInvokeScope(#funcName);                                                                                                           \
             v8::Isolate *   _isolate = _v8args.GetIsolate();                                                                                     \
             v8::HandleScope _hs(_isolate);                                                                                                       \
             bool            ret              = true;                                                                                             \

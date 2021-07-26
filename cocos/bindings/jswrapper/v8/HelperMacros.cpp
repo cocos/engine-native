@@ -1,8 +1,8 @@
 /****************************************************************************
  Copyright (c) 2021 Xiamen Yaji Software Co., Ltd.
- 
+
  http://www.cocos.com
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated engine source code (the "Software"), a limited,
  worldwide, royalty-free, non-assignable, revocable and non-exclusive license
@@ -10,10 +10,10 @@
  not use Cocos Creator software for developing other software or tools that's
  used for developing games. You are not granted to publish, distribute,
  sublicense, and/or sell copies of Cocos Creator.
- 
+
  The software or tools in this License Agreement are licensed, not sold.
  Xiamen Yaji Software Co., Ltd. reserves all rights not expressly granted to you.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,31 +21,12 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
- ****************************************************************************/
+****************************************************************************/
 
-#include "scene/Pass.h"
+#pragma once
+#include "HelperMacros.h"
 
-namespace cc {
-namespace scene {
-
-void Pass::update() {
-    if (_rootBufferDirty && _rootBuffer) {
-        _rootBuffer->update(_rootBlock, _rootBuffer->getSize());
-        _rootBufferDirty = false;
-    }
-    _descriptorSet->update();
-}
-
-void Pass::initWithData(uint8_t *data) {
-    _passLayout = reinterpret_cast<PassLayout *>(data);
-}
-
-void Pass::setState(gfx::BlendState *bs, gfx::DepthStencilState *ds, gfx::RasterizerState *rs, gfx::DescriptorSet *descriptorSet) {
-    _blendState        = bs;
-    _depthStencilState = ds;
-    _rasterizerState   = rs;
-    _descriptorSet     = descriptorSet;
-}
-
-} // namespace scene
-} // namespace cc
+#if defined(RECORD_JSB_INVOKING)
+unsigned int                                      __jsbInvocationCount;
+std::map<char const *, std::tuple<int, uint64_t>> __jsbFunctionInvokedRecords;
+#endif
