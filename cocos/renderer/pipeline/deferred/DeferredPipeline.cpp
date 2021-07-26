@@ -161,6 +161,9 @@ void DeferredPipeline::initFrameGraphExternalTexture() {
 
     _depthTex = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(depthInfo);
     _depthTex->createPersistent();
+
+    // backbuffer
+    _fgBackBuffer = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>();
 }
 
 void DeferredPipeline::destroyFrameGraphExternalTexture() {
@@ -179,11 +182,15 @@ void DeferredPipeline::destroyFrameGraphExternalTexture() {
         CC_SAFE_DELETE(depthTex);
         CC_SAFE_DELETE(_depthTex);
     }
+
+    if (_fgBackBuffer) {
+        CC_SAFE_DELETE(_fgBackBuffer);
+    }
 }
 
 void DeferredPipeline::prepareFrameGraph() {
     // repare for the backbuffer, if the gfx::Texture is nullptr, cocos will use swapchain texture when create framebuffer
-    _fg.getBlackboard().put(_backBuffer, _fg.importExternal(_backBuffer, _fgBackBuffer));
+    _fg.getBlackboard().put(_backBuffer, _fg.importExternal(_backBuffer, *_fgBackBuffer));
 
     for (uint i = 0; i < 4; ++i) {
         _fg.getBlackboard().put(_gbuffer[i], _fg.importExternal(_gbuffer[i], *_gbufferTex[i]));
@@ -196,10 +203,12 @@ void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
     _commandBuffers[0]->begin();
     _pipelineUBO->updateGlobalUBO();
     _pipelineUBO->updateMultiCameraUBO(cameras);
+
     for (auto *camera : cameras) {
         _fg.reset();
         prepareFrameGraph();
         sceneCulling(this, camera);
+        _frameGraphCamera = camera;
         for (auto *const flow : _flows) {
             flow->render(camera);
         }
@@ -406,9 +415,6 @@ void DeferredPipeline::destroy() {
     _renderPasses.clear();
 
     _commandBuffers.clear();
-
-    CC_SAFE_DESTROY(_gbufferRenderPass);
-    CC_SAFE_DESTROY(_lightingRenderPass);
 
     RenderPipeline::destroy();
 }

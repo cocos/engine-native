@@ -73,7 +73,6 @@ public:
     inline const UintList &       getLightIndices() const { return _lightIndices; }
     gfx::InputAssembler *         getQuadIAOffScreen() { return _quadIAOffscreen; }
     gfx::Rect                     getRenderArea(scene::Camera *camera, bool onScreen);
-    inline DeferredRenderData *   getDeferredRenderData() { return _deferredRenderData; };
     void                          updateQuadVertexData(const gfx::Rect &renderArea);
     void                          genQuadVertexData(gfx::SurfaceTransform surfaceTransform, const gfx::Rect &renderArea, float *data);
 
@@ -84,6 +83,7 @@ public:
     void destroyFrameGraphExternalTexture();
     uint getWidth() { return _width; }
     uint getHeight() { return _height; }
+    scene::Camera *getFrameGraphCamera() { return _frameGraphCamera; }
 
 private:
     bool activeRenderer();
@@ -105,13 +105,11 @@ private:
     gfx::Buffer *        _quadVBOffscreen = nullptr;
     gfx::InputAssembler *_quadIAOffscreen = nullptr;
 
-    gfx::RenderPass *   _gbufferRenderPass  = nullptr;
-    gfx::RenderPass *   _lightingRenderPass = nullptr;
-    uint                _width;
-    uint                _height;
+    uint             _width;
+    uint             _height;
 
     framegraph::FrameGraph _fg;
-    framegraph::Texture    _fgBackBuffer;
+    scene::Camera *_frameGraphCamera = nullptr;     // 每个camera走一遍framegraph流程
 
 public:
     // deferred resource name declear
@@ -129,6 +127,7 @@ public:
     // external resources of framegraph
     framegraph::Texture *_gbufferTex[4] = {nullptr};
     framegraph::Texture *_depthTex = nullptr;
+    framegraph::Texture *_fgBackBuffer = nullptr;
 };
 
 } // namespace pipeline

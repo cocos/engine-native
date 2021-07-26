@@ -44,6 +44,7 @@ public:
     void render(scene::Camera *camera) override;
 
     gfx::DescriptorSet *getGlobalSet() { return _globalSet; }
+    UIPhase *getUIPhase() { return _uiPhase; }
 
 private:
     gfx::Rect _renderArea;

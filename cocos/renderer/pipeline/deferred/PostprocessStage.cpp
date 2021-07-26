@@ -101,7 +101,6 @@ void PostprocessStage::destroy() {
 void PostprocessStage::render(scene::Camera *camera) {
     struct renderData {
         framegraph::TextureHandle lightingOut;      // read from lighting output
-        framegraph::TextureHandle depth;            // read from depth
         framegraph::TextureHandle backBuffer;       // write to back buffer
     };
 
@@ -110,21 +109,20 @@ void PostprocessStage::render(scene::Camera *camera) {
         data.lightingOut = builder.read(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_lightingOut)));
         builder.writeToBlackboard(DeferredPipeline::_lightingOut, data.lightingOut);
 
-        // depth is as an attachment
-        //framegraph::RenderTargetAttachment::Descriptor depthAttachInfo;
-        //depthAttachInfo.usage       = framegraph::RenderTargetAttachment::Usage::DEPTH_STENCIL;
-        //depthAttachInfo.loadOp      = gfx::LoadOp::LOAD;
-        //depthAttachInfo.clearColor  = gfx::Color();
-        //depthAttachInfo.endAccesses = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
-
-        //data.depth = builder.write(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_depth)), depthAttachInfo);
-        //builder.writeToBlackboard(DeferredPipeline::_depth, data.depth);
-
         // backbuffer is as an attachment
         framegraph::RenderTargetAttachment::Descriptor colorAttachmentInfo;
         colorAttachmentInfo.usage       = framegraph::RenderTargetAttachment::Usage::COLOR;
-        colorAttachmentInfo.loadOp      = gfx::LoadOp::DISCARD;
-        colorAttachmentInfo.clearColor  = _clearColors[0];
+
+        gfx::ClearFlagBit clearFlags = static_cast<gfx::ClearFlagBit>(camera->clearFlag);
+        if (!hasFlag(clearFlags, gfx::ClearFlagBit::COLOR)) {
+            if (hasFlag(clearFlags, static_cast<gfx::ClearFlagBit>(skyboxFlag))) {
+                colorAttachmentInfo.loadOp = gfx::LoadOp::DISCARD;
+            } else {
+                colorAttachmentInfo.loadOp        = gfx::LoadOp::LOAD;
+                colorAttachmentInfo.beginAccesses = {gfx::AccessType::PRESENT};
+            }
+        }
+
         colorAttachmentInfo.endAccesses = {gfx::AccessType::PRESENT};
 
         data.backBuffer = builder.write(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_backBuffer)), colorAttachmentInfo);
@@ -180,6 +178,8 @@ void PostprocessStage::render(scene::Camera *camera) {
         cmdBf->bindPipelineState(pso);
         cmdBf->bindInputAssembler(ia);
         cmdBf->draw(ia);
+
+        stage->getUIPhase()->render(pipeline->getFrameGraphCamera(), renderPass);
     };
 
     pipeline->getFrameGraph().addPass<renderData>(IP_POSTPROCESS, DeferredPipeline::_passPostprocess, postSetup, postExec);
