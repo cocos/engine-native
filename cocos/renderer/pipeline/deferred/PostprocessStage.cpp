@@ -105,6 +105,7 @@ void PostprocessStage::render(scene::Camera *camera) {
         framegraph::TextureHandle backBuffer;       // write to back buffer
     };
 
+    auto *      pipeline      = static_cast<DeferredPipeline *>(_pipeline);
     auto postSetup = [&] (framegraph::PassNodeBuilder &builder, renderData &data) {
         data.lightingOut = builder.read(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_lightingOut)));
         builder.writeToBlackboard(DeferredPipeline::_lightingOut, data.lightingOut);
@@ -128,6 +129,10 @@ void PostprocessStage::render(scene::Camera *camera) {
 
         data.backBuffer = builder.write(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_backBuffer)), colorAttachmentInfo);
         builder.writeToBlackboard(DeferredPipeline::_backBuffer, data.backBuffer);
+
+        auto renderArea = pipeline->getRenderArea(camera, !camera->window->hasOffScreenAttachments);
+        gfx::Viewport viewport{ renderArea.x, renderArea.y, renderArea.width, renderArea.height, 0.F, 1.F};
+        builder.setViewport(viewport, renderArea);
     };
 
     auto postExec = [&] (renderData const &data, const framegraph::DevicePassResourceTable &table) {
@@ -177,7 +182,6 @@ void PostprocessStage::render(scene::Camera *camera) {
         cmdBf->draw(ia);
     };
 
-    auto *      pipeline      = static_cast<DeferredPipeline *>(_pipeline);
     pipeline->getFrameGraph().addPass<renderData>(IP_POSTPROCESS, DeferredPipeline::_passPostprocess, postSetup, postExec);
     pipeline->getFrameGraph().presentFromBlackboard(DeferredPipeline::_backBuffer);
 }

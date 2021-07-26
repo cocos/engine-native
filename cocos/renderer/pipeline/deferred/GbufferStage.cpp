@@ -168,7 +168,7 @@ void GbufferStage::render(scene::Camera *camera) {
     };
 
     auto *pipeline = static_cast<DeferredPipeline *>(_pipeline);
-    _renderArea = pipeline->getRenderArea(camera);
+    _renderArea = pipeline->getRenderArea(camera, false);
 
     // render area is not oriented, copy buffer must be called outsize of renderpass, it shouldnot be called in execute lambda expression
     pipeline->updateQuadVertexData(_renderArea);

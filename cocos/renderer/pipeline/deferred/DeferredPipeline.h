@@ -72,7 +72,7 @@ public:
     inline const UintList &       getLightIndexOffsets() const { return _lightIndexOffsets; }
     inline const UintList &       getLightIndices() const { return _lightIndices; }
     gfx::InputAssembler *         getQuadIAOffScreen() { return _quadIAOffscreen; }
-    gfx::Rect                     getRenderArea(scene::Camera *camera);
+    gfx::Rect                     getRenderArea(scene::Camera *camera, bool onScreen);
     void                          updateQuadVertexData(const gfx::Rect &renderArea);
     void                          genQuadVertexData(gfx::SurfaceTransform surfaceTransform, const gfx::Rect &renderArea, float *data);
 
@@ -80,6 +80,9 @@ public:
     gfx::Color getClearcolor(scene::Camera *camera);
     void prepareFrameGraph();
     void initFrameGraphExternalTexture();
+    void destroyFrameGraphExternalTexture();
+    uint getWidth() { return _width; }
+    uint getHeight() { return _height; }
 
 private:
     bool activeRenderer();

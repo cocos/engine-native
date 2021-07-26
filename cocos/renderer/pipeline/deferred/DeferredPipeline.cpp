@@ -102,7 +102,6 @@ bool DeferredPipeline::activate() {
         return false;
     }
 
-    initFrameGraphExternalTexture();
     return true;
 }
 
@@ -124,16 +123,16 @@ void DeferredPipeline::initFrameGraphExternalTexture() {
         gfx::TextureType::TEX2D,
         gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
         gfx::Format::RGBA8,
-        _device->getWidth(),
-        _device->getHeight(),
+        _width,
+        _height,
     };
 
     gfx::TextureInfo infoPos = {
         gfx::TextureType::TEX2D,
         gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
         gfx::Format::RGBA16F,       // POSITON cannot use RGBA8
-        _device->getWidth(),
-        _device->getHeight(),
+        _width,
+        _height,
     };
 
     for (uint i = 0; i < 4; ++i) {
@@ -156,12 +155,30 @@ void DeferredPipeline::initFrameGraphExternalTexture() {
         gfx::TextureType::TEX2D,
         gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT,
         _device->getDepthStencilFormat(),
-        _device->getWidth(),
-        _device->getHeight(),
+        _width,
+        _height,
     };
 
     _depthTex = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(depthInfo);
     _depthTex->createPersistent();
+}
+
+void DeferredPipeline::destroyFrameGraphExternalTexture() {
+    // gbuffer descriptorset setup
+    for (uint i = 0; i < 4; ++i) {
+        // bind global descriptor
+        if (_gbufferTex[i]) {
+            gfx::Texture *tex = (gfx::Texture *)(_gbufferTex[i]->getDevObj());
+            CC_SAFE_DELETE(tex);
+            CC_SAFE_DELETE(_gbufferTex[i]);
+        }
+    }
+
+    if (_depthTex) {
+        gfx::Texture *depthTex = (gfx::Texture *)(_depthTex->getDevObj());
+        CC_SAFE_DELETE(depthTex);
+        CC_SAFE_DELETE(_depthTex);
+    }
 }
 
 void DeferredPipeline::prepareFrameGraph() {
@@ -275,10 +292,17 @@ bool DeferredPipeline::createQuadInputAssembler(gfx::Buffer **quadIB, gfx::Buffe
     return (*quadIA) != nullptr;
 }
 
-gfx::Rect DeferredPipeline::getRenderArea(scene::Camera *camera) {
+gfx::Rect DeferredPipeline::getRenderArea(scene::Camera *camera, bool onScreen) {
     gfx::Rect renderArea;
-    uint w = camera->window->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->height : camera->width;
-    uint h = camera->window->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->width : camera->height;
+    uint w;
+    uint h;
+    if (onScreen) {
+        w = camera->window->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->height : camera->width;
+        h = camera->window->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->width : camera->height;
+    } else {
+        w = camera->width;
+        h = camera->height;
+    }
 
     const auto &viewport = camera->viewPort;
     renderArea.x         = static_cast<int>(viewport.x * w);
@@ -344,6 +368,7 @@ bool DeferredPipeline::activeRenderer() {
 
     _width  = _device->getWidth();
     _height = _device->getHeight();
+    initFrameGraphExternalTexture();
 
     return true;
 }
@@ -355,6 +380,9 @@ void DeferredPipeline::resize(uint width, uint height) {
     _width  = width;
     _height = height;
     destroyDeferredData();
+
+    destroyFrameGraphExternalTexture();
+    initFrameGraphExternalTexture();
 }
 
 void DeferredPipeline::destroy() {
