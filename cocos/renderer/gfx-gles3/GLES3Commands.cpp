@@ -2354,17 +2354,12 @@ void cmdFuncGLES3BindState(GLES3Device *device, GLES3GPUPipelineState *gpuPipeli
                 GL_CHECK(glBindVertexArray(glVAO));
                 GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, 0));
                 GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
-                cache->glArrayBuffer        = 0;
-                cache->glElementArrayBuffer = 0;
 
                 for (auto &gpuInput : gpuPipelineState->gpuShader->glInputs) {
                     for (size_t a = 0; a < gpuInputAssembler->attributes.size(); ++a) {
                         const GLES3GPUAttribute &gpuAttribute = gpuInputAssembler->glAttribs[a];
                         if (gpuAttribute.name == gpuInput.name) {
-                            if (cache->glArrayBuffer != gpuAttribute.glBuffer) {
-                                GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, gpuAttribute.glBuffer));
-                                cache->glArrayBuffer = gpuAttribute.glBuffer;
-                            }
+                            GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, gpuAttribute.glBuffer));
 
                             for (uint c = 0; c < gpuAttribute.componentCount; ++c) {
                                 GLuint glLoc        = gpuInput.glLoc + c;
