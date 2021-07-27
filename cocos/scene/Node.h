@@ -89,8 +89,7 @@ public:
     inline void setLocalRotation(float x, float y, float z, float w) { _nodeLayout->localRotation.set(x, y, z, w); }
     inline void setLocalScale(const Vec3 &scale) { _nodeLayout->localScale.set(scale); }
 
-    inline Node *getParent() const { return _parent; }
-
+    inline Node *            getParent() const { return _parent; }
     inline uint32_t          getFlagsChanged() const { return *_flagChunk; }
     inline uint32_t          getLayer() const { return _nodeLayout->layer; }
     inline uint32_t          getDirtyFlag() const { return _nodeLayout->dirtyFlag; }
@@ -108,7 +107,7 @@ private:
     NodeLayout *        _nodeLayout{nullptr};
     Node *              _parent{nullptr};
     Mat4                _rtMat;
-    uint32_t *  _flagChunk{nullptr};
+    uint32_t *          _flagChunk{nullptr};
     std::vector<Node *> _children;
     std::vector<Node *> _computeNodes;
 };

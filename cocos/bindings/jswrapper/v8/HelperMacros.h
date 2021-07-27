@@ -36,6 +36,7 @@
 #include "base/Log.h"
 
 //#define RECORD_JSB_INVOKING
+
 #ifndef CC_DEBUG
     #undef RECORD_JSB_INVOKING
 #endif
@@ -43,20 +44,11 @@
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
     #if defined(RECORD_JSB_INVOKING)
-extern unsigned int                                      __jsbInvocationCount;        // NOLINT
-extern std::map<const char *, std::tuple<int, uint64_t>> __jsbFunctionInvokedRecords; // NOLINT
 
 class JsbInvokeScopeT {
 public:
-    explicit JsbInvokeScopeT(const char *functionName) : _functionName(functionName) {
-        _start = std::chrono::high_resolution_clock::now();
-        __jsbInvocationCount++;
-    }
-    ~JsbInvokeScopeT() {
-        auto &ref = __jsbFunctionInvokedRecords[_functionName];
-        std::get<0>(ref) += 1;
-        std::get<1>(ref) += std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - _start).count();
-    }
+    JsbInvokeScopeT(const char *functionName);
+    ~JsbInvokeScopeT();
 
 private:
     const char *                                                _functionName;
@@ -84,10 +76,6 @@ constexpr typename std::enable_if<std::is_enum<T>::value, char *>::type SE_UNDER
 template <typename T>
 constexpr typename std::enable_if<!std::is_enum<T>::value, char *>::type SE_UNDERLYING_TYPE_NAME() { // NOLINT(readability-identifier-naming)
     return typeid(T).name();
-}
-
-inline bool cmp(const std::pair<const char *, std::tuple<int, uint64_t>> &a, const std::pair<const char *, std::tuple<int, uint64_t>> &b) {
-    return std::get<1>(a.second) > std::get<1>(b.second);
 }
 
 void clearRecordJSBInvoke();

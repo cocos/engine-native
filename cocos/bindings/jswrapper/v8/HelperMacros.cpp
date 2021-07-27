@@ -26,29 +26,46 @@
 #include "HelperMacros.h"
 
 #if defined(RECORD_JSB_INVOKING)
+
+namespace {
+bool cmp(const std::pair<const char *, std::tuple<int, uint64_t>> &a, const std::pair<const char *, std::tuple<int, uint64_t>> &b) {
+    return std::get<1>(a.second) > std::get<1>(b.second);
+}
 unsigned int                                      __jsbInvocationCount;        // NOLINT(readability-identifier-naming)
 std::map<char const *, std::tuple<int, uint64_t>> __jsbFunctionInvokedRecords; // NOLINT(readability-identifier-naming)
+} // namespace
+
+JsbInvokeScopeT::JsbInvokeScopeT(const char *functionName) : _functionName(functionName) {
+    _start = std::chrono::high_resolution_clock::now();
+    __jsbInvocationCount++;
+}
+JsbInvokeScopeT::~JsbInvokeScopeT() {
+    auto &ref = __jsbFunctionInvokedRecords[_functionName];
+    std::get<0>(ref) += 1;
+    std::get<1>(ref) += std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - _start).count();
+}
+
 #endif
 
 void printJSBInvokeAtFrame(int n) {
 #if defined(RECORD_JSB_INVOKING)
     static int cnt = 0;
     cnt += 1;
-    if(cnt % n == 0) {
-    printJSBInvoke();
+    if (cnt % n == 0) {
+        printJSBInvoke();
     }
 #endif
 }
 
 void clearRecordJSBInvoke() {
-    #if defined(RECORD_JSB_INVOKING)
+#if defined(RECORD_JSB_INVOKING)
     __jsbInvocationCount = 0;
     __jsbFunctionInvokedRecords.clear();
-    #endif
+#endif
 }
 
 void printJSBInvoke() {
-    #if defined(RECORD_JSB_INVOKING)
+#if defined(RECORD_JSB_INVOKING)
     static std::vector<std::pair<const char *, std::tuple<int, uint64_t>>> pairs;
     for (const auto &it : __jsbFunctionInvokedRecords) {
         pairs.emplace_back(it); //NOLINT
@@ -61,5 +78,5 @@ void printJSBInvoke() {
     }
     pairs.clear();
     cc::Log::logMessage(cc::LogType::KERNEL, cc::LogLevel::LEVEL_DEBUG, "End print JSB function record info.......\n");
-    #endif
+#endif
 }
