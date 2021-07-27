@@ -58,6 +58,7 @@ public:
     inline scene::Sphere *                                                     getSphere() const { return _sphere; }
     inline scene::Sphere *                                                     getCameraBoundingSphere() const { return _cameraBoundingSphere; }
     inline scene::Frustum *                                                    getDirLightFrustum() const { return _dirLightFrustum; }
+    inline vector<scene::Frustum *> &                                          getValidFrustum() { return _validFrustums; }
 
 private:
     RenderObjectList _renderObjects;
@@ -69,6 +70,7 @@ private:
     scene::Sphere *                 _sphere               = nullptr;
     scene::Sphere *                 _cameraBoundingSphere = nullptr;
     scene::Frustum *                _dirLightFrustum      = nullptr;
+    vector<scene::Frustum *>        _validFrustums{new scene::Frustum(), new scene::Frustum(), new scene::Frustum(), new scene::Frustum()};
 
     std::unordered_map<const scene::Light *, gfx::Framebuffer *> _shadowFrameBufferMap;
 };

@@ -40,6 +40,7 @@ class RenderPipeline;
 
 class CC_DLL PipelineUBO : public Object {
 public:
+    static void    quantizeDirLightShadowCamera(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> *bufferView, const scene::Camera *camera);
     static void    updateGlobalUBOView(const RenderPipeline *pipeline, std::array<float, UBOGlobal::COUNT> *bufferView);
     static void    updateCameraUBOView(const RenderPipeline *pipeline, std::array<float, UBOCamera::COUNT> *bufferView, const scene::Camera *camera);
     static void    updateShadowUBOView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> *bufferView, const scene::Camera *camera);
@@ -56,7 +57,6 @@ public:
     void updateShadowUBO(const scene::Camera *camera);
     void updateShadowUBOLight(const scene::Light *light, const scene::Camera *camera);
     void updateShadowUBORange(uint offset, const Mat4 *data);
-    void destroyShadowFrameBuffers();
 
     uint getCurrentCameraUBOOffset() const;
     void incCameraUBOOffset();

@@ -38,11 +38,10 @@
 #include "scene/RenderScene.h"
 #include "scene/Sphere.h"
 #include "scene/SpotLight.h"
+#include "scene/Frustum.h"
 
 namespace cc {
 namespace pipeline {
-bool         castBoundsInitialized = false;
-scene::AABB castWorldBounds;
 
 RenderObject genRenderObject(const scene::Model *model, const scene::Camera *camera) {
     float depth = 0;
@@ -162,18 +161,52 @@ void lightCollecting(scene::Camera *camera, std::vector<const scene::Light *> *v
     CC_SAFE_DELETE(sphere);
 }
 
-void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
-    auto *const       sceneData  = pipeline->getPipelineSceneData();
-    auto *const       sharedData = sceneData->getSharedData();
-    auto *const       shadows    = sharedData->shadow;
-    auto *const       skyBox     = sharedData->skybox;
-    const auto *const scene      = camera->scene;
+Mat4 getCameraWorldMatrix(const scene::Camera* camera) {
+    Mat4 out;
+    if (!camera || !camera->node) {
+        return out;
+    }
 
-    castBoundsInitialized = false;
+    const scene::Node *cameraNode = camera->node;
+    const Vec3 &       position   = cameraNode->getWorldPosition();
+    const Quaternion & rotation   = cameraNode->getWorldRotation();
+
+    Mat4::fromRT(rotation, position, &out);
+    out.m[8] *= -1.0;
+    out.m[9] *= -1.0;
+    out.m[10] *= -1.0;
+
+    return out;
+}
+
+void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
+    PipelineSceneData *const              sceneData       = pipeline->getPipelineSceneData();
+    scene::PipelineSharedSceneData *const sharedData      = sceneData->getSharedData();
+    scene::Shadow *const                  shadowInfo         = sharedData->shadow;
+    scene::Skybox *const                  skyBox          = sharedData->skybox;
+    const scene::RenderScene *const       scene           = camera->scene;
+    const scene::DirectionalLight *       mainLight       = scene->getMainLight();
+    scene::Frustum *                dirLightFrustum = sceneData->getDirLightFrustum();
+    vector<scene::Frustum *>              &validFrustum    = sceneData->getValidFrustum();
+
     RenderObjectList shadowObjects;
     bool             isShadowMap = false;
-    if (shadows->enabled && shadows->shadowType == scene::ShadowType::SHADOWMAP) {
+    if (shadowInfo->enabled && shadowInfo->shadowType == scene::ShadowType::SHADOWMAP) {
         isShadowMap = true;
+
+        // update dirLightFrustum
+        if (mainLight && mainLight->getNode()) {
+            scene::Sphere *cameraBoundingSphere = sceneData->getCameraBoundingSphere();
+            const Mat4 matWorldTrans = getCameraWorldMatrix(camera);
+            validFrustum[0]->split(shadowInfo->nearValue, shadowInfo->farValue, camera->aspect, camera->fov, matWorldTrans);
+            cameraBoundingSphere->mergeFrustum(*validFrustum[0]);
+            const float range    = shadowInfo->range;
+            const float radius = cameraBoundingSphere->getRadius();
+            const float radius2X = radius * 2.0;
+            dirLightFrustum->createOrtho(radius2X, radius2X, -range, radius, matWorldTrans);
+        } else {
+            dirLightFrustum->zero();
+        }
     }
 
     RenderObjectList               renderObjects;
@@ -192,12 +225,11 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
                 // shadow render Object
                 const auto *modelWorldBounds = model->getWorldBounds();
                 if (isShadowMap && model->getCastShadow() && modelWorldBounds) {
-                    if (!castBoundsInitialized) {
-                        castWorldBounds.set(modelWorldBounds->getCenter(), modelWorldBounds->getHalfExtents());
-                        castBoundsInitialized = true;
+
+                    if (modelWorldBounds->aabbFrustum(*dirLightFrustum)){
+                        shadowObjects.emplace_back(genRenderObject(model, camera));
                     }
-                    castWorldBounds.merge(*modelWorldBounds);
-                    shadowObjects.emplace_back(genRenderObject(model, camera));
+                    
                 }
                 // frustum culling
                 if (modelWorldBounds && !modelWorldBounds->aabbFrustum(camera->frustum)) {
@@ -210,7 +242,6 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
     }
 
     if (isShadowMap) {
-        sceneData->getSphere()->define(castWorldBounds);
         sceneData->setShadowObjects(std::move(shadowObjects));
     }
 
