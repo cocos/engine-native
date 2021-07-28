@@ -3,7 +3,7 @@
 set -x
 set -e
 
-if [ -d $HW_NDK ]; then
+if [ -f "$HW_NDK/build/cmake/ohos.toolchain.cmake" ]; then
 
     cmake -B build-ohos \
     -DCMAKE_TOOLCHAIN_FILE="$HW_NDK/build/cmake/ohos.toolchain.cmake" \
@@ -18,10 +18,15 @@ if [ -d $HW_NDK ]; then
 
 fi
 
+if [ -f "$NDK_ROOT/build/cmake/android.toolchain.cmake" ]; then
+    ANDOIR_TOOLCHAIN_FILE="$NDK_ROOT/build/cmake/android.toolchain.cmake"
+else
+    ANDOIR_TOOLCHAIN_FILE="$ANDROID_NDK/build/cmake/android.toolchain.cmake"
+fi
 
 cmake -B build-win32 -A win32 
 cmake -B build-android \
- -DCMAKE_TOOLCHAIN_FILE="$NDK_ROOT/build/cmake/android.toolchain.cmake" \
+ -DCMAKE_TOOLCHAIN_FILE="$ANDOIR_TOOLCHAIN_FILE" \
  -DANDROID_PLATFORM=android-21 \
  -DCMAKE_MAKE_PROGRAM=ninja \
  -DANDROID_LD=lld \
