@@ -26,7 +26,7 @@ cc_set_if_undefined(USE_WEBSOCKET_SERVER     OFF)
 cc_set_if_undefined(USE_JOB_SYSTEM_TASKFLOW  OFF)
 cc_set_if_undefined(USE_JOB_SYSTEM_TBB       OFF)
 cc_set_if_undefined(USE_PHYSICS_PHYSX        OFF)
-cc_set_if_undefined(USE_MODULES              ON)
+cc_set_if_undefined(USE_MODULES              OFF)
 
 if(ANDROID OR WINDOWS)
     cc_set_if_undefined(CC_USE_GLES3 ON)
@@ -278,8 +278,6 @@ cocos_source_files(
     cocos/base/CoreStd.h
     cocos/base/csscolorparser.cpp
     cocos/base/csscolorparser.h
-    cocos/base/Data.cpp
-    cocos/base/Data.h
     cocos/base/etc1.cpp
     cocos/base/etc1.h
     cocos/base/etc2.cpp
@@ -302,20 +300,19 @@ cocos_source_files(
     cocos/base/ThreadPool.cpp
     cocos/base/ThreadPool.h
     cocos/base/TypeDef.h
-    cocos/base/UTF8.cpp
-    cocos/base/UTF8.h
-    cocos/base/Utils.cpp
-    cocos/base/Utils.h
-    cocos/base/Value.cpp
-    cocos/base/Value.h
     cocos/base/Vector.h
-    cocos/base/ZipUtils.cpp
-    cocos/base/ZipUtils.h
 )
 
+############ module log
 cocos_source_files(MODULE cclog
     cocos/base/Log.cpp
     cocos/base/Log.h
+)
+
+############ module log
+cocos_source_files(MODULE ccunzip
+    cocos/base/ZipUtils.cpp
+    cocos/base/ZipUtils.h
 )
 
 ##### memory
@@ -390,7 +387,7 @@ else()
     )
 endif()
 
-##### math
+######### module math
 cocos_source_files(MODULE ccmath
     cocos/math/Geometry.cpp
     cocos/math/Geometry.h
@@ -507,23 +504,41 @@ cocos_source_files(
     cocos/platform/Device.h
     cocos/platform/Image.cpp
     cocos/platform/Image.h
-    cocos/platform/SAXParser.cpp
-    cocos/platform/SAXParser.h
     cocos/platform/StdC.h
 )
 
+########## module utils
+cocos_source_files(MODULE ccutils
+    cocos/base/Data.cpp
+    cocos/base/Data.h
+    cocos/base/Value.cpp
+    cocos/base/Value.h
+    cocos/base/UTF8.cpp
+    cocos/base/UTF8.h
+    cocos/platform/SAXParser.cpp
+    cocos/platform/SAXParser.h
+    cocos/base/Utils.cpp
+    cocos/base/Utils.h
+)
+
+########## module ccfilesystem
 cocos_source_files(MODULE ccfilesystem
     cocos/platform/FileUtils.cpp
     cocos/platform/FileUtils.h
 )
 
 if(WINDOWS)
+    cocos_source_files(MODULE ccutils
+        cocos/platform/win32/Utils-win32.cpp
+        cocos/platform/win32/Utils-win32.h
+    )
+endif()
+
+if(WINDOWS)
     cocos_source_files(
         NO_WERROR    cocos/platform/win32/Application-win32.cpp
         NO_WERROR    cocos/platform/win32/CanvasRenderingContext2D-win32.cpp
                      cocos/platform/win32/Device-win32.cpp
-                     cocos/platform/win32/Utils-win32.cpp
-                     cocos/platform/win32/Utils-win32.h
                      cocos/platform/win32/View-win32.cpp
                      cocos/platform/win32/View-win32.h
                      cocos/platform/win32/compat
@@ -1589,6 +1604,7 @@ elseif(WIN32)
     )
 endif()
 
+############# module bindings 
 if(USE_SE_V8)
     cocos_source_files(MODULE ccbindings
                      cocos/bindings/jswrapper/v8/Base.h
@@ -1801,7 +1817,8 @@ if(USE_MODULES)
     add_library(ccmath ${ccmath_SOURCE_LIST})
     add_library(cclog ${cclog_SOURCE_LIST})
     add_library(ccfilesystem ${ccfilesystem_SOURCE_LIST} ${CC_TINYDIR_SOURCES})
-    add_library(ccunzip ${CC_UNZIP_SOURCES})
+    add_library(ccutils ${ccutils_SOURCE_LIST} ${CC_FS_SOURCES})
+    add_library(ccunzip ${ccunzip_SOURCE_LIST} ${CC_UNZIP_SOURCES})
     add_library(ccbindings ${ccbindings_SOURCE_LIST})
 
     target_include_directories(ccmath PRIVATE
@@ -1809,6 +1826,8 @@ if(USE_MODULES)
     )
     target_include_directories(ccunzip PRIVATE
         ${CWD}/external/sources/unzip
+        ${CWD}/external/sources
+        ${CWD}/cocos
     )
     target_include_directories(cclog PRIVATE
         ${CWD}/cocos
@@ -1817,11 +1836,19 @@ if(USE_MODULES)
         ${CWD}/cocos
         ${CWD}/external/sources
     )
+    target_include_directories(ccutils PRIVATE
+        ${CWD}/cocos
+        ${CWD}/external/sources
+    )
     target_include_directories(ccbindings PRIVATE
         ${CWD}/cocos
     )
     target_link_libraries(ccunzip PUBLIC ${ZLIB})
-    target_link_libraries(ccfilesystem PUBLIC ccunzip)
+    target_link_libraries(ccfilesystem PUBLIC 
+        ccunzip 
+        ccutils
+        cclog
+    )
     target_link_libraries(ccbindings PUBLIC 
         ccfilesystem
         cclog
@@ -1835,6 +1862,9 @@ if(USE_MODULES)
         target_link_libraries(cclog PUBLIC
             log
         )
+        target_link_libraries(ccfilesystem PUBLIC
+            cocos2d_jni
+        )
     elseif(OHOS)
         target_link_libraries(cclog PUBLIC
             hilog_ndk.z
@@ -1847,6 +1877,7 @@ else()
         ${ccfilesystem_SOURCE_LIST}
         ${ccunzip}
         ${ccbindings_SOURCE_LIST}
+        ${ccutils_SOURCE_LIST}
         ${CC_UNZIP_SOURCES}
         ${CC_TINYDIR_SOURCES}
     )
@@ -1861,6 +1892,7 @@ if(USE_MODULES)
         ccfilesystem
         ccunzip
         ccbindings
+        ccutils
     )
 endif()
 
@@ -1911,6 +1943,7 @@ if(USE_MODULES)
     cc_apply_definations(ccfilesystem)
     cc_apply_definations(ccunzip)
     cc_apply_definations(ccbindings)
+    cc_apply_definations(ccutils)
 endif()
 
 if(CC_USE_VULKAN)
@@ -1981,7 +2014,14 @@ if(WIN32)
         cc_win32_definations(cclog)
         cc_win32_definations(ccunzip)
         cc_win32_definations(ccfilesystem)
+        cc_win32_definations(ccutils)
     endif()
+    target_link_libraries(ccutils PUBLIC
+        ws2_32 psapi userenv Iphlpapi
+    )
+    target_link_libraries(ccbindings PUBLIC
+        ws2_32
+    )
 endif()
 
 if(ANDROID)
