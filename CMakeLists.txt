@@ -28,6 +28,7 @@ cc_set_if_undefined(USE_JOB_SYSTEM_TBB       OFF)
 cc_set_if_undefined(USE_PHYSICS_PHYSX        OFF)
 cc_set_if_undefined(USE_MODULES              OFF)
 
+
 if(ANDROID OR WINDOWS)
     cc_set_if_undefined(CC_USE_GLES3 ON)
     cc_set_if_undefined(CC_USE_VULKAN OFF)
@@ -1846,7 +1847,9 @@ if(USE_MODULES)
         ${CWD}
         ${CC_EXTERNAL_INCLUDES}
     )
-    target_link_libraries(ccunzip PUBLIC ${ZLIB})
+    target_link_libraries(ccunzip PUBLIC
+        ${ZLIB}
+    )
     target_link_libraries(ccfilesystem PUBLIC 
         ccunzip 
         ccutils
@@ -2027,13 +2030,17 @@ if(WIN32)
         cc_win32_definations(ccunzip)
         cc_win32_definations(ccfilesystem)
         cc_win32_definations(ccutils)
+        cc_win32_definations(ccbindings)
+
+        target_link_libraries(ccutils PUBLIC
+            ws2_32 psapi userenv Iphlpapi
+        )
+        target_link_libraries(ccbindings PUBLIC
+            ws2_32
+        )
     endif()
-    target_link_libraries(ccutils PUBLIC
-        ws2_32 psapi userenv Iphlpapi
-    )
-    target_link_libraries(ccbindings PUBLIC
-        ws2_32
-    )
+
+
 endif()
 
 if(ANDROID)
