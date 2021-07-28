@@ -59,5 +59,6 @@ done
 ./build-win32/bindings/Release/test-bindings.exe
 ./build-win32/filesystem/Release/test-fs.exe
 
+exit 0
 # cmake --build build-win32
 
