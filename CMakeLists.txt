@@ -1869,6 +1869,11 @@ if(USE_MODULES)
         target_link_libraries(cclog PUBLIC
             hilog_ndk.z
         )
+    elseif(APPLE)
+        target_link_libraries(ccfilesystem PUBLIC
+        "-framework Foundation"
+        "-framework SystemConfiguration"
+        )
     endif()
 else()
     list(APPEND COCOS2D_SOURCE_LIST

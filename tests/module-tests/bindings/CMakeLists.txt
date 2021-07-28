@@ -20,3 +20,10 @@ if(MSVC)
     endforeach()
     target_link_options(${LIB_NAME} PRIVATE /SUBSYSTEM:CONSOLE)
 endif()
+
+
+if(IOS)
+    set_target_properties(test-bindings PROPERTIES
+        XCODE_ATTRIBUTE_ENABLE_BITCODE "NO"
+    )
+endif()
