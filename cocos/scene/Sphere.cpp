@@ -123,11 +123,5 @@ void Sphere::mergeFrustum(const Frustum &frustum) {
     }
 }
 
-void Sphere::mergePoints(const std::vector<Vec3> &vertices) {
-    for (const auto &vertex : vertices) {
-        mergePoint(vertex);
-    }
-}
-
 } // namespace scene
 } // namespace cc

@@ -54,7 +54,6 @@ public:
     int  spherePlane(const Plane &plane);
     bool sphereFrustum(const Frustum &frustum) const;
     void mergeFrustum(const Frustum &frustum);
-    void mergePoints(const std::vector<Vec3> &vertices);
 
 private:
     float _radius{-1.0F};
