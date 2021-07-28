@@ -47,5 +47,6 @@ void updateSphereLight(scene::Shadow *shadows, const scene::Light *light, std::a
 void updateDirLight(scene::Shadow *shadows, const scene::Light *light, std::array<float, UBOShadow::COUNT> *);
 void getShadowWorldMatrix(const scene::Sphere *sphere, const cc::Quaternion &rotation, const cc::Vec3 &dir, cc::Mat4 *shadowWorldMat, cc::Vec3 *out);
 Mat4 getCameraWorldMatrix(const scene::Camera *camera);
+void updateDirFrustum(const scene::Sphere *cameraBoundingSphere, const Quaternion &rotation, float range, scene::Frustum *dirLightFrustum);
 } // namespace pipeline
 } // namespace cc

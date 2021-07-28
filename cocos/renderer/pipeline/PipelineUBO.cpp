@@ -61,7 +61,7 @@ void PipelineUBO::quantizeDirLightShadowCamera(const RenderPipeline *pipeline, s
     Mat4::fromRT(rotation, Vec3::ZERO, &matWorldTrans);
 
     Mat4 matShadowProj;
-    Mat4::createOrthographic(-radius, radius, -radius, radius, -range, radius, &matShadowProj);
+    Mat4::createOrthographic(-radius * 0.5F, radius * 0.5F, -radius * 0.5F, radius * 0.5F, -range, radius, &matShadowProj);
 
     // snap to whole texels
     Mat4 matWorldTransInv;

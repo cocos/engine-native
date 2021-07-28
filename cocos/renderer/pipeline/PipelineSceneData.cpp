@@ -38,6 +38,7 @@ void PipelineSceneData::activate(gfx::Device *device, RenderPipeline *pipeline)
     _sphere = CC_NEW(scene::Sphere);
     _cameraBoundingSphere = CC_NEW(scene::Sphere);
     _dirLightFrustum      = CC_NEW(scene::Frustum);
+    _validFrustum         = CC_NEW(scene::Frustum);
 }
 
 void PipelineSceneData::setPipelineSharedSceneData(scene::PipelineSharedSceneData *data)
@@ -50,6 +51,7 @@ void PipelineSceneData::destroy()
     CC_SAFE_DELETE(_sphere)
     CC_SAFE_DELETE(_cameraBoundingSphere)
     CC_SAFE_DELETE(_dirLightFrustum)
+    CC_SAFE_DELETE(_validFrustum)
 
     for (auto &pair : _shadowFrameBufferMap) {
         pair.second->destroy();

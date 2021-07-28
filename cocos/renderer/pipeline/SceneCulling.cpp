@@ -179,15 +179,27 @@ Mat4 getCameraWorldMatrix(const scene::Camera* camera) {
     return out;
 }
 
+void updateDirFrustum(const scene::Sphere *cameraBoundingSphere, const Quaternion &rotation, float range, scene::Frustum *dirLightFrustum) {
+    const float radius   = cameraBoundingSphere->getRadius();
+    const Vec3 &position = cameraBoundingSphere->getCenter();
+    Mat4        matWorldTrans;
+    Mat4::fromRT(rotation, position, &matWorldTrans);
+    matWorldTrans.m[8] *= -1.0;
+    matWorldTrans.m[9] *= -1.0;
+    matWorldTrans.m[10] *= -1.0;
+
+    dirLightFrustum->createOrtho(radius, radius, -range, radius, matWorldTrans);
+}
+
 void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
     PipelineSceneData *const              sceneData       = pipeline->getPipelineSceneData();
     scene::PipelineSharedSceneData *const sharedData      = sceneData->getSharedData();
-    scene::Shadow *const                  shadowInfo         = sharedData->shadow;
+    scene::Shadow *const                  shadowInfo      = sharedData->shadow;
     scene::Skybox *const                  skyBox          = sharedData->skybox;
     const scene::RenderScene *const       scene           = camera->scene;
     const scene::DirectionalLight *       mainLight       = scene->getMainLight();
-    scene::Frustum *                dirLightFrustum = sceneData->getDirLightFrustum();
-    vector<scene::Frustum *>              &validFrustum    = sceneData->getValidFrustum();
+    scene::Frustum *                      dirLightFrustum = sceneData->getDirLightFrustum();
+    scene::Frustum *                      validFrustum    = sceneData->getValidFrustum();
 
     RenderObjectList shadowObjects;
     bool             isShadowMap = false;
@@ -198,12 +210,10 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
         if (mainLight && mainLight->getNode()) {
             scene::Sphere *cameraBoundingSphere = sceneData->getCameraBoundingSphere();
             const Mat4 matWorldTrans = getCameraWorldMatrix(camera);
-            validFrustum[0]->split(shadowInfo->nearValue, shadowInfo->farValue, camera->aspect, camera->fov, matWorldTrans);
-            cameraBoundingSphere->mergeFrustum(*validFrustum[0]);
-            const float range    = shadowInfo->range;
-            const float radius = cameraBoundingSphere->getRadius();
-            const float radius2X = radius * 2.0;
-            dirLightFrustum->createOrtho(radius2X, radius2X, -range, radius, matWorldTrans);
+            const Quaternion &rotation             = mainLight->getNode()->getWorldRotation();
+            validFrustum->split(shadowInfo->nearValue, shadowInfo->farValue, camera->aspect, camera->fov, matWorldTrans);
+            cameraBoundingSphere->mergeFrustum(*validFrustum);
+            updateDirFrustum(cameraBoundingSphere, rotation, shadowInfo->range, dirLightFrustum);
         } else {
             dirLightFrustum->zero();
         }
