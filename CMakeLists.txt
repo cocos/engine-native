@@ -26,9 +26,7 @@ cc_set_if_undefined(USE_WEBSOCKET_SERVER     OFF)
 cc_set_if_undefined(USE_JOB_SYSTEM_TASKFLOW  OFF)
 cc_set_if_undefined(USE_JOB_SYSTEM_TBB       OFF)
 cc_set_if_undefined(USE_PHYSICS_PHYSX        OFF)
-
 cc_set_if_undefined(USE_MODULES              ON)
-set(USE_MODULES OFF)
 
 if(ANDROID OR WINDOWS)
     cc_set_if_undefined(CC_USE_GLES3 ON)
