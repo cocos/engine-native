@@ -2,6 +2,23 @@
 
 set -x
 set -e
+
+if [ -d $HW_NDK ]; then
+
+    cmake -B build-ohos \
+    -DCMAKE_TOOLCHAIN_FILE="$HW_NDK/build/cmake/ohos.toolchain.cmake" \
+    -DCMAKE_MAKE_PROGRAM=ninja \
+    -GNinja \
+    -DOHOS_ARCH=arm64-v8a 
+
+    for target in test-log test-bindings test-math test-fs 
+    do
+        cmake --build build-ohos --target $target
+    done
+
+fi
+
+
 cmake -B build-win32 -A win32 
 cmake -B build-android \
  -DCMAKE_TOOLCHAIN_FILE="$NDK_ROOT/build/cmake/android.toolchain.cmake" \
@@ -23,3 +40,4 @@ done
 ./build-win32/filesystem/Release/test-fs.exe
 
 # cmake --build build-win32
+

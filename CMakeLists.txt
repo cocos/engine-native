@@ -1833,6 +1833,7 @@ if(USE_MODULES)
         ${CWD}/cocos
     )
     target_include_directories(ccfilesystem PRIVATE
+        ${CWD}
         ${CWD}/cocos
         ${CWD}/external/sources
     )
@@ -1842,6 +1843,8 @@ if(USE_MODULES)
     )
     target_include_directories(ccbindings PRIVATE
         ${CWD}/cocos
+        ${CWD}
+        ${CC_EXTERNAL_INCLUDES}
     )
     target_link_libraries(ccunzip PUBLIC ${ZLIB})
     target_link_libraries(ccfilesystem PUBLIC 
@@ -1868,6 +1871,10 @@ if(USE_MODULES)
     elseif(OHOS)
         target_link_libraries(cclog PUBLIC
             hilog_ndk.z
+        )
+        target_link_libraries(ccfilesystem PUBLIC
+            cocos2d_jni
+            rawfile.z
         )
     elseif(APPLE)
         target_link_libraries(ccfilesystem PUBLIC
