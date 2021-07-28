@@ -168,7 +168,7 @@ Mat4 getCameraWorldMatrix(const scene::Camera* camera) {
     }
 
     const scene::Node *cameraNode = camera->node;
-    const Vec3 &       position   = cameraNode->getWorldPosition();
+    const Vec3       & position   = cameraNode->getWorldPosition();
     const Quaternion & rotation   = cameraNode->getWorldRotation();
 
     Mat4::fromRT(rotation, position, &out);

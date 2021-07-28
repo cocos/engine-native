@@ -193,7 +193,7 @@ public:
      *
      * @param v The vector to compute the cross product with.
      */
-    Vec3 crossProduct(const Vec3 &v) const;
+    static void crossProduct(const Vec3 &v1, const Vec3 &v2, Vec3 *dst);
 
     /**
      * Computes the cross product of the specified vectors and stores the result in dst.

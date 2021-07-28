@@ -23,8 +23,9 @@
  THE SOFTWARE.
  ****************************************************************************/
 
-#include "scene/Sphere.h"
 #include <algorithm>
+#include "scene/Sphere.h"
+#include "base/TypeDef.h"
 
 namespace cc {
 namespace scene {
@@ -115,15 +116,16 @@ bool Sphere::sphereFrustum(const Frustum &frustum) const {
                        [self](const Plane &plane) { return self->interset(plane) != -1; });
 }
 
-void Sphere::mergeFrustum(const Frustum &frustum){
-    const std::vector<Vec3> vertices{frustum.vertices.begin(), frustum.vertices.end()};
-
-    mergePoints(vertices);
+void Sphere::mergeFrustum(const Frustum &frustum) {
+    const std::array<Vec3, 8> &vertices = frustum.vertices;
+    for (uint i = 0; i < vertices.max_size(); ++i) {
+        mergePoint(vertices[i]);
+    }
 }
 
 void Sphere::mergePoints(const std::vector<Vec3> &vertices) {
-    for (const Vec3 &vertex : vertices) {
-        mergePoint(vertex);
+    for (uint i = 0; i < vertices.size(); ++i) {
+        mergePoint(vertices[i]);
     }
 }
 

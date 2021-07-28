@@ -70,8 +70,8 @@ Vec3::~Vec3() {
 
 float Vec3::angle(const Vec3 &v1, const Vec3 &v2) {
     const float dx = v1.y * v2.z - v1.z * v2.y;
-    const float  dy = v1.z * v2.x - v1.x * v2.z;
-    const float  dz = v1.x * v2.y - v1.y * v2.x;
+    const float dy = v1.z * v2.x - v1.x * v2.z;
+    const float dz = v1.x * v2.y - v1.y * v2.x;
 
     return std::atan2(std::sqrt(dx * dx + dy * dy + dz * dz) + MATH_FLOAT_SMALL, dot(v1, v2));
 }
@@ -145,11 +145,11 @@ void Vec3::cross(const Vec3 &v1, const Vec3 &v2, Vec3 *dst) {
     MathUtil::crossVec3(&v1.x, &v2.x, &dst->x);
 }
 
-Vec3 Vec3::crossProduct(const Vec3 &v) const {
-    return Vec3(
-        y * v.z - z * v.y,
-        z * v.x - x * v.z,
-        x * v.y - y * v.x);
+void Vec3::crossProduct(const Vec3 &v1, const Vec3 &v2, Vec3 *dst) {
+    dst->set(
+        v1.y * v2.z - v1.z * v2.y,
+        v1.z * v2.x - v1.x * v2.z,
+        v1.x * v2.y - v1.y * v2.x);
 }
 
 void Vec3::multiply(const Vec3 &v) {

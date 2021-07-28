@@ -45,7 +45,9 @@ void Plane::define(const Vec3 &v0, const Vec3 &v1, const Vec3 &v2) {
     const Vec3 dist1 = v1 - v0;
     const Vec3 dist2 = v2 - v0;
 
-    define(dist1.crossProduct(dist2), v0);
+    Vec3 dist;
+    Vec3::crossProduct(dist1, dist2, &dist);
+    define(dist, v0);
 }
 
 // Define from a normal vector and a point on the plane.
