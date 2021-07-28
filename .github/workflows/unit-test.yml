@@ -34,4 +34,4 @@ jobs:
       - name: Test modules
         shell: bash
         run: |
-          cd tests/modules-tests && bash run-test-windows.sh
+          cd tests/module-tests && bash run-test-windows.sh

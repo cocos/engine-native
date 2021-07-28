@@ -97,6 +97,7 @@ endif()
 ################################# list all option values ##############################
 
 cc_inspect_values(
+    USE_MODULES
     CC_USE_METAL
     CC_USE_GLES3
     CC_USE_GLES2
@@ -1890,7 +1891,7 @@ else()
         ${ccmath_SOURCE_LIST}
         ${cclog_SOURCE_LIST}
         ${ccfilesystem_SOURCE_LIST}
-        ${ccunzip}
+        ${ccunzip_SOURCE_LIST}
         ${ccbindings_SOURCE_LIST}
         ${ccutils_SOURCE_LIST}
         ${CC_UNZIP_SOURCES}
