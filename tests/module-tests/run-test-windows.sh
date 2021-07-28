@@ -31,7 +31,7 @@ fi
 cmake -B build-win32 -A win32 
 
 
-if ! [ -x "$(command -v git)" ]; then
+if ! [ -x "$(command -v ninja)" ]; then
     cmake -B build-android \
     -DCMAKE_TOOLCHAIN_FILE="$ANDOIR_TOOLCHAIN_FILE" \
     -DANDROID_PLATFORM=android-21 \
