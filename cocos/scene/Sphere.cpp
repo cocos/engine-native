@@ -124,8 +124,8 @@ void Sphere::mergeFrustum(const Frustum &frustum) {
 }
 
 void Sphere::mergePoints(const std::vector<Vec3> &vertices) {
-    for (uint i = 0; i < vertices.size(); ++i) {
-        mergePoint(vertices[i]);
+    for (const auto &vertex : vertices) {
+        mergePoint(vertex);
     }
 }
 
