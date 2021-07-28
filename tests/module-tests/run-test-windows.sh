@@ -20,8 +20,12 @@ fi
 
 if [ -f "$NDK_ROOT/build/cmake/android.toolchain.cmake" ]; then
     ANDOIR_TOOLCHAIN_FILE="$NDK_ROOT/build/cmake/android.toolchain.cmake"
-else
+elif [ -f "$ANDROID_NDK/build/cmake/android.toolchain.cmake" ]; then
     ANDOIR_TOOLCHAIN_FILE="$ANDROID_NDK/build/cmake/android.toolchain.cmake"
+elif [ -f "$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake" ]; then
+    ANDOIR_TOOLCHAIN_FILE="$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake"
+else
+    ANDOIR_TOOLCHAIN_FILE="$ANDROID_NDK_ROOT/build/cmake/android.toolchain.cmake"
 fi
 
 cmake -B build-win32 -A win32 
