@@ -26,6 +26,7 @@
 #pragma once
 
 #include <vector>
+#include "cocos/bindings/manual/jsb_conversions.h"
 #include "math/Mat3.h"
 #include "math/Mat4.h"
 #include "math/Quaternion.h"
@@ -57,18 +58,18 @@ public:
     Node &operator=(const Node &) = delete;
     Node &operator=(Node &&) = delete;
 
-    void initWithData(uint8_t *, uint8_t *);
+    void initWithData(uint8_t *, uint8_t *, const se::Value &);
     void invalidateChildren(TransformBit dirtyBit);
 
     void updateWorldTransform();
     void updateWorldRTMatrix();
 
-    void setWorldPosition(float x, float y, float z);
-    void setWorldRotation(float x, float y, float z, float w);
-    void setParent(Node *parent);
+    void        setWorldPosition(float x, float y, float z);
+    void        setWorldRotation(float x, float y, float z, float w);
+    void        setParent(Node *parent);
+    static void setDirtyNode(int idx, Node *node);
 
     inline void addChild(Node *node) { _children.emplace_back(node); }
-
     inline void removeChild(Node *node) {
         auto iter = std::find(_children.begin(), _children.end(), node);
         if (iter != _children.end()) {
@@ -102,6 +103,7 @@ public:
     inline const Quaternion &getWorldRotation() const { return _nodeLayout->worldRotation; }
     inline const Vec3 &      getWorldScale() const { return _nodeLayout->worldScale; }
     inline const Mat4 &      getWorldRTMatrix() const { return _rtMat; };
+    static Node *            getDirtyNode(int idx);
 
 private:
     NodeLayout *        _nodeLayout{nullptr};
@@ -109,7 +111,7 @@ private:
     Mat4                _rtMat;
     uint32_t *          _flagChunk{nullptr};
     std::vector<Node *> _children;
-    std::vector<Node *> _computeNodes;
+    static se::Object * dirtyNodes;
 };
 
 } // namespace scene
