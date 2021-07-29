@@ -17,8 +17,9 @@
 #include "cocos/renderer/pipeline/GlobalDescriptorSetManager.h"
 #include "cocos/renderer/pipeline/InstancedBuffer.h"
 #include "cocos/renderer/pipeline/deferred/DeferredPipeline.h"
-#include "cocos/renderer/pipeline/deferred/MainFlow.h"
+#include "cocos/renderer/pipeline/deferred/GbufferFlow.h"
 #include "cocos/renderer/pipeline/deferred/GbufferStage.h"
+#include "cocos/renderer/pipeline/deferred/LightingFlow.h"
 #include "cocos/renderer/pipeline/deferred/LightingStage.h"
 #include "cocos/renderer/pipeline/deferred/PostprocessStage.h"
 
@@ -194,15 +195,15 @@ bool register_all_pipeline(se::Object* obj);
 JSB_REGISTER_OBJECT_TYPE(cc::pipeline::DeferredPipeline);
 SE_DECLARE_FUNC(js_pipeline_DeferredPipeline_DeferredPipeline);
 
-extern se::Object* __jsb_cc_pipeline_MainFlow_proto;
-extern se::Class* __jsb_cc_pipeline_MainFlow_class;
+extern se::Object* __jsb_cc_pipeline_GbufferFlow_proto;
+extern se::Class* __jsb_cc_pipeline_GbufferFlow_class;
 
-bool js_register_cc_pipeline_MainFlow(se::Object* obj);
+bool js_register_cc_pipeline_GbufferFlow(se::Object* obj);
 bool register_all_pipeline(se::Object* obj);
 
-JSB_REGISTER_OBJECT_TYPE(cc::pipeline::MainFlow);
-SE_DECLARE_FUNC(js_pipeline_MainFlow_getInitializeInfo);
-SE_DECLARE_FUNC(js_pipeline_MainFlow_MainFlow);
+JSB_REGISTER_OBJECT_TYPE(cc::pipeline::GbufferFlow);
+SE_DECLARE_FUNC(js_pipeline_GbufferFlow_getInitializeInfo);
+SE_DECLARE_FUNC(js_pipeline_GbufferFlow_GbufferFlow);
 
 extern se::Object* __jsb_cc_pipeline_GbufferStage_proto;
 extern se::Class* __jsb_cc_pipeline_GbufferStage_class;
@@ -213,6 +214,16 @@ bool register_all_pipeline(se::Object* obj);
 JSB_REGISTER_OBJECT_TYPE(cc::pipeline::GbufferStage);
 SE_DECLARE_FUNC(js_pipeline_GbufferStage_getInitializeInfo);
 SE_DECLARE_FUNC(js_pipeline_GbufferStage_GbufferStage);
+
+extern se::Object* __jsb_cc_pipeline_LightingFlow_proto;
+extern se::Class* __jsb_cc_pipeline_LightingFlow_class;
+
+bool js_register_cc_pipeline_LightingFlow(se::Object* obj);
+bool register_all_pipeline(se::Object* obj);
+
+JSB_REGISTER_OBJECT_TYPE(cc::pipeline::LightingFlow);
+SE_DECLARE_FUNC(js_pipeline_LightingFlow_getInitializeInfo);
+SE_DECLARE_FUNC(js_pipeline_LightingFlow_LightingFlow);
 
 extern se::Object* __jsb_cc_pipeline_LightingStage_proto;
 extern se::Class* __jsb_cc_pipeline_LightingStage_class;
