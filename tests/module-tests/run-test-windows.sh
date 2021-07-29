@@ -33,18 +33,18 @@ cmake -B build-win32 -A win32
 
 if ! [ -x "$(command -v ninja)" ]; then
     cmake -B build-android \
-    -DCMAKE_TOOLCHAIN_FILE="$ANDOIR_TOOLCHAIN_FILE" \
-    -DANDROID_PLATFORM=android-21 \
-    -DCMAKE_MAKE_PROGRAM=make \
-    -DANDROID_LD=lld \
-    -G"Unix Makefiles"
+        -DCMAKE_TOOLCHAIN_FILE="$ANDOIR_TOOLCHAIN_FILE" \
+        -DANDROID_PLATFORM=android-21 \
+        -DCMAKE_MAKE_PROGRAM=make \
+        -DANDROID_LD=lld \
+        -G"Unix Makefiles"
 else
     cmake -B build-android \
-    -DCMAKE_TOOLCHAIN_FILE="$ANDOIR_TOOLCHAIN_FILE" \
-    -DANDROID_PLATFORM=android-21 \
-    -DCMAKE_MAKE_PROGRAM=ninja \
-    -DANDROID_LD=lld \
-    -GNinja
+        -DCMAKE_TOOLCHAIN_FILE="$ANDOIR_TOOLCHAIN_FILE" \
+        -DANDROID_PLATFORM=android-21 \
+        -DCMAKE_MAKE_PROGRAM=ninja \
+        -DANDROID_LD=lld \
+        -GNinja
 fi
 
 
