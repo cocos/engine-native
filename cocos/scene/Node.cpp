@@ -34,12 +34,12 @@ void        Node::updateWorldTransform() {
         return;
     }
     int        i    = 0;
-    Node *     curr = this;
+    BaseNode * curr = this;
     Mat3       mat3;
     Mat3       m43;
     Quaternion quat;
     while (curr && curr->getDirtyFlag()) {
-        setDirtyNode(i++, curr);
+        setDirtyNode(i++, reinterpret_cast<Node *>(curr));
         curr = curr->getParent();
     }
     Node *   child{nullptr};
@@ -59,11 +59,10 @@ void        Node::updateWorldTransform() {
                 childLayout->worldMatrix.m[14] = childLayout->worldPosition.z;
             }
             if (dirtyBits & static_cast<uint32_t>(TransformBit::RS)) {
-                auto *currLayout = curr->_nodeLayout;
                 Mat4::fromRTS(childLayout->localRotation, childLayout->localPosition, childLayout->localScale, &childLayout->worldMatrix);
-                Mat4::multiply(currLayout->worldMatrix, childLayout->worldMatrix, &childLayout->worldMatrix);
+                Mat4::multiply(curr->getWorldMatrix(), childLayout->worldMatrix, &childLayout->worldMatrix);
                 if (dirtyBits & static_cast<uint32_t>(TransformBit::ROTATION)) {
-                    Quaternion::multiply(currLayout->worldRotation, childLayout->localRotation, &childLayout->worldRotation);
+                    Quaternion::multiply(curr->getWorldRotation(), childLayout->localRotation, &childLayout->worldRotation);
                 }
                 quat = childLayout->worldRotation;
                 quat.conjugate();
@@ -105,14 +104,14 @@ void Node::invalidateChildren(TransformBit dirtyBit) {
     setDirtyNode(0, this);
     int i{0};
     while (i >= 0) {
-        Node *          cur             = getDirtyNode(i--);
+        BaseNode *      cur             = getDirtyNode(i--);
         const uint32_t &hasChangedFlags = cur->getFlagsChanged();
         if ((cur->getDirtyFlag() & hasChangedFlags & curDirtyBit) != curDirtyBit) {
             cur->setDirtyFlag(cur->getDirtyFlag() | curDirtyBit);
             cur->setFlagsChanged(hasChangedFlags | curDirtyBit);
-            int childCount{static_cast<int>(cur->_children.size())};
-            for (Node *curChild : cur->_children) {
-                setDirtyNode(++i, curChild);
+            int childCount{static_cast<int>(cur->getChilds().size())};
+            for (BaseNode *curChild : cur->getChilds()) {
+                setDirtyNode(++i, reinterpret_cast<Node *>(curChild));
             }
         }
         curDirtyBit = childDirtyBit;
@@ -136,25 +135,12 @@ void Node::setWorldRotation(float x, float y, float z, float w) {
     _nodeLayout->worldRotation.set(x, y, z, w);
     if (_parent) {
         _parent->updateWorldTransform();
-        _nodeLayout->localRotation.set(_parent->_nodeLayout->worldRotation.getConjugated());
+        _nodeLayout->localRotation.set(_parent->getWorldRotation().getConjugated());
         _nodeLayout->localRotation.multiply(_nodeLayout->worldRotation);
     } else {
         _nodeLayout->localRotation.set(_nodeLayout->worldRotation);
     }
     invalidateChildren(TransformBit::ROTATION);
-}
-
-void Node::setParent(Node *parent) {
-    if (_parent == parent) {
-        return;
-    }
-    if (_parent != nullptr) {
-        _parent->removeChild(this);
-    }
-    _parent = parent;
-    if (_parent) {
-        _parent->addChild(this);
-    }
 }
 
 void Node::setDirtyNode(int idx, Node *node) {
