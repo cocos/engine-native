@@ -50,22 +50,22 @@ public:
     /**
      * The x-coordinate.
      */
-    float x{0.0F};
+    float x;
 
     /**
      * The y-coordinate.
      */
-    float y{0.0F};
+    float y;
 
     /**
      * The z-coordinate.
      */
-    float z{0.0F};
+    float z;
 
     /**
      * Constructs a new vector initialized to all zeros.
      */
-    Vec3() = default;
+    Vec3();
 
     /**
      * Constructs a new vector initialized to the specified values.
@@ -111,7 +111,7 @@ public:
     /**
      * Destructor.
      */
-    ~Vec3() = default;
+    ~Vec3();
 
     /**
      * Indicates whether this vector contains all zeros.

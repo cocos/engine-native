@@ -28,6 +28,12 @@
 
 NS_CC_MATH_BEGIN
 
+Vec3::Vec3()
+: x(0.0F),
+  y(0.0F),
+  z(0.0F) {
+}
+
 Vec3::Vec3(float xx, float yy, float zz)
 : x(xx),
   y(yy),
@@ -58,6 +64,8 @@ Vec3 Vec3::fromColor(unsigned int color) {
     Vec3 value(components);
     return value;
 }
+
+Vec3::~Vec3() = default;
 
 float Vec3::angle(const Vec3 &v1, const Vec3 &v2) {
     const float dx = v1.y * v2.z - v1.z * v2.y;
