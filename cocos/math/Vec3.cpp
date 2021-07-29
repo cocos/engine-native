@@ -28,19 +28,13 @@
 
 NS_CC_MATH_BEGIN
 
-Vec3::Vec3()
-: x(0.0F),
-  y(0.0F),
-  z(0.0F) {
-}
-
 Vec3::Vec3(float xx, float yy, float zz)
 : x(xx),
   y(yy),
   z(zz) {
 }
 
-Vec3::Vec3(const float *array) {
+Vec3::Vec3(const float *array) noexcept {
     set(array);
 }
 
@@ -64,8 +58,6 @@ Vec3 Vec3::fromColor(unsigned int color) {
     Vec3 value(components);
     return value;
 }
-
-Vec3::~Vec3() = default;
 
 float Vec3::angle(const Vec3 &v1, const Vec3 &v2) {
     const float dx = v1.y * v2.z - v1.z * v2.y;
@@ -176,14 +168,18 @@ void Vec3::multiply(const Vec3 &v1, const Vec3 &v2, Vec3 *dst) {
 }
 
 void Vec3::transformMat3(const Vec3 &v, const Mat3 &m) {
-    const float ix = v.x, iy = v.y, iz = v.z;
+    const float ix = v.x;
+    const float iy = v.y;
+    const float iz = v.z;
     x = ix * m.m[0] + iy * m.m[3] + iz * m.m[6];
     y = ix * m.m[1] + iy * m.m[4] + iz * m.m[7];
     z = ix * m.m[2] + iy * m.m[5] + iz * m.m[8];
 }
 
 void Vec3::transformMat4(const Vec3 &v, const Mat4 &m) {
-    const float ix = v.x, iy = v.y, iz = v.z;
+    const float ix = v.x;
+    const float iy = v.y;
+    const float iz = v.z;
     float rhw = m.m[3] * ix + m.m[7] * iy + m.m[11] * iz + m.m[15];
     rhw = static_cast<bool>(rhw) ? 1.0F / rhw : 1.0F;
 
@@ -193,7 +189,10 @@ void Vec3::transformMat4(const Vec3 &v, const Mat4 &m) {
 }
 
 void Vec3::transformQuat(const Quaternion &q) {
-    const float qx = q.x, qy = q.y, qz = q.z, qw = q.w;
+    const float qx = q.x;
+    const float qy = q.y;
+    const float qz = q.z;
+    const float qw = q.w;
 
     // calculate quat * vec
     const float ix = qw * x + qy * z - qz * y;
@@ -234,13 +233,15 @@ float Vec3::dot(const Vec3 &v1, const Vec3 &v2) {
 void Vec3::normalize() {
     float n = x * x + y * y + z * z;
     // Already normalized.
-    if (n == 1.0F)
+    if (n == 1.0F) {
         return;
+    }
 
     n = std::sqrt(n);
     // Too close to zero.
-    if (n < MATH_TOLERANCE)
+    if (n < MATH_TOLERANCE) {
         return;
+    } 
 
     n = 1.0F / n;
     x *= n;

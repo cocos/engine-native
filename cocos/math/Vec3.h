@@ -23,7 +23,6 @@
 #ifndef MATH_VEC3_H
 #define MATH_VEC3_H
 
-#include <cmath>
 #include "math/MathBase.h"
 
 /**
@@ -51,22 +50,22 @@ public:
     /**
      * The x-coordinate.
      */
-    float x{};
+    float x{0.0F};
 
     /**
      * The y-coordinate.
      */
-    float y{};
+    float y{0.0F};
 
     /**
      * The z-coordinate.
      */
-    float z{};
+    float z{0.0F};
 
     /**
      * Constructs a new vector initialized to all zeros.
      */
-    Vec3();
+    Vec3() = default;
 
     /**
      * Constructs a new vector initialized to the specified values.
@@ -82,7 +81,7 @@ public:
      *
      * @param array An array containing the elements of the vector in the order x, y, z.
      */
-    Vec3(const float *array);
+    Vec3(const float *array) noexcept;
 
     /**
      * Constructs a vector that describes the direction between the specified points.
@@ -112,7 +111,7 @@ public:
     /**
      * Destructor.
      */
-    ~Vec3();
+    ~Vec3() = default;
 
     /**
      * Indicates whether this vector contains all zeros.
