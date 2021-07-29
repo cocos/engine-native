@@ -183,8 +183,8 @@ void GbufferStage::render(scene::Camera *camera) {
         colorInfo.clearColor  = clearColor;
         colorInfo.endAccesses = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_READ};
         for (int i = 0; i < 4; ++i) {
-            data.gbuffer[i] = builder.write(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_gbuffer[i])), colorInfo);
-            builder.writeToBlackboard(DeferredPipeline::_gbuffer[i], data.gbuffer[i]);
+            data.gbuffer[i] = builder.write(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::fgStrHandleGbufferTexture[i])), colorInfo);
+            builder.writeToBlackboard(DeferredPipeline::fgStrHandleGbufferTexture[i], data.gbuffer[i]);
         }
 
         // depth setup
@@ -195,8 +195,8 @@ void GbufferStage::render(scene::Camera *camera) {
         depthInfo.clearStencil = camera->clearStencil;
         depthInfo.endAccesses = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
 
-        data.depth = builder.write(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_depth)), depthInfo);
-        builder.writeToBlackboard(DeferredPipeline::_depth, data.depth);
+        data.depth = builder.write(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::fgStrHandleDepthTexture)), depthInfo);
+        builder.writeToBlackboard(DeferredPipeline::fgStrHandleDepthTexture, data.depth);
 
         // viewport setup
         gfx::Viewport viewport{ _renderArea.x, _renderArea.y, _renderArea.width, _renderArea.height, 0.F, 1.F};
@@ -213,7 +213,7 @@ void GbufferStage::render(scene::Camera *camera) {
         stage->recordCommands(pipeline, renderPass);
     };
 
-    pipeline->getFrameGraph().addPass<renderData>(IP_GBUFFER, DeferredPipeline::_passGbuffer, gbufferSetup, gbufferExec);
+    pipeline->getFrameGraph().addPass<renderData>(IP_GBUFFER, DeferredPipeline::fgStrHandleGbufferPass, gbufferSetup, gbufferExec);
 }
 } // namespace pipeline
 } // namespace cc

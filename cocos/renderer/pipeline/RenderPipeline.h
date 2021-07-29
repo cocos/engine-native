@@ -78,8 +78,7 @@ public:
     inline PipelineUBO *                           getPipelineUBO() const { return _pipelineUBO; }
     inline const String &                          getConstantMacros() { return _constantMacros; }
     inline gfx::Device *                           getDevice() { return _device; }
-
-    RenderStage *                                  getRenderstageByName(const String &name);
+    RenderStage *                                  getRenderstageByName(const String &name) const;
 
 protected:
     static RenderPipeline *instance;

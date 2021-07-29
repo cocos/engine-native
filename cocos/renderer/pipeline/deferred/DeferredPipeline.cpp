@@ -58,20 +58,20 @@ void srgbToLinear(gfx::Color *out, const gfx::Color &gamma) {
     out->z = gamma.z * gamma.z;
 }
 
-framegraph::StringHandle DeferredPipeline::_gbuffer[4] = {
-    framegraph::FrameGraph::stringToHandle("gbufferAlbedo"),
-    framegraph::FrameGraph::stringToHandle("gbufferPosition"),
-    framegraph::FrameGraph::stringToHandle("gbufferNormal"),
-    framegraph::FrameGraph::stringToHandle("gbufferEmissive")
+framegraph::StringHandle DeferredPipeline::fgStrHandleGbufferTexture[4] = {
+    framegraph::FrameGraph::stringToHandle("gbufferAlbedoTexture"),
+    framegraph::FrameGraph::stringToHandle("gbufferPositionTexture"),
+    framegraph::FrameGraph::stringToHandle("gbufferNormalTexture"),
+    framegraph::FrameGraph::stringToHandle("gbufferEmissiveTexture")
 };
-framegraph::StringHandle DeferredPipeline::_depth = framegraph::FrameGraph::stringToHandle("depth");
-framegraph::StringHandle DeferredPipeline::_lightingOut = framegraph::FrameGraph::stringToHandle("lightingOutput");
-framegraph::StringHandle DeferredPipeline::_backBuffer = framegraph::FrameGraph::stringToHandle("backBuffer");
+framegraph::StringHandle DeferredPipeline::fgStrHandleDepthTexture = framegraph::FrameGraph::stringToHandle("depthTexture");
+framegraph::StringHandle DeferredPipeline::fgStrHandleLightingOutTexture = framegraph::FrameGraph::stringToHandle("lightingOutputTexture");
+framegraph::StringHandle DeferredPipeline::fgStrHandleBackBufferTexture = framegraph::FrameGraph::stringToHandle("backBufferTexture");
 
-framegraph::StringHandle DeferredPipeline::_passGbuffer = framegraph::FrameGraph::stringToHandle("deferredGbufferPass");
-framegraph::StringHandle DeferredPipeline::_passLighting = framegraph::FrameGraph::stringToHandle("deferredLightingPass");
-framegraph::StringHandle DeferredPipeline::_passSspr = framegraph::FrameGraph::stringToHandle("deferredSSPRPass");
-framegraph::StringHandle DeferredPipeline::_passPostprocess = framegraph::FrameGraph::stringToHandle("deferredPostPass");
+framegraph::StringHandle DeferredPipeline::fgStrHandleGbufferPass = framegraph::FrameGraph::stringToHandle("deferredGbufferPass");
+framegraph::StringHandle DeferredPipeline::fgStrHandleLightingPass = framegraph::FrameGraph::stringToHandle("deferredLightingPass");
+framegraph::StringHandle DeferredPipeline::fgStrHandleSsprPass = framegraph::FrameGraph::stringToHandle("deferredSSPRPass");
+framegraph::StringHandle DeferredPipeline::fgStrHandlePostprocessPass = framegraph::FrameGraph::stringToHandle("deferredPostPass");
 
 bool DeferredPipeline::initialize(const RenderPipelineInfo &info) {
     RenderPipeline::initialize(info);
@@ -137,15 +137,15 @@ void DeferredPipeline::initFrameGraphExternalTexture() {
 
     for (uint i = 0; i < 4; ++i) {
         if (i != 1) {
-            _gbufferTex[i] = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(info);
-            _gbufferTex[i]->createPersistent();
+            fgTextureGbuffer[i] = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(info);
+            fgTextureGbuffer[i]->createPersistent();
         } else {
-            _gbufferTex[i] = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(infoPos);
-            _gbufferTex[i]->createPersistent();
+            fgTextureGbuffer[i] = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(infoPos);
+            fgTextureGbuffer[i]->createPersistent();
         }
 
         // bind global descriptor
-        gfx::Texture *tex = (gfx::Texture *)(_gbufferTex[i]->getDevObj());
+        gfx::Texture *tex = (gfx::Texture *)(fgTextureGbuffer[i]->getDevObj());
         _descriptorSet->bindSampler(static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_ALBEDOMAP) + i, sampler);
         _descriptorSet->bindTexture(static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_ALBEDOMAP) + i, tex);
     }
@@ -159,44 +159,44 @@ void DeferredPipeline::initFrameGraphExternalTexture() {
         _height,
     };
 
-    _depthTex = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(depthInfo);
-    _depthTex->createPersistent();
+    fgTextureDepth = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(depthInfo);
+    fgTextureDepth->createPersistent();
 
     // backbuffer
-    _fgBackBuffer = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>();
+    fgTextureBackBuffer = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>();
 }
 
 void DeferredPipeline::destroyFrameGraphExternalTexture() {
     // gbuffer descriptorset setup
     for (uint i = 0; i < 4; ++i) {
         // bind global descriptor
-        if (_gbufferTex[i]) {
-            gfx::Texture *tex = (gfx::Texture *)(_gbufferTex[i]->getDevObj());
+        if (fgTextureGbuffer[i]) {
+            gfx::Texture *tex = (gfx::Texture *)(fgTextureGbuffer[i]->getDevObj());
             CC_SAFE_DELETE(tex);
-            CC_SAFE_DELETE(_gbufferTex[i]);
+            CC_SAFE_DELETE(fgTextureGbuffer[i]);
         }
     }
 
-    if (_depthTex) {
-        gfx::Texture *depthTex = (gfx::Texture *)(_depthTex->getDevObj());
+    if (fgTextureDepth) {
+        gfx::Texture *depthTex = (gfx::Texture *)(fgTextureDepth->getDevObj());
         CC_SAFE_DELETE(depthTex);
-        CC_SAFE_DELETE(_depthTex);
+        CC_SAFE_DELETE(fgTextureDepth);
     }
 
-    if (_fgBackBuffer) {
-        CC_SAFE_DELETE(_fgBackBuffer);
+    if (fgTextureBackBuffer) {
+        CC_SAFE_DELETE(fgTextureBackBuffer);
     }
 }
 
 void DeferredPipeline::prepareFrameGraph() {
     // repare for the backbuffer, if the gfx::Texture is nullptr, cocos will use swapchain texture when create framebuffer
-    _fg.getBlackboard().put(_backBuffer, _fg.importExternal(_backBuffer, *_fgBackBuffer));
+    _fg.getBlackboard().put(fgStrHandleBackBufferTexture, _fg.importExternal(fgStrHandleBackBufferTexture, *fgTextureBackBuffer));
 
     for (uint i = 0; i < 4; ++i) {
-        _fg.getBlackboard().put(_gbuffer[i], _fg.importExternal(_gbuffer[i], *_gbufferTex[i]));
+        _fg.getBlackboard().put(fgStrHandleGbufferTexture[i], _fg.importExternal(fgStrHandleGbufferTexture[i], *fgTextureGbuffer[i]));
     }
 
-    _fg.getBlackboard().put(_depth, _fg.importExternal(_depth, *_depthTex));
+    _fg.getBlackboard().put(fgStrHandleDepthTexture, _fg.importExternal(fgStrHandleDepthTexture, *fgTextureDepth));
 }
 
 void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
@@ -388,15 +388,15 @@ void DeferredPipeline::destroy() {
     destroyDeferredData();
 
     for (int i = 0; i < 4; ++i) {
-        if (_gbufferTex[i]) {
-            delete _gbufferTex[i];
-            _gbufferTex[i] = nullptr;
+        if (fgTextureGbuffer[i]) {
+            delete fgTextureGbuffer[i];
+            fgTextureGbuffer[i] = nullptr;
         }
     }
 
-    if (_depthTex) {
-        delete _depthTex;
-        _depthTex = nullptr;
+    if (fgTextureDepth) {
+        delete fgTextureDepth;
+        fgTextureDepth = nullptr;
     }
 
     if (_descriptorSet) {

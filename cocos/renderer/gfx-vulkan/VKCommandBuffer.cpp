@@ -145,10 +145,13 @@ void CCVKCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo
     size_t                attachmentCount = clearValues.size();
 
     if (attachmentCount) {
-        for (size_t i = 0U; i < attachmentCount - 1; ++i) {
+        for (size_t i = 0U; i < attachmentCount; ++i) {
             clearValues[i].color = {{colors[i].x, colors[i].y, colors[i].z, colors[i].w}};
         }
-        clearValues[attachmentCount - 1].depthStencil = {depth, stencil};
+
+        if (fbo->getDepthStencilTexture()) {
+            clearValues[attachmentCount - 1].depthStencil = { depth, stencil };
+        }
     }
     auto *                device = CCVKDevice::getInstance();
     VkRenderPassBeginInfo passBeginInfo{VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO};

@@ -81,9 +81,9 @@ public:
     void prepareFrameGraph();
     void initFrameGraphExternalTexture();
     void destroyFrameGraphExternalTexture();
-    uint getWidth() { return _width; }
-    uint getHeight() { return _height; }
-    scene::Camera *getFrameGraphCamera() { return _frameGraphCamera; }
+    uint getWidth() const { return _width; }
+    uint getHeight() const { return _height; }
+    scene::Camera *getFrameGraphCamera() const { return _frameGraphCamera; }
 
 private:
     bool activeRenderer();
@@ -105,29 +105,29 @@ private:
     gfx::Buffer *        _quadVBOffscreen = nullptr;
     gfx::InputAssembler *_quadIAOffscreen = nullptr;
 
-    uint             _width;
-    uint             _height;
+    uint             _width = 0;
+    uint             _height = 0;
 
     framegraph::FrameGraph _fg;
-    scene::Camera *_frameGraphCamera = nullptr;     // 每个camera走一遍framegraph流程
+    scene::Camera *_frameGraphCamera = nullptr;
 
 public:
     // deferred resource name declear
-    static framegraph::StringHandle _gbuffer[4];        // deal as external resource
-    static framegraph::StringHandle _depth;             // deal as external resource
-    static framegraph::StringHandle _lightingOut;
-    static framegraph::StringHandle _backBuffer;        // buffer get from swapchain, used for queuepresent
+    static framegraph::StringHandle fgStrHandleGbufferTexture[4];        // deal as external resource
+    static framegraph::StringHandle fgStrHandleDepthTexture;             // deal as external resource
+    static framegraph::StringHandle fgStrHandleLightingOutTexture;
+    static framegraph::StringHandle fgStrHandleBackBufferTexture;        // buffer get from swapchain, used for queuepresent
 
     // deferred pass name declear
-    static framegraph::StringHandle _passGbuffer;
-    static framegraph::StringHandle _passLighting;
-    static framegraph::StringHandle _passSspr;
-    static framegraph::StringHandle _passPostprocess;
+    static framegraph::StringHandle fgStrHandleGbufferPass;
+    static framegraph::StringHandle fgStrHandleLightingPass;
+    static framegraph::StringHandle fgStrHandleSsprPass;
+    static framegraph::StringHandle fgStrHandlePostprocessPass;
 
     // external resources of framegraph
-    framegraph::Texture *_gbufferTex[4] = {nullptr};
-    framegraph::Texture *_depthTex = nullptr;
-    framegraph::Texture *_fgBackBuffer = nullptr;
+    framegraph::Texture *fgTextureGbuffer[4] = {nullptr};
+    framegraph::Texture *fgTextureDepth = nullptr;
+    framegraph::Texture *fgTextureBackBuffer = nullptr;
 };
 
 } // namespace pipeline

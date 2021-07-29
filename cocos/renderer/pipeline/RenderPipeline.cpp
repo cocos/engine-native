@@ -137,8 +137,8 @@ void RenderPipeline::generateConstantMacros() {
         _device->getCapabilities().maxFragmentUniformVectors);
 }
 
-RenderStage * RenderPipeline::getRenderstageByName(const String &name) {
-    for (auto flow : _flows) {
+RenderStage * RenderPipeline::getRenderstageByName(const String &name) const {
+    for (auto *flow : _flows) {
         auto val = flow->getRenderstageByName(name);
         if (val) {
             return val;

@@ -39,8 +39,9 @@
 
 namespace cc {
 namespace pipeline {
-
+namespace {
 static const String StageName = "PostprocessStage";
+}
 
 RenderStageInfo PostprocessStage::initInfo = {
     StageName,
@@ -106,8 +107,8 @@ void PostprocessStage::render(scene::Camera *camera) {
 
     auto *      pipeline      = static_cast<DeferredPipeline *>(_pipeline);
     auto postSetup = [&] (framegraph::PassNodeBuilder &builder, renderData &data) {
-        data.lightingOut = builder.read(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_lightingOut)));
-        builder.writeToBlackboard(DeferredPipeline::_lightingOut, data.lightingOut);
+        data.lightingOut = builder.read(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::fgStrHandleLightingOutTexture)));
+        builder.writeToBlackboard(DeferredPipeline::fgStrHandleLightingOutTexture, data.lightingOut);
 
         // backbuffer is as an attachment
         framegraph::RenderTargetAttachment::Descriptor colorAttachmentInfo;
@@ -125,8 +126,8 @@ void PostprocessStage::render(scene::Camera *camera) {
 
         colorAttachmentInfo.endAccesses = {gfx::AccessType::PRESENT};
 
-        data.backBuffer = builder.write(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::_backBuffer)), colorAttachmentInfo);
-        builder.writeToBlackboard(DeferredPipeline::_backBuffer, data.backBuffer);
+        data.backBuffer = builder.write(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::fgStrHandleBackBufferTexture)), colorAttachmentInfo);
+        builder.writeToBlackboard(DeferredPipeline::fgStrHandleBackBufferTexture, data.backBuffer);
 
         auto renderArea = pipeline->getRenderArea(camera, !camera->window->hasOffScreenAttachments);
         gfx::Viewport viewport{ renderArea.x, renderArea.y, renderArea.width, renderArea.height, 0.F, 1.F};
@@ -182,8 +183,8 @@ void PostprocessStage::render(scene::Camera *camera) {
         stage->getUIPhase()->render(pipeline->getFrameGraphCamera(), renderPass);
     };
 
-    pipeline->getFrameGraph().addPass<renderData>(IP_POSTPROCESS, DeferredPipeline::_passPostprocess, postSetup, postExec);
-    pipeline->getFrameGraph().presentFromBlackboard(DeferredPipeline::_backBuffer);
+    pipeline->getFrameGraph().addPass<renderData>(IP_POSTPROCESS, DeferredPipeline::fgStrHandlePostprocessPass, postSetup, postExec);
+    pipeline->getFrameGraph().presentFromBlackboard(DeferredPipeline::fgStrHandleBackBufferTexture);
 }
 } // namespace pipeline
 } // namespace cc

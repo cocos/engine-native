@@ -67,7 +67,7 @@ private:
     ResourceDictionary reads{};
     ResourceDictionary writes{};
 
-    DevicePass *_devicePass;
+    DevicePass *_devicePass = nullptr;
     friend class DevicePass;
 };
 

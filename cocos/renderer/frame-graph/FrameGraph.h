@@ -62,7 +62,7 @@ public:
     static void gc(uint32_t unusedFrameCount = 30) noexcept;
 
     template <typename Data, typename SetupMethod, typename ExecuteMethod>
-    CallbackPass<Data, ExecuteMethod> const &addPass(PassInsertPoint insertPoint, const StringHandle &name, SetupMethod setup, ExecuteMethod &&execute) noexcept;
+    CallbackPass<Data, ExecuteMethod> const &addPass(PassInsertPoint insertPoint, const StringHandle &name, SetupMethod setup, ExecuteMethod &&execute, bool sideEffect=false) noexcept;
 
     template <typename ResourceType>
     TypedHandle<ResourceType> create(const StringHandle &name, const typename ResourceType::Descriptor &desc) noexcept;
@@ -103,10 +103,11 @@ private:
 //////////////////////////////////////////////////////////////////////////
 
 template <typename Data, typename SetupMethod, typename ExecuteMethod>
-const CallbackPass<Data, ExecuteMethod> &FrameGraph::addPass(const PassInsertPoint insertPoint, const StringHandle &name, SetupMethod setup, ExecuteMethod &&execute) noexcept {
+const CallbackPass<Data, ExecuteMethod> &FrameGraph::addPass(const PassInsertPoint insertPoint, const StringHandle &name, SetupMethod setup, ExecuteMethod &&execute, bool sideEffet) noexcept {
     static_assert(sizeof(ExecuteMethod) < 1024, "Execute() lambda is capturing too much data.");
     auto *const     pass     = new CallbackPass<Data, ExecuteMethod>(std::forward<ExecuteMethod>(execute));
     PassNode &      passNode = createPassNode(insertPoint, name, pass);
+    if (sideEffet) passNode.sideEffect();
     PassNodeBuilder builder(*this, passNode);
     setup(builder, pass->getData());
     return *pass;
