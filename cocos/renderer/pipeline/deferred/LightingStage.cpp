@@ -418,7 +418,7 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         stage->recordCommands(pipeline, renderPass);
     };
 
-    pipeline->getFrameGraph().addPass<renderData>(IP_LIGHTING, DeferredPipeline::fgStrHandleLightingPass, lightingSetup, lightingExec);
+    pipeline->getFrameGraph().addPass<renderData>(static_cast<uint>(DeferredInsertPoint::IP_LIGHTING), DeferredPipeline::fgStrHandleLightingPass, lightingSetup, lightingExec);
 }
 
 void LightingStage::putTransparentObj2Queue() {
@@ -727,7 +727,7 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
         }
     }
 
-    uint insertPoint = IP_SSPR;
+    uint insertPoint = static_cast<uint>(DeferredInsertPoint::IP_SSPR);
     for (uint i = 0; i < _reflectionElems.size(); ++i) {
         // add clear and comp passes here
         //pipeline->getFrameGraph().addPass<DataClear>(insertPoint++, _ssprClearPass[i], clearSetup, clearExec, true);

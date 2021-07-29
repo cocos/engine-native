@@ -103,11 +103,11 @@ private:
 //////////////////////////////////////////////////////////////////////////
 
 template <typename Data, typename SetupMethod, typename ExecuteMethod>
-const CallbackPass<Data, ExecuteMethod> &FrameGraph::addPass(const PassInsertPoint insertPoint, const StringHandle &name, SetupMethod setup, ExecuteMethod &&execute, bool sideEffet) noexcept {
+const CallbackPass<Data, ExecuteMethod> &FrameGraph::addPass(const PassInsertPoint insertPoint, const StringHandle &name, SetupMethod setup, ExecuteMethod &&execute, bool sideEffect) noexcept {
     static_assert(sizeof(ExecuteMethod) < 1024, "Execute() lambda is capturing too much data.");
     auto *const     pass     = new CallbackPass<Data, ExecuteMethod>(std::forward<ExecuteMethod>(execute));
     PassNode &      passNode = createPassNode(insertPoint, name, pass);
-    if (sideEffet) passNode.sideEffect();
+    if (sideEffect) passNode.sideEffect();
     PassNodeBuilder builder(*this, passNode);
     setup(builder, pass->getData());
     return *pass;

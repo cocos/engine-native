@@ -47,7 +47,7 @@ struct CC_DLL DeferredRenderData {
     gfx::Texture *    depthTex             = nullptr;
 };
 
-enum DeferredInsertPoint {
+enum class DeferredInsertPoint {
     IP_GBUFFER = 100,
     IP_LIGHTING = 200,
     IP_SSPR = 300,

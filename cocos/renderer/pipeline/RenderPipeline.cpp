@@ -139,7 +139,7 @@ void RenderPipeline::generateConstantMacros() {
 
 RenderStage * RenderPipeline::getRenderstageByName(const String &name) const {
     for (auto *flow : _flows) {
-        auto val = flow->getRenderstageByName(name);
+        auto *val = flow->getRenderstageByName(name);
         if (val) {
             return val;
         }

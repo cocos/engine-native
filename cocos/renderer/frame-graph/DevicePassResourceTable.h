@@ -64,8 +64,8 @@ private:
     void                   extract(const FrameGraph &graph, const PassNode *const passNode, bool multiSubPass, std::vector<const gfx::Texture *> const &renderTargets) noexcept;
     void                   extract(const FrameGraph &graph, std::vector<Handle> const &from, ResourceDictionary &to, bool ignoreRenderTarget, std::vector<const gfx::Texture *> const &renderTargets) noexcept;
 
-    ResourceDictionary reads{};
-    ResourceDictionary writes{};
+    ResourceDictionary _reads{};
+    ResourceDictionary _writes{};
 
     DevicePass *_devicePass = nullptr;
     friend class DevicePass;
@@ -74,13 +74,13 @@ private:
 template <typename Type>
 std::enable_if_t<std::is_base_of<gfx::GFXObject, typename Type::DeviceResource>::value, typename Type::DeviceResource *>
 DevicePassResourceTable::getRead(TypedHandle<Type> const handle) const noexcept {
-    return static_cast<typename Type::DeviceResource *>(get(reads, handle));
+    return static_cast<typename Type::DeviceResource *>(get(_reads, handle));
 }
 
 template <typename Type>
 std::enable_if_t<std::is_base_of<gfx::GFXObject, typename Type::DeviceResource>::value, typename Type::DeviceResource *>
 DevicePassResourceTable::getWrite(TypedHandle<Type> const handle) const noexcept {
-    return static_cast<typename Type::DeviceResource *>(get(writes, handle));
+    return static_cast<typename Type::DeviceResource *>(get(_writes, handle));
 }
 
 } // namespace framegraph

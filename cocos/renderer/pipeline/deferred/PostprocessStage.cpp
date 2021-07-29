@@ -183,7 +183,7 @@ void PostprocessStage::render(scene::Camera *camera) {
         stage->getUIPhase()->render(pipeline->getFrameGraphCamera(), renderPass);
     };
 
-    pipeline->getFrameGraph().addPass<renderData>(IP_POSTPROCESS, DeferredPipeline::fgStrHandlePostprocessPass, postSetup, postExec);
+    pipeline->getFrameGraph().addPass<renderData>(static_cast<uint>(DeferredInsertPoint::IP_POSTPROCESS), DeferredPipeline::fgStrHandlePostprocessPass, postSetup, postExec);
     pipeline->getFrameGraph().presentFromBlackboard(DeferredPipeline::fgStrHandleBackBufferTexture);
 }
 } // namespace pipeline

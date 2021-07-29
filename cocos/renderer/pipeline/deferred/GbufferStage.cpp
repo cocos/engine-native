@@ -213,7 +213,7 @@ void GbufferStage::render(scene::Camera *camera) {
         stage->recordCommands(pipeline, renderPass);
     };
 
-    pipeline->getFrameGraph().addPass<renderData>(IP_GBUFFER, DeferredPipeline::fgStrHandleGbufferPass, gbufferSetup, gbufferExec);
+    pipeline->getFrameGraph().addPass<renderData>(static_cast<uint>(DeferredInsertPoint::IP_GBUFFER), DeferredPipeline::fgStrHandleGbufferPass, gbufferSetup, gbufferExec);
 }
 } // namespace pipeline
 } // namespace cc
