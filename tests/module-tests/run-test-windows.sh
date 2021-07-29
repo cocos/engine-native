@@ -51,14 +51,20 @@ fi
 for target in test-log test-bindings test-math test-fs 
 do
 cmake --build build-android --target $target -- -j 4
-cmake --build build-win32 --target $target --config Release 
+cmake --build build-win32 --target $target --config Release --  /verbosity:minimal
 done
 
-./build-win32/log/Release/test-log.exe
-./build-win32/math/Release/test-math.exe
-./build-win32/bindings/Release/test-bindings.exe
-./build-win32/filesystem/Release/test-fs.exe
+TEST_LOG_EXE=./build-win32/log/Release/test-log.exe
+TESTS_MATH_EXE=./build-win32/math/Release/test-math.exe
+TEST_BINDINGS_EXE=./build-win32/bindings/Release/test-bindings.exe
+TEST_FS_EXE=./build-win32/filesystem/Release/test-fs.exe
 
-exit 0
-# cmake --build build-win32
+for exe in $TEST_LOG_EXE $TESTS_MATH_EXE $TEST_BINDINGS_EXE $TEST_FS_EXE
+do
+if ! [ -f $exe ]; then
+echo "File $exe not found!"
+exit 1
+fi
+done
 
+echo "done!"
