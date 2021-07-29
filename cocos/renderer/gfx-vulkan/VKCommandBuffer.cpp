@@ -142,7 +142,7 @@ void CCVKCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo
     }
 
     vector<VkClearValue> &clearValues     = gpuRenderPass->clearValues;
-    size_t                attachmentCount = clearValues.size();
+    size_t                attachmentCount = fbo->getDepthStencilTexture() ? clearValues.size() -1 : clearValues.size();
 
     if (attachmentCount) {
         for (size_t i = 0U; i < attachmentCount; ++i) {
@@ -150,7 +150,7 @@ void CCVKCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo
         }
 
         if (fbo->getDepthStencilTexture()) {
-            clearValues[attachmentCount - 1].depthStencil = { depth, stencil };
+            clearValues[attachmentCount].depthStencil = { depth, stencil };
         }
     }
     auto *                device = CCVKDevice::getInstance();

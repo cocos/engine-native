@@ -28,7 +28,6 @@
 #include <string>
 #include <vector>
 #include "CallbackPass.h"
-#include "DevicePassResourceTable.h"
 #include "RenderTargetAttachment.h"
 #include "gfx-base/GFXDef.h"
 

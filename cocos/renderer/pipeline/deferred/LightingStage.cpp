@@ -57,18 +57,18 @@ void linearToSrgb(gfx::Color *out, const gfx::Color &linear) {
     out->z = std::sqrt(linear.z);
 }
 
-static const String StageName = "LightingStage";
-static const uint _maxReflectorSize =  5;
+const String StageName = "LightingStage";
+static const uint maxReflectorSize =  5;
 framegraph::StringHandle _reflectTexHandle = framegraph::FrameGraph::stringToHandle("reflectionTex");
-framegraph::StringHandle _denoiseTexHandle[_maxReflectorSize];
-framegraph::StringHandle _ssprClearPass[_maxReflectorSize];
-framegraph::StringHandle _ssprCompReflectPass[_maxReflectorSize];
-framegraph::StringHandle _ssprCompDenoisePass[_maxReflectorSize];
-framegraph::StringHandle _ssprRenderPass[_maxReflectorSize];
+framegraph::StringHandle _denoiseTexHandle[maxReflectorSize];
+framegraph::StringHandle _ssprClearPass[maxReflectorSize];
+framegraph::StringHandle _ssprCompReflectPass[maxReflectorSize];
+framegraph::StringHandle _ssprCompDenoisePass[maxReflectorSize];
+framegraph::StringHandle _ssprRenderPass[maxReflectorSize];
 
 static void initStrHandle () {
     std::string tmp;
-    for (int i = 0; i < _maxReflectorSize; ++i) {
+    for (int i = 0; i < maxReflectorSize; ++i) {
         tmp = std::string("denoiseTexureHandle") + std::to_string(i);
         _denoiseTexHandle[i] = framegraph::FrameGraph::stringToHandle(tmp.c_str());
 
@@ -412,13 +412,13 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         assert(pipeline != nullptr);
         LightingStage *stage = static_cast<LightingStage *>(pipeline->getRenderstageByName(StageName));
         assert(stage != nullptr);
-        gfx::RenderPass *renderPass = table.getDevicePass()->getRenderPass().get();
+        gfx::RenderPass *renderPass = table.getRenderPass().get();
         assert(renderPass != nullptr);
 
         stage->recordCommands(pipeline, renderPass);
     };
 
-    pipeline->getFrameGraph().addPass<renderData>(IP_LIGHTING, DeferredPipeline::fgStrHandleLightingPass, lightingSetup, lightingExec);
+    pipeline->getFrameGraph().addPass<renderData>(static_cast<uint>(DeferredInsertPoint::IP_LIGHTING), DeferredPipeline::fgStrHandleLightingPass, lightingSetup, lightingExec);
 }
 
 void LightingStage::putTransparentObj2Queue() {
@@ -496,6 +496,7 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
         data.reflection = builder.create<framegraph::Texture>(_reflectTexHandle, colorTexInfo);
         data.reflection = builder.write(data.reflection, colorAttachmentInfo);
         builder.writeToBlackboard(_reflectTexHandle, data.reflection);
+        builder.sideEffect();
     };
 
     auto clearExec = [&] (DataClear const &data, const framegraph::DevicePassResourceTable &table) {};
@@ -700,7 +701,7 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
         stage->getReflectRenderQueue()->clear();
         stage->getReflectRenderQueue()->insertRenderPass(elem.renderObject, elem.modelIndex, elem.passIndex);
 
-        gfx::RenderPass *renderPass = table.getDevicePass()->getRenderPass().get();
+		gfx::RenderPass *renderPass = table.getRenderPass().get();
         stage->getReflectRenderQueue()->sort();
         stage->getReflectRenderQueue()->recordCommandBuffer(pipeline->getDevice(), renderPass, cmdBuff);
     };
@@ -727,10 +728,10 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
         }
     }
 
-    uint insertPoint = IP_SSPR;
+    uint insertPoint = static_cast<uint>(DeferredInsertPoint::IP_SSPR);
     for (uint i = 0; i < _reflectionElems.size(); ++i) {
         // add clear and comp passes here
-        //pipeline->getFrameGraph().addPass<DataClear>(insertPoint++, _ssprClearPass[i], clearSetup, clearExec, true);
+        pipeline->getFrameGraph().addPass<DataClear>(insertPoint++, _ssprClearPass[i], clearSetup, clearExec);
         pipeline->getFrameGraph().addPass<DataCompReflect>(insertPoint++, _ssprCompReflectPass[i], compReflectSetup, compReflectExec);
         pipeline->getFrameGraph().addPass<DataCompDenoise>(insertPoint++, _ssprCompDenoisePass[i], compDenoiseSetup, compDenoiseExec);
     }

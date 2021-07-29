@@ -208,12 +208,12 @@ void GbufferStage::render(scene::Camera *camera) {
         assert(pipeline != nullptr);
         GbufferStage *stage = static_cast<GbufferStage *>(pipeline->getRenderstageByName(StageName));
         assert(stage != nullptr);
-        gfx::RenderPass *renderPass = table.getDevicePass()->getRenderPass().get();
+        gfx::RenderPass *renderPass = table.getRenderPass().get();
         assert(renderPass != nullptr);
         stage->recordCommands(pipeline, renderPass);
     };
 
-    pipeline->getFrameGraph().addPass<renderData>(IP_GBUFFER, DeferredPipeline::fgStrHandleGbufferPass, gbufferSetup, gbufferExec);
+    pipeline->getFrameGraph().addPass<renderData>(static_cast<uint>(DeferredInsertPoint::IP_GBUFFER), DeferredPipeline::fgStrHandleGbufferPass, gbufferSetup, gbufferExec);
 }
 } // namespace pipeline
 } // namespace cc

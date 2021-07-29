@@ -30,6 +30,7 @@
 #include "PassNode.h"
 #include "ResourceNode.h"
 #include "gfx-base/GFXCommandBuffer.h"
+#include "DevicePassResourceTable.h"
 
 namespace cc {
 namespace framegraph {
@@ -137,6 +138,10 @@ void DevicePass::append(const FrameGraph &graph, const RenderTargetAttachment &a
             }
         }
     }
+}
+
+const RenderPass &DevicePassResourceTable::getRenderPass() const {
+    return _devicePass->getRenderPass();
 }
 
 void DevicePass::begin(gfx::CommandBuffer *cmdBuff) {

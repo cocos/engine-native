@@ -40,7 +40,7 @@
 namespace cc {
 namespace pipeline {
 namespace {
-static const String StageName = "PostprocessStage";
+const String StageName = "PostprocessStage";
 }
 
 RenderStageInfo PostprocessStage::initInfo = {
@@ -139,7 +139,7 @@ void PostprocessStage::render(scene::Camera *camera) {
         assert(pipeline != nullptr);
         PostprocessStage *stage = (PostprocessStage *)pipeline->getRenderstageByName(StageName);
         assert(stage != nullptr);
-        gfx::RenderPass *renderPass = table.getDevicePass()->getRenderPass().get();
+        gfx::RenderPass *renderPass = table.getRenderPass().get();
         assert(renderPass != nullptr);
 
         // bind descriptor
@@ -183,7 +183,7 @@ void PostprocessStage::render(scene::Camera *camera) {
         stage->getUIPhase()->render(pipeline->getFrameGraphCamera(), renderPass);
     };
 
-    pipeline->getFrameGraph().addPass<renderData>(IP_POSTPROCESS, DeferredPipeline::fgStrHandlePostprocessPass, postSetup, postExec);
+    pipeline->getFrameGraph().addPass<renderData>(static_cast<uint>(DeferredInsertPoint::IP_POSTPROCESS), DeferredPipeline::fgStrHandlePostprocessPass, postSetup, postExec);
     pipeline->getFrameGraph().presentFromBlackboard(DeferredPipeline::fgStrHandleBackBufferTexture);
 }
 } // namespace pipeline

@@ -63,11 +63,11 @@ public:
     ReflectionComp *getReflectionComp() {return _reflectionComp;}
     RenderElem     getRendElement();
     void           addDenoiseIndex() {_denoiseIndex = (_denoiseIndex + 1) % _reflectionElems.size();}
-    RenderQueue    *getReflectRenderQueue() {return _reflectionRenderQueue;}
-    uint           getSsprTexWidth() { return _ssprTexWidth; }
-    uint           getSsprTexHeight() { return _ssprTexHeight; }
-    Mat4           &getMatViewProj() { return _matViewProj; }
-    gfx::Sampler   *getSsprSampler() { return _ssprSample; }
+    RenderQueue    *getReflectRenderQueue() const {return _reflectionRenderQueue;}
+    uint           getSsprTexWidth() const { return _ssprTexWidth; }
+    uint           getSsprTexHeight() const { return _ssprTexHeight; }
+    Mat4           getMatViewProj() const { return _matViewProj; }
+    gfx::Sampler   *getSsprSampler() const { return _ssprSample; }
 
 private:
     void gatherLights(scene::Camera *camera);

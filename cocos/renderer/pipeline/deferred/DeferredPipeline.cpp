@@ -50,6 +50,8 @@ namespace {
     (dst)[(offset) + 1] = (src).y; \
     (dst)[(offset) + 2] = (src).z; \
     (dst)[(offset) + 3] = (src).w;
+
+static const uint gbufferPosIndex = 1;
 } // namespace
 
 void srgbToLinear(gfx::Color *out, const gfx::Color &gamma) {
@@ -58,7 +60,7 @@ void srgbToLinear(gfx::Color *out, const gfx::Color &gamma) {
     out->z = gamma.z * gamma.z;
 }
 
-framegraph::StringHandle DeferredPipeline::fgStrHandleGbufferTexture[4] = {
+framegraph::StringHandle DeferredPipeline::fgStrHandleGbufferTexture[gbufferCount] = {
     framegraph::FrameGraph::stringToHandle("gbufferAlbedoTexture"),
     framegraph::FrameGraph::stringToHandle("gbufferPositionTexture"),
     framegraph::FrameGraph::stringToHandle("gbufferNormalTexture"),
@@ -135,8 +137,8 @@ void DeferredPipeline::initFrameGraphExternalTexture() {
         _height,
     };
 
-    for (uint i = 0; i < 4; ++i) {
-        if (i != 1) {
+    for (uint i = 0; i < gbufferCount; ++i) {
+        if (i != gbufferPosIndex) {
             fgTextureGbuffer[i] = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(info);
             fgTextureGbuffer[i]->createPersistent();
         } else {
@@ -168,7 +170,7 @@ void DeferredPipeline::initFrameGraphExternalTexture() {
 
 void DeferredPipeline::destroyFrameGraphExternalTexture() {
     // gbuffer descriptorset setup
-    for (uint i = 0; i < 4; ++i) {
+    for (uint i = 0; i < gbufferCount; ++i) {
         // bind global descriptor
         if (fgTextureGbuffer[i]) {
             gfx::Texture *tex = (gfx::Texture *)(fgTextureGbuffer[i]->getDevObj());
@@ -388,16 +390,10 @@ void DeferredPipeline::destroy() {
     destroyDeferredData();
 
     for (int i = 0; i < 4; ++i) {
-        if (fgTextureGbuffer[i]) {
-            delete fgTextureGbuffer[i];
-            fgTextureGbuffer[i] = nullptr;
-        }
+        CC_SAFE_DELETE(fgTextureGbuffer[i]);
     }
 
-    if (fgTextureDepth) {
-        delete fgTextureDepth;
-        fgTextureDepth = nullptr;
-    }
+    CC_SAFE_DELETE(fgTextureDepth);
 
     if (_descriptorSet) {
         _descriptorSet->getBuffer(UBOGlobal::BINDING)->destroy();
@@ -425,7 +421,7 @@ void DeferredPipeline::destroyDeferredData() {
 gfx::Color DeferredPipeline::getClearcolor(scene::Camera *camera) {
     auto *const sceneData     = getPipelineSceneData();
     auto *const sharedData    = sceneData->getSharedData();
-    gfx::Color clearColor = {0.0, 0.0, 0.0, 1.0};
+    gfx::Color clearColor{0.0, 0.0, 0.0, 1.0F};
     if (camera->clearFlag & static_cast<uint>(gfx::ClearFlagBit::COLOR)) {
         if (sharedData->isHDR) {
             srgbToLinear(&clearColor, camera->clearColor);

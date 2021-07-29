@@ -47,7 +47,7 @@ struct CC_DLL DeferredRenderData {
     gfx::Texture *    depthTex             = nullptr;
 };
 
-enum DeferredInsertPoint {
+enum class DeferredInsertPoint {
     IP_GBUFFER = 100,
     IP_LIGHTING = 200,
     IP_SSPR = 300,
@@ -125,7 +125,8 @@ public:
     static framegraph::StringHandle fgStrHandlePostprocessPass;
 
     // external resources of framegraph
-    framegraph::Texture *fgTextureGbuffer[4] = {nullptr};
+    static const uint gbufferCount = 4;
+    framegraph::Texture *fgTextureGbuffer[gbufferCount] = {nullptr};
     framegraph::Texture *fgTextureDepth = nullptr;
     framegraph::Texture *fgTextureBackBuffer = nullptr;
 };
