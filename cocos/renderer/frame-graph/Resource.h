@@ -78,7 +78,7 @@ public:
     void                       destroyPersistent() noexcept;
     inline DeviceResourceType *get() const noexcept;
     inline const Descriptor &  getDesc() const noexcept;
-    DeviceResourceType *getDevObj() const { return _deviceObject; }
+    DeviceResourceType *getDeviceObject() const { return _deviceObject; }
 
 private:
     void computeHash() noexcept;

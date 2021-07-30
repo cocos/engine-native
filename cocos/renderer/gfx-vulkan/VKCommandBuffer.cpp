@@ -142,16 +142,15 @@ void CCVKCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo
     }
 
     vector<VkClearValue> &clearValues     = gpuRenderPass->clearValues;
-    size_t                attachmentCount = fbo->getDepthStencilTexture() ? clearValues.size() -1 : clearValues.size();
+    bool                  depthEnabled    = gpuRenderPass->depthStencilAttachment.format != Format::UNKNOWN;
+    size_t                attachmentCount = depthEnabled ? clearValues.size() - 1 : clearValues.size();
 
-    if (attachmentCount) {
-        for (size_t i = 0U; i < attachmentCount; ++i) {
-            clearValues[i].color = {{colors[i].x, colors[i].y, colors[i].z, colors[i].w}};
-        }
+    for (size_t i = 0U; i < attachmentCount; ++i) {
+        clearValues[i].color = {{colors[i].x, colors[i].y, colors[i].z, colors[i].w}};
+    }
 
-        if (fbo->getDepthStencilTexture()) {
-            clearValues[attachmentCount].depthStencil = { depth, stencil };
-        }
+    if (depthEnabled) {
+        clearValues[attachmentCount].depthStencil = { depth, stencil };
     }
     auto *                device = CCVKDevice::getInstance();
     VkRenderPassBeginInfo passBeginInfo{VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO};

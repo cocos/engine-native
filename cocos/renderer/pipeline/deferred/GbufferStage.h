@@ -54,7 +54,7 @@ public:
     void dispenseRenderObject2Queues();
     void recordCommands(DeferredPipeline *pipeline, gfx::RenderPass *renderPass);
 
-public :
+private:
     static RenderStageInfo initInfo;
     PlanarShadowQueue *    _planarShadowQueue = nullptr;
     RenderBatchedQueue *   _batchedQueue      = nullptr;
