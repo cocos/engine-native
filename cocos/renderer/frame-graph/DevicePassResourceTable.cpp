@@ -32,7 +32,7 @@
 namespace cc {
 namespace framegraph {
 
-gfx::GFXObject *DevicePassResourceTable::get(const ResourceDictionary &from, const Handle handle) noexcept {
+gfx::GFXObject *DevicePassResourceTable::get(const ResourceDictionary &from, Handle handle) noexcept {
     const auto it = from.find(handle);
     return it == from.cend() ? nullptr : it->second;
 }

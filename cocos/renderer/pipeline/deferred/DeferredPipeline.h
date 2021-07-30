@@ -125,8 +125,8 @@ public:
     static framegraph::StringHandle fgStrHandlePostprocessPass;
 
     // external resources of framegraph
-    static const uint gbufferCount = 4;
-    framegraph::Texture *fgTextureGbuffer[gbufferCount] = {nullptr};
+    static const uint GBUFFER_COUNT = 4;
+    framegraph::Texture *fgTextureGbuffer[GBUFFER_COUNT] = {nullptr};
     framegraph::Texture *fgTextureDepth = nullptr;
     framegraph::Texture *fgTextureBackBuffer = nullptr;
 };

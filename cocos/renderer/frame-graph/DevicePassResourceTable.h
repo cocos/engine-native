@@ -48,11 +48,11 @@ public:
 
     template <typename Type>
     std::enable_if_t<std::is_base_of<gfx::GFXObject, typename Type::DeviceResource>::value, typename Type::DeviceResource *>
-    getRead(TypedHandle<Type> const handle) const noexcept;
+    getRead(TypedHandle<Type> handle) const noexcept;
 
     template <typename Type>
     std::enable_if_t<std::is_base_of<gfx::GFXObject, typename Type::DeviceResource>::value, typename Type::DeviceResource *>
-    getWrite(TypedHandle<Type> const handle) const noexcept;
+    getWrite(TypedHandle<Type> handle) const noexcept;
 
     void       setDevicePass(DevicePass *pass) {_devicePass = pass;}
     const RenderPass &getRenderPass() const;
@@ -60,7 +60,7 @@ public:
 private:
     using ResourceDictionary = std::unordered_map<Handle, gfx::GFXObject *, Handle::Hasher>;
 
-    static gfx::GFXObject *get(const ResourceDictionary &from, const Handle handle) noexcept;
+    static gfx::GFXObject *get(const ResourceDictionary &from, Handle handle) noexcept;
     void                   extract(const FrameGraph &graph, const PassNode *const passNode, bool multiSubPass, std::vector<const gfx::Texture *> const &renderTargets) noexcept;
     void                   extract(const FrameGraph &graph, std::vector<Handle> const &from, ResourceDictionary &to, bool ignoreRenderTarget, std::vector<const gfx::Texture *> const &renderTargets) noexcept;
 
@@ -73,13 +73,13 @@ private:
 
 template <typename Type>
 std::enable_if_t<std::is_base_of<gfx::GFXObject, typename Type::DeviceResource>::value, typename Type::DeviceResource *>
-DevicePassResourceTable::getRead(TypedHandle<Type> const handle) const noexcept {
+DevicePassResourceTable::getRead(TypedHandle<Type> handle) const noexcept {
     return static_cast<typename Type::DeviceResource *>(get(_reads, handle));
 }
 
 template <typename Type>
 std::enable_if_t<std::is_base_of<gfx::GFXObject, typename Type::DeviceResource>::value, typename Type::DeviceResource *>
-DevicePassResourceTable::getWrite(TypedHandle<Type> const handle) const noexcept {
+DevicePassResourceTable::getWrite(TypedHandle<Type> handle) const noexcept {
     return static_cast<typename Type::DeviceResource *>(get(_writes, handle));
 }
 

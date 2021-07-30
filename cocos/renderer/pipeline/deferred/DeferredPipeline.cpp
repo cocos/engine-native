@@ -51,7 +51,7 @@ namespace {
     (dst)[(offset) + 2] = (src).z; \
     (dst)[(offset) + 3] = (src).w;
 
-static const uint gbufferPosIndex = 1;
+const uint GBUFFER_POS_INDEX = 1;
 } // namespace
 
 void srgbToLinear(gfx::Color *out, const gfx::Color &gamma) {
@@ -60,7 +60,7 @@ void srgbToLinear(gfx::Color *out, const gfx::Color &gamma) {
     out->z = gamma.z * gamma.z;
 }
 
-framegraph::StringHandle DeferredPipeline::fgStrHandleGbufferTexture[gbufferCount] = {
+framegraph::StringHandle DeferredPipeline::fgStrHandleGbufferTexture[GBUFFER_COUNT] = {
     framegraph::FrameGraph::stringToHandle("gbufferAlbedoTexture"),
     framegraph::FrameGraph::stringToHandle("gbufferPositionTexture"),
     framegraph::FrameGraph::stringToHandle("gbufferNormalTexture"),
@@ -137,8 +137,8 @@ void DeferredPipeline::initFrameGraphExternalTexture() {
         _height,
     };
 
-    for (uint i = 0; i < gbufferCount; ++i) {
-        if (i != gbufferPosIndex) {
+    for (uint i = 0; i < GBUFFER_COUNT; ++i) {
+        if (i != GBUFFER_POS_INDEX) {
             fgTextureGbuffer[i] = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(info);
             fgTextureGbuffer[i]->createPersistent();
         } else {
@@ -147,7 +147,7 @@ void DeferredPipeline::initFrameGraphExternalTexture() {
         }
 
         // bind global descriptor
-        gfx::Texture *tex = (gfx::Texture *)(fgTextureGbuffer[i]->getDevObj());
+        auto *tex = static_cast<gfx::Texture *>(fgTextureGbuffer[i]->getDevObj());
         _descriptorSet->bindSampler(static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_ALBEDOMAP) + i, sampler);
         _descriptorSet->bindTexture(static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_ALBEDOMAP) + i, tex);
     }
@@ -170,17 +170,17 @@ void DeferredPipeline::initFrameGraphExternalTexture() {
 
 void DeferredPipeline::destroyFrameGraphExternalTexture() {
     // gbuffer descriptorset setup
-    for (uint i = 0; i < gbufferCount; ++i) {
+    for (auto *node : fgTextureGbuffer) {
         // bind global descriptor
-        if (fgTextureGbuffer[i]) {
-            gfx::Texture *tex = (gfx::Texture *)(fgTextureGbuffer[i]->getDevObj());
+        if (node) {
+            auto *tex = static_cast<gfx::Texture *>(node->getDevObj());
             CC_SAFE_DELETE(tex);
-            CC_SAFE_DELETE(fgTextureGbuffer[i]);
+            CC_SAFE_DELETE(node);
         }
     }
 
     if (fgTextureDepth) {
-        gfx::Texture *depthTex = (gfx::Texture *)(fgTextureDepth->getDevObj());
+        auto *depthTex = static_cast<gfx::Texture *>(fgTextureDepth->getDevObj());
         CC_SAFE_DELETE(depthTex);
         CC_SAFE_DELETE(fgTextureDepth);
     }
@@ -389,8 +389,8 @@ void DeferredPipeline::destroy() {
     destroyQuadInputAssembler();
     destroyDeferredData();
 
-    for (int i = 0; i < 4; ++i) {
-        CC_SAFE_DELETE(fgTextureGbuffer[i]);
+    for (auto *node : fgTextureGbuffer) {
+        CC_SAFE_DELETE(node);
     }
 
     CC_SAFE_DELETE(fgTextureDepth);

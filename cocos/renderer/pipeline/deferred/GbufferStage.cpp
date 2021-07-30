@@ -43,7 +43,7 @@
 namespace cc {
 namespace pipeline {
 namespace {
-const String StageName = "GbufferStage";
+const String STAGE_NAME = "GbufferStage";
 
 void srgbToLinear(gfx::Color *out, const gfx::Color &gamma) {
     out->x = gamma.x * gamma.x;
@@ -59,7 +59,7 @@ void linearToSrgb(gfx::Color *out, const gfx::Color &linear) {
 } // namespace
 
 RenderStageInfo GbufferStage::initInfo = {
-    StageName,
+    STAGE_NAME,
     static_cast<uint>(DeferredStagePriority::GBUFFER),
     static_cast<uint>(RenderFlowTag::SCENE),
     {{false, RenderQueueSortMode::FRONT_TO_BACK, {"default"}},
@@ -162,7 +162,7 @@ void GbufferStage::recordCommands(DeferredPipeline *pipeline, gfx::RenderPass *r
 }
 
 void GbufferStage::render(scene::Camera *camera) {
-    struct renderData {
+    struct RenderData {
         framegraph::TextureHandle gbuffer[4];
         framegraph::TextureHandle depth;
     };
@@ -173,7 +173,7 @@ void GbufferStage::render(scene::Camera *camera) {
     // render area is not oriented, copy buffer must be called outsize of renderpass, it shouldnot be called in execute lambda expression
     pipeline->updateQuadVertexData(_renderArea);
 
-    auto gbufferSetup = [&](framegraph::PassNodeBuilder &builder, renderData &data) {
+    auto gbufferSetup = [&](framegraph::PassNodeBuilder &builder, RenderData &data) {
         // gbuffer setup
         gfx::Color clearColor = {0.0, 0.0, 0.0, 0.0};
 
@@ -203,17 +203,18 @@ void GbufferStage::render(scene::Camera *camera) {
         builder.setViewport(viewport, _renderArea);
     };
 
-    auto gbufferExec = [&] (renderData const &data, const framegraph::DevicePassResourceTable &table) {
-        DeferredPipeline *pipeline = static_cast<DeferredPipeline *>(RenderPipeline::getInstance());
+    auto gbufferExec = [&] (RenderData const &data, const framegraph::DevicePassResourceTable &table) {
+        CC_UNUSED_PARAM(data);
+        auto *pipeline = static_cast<DeferredPipeline *>(RenderPipeline::getInstance());
         assert(pipeline != nullptr);
-        GbufferStage *stage = static_cast<GbufferStage *>(pipeline->getRenderstageByName(StageName));
+        auto *stage = static_cast<GbufferStage *>(pipeline->getRenderstageByName(STAGE_NAME));
         assert(stage != nullptr);
         gfx::RenderPass *renderPass = table.getRenderPass().get();
         assert(renderPass != nullptr);
         stage->recordCommands(pipeline, renderPass);
     };
 
-    pipeline->getFrameGraph().addPass<renderData>(static_cast<uint>(DeferredInsertPoint::IP_GBUFFER), DeferredPipeline::fgStrHandleGbufferPass, gbufferSetup, gbufferExec);
+    pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(DeferredInsertPoint::IP_GBUFFER), DeferredPipeline::fgStrHandleGbufferPass, gbufferSetup, gbufferExec);
 }
 } // namespace pipeline
 } // namespace cc

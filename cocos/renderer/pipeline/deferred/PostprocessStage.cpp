@@ -40,11 +40,11 @@
 namespace cc {
 namespace pipeline {
 namespace {
-const String StageName = "PostprocessStage";
+const String STAGE_NAME = "PostprocessStage";
 }
 
 RenderStageInfo PostprocessStage::initInfo = {
-    StageName,
+    STAGE_NAME,
     static_cast<uint>(DeferredStagePriority::POSTPROCESS),
     0,
     {{true, RenderQueueSortMode::BACK_TO_FRONT, {"default"}}},
@@ -89,8 +89,8 @@ void PostprocessStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
         _renderQueues.emplace_back(CC_NEW(RenderQueue(std::move(info))));
     }
 
-    gfx::DescriptorSetLayout *_globalSetlayout = _device->createDescriptorSetLayout({globalDescriptorSetLayout.bindings});
-    _globalSet = _device->createDescriptorSet({ _globalSetlayout });
+    gfx::DescriptorSetLayout *globalSetlayout = _device->createDescriptorSetLayout({globalDescriptorSetLayout.bindings});
+    _globalSet = _device->createDescriptorSet({ globalSetlayout });
 }
 
 void PostprocessStage::destroy() {
@@ -100,13 +100,13 @@ void PostprocessStage::destroy() {
 }
 
 void PostprocessStage::render(scene::Camera *camera) {
-    struct renderData {
+    struct RenderData {
         framegraph::TextureHandle lightingOut;      // read from lighting output
         framegraph::TextureHandle backBuffer;       // write to back buffer
     };
 
     auto *      pipeline      = static_cast<DeferredPipeline *>(_pipeline);
-    auto postSetup = [&] (framegraph::PassNodeBuilder &builder, renderData &data) {
+    auto postSetup = [&] (framegraph::PassNodeBuilder &builder, RenderData &data) {
         data.lightingOut = builder.read(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::fgStrHandleLightingOutTexture)));
         builder.writeToBlackboard(DeferredPipeline::fgStrHandleLightingOutTexture, data.lightingOut);
 
@@ -114,7 +114,7 @@ void PostprocessStage::render(scene::Camera *camera) {
         framegraph::RenderTargetAttachment::Descriptor colorAttachmentInfo;
         colorAttachmentInfo.usage       = framegraph::RenderTargetAttachment::Usage::COLOR;
 
-        gfx::ClearFlagBit clearFlags = static_cast<gfx::ClearFlagBit>(camera->clearFlag);
+        auto clearFlags = static_cast<gfx::ClearFlagBit>(camera->clearFlag);
         if (!hasFlag(clearFlags, gfx::ClearFlagBit::COLOR)) {
             if (hasFlag(clearFlags, static_cast<gfx::ClearFlagBit>(skyboxFlag))) {
                 colorAttachmentInfo.loadOp = gfx::LoadOp::DISCARD;
@@ -134,16 +134,16 @@ void PostprocessStage::render(scene::Camera *camera) {
         builder.setViewport(viewport, renderArea);
     };
 
-    auto postExec = [&] (renderData const &data, const framegraph::DevicePassResourceTable &table) {
-        DeferredPipeline *pipeline = static_cast<DeferredPipeline *>(RenderPipeline::getInstance());
+    auto postExec = [&] (RenderData const &data, const framegraph::DevicePassResourceTable &table) {
+        auto *pipeline = static_cast<DeferredPipeline *>(RenderPipeline::getInstance());
         assert(pipeline != nullptr);
-        PostprocessStage *stage = (PostprocessStage *)pipeline->getRenderstageByName(StageName);
+        auto *stage = static_cast<PostprocessStage *>(pipeline->getRenderstageByName(STAGE_NAME));
         assert(stage != nullptr);
         gfx::RenderPass *renderPass = table.getRenderPass().get();
         assert(renderPass != nullptr);
 
         // bind descriptor
-        gfx::Texture *lightingOut    = (gfx::Texture *)(table.getRead(data.lightingOut));
+        auto *lightingOut    = static_cast<gfx::Texture *>(table.getRead(data.lightingOut));
 
         gfx::SamplerInfo info{
             gfx::Filter::LINEAR,
@@ -183,7 +183,7 @@ void PostprocessStage::render(scene::Camera *camera) {
         stage->getUIPhase()->render(pipeline->getFrameGraphCamera(), renderPass);
     };
 
-    pipeline->getFrameGraph().addPass<renderData>(static_cast<uint>(DeferredInsertPoint::IP_POSTPROCESS), DeferredPipeline::fgStrHandlePostprocessPass, postSetup, postExec);
+    pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(DeferredInsertPoint::IP_POSTPROCESS), DeferredPipeline::fgStrHandlePostprocessPass, postSetup, postExec);
     pipeline->getFrameGraph().presentFromBlackboard(DeferredPipeline::fgStrHandleBackBufferTexture);
 }
 } // namespace pipeline
