@@ -126,6 +126,10 @@ public:
 
     // external resources of framegraph
     static const uint GBUFFER_COUNT = 4;
+
+    // In deferred pipeline, all passes use the same global descriptorset.
+    // In vulkan spec, a descriptorset cannot update after first use, so we should bind all bindings before any pass executing
+    // So gbuffer should create gfx texture and binding to global descriptorset in DeferredPipeline::activeRenderer
     framegraph::Texture *fgTextureGbuffer[GBUFFER_COUNT] = {nullptr};
     framegraph::Texture *fgTextureDepth = nullptr;
     framegraph::Texture *fgTextureBackBuffer = nullptr;
