@@ -22,10 +22,9 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 ****************************************************************************/
+#pragma once
 
-#ifndef CC_GFXGLES3_DESCRIPTOR_SET_LAYOUT_H_
-#define CC_GFXGLES3_DESCRIPTOR_SET_LAYOUT_H_
-
+#include "GLES3Std.h"
 #include "gfx-base/GFXDescriptorSetLayout.h"
 
 namespace cc {
@@ -36,7 +35,7 @@ class GLES3GPUDescriptorSetLayout;
 class CC_GLES3_API GLES3DescriptorSetLayout final : public DescriptorSetLayout {
 public:
     GLES3DescriptorSetLayout();
-    ~GLES3DescriptorSetLayout();
+    ~GLES3DescriptorSetLayout() override;
 
     inline GLES3GPUDescriptorSetLayout *gpuDescriptorSetLayout() const { return _gpuDescriptorSetLayout; }
 
@@ -49,5 +48,3 @@ protected:
 
 } // namespace gfx
 } // namespace cc
-
-#endif // CC_GFXGLES3_DESCRIPTOR_SET_LAYOUT_H_

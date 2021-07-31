@@ -24,6 +24,8 @@
 ****************************************************************************/
 
 #pragma once
+
+#include "GLES3Std.h"
 #include "gfx-base/GFXGlobalBarrier.h"
 
 namespace cc {
@@ -31,10 +33,10 @@ namespace gfx {
 
 class GLES3GPUGlobalBarrier;
 
-class CC_DLL GLES3GlobalBarrier : public GlobalBarrier {
+class CC_GLES3_API GLES3GlobalBarrier : public GlobalBarrier {
 public:
     GLES3GlobalBarrier();
-    ~GLES3GlobalBarrier();
+    ~GLES3GlobalBarrier() override;
 
     inline const GLES3GPUGlobalBarrier *gpuBarrier() const { return _gpuBarrier; }
 

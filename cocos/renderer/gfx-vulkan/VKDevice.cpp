@@ -130,11 +130,6 @@ bool CCVKDevice::doInit(const DeviceInfo & /*info*/) {
 
     if (_gpuContext->validationEnabled) {
         requestedLayers.push_back("VK_LAYER_KHRONOS_validation");
-        // GPU-assisted validation
-        requestedFeatures2.features.shaderInt64                    = deviceFeatures.shaderInt64;
-        requestedFeatures2.features.fragmentStoresAndAtomics       = deviceFeatures.fragmentStoresAndAtomics;
-        requestedFeatures2.features.vertexPipelineStoresAndAtomics = deviceFeatures.vertexPipelineStoresAndAtomics;
-        requestedExtensions.push_back(VK_KHR_SHADER_NON_SEMANTIC_INFO_EXTENSION_NAME);
     }
 
     // check extensions

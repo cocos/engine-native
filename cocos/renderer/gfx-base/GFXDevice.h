@@ -132,8 +132,8 @@ protected:
     virtual GlobalBarrier *      createGlobalBarrier()                                             = 0;
     virtual TextureBarrier *     createTextureBarrier()                                            = 0;
 
-    virtual void bindRenderContext(bool bound) {}
-    virtual void bindDeviceContext(bool bound) {}
+    // For context switching between threads
+    virtual void bindContext(bool bound) {}
 
     String             _deviceName;
     String             _renderer;

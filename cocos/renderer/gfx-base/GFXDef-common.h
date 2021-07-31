@@ -408,7 +408,7 @@ enum class MemoryAccessBit : uint32_t {
     READ_WRITE = READ_ONLY | WRITE_ONLY,
 };
 using MemoryAccess = MemoryAccessBit;
-CC_ENUM_CONVERSION_OPERATOR(MemoryAccessBit);
+CC_ENUM_BITWISE_OPERATORS(MemoryAccessBit);
 
 enum class MemoryUsageBit : uint32_t {
     NONE   = 0,
@@ -900,7 +900,6 @@ struct BindingMappingInfo {
 struct SwapchainInfo {
     void *      windowHandle = nullptr; // @ts-overrides { type: 'HTMLCanvasElement' }
     VsyncMode   vsyncMode    = VsyncMode::RELAXED;
-    SampleCount samples      = SampleCount::ONE;
 
     uint32_t width  = 0U;
     uint32_t height = 0U;

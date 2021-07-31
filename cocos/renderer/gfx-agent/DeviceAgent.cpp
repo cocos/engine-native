@@ -149,13 +149,13 @@ void DeviceAgent::setMultithreaded(bool multithreaded) {
 
     if (multithreaded) {
         _mainMessageQueue->setImmediateMode(false);
-        _actor->bindRenderContext(false);
+        _actor->bindContext(false);
         _mainMessageQueue->runConsumerThread();
         ENQUEUE_MESSAGE_1(
             _mainMessageQueue, DeviceMakeCurrentTrue,
             actor, _actor,
             {
-                actor->bindDeviceContext(true);
+                actor->bindContext(true);
                 CC_LOG_INFO("Device thread detached.");
             });
         for (CommandBufferAgent *cmdBuff : _cmdBuffRefs) {
@@ -166,11 +166,11 @@ void DeviceAgent::setMultithreaded(bool multithreaded) {
             _mainMessageQueue, DeviceMakeCurrentFalse,
             actor, _actor,
             {
-                actor->bindDeviceContext(false);
+                actor->bindContext(false);
             });
         _mainMessageQueue->terminateConsumerThread();
         _mainMessageQueue->setImmediateMode(true);
-        _actor->bindRenderContext(true);
+        _actor->bindContext(true);
         for (CommandBufferAgent *cmdBuff : _cmdBuffRefs) {
             cmdBuff->_messageQueue->setImmediateMode(true);
         }

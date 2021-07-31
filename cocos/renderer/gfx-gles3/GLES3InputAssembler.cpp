@@ -68,7 +68,7 @@ void GLES3InputAssembler::doDestroy() {
     }
 }
 
-void GLES3InputAssembler::ExtractCmdDraw(GLES3CmdDraw *cmd) {
+void GLES3InputAssembler::ExtractCmdDraw(GLES3CmdDraw *cmd) const {
     cmd->drawInfo.vertexCount   = _vertexCount;
     cmd->drawInfo.firstVertex   = _firstVertex;
     cmd->drawInfo.indexCount    = _indexCount;

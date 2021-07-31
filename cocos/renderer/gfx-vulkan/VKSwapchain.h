@@ -52,6 +52,8 @@ protected:
     void doResize(uint32_t width, uint32_t height) override;
     void doDestroySurface() override;
     void doCreateSurface(void *windowHandle) override;
+    
+    void createVkSurface();
 
     void destroySwapchain(const CCVKGPUDevice *gpuDevice);
 

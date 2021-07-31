@@ -41,40 +41,13 @@ CCVKSwapchain::~CCVKSwapchain() {
     destroy();
 }
 
-void CCVKSwapchain::doInit(const SwapchainInfo &info) {
+void CCVKSwapchain::doInit(const SwapchainInfo &/*info*/) {
     auto *      gpuDevice  = CCVKDevice::getInstance()->gpuDevice();
     const auto *gpuContext = CCVKDevice::getInstance()->gpuContext();
     _gpuSwapchain          = CC_NEW(CCVKGPUSwapchain);
     gpuDevice->swapchains.insert(_gpuSwapchain);
 
-    ///////////////////// Surface Creation /////////////////////
-
-#if defined(VK_USE_PLATFORM_ANDROID_KHR)
-    VkAndroidSurfaceCreateInfoKHR surfaceCreateInfo{VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR};
-    surfaceCreateInfo.window = reinterpret_cast<ANativeWindow *>(_windowHandle);
-    VK_CHECK(vkCreateAndroidSurfaceKHR(gpuContext->vkInstance, &surfaceCreateInfo, nullptr, &_gpuSwapchain->vkSurface));
-#elif defined(VK_USE_PLATFORM_WIN32_KHR)
-    VkWin32SurfaceCreateInfoKHR surfaceCreateInfo{VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR};
-    surfaceCreateInfo.hinstance = static_cast<HINSTANCE>(GetModuleHandle(0));
-    surfaceCreateInfo.hwnd      = reinterpret_cast<HWND>(_windowHandle);
-    VK_CHECK(vkCreateWin32SurfaceKHR(gpuContext->vkInstance, &surfaceCreateInfo, nullptr, &_gpuSwapchain->vkSurface));
-#elif defined(VK_USE_PLATFORM_METAL_EXT)
-    VkMetalSurfaceCreateInfoEXT surfaceCreateInfo{VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT};
-    surfaceCreateInfo.pLayer = reinterpret_cast<CAMetalLayer *>(_windowHandle);
-    VK_CHECK(vkCreateMetalSurfaceEXT(gpuContext->vkInstance, &surfaceCreateInfo, nullptr, &_gpuSwapchain->vkSurface));
-#elif defined(VK_USE_PLATFORM_WAYLAND_KHR)
-    VkWaylandSurfaceCreateInfoKHR surfaceCreateInfo{VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR};
-    surfaceCreateInfo.display = nullptr; // TODO
-    surfaceCreateInfo.surface = reinterpret_cast<wl_surface *>(_windowHandle);
-    VK_CHECK(vkCreateWaylandSurfaceKHR(gpuContext->vkInstance, &surfaceCreateInfo, nullptr, &_gpuSwapchain->vkSurface));
-#elif defined(VK_USE_PLATFORM_XCB_KHR)
-    VkXcbSurfaceCreateInfoKHR surfaceCreateInfo{VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR};
-    surfaceCreateInfo.connection = nullptr; // TODO
-    surfaceCreateInfo.window     = static_cast<xcb_window_t>(_windowHandle);
-    VK_CHECK(vkCreateXcbSurfaceKHR(gpuContext->vkInstance, &surfaceCreateInfo, nullptr, &_gpuSwapchain->vkSurface));
-#else
-    #pragma error Platform not supported
-#endif
+    createVkSurface();
 
     ///////////////////// Parameter Selection /////////////////////
 
@@ -229,7 +202,6 @@ void CCVKSwapchain::doInit(const SwapchainInfo &info) {
     textureInfo.format    = colorFmt;
     textureInfo.width     = 1;
     textureInfo.height    = 1;
-    textureInfo.samples   = info.samples;
     initTexture(textureInfo, _colorTexture);
 
     textureInfo.format = depthStencilFmt;
@@ -395,7 +367,6 @@ void CCVKSwapchain::destroySwapchain(const CCVKGPUDevice *gpuDevice) {
 }
 
 void CCVKSwapchain::doDestroySurface() {
-#if (CC_PLATFORM == CC_PLATFORM_ANDROID)
     if (!_gpuSwapchain || _gpuSwapchain->vkSurface == VK_NULL_HANDLE) return;
     const auto *gpuDevice  = CCVKDevice::getInstance()->gpuDevice();
     const auto *gpuContext = CCVKDevice::getInstance()->gpuContext();
@@ -406,21 +377,42 @@ void CCVKSwapchain::doDestroySurface() {
 
     vkDestroySurfaceKHR(gpuContext->vkInstance, _gpuSwapchain->vkSurface, nullptr);
     _gpuSwapchain->vkSurface = VK_NULL_HANDLE;
-#endif
 }
 
-void CCVKSwapchain::doCreateSurface(void *windowHandle) {
-#if (CC_PLATFORM == CC_PLATFORM_ANDROID)
-    _windowHandle = windowHandle;
+void CCVKSwapchain::doCreateSurface(void */*windowHandle*/) {
     if (!_gpuSwapchain || _gpuSwapchain->vkSurface != VK_NULL_HANDLE) return;
+    createVkSurface();
+    checkSwapchainStatus();
+}
+
+void CCVKSwapchain::createVkSurface() {
     const auto *gpuContext = CCVKDevice::getInstance()->gpuContext();
 
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
     VkAndroidSurfaceCreateInfoKHR surfaceCreateInfo{VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR};
     surfaceCreateInfo.window = reinterpret_cast<ANativeWindow *>(_windowHandle);
-    VK_CHECK(vkCreateAndroidSurfaceKHR(CCVKDevice::getInstance()->gpuContext()->vkInstance, &surfaceCreateInfo,
-                                       nullptr, &_gpuSwapchain->vkSurface));
-
-    checkSwapchainStatus();
+    VK_CHECK(vkCreateAndroidSurfaceKHR(gpuContext->vkInstance, &surfaceCreateInfo, nullptr, &_gpuSwapchain->vkSurface));
+#elif defined(VK_USE_PLATFORM_WIN32_KHR)
+    VkWin32SurfaceCreateInfoKHR surfaceCreateInfo{VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR};
+    surfaceCreateInfo.hinstance = static_cast<HINSTANCE>(GetModuleHandle(0));
+    surfaceCreateInfo.hwnd      = reinterpret_cast<HWND>(_windowHandle);
+    VK_CHECK(vkCreateWin32SurfaceKHR(gpuContext->vkInstance, &surfaceCreateInfo, nullptr, &_gpuSwapchain->vkSurface));
+#elif defined(VK_USE_PLATFORM_METAL_EXT)
+    VkMetalSurfaceCreateInfoEXT surfaceCreateInfo{VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT};
+    surfaceCreateInfo.pLayer = reinterpret_cast<CAMetalLayer *>(_windowHandle);
+    VK_CHECK(vkCreateMetalSurfaceEXT(gpuContext->vkInstance, &surfaceCreateInfo, nullptr, &_gpuSwapchain->vkSurface));
+#elif defined(VK_USE_PLATFORM_WAYLAND_KHR)
+    VkWaylandSurfaceCreateInfoKHR surfaceCreateInfo{VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR};
+    surfaceCreateInfo.display = nullptr; // TODO
+    surfaceCreateInfo.surface = reinterpret_cast<wl_surface *>(_windowHandle);
+    VK_CHECK(vkCreateWaylandSurfaceKHR(gpuContext->vkInstance, &surfaceCreateInfo, nullptr, &_gpuSwapchain->vkSurface));
+#elif defined(VK_USE_PLATFORM_XCB_KHR)
+    VkXcbSurfaceCreateInfoKHR surfaceCreateInfo{VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR};
+    surfaceCreateInfo.connection = nullptr; // TODO
+    surfaceCreateInfo.window     = static_cast<xcb_window_t>(_windowHandle);
+    VK_CHECK(vkCreateXcbSurfaceKHR(gpuContext->vkInstance, &surfaceCreateInfo, nullptr, &_gpuSwapchain->vkSurface));
+#else
+    #pragma error Platform not supported
 #endif
 }
 

@@ -65,7 +65,6 @@ void SwapchainValidator::doInit(const SwapchainInfo &info) {
     textureInfo.format    = _actor->getColorTexture()->getFormat();
     textureInfo.width     = info.width;
     textureInfo.height    = info.height;
-    textureInfo.samples   = info.samples;
     initTexture(textureInfo, _colorTexture);
 
     textureInfo.format = _actor->getDepthStencilTexture()->getFormat();

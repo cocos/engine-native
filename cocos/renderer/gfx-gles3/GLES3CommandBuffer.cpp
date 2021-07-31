@@ -27,6 +27,7 @@
 
 #include "GLES3Buffer.h"
 #include "GLES3CommandBuffer.h"
+#include "GLES3Commands.h"
 #include "GLES3DescriptorSet.h"
 #include "GLES3Device.h"
 #include "GLES3Framebuffer.h"

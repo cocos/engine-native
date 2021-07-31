@@ -26,25 +26,28 @@
 #pragma once
 
 #include "GLES3Std.h"
-#include "gfx-base/GFXSampler.h"
+#include "gfx-base/GFXSwapchain.h"
 
 namespace cc {
 namespace gfx {
 
-class GLES3GPUSampler;
+class GLES3GPUSwapchain;
 
-class CC_GLES3_API GLES3Sampler final : public Sampler {
+class CC_GLES3_API GLES3Swapchain final : public Swapchain {
 public:
-    GLES3Sampler();
-    ~GLES3Sampler() override;
+    GLES3Swapchain();
+    ~GLES3Swapchain() override;
 
-    inline GLES3GPUSampler *gpuSampler() const { return _gpuSampler; }
+    inline GLES3GPUSwapchain *gpuSwapchain() const { return _gpuSwapchain; }
 
 protected:
-    void doInit(const SamplerInfo &info) override;
+    void doInit(const SwapchainInfo &info) override;
     void doDestroy() override;
+    void doResize(uint32_t width, uint32_t height) override;
+    void doDestroySurface() override;
+    void doCreateSurface(void *windowHandle) override;
 
-    GLES3GPUSampler *_gpuSampler = nullptr;
+    GLES3GPUSwapchain *_gpuSwapchain{nullptr};
 };
 
 } // namespace gfx

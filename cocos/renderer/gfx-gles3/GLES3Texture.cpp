@@ -27,6 +27,7 @@
 
 #include "GLES3Commands.h"
 #include "GLES3Device.h"
+#include "GLES3Swapchain.h"
 #include "GLES3Texture.h"
 
 namespace cc {
@@ -90,6 +91,25 @@ void GLES3Texture::doResize(uint width, uint height, uint size) {
     if (!_gpuTexture->memoryless) {
         GLES3Device::getInstance()->getMemoryStatus().textureSize += size;
     }
+}
+
+///////////////////////////// Swapchian Specific /////////////////////////////
+
+void GLES3Texture::doInit(const SwapchainTextureInfo& info) {
+    _gpuTexture             = CC_NEW(GLES3GPUTexture);
+    _gpuTexture->type       = _type;
+    _gpuTexture->format     = _format;
+    _gpuTexture->usage      = _usage;
+    _gpuTexture->width      = _width;
+    _gpuTexture->height     = _height;
+    _gpuTexture->depth      = _depth;
+    _gpuTexture->size       = _size;
+    _gpuTexture->arrayLayer = _layerCount;
+    _gpuTexture->mipLevel   = _levelCount;
+    _gpuTexture->samples    = SampleCount::ONE;
+    _gpuTexture->flags      = _flags;
+    _gpuTexture->memoryless = true;
+    _gpuTexture->swapchain  = static_cast<GLES3Swapchain*>(info.swapchain)->gpuSwapchain();
 }
 
 } // namespace gfx

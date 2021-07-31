@@ -35,7 +35,6 @@ struct SwapchainTextureInfo {
     Format      format{Format::UNKNOWN};
     uint32_t    width{0};
     uint32_t    height{0};
-    SampleCount samples{SampleCount::ONE};
 };
 
 constexpr TextureUsage TEXTURE_USAGE_TRANSIENT = static_cast<TextureUsage>(

@@ -96,8 +96,7 @@ protected:
     bool doInit(const DeviceInfo &info) override;
     void doDestroy() override;
 
-    void bindRenderContext(bool bound) override { _actor->bindRenderContext(bound); }
-    void bindDeviceContext(bool bound) override { _actor->bindDeviceContext(bound); }
+    void bindContext(bool bound) override { _actor->bindContext(bound); }
 
     bool _recording{false};
     uint _currentFrame{1U};

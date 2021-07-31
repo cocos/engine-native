@@ -88,24 +88,6 @@ void Texture::initialize(const TextureViewInfo &info) {
     doInit(info);
 }
 
-void Texture::initialize(const SwapchainTextureInfo &info, Texture *out) {
-    out->_type       = TextureType::TEX2D;
-    out->_format     = info.format;
-    out->_baseLayer  = 0;
-    out->_layerCount = 1;
-    out->_baseLevel  = 0;
-    out->_levelCount = 1;
-    out->_usage      = GFX_FORMAT_INFOS[toNumber(out->_format)].hasDepth ? TextureUsageBit::DEPTH_STENCIL_ATTACHMENT : TextureUsageBit::COLOR_ATTACHMENT;
-    out->_width      = info.width;
-    out->_height     = info.height;
-    out->_depth      = 1;
-    out->_samples    = info.samples;
-    out->_flags      = TextureFlagBit::NONE;
-    out->_size       = formatSize(out->_format, out->_width, out->_height, out->_depth);
-
-    out->doInit(info);
-}
-
 void Texture::resize(uint width, uint height) {
     if (_width != width || _height != height) {
         uint size = formatSize(_format, width, height, _depth);
@@ -124,6 +106,26 @@ void Texture::destroy() {
 
     _format = Format::UNKNOWN;
     _width = _height = _depth = _size = 0;
+}
+
+///////////////////////////// Swapchian Specific /////////////////////////////
+
+void Texture::initialize(const SwapchainTextureInfo &info, Texture *out) {
+    out->_type       = TextureType::TEX2D;
+    out->_format     = info.format;
+    out->_baseLayer  = 0;
+    out->_layerCount = 1;
+    out->_baseLevel  = 0;
+    out->_levelCount = 1;
+    out->_usage      = GFX_FORMAT_INFOS[toNumber(out->_format)].hasDepth ? TextureUsageBit::DEPTH_STENCIL_ATTACHMENT : TextureUsageBit::COLOR_ATTACHMENT;
+    out->_width      = info.width;
+    out->_height     = info.height;
+    out->_depth      = 1;
+    out->_samples    = SampleCount::ONE;
+    out->_flags      = TextureFlagBit::NONE;
+    out->_size       = formatSize(out->_format, out->_width, out->_height, out->_depth);
+
+    out->doInit(info);
 }
 
 } // namespace gfx
