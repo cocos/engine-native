@@ -396,7 +396,7 @@ static bool js_spine_TrackEntry_getMixBlend(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        unsigned int result = (unsigned int)cobj->getMixBlend();
+        auto result = static_cast<unsigned int>(cobj->getMixBlend());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_spine_TrackEntry_getMixBlend : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -3246,7 +3246,7 @@ static bool js_spine_BoneData_getTransformMode(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        unsigned int result = (unsigned int)cobj->getTransformMode();
+        auto result = static_cast<unsigned int>(cobj->getTransformMode());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_spine_BoneData_getTransformMode : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -7461,7 +7461,7 @@ static bool js_spine_PathConstraintData_getPositionMode(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        unsigned int result = (unsigned int)cobj->getPositionMode();
+        auto result = static_cast<unsigned int>(cobj->getPositionMode());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_spine_PathConstraintData_getPositionMode : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -7499,7 +7499,7 @@ static bool js_spine_PathConstraintData_getRotateMode(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        unsigned int result = (unsigned int)cobj->getRotateMode();
+        auto result = static_cast<unsigned int>(cobj->getRotateMode());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_spine_PathConstraintData_getRotateMode : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -7537,7 +7537,7 @@ static bool js_spine_PathConstraintData_getSpacingMode(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        unsigned int result = (unsigned int)cobj->getSpacingMode();
+        auto result = static_cast<unsigned int>(cobj->getSpacingMode());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_spine_PathConstraintData_getSpacingMode : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -11527,7 +11527,7 @@ static bool js_spine_SlotData_getBlendMode(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        unsigned int result = (unsigned int)cobj->getBlendMode();
+        auto result = static_cast<unsigned int>(cobj->getBlendMode());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_spine_SlotData_getBlendMode : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());

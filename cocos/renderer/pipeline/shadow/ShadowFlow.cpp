@@ -242,8 +242,7 @@ void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const Light *li
     pipeline->getPipelineSceneData()->setShadowFramebuffer(light, framebuffer);
 }
 
-void ShadowFlow::destroy() {
-    
+void ShadowFlow::destroy() {    
     for (auto rpPair: renderPassHashMap) {
         rpPair.second->destroy();
     }
@@ -251,7 +250,7 @@ void ShadowFlow::destroy() {
     _renderPass = nullptr;
 
     for (auto *texture : _usedTextures) {
-        CC_DELETE(texture);
+        CC_SAFE_DESTROY(texture);
     }
     _usedTextures.clear();
 

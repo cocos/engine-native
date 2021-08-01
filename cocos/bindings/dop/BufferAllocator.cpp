@@ -51,7 +51,7 @@ Object *BufferAllocator::alloc(uint index, uint bytes) {
         oldObj->decRef();
     }
     Object *obj = Object::createArrayBufferObject(nullptr, bytes);
-    obj->incRef();
+
     _buffers[index] = obj;
 
     uint8_t *ret = nullptr;

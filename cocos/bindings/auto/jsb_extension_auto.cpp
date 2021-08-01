@@ -160,7 +160,7 @@ static bool js_extension_EventAssetsManagerEx_getEventCode(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        int result = (int)cobj->getEventCode();
+        auto result = static_cast<int>(cobj->getEventCode());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_extension_EventAssetsManagerEx_getEventCode : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -790,7 +790,7 @@ static bool js_extension_AssetsManagerEx_getState(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        int result = (int)cobj->getState();
+        auto result = static_cast<int>(cobj->getState());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_extension_AssetsManagerEx_getState : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -1032,14 +1032,14 @@ static bool js_extension_AssetsManagerEx_setVerifyCallback(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<std::function<bool (const std::string&, cc::extension::ManifestAsset)>, true> arg0 = {};
+        HolderType<std::function<bool (const std::string, cc::extension::ManifestAsset)>, true> arg0 = {};
         do {
             if (args[0].isObject() && args[0].toObject()->isFunction())
             {
                 se::Value jsThis(s.thisObject());
                 se::Value jsFunc(args[0]);
                 jsThis.toObject()->attachObject(jsFunc.toObject());
-                auto lambda = [=](const std::string& larg0, cc::extension::ManifestAsset larg1) -> bool {
+                auto lambda = [=](const std::string larg0, cc::extension::ManifestAsset larg1) -> bool {
                     se::ScriptEngine::getInstance()->clearException();
                     se::AutoHandleScope hs;
         
@@ -1085,14 +1085,14 @@ static bool js_extension_AssetsManagerEx_setVersionCompareHandle(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 1) {
-        HolderType<std::function<int (const std::string&, const std::string&)>, true> arg0 = {};
+        HolderType<std::function<int (const std::string, const std::string)>, true> arg0 = {};
         do {
             if (args[0].isObject() && args[0].toObject()->isFunction())
             {
                 se::Value jsThis(s.thisObject());
                 se::Value jsFunc(args[0]);
                 jsThis.toObject()->attachObject(jsFunc.toObject());
-                auto lambda = [=](const std::string& larg0, const std::string& larg1) -> int {
+                auto lambda = [=](const std::string larg0, const std::string larg1) -> int {
                     se::ScriptEngine::getInstance()->clearException();
                     se::AutoHandleScope hs;
         
@@ -1183,14 +1183,14 @@ static bool js_extension_AssetsManagerEx_constructor(se::State& s)  // construct
             HolderType<std::string, true> arg1 = {};
             ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
             if (!ok) { ok = true; break; }
-            HolderType<std::function<int (const std::string&, const std::string&)>, true> arg2 = {};
+            HolderType<std::function<int (const std::string, const std::string)>, true> arg2 = {};
             do {
                 if (args[2].isObject() && args[2].toObject()->isFunction())
                 {
                     se::Value jsThis(s.thisObject());
                     se::Value jsFunc(args[2]);
                     jsThis.toObject()->attachObject(jsFunc.toObject());
-                    auto lambda = [=](const std::string& larg0, const std::string& larg1) -> int {
+                    auto lambda = [=](const std::string larg0, const std::string larg1) -> int {
                         se::ScriptEngine::getInstance()->clearException();
                         se::AutoHandleScope hs;
             

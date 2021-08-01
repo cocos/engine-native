@@ -47,7 +47,7 @@ struct AdditiveLightPass {
     const PassView *      pass     = nullptr;
     gfx::Shader *         shader   = nullptr;
     vector<uint>          dynamicOffsets;
-    vector<const Light *> lights;
+    vector<uint>          lights;
 };
 
 class RenderAdditiveLightQueue : public Object {
@@ -57,7 +57,7 @@ public:
 
     void recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer);
     void gatherLightPasses(const Camera *camera, gfx::CommandBuffer *cmdBuffer);
-    void destroy();
+    void destroy() const;
 
 private:
     static bool cullSphereLight(const Light *light, const ModelView *model);
@@ -70,9 +70,8 @@ private:
     void                updateLightDescriptorSet(const Camera *camera, gfx::CommandBuffer *cmdBuffer);
     bool                getLightPassIndex(const ModelView *model, vector<uint> *lightPassIndices) const;
     void                lightCulling(const ModelView *model);
-    gfx::DescriptorSet *getOrCreateDescriptorSet(const Light *light);
 
-    ForwardPipeline *              _pipeline = nullptr;
+    RenderPipeline *               _pipeline = nullptr;
     vector<vector<SubModelView *>> _sortedSubModelsArray;
     vector<vector<uint>>           _sortedPSOCIArray;
     vector<const Light *>          _validLights;
@@ -84,9 +83,7 @@ private:
     RenderBatchedQueue *           _batchedQueue         = nullptr;
     gfx::Buffer *                  _lightBuffer          = nullptr;
     gfx::Buffer *                  _firstLightBufferView = nullptr;
-    gfx::Sampler *                 _sampler              = nullptr;
 
-    std::unordered_map<const Light *, gfx::DescriptorSet *> _descriptorSetMap{};
     std::array<float, UBOShadow::COUNT>                     _shadowUBO{};
 
     uint  _lightBufferStride       = 0;

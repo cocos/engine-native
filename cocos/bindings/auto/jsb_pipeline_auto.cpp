@@ -35,6 +35,7 @@
 #include "renderer/pipeline/RenderFlow.h"
 #include "renderer/pipeline/RenderStage.h"
 #include "renderer/pipeline/Define.h"
+#include "renderer/pipeline/GlobalDescriptorSetManager.h"
 #include "renderer/pipeline/helper/SharedMemory.h"
 #include "renderer/pipeline/InstancedBuffer.h"
 #include "renderer/pipeline/deferred/DeferredPipeline.h"
@@ -326,7 +327,7 @@ static bool js_pipeline_Light_getType(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        int result = (int)cobj->getType();
+        auto result = static_cast<int>(cobj->getType());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_Light_getType : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -940,7 +941,7 @@ static bool js_pipeline_PassView_getBatchingScheme(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        int result = (int)cobj->getBatchingScheme();
+        auto result = static_cast<int>(cobj->getBatchingScheme());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_PassView_getBatchingScheme : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -1016,7 +1017,7 @@ static bool js_pipeline_PassView_getDynamicState(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        int result = (int)cobj->getDynamicState();
+        auto result = static_cast<int>(cobj->getDynamicState());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_PassView_getDynamicState : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -1054,7 +1055,7 @@ static bool js_pipeline_PassView_getPrimitive(se::State& s)
     size_t argc = args.size();
     CC_UNUSED bool ok = true;
     if (argc == 0) {
-        int result = (int)cobj->getPrimitive();
+        auto result = static_cast<int>(cobj->getPrimitive());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_pipeline_PassView_getPrimitive : Error processing arguments");
         SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
@@ -1836,6 +1837,255 @@ bool js_register_pipeline_RenderWindow(se::Object* obj)
     se::ScriptEngine::getInstance()->clearException();
     return true;
 }
+se::Object* __jsb_cc_pipeline_GlobalDSManager_proto = nullptr;
+se::Class* __jsb_cc_pipeline_GlobalDSManager_class = nullptr;
+
+static bool js_pipeline_GlobalDSManager_bindBuffer(se::State& s)
+{
+    cc::pipeline::GlobalDSManager* cobj = SE_THIS_OBJECT<cc::pipeline::GlobalDSManager>(s);
+    SE_PRECONDITION2(cobj, false, "js_pipeline_GlobalDSManager_bindBuffer : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 2) {
+        HolderType<unsigned int, false> arg0 = {};
+        HolderType<cc::gfx::Buffer*, false> arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_pipeline_GlobalDSManager_bindBuffer : Error processing arguments");
+        cobj->bindBuffer(arg0.value(), arg1.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    return false;
+}
+SE_BIND_FUNC(js_pipeline_GlobalDSManager_bindBuffer)
+
+static bool js_pipeline_GlobalDSManager_bindSampler(se::State& s)
+{
+    cc::pipeline::GlobalDSManager* cobj = SE_THIS_OBJECT<cc::pipeline::GlobalDSManager>(s);
+    SE_PRECONDITION2(cobj, false, "js_pipeline_GlobalDSManager_bindSampler : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 2) {
+        HolderType<unsigned int, false> arg0 = {};
+        HolderType<cc::gfx::Sampler*, false> arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_pipeline_GlobalDSManager_bindSampler : Error processing arguments");
+        cobj->bindSampler(arg0.value(), arg1.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    return false;
+}
+SE_BIND_FUNC(js_pipeline_GlobalDSManager_bindSampler)
+
+static bool js_pipeline_GlobalDSManager_bindTexture(se::State& s)
+{
+    cc::pipeline::GlobalDSManager* cobj = SE_THIS_OBJECT<cc::pipeline::GlobalDSManager>(s);
+    SE_PRECONDITION2(cobj, false, "js_pipeline_GlobalDSManager_bindTexture : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 2) {
+        HolderType<unsigned int, false> arg0 = {};
+        HolderType<cc::gfx::Texture*, false> arg1 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_pipeline_GlobalDSManager_bindTexture : Error processing arguments");
+        cobj->bindTexture(arg0.value(), arg1.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    return false;
+}
+SE_BIND_FUNC(js_pipeline_GlobalDSManager_bindTexture)
+
+static bool js_pipeline_GlobalDSManager_getDescriptorSetLayout(se::State& s)
+{
+    cc::pipeline::GlobalDSManager* cobj = SE_THIS_OBJECT<cc::pipeline::GlobalDSManager>(s);
+    SE_PRECONDITION2(cobj, false, "js_pipeline_GlobalDSManager_getDescriptorSetLayout : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::gfx::DescriptorSetLayout* result = cobj->getDescriptorSetLayout();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_pipeline_GlobalDSManager_getDescriptorSetLayout : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_pipeline_GlobalDSManager_getDescriptorSetLayout)
+
+static bool js_pipeline_GlobalDSManager_getDescriptorSetMap(se::State& s)
+{
+    cc::pipeline::GlobalDSManager* cobj = SE_THIS_OBJECT<cc::pipeline::GlobalDSManager>(s);
+    SE_PRECONDITION2(cobj, false, "js_pipeline_GlobalDSManager_getDescriptorSetMap : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        std::unordered_map<unsigned int, cc::gfx::DescriptorSet *> result = cobj->getDescriptorSetMap();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_pipeline_GlobalDSManager_getDescriptorSetMap : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_pipeline_GlobalDSManager_getDescriptorSetMap)
+
+static bool js_pipeline_GlobalDSManager_getGlobalDescriptorSet(se::State& s)
+{
+    cc::pipeline::GlobalDSManager* cobj = SE_THIS_OBJECT<cc::pipeline::GlobalDSManager>(s);
+    SE_PRECONDITION2(cobj, false, "js_pipeline_GlobalDSManager_getGlobalDescriptorSet : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::gfx::DescriptorSet* result = cobj->getGlobalDescriptorSet();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_pipeline_GlobalDSManager_getGlobalDescriptorSet : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_pipeline_GlobalDSManager_getGlobalDescriptorSet)
+
+static bool js_pipeline_GlobalDSManager_getLinearSampler(se::State& s)
+{
+    cc::pipeline::GlobalDSManager* cobj = SE_THIS_OBJECT<cc::pipeline::GlobalDSManager>(s);
+    SE_PRECONDITION2(cobj, false, "js_pipeline_GlobalDSManager_getLinearSampler : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::gfx::Sampler* result = cobj->getLinearSampler();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_pipeline_GlobalDSManager_getLinearSampler : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_pipeline_GlobalDSManager_getLinearSampler)
+
+static bool js_pipeline_GlobalDSManager_getOrCreateDescriptorSet(se::State& s)
+{
+    cc::pipeline::GlobalDSManager* cobj = SE_THIS_OBJECT<cc::pipeline::GlobalDSManager>(s);
+    SE_PRECONDITION2(cobj, false, "js_pipeline_GlobalDSManager_getOrCreateDescriptorSet : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_pipeline_GlobalDSManager_getOrCreateDescriptorSet : Error processing arguments");
+        cc::gfx::DescriptorSet* result = cobj->getOrCreateDescriptorSet(arg0.value());
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_pipeline_GlobalDSManager_getOrCreateDescriptorSet : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_pipeline_GlobalDSManager_getOrCreateDescriptorSet)
+
+static bool js_pipeline_GlobalDSManager_getPointSampler(se::State& s)
+{
+    cc::pipeline::GlobalDSManager* cobj = SE_THIS_OBJECT<cc::pipeline::GlobalDSManager>(s);
+    SE_PRECONDITION2(cobj, false, "js_pipeline_GlobalDSManager_getPointSampler : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::gfx::Sampler* result = cobj->getPointSampler();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_pipeline_GlobalDSManager_getPointSampler : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_pipeline_GlobalDSManager_getPointSampler)
+
+static bool js_pipeline_GlobalDSManager_update(se::State& s)
+{
+    cc::pipeline::GlobalDSManager* cobj = SE_THIS_OBJECT<cc::pipeline::GlobalDSManager>(s);
+    SE_PRECONDITION2(cobj, false, "js_pipeline_GlobalDSManager_update : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->update();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_pipeline_GlobalDSManager_update)
+
+SE_DECLARE_FINALIZE_FUNC(js_cc_pipeline_GlobalDSManager_finalize)
+
+static bool js_pipeline_GlobalDSManager_constructor(se::State& s) // constructor.c
+{
+    cc::pipeline::GlobalDSManager* cobj = JSB_ALLOC(cc::pipeline::GlobalDSManager);
+    s.thisObject()->setPrivateData(cobj);
+    se::NonRefNativePtrCreatedByCtorMap::emplace(cobj);
+    return true;
+}
+SE_BIND_CTOR(js_pipeline_GlobalDSManager_constructor, __jsb_cc_pipeline_GlobalDSManager_class, js_cc_pipeline_GlobalDSManager_finalize)
+
+
+
+
+static bool js_cc_pipeline_GlobalDSManager_finalize(se::State& s)
+{
+    auto iter = se::NonRefNativePtrCreatedByCtorMap::find(SE_THIS_OBJECT<cc::pipeline::GlobalDSManager>(s));
+    if (iter != se::NonRefNativePtrCreatedByCtorMap::end())
+    {
+        se::NonRefNativePtrCreatedByCtorMap::erase(iter);
+        cc::pipeline::GlobalDSManager* cobj = SE_THIS_OBJECT<cc::pipeline::GlobalDSManager>(s);
+        JSB_FREE(cobj);
+    }
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_cc_pipeline_GlobalDSManager_finalize)
+
+bool js_register_pipeline_GlobalDSManager(se::Object* obj)
+{
+    auto cls = se::Class::create("GlobalDSManager", obj, nullptr, _SE(js_pipeline_GlobalDSManager_constructor));
+
+    cls->defineFunction("bindBuffer", _SE(js_pipeline_GlobalDSManager_bindBuffer));
+    cls->defineFunction("bindSampler", _SE(js_pipeline_GlobalDSManager_bindSampler));
+    cls->defineFunction("bindTexture", _SE(js_pipeline_GlobalDSManager_bindTexture));
+    cls->defineFunction("getDescriptorSetLayout", _SE(js_pipeline_GlobalDSManager_getDescriptorSetLayout));
+    cls->defineFunction("getDescriptorSetMap", _SE(js_pipeline_GlobalDSManager_getDescriptorSetMap));
+    cls->defineFunction("getGlobalDescriptorSet", _SE(js_pipeline_GlobalDSManager_getGlobalDescriptorSet));
+    cls->defineFunction("getLinearSampler", _SE(js_pipeline_GlobalDSManager_getLinearSampler));
+    cls->defineFunction("getOrCreateDescriptorSet", _SE(js_pipeline_GlobalDSManager_getOrCreateDescriptorSet));
+    cls->defineFunction("getPointSampler", _SE(js_pipeline_GlobalDSManager_getPointSampler));
+    cls->defineFunction("update", _SE(js_pipeline_GlobalDSManager_update));
+    cls->defineFinalizeFunction(_SE(js_cc_pipeline_GlobalDSManager_finalize));
+    cls->install();
+    JSBClassType::registerClass<cc::pipeline::GlobalDSManager>(cls);
+
+    __jsb_cc_pipeline_GlobalDSManager_proto = cls->getProto();
+    __jsb_cc_pipeline_GlobalDSManager_class = cls;
+
+    se::ScriptEngine::getInstance()->clearException();
+    return true;
+}
 se::Object* __jsb_cc_pipeline_RenderPipelineInfo_proto = nullptr;
 se::Class* __jsb_cc_pipeline_RenderPipelineInfo_class = nullptr;
 
@@ -2120,6 +2370,25 @@ static bool js_pipeline_RenderPipeline_getDevice(se::State& s)
 }
 SE_BIND_FUNC(js_pipeline_RenderPipeline_getDevice)
 
+static bool js_pipeline_RenderPipeline_getGlobalDSManager(se::State& s)
+{
+    cc::pipeline::RenderPipeline* cobj = SE_THIS_OBJECT<cc::pipeline::RenderPipeline>(s);
+    SE_PRECONDITION2(cobj, false, "js_pipeline_RenderPipeline_getGlobalDSManager : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::pipeline::GlobalDSManager* result = cobj->getGlobalDSManager();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_pipeline_RenderPipeline_getGlobalDSManager : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_PROP_GET(js_pipeline_RenderPipeline_getGlobalDSManager)
+
 static bool js_pipeline_RenderPipeline_initialize(se::State& s)
 {
     cc::pipeline::RenderPipeline* cobj = SE_THIS_OBJECT<cc::pipeline::RenderPipeline>(s);
@@ -2246,6 +2515,7 @@ bool js_register_pipeline_RenderPipeline(se::Object* obj)
 {
     auto cls = se::Class::create("RenderPipeline", obj, nullptr, nullptr);
 
+    cls->defineProperty("globalDSManager", _SE(js_pipeline_RenderPipeline_getGlobalDSManager), nullptr);
     cls->defineProperty("descriptorSet", _SE(js_pipeline_RenderPipeline_getDescriptorSet), nullptr);
     cls->defineProperty("descriptorSetLayout", _SE(js_pipeline_RenderPipeline_getDescriptorSetLayout), nullptr);
     cls->defineProperty("constantMacros", _SE(js_pipeline_RenderPipeline_getConstantMacros), nullptr);
@@ -3769,6 +4039,7 @@ bool register_all_pipeline(se::Object* obj)
     js_register_pipeline_PassView(ns);
     js_register_pipeline_ForwardPipeline(ns);
     js_register_pipeline_Light(ns);
+    js_register_pipeline_GlobalDSManager(ns);
     js_register_pipeline_RenderFlowInfo(ns);
     js_register_pipeline_RenderWindow(ns);
     js_register_pipeline_RenderQueueDesc(ns);

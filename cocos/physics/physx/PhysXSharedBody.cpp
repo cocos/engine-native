@@ -86,6 +86,7 @@ PhysXSharedBody *PhysXSharedBody::getSharedBody(const uint handle, PhysXWorld *c
 }
 
 PhysXSharedBody::~PhysXSharedBody() {
+    sharedBodesMap.erase(_mNodeHandle);
     if (_mStaticActor != nullptr) PX_RELEASE(_mStaticActor);
     if (_mDynamicActor != nullptr) PX_RELEASE(_mDynamicActor);
 }
@@ -219,13 +220,14 @@ void PhysXSharedBody::syncScale() {
 }
 
 void PhysXSharedBody::syncSceneToPhysics() {
-    if (getNode().flagsChanged) {
-        if (getNode().flagsChanged & static_cast<uint32_t>(TransformBit::SCALE)) syncScale();
+    uint32_t hasChangedFlags = getNode().getHasChangedFlags();
+    if (hasChangedFlags) {
+        if (hasChangedFlags & static_cast<uint32_t>(TransformBit::SCALE)) syncScale();
         auto wp = getImpl().rigidActor->getGlobalPose();
-        if (getNode().flagsChanged & static_cast<uint32_t>(TransformBit::POSITION)) {
+        if (hasChangedFlags & static_cast<uint32_t>(TransformBit::POSITION)) {
             pxSetVec3Ext(wp.p, getNode().worldPosition);
         }
-        if (getNode().flagsChanged & static_cast<uint32_t>(TransformBit::ROTATION)) {
+        if (hasChangedFlags & static_cast<uint32_t>(TransformBit::ROTATION)) {
             pxSetQuatExt(wp.q, getNode().worldRotation);
         }
 
@@ -238,7 +240,8 @@ void PhysXSharedBody::syncSceneToPhysics() {
 }
 
 void PhysXSharedBody::syncSceneWithCheck() {
-    if (getNode().flagsChanged & static_cast<uint32_t>(TransformBit::SCALE)) syncScale();
+    uint32_t hasChangedFlags = getNode().getHasChangedFlags();
+    if (hasChangedFlags & static_cast<uint32_t>(TransformBit::SCALE)) syncScale();
     auto wp         = getImpl().rigidActor->getGlobalPose();
     bool needUpdate = false;
     if (wp.p != getNode().worldPosition) {
@@ -260,7 +263,7 @@ void PhysXSharedBody::syncPhysicsToScene() {
     const PxTransform &wp = getImpl().rigidActor->getGlobalPose();
     pxSetVec3Ext(getNode().worldPosition, wp.p);
     pxSetQuatExt(getNode().worldRotation, wp.q);
-    getNode().flagsChanged |= static_cast<uint32_t>(TransformBit::POSITION) | static_cast<uint32_t>(TransformBit::ROTATION);
+    getNode().getHasChangedFlags() |= static_cast<uint32_t>(TransformBit::POSITION) | static_cast<uint32_t>(TransformBit::ROTATION);
 }
 
 void PhysXSharedBody::addShape(PhysXShape &shape) {
