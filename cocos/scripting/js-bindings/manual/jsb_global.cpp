@@ -871,9 +871,13 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
                 se::ValueArray seArgs;
                 se::Value dataVal;
                 
+                std::vector< se::Object* > refs;
                 if (loadSucceed)
                 {
-                    se::HandleObject retObj(se::Object::createPlainObject());
+                    se::Object* retObj = se::Object::createPlainObject();
+                    retObj->root();
+                    refs.push_back(retObj);
+                    
                     Data data;
                     data.fastSet(imgInfo->data, imgInfo->length); 
                     Data_to_seval(data, &dataVal);
@@ -888,12 +892,18 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
                     retObj->setProperty("numberOfMipmaps", se::Value(imgInfo->numberOfMipmaps));
                     if (imgInfo->numberOfMipmaps > 0)
                     {
-                        se::HandleObject mipmapArray(se::Object::createArrayObject(imgInfo->numberOfMipmaps));
+                        se::Object* mipmapArray = se::Object::createArrayObject(imgInfo->numberOfMipmaps);
+                        mipmapArray->root();
+                        refs.push_back(mipmapArray);
+                        
                         retObj->setProperty("mipmaps", se::Value(mipmapArray));
                         auto mipmapInfo = img->getMipmaps();
                         for (int i = 0; i < imgInfo->numberOfMipmaps; ++i)
                         {
-                            se::HandleObject info(se::Object::createPlainObject());
+                            se::Object* info = se::Object::createPlainObject();
+                            info->root();
+                            refs.push_back(info);
+                            
                             info->setProperty("offset", se::Value(mipmapInfo[i].offset));
                             info->setProperty("length", se::Value(mipmapInfo[i].len));
                             mipmapArray->setArrayElement(i, se::Value(info));
@@ -914,13 +924,21 @@ bool jsb_global_load_image(const std::string& path, const se::Value& callbackVal
                 }
 
                 if (!errorMsg.empty()) {
-                    se::HandleObject retObj(se::Object::createPlainObject());
+                    se::Object* retObj = se::Object::createPlainObject();
+                    retObj->root();
+                    refs.push_back(retObj);
+                    
                     retObj->setProperty("errorMsg", se::Value(errorMsg));
                     seArgs.push_back(se::Value(retObj));
                 }
 
                 callbackPtr->toObject()->call(seArgs, nullptr);
                 img = nullptr;
+                
+                for (auto obj : refs) {
+                    obj->unroot();
+                    obj->decRef();
+                }
             });
 
         });

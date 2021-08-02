@@ -42,6 +42,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.HashMap;
 import java.util.Map;
 import java.nio.ByteBuffer;
 
@@ -557,7 +558,7 @@ public class Cocos2dxVideoView extends SurfaceView {
                 mRetriever.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
             } else {
                 mMediaPlayer.setDataSource(mVideoUri.toString());
-                mRetriever.setDataSource(mVideoUri.toString());
+                mRetriever.setDataSource(mVideoUri.toString(), new HashMap<String, String>());
             }
             mCurrentState = State.INITIALIZED;
 
