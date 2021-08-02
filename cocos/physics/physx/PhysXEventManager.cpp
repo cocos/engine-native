@@ -80,23 +80,23 @@ void PhysXEventManager::SimulationEventCallback::onContact(const physx::PxContac
             return (pair->shapeA == self || pair->shapeA == other) && (pair->shapeB == self || pair->shapeB == other);
         });
 
-        if (cp.events & physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS) {
-            if (iter != pairs.end()) iter->get()->state = ETouchState::STAY;
+		if (iter == pairs.end()){
+            pairs.push_back(std::shared_ptr<ContactEventPair>(new ContactEventPair{self, other}));
+            iter = pairs.end() - 1;
+		}
+
+        if (cp.events & physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS) {            
+			iter->get()->state = ETouchState::STAY;
         } else if (cp.events & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND) {
-            if (iter == pairs.end()) {
-                pairs.push_back(std::shared_ptr<ContactEventPair>(new ContactEventPair{self, other}));
-                iter = pairs.end() - 1;
-            }
+            iter->get()->state = ETouchState::ENTER;
         } else if (cp.events & physx::PxPairFlag::eNOTIFY_TOUCH_LOST) {
-            if (iter != pairs.end()) iter->get()->state = ETouchState::EXIT;
+            iter->get()->state = ETouchState::EXIT;
         }
 
-        if (iter != pairs.end()) {
-            const physx::PxU8 &contactCount = cp.contactCount;
-            iter->get()->contacts.resize(contactCount);
-            if (contactCount > 0) {
-                cp.extractContacts(reinterpret_cast<physx::PxContactPairPoint *>(&iter->get()->contacts[0]), contactCount);
-            }
+        const physx::PxU8 &contactCount = cp.contactCount;
+        iter->get()->contacts.resize(contactCount);
+        if (contactCount > 0) {
+            cp.extractContacts(reinterpret_cast<physx::PxContactPairPoint *>(&iter->get()->contacts[0]), contactCount);
         }
     }
 }
@@ -114,18 +114,8 @@ void PhysXEventManager::refreshPairs() {
             iter++;
         }
     }
-
-    for (auto iter = getConatctPairs().begin(); iter != getConatctPairs().end();) {
-        const auto &selfIter  = getPxShapeMap().find(reinterpret_cast<uintptr_t>(&(reinterpret_cast<PhysXShape *>(iter->get()->shapeA)->getShape())));
-        const auto &otherIter = getPxShapeMap().find(reinterpret_cast<uintptr_t>(&(reinterpret_cast<PhysXShape *>(iter->get()->shapeB)->getShape())));
-        if (selfIter == getPxShapeMap().end() || otherIter == getPxShapeMap().end()) {
-            iter = getConatctPairs().erase(iter);
-        } else if (iter->get()->state == ETouchState::EXIT) {
-            iter = getConatctPairs().erase(iter);
-        } else {
-            iter++;
-        }
-    }
+    
+	getConatctPairs().clear();
 }
 
 } // namespace physics
