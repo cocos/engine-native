@@ -73,8 +73,10 @@ private:
     void gatherLights(scene::Camera *camera);
     void initLightingBuffer();
     void fgLightingPass(scene::Camera *camera);
+    void fgTransparent(scene::Camera *camera);
     void fgSsprPass(scene::Camera *camera);
-    void recordCommands(DeferredPipeline *pipeline, gfx::RenderPass *renderPass);
+    void recordCommandsLit(DeferredPipeline *pipeline, gfx::RenderPass *renderPass);
+    void recordCommandsTransparent(DeferredPipeline *pipeline, gfx::RenderPass *renderPass);
 
     void putTransparentObj2Queue();
 

@@ -145,11 +145,7 @@ void GbufferStage::dispenseRenderObject2Queues() {
 }
 void GbufferStage::recordCommands(DeferredPipeline *pipeline, gfx::RenderPass *renderPass)
 {
-    dispenseRenderObject2Queues();
     auto *cmdBuff  = pipeline->getCommandBuffers()[0];
-
-    _instancedQueue->uploadBuffers(cmdBuff);
-    _batchedQueue->uploadBuffers(cmdBuff);
 
     // descriptorset bindings
     uint const globalOffsets[] = {pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
@@ -214,7 +210,17 @@ void GbufferStage::render(scene::Camera *camera) {
         stage->recordCommands(pipeline, renderPass);
     };
 
-    pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(DeferredInsertPoint::IP_GBUFFER), DeferredPipeline::fgStrHandleGbufferPass, gbufferSetup, gbufferExec);
+    // Command 'updateBuffer' must be recorded outside render passes, cannot put them in execute lambda
+    dispenseRenderObject2Queues();
+    auto *cmdBuff  = pipeline->getCommandBuffers()[0];
+    _instancedQueue->uploadBuffers(cmdBuff);
+    _batchedQueue->uploadBuffers(cmdBuff);
+
+    // if empty == true, gbuffer and lightig passes will be ignored
+    bool empty = _renderQueues[0]->empty() && _instancedQueue->empty() && _batchedQueue->empty();
+    if (!empty) {
+        pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(DeferredInsertPoint::IP_GBUFFER), DeferredPipeline::fgStrHandleGbufferPass, gbufferSetup, gbufferExec);
+    }
 }
 } // namespace pipeline
 } // namespace cc

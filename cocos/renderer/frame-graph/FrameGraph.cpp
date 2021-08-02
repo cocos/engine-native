@@ -99,6 +99,7 @@ void FrameGraph::presentFromBlackboard(const StringHandle &inputName) {
 }
 
 void FrameGraph::compile() {
+    if (_passNodes.empty()) return;
     sort();
     cull();
     computeResourceLifetime();
@@ -112,6 +113,7 @@ void FrameGraph::compile() {
 }
 
 void FrameGraph::execute() noexcept {
+    if (_passNodes.empty()) return;
     for (auto &pass : _devicePasses) {
         pass->execute();
     }
@@ -170,6 +172,15 @@ void FrameGraph::move(const TextureHandle from, const TextureHandle to, uint8_t 
             }
         }
     }
+}
+
+bool FrameGraph::isPassExist(StringHandle handle) {
+    for (const auto &passNode : _passNodes) {
+        if (passNode->_name == handle) {
+            return true;
+        }
+    }
+    return false;
 }
 
 Handle FrameGraph::create(VirtualResource *const virtualResource) {

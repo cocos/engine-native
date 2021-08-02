@@ -50,6 +50,7 @@ struct CC_DLL DeferredRenderData {
 enum class DeferredInsertPoint {
     IP_GBUFFER = 100,
     IP_LIGHTING = 200,
+    IP_TRANSPARENT = 220,
     IP_SSPR = 300,
     IP_POSTPROCESS = 400,
     IP_INVALID
@@ -121,6 +122,7 @@ public:
     // deferred pass name declear
     static framegraph::StringHandle fgStrHandleGbufferPass;
     static framegraph::StringHandle fgStrHandleLightingPass;
+    static framegraph::StringHandle fgStrHandleTransparentPass;
     static framegraph::StringHandle fgStrHandleSsprPass;
     static framegraph::StringHandle fgStrHandlePostprocessPass;
 
