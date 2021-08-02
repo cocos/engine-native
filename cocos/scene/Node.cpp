@@ -28,25 +28,24 @@
 
 namespace cc {
 namespace scene {
-void Node::updateWorldTransform() {
+se::Object *Node::dirtyNodes{nullptr};
+void        Node::updateWorldTransform() {
     if (!getDirtyFlag()) {
         return;
     }
-    uint32_t            i    = 0;
-    Node *              curr = this;
-    Mat3                mat3;
-    Mat3                m43;
-    Quaternion          quat;
-    std::vector<Node *> arrayA;
+    int        i    = 0;
+    BaseNode * curr = this;
+    Mat3       mat3;
+    Mat3       m43;
+    Quaternion quat;
     while (curr && curr->getDirtyFlag()) {
-        i++;
-        arrayA.push_back(curr);
+        setDirtyNode(i++, reinterpret_cast<Node *>(curr));
         curr = curr->getParent();
     }
     Node *   child{nullptr};
     uint32_t dirtyBits = 0;
     while (i) {
-        child = arrayA[--i];
+        child = getDirtyNode(--i);
         if (!child) {
             continue;
         }
@@ -54,17 +53,16 @@ void Node::updateWorldTransform() {
         auto *childLayout = child->_nodeLayout;
         if (curr) {
             if (dirtyBits & static_cast<uint32_t>(TransformBit::POSITION)) {
-                childLayout->worldPosition.transformMat4(childLayout->localPosition, childLayout->worldMatrix);
+                childLayout->worldPosition.transformMat4(childLayout->localPosition, curr->getWorldMatrix());
                 childLayout->worldMatrix.m[12] = childLayout->worldPosition.x;
                 childLayout->worldMatrix.m[13] = childLayout->worldPosition.y;
                 childLayout->worldMatrix.m[14] = childLayout->worldPosition.z;
             }
             if (dirtyBits & static_cast<uint32_t>(TransformBit::RS)) {
-                auto *currLayout = curr->_nodeLayout;
                 Mat4::fromRTS(childLayout->localRotation, childLayout->localPosition, childLayout->localScale, &childLayout->worldMatrix);
-                Mat4::multiply(currLayout->worldMatrix, childLayout->worldMatrix, &childLayout->worldMatrix);
+                Mat4::multiply(curr->getWorldMatrix(), childLayout->worldMatrix, &childLayout->worldMatrix);
                 if (dirtyBits & static_cast<uint32_t>(TransformBit::ROTATION)) {
-                    Quaternion::multiply(currLayout->worldRotation, childLayout->localRotation, &currLayout->worldRotation);
+                    Quaternion::multiply(curr->getWorldRotation(), childLayout->localRotation, &childLayout->worldRotation);
                 }
                 quat = childLayout->worldRotation;
                 quat.conjugate();
@@ -86,7 +84,7 @@ void Node::updateWorldTransform() {
                 }
                 if (dirtyBits & static_cast<uint32_t>(TransformBit::SCALE)) {
                     childLayout->worldScale.set(childLayout->localScale);
-                    Mat4::fromRTS(childLayout->localRotation, childLayout->localPosition, childLayout->localScale, &childLayout->worldMatrix);
+                    Mat4::fromRTS(childLayout->worldRotation, childLayout->worldPosition, childLayout->worldScale, &childLayout->worldMatrix);
                 }
             }
         }
@@ -100,10 +98,83 @@ void Node::updateWorldRTMatrix() {
     Mat4::fromRT(_nodeLayout->worldRotation, _nodeLayout->worldPosition, &_rtMat);
 }
 
-void Node::initWithData(uint8_t *data, uint8_t *flagChunk, uint32_t offset) {
+void Node::invalidateChildren(TransformBit dirtyBit) {
+    uint32_t       curDirtyBit{static_cast<uint32_t>(dirtyBit)};
+    const uint32_t childDirtyBit{curDirtyBit | static_cast<uint32_t>(TransformBit::POSITION)};
+    setDirtyNode(0, this);
+    int i{0};
+    while (i >= 0) {
+        BaseNode *      cur             = getDirtyNode(i--);
+        const uint32_t &hasChangedFlags = cur->getFlagsChanged();
+        if ((cur->getDirtyFlag() & hasChangedFlags & curDirtyBit) != curDirtyBit) {
+            cur->setDirtyFlag(cur->getDirtyFlag() | curDirtyBit);
+            cur->setFlagsChanged(hasChangedFlags | curDirtyBit);
+            int childCount{static_cast<int>(cur->getChilds().size())};
+            for (BaseNode *curChild : cur->getChilds()) {
+                setDirtyNode(++i, reinterpret_cast<Node *>(curChild));
+            }
+        }
+        curDirtyBit = childDirtyBit;
+    }
+}
+
+void Node::setWorldPosition(float x, float y, float z) {
+    _nodeLayout->worldPosition.set(x, y, z);
+    if (_parent) {
+        _parent->updateWorldTransform();
+        Mat4 invertWMat{_parent->getWorldMatrix()};
+        invertWMat.inverse();
+        _nodeLayout->localPosition.transformMat4(_nodeLayout->worldPosition, invertWMat);
+    } else {
+        _nodeLayout->localPosition.set(_nodeLayout->worldPosition);
+    }
+    invalidateChildren(TransformBit::POSITION);
+}
+
+void Node::setWorldRotation(float x, float y, float z, float w) {
+    _nodeLayout->worldRotation.set(x, y, z, w);
+    if (_parent) {
+        _parent->updateWorldTransform();
+        _nodeLayout->localRotation.set(_parent->getWorldRotation().getConjugated());
+        _nodeLayout->localRotation.multiply(_nodeLayout->worldRotation);
+    } else {
+        _nodeLayout->localRotation.set(_nodeLayout->worldRotation);
+    }
+    invalidateChildren(TransformBit::ROTATION);
+}
+
+void Node::setDirtyNode(int idx, Node *node) {
+    se::AutoHandleScope autoHandle;
+    if (dirtyNodes) {
+        se::Value value;
+        nativevalue_to_se(node, value, nullptr);
+        dirtyNodes->setArrayElement(static_cast<uint32_t>(idx), value);
+    }
+}
+
+Node *Node::getDirtyNode(const int idx) {
+    se::AutoHandleScope autoHandle;
+    if (dirtyNodes) {
+        se::Value value;
+        if (dirtyNodes->getArrayElement(static_cast<uint32_t>(idx), &value)) {
+            if (value.isObject()) {
+                return reinterpret_cast<cc::scene::Node *>(value.toObject()->getPrivateData());
+            }
+        }
+    }
+    return nullptr;
+}
+
+void Node::initWithData(uint8_t *data, uint8_t *flagChunk, const se::Value &dirtys) {
     _nodeLayout = reinterpret_cast<NodeLayout *>(data);
-    _flagChunk  = flagChunk;
-    _flagOffest = offset;
+    _flagChunk  = reinterpret_cast<uint32_t *>(flagChunk);
+    if (dirtyNodes == nullptr) {
+        dirtyNodes = dirtys.toObject();
+        dirtyNodes->incRef();
+        se::ScriptEngine::getInstance()->addBeforeCleanupHook([]() {
+            dirtyNodes->decRef();
+        });
+    }
 }
 
 } // namespace scene
