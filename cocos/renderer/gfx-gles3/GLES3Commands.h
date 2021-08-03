@@ -50,18 +50,6 @@ public:
     }
 };
 
-enum class GLES3State {
-    VIEWPORT,
-    SCISSOR,
-    LINE_WIDTH,
-    DEPTH_BIAS,
-    BLEND_CONSTANTS,
-    DEPTH_BOUNDS,
-    STENCIL_WRITE_MASK,
-    STENCIL_COMPARE_MASK,
-    COUNT,
-};
-
 class GLES3CmdBindStates final : public GLESCmd {
 public:
     GLES3GPUPipelineState *         gpuPipelineState  = nullptr;

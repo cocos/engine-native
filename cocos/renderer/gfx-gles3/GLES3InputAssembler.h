@@ -39,8 +39,6 @@ public:
     GLES3InputAssembler();
     ~GLES3InputAssembler() override;
 
-    void ExtractCmdDraw(GLES3CmdDraw *cmd) const;
-
     inline GLES3GPUInputAssembler *gpuInputAssembler() const { return _gpuInputAssembler; }
 
 protected:

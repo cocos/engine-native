@@ -1145,7 +1145,6 @@ void cmdFuncGLES3CreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
 
     for (size_t i = 0; i < gpuShader->gpuStages.size(); ++i) {
         GLES3GPUShaderStage &gpuStage = gpuShader->gpuStages[i];
-        uint                 version  = 300;
 
         switch (gpuStage.type) {
             case ShaderStageFlagBit::VERTEX: {
@@ -1161,7 +1160,6 @@ void cmdFuncGLES3CreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
             case ShaderStageFlagBit::COMPUTE: {
                 glShaderStage  = GL_COMPUTE_SHADER;
                 shaderStageStr = "Compute Shader";
-                version        = 310;
                 break;
             }
             default: {
@@ -1171,6 +1169,7 @@ void cmdFuncGLES3CreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
         }
 
         GL_CHECK(gpuStage.glShader = glCreateShader(glShaderStage));
+        uint        version      = device->constantRegistry()->glMinorVersion ? 310 : 300;
         String      shaderSource = StringUtil::format("#version %u es\n", version) + gpuStage.source;
         const char *source       = shaderSource.c_str();
         GL_CHECK(glShaderSource(gpuStage.glShader, 1, (const GLchar **)&source, nullptr));
@@ -1318,8 +1317,9 @@ void cmdFuncGLES3CreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
                 glBuffer.set     = buffer.set;
                 glBuffer.binding = buffer.binding;
 
-                // no way to specify SSBO bindings in GLES
-                GLenum prop = GL_BUFFER_BINDING;
+                static GLenum prop = GL_BUFFER_BINDING;
+
+                // SSBO bindings should already be specified in shader layout qualifiers
                 GL_CHECK(glGetProgramResourceiv(gpuShader->glProgram, GL_SHADER_STORAGE_BLOCK, i, 1, &prop, 1, nullptr, (GLint *)&glBuffer.glBinding));
                 break;
             }
@@ -1719,8 +1719,8 @@ void cmdFuncGLES3DestroyFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gp
 
 void cmdFuncGLES3CreateGlobalBarrier(const std::vector<AccessType> &prevAccesses, const std::vector<AccessType> &nextAccesses, GLES3GPUGlobalBarrier *barrier) {
     bool hasShaderWrites = false;
-    for (size_t i = 0u; i < prevAccesses.size(); ++i) {
-        switch (prevAccesses[i]) {
+    for (auto prevAccesse : prevAccesses) {
+        switch (prevAccesse) {
             case AccessType::COMPUTE_SHADER_WRITE:
             case AccessType::VERTEX_SHADER_WRITE:
             case AccessType::FRAGMENT_SHADER_WRITE:
@@ -1734,8 +1734,8 @@ void cmdFuncGLES3CreateGlobalBarrier(const std::vector<AccessType> &prevAccesses
     }
 
     if (hasShaderWrites) {
-        for (size_t i = 0u; i < nextAccesses.size(); ++i) {
-            switch (nextAccesses[i]) {
+        for (auto nextAccesse : nextAccesses) {
+            switch (nextAccesse) {
                 case AccessType::INDIRECT_BUFFER:
                     barrier->glBarriers |= GL_COMMAND_BARRIER_BIT;
                     break;

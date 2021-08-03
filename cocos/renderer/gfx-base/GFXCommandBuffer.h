@@ -150,9 +150,7 @@ void CommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, co
 }
 
 void CommandBuffer::draw(InputAssembler *ia) {
-    DrawInfo info;
-    ia->extractDrawInfo(info);
-    draw(info);
+    draw(ia->getDrawInfo());
 }
 
 void CommandBuffer::copyBuffersToTexture(const BufferDataList &buffers, Texture *texture, const BufferTextureCopyList &regions) {

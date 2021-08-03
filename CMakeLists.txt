@@ -578,7 +578,7 @@ elseif(ANDROID)
         ${CWD}/cocos/platform/java/jni/JniImp.cpp
         ${CWD}/cocos/platform/java/jni/JniImp.h
     )
-    
+
     cocos_source_files(MODULE ccfilesystem
         cocos/platform/android/FileUtils-android.cpp
         cocos/platform/android/FileUtils-android.h
@@ -618,7 +618,7 @@ elseif(APPLE)
                      cocos/platform/ios/Reachability.h
                      cocos/platform/ios/Reachability.cpp
     )
-    
+
     cocos_source_files(MODULE ccfilesystem
         cocos/platform/apple/FileUtils-apple.h
         cocos/platform/apple/FileUtils-apple.mm
@@ -967,14 +967,13 @@ if(CC_USE_GLES3)
                      cocos/renderer/gfx-gles3/GLES3CommandBuffer.h
                      cocos/renderer/gfx-gles3/GLES3Commands.cpp
                      cocos/renderer/gfx-gles3/GLES3Commands.h
-                     cocos/renderer/gfx-gles3/GLES3Context.cpp
-                     cocos/renderer/gfx-gles3/GLES3Context.h
                      cocos/renderer/gfx-gles3/GLES3Device.cpp
                      cocos/renderer/gfx-gles3/GLES3Device.h
                      cocos/renderer/gfx-gles3/GLES3Framebuffer.cpp
                      cocos/renderer/gfx-gles3/GLES3Framebuffer.h
                      cocos/renderer/gfx-gles3/GLES3GlobalBarrier.cpp
                      cocos/renderer/gfx-gles3/GLES3GlobalBarrier.h
+                     cocos/renderer/gfx-gles3/GLES3GPUContext.cpp
                      cocos/renderer/gfx-gles3/GLES3GPUObjects.h
                      cocos/renderer/gfx-gles3/GLES3InputAssembler.cpp
                      cocos/renderer/gfx-gles3/GLES3InputAssembler.h
@@ -1621,7 +1620,7 @@ elseif(WIN32)
     )
 endif()
 
-############# module bindings 
+############# module bindings
 if(USE_SE_V8)
     cocos_source_files(MODULE ccbindings
                      cocos/bindings/jswrapper/v8/Base.h
@@ -1870,12 +1869,12 @@ if(USE_MODULES)
     target_link_libraries(ccunzip PUBLIC
         ${ZLIB}
     )
-    target_link_libraries(ccfilesystem PUBLIC 
-        ccunzip 
+    target_link_libraries(ccfilesystem PUBLIC
+        ccunzip
         ccutils
         cclog
     )
-    target_link_libraries(ccbindings PUBLIC 
+    target_link_libraries(ccbindings PUBLIC
         ccfilesystem
         cclog
         ${se_libs_name}

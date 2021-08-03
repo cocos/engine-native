@@ -256,7 +256,7 @@ for (const name of Object.keys(structMap)) {
     output += `    ) {}\n`;
 
     if (!Object.keys(struct.member).some((k) => struct.member[k].readonly)) {
-        output += `\n    public copy (info: ${name}) {\n`;
+        output += `\n    public copy (info: Readonly<${name}>) {\n`;
         for (const key in struct.member) {
             const { decayedType, isArray } = struct.member[key];
             if (isArray) {
