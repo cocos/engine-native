@@ -25,7 +25,7 @@
 
 #include "GLES2GPUObjects.h"
 
-#define FORCE_DISABLE_VALIDATION 0
+#define FORCE_DISABLE_VALIDATION 1
 
 namespace cc {
 namespace gfx {

@@ -31,8 +31,8 @@
 namespace cc {
 namespace gfx {
 
-GLES3GlobalBarrier::GLES3GlobalBarrier()
-: GlobalBarrier() {
+GLES3GlobalBarrier::GLES3GlobalBarrier() {
+    _typedID = generateObjectID<decltype(this)>();
 }
 
 GLES3GlobalBarrier::~GLES3GlobalBarrier() {

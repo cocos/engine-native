@@ -43,18 +43,18 @@ GLES2Texture::~GLES2Texture() {
 
 void GLES2Texture::doInit(const TextureInfo& /*info*/) {
     _gpuTexture             = CC_NEW(GLES2GPUTexture);
-    _gpuTexture->type       = _type;
-    _gpuTexture->format     = _format;
-    _gpuTexture->usage      = _usage;
-    _gpuTexture->width      = _width;
-    _gpuTexture->height     = _height;
-    _gpuTexture->depth      = _depth;
+    _gpuTexture->type       = _info.type;
+    _gpuTexture->format     = _info.format;
+    _gpuTexture->usage      = _info.usage;
+    _gpuTexture->width      = _info.width;
+    _gpuTexture->height     = _info.height;
+    _gpuTexture->depth      = _info.depth;
+    _gpuTexture->arrayLayer = _info.layerCount;
+    _gpuTexture->mipLevel   = _info.levelCount;
+    _gpuTexture->samples    = _info.samples;
+    _gpuTexture->flags      = _info.flags;
     _gpuTexture->size       = _size;
-    _gpuTexture->arrayLayer = _layerCount;
-    _gpuTexture->mipLevel   = _levelCount;
-    _gpuTexture->samples    = _samples;
-    _gpuTexture->flags      = _flags;
-    _gpuTexture->isPowerOf2 = math::IsPowerOfTwo(_width) && math::IsPowerOfTwo(_height);
+    _gpuTexture->isPowerOf2 = math::IsPowerOfTwo(_info.width) && math::IsPowerOfTwo(_info.height);
 
     cmdFuncGLES2CreateTexture(GLES2Device::getInstance(), _gpuTexture);
 
@@ -94,21 +94,21 @@ void GLES2Texture::doResize(uint width, uint height, uint size) {
 
 ///////////////////////////// Swapchain Specific /////////////////////////////
 
-void GLES2Texture::doInit(const SwapchainTextureInfo& info) {
+void GLES2Texture::doInit(const SwapchainTextureInfo& /*info*/) {
     _gpuTexture             = CC_NEW(GLES2GPUTexture);
-    _gpuTexture->type       = _type;
-    _gpuTexture->format     = _format;
-    _gpuTexture->usage      = _usage;
-    _gpuTexture->width      = _width;
-    _gpuTexture->height     = _height;
-    _gpuTexture->depth      = _depth;
+    _gpuTexture->type       = _info.type;
+    _gpuTexture->format     = _info.format;
+    _gpuTexture->usage      = _info.usage;
+    _gpuTexture->width      = _info.width;
+    _gpuTexture->height     = _info.height;
+    _gpuTexture->depth      = _info.depth;
+    _gpuTexture->arrayLayer = _info.layerCount;
+    _gpuTexture->mipLevel   = _info.levelCount;
+    _gpuTexture->samples    = _info.samples;
+    _gpuTexture->flags      = _info.flags;
     _gpuTexture->size       = _size;
-    _gpuTexture->arrayLayer = _layerCount;
-    _gpuTexture->mipLevel   = _levelCount;
-    _gpuTexture->samples    = SampleCount::ONE;
-    _gpuTexture->flags      = _flags;
     _gpuTexture->memoryless = true;
-    _gpuTexture->swapchain  = static_cast<GLES2Swapchain*>(info.swapchain)->gpuSwapchain();
+    _gpuTexture->swapchain  = static_cast<GLES2Swapchain*>(_swapchain)->gpuSwapchain();
 }
 
 } // namespace gfx

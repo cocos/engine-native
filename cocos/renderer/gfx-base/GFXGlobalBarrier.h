@@ -37,7 +37,7 @@ public:
 
     static uint computeHash(const GlobalBarrierInfo &info);
 
-    inline const GlobalBarrierInfo &info() const { return _info; }
+    inline const GlobalBarrierInfo &getInfo() const { return _info; }
 
 protected:
     friend class Device;
@@ -45,7 +45,8 @@ protected:
     virtual void doInit(const GlobalBarrierInfo &info) {}
 
     void initialize(const GlobalBarrierInfo &info) {
-        _info = info; doInit(info);
+        _info = info;
+        doInit(info);
     }
 
     GlobalBarrierInfo _info;

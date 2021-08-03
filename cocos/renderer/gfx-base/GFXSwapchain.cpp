@@ -52,11 +52,11 @@ void Swapchain::destroy() {
 }
 
 void Swapchain::resize(uint32_t width, uint32_t height) {
-    if (width != _colorTexture->_width || height != _colorTexture->_height) {
+    if (width != _colorTexture->_info.width || height != _colorTexture->_info.height) {
         doResize(width, height);
 
-        _colorTexture->_width = _depthStencilTexture->_width = width;
-        _colorTexture->_height = _depthStencilTexture->_height = height;
+        _colorTexture->_info.width = _depthStencilTexture->_info.width = width;
+        _colorTexture->_info.height = _depthStencilTexture->_info.height = height;
     }
 }
 

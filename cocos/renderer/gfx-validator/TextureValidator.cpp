@@ -51,7 +51,7 @@ TextureValidator::~TextureValidator() {
 }
 
 void TextureValidator::doInit(const TextureInfo &info) {
-    CCASSERT(!featureCheckMap.count(_format) || DeviceValidator::getInstance()->hasFeature(featureCheckMap[_format]), "unsupported format");
+    CCASSERT(!featureCheckMap.count(_info.format) || DeviceValidator::getInstance()->hasFeature(featureCheckMap[_info.format]), "unsupported format");
 
     // Potentially inefficient
     static const TextureUsageBit INEFFICIENT_MASK{TextureUsageBit::INPUT_ATTACHMENT | TextureUsageBit::SAMPLED};
@@ -76,7 +76,7 @@ void TextureValidator::doDestroy() {
 }
 
 void TextureValidator::doResize(uint width, uint height, uint /*size*/) {
-    CCASSERT(hasFlag(_flags, TextureFlagBit::RESIZABLE), "Cannot resize immutable textures");
+    CCASSERT(hasFlag(_info.flags, TextureFlagBit::RESIZABLE), "Cannot resize immutable textures");
     CCASSERT(!_isTextureView, "Cannot resize texture views");
 
     _actor->resize(width, height);
