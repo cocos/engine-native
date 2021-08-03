@@ -41,7 +41,7 @@
 #include "scene/Sphere.h"
 #include "scene/SphereLight.h"
 #include "../Define.h"
-#include "frame-graph/BlackBoard.h"
+#include "frame-graph/Blackboard.h"
 #include "frame-graph/Handle.h"
 
 namespace cc {
