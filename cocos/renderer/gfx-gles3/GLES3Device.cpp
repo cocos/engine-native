@@ -33,17 +33,17 @@
 #include "GLES3Device.h"
 #include "GLES3Framebuffer.h"
 #include "GLES3GPUObjects.h"
-#include "GLES3GlobalBarrier.h"
 #include "GLES3InputAssembler.h"
 #include "GLES3PipelineLayout.h"
 #include "GLES3PipelineState.h"
 #include "GLES3PrimaryCommandBuffer.h"
 #include "GLES3Queue.h"
 #include "GLES3RenderPass.h"
-#include "GLES3Sampler.h"
 #include "GLES3Shader.h"
 #include "GLES3Swapchain.h"
 #include "GLES3Texture.h"
+#include "states/GLES3GlobalBarrier.h"
+#include "states/GLES3Sampler.h"
 
 // when capturing GLES commands (RENDERDOC_HOOK_EGL=1, default value)
 // renderdoc doesn't support this extension during replay
@@ -301,10 +301,6 @@ Texture *GLES3Device::createTexture() {
     return CC_NEW(GLES3Texture);
 }
 
-Sampler *GLES3Device::createSampler() {
-    return CC_NEW(GLES3Sampler);
-}
-
 Shader *GLES3Device::createShader() {
     return CC_NEW(GLES3Shader);
 }
@@ -337,12 +333,16 @@ PipelineState *GLES3Device::createPipelineState() {
     return CC_NEW(GLES3PipelineState);
 }
 
-GlobalBarrier *GLES3Device::createGlobalBarrier() {
-    return CC_NEW(GLES3GlobalBarrier);
+Sampler *GLES3Device::createSampler(const SamplerInfo &info) {
+    return CC_NEW(GLES3Sampler(info));
 }
 
-TextureBarrier *GLES3Device::createTextureBarrier() {
-    return CC_NEW(TextureBarrier);
+GlobalBarrier *GLES3Device::createGlobalBarrier(const GlobalBarrierInfo &info) {
+    return CC_NEW(GLES3GlobalBarrier(info));
+}
+
+TextureBarrier *GLES3Device::createTextureBarrier(const TextureBarrierInfo &info) {
+    return CC_NEW(TextureBarrier(info));
 }
 
 void GLES3Device::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) {

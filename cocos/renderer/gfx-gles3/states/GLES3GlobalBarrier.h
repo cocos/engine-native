@@ -23,33 +23,26 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "base/CoreStd.h"
+#pragma once
 
-#include "GFXGlobalBarrier.h"
-#include "GFXObject.h"
+#include "../GLES3Std.h"
+#include "gfx-base/states/GFXGlobalBarrier.h"
 
 namespace cc {
 namespace gfx {
 
-GlobalBarrier::GlobalBarrier()
-: GFXObject(ObjectType::GLOBAL_BARRIER) {
-    _typedID = generateObjectID<decltype(this)>();
-}
+class GLES3GPUGlobalBarrier;
 
-GlobalBarrier::~GlobalBarrier() = default;
+class CC_GLES3_API GLES3GlobalBarrier : public GlobalBarrier {
+public:
+    explicit GLES3GlobalBarrier(const GlobalBarrierInfo &info);
+    ~GLES3GlobalBarrier() override;
 
-uint GlobalBarrier::computeHash(const GlobalBarrierInfo &info) {
-    uint seed = static_cast<uint>(info.prevAccesses.size() + info.nextAccesses.size());
+    inline const GLES3GPUGlobalBarrier *gpuBarrier() const { return _gpuBarrier; }
 
-    for (const AccessType type : info.prevAccesses) {
-        seed ^= static_cast<uint>(type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    }
-    for (const AccessType type : info.nextAccesses) {
-        seed ^= static_cast<uint>(type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    }
-
-    return seed;
-}
+protected:
+    GLES3GPUGlobalBarrier *_gpuBarrier = nullptr;
+};
 
 } // namespace gfx
 } // namespace cc

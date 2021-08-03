@@ -32,7 +32,9 @@
 namespace cc {
 namespace gfx {
 
-CCVKShader::CCVKShader() = default;
+CCVKShader::CCVKShader() {
+    _typedID = generateObjectID<decltype(this)>();
+}
 
 CCVKShader::~CCVKShader() {
     destroy();

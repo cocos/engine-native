@@ -23,30 +23,26 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#ifndef CC_GFXVULKAN_TEXTURE_BARRIER_H_
-#define CC_GFXVULKAN_TEXTURE_BARRIER_H_
+#pragma once
 
-#include "gfx-base/GFXTextureBarrier.h"
+#include "../VKStd.h"
+#include "gfx-base/states/GFXGlobalBarrier.h"
 
 namespace cc {
 namespace gfx {
 
-class CCVKGPUTextureBarrier;
+class CCVKGPUGlobalBarrier;
 
-class CC_DLL CCVKTextureBarrier : public TextureBarrier {
+class CC_VULKAN_API CCVKGlobalBarrier : public GlobalBarrier {
 public:
-    CCVKTextureBarrier();
-    ~CCVKTextureBarrier();
+    explicit CCVKGlobalBarrier(const GlobalBarrierInfo &info);
+    ~CCVKGlobalBarrier() override;
 
-    inline const CCVKGPUTextureBarrier *gpuBarrier() const { return _gpuBarrier; }
+    inline const CCVKGPUGlobalBarrier *gpuBarrier() const { return _gpuBarrier; }
 
 protected:
-    void doInit(const TextureBarrierInfo &info) override;
-
-    CCVKGPUTextureBarrier *_gpuBarrier = nullptr;
+    CCVKGPUGlobalBarrier *_gpuBarrier = nullptr;
 };
 
 } // namespace gfx
 } // namespace cc
-
-#endif // CC_GFXVULKAN_TEXTURE_BARRIER_H_

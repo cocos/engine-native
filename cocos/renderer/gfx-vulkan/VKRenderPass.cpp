@@ -32,7 +32,9 @@
 namespace cc {
 namespace gfx {
 
-CCVKRenderPass::CCVKRenderPass() = default;
+CCVKRenderPass::CCVKRenderPass() {
+    _typedID = generateObjectID<decltype(this)>();
+}
 
 CCVKRenderPass::~CCVKRenderPass() {
     destroy();

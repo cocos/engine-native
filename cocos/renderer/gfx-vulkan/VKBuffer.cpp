@@ -33,7 +33,9 @@
 namespace cc {
 namespace gfx {
 
-CCVKBuffer::CCVKBuffer() = default;
+CCVKBuffer::CCVKBuffer() {
+    _typedID = generateObjectID<decltype(this)>();
+}
 
 CCVKBuffer::~CCVKBuffer() {
     destroy();

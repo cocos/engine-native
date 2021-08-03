@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -23,50 +23,33 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "base/CoreStd.h"
-#include "base/threading/MessageQueue.h"
-
-#include "DescriptorSetLayoutAgent.h"
-#include "DeviceAgent.h"
-#include "SamplerAgent.h"
+#include "../GLES3Commands.h"
+#include "../GLES3Device.h"
+#include "GLES3Sampler.h"
 
 namespace cc {
 namespace gfx {
 
-SamplerAgent::SamplerAgent(Sampler *actor)
-: Agent<Sampler>(actor) {
+GLES3Sampler::GLES3Sampler(const SamplerInfo &info) : Sampler(info) {
     _typedID = generateObjectID<decltype(this)>();
+
+    _gpuSampler            = CC_NEW(GLES3GPUSampler);
+    _gpuSampler->minFilter = _info.minFilter;
+    _gpuSampler->magFilter = _info.magFilter;
+    _gpuSampler->mipFilter = _info.mipFilter;
+    _gpuSampler->addressU  = _info.addressU;
+    _gpuSampler->addressV  = _info.addressV;
+    _gpuSampler->addressW  = _info.addressW;
+
+    cmdFuncGLES3CreateSampler(GLES3Device::getInstance(), _gpuSampler);
 }
 
-SamplerAgent::~SamplerAgent() {
-    ENQUEUE_MESSAGE_1(
-        DeviceAgent::getInstance()->getMessageQueue(),
-        SamplerDestruct,
-        actor, _actor,
-        {
-            CC_SAFE_DELETE(actor);
-        });
-}
-
-void SamplerAgent::doInit(const SamplerInfo &info) {
-    ENQUEUE_MESSAGE_2(
-        DeviceAgent::getInstance()->getMessageQueue(),
-        SamplerInit,
-        actor, getActor(),
-        info, info,
-        {
-            actor->initialize(info);
-        });
-}
-
-void SamplerAgent::doDestroy() {
-    ENQUEUE_MESSAGE_1(
-        DeviceAgent::getInstance()->getMessageQueue(),
-        SamplerDestroy,
-        actor, getActor(),
-        {
-            actor->destroy();
-        });
+GLES3Sampler::~GLES3Sampler() {
+    if (_gpuSampler) {
+        cmdFuncGLES3DestroySampler(GLES3Device::getInstance(), _gpuSampler);
+        CC_DELETE(_gpuSampler);
+        _gpuSampler = nullptr;
+    }
 }
 
 } // namespace gfx

@@ -33,7 +33,9 @@
 namespace cc {
 namespace gfx {
 
-CCVKPipelineLayout::CCVKPipelineLayout() = default;
+CCVKPipelineLayout::CCVKPipelineLayout() {
+    _typedID = generateObjectID<decltype(this)>();
+}
 
 CCVKPipelineLayout::~CCVKPipelineLayout() {
     destroy();

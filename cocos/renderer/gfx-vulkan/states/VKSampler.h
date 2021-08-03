@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -25,26 +25,23 @@
 
 #pragma once
 
-#include "GLES3Std.h"
-#include "gfx-base/GFXSampler.h"
+#include "../VKStd.h"
+#include "gfx-base/states/GFXSampler.h"
 
 namespace cc {
 namespace gfx {
 
-class GLES3GPUSampler;
+class CCVKGPUSampler;
 
-class CC_GLES3_API GLES3Sampler final : public Sampler {
+class CC_VULKAN_API CCVKSampler final : public Sampler {
 public:
-    GLES3Sampler();
-    ~GLES3Sampler() override;
+    explicit CCVKSampler(const SamplerInfo &info);
+    ~CCVKSampler() override;
 
-    inline GLES3GPUSampler *gpuSampler() const { return _gpuSampler; }
+    inline CCVKGPUSampler *gpuSampler() const { return _gpuSampler; }
 
 protected:
-    void doInit(const SamplerInfo &info) override;
-    void doDestroy() override;
-
-    GLES3GPUSampler *_gpuSampler = nullptr;
+    CCVKGPUSampler *_gpuSampler = nullptr;
 };
 
 } // namespace gfx

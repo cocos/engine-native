@@ -156,8 +156,6 @@ public:
     Address        addressW      = Address::WRAP;
     uint           maxAnisotropy = 0U;
     ComparisonFunc cmpFunc       = ComparisonFunc::NEVER;
-    Color          borderColor;
-    float          mipLODBias = 0.0F;
 
     // descriptor infos
     VkSampler vkSampler;

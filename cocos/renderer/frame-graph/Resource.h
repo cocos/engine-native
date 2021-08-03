@@ -31,10 +31,8 @@
 #include "renderer/gfx-base/GFXBuffer.h"
 #include "renderer/gfx-base/GFXDevice.h"
 #include "renderer/gfx-base/GFXFramebuffer.h"
-#include "renderer/gfx-base/GFXGlobalBarrier.h"
 #include "renderer/gfx-base/GFXRenderPass.h"
 #include "renderer/gfx-base/GFXTexture.h"
-#include "renderer/gfx-base/GFXTextureBarrier.h"
 
 namespace cc {
 namespace framegraph {
@@ -182,10 +180,8 @@ void Resource<DeviceResourceType, DescriptorType, DeviceResourceCreatorType, Des
 
 DEFINE_GFX_RESOURCE(Buffer)
 DEFINE_GFX_RESOURCE(Framebuffer)
-DEFINE_GFX_RESOURCE(GlobalBarrier)
 DEFINE_GFX_RESOURCE(RenderPass)
 DEFINE_GFX_RESOURCE(Texture)
-DEFINE_GFX_RESOURCE(TextureBarrier)
 
 } // namespace framegraph
 } // namespace cc

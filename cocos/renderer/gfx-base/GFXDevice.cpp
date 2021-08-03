@@ -59,10 +59,22 @@ bool Device::initialize(const DeviceInfo &info) {
 }
 
 void Device::destroy() {
-    doDestroy();
+    for (auto pair : _samplers) {
+        CC_SAFE_DELETE(pair.second);
+    }
+
+    for (auto pair : _globalBarriers) {
+        CC_SAFE_DELETE(pair.second);
+    }
+
+    for (auto pair : _textureBarriers) {
+        CC_SAFE_DELETE(pair.second);
+    }
 
     _bindingMappingInfo.bufferOffsets.clear();
     _bindingMappingInfo.samplerOffsets.clear();
+
+    doDestroy();
 }
 
 } // namespace gfx

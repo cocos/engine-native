@@ -23,23 +23,37 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#pragma once
-
-#include "base/Agent.h"
-#include "gfx-base/GFXSampler.h"
+#include "VKGlobalBarrier.h"
+#include "../VKCommands.h"
 
 namespace cc {
 namespace gfx {
 
-class CC_DLL SamplerAgent final : public Agent<Sampler> {
-public:
-    explicit SamplerAgent(Sampler *actor);
-    ~SamplerAgent() override;
+CCVKGlobalBarrier::CCVKGlobalBarrier(const GlobalBarrierInfo &info) : GlobalBarrier(info) {
+    _typedID = generateObjectID<decltype(this)>();
 
-protected:
-    void doInit(const SamplerInfo &info) override;
-    void doDestroy() override;
-};
+    _gpuBarrier = CC_NEW(CCVKGPUGlobalBarrier);
+    _gpuBarrier->accessTypes.resize(info.prevAccesses.size() + info.nextAccesses.size());
+
+    uint index = 0U;
+    for (AccessType type : info.prevAccesses) {
+        _gpuBarrier->accessTypes[index++] = THSVS_ACCESS_TYPES[static_cast<uint>(type)];
+    }
+    for (AccessType type : info.nextAccesses) {
+        _gpuBarrier->accessTypes[index++] = THSVS_ACCESS_TYPES[static_cast<uint>(type)];
+    }
+
+    _gpuBarrier->barrier.prevAccessCount = info.prevAccesses.size();
+    _gpuBarrier->barrier.pPrevAccesses   = _gpuBarrier->accessTypes.data();
+    _gpuBarrier->barrier.nextAccessCount = info.nextAccesses.size();
+    _gpuBarrier->barrier.pNextAccesses   = _gpuBarrier->accessTypes.data() + info.prevAccesses.size();
+
+    thsvsGetVulkanMemoryBarrier(_gpuBarrier->barrier, &_gpuBarrier->srcStageMask, &_gpuBarrier->dstStageMask, &_gpuBarrier->vkBarrier);
+}
+
+CCVKGlobalBarrier::~CCVKGlobalBarrier() {
+    CC_SAFE_DELETE(_gpuBarrier);
+}
 
 } // namespace gfx
 } // namespace cc

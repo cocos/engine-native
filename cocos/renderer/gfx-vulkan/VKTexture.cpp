@@ -35,7 +35,9 @@
 namespace cc {
 namespace gfx {
 
-CCVKTexture::CCVKTexture() = default;
+CCVKTexture::CCVKTexture() {
+    _typedID = generateObjectID<decltype(this)>();
+}
 
 CCVKTexture::~CCVKTexture() {
     destroy();

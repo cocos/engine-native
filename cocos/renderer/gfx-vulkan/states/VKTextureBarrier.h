@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -23,42 +23,26 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "base/CoreStd.h"
+#pragma once
 
-#include "GFXObject.h"
-#include "GFXSampler.h"
+#include "../VKStd.h"
+#include "gfx-base/states/GFXTextureBarrier.h"
 
 namespace cc {
 namespace gfx {
 
-Sampler::Sampler()
-: GFXObject(ObjectType::SAMPLER) {
-    _borderColor.x = 0.0F;
-    _borderColor.y = 0.0F;
-    _borderColor.z = 0.0F;
-    _borderColor.w = 0.0F;
-}
+class CCVKGPUTextureBarrier;
 
-Sampler::~Sampler() = default;
+class CC_VULKAN_API CCVKTextureBarrier : public TextureBarrier {
+public:
+    explicit CCVKTextureBarrier(const TextureBarrierInfo &info);
+    ~CCVKTextureBarrier() override;
 
-void Sampler::initialize(const SamplerInfo &info) {
-    _minFilter     = info.minFilter;
-    _magFilter     = info.magFilter;
-    _mipFilter     = info.mipFilter;
-    _addressU      = info.addressU;
-    _addressV      = info.addressV;
-    _addressW      = info.addressW;
-    _maxAnisotropy = info.maxAnisotropy;
-    _cmpFunc       = info.cmpFunc;
-    _borderColor   = info.borderColor;
-    _mipLODBias    = info.mipLODBias;
+    inline const CCVKGPUTextureBarrier *gpuBarrier() const { return _gpuBarrier; }
 
-    doInit(info);
-}
-
-void Sampler::destroy() {
-    doDestroy();
-}
+protected:
+    CCVKGPUTextureBarrier *_gpuBarrier = nullptr;
+};
 
 } // namespace gfx
 } // namespace cc

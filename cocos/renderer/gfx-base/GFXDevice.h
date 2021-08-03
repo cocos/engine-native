@@ -31,18 +31,18 @@
 #include "GFXDescriptorSet.h"
 #include "GFXDescriptorSetLayout.h"
 #include "GFXFramebuffer.h"
-#include "GFXGlobalBarrier.h"
 #include "GFXInputAssembler.h"
 #include "GFXObject.h"
 #include "GFXPipelineLayout.h"
 #include "GFXPipelineState.h"
 #include "GFXQueue.h"
 #include "GFXRenderPass.h"
-#include "GFXSampler.h"
 #include "GFXShader.h"
 #include "GFXSwapchain.h"
 #include "GFXTexture.h"
-#include "GFXTextureBarrier.h"
+#include "states/GFXGlobalBarrier.h"
+#include "states/GFXSampler.h"
+#include "states/GFXTextureBarrier.h"
 
 namespace cc {
 namespace gfx {
@@ -73,7 +73,6 @@ public:
     inline Buffer *             createBuffer(const BufferViewInfo &info);
     inline Texture *            createTexture(const TextureInfo &info);
     inline Texture *            createTexture(const TextureViewInfo &info);
-    inline Sampler *            createSampler(const SamplerInfo &info);
     inline Shader *             createShader(const ShaderInfo &info);
     inline InputAssembler *     createInputAssembler(const InputAssemblerInfo &info);
     inline RenderPass *         createRenderPass(const RenderPassInfo &info);
@@ -82,8 +81,10 @@ public:
     inline DescriptorSetLayout *createDescriptorSetLayout(const DescriptorSetLayoutInfo &info);
     inline PipelineLayout *     createPipelineLayout(const PipelineLayoutInfo &info);
     inline PipelineState *      createPipelineState(const PipelineStateInfo &info);
-    inline GlobalBarrier *      createGlobalBarrier(const GlobalBarrierInfo &info);
-    inline TextureBarrier *     createTextureBarrier(const TextureBarrierInfo &info);
+
+    inline Sampler *       getSampler(const SamplerInfo &info);
+    inline GlobalBarrier * getGlobalBarrier(const GlobalBarrierInfo &info);
+    inline TextureBarrier *getTextureBarrier(const TextureBarrierInfo &info);
 
     virtual void copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) = 0;
     virtual void copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint count)        = 0;
@@ -120,7 +121,6 @@ protected:
     virtual Swapchain *          createSwapchain()                                                 = 0;
     virtual Buffer *             createBuffer()                                                    = 0;
     virtual Texture *            createTexture()                                                   = 0;
-    virtual Sampler *            createSampler()                                                   = 0;
     virtual Shader *             createShader()                                                    = 0;
     virtual InputAssembler *     createInputAssembler()                                            = 0;
     virtual RenderPass *         createRenderPass()                                                = 0;
@@ -129,8 +129,10 @@ protected:
     virtual DescriptorSetLayout *createDescriptorSetLayout()                                       = 0;
     virtual PipelineLayout *     createPipelineLayout()                                            = 0;
     virtual PipelineState *      createPipelineState()                                             = 0;
-    virtual GlobalBarrier *      createGlobalBarrier()                                             = 0;
-    virtual TextureBarrier *     createTextureBarrier()                                            = 0;
+
+    virtual Sampler *       createSampler(const SamplerInfo &info)               = 0;
+    virtual GlobalBarrier * createGlobalBarrier(const GlobalBarrierInfo &info)   = 0;
+    virtual TextureBarrier *createTextureBarrier(const TextureBarrierInfo &info) = 0;
 
     // For context switching between threads
     virtual void bindContext(bool bound) {}
@@ -153,6 +155,10 @@ protected:
     uint         _numInstances{0U};
     uint         _numTriangles{0U};
     MemoryStatus _memoryStatus;
+
+    unordered_map<uint, Sampler *>        _samplers;
+    unordered_map<uint, GlobalBarrier *>  _globalBarriers;
+    unordered_map<uint, TextureBarrier *> _textureBarriers;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -195,12 +201,6 @@ Texture *Device::createTexture(const TextureInfo &info) {
 
 Texture *Device::createTexture(const TextureViewInfo &info) {
     Texture *res = createTexture();
-    res->initialize(info);
-    return res;
-}
-
-Sampler *Device::createSampler(const SamplerInfo &info) {
-    Sampler *res = createSampler();
     res->initialize(info);
     return res;
 }
@@ -253,16 +253,28 @@ PipelineState *Device::createPipelineState(const PipelineStateInfo &info) {
     return res;
 }
 
-GlobalBarrier *Device::createGlobalBarrier(const GlobalBarrierInfo &info) {
-    GlobalBarrier *res = createGlobalBarrier();
-    res->initialize(info);
-    return res;
+Sampler *Device::getSampler(const SamplerInfo &info) {
+    uint hash = gfx::Sampler::computeHash(info);
+    if (!_samplers.count(hash)) {
+        _samplers[hash] = createSampler(info);
+    }
+    return _samplers[hash];
 }
 
-TextureBarrier *Device::createTextureBarrier(const TextureBarrierInfo &info) {
-    TextureBarrier *res = createTextureBarrier();
-    res->initialize(info);
-    return res;
+GlobalBarrier *Device::getGlobalBarrier(const GlobalBarrierInfo &info) {
+    uint hash = gfx::GlobalBarrier::computeHash(info);
+    if (!_globalBarriers.count(hash)) {
+        _globalBarriers[hash] = createGlobalBarrier(info);
+    }
+    return _globalBarriers[hash];
+}
+
+TextureBarrier *Device::getTextureBarrier(const TextureBarrierInfo &info) {
+    uint hash = gfx::TextureBarrier::computeHash(info);
+    if (!_textureBarriers.count(hash)) {
+        _textureBarriers[hash] = createTextureBarrier(info);
+    }
+    return _textureBarriers[hash];
 }
 
 void Device::copyBuffersToTexture(const BufferDataList &buffers, Texture *dst, const BufferTextureCopyList &regions) {

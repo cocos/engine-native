@@ -25,30 +25,20 @@
 
 #pragma once
 
-#include "GFXObject.h"
+#include "../GFXObject.h"
 
 namespace cc {
 namespace gfx {
 
 class CC_DLL GlobalBarrier : public GFXObject {
 public:
-    GlobalBarrier();
-    ~GlobalBarrier() override;
+    explicit GlobalBarrier(const GlobalBarrierInfo &info);
 
     static uint computeHash(const GlobalBarrierInfo &info);
 
     inline const GlobalBarrierInfo &getInfo() const { return _info; }
 
 protected:
-    friend class Device;
-
-    virtual void doInit(const GlobalBarrierInfo &info) {}
-
-    void initialize(const GlobalBarrierInfo &info) {
-        _info = info;
-        doInit(info);
-    }
-
     GlobalBarrierInfo _info;
 };
 

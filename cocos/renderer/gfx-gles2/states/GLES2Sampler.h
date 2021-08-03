@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -25,16 +25,24 @@
 
 #pragma once
 
-#include "gfx-base/GFXSampler.h"
+#include "../GLES2Std.h"
+#include "gfx-base/GFXDef-common.h"
+#include "gfx-base/states/GFXSampler.h"
 
 namespace cc {
 namespace gfx {
 
-class CC_DLL EmptySampler final : public Sampler {
+class GLES2GPUSampler;
+
+class CC_GLES2_API GLES2Sampler final : public Sampler {
 public:
+    explicit GLES2Sampler(const SamplerInfo &info);
+    ~GLES2Sampler() override;
+
+    inline GLES2GPUSampler *gpuSampler() const { return _gpuSampler; }
+
 protected:
-    void doInit(const SamplerInfo &info) override;
-    void doDestroy() override;
+    GLES2GPUSampler *_gpuSampler = nullptr;
 };
 
 } // namespace gfx

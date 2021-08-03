@@ -898,8 +898,8 @@ struct BindingMappingInfo {
 };
 
 struct SwapchainInfo {
-    void *      windowHandle = nullptr; // @ts-overrides { type: 'HTMLCanvasElement' }
-    VsyncMode   vsyncMode    = VsyncMode::RELAXED;
+    void *    windowHandle = nullptr; // @ts-overrides { type: 'HTMLCanvasElement' }
+    VsyncMode vsyncMode    = VsyncMode::RELAXED;
 
     uint32_t width  = 0U;
     uint32_t height = 0U;
@@ -982,8 +982,6 @@ struct SamplerInfo {
     Address        addressW      = Address::WRAP;
     uint32_t       maxAnisotropy = 0U;
     ComparisonFunc cmpFunc       = ComparisonFunc::ALWAYS;
-    Color          borderColor;
-    float          mipLODBias = 0.0F;
 };
 
 struct Uniform {

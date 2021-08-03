@@ -23,26 +23,26 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "GLES3Std.h"
+#pragma once
 
-#include "GLES3Commands.h"
-#include "GLES3GlobalBarrier.h"
+#include "../GLES3Std.h"
+#include "gfx-base/states/GFXSampler.h"
 
 namespace cc {
 namespace gfx {
 
-GLES3GlobalBarrier::GLES3GlobalBarrier() {
-    _typedID = generateObjectID<decltype(this)>();
-}
+class GLES3GPUSampler;
 
-GLES3GlobalBarrier::~GLES3GlobalBarrier() {
-    CC_SAFE_DELETE(_gpuBarrier);
-}
+class CC_GLES3_API GLES3Sampler final : public Sampler {
+public:
+    explicit GLES3Sampler(const SamplerInfo &info);
+    ~GLES3Sampler() override;
 
-void GLES3GlobalBarrier::doInit(const GlobalBarrierInfo &info) {
-    _gpuBarrier = CC_NEW(GLES3GPUGlobalBarrier);
-    cmdFuncGLES3CreateGlobalBarrier(info.prevAccesses, info.nextAccesses, _gpuBarrier);
-}
+    inline GLES3GPUSampler *gpuSampler() const { return _gpuSampler; }
+
+protected:
+    GLES3GPUSampler *_gpuSampler = nullptr;
+};
 
 } // namespace gfx
 } // namespace cc

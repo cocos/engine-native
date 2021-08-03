@@ -93,7 +93,6 @@ protected:
     Swapchain *          createSwapchain() override;
     Buffer *             createBuffer() override;
     Texture *            createTexture() override;
-    Sampler *            createSampler() override;
     Shader *             createShader() override;
     InputAssembler *     createInputAssembler() override;
     RenderPass *         createRenderPass() override;
@@ -102,10 +101,13 @@ protected:
     DescriptorSetLayout *createDescriptorSetLayout() override;
     PipelineLayout *     createPipelineLayout() override;
     PipelineState *      createPipelineState() override;
-    GlobalBarrier *      createGlobalBarrier() override;
-    TextureBarrier *     createTextureBarrier() override;
-    void                 copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) override;
-    void                 copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint count) override;
+
+    Sampler *       createSampler(const SamplerInfo &info) override;
+    GlobalBarrier * createGlobalBarrier(const GlobalBarrierInfo &info) override;
+    TextureBarrier *createTextureBarrier(const TextureBarrierInfo &info) override;
+
+    void copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) override;
+    void copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint count) override;
 
     void bindContext(bool bound) override;
 

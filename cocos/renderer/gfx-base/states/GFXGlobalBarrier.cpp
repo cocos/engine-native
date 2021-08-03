@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -23,28 +23,30 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#pragma once
+#include "base/CoreStd.h"
 
-#include "gfx-base/GFXSampler.h"
+#include "GFXGlobalBarrier.h"
 
 namespace cc {
 namespace gfx {
 
-class CCVKGPUSampler;
+GlobalBarrier::GlobalBarrier(const GlobalBarrierInfo &info)
+: GFXObject(ObjectType::GLOBAL_BARRIER) {
+    _info = info;
+}
 
-class CC_VULKAN_API CCVKSampler final : public Sampler {
-public:
-    CCVKSampler();
-    ~CCVKSampler();
+uint GlobalBarrier::computeHash(const GlobalBarrierInfo &info) {
+    uint seed = static_cast<uint>(info.prevAccesses.size() + info.nextAccesses.size());
 
-    inline CCVKGPUSampler *gpuSampler() const { return _gpuSampler; }
+    for (const AccessType type : info.prevAccesses) {
+        seed ^= static_cast<uint>(type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    }
+    for (const AccessType type : info.nextAccesses) {
+        seed ^= static_cast<uint>(type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    }
 
-protected:
-    void doInit(const SamplerInfo &info) override;
-    void doDestroy() override;
-
-    CCVKGPUSampler *_gpuSampler = nullptr;
-};
+    return seed;
+}
 
 } // namespace gfx
 } // namespace cc

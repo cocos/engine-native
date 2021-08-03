@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -23,23 +23,22 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#pragma once
-
-#include "base/Agent.h"
-#include "gfx-base/GFXSampler.h"
+#include "../GLES3Commands.h"
+#include "GLES3GlobalBarrier.h"
 
 namespace cc {
 namespace gfx {
 
-class CC_DLL SamplerValidator final : public Agent<Sampler> {
-public:
-    explicit SamplerValidator(Sampler *actor);
-    ~SamplerValidator() override;
+GLES3GlobalBarrier::GLES3GlobalBarrier(const GlobalBarrierInfo &info) : GlobalBarrier(info) {
+    _typedID = generateObjectID<decltype(this)>();
 
-protected:
-    void doInit(const SamplerInfo &info) override;
-    void doDestroy() override;
-};
+    _gpuBarrier = CC_NEW(GLES3GPUGlobalBarrier);
+    cmdFuncGLES3CreateGlobalBarrier(info.prevAccesses, info.nextAccesses, _gpuBarrier);
+}
+
+GLES3GlobalBarrier::~GLES3GlobalBarrier() {
+    CC_SAFE_DELETE(_gpuBarrier);
+}
 
 } // namespace gfx
 } // namespace cc

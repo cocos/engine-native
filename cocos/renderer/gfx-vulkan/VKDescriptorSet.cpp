@@ -31,14 +31,16 @@
 #include "VKDescriptorSetLayout.h"
 #include "VKDevice.h"
 #include "VKPipelineLayout.h"
-#include "VKSampler.h"
+#include "states/VKSampler.h"
 #include "VKShader.h"
 #include "VKTexture.h"
 
 namespace cc {
 namespace gfx {
 
-CCVKDescriptorSet::CCVKDescriptorSet() = default;
+CCVKDescriptorSet::CCVKDescriptorSet() {
+    _typedID = generateObjectID<decltype(this)>();
+}
 
 CCVKDescriptorSet::~CCVKDescriptorSet() {
     destroy();

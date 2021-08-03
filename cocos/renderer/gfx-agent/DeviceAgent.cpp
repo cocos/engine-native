@@ -37,7 +37,6 @@
 #include "PipelineStateAgent.h"
 #include "QueueAgent.h"
 #include "RenderPassAgent.h"
-#include "SamplerAgent.h"
 #include "ShaderAgent.h"
 #include "SwapchainAgent.h"
 #include "TextureAgent.h"
@@ -203,11 +202,6 @@ Texture *DeviceAgent::createTexture() {
     return CC_NEW(TextureAgent(actor));
 }
 
-Sampler *DeviceAgent::createSampler() {
-    Sampler *actor = _actor->createSampler();
-    return CC_NEW(SamplerAgent(actor));
-}
-
 Shader *DeviceAgent::createShader() {
     Shader *actor = _actor->createShader();
     return CC_NEW(ShaderAgent(actor));
@@ -248,12 +242,16 @@ PipelineState *DeviceAgent::createPipelineState() {
     return CC_NEW(PipelineStateAgent(actor));
 }
 
-GlobalBarrier *DeviceAgent::createGlobalBarrier() {
-    return _actor->createGlobalBarrier();
+Sampler *DeviceAgent::createSampler(const SamplerInfo &info) {
+    return _actor->createSampler(info);
 }
 
-TextureBarrier *DeviceAgent::createTextureBarrier() {
-    return _actor->createTextureBarrier();
+GlobalBarrier *DeviceAgent::createGlobalBarrier(const GlobalBarrierInfo &info) {
+    return _actor->createGlobalBarrier(info);
+}
+
+TextureBarrier *DeviceAgent::createTextureBarrier(const TextureBarrierInfo &info) {
+    return _actor->createTextureBarrier(info);
 }
 
 void DeviceAgent::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) {

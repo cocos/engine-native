@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -24,32 +24,28 @@
 ****************************************************************************/
 
 #include "base/CoreStd.h"
-#include "base/threading/MessageQueue.h"
 
-#include "DescriptorSetLayoutValidator.h"
-#include "DeviceValidator.h"
-#include "SamplerValidator.h"
-#include "ValidationUtils.h"
+#include "GFXSampler.h"
 
 namespace cc {
 namespace gfx {
 
-SamplerValidator::SamplerValidator(Sampler *actor)
-: Agent<Sampler>(actor) {
-    _typedID = generateObjectID<decltype(this)>();
+Sampler::Sampler(const SamplerInfo &info)
+: GFXObject(ObjectType::SAMPLER) {
+    _info = info;
 }
 
-SamplerValidator::~SamplerValidator() {
-    DeviceResourceTracker<Sampler>::erase(this);
-    CC_SAFE_DELETE(_actor);
-}
-
-void SamplerValidator::doInit(const SamplerInfo &info) {
-    _actor->initialize(info);
-}
-
-void SamplerValidator::doDestroy() {
-    _actor->destroy();
+uint Sampler::computeHash(const SamplerInfo &info) {
+    uint seed = 8;
+    seed ^= static_cast<uint>(info.minFilter) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= static_cast<uint>(info.magFilter) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= static_cast<uint>(info.mipFilter) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= static_cast<uint>(info.addressU) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= static_cast<uint>(info.addressV) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= static_cast<uint>(info.addressW) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= static_cast<uint>(info.maxAnisotropy) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= static_cast<uint>(info.cmpFunc) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    return seed;
 }
 
 } // namespace gfx

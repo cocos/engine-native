@@ -31,18 +31,22 @@
 #include "VKDescriptorSet.h"
 #include "VKDevice.h"
 #include "VKFramebuffer.h"
-#include "VKGlobalBarrier.h"
 #include "VKInputAssembler.h"
 #include "VKPipelineState.h"
 #include "VKQueue.h"
 #include "VKRenderPass.h"
 #include "VKTexture.h"
-#include "VKTextureBarrier.h"
 #include "gfx-base/GFXDef-common.h"
+#include "states/VKGlobalBarrier.h"
+#include "states/VKTextureBarrier.h"
 #include "vulkan/vulkan_core.h"
 
 namespace cc {
 namespace gfx {
+
+CCVKCommandBuffer::CCVKCommandBuffer() {
+    _typedID = generateObjectID<decltype(this)>();
+}
 
 CCVKCommandBuffer::~CCVKCommandBuffer() {
     destroy();

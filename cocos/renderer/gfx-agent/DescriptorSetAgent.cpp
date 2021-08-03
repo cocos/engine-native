@@ -30,7 +30,6 @@
 #include "DescriptorSetAgent.h"
 #include "DescriptorSetLayoutAgent.h"
 #include "DeviceAgent.h"
-#include "SamplerAgent.h"
 #include "TextureAgent.h"
 
 namespace cc {
@@ -128,7 +127,7 @@ void DescriptorSetAgent::bindSampler(uint binding, Sampler *sampler, uint index)
         DescriptorSetBindSampler,
         actor, getActor(),
         binding, binding,
-        sampler, static_cast<SamplerAgent *>(sampler)->getActor(),
+        sampler, sampler,
         index, index,
         {
             actor->bindSampler(binding, sampler, index);

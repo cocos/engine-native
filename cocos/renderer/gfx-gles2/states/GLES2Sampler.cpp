@@ -23,37 +23,33 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "base/CoreStd.h"
-
-#include "GFXObject.h"
-#include "GFXQueue.h"
-#include "GFXTextureBarrier.h"
+#include "../GLES2Commands.h"
+#include "../GLES2Device.h"
+#include "GLES2Sampler.h"
 
 namespace cc {
 namespace gfx {
 
-TextureBarrier::TextureBarrier()
-: GFXObject(ObjectType::TEXTURE_BARRIER) {
+GLES2Sampler::GLES2Sampler(const SamplerInfo &info) : Sampler(info) {
     _typedID = generateObjectID<decltype(this)>();
+
+    _gpuSampler            = CC_NEW(GLES2GPUSampler);
+    _gpuSampler->minFilter = _info.minFilter;
+    _gpuSampler->magFilter = _info.magFilter;
+    _gpuSampler->mipFilter = _info.mipFilter;
+    _gpuSampler->addressU  = _info.addressU;
+    _gpuSampler->addressV  = _info.addressV;
+    _gpuSampler->addressW  = _info.addressW;
+
+    cmdFuncGLES2CreateSampler(GLES2Device::getInstance(), _gpuSampler);
 }
 
-TextureBarrier::~TextureBarrier() = default;
-
-uint TextureBarrier::computeHash(const TextureBarrierInfo &info) {
-    uint seed = static_cast<uint>(info.prevAccesses.size() + info.nextAccesses.size() + 3);
-
-    for (const AccessType type : info.prevAccesses) {
-        seed ^= static_cast<uint>(type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+GLES2Sampler::~GLES2Sampler() {
+    if (_gpuSampler) {
+        cmdFuncGLES2DestroySampler(GLES2Device::getInstance(), _gpuSampler);
+        CC_DELETE(_gpuSampler);
+        _gpuSampler = nullptr;
     }
-    for (const AccessType type : info.nextAccesses) {
-        seed ^= static_cast<uint>(type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    }
-
-    seed ^= info.discardContents + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    seed ^= (info.srcQueue ? static_cast<uint>(info.srcQueue->getType()) : 0U) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    seed ^= (info.dstQueue ? static_cast<uint>(info.dstQueue->getType()) : 0U) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-
-    return seed;
 }
 
 } // namespace gfx

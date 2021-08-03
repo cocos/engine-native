@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -23,34 +23,36 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#pragma once
-
-#include "GFXObject.h"
+#include "../VKCommands.h"
+#include "../VKDevice.h"
+#include "VKSampler.h"
 
 namespace cc {
 namespace gfx {
 
-class CC_DLL TextureBarrier : public GFXObject {
-public:
-    TextureBarrier();
-    ~TextureBarrier() override;
+CCVKSampler::CCVKSampler(const SamplerInfo &info) : Sampler(info) {
+    _typedID = generateObjectID<decltype(this)>();
 
-    static uint computeHash(const TextureBarrierInfo &info);
+    _gpuSampler                = CC_NEW(CCVKGPUSampler);
+    _gpuSampler->minFilter     = _info.minFilter;
+    _gpuSampler->magFilter     = _info.magFilter;
+    _gpuSampler->mipFilter     = _info.mipFilter;
+    _gpuSampler->addressU      = _info.addressU;
+    _gpuSampler->addressV      = _info.addressV;
+    _gpuSampler->addressW      = _info.addressW;
+    _gpuSampler->maxAnisotropy = _info.maxAnisotropy;
+    _gpuSampler->cmpFunc       = _info.cmpFunc;
 
-    inline const TextureBarrierInfo &getInfo() const { return _info; }
+    cmdFuncCCVKCreateSampler(CCVKDevice::getInstance(), _gpuSampler);
+}
 
-protected:
-    friend class Device;
-
-    virtual void doInit(const TextureBarrierInfo &info) {}
-
-    void initialize(const TextureBarrierInfo &info) {
-        _info = info;
-        doInit(info);
+CCVKSampler::~CCVKSampler() {
+    if (_gpuSampler) {
+        CCVKDevice::getInstance()->gpuDescriptorHub()->disengage(_gpuSampler);
+        CCVKDevice::getInstance()->gpuRecycleBin()->collect(_gpuSampler);
+        _gpuSampler = nullptr;
     }
-
-    TextureBarrierInfo _info;
-};
+}
 
 } // namespace gfx
 } // namespace cc

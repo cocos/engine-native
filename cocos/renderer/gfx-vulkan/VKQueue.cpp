@@ -34,7 +34,9 @@
 namespace cc {
 namespace gfx {
 
-CCVKQueue::CCVKQueue() = default;
+CCVKQueue::CCVKQueue() {
+    _typedID = generateObjectID<decltype(this)>();
+}
 
 CCVKQueue::~CCVKQueue() {
     destroy();

@@ -37,6 +37,10 @@
 namespace cc {
 namespace gfx {
 
+CCVKSwapchain::CCVKSwapchain() {
+    _typedID = generateObjectID<decltype(this)>();
+}
+
 CCVKSwapchain::~CCVKSwapchain() {
     destroy();
 }

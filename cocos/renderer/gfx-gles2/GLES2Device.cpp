@@ -39,10 +39,10 @@
 #include "GLES2PrimaryCommandBuffer.h"
 #include "GLES2Queue.h"
 #include "GLES2RenderPass.h"
-#include "GLES2Sampler.h"
 #include "GLES2Shader.h"
 #include "GLES2Swapchain.h"
 #include "GLES2Texture.h"
+#include "states/GLES2Sampler.h"
 
 // when capturing GLES commands (RENDERDOC_HOOK_EGL=1, default value)
 // renderdoc doesn't support this extension during replay
@@ -298,10 +298,6 @@ Texture *GLES2Device::createTexture() {
     return CC_NEW(GLES2Texture);
 }
 
-Sampler *GLES2Device::createSampler() {
-    return CC_NEW(GLES2Sampler);
-}
-
 Shader *GLES2Device::createShader() {
     return CC_NEW(GLES2Shader);
 }
@@ -334,12 +330,16 @@ PipelineState *GLES2Device::createPipelineState() {
     return CC_NEW(GLES2PipelineState);
 }
 
-GlobalBarrier *GLES2Device::createGlobalBarrier() {
-    return CC_NEW(GlobalBarrier);
+Sampler *GLES2Device::createSampler(const SamplerInfo &info) {
+    return CC_NEW(GLES2Sampler(info));
 }
 
-TextureBarrier *GLES2Device::createTextureBarrier() {
-    return CC_NEW(TextureBarrier);
+GlobalBarrier *GLES2Device::createGlobalBarrier(const GlobalBarrierInfo &info) {
+    return CC_NEW(GlobalBarrier(info));
+}
+
+TextureBarrier *GLES2Device::createTextureBarrier(const TextureBarrierInfo &info) {
+    return CC_NEW(TextureBarrier(info));
 }
 
 void GLES2Device::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) {

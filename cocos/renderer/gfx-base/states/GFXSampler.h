@@ -25,44 +25,22 @@
 
 #pragma once
 
-#include "GFXObject.h"
+#include "../GFXObject.h"
+#include "gfx-base/GFXDef-common.h"
 
 namespace cc {
 namespace gfx {
 
 class CC_DLL Sampler : public GFXObject {
 public:
-    Sampler();
-    ~Sampler() override;
+    explicit Sampler(const SamplerInfo &info);
 
-    void initialize(const SamplerInfo &info);
-    void destroy();
+    static uint computeHash(const SamplerInfo &info);
 
-    inline Filter         getMinFilter() const { return _minFilter; }
-    inline Filter         getMagFilter() const { return _magFilter; }
-    inline Filter         getMipFilter() const { return _mipFilter; }
-    inline Address        getAddressU() const { return _addressU; }
-    inline Address        getAddressV() const { return _addressV; }
-    inline Address        getAddressW() const { return _addressW; }
-    inline uint           getMaxAnisotropy() const { return _maxAnisotropy; }
-    inline ComparisonFunc getCmpFunc() const { return _cmpFunc; }
-    inline const Color &  getBorderColor() const { return _borderColor; }
-    inline float          getMipLODBias() const { return _mipLODBias; }
+    inline const SamplerInfo &  getInfo() const { return _info; }
 
 protected:
-    virtual void doInit(const SamplerInfo &info) = 0;
-    virtual void doDestroy()                     = 0;
-
-    Filter         _minFilter     = Filter::NONE;
-    Filter         _magFilter     = Filter::NONE;
-    Filter         _mipFilter     = Filter::NONE;
-    Address        _addressU      = Address::WRAP;
-    Address        _addressV      = Address::WRAP;
-    Address        _addressW      = Address::WRAP;
-    uint           _maxAnisotropy = 0;
-    ComparisonFunc _cmpFunc       = ComparisonFunc::ALWAYS;
-    Color          _borderColor;
-    float          _mipLODBias = 0.0F;
+    SamplerInfo _info;
 };
 
 } // namespace gfx

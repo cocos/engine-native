@@ -23,42 +23,35 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#pragma once
+#include "base/CoreStd.h"
 
-#include "GLES2Std.h"
-#include "gfx-base/GFXSampler.h"
+#include "../GFXQueue.h"
+#include "GFXTextureBarrier.h"
 
 namespace cc {
 namespace gfx {
 
-class GLES2GPUSampler;
+TextureBarrier::TextureBarrier(const TextureBarrierInfo &info)
+: GFXObject(ObjectType::TEXTURE_BARRIER) {
+    _info = info;
+}
 
-class CC_GLES2_API GLES2Sampler final : public Sampler {
-public:
-    GLES2Sampler();
-    ~GLES2Sampler() override;
+uint TextureBarrier::computeHash(const TextureBarrierInfo &info) {
+    uint seed = static_cast<uint>(info.prevAccesses.size() + info.nextAccesses.size() + 3);
 
-    inline GLES2GPUSampler *gpuSampler() const { return _gpuSampler; }
+    for (const AccessType type : info.prevAccesses) {
+        seed ^= static_cast<uint>(type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    }
+    for (const AccessType type : info.nextAccesses) {
+        seed ^= static_cast<uint>(type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    }
 
-protected:
-    void doInit(const SamplerInfo &info) override;
-    void doDestroy() override;
+    seed ^= info.discardContents + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= (info.srcQueue ? static_cast<uint>(info.srcQueue->getType()) : 0U) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= (info.dstQueue ? static_cast<uint>(info.dstQueue->getType()) : 0U) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 
-    GLES2GPUSampler *_gpuSampler = nullptr;
-    String           _name;
-    Filter           _minFilter     = Filter::LINEAR;
-    Filter           _magFilter     = Filter::LINEAR;
-    Filter           _mipFilter     = Filter::NONE;
-    Address          _addressU      = Address::WRAP;
-    Address          _addressV      = Address::WRAP;
-    Address          _addressW      = Address::WRAP;
-    uint             _maxAnisotropy = 16;
-    ComparisonFunc   _cmpFunc       = ComparisonFunc::NEVER;
-    Color            _borderColor;
-    uint             _minLOD     = 0;
-    uint             _maxLOD     = 1000;
-    float            _mipLODBias = 0.F;
-};
+    return seed;
+}
 
 } // namespace gfx
 } // namespace cc

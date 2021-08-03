@@ -33,7 +33,9 @@
 namespace cc {
 namespace gfx {
 
-CCVKInputAssembler::CCVKInputAssembler() = default;
+CCVKInputAssembler::CCVKInputAssembler() {
+    _typedID = generateObjectID<decltype(this)>();
+}
 
 CCVKInputAssembler::~CCVKInputAssembler() {
     destroy();

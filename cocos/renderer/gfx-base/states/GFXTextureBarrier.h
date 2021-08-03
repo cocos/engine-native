@@ -25,25 +25,21 @@
 
 #pragma once
 
-#include "GLES3Std.h"
-#include "gfx-base/GFXGlobalBarrier.h"
+#include "../GFXObject.h"
 
 namespace cc {
 namespace gfx {
 
-class GLES3GPUGlobalBarrier;
-
-class CC_GLES3_API GLES3GlobalBarrier : public GlobalBarrier {
+class CC_DLL TextureBarrier : public GFXObject {
 public:
-    GLES3GlobalBarrier();
-    ~GLES3GlobalBarrier() override;
+    explicit TextureBarrier(const TextureBarrierInfo &info);
 
-    inline const GLES3GPUGlobalBarrier *gpuBarrier() const { return _gpuBarrier; }
+    static uint computeHash(const TextureBarrierInfo &info);
+
+    inline const TextureBarrierInfo &getInfo() const { return _info; }
 
 protected:
-    void doInit(const GlobalBarrierInfo &info) override;
-
-    GLES3GPUGlobalBarrier *_gpuBarrier = nullptr;
+    TextureBarrierInfo _info;
 };
 
 } // namespace gfx

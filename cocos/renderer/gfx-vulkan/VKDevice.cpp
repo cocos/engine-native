@@ -31,18 +31,18 @@
 #include "VKDescriptorSetLayout.h"
 #include "VKDevice.h"
 #include "VKFramebuffer.h"
-#include "VKGlobalBarrier.h"
 #include "VKInputAssembler.h"
 #include "VKPipelineLayout.h"
 #include "VKPipelineState.h"
 #include "VKQueue.h"
 #include "VKRenderPass.h"
-#include "VKSampler.h"
 #include "VKShader.h"
 #include "VKSwapchain.h"
 #include "VKTexture.h"
-#include "VKTextureBarrier.h"
 #include "VKUtils.h"
+#include "states/VKGlobalBarrier.h"
+#include "states/VKSampler.h"
+#include "states/VKTextureBarrier.h"
 
 CC_DISABLE_WARNINGS()
 #define VMA_IMPLEMENTATION
@@ -642,10 +642,6 @@ Texture *CCVKDevice::createTexture() {
     return CC_NEW(CCVKTexture);
 }
 
-Sampler *CCVKDevice::createSampler() {
-    return CC_NEW(CCVKSampler);
-}
-
 Shader *CCVKDevice::createShader() {
     return CC_NEW(CCVKShader);
 }
@@ -678,12 +674,16 @@ PipelineState *CCVKDevice::createPipelineState() {
     return CC_NEW(CCVKPipelineState);
 }
 
-GlobalBarrier *CCVKDevice::createGlobalBarrier() {
-    return CC_NEW(CCVKGlobalBarrier);
+Sampler *CCVKDevice::createSampler(const SamplerInfo &info) {
+    return CC_NEW(CCVKSampler(info));
 }
 
-TextureBarrier *CCVKDevice::createTextureBarrier() {
-    return CC_NEW(CCVKTextureBarrier);
+GlobalBarrier *CCVKDevice::createGlobalBarrier(const GlobalBarrierInfo &info) {
+    return CC_NEW(CCVKGlobalBarrier(info));
+}
+
+TextureBarrier *CCVKDevice::createTextureBarrier(const TextureBarrierInfo &info) {
+    return CC_NEW(CCVKTextureBarrier(info));
 }
 
 void CCVKDevice::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) {

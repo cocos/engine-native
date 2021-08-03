@@ -36,7 +36,6 @@
 #include "EmptyPipelineState.h"
 #include "EmptyQueue.h"
 #include "EmptyRenderPass.h"
-#include "EmptySampler.h"
 #include "EmptyShader.h"
 #include "EmptySwapchain.h"
 #include "EmptyTexture.h"
@@ -105,10 +104,6 @@ Texture *EmptyDevice::createTexture() {
     return CC_NEW(EmptyTexture());
 }
 
-Sampler *EmptyDevice::createSampler() {
-    return CC_NEW(EmptySampler());
-}
-
 Shader *EmptyDevice::createShader() {
     return CC_NEW(EmptyShader());
 }
@@ -141,12 +136,16 @@ PipelineState *EmptyDevice::createPipelineState() {
     return CC_NEW(EmptyPipelineState());
 }
 
-GlobalBarrier *EmptyDevice::createGlobalBarrier() {
-    return CC_NEW(GlobalBarrier());
+Sampler *EmptyDevice::createSampler(const SamplerInfo &info) {
+    return CC_NEW(Sampler(info));
 }
 
-TextureBarrier *EmptyDevice::createTextureBarrier() {
-    return CC_NEW(TextureBarrier());
+GlobalBarrier *EmptyDevice::createGlobalBarrier(const GlobalBarrierInfo &info) {
+    return CC_NEW(GlobalBarrier(info));
+}
+
+TextureBarrier *EmptyDevice::createTextureBarrier(const TextureBarrierInfo &info) {
+    return CC_NEW(TextureBarrier(info));
 }
 
 void EmptyDevice::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) {

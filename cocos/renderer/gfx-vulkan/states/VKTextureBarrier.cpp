@@ -23,22 +23,17 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "VKStd.h"
-
-#include "VKCommands.h"
-#include "VKGlobalBarrier.h"
+#include "../VKGPUObjects.h"
+#include "../VKQueue.h"
+#include "VKTextureBarrier.h"
 
 namespace cc {
 namespace gfx {
 
-CCVKGlobalBarrier::CCVKGlobalBarrier() = default;
+CCVKTextureBarrier::CCVKTextureBarrier(const TextureBarrierInfo &info) : TextureBarrier(info) {
+    _typedID = generateObjectID<decltype(this)>();
 
-CCVKGlobalBarrier::~CCVKGlobalBarrier() {
-    CC_SAFE_DELETE(_gpuBarrier);
-}
-
-void CCVKGlobalBarrier::doInit(const GlobalBarrierInfo &info) {
-    _gpuBarrier = CC_NEW(CCVKGPUGlobalBarrier);
+    _gpuBarrier = CC_NEW(CCVKGPUTextureBarrier);
     _gpuBarrier->accessTypes.resize(info.prevAccesses.size() + info.nextAccesses.size());
 
     uint index = 0U;
@@ -54,7 +49,24 @@ void CCVKGlobalBarrier::doInit(const GlobalBarrierInfo &info) {
     _gpuBarrier->barrier.nextAccessCount = info.nextAccesses.size();
     _gpuBarrier->barrier.pNextAccesses   = _gpuBarrier->accessTypes.data() + info.prevAccesses.size();
 
-    thsvsGetVulkanMemoryBarrier(_gpuBarrier->barrier, &_gpuBarrier->srcStageMask, &_gpuBarrier->dstStageMask, &_gpuBarrier->vkBarrier);
+    _gpuBarrier->barrier.prevLayout = _gpuBarrier->barrier.nextLayout = THSVS_IMAGE_LAYOUT_OPTIMAL;
+    _gpuBarrier->barrier.discardContents                              = info.discardContents;
+    _gpuBarrier->barrier.subresourceRange.baseMipLevel                = 0U;
+    _gpuBarrier->barrier.subresourceRange.levelCount                  = VK_REMAINING_MIP_LEVELS;
+    _gpuBarrier->barrier.subresourceRange.baseArrayLayer              = 0U;
+    _gpuBarrier->barrier.subresourceRange.layerCount                  = VK_REMAINING_ARRAY_LAYERS;
+    _gpuBarrier->barrier.srcQueueFamilyIndex                          = info.srcQueue
+                                                                            ? static_cast<CCVKQueue *>(info.srcQueue)->gpuQueue()->queueFamilyIndex
+                                                                            : VK_QUEUE_FAMILY_IGNORED;
+    _gpuBarrier->barrier.dstQueueFamilyIndex                          = info.dstQueue
+                                                                            ? static_cast<CCVKQueue *>(info.dstQueue)->gpuQueue()->queueFamilyIndex
+                                                                            : VK_QUEUE_FAMILY_IGNORED;
+
+    thsvsGetVulkanImageMemoryBarrier(_gpuBarrier->barrier, &_gpuBarrier->srcStageMask, &_gpuBarrier->dstStageMask, &_gpuBarrier->vkBarrier);
+}
+
+CCVKTextureBarrier::~CCVKTextureBarrier() {
+    CC_SAFE_DELETE(_gpuBarrier);
 }
 
 } // namespace gfx

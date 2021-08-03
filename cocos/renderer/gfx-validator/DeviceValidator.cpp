@@ -36,7 +36,6 @@
 #include "PipelineStateValidator.h"
 #include "QueueValidator.h"
 #include "RenderPassValidator.h"
-#include "SamplerValidator.h"
 #include "ShaderValidator.h"
 #include "SwapchainValidator.h"
 #include "TextureValidator.h"
@@ -169,13 +168,6 @@ Texture *DeviceValidator::createTexture() {
     return result;
 }
 
-Sampler *DeviceValidator::createSampler() {
-    Sampler *actor  = _actor->createSampler();
-    Sampler *result = CC_NEW(SamplerValidator(actor));
-    DeviceResourceTracker<Sampler>::push(result);
-    return result;
-}
-
 Shader *DeviceValidator::createShader() {
     Shader *actor  = _actor->createShader();
     Shader *result = CC_NEW(ShaderValidator(actor));
@@ -232,14 +224,16 @@ PipelineState *DeviceValidator::createPipelineState() {
     return result;
 }
 
-GlobalBarrier *DeviceValidator::createGlobalBarrier() {
-    GlobalBarrier *actor = _actor->createGlobalBarrier();
-    return actor;
+Sampler *DeviceValidator::createSampler(const SamplerInfo &info) {
+    return _actor->createSampler(info);
 }
 
-TextureBarrier *DeviceValidator::createTextureBarrier() {
-    TextureBarrier *actor = _actor->createTextureBarrier();
-    return actor;
+GlobalBarrier *DeviceValidator::createGlobalBarrier(const GlobalBarrierInfo &info) {
+    return _actor->createGlobalBarrier(info);
+}
+
+TextureBarrier *DeviceValidator::createTextureBarrier(const TextureBarrierInfo &info) {
+    return _actor->createTextureBarrier(info);
 }
 
 void DeviceValidator::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) {
