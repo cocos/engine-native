@@ -81,19 +81,21 @@ class CocosZipInstaller(object):
         self._workpath = workpath
         self._config_path = config_path
         self._version_path = version_path
+        self._is_python3 = sys.version_info[0] > 2
 
         data = self.load_json_file(config_path)
 
         self._current_version = data["version"]
+        self._current_commit = data["from"]["commit"]
         self._repo_name = data["from"]["name"]
         try:
             self._move_dirs = data["move_dirs"]
         except:
             self._move_dirs = None
-        self._filename = self._current_version + '.zip'
+        self._filename = self._current_commit + '.zip'
         self._url = "https://github.com/" + data["from"]["owner"] + "/" + self._repo_name + '/archive/' + self._filename
         # 'v' letter was swallowed by github, so we need to substring it from the 2nd letter
-        self._extracted_folder_name = os.path.join(self._workpath, self._repo_name + '-' + self._current_version[1:])
+        self._extracted_folder_name = os.path.join(self._workpath, self._repo_name + '-' + self._current_commit)
 
         try:
             data = self.load_json_file(version_path)
@@ -109,8 +111,19 @@ class CocosZipInstaller(object):
         ret.rstrip(" \t")
         return ret
 
-    def download_file(self):
-        print("==> Ready to download '%s' from '%s'" % (self._filename, self._url))
+    def open_url3(slef):
+        import urllib3
+        try:
+            u = urllib3.urlopen(self._url)
+        except urllib3.HTTPError as e:
+            if e.code == 404:
+                print("==> Error: Could not find the file from url: '%s'" % (self._url))
+            print("==> Http request failed, error code: " + str(e.code) + ", reason: " + e.read())
+            sys.exit(1)
+
+        return u
+
+    def open_url2(slef):
         import urllib2
         try:
             u = urllib2.urlopen(self._url)
@@ -119,6 +132,15 @@ class CocosZipInstaller(object):
                 print("==> Error: Could not find the file from url: '%s'" % (self._url))
             print("==> Http request failed, error code: " + str(e.code) + ", reason: " + e.read())
             sys.exit(1)
+
+        return u
+
+    def download_file(self):
+        print("==> Ready to download '%s' from '%s'" % (self._filename, self._url))
+        if self._is_python3:
+            u = self.open_url3()
+        else:
+            u = self.open_url2()
 
         f = open(self._filename, 'wb')
         meta = u.info()
@@ -297,22 +319,9 @@ class CocosZipInstaller(object):
             print("==> Download (%s) finish!" % self._filename)
 
 
-def _check_python_version():
-    major_ver = sys.version_info[0]
-    if major_ver > 2:
-        print ("The python version is %d.%d. But python 2.x is required. (Version 2.7 is well tested)\n"
-               "Download it here: https://www.python.org/" % (major_ver, sys.version_info[1]))
-        return False
-
-    return True
-
-
 def main():
     workpath = os.path.dirname(os.path.realpath(__file__))
-
-    if not _check_python_version():
-        exit()
-
+    
     parser = OptionParser()
     parser.add_option('-r', '--remove-download',
                       action="store", type="string", dest='remove_downloaded', default=None,

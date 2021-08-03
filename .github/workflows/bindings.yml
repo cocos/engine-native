@@ -22,7 +22,7 @@ jobs:
         run: |
           EXT_VERSION=`grep version external/config.json  |awk -F'"' '{print $4}'`
           rm external/config.json
-          git clone --branch $EXT_VERSION --depth 1 https://github.com/cocos-creator/engine-native-external external
+          python3 ./download-deps.py
       - name: Run genbindings.py
         run: |
           python3 -m pip install PyYAML Cheetah3
