@@ -41,8 +41,8 @@
 #include "scene/Sphere.h"
 #include "scene/SphereLight.h"
 #include "../Define.h"
-#include "frame-graph/blackBoard.h"
-#include "frame-graph/handle.h"
+#include "frame-graph/BlackBoard.h"
+#include "frame-graph/Handle.h"
 
 namespace cc {
 namespace pipeline {
