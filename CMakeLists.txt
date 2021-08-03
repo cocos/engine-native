@@ -46,8 +46,6 @@ elseif(OHOS)
     cc_set_if_undefined(CC_USE_GLES2 OFF)
 endif()
 
-set(CC_USE_GLES2 OFF)
-
 if(USE_PHYSICS_PHYSX)
     if (ANDROID AND CMAKE_ANDROID_ARCH_ABI MATCHES x86)
         set(USE_PHYSICS_PHYSX OFF)
@@ -908,12 +906,11 @@ if(CC_USE_GLES2)
                      cocos/renderer/gfx-gles2/GLES2CommandBuffer.h
                      cocos/renderer/gfx-gles2/GLES2Commands.cpp
                      cocos/renderer/gfx-gles2/GLES2Commands.h
-                     cocos/renderer/gfx-gles2/GLES2Context.h
-                     cocos/renderer/gfx-gles2/GLES2Context.cpp
                      cocos/renderer/gfx-gles2/GLES2Device.cpp
                      cocos/renderer/gfx-gles2/GLES2Device.h
                      cocos/renderer/gfx-gles2/GLES2Framebuffer.cpp
                      cocos/renderer/gfx-gles2/GLES2Framebuffer.h
+                     cocos/renderer/gfx-gles2/GLES2GPUContext.cpp
                      cocos/renderer/gfx-gles2/GLES2GPUObjects.h
                      cocos/renderer/gfx-gles2/GLES2InputAssembler.cpp
                      cocos/renderer/gfx-gles2/GLES2InputAssembler.h
@@ -935,6 +932,8 @@ if(CC_USE_GLES2)
                      cocos/renderer/gfx-gles2/GLES2Sampler.h
                      cocos/renderer/gfx-gles2/GLES2Shader.cpp
                      cocos/renderer/gfx-gles2/GLES2Shader.h
+                     cocos/renderer/gfx-gles2/GLES2Swapchain.cpp
+                     cocos/renderer/gfx-gles2/GLES2Swapchain.h
                      cocos/renderer/gfx-gles2/GLES2Std.cpp
                      cocos/renderer/gfx-gles2/GLES2Std.h
                      cocos/renderer/gfx-gles2/GLES2Texture.cpp
@@ -949,11 +948,6 @@ if(CC_USE_GLES2)
     else()
         cocos_source_files(
                          cocos/renderer/gfx-gles2/GLES2Wrangler.cpp
-        )
-    endif()
-    if(IOS)
-        cocos_source_files(
-            NO_WERROR    cocos/renderer/gfx-gles2/GLES2Context.mm
         )
     endif()
 endif()
@@ -1010,11 +1004,6 @@ if(CC_USE_GLES3)
     else()
         cocos_source_files(
                          cocos/renderer/gfx-gles3/GLES3Wrangler.cpp
-        )
-    endif()
-    if(IOS)
-        cocos_source_files(
-            NO_WERROR    cocos/renderer/gfx-gles3/GLES3Context.mm
         )
     endif()
 endif()

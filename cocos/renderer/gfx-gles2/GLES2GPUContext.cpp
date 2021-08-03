@@ -23,7 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "GLES3GPUObjects.h"
+#include "GLES2GPUObjects.h"
 
 #define FORCE_DISABLE_VALIDATION 0
 
@@ -33,7 +33,7 @@ namespace gfx {
 #if CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION
 constexpr uint DISABLE_VALIDATION_ASSERTIONS = 1; // 0 for default behavior, otherwise assertions will be disabled
 
-void GL_APIENTRY GLES3EGLDebugProc(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
+void GL_APIENTRY GLES2EGLDebugProc(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
     String sourceDesc;
     switch (source) {
         case GL_DEBUG_SOURCE_API_KHR: sourceDesc = "API"; break;
@@ -79,11 +79,11 @@ void GL_APIENTRY GLES3EGLDebugProc(GLenum source, GLenum type, GLuint id, GLenum
 }
 #endif
 
-bool GLES3GPUContext::initialize(GLES3GPUStateCache *stateCache, GLES3GPUConstantRegistry *constantRegistry) {
+bool GLES2GPUContext::initialize(GLES2GPUStateCache *stateCache, GLES2GPUConstantRegistry *constantRegistry) {
     _stateCache       = stateCache;
     _constantRegistry = constantRegistry;
 
-    if (!gles3wInit()) {
+    if (!gles2wInit()) {
         return false;
     }
 
@@ -118,7 +118,7 @@ bool GLES3GPUContext::initialize(GLES3GPUStateCache *stateCache, GLES3GPUConstan
 
     EGLint defaultAttribs[]{
         EGL_SURFACE_TYPE, EGL_WINDOW_BIT | EGL_PBUFFER_BIT,
-        EGL_RENDERABLE_TYPE, EGL_OPENGL_ES3_BIT_KHR,
+        EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
         EGL_BLUE_SIZE, blueSize,
         EGL_GREEN_SIZE, greenSize,
         EGL_RED_SIZE, redSize,
@@ -202,26 +202,19 @@ bool GLES3GPUContext::initialize(GLES3GPUStateCache *stateCache, GLES3GPUConstan
     bool hasKHRCreateCtx = checkExtension(CC_TOSTR(EGL_KHR_create_context));
     if (hasKHRCreateCtx) {
         eglAttributes.push_back(EGL_CONTEXT_MAJOR_VERSION_KHR);
-        eglAttributes.push_back(3);
-        eglAttributes.push_back(EGL_CONTEXT_MINOR_VERSION_KHR);
         eglAttributes.push_back(2);
+        eglAttributes.push_back(EGL_CONTEXT_MINOR_VERSION_KHR);
+        eglAttributes.push_back(0);
 #if CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION
         eglAttributes.push_back(EGL_CONTEXT_FLAGS_KHR);
         eglAttributes.push_back(EGL_CONTEXT_OPENGL_DEBUG_BIT_KHR);
 #endif
         eglAttributes.push_back(EGL_NONE);
 
-        for (int m = 2; m >= 0; --m) {
-            eglAttributes[3] = m;
-            EGL_CHECK(eglDefaultContext = eglCreateContext(eglDisplay, eglConfig, nullptr, eglAttributes.data()));
-            if (eglDefaultContext) {
-                _constantRegistry->glMinorVersion = m;
-                break;
-            }
-        }
+        EGL_CHECK(eglDefaultContext = eglCreateContext(eglDisplay, eglConfig, nullptr, eglAttributes.data()));
     } else {
         eglAttributes.push_back(EGL_CONTEXT_CLIENT_VERSION);
-        eglAttributes.push_back(3);
+        eglAttributes.push_back(2);
         eglAttributes.push_back(EGL_NONE);
 
         EGL_CHECK(eglDefaultContext = eglCreateContext(eglDisplay, eglConfig, nullptr, eglAttributes.data()));
@@ -247,7 +240,7 @@ bool GLES3GPUContext::initialize(GLES3GPUStateCache *stateCache, GLES3GPUConstan
     return true;
 }
 
-void GLES3GPUContext::destroy() {
+void GLES2GPUContext::destroy() {
     if (eglDisplay) {
         makeCurrent(EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
     }
@@ -275,7 +268,7 @@ void GLES3GPUContext::destroy() {
     }
 }
 
-void GLES3GPUContext::bindContext(bool bound) {
+void GLES2GPUContext::bindContext(bool bound) {
     if (bound) {
         makeCurrent(_eglCurrentDrawSurface, _eglCurrentReadSurface, eglDefaultContext);
         resetStates();
@@ -284,7 +277,7 @@ void GLES3GPUContext::bindContext(bool bound) {
     }
 }
 
-void GLES3GPUContext::makeCurrent(const GLES3GPUSwapchain *drawSwapchain, const GLES3GPUSwapchain *readSwapchain) {
+void GLES2GPUContext::makeCurrent(const GLES2GPUSwapchain *drawSwapchain, const GLES2GPUSwapchain *readSwapchain) {
     EGLSurface drawSurface = drawSwapchain ? drawSwapchain->eglSurface : _eglCurrentDrawSurface;
     EGLSurface readSurface = readSwapchain ? readSwapchain->eglSurface : _eglCurrentReadSurface;
     if (_eglCurrentDrawSurface == drawSurface && _eglCurrentReadSurface == readSurface) return;
@@ -292,7 +285,7 @@ void GLES3GPUContext::makeCurrent(const GLES3GPUSwapchain *drawSwapchain, const 
     makeCurrent(drawSurface, readSurface, _eglCurrentContext);
 }
 
-void GLES3GPUContext::present(const GLES3GPUSwapchain *swapchain) {
+void GLES2GPUContext::present(const GLES2GPUSwapchain *swapchain) {
     if (_eglCurrentInterval != swapchain->eglSwapInterval) {
         if (!eglSwapInterval(eglDisplay, swapchain->eglSwapInterval)) {
             CC_LOG_ERROR("eglSwapInterval() - FAILED.");
@@ -302,7 +295,7 @@ void GLES3GPUContext::present(const GLES3GPUSwapchain *swapchain) {
     EGL_CHECK(eglSwapBuffers(eglDisplay, swapchain->eglSurface));
 }
 
-EGLContext GLES3GPUContext::getSharedContext() {
+EGLContext GLES2GPUContext::getSharedContext() {
     size_t threadID{std::hash<std::thread::id>{}(std::this_thread::get_id())};
     if (_sharedContexts.count(threadID)) return _sharedContexts[threadID];
 
@@ -318,7 +311,7 @@ EGLContext GLES3GPUContext::getSharedContext() {
     return context;
 }
 
-bool GLES3GPUContext::makeCurrent(EGLSurface drawSurface, EGLSurface readSurface, EGLContext context, bool updateCache) {
+bool GLES2GPUContext::makeCurrent(EGLSurface drawSurface, EGLSurface readSurface, EGLContext context, bool updateCache) {
     bool succeeded;
     EGL_CHECK(succeeded = eglMakeCurrent(eglDisplay, drawSurface, readSurface, context));
     if (succeeded && updateCache) {
@@ -329,7 +322,7 @@ bool GLES3GPUContext::makeCurrent(EGLSurface drawSurface, EGLSurface readSurface
     return succeeded;
 }
 
-void GLES3GPUContext::resetStates() const {
+void GLES2GPUContext::resetStates() const {
     GL_CHECK(glPixelStorei(GL_PACK_ALIGNMENT, 1));
     GL_CHECK(glPixelStorei(GL_UNPACK_ALIGNMENT, 1));
     GL_CHECK(glActiveTexture(GL_TEXTURE0));
@@ -370,32 +363,17 @@ void GLES3GPUContext::resetStates() const {
 
     GL_CHECK(glUseProgram(0));
 
-    GL_CHECK(glBindVertexArray(0));
+    if (_constantRegistry->useVAO) {
+        GL_CHECK(glBindVertexArrayOES(0));
+    }
 
     GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, 0));
     GL_CHECK(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
-    GL_CHECK(glBindBuffer(GL_PIXEL_PACK_BUFFER, 0));
-    GL_CHECK(glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0));
-    GL_CHECK(glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, 0));
-    GL_CHECK(glBindBuffer(GL_UNIFORM_BUFFER, 0));
-    GL_CHECK(glBindBuffer(GL_COPY_READ_BUFFER, 0));
-    GL_CHECK(glBindBuffer(GL_COPY_WRITE_BUFFER, 0));
-
-    if (_constantRegistry->glMinorVersion) {
-        GL_CHECK(glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0));
-        GL_CHECK(glBindBuffer(GL_DRAW_INDIRECT_BUFFER, 0));
-        GL_CHECK(glBindBuffer(GL_DISPATCH_INDIRECT_BUFFER, 0));
-        GL_CHECK(glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0));
-    }
 
     GL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
-    GL_CHECK(glBindTexture(GL_TEXTURE_3D, 0));
-    GL_CHECK(glBindTexture(GL_TEXTURE_2D_ARRAY, 0));
     GL_CHECK(glBindTexture(GL_TEXTURE_CUBE_MAP, 0));
-    GL_CHECK(glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0));
 
-    GL_CHECK(glBindFramebuffer(GL_READ_FRAMEBUFFER, 0));
-    GL_CHECK(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 
 #if CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION
     GL_CHECK(glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_KHR));
@@ -403,7 +381,7 @@ void GLES3GPUContext::resetStates() const {
         GL_CHECK(glDebugMessageControlKHR(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE));
     }
     if (glDebugMessageCallbackKHR) {
-        GL_CHECK(glDebugMessageCallbackKHR(GLES3EGLDebugProc, NULL));
+        GL_CHECK(glDebugMessageCallbackKHR(GLES2EGLDebugProc, NULL));
     }
 #endif
 

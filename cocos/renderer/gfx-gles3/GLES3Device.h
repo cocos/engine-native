@@ -107,11 +107,11 @@ protected:
 
     void bindContext(bool bound) override;
 
-    GLES3GPUStateCache *         _gpuStateCache          = nullptr;
-    GLES3GPUContext *            _gpuContext             = nullptr;
-    GLES3GPUStagingBufferPool *  _gpuStagingBufferPool   = nullptr;
-    GLES3GPUConstantRegistry *   _gpuConstantRegistry    = nullptr;
-    GLES3GPUFramebufferCacheMap *_gpuFramebufferCacheMap = nullptr;
+    GLES3GPUStateCache *         _gpuStateCache{nullptr};
+    GLES3GPUContext *            _gpuContext{nullptr};
+    GLES3GPUStagingBufferPool *  _gpuStagingBufferPool{nullptr};
+    GLES3GPUConstantRegistry *   _gpuConstantRegistry{nullptr};
+    GLES3GPUFramebufferCacheMap *_gpuFramebufferCacheMap{nullptr};
 
     vector<GLES3GPUSwapchain *> _swapchains;
 

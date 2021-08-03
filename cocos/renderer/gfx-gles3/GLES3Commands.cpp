@@ -2008,7 +2008,6 @@ static void ensureScissorRect(GLES3GPUStateCache *cache, int32_t x, int32_t y, u
 }
 
 void cmdFuncGLES3EndRenderPass(GLES3Device *device) {
-    static vector<GLenum> drawBuffers;
     static vector<GLenum> invalidAttachments;
 
     GLES3GPUStateCache * cache                = device->stateCache();
@@ -2063,7 +2062,6 @@ void cmdFuncGLES3EndRenderPass(GLES3Device *device) {
     };
 
     if (instance.resolveMask) {
-        drawBuffers.clear();
         device->context()->makeCurrent(instance.resolveFramebuffer.swapchain, instance.framebuffer.swapchain);
 
         if (cache->glReadFramebuffer != glFramebuffer) {
@@ -2090,8 +2088,6 @@ void cmdFuncGLES3EndRenderPass(GLES3Device *device) {
                     0, 0, srcTex->width, srcTex->height,
                     0, 0, dstTex->width, dstTex->height,
                     GL_COLOR_BUFFER_BIT, GL_NEAREST));
-
-                drawBuffers.push_back(attachment);
             }
         }
 
@@ -2954,6 +2950,7 @@ CC_GLES3_API void cmdFuncGLES3CopyTextureToBuffers(GLES3Device *device, GLES3GPU
         GL_CHECK(glReadPixels(region.texOffset.x, region.texOffset.y, region.texExtent.width, region.texExtent.height, glFormat, glType, copyDst));
     }
 }
+
 void cmdFuncGLES3BlitTexture(GLES3Device *device, GLES3GPUTexture *gpuTextureSrc, GLES3GPUTexture *gpuTextureDst,
                              const TextureBlit *regions, uint count, Filter filter) {
     GLES3GPUStateCache *cache = device->stateCache();

@@ -27,6 +27,7 @@
 
 #include "GLES2Commands.h"
 #include "GLES2Device.h"
+#include "GLES2Swapchain.h"
 #include "GLES2Texture.h"
 
 namespace cc {
@@ -57,7 +58,9 @@ void GLES2Texture::doInit(const TextureInfo& /*info*/) {
 
     cmdFuncGLES2CreateTexture(GLES2Device::getInstance(), _gpuTexture);
 
-    GLES2Device::getInstance()->getMemoryStatus().textureSize += _size;
+    if (!_gpuTexture->memoryless) {
+        GLES2Device::getInstance()->getMemoryStatus().textureSize += _size;
+    }
 }
 
 void GLES2Texture::doInit(const TextureViewInfo& /*info*/) {
@@ -65,9 +68,10 @@ void GLES2Texture::doInit(const TextureViewInfo& /*info*/) {
 }
 
 void GLES2Texture::doDestroy() {
-    GLES2Device::getInstance()->getMemoryStatus().textureSize -= _size;
-
     if (_gpuTexture) {
+        if (!_gpuTexture->memoryless) {
+            GLES2Device::getInstance()->getMemoryStatus().textureSize -= _size;
+        }
         cmdFuncGLES2DestroyTexture(GLES2Device::getInstance(), _gpuTexture);
         CC_DELETE(_gpuTexture);
         _gpuTexture = nullptr;
@@ -75,14 +79,36 @@ void GLES2Texture::doDestroy() {
 }
 
 void GLES2Texture::doResize(uint width, uint height, uint size) {
-    GLES2Device::getInstance()->getMemoryStatus().textureSize -= _size;
-
+    if (!_gpuTexture->memoryless) {
+        GLES2Device::getInstance()->getMemoryStatus().textureSize -= _size;
+    }
     _gpuTexture->width  = width;
     _gpuTexture->height = height;
     _gpuTexture->size   = size;
     cmdFuncGLES2ResizeTexture(GLES2Device::getInstance(), _gpuTexture);
 
-    GLES2Device::getInstance()->getMemoryStatus().textureSize += size;
+    if (!_gpuTexture->memoryless) {
+        GLES2Device::getInstance()->getMemoryStatus().textureSize += size;
+    }
+}
+
+///////////////////////////// Swapchain Specific /////////////////////////////
+
+void GLES2Texture::doInit(const SwapchainTextureInfo& info) {
+    _gpuTexture             = CC_NEW(GLES2GPUTexture);
+    _gpuTexture->type       = _type;
+    _gpuTexture->format     = _format;
+    _gpuTexture->usage      = _usage;
+    _gpuTexture->width      = _width;
+    _gpuTexture->height     = _height;
+    _gpuTexture->depth      = _depth;
+    _gpuTexture->size       = _size;
+    _gpuTexture->arrayLayer = _layerCount;
+    _gpuTexture->mipLevel   = _levelCount;
+    _gpuTexture->samples    = SampleCount::ONE;
+    _gpuTexture->flags      = _flags;
+    _gpuTexture->memoryless = true;
+    _gpuTexture->swapchain  = static_cast<GLES2Swapchain*>(info.swapchain)->gpuSwapchain();
 }
 
 } // namespace gfx

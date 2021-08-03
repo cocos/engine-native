@@ -26,21 +26,14 @@
 #pragma once
 
 #include "GLES2Std.h"
-
 #include "gfx-base/GFXDevice.h"
-
-#ifndef GL_COMPRESSED_RGB8_ETC2
-    #define GL_COMPRESSED_RGB8_ETC2 0x9274
-#endif
-
-#ifndef GL_COMPRESSED_RGBA8_ETC2_EAC
-    #define GL_COMPRESSED_RGBA8_ETC2_EAC 0x9278
-#endif
+#include "gfx-base/GFXSwapchain.h"
 
 namespace cc {
 namespace gfx {
 
-class GLES2Context;
+class GLES2GPUContext;
+class GLES2GPUSwapchain;
 class GLES2GPUStateCache;
 class GLES2GPUBlitManager;
 class GLES2GPUStagingBufferPool;
@@ -70,10 +63,10 @@ public:
     using Device::createTexture;
     using Device::createTextureBarrier;
 
-    void resize(uint width, uint height) override;
-    void acquire() override;
+    void acquire(Swapchain *const *swapchains, uint32_t count) override;
     void present() override;
 
+    inline GLES2GPUContext *            context() const { return _gpuContext; }
     inline GLES2GPUStateCache *         stateCache() const { return _gpuStateCache; }
     inline GLES2GPUBlitManager *        blitManager() const { return _gpuBlitManager; }
     inline GLES2GPUStagingBufferPool *  stagingBufferPool() const { return _gpuStagingBufferPool; }
@@ -90,7 +83,6 @@ protected:
     static GLES2Device *instance;
 
     friend class DeviceManager;
-    friend class GLES2Context;
 
     GLES2Device();
 
@@ -98,6 +90,7 @@ protected:
     void                 doDestroy() override;
     CommandBuffer *      createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) override;
     Queue *              createQueue() override;
+    Swapchain *          createSwapchain() override;
     Buffer *             createBuffer() override;
     Texture *            createTexture() override;
     Sampler *            createSampler() override;
@@ -112,23 +105,20 @@ protected:
     GlobalBarrier *      createGlobalBarrier() override;
     TextureBarrier *     createTextureBarrier() override;
     void                 copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) override;
-    void                 copyTextureToBuffers(Texture* src, uint8_t *const* buffers, const BufferTextureCopy* region, uint count) override;
+    void                 copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint count) override;
 
-    void releaseSurface(uintptr_t windowHandle) override;
-    void acquireSurface(uintptr_t windowHandle) override;
-
-    void bindRenderContext(bool bound) override;
-    void bindDeviceContext(bool bound) override;
+    void bindContext(bool bound) override;
 
     static bool checkForETC2();
 
-    GLES2Context *               _renderContext          = nullptr;
-    GLES2Context *               _deviceContext          = nullptr;
-    GLES2GPUStateCache *         _gpuStateCache          = nullptr;
-    GLES2GPUBlitManager *        _gpuBlitManager         = nullptr;
-    GLES2GPUStagingBufferPool *  _gpuStagingBufferPool   = nullptr;
-    GLES2GPUConstantRegistry *   _gpuConstantRegistry    = nullptr;
-    GLES2GPUFramebufferCacheMap *_gpuFramebufferCacheMap = nullptr;
+    GLES2GPUContext *            _gpuContext{nullptr};
+    GLES2GPUStateCache *         _gpuStateCache{nullptr};
+    GLES2GPUBlitManager *        _gpuBlitManager{nullptr};
+    GLES2GPUStagingBufferPool *  _gpuStagingBufferPool{nullptr};
+    GLES2GPUConstantRegistry *   _gpuConstantRegistry{nullptr};
+    GLES2GPUFramebufferCacheMap *_gpuFramebufferCacheMap{nullptr};
+
+    vector<GLES2GPUSwapchain *> _swapchains;
 
     StringArray _extensions;
 };

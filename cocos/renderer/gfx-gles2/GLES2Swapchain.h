@@ -23,50 +23,32 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "GLES2Std.h"
+#pragma once
 
-#include "GLES2Buffer.h"
-#include "GLES2Commands.h"
-#include "GLES2Device.h"
-#include "GLES2InputAssembler.h"
+#include "GLES2Std.h"
+#include "gfx-base/GFXSwapchain.h"
 
 namespace cc {
 namespace gfx {
 
-GLES2InputAssembler::GLES2InputAssembler() {
-    _typedID = generateObjectID<decltype(this)>();
-}
+class GLES2GPUSwapchain;
 
-GLES2InputAssembler::~GLES2InputAssembler() {
-    destroy();
-}
+class CC_GLES2_API GLES2Swapchain final : public Swapchain {
+public:
+    GLES2Swapchain();
+    ~GLES2Swapchain() override;
 
-void GLES2InputAssembler::doInit(const InputAssemblerInfo &info) {
-    _gpuInputAssembler             = CC_NEW(GLES2GPUInputAssembler);
-    _gpuInputAssembler->attributes = _attributes;
-    _gpuInputAssembler->gpuVertexBuffers.resize(_vertexBuffers.size());
-    for (size_t i = 0; i < _gpuInputAssembler->gpuVertexBuffers.size(); ++i) {
-        auto *vb                                = static_cast<GLES2Buffer *>(_vertexBuffers[i]);
-        _gpuInputAssembler->gpuVertexBuffers[i] = vb->gpuBuffer();
-    }
-    if (info.indexBuffer) {
-        _gpuInputAssembler->gpuIndexBuffer = static_cast<GLES2Buffer *>(info.indexBuffer)->gpuBuffer();
-    }
+    inline GLES2GPUSwapchain *gpuSwapchain() const { return _gpuSwapchain; }
 
-    if (info.indirectBuffer) {
-        _gpuInputAssembler->gpuIndirectBuffer = static_cast<GLES2Buffer *>(info.indirectBuffer)->gpuBuffer();
-    }
+protected:
+    void doInit(const SwapchainInfo &info) override;
+    void doDestroy() override;
+    void doResize(uint32_t width, uint32_t height) override;
+    void doDestroySurface() override;
+    void doCreateSurface(void *windowHandle) override;
 
-    cmdFuncGLES2CreateInputAssembler(GLES2Device::getInstance(), _gpuInputAssembler);
-}
-
-void GLES2InputAssembler::doDestroy() {
-    if (_gpuInputAssembler) {
-        cmdFuncGLES2DestroyInputAssembler(GLES2Device::getInstance(), _gpuInputAssembler);
-        CC_DELETE(_gpuInputAssembler);
-        _gpuInputAssembler = nullptr;
-    }
-}
+    GLES2GPUSwapchain *_gpuSwapchain{nullptr};
+};
 
 } // namespace gfx
 } // namespace cc

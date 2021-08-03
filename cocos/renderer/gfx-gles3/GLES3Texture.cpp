@@ -93,7 +93,7 @@ void GLES3Texture::doResize(uint width, uint height, uint size) {
     }
 }
 
-///////////////////////////// Swapchian Specific /////////////////////////////
+///////////////////////////// Swapchain Specific /////////////////////////////
 
 void GLES3Texture::doInit(const SwapchainTextureInfo& info) {
     _gpuTexture             = CC_NEW(GLES3GPUTexture);

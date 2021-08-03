@@ -1,7 +1,7 @@
-#include "GLES3Swapchain.h"
-#include "GLES3Device.h"
-#include "GLES3GPUObjects.h"
-#include "GLES3Texture.h"
+#include "GLES2Swapchain.h"
+#include "GLES2Device.h"
+#include "GLES2GPUObjects.h"
+#include "GLES2Texture.h"
 
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
     #include "android/native_window.h"
@@ -13,17 +13,17 @@
 namespace cc {
 namespace gfx {
 
-GLES3Swapchain::GLES3Swapchain() {
+GLES2Swapchain::GLES2Swapchain() {
     _typedID = generateObjectID<decltype(this)>();
 }
 
-GLES3Swapchain::~GLES3Swapchain() {
+GLES2Swapchain::~GLES2Swapchain() {
     destroy();
 }
 
-void GLES3Swapchain::doInit(const SwapchainInfo& info) {
-    const auto* context = GLES3Device::getInstance()->context();
-    _gpuSwapchain       = CC_NEW(GLES3GPUSwapchain);
+void GLES2Swapchain::doInit(const SwapchainInfo& info) {
+    const auto* context = GLES2Device::getInstance()->context();
+    _gpuSwapchain       = CC_NEW(GLES2GPUSwapchain);
     auto* window        = reinterpret_cast<EGLNativeWindowType>(info.windowHandle);
 
 #if CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS
@@ -61,8 +61,8 @@ void GLES3Swapchain::doInit(const SwapchainInfo& info) {
 
     ///////////////////// Texture Creation /////////////////////
 
-    _colorTexture        = CC_NEW(GLES3Texture);
-    _depthStencilTexture = CC_NEW(GLES3Texture);
+    _colorTexture        = CC_NEW(GLES2Texture);
+    _depthStencilTexture = CC_NEW(GLES2Texture);
 
     SwapchainTextureInfo textureInfo;
     textureInfo.swapchain = this;
@@ -75,7 +75,7 @@ void GLES3Swapchain::doInit(const SwapchainInfo& info) {
     initTexture(textureInfo, _depthStencilTexture);
 }
 
-void GLES3Swapchain::doDestroy() {
+void GLES2Swapchain::doDestroy() {
     if (!_gpuSwapchain) return;
 
     CC_SAFE_DESTROY(_depthStencilTexture)
@@ -85,22 +85,22 @@ void GLES3Swapchain::doDestroy() {
     CC_SAFE_DELETE(_gpuSwapchain);
 }
 
-void GLES3Swapchain::doResize(uint32_t width, uint32_t height) {
+void GLES2Swapchain::doResize(uint32_t width, uint32_t height) {
     _colorTexture->resize(width, height);
     _depthStencilTexture->resize(width, height);
 }
 
-void GLES3Swapchain::doDestroySurface() {
+void GLES2Swapchain::doDestroySurface() {
     if (_gpuSwapchain->eglSurface != EGL_NO_SURFACE) {
-        const auto* context = GLES3Device::getInstance()->context();
+        const auto* context = GLES2Device::getInstance()->context();
         eglDestroySurface(context->eglDisplay, _gpuSwapchain->eglSurface);
         EGL_CHECK(eglMakeCurrent(context->eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
         _gpuSwapchain->eglSurface = EGL_NO_SURFACE;
     }
 }
 
-void GLES3Swapchain::doCreateSurface(void* windowHandle) {
-    auto* context = GLES3Device::getInstance()->context();
+void GLES2Swapchain::doCreateSurface(void* windowHandle) {
+    auto* context = GLES2Device::getInstance()->context();
     auto* window  = reinterpret_cast<EGLNativeWindowType>(windowHandle);
 
     EGLint nFmt = 0;
