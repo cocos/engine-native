@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -21,41 +21,46 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
- ****************************************************************************/
+****************************************************************************/
 
-#include "main.h"
-#include "AppDelegate.h"
-#include "sdl2/SDL.h"
+#pragma once
 
+#include "../Config.h"
 #if USE_MEMORY_LEAK_DETECTOR
-#include "base/memory/MemoryHook.h"
-#endif
 
-using namespace cc;
+#include "../Macros.h"
+#include <string>
+#include <vector>
+#include <cstdint>
 
-// uncomment below line, open debug console
-// #define USE_WIN32_CONSOLE
+namespace cc {
 
-int SDL_main(int argc, char *argv[])
-{
-#if USE_MEMORY_LEAK_DETECTOR
-    cc::MemoryHookGuard hook;
-#endif
+#define MAX_STACK_FRAMES        32
+#define MAX_SYMBOL_LENGTH       255
 
-#ifdef USE_WIN32_CONSOLE
-    AllocConsole();
-    freopen("CONIN$", "r", stdin);
-    freopen("CONOUT$", "w", stdout);
-    freopen("CONOUT$", "w", stderr);
-#endif
+/**
+ * A single frame of callstack.
+ */
+struct CC_DLL StackFrame {
+    std::string module;
+    std::string file;
+    std::string function;
+    uint32_t    line{0};
 
-    // create the application instance
-    AppDelegate app("Cocos3D Game", 960, 640);
-    app.start();
+    std::string toString();
+};
 
-#ifdef USE_WIN32_CONSOLE
-    FreeConsole();
-#endif
+/**
+ * An utility class used to backtrace callstack.
+ */
+class CC_DLL CallStack {
+public:
+    static std::string             basename(const std::string& path);
 
-    return 0;
-}
+    static std::vector<void*>      backtrace();
+    static std::vector<StackFrame> backtraceSymbols(const std::vector<void*>& callstack);
+};
+
+} // namespace cc
+
+#endif 
