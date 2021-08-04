@@ -384,14 +384,6 @@ bool DeferredPipeline::activeRenderer() {
     unsigned int ibData[] = {0, 1, 2, 1, 3, 2};
     _quadIB->update(ibData, sizeof(ibData));
 
-    //if (!createQuadInputAssembler(&_quadIB, &_quadVB[0], &_quadIA[0])) {
-    //    return false;
-    //}
-
-    //if (!createQuadInputAssembler(&_quadIB, &_quadVB[1], &_quadIA[1])) {
-    //    return false;
-    //}
-
     _width  = _device->getWidth();
     _height = _device->getHeight();
     initFrameGraphExternalTexture();

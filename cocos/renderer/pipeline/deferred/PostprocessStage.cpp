@@ -183,8 +183,8 @@ void PostprocessStage::render(scene::Camera *camera) {
         depthAttachmentInfo.beginAccesses = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
         depthAttachmentInfo.endAccesses = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_READ};
 
-        //data.depth = builder.write(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::fgStrHandleDepthTexture)), depthAttachmentInfo);
-        //builder.writeToBlackboard(DeferredPipeline::fgStrHandleDepthTexture, data.depth);
+        data.depth = builder.write(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::fgStrHandleDepthTexture)), depthAttachmentInfo);
+        builder.writeToBlackboard(DeferredPipeline::fgStrHandleDepthTexture, data.depth);
 
         auto renderArea = pipeline->getRenderArea(camera, !camera->window->hasOffScreenAttachments);
         (void)pipeline->getIAByRenderArea(renderArea);
