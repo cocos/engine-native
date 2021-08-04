@@ -26,6 +26,7 @@
 #pragma once
 
 #include "../RenderStage.h"
+#include "frame-graph/Handle.h"
 
 namespace cc {
 namespace pipeline {
@@ -55,6 +56,8 @@ private:
 
     gfx::DescriptorSetLayout *_globalSetlayout = nullptr;
     gfx::DescriptorSet       *_globalSet = nullptr;
+
+    framegraph::StringHandle fgStrHandlePostOut;
 };
 } // namespace pipeline
 } // namespace cc

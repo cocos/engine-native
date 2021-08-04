@@ -340,9 +340,11 @@ void LightingStage::recordCommandsLit(DeferredPipeline *pipeline, gfx::RenderPas
     cmdBuff->bindDescriptorSet(static_cast<uint>(SetIndex::GLOBAL), pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
 
     // get pso and draw quad
+    auto rendeArea = pipeline->getRenderArea(pipeline->getFrameGraphCamera(), false);
+
     scene::Pass *pass   = sceneData->getSharedData()->deferredLightPass;
     gfx::Shader *shader = sceneData->getSharedData()->deferredLightPassShader;
-    gfx::InputAssembler *inputAssembler = pipeline->getQuadIAOffScreen();
+    gfx::InputAssembler *inputAssembler = pipeline->getIAByRenderArea(rendeArea);
     gfx::PipelineState *pState         = PipelineStateManager::getOrCreatePipelineState(
         pass, shader, inputAssembler, renderPass);
     assert(pState != nullptr);
@@ -860,7 +862,6 @@ void LightingStage::render(scene::Camera *camera) {
 
     // if lighting pass is inexistence, ignore sspr pass now.
     // when clear image api is available, better way can be applied.
-    //auto lightoutHandle =  framegraph::TextureHandle(pipeline->getFrameGraph().getBlackboard().get(DeferredPipeline::fgStrHandleLightingOutTexture));
     if (pipeline->getFrameGraph().isPassExist(DeferredPipeline::fgStrHandleLightingPass)) {
         fgSsprPass(camera);
     }

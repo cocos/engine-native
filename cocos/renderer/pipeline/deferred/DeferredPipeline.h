@@ -32,6 +32,7 @@
 #include "pipeline/RenderPipeline.h"
 #include "frame-graph/FrameGraph.h"
 #include "frame-graph/Handle.h"
+#include <unordered_map>
 
 namespace cc {
 namespace pipeline {
@@ -72,9 +73,8 @@ public:
     inline const gfx::BufferList &getLightBuffers() const { return _lightBuffers; }
     inline const UintList &       getLightIndexOffsets() const { return _lightIndexOffsets; }
     inline const UintList &       getLightIndices() const { return _lightIndices; }
-    gfx::InputAssembler *         getQuadIAOffScreen() { return _quadIAOffscreen; }
     gfx::Rect                     getRenderArea(scene::Camera *camera, bool onScreen);
-    void                          updateQuadVertexData(const gfx::Rect &renderArea);
+    void                          updateQuadVertexData(const gfx::Rect &renderArea, gfx::Buffer *buffer);
     void                          genQuadVertexData(gfx::SurfaceTransform surfaceTransform, const gfx::Rect &renderArea, float *data);
 
     framegraph::FrameGraph &getFrameGraph() { return _fg; }
@@ -85,10 +85,11 @@ public:
     uint getWidth() const { return _width; }
     uint getHeight() const { return _height; }
     scene::Camera *getFrameGraphCamera() const { return _frameGraphCamera; }
+    gfx::InputAssembler *getIAByRenderArea(const gfx::Rect &rect);
 
 private:
     bool activeRenderer();
-    bool createQuadInputAssembler(gfx::Buffer **quadIB, gfx::Buffer **quadVB, gfx::InputAssembler **quadIA);
+    bool createQuadInputAssembler(gfx::Buffer *quadIB, gfx::Buffer **quadVB, gfx::InputAssembler **quadIA);
     void destroyQuadInputAssembler();
     void destroyDeferredData();
     void generateDeferredRenderData();
@@ -101,10 +102,9 @@ private:
     map<gfx::ClearFlags, gfx::RenderPass *> _renderPasses;
     gfx::Rect                               _lastUsedRenderArea;
 
-    // light stage
-    gfx::Buffer *        _quadIB          = nullptr;
-    gfx::Buffer *        _quadVBOffscreen = nullptr;
-    gfx::InputAssembler *_quadIAOffscreen = nullptr;
+    gfx::Buffer *                                   _quadIB = nullptr;
+    std::vector<gfx::Buffer *>                      _quadVB;
+    std::unordered_map<uint, gfx::InputAssembler *> _quadIA;
 
     uint             _width = 0;
     uint             _height = 0;

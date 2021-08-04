@@ -227,15 +227,28 @@ void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
     _device->getQueue()->submit(_commandBuffers);
 }
 
-void DeferredPipeline::updateQuadVertexData(const gfx::Rect &renderArea) {
-    if (_lastUsedRenderArea == renderArea) {
-        return;
-    }
-
+void DeferredPipeline::updateQuadVertexData(const gfx::Rect &renderArea, gfx::Buffer *buffer) {
     _lastUsedRenderArea = renderArea;
     float vbData[16]    = {0};
     genQuadVertexData(gfx::SurfaceTransform::IDENTITY, renderArea, vbData);
-    _commandBuffers[0]->updateBuffer(_quadVBOffscreen, vbData);
+    buffer->update(vbData, sizeof(vbData));
+}
+
+gfx::InputAssembler *DeferredPipeline::getIAByRenderArea(const gfx::Rect &rect) {
+    uint value = rect.x + rect.y + rect.height + rect.width + rect.width * rect.height;
+    if (_quadIA.find(value) != _quadIA.end()) {
+        return _quadIA[value];
+    }
+
+    gfx::Buffer *vb = nullptr;
+    gfx::InputAssembler *ia = nullptr;
+    createQuadInputAssembler(_quadIB, &vb, &ia);
+    _quadVB.push_back(vb);
+    _quadIA[value] = ia;
+
+    updateQuadVertexData(rect, vb);
+
+    return ia;
 }
 
 void DeferredPipeline::genQuadVertexData(gfx::SurfaceTransform /*surfaceTransform*/, const gfx::Rect &renderArea, float *vbData) {
@@ -265,7 +278,7 @@ void DeferredPipeline::genQuadVertexData(gfx::SurfaceTransform /*surfaceTransfor
     vbData[n++] = minY;
 }
 
-bool DeferredPipeline::createQuadInputAssembler(gfx::Buffer **quadIB, gfx::Buffer **quadVB, gfx::InputAssembler **quadIA) {
+bool DeferredPipeline::createQuadInputAssembler(gfx::Buffer *quadIB, gfx::Buffer **quadVB, gfx::InputAssembler **quadIA) {
     // step 1 create vertex buffer
     uint vbStride = sizeof(float) * 4;
     uint vbSize   = vbStride * 4;
@@ -279,27 +292,12 @@ bool DeferredPipeline::createQuadInputAssembler(gfx::Buffer **quadIB, gfx::Buffe
         return false;
     }
 
-    // step 2 create index buffer
-    uint ibStride = 4;
-    uint ibSize   = ibStride * 6;
-    if (*quadIB == nullptr) {
-        *quadIB = _device->createBuffer({gfx::BufferUsageBit::INDEX | gfx::BufferUsageBit::TRANSFER_DST,
-                                         gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE, ibSize, ibStride});
-    }
-
-    if (*quadIB == nullptr) {
-        return false;
-    }
-
-    unsigned int ibData[] = {0, 1, 2, 1, 3, 2};
-    (*quadIB)->update(ibData, sizeof(ibData));
-
-    // step 3 create input assembler
+    // step 2 create input assembler
     gfx::InputAssemblerInfo info;
     info.attributes.push_back({"a_position", gfx::Format::RG32F});
     info.attributes.push_back({"a_texCoord", gfx::Format::RG32F});
     info.vertexBuffers.push_back(*quadVB);
-    info.indexBuffer = *quadIB;
+    info.indexBuffer = quadIB;
     *quadIA          = _device->createInputAssembler(info);
     return (*quadIA) != nullptr;
 }
@@ -326,8 +324,16 @@ gfx::Rect DeferredPipeline::getRenderArea(scene::Camera *camera, bool onScreen) 
 
 void DeferredPipeline::destroyQuadInputAssembler() {
     CC_SAFE_DESTROY(_quadIB);
-    CC_SAFE_DESTROY(_quadVBOffscreen);
-    CC_SAFE_DESTROY(_quadIAOffscreen);
+
+    for (auto *node : _quadVB) {
+        CC_SAFE_DESTROY(node);
+    }
+
+    for (auto node : _quadIA) {
+        CC_SAFE_DESTROY(node.second);
+    }
+    _quadVB.clear();
+    _quadIA.clear();
 }
 
 bool DeferredPipeline::activeRenderer() {
@@ -363,9 +369,28 @@ bool DeferredPipeline::activeRenderer() {
     _macros.setValue("CC_USE_HDR", static_cast<bool>(sharedData->isHDR));
     _macros.setValue("CC_SUPPORT_FLOAT_TEXTURE", _device->hasFeature(gfx::Feature::TEXTURE_FLOAT));
 
-    if (!createQuadInputAssembler(&_quadIB, &_quadVBOffscreen, &_quadIAOffscreen)) {
+    // step 2 create index buffer
+    uint ibStride = 4;
+    uint ibSize   = ibStride * 6;
+    if (_quadIB == nullptr) {
+        _quadIB = _device->createBuffer({gfx::BufferUsageBit::INDEX | gfx::BufferUsageBit::TRANSFER_DST,
+                                         gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE, ibSize, ibStride});
+    }
+
+    if (_quadIB == nullptr) {
         return false;
     }
+
+    unsigned int ibData[] = {0, 1, 2, 1, 3, 2};
+    _quadIB->update(ibData, sizeof(ibData));
+
+    //if (!createQuadInputAssembler(&_quadIB, &_quadVB[0], &_quadIA[0])) {
+    //    return false;
+    //}
+
+    //if (!createQuadInputAssembler(&_quadIB, &_quadVB[1], &_quadIA[1])) {
+    //    return false;
+    //}
 
     _width  = _device->getWidth();
     _height = _device->getHeight();

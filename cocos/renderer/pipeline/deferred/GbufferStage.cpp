@@ -167,7 +167,8 @@ void GbufferStage::render(scene::Camera *camera) {
     _renderArea = pipeline->getRenderArea(camera, false);
 
     // render area is not oriented, copy buffer must be called outsize of renderpass, it shouldnot be called in execute lambda expression
-    pipeline->updateQuadVertexData(_renderArea);
+    // If there are only transparent object, lighting pass is ignored, we should call getIAByRenderArea here
+    (void)pipeline->getIAByRenderArea(_renderArea);
 
     auto gbufferSetup = [&](framegraph::PassNodeBuilder &builder, RenderData &data) {
         // gbuffer setup
