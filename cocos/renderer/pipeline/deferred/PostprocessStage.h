@@ -57,7 +57,7 @@ private:
     gfx::DescriptorSetLayout *_globalSetlayout = nullptr;
     gfx::DescriptorSet       *_globalSet = nullptr;
 
-    framegraph::StringHandle fgStrHandlePostOut;
+    framegraph::StringHandle _fgStrHandlePostOut;
 };
 } // namespace pipeline
 } // namespace cc

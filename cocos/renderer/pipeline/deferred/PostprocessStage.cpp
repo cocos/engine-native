@@ -100,7 +100,7 @@ void PostprocessStage::destroy() {
 }
 
 void PostprocessStage::render(scene::Camera *camera) {
-    fgStrHandlePostOut = DeferredPipeline::fgStrHandleBackBufferTexture;
+    _fgStrHandlePostOut = DeferredPipeline::fgStrHandleBackBufferTexture;
     struct RenderData {
         framegraph::TextureHandle lightingOut;      // read from lighting output
         framegraph::TextureHandle backBuffer;       // write to back buffer
@@ -120,7 +120,7 @@ void PostprocessStage::render(scene::Camera *camera) {
     // when camera->window->frameBuffer->_colorTextures[0] != nullptr, it means that render to a staging texture
     auto *      pipeline      = static_cast<DeferredPipeline *>(_pipeline);
     if (camera->window->frameBuffer->getColorTextures()[0] != nullptr) {
-        fgStrHandlePostOut = framegraph::FrameGraph::stringToHandle("fgStrHandlePostoutTexture");
+        _fgStrHandlePostOut = framegraph::FrameGraph::stringToHandle("fgStrHandlePostoutTexture");
         gfx::TextureInfo textureInfo = {
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
@@ -129,10 +129,10 @@ void PostprocessStage::render(scene::Camera *camera) {
             camera->window->frameBuffer->getColorTextures()[0]->getHeight(),
         };
 
-        framegraph::Texture *output = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(textureInfo);
+        auto *output = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(textureInfo);
         output->createPersistent(camera->window->frameBuffer->getColorTextures()[0]);
 
-        pipeline->getFrameGraph().getBlackboard().put(fgStrHandlePostOut, pipeline->getFrameGraph().importExternal(fgStrHandlePostOut, *output));
+        pipeline->getFrameGraph().getBlackboard().put(_fgStrHandlePostOut, pipeline->getFrameGraph().importExternal(_fgStrHandlePostOut, *output));
     }
 
     auto postSetup = [&] (framegraph::PassNodeBuilder &builder, RenderData &data) {
@@ -172,9 +172,9 @@ void PostprocessStage::render(scene::Camera *camera) {
         }
 
         colorAttachmentInfo.endAccesses = {gfx::AccessType::PRESENT};
-        data.backBuffer = framegraph::TextureHandle(builder.readFromBlackboard(fgStrHandlePostOut));
+        data.backBuffer = framegraph::TextureHandle(builder.readFromBlackboard(_fgStrHandlePostOut));
         data.backBuffer = builder.write(data.backBuffer, colorAttachmentInfo);
-        builder.writeToBlackboard(fgStrHandlePostOut, data.backBuffer);
+        builder.writeToBlackboard(_fgStrHandlePostOut, data.backBuffer);
 
         // depth
         framegraph::RenderTargetAttachment::Descriptor depthAttachmentInfo;
@@ -231,7 +231,7 @@ void PostprocessStage::render(scene::Camera *camera) {
             gfx::Shader *sd        = sceneData->getSharedData()->deferredPostPassShader;
 
             // get pso and draw quad
-            auto camera = pipeline->getFrameGraphCamera();
+            auto *camera = pipeline->getFrameGraphCamera();
             auto rendeArea = pipeline->getRenderArea(camera, !camera->window->hasOffScreenAttachments);
             gfx::InputAssembler *ia = pipeline->getIAByRenderArea(rendeArea);
             gfx::PipelineState * pso = PipelineStateManager::getOrCreatePipelineState(pv, sd, ia, renderPass);
@@ -281,6 +281,7 @@ void PostprocessStage::render(scene::Camera *camera) {
     };
 
     auto uiPhaseExec = [&] (RenderData const &data, const framegraph::DevicePassResourceTable &table) {
+        CC_UNUSED_PARAM(data);
         auto *pipeline = static_cast<DeferredPipeline *>(RenderPipeline::getInstance());
         assert(pipeline != nullptr);
         auto *stage = static_cast<PostprocessStage *>(pipeline->getRenderstageByName(STAGE_NAME));
