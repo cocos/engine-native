@@ -79,6 +79,40 @@ void free(void* ptr) {
 }
 
 #elif CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX
+typedef void (*NewHookType)(const void* ptr, size_t size);
+typedef void (*DeleteHookType)(const void* ptr);
+
+typedef void
+malloc_logger_t(uint32_t aType,
+                uintptr_t aArg1, uintptr_t aArg2, uintptr_t aArg3,
+                uintptr_t aResult, uint32_t aNumHotFramesToSkip);
+extern malloc_logger_t* malloc_logger;
+static malloc_logger_t* g_default_malloc_logger;
+NewHookType g_new_hooker = nullptr;
+DeleteHookType g_delete_hooker = nullptr;
+
+static void
+cocos_malloc_logger(uint32_t aType,
+                 uintptr_t aArg1, uintptr_t aArg2, uintptr_t aArg3,
+                 uintptr_t aResult, uint32_t aNumHotFramesToSkip)
+{
+    // malloc/calloc/valloc/realloc
+    if (aResult != 0) {
+        if (g_new_hooker) {
+            const void* ptr = reinterpret_cast<const void*>(aResult);
+            size_t size = reinterpret_cast<size_t>(aArg2);
+            g_new_hooker(ptr, size);
+        }
+    }
+    // free
+    else {
+        if (g_delete_hooker) {
+            const void* ptr = reinterpret_cast<const void*>(aArg2);
+            g_delete_hooker(ptr);
+        }
+    }
+}
+
 #elif CC_PLATFORM == CC_PLATFORM_WINDOWS
 
 extern "C" {
@@ -214,7 +248,10 @@ void MemoryHook::registerAll() {
     g_new_hooker = newHook;
     g_delete_hooker = deleteHook;
 #elif CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX
-
+    g_default_malloc_logger = malloc_logger;
+    malloc_logger = cocos_malloc_logger;
+    g_new_hooker = newHook;
+    g_delete_hooker = deleteHook;
 #elif CC_PLATFORM_WINDOWS
     MallocHook_AddNewHook(&newHook);
     MallocHook_AddDeleteHook(&deleteHook);
@@ -226,7 +263,9 @@ void MemoryHook::unRegisterAll() {
     g_new_hooker = nullptr;
     g_delete_hooker = nullptr;
 #elif CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX
-
+    malloc_logger = g_default_malloc_logger;
+    g_new_hooker = nullptr;
+    g_delete_hooker = nullptr;
 #elif CC_PLATFORM_WINDOWS
     MallocHook_RemoveNewHook(&newHook);
     MallocHook_RemoveDeleteHook(&deleteHook);
