@@ -23,12 +23,12 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "physics/physx/PhysXInc.h"
 #include "physics/physx/PhysXEventManager.h"
-#include "physics/spec/IWorld.h"
+#include <algorithm>
+#include "physics/physx/PhysXInc.h"
 #include "physics/physx/PhysXUtils.h"
 #include "physics/physx/shapes/PhysXShape.h"
-#include <algorithm>
+#include "physics/spec/IWorld.h"
 
 namespace cc {
 namespace physics {
@@ -80,13 +80,13 @@ void PhysXEventManager::SimulationEventCallback::onContact(const physx::PxContac
             return (pair->shapeA == self || pair->shapeA == other) && (pair->shapeB == self || pair->shapeB == other);
         });
 
-		if (iter == pairs.end()){
+        if (iter == pairs.end()) {
             pairs.push_back(std::shared_ptr<ContactEventPair>(new ContactEventPair{self, other}));
             iter = pairs.end() - 1;
-		}
+        }
 
-        if (cp.events & physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS) {            
-			iter->get()->state = ETouchState::STAY;
+        if (cp.events & physx::PxPairFlag::eNOTIFY_TOUCH_PERSISTS) {
+            iter->get()->state = ETouchState::STAY;
         } else if (cp.events & physx::PxPairFlag::eNOTIFY_TOUCH_FOUND) {
             iter->get()->state = ETouchState::ENTER;
         } else if (cp.events & physx::PxPairFlag::eNOTIFY_TOUCH_LOST) {
@@ -114,8 +114,8 @@ void PhysXEventManager::refreshPairs() {
             iter++;
         }
     }
-    
-	getConatctPairs().clear();
+
+    getConatctPairs().clear();
 }
 
 } // namespace physics
