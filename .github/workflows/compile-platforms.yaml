@@ -16,7 +16,6 @@ jobs:
         shell: bash
         run: |
           EXT_VERSION=`grep version external/config.json  |awk -F'"' '{print $4}'`
-          rm external/config.json
           python3 ./download-deps.py
       - name: Install deps
         run: |
@@ -59,7 +58,6 @@ jobs:
         shell: bash
         run: |
           EXT_VERSION=`grep version external/config.json  |awk -F'"' '{print $4}'`
-          rm external/config.json
           python3 ./download-deps.py
       - name: Generate bindings
         run: |
@@ -117,7 +115,6 @@ jobs:
         shell: bash
         run: |
           EXT_VERSION=`grep version external/config.json  |awk -F'"' '{print $4}'`
-          rm external/config.json
           python3 ./download-deps.py
       - name: Generate bindings
         run: |
@@ -168,7 +165,6 @@ jobs:
         shell: bash
         run: |
           EXT_VERSION=`grep version external/config.json  |awk -F'"' '{print $4}'`
-          rm external/config.json
           python3 ./download-deps.py
       - name: Generate bindings
         run: |

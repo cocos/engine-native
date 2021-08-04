@@ -21,7 +21,7 @@ jobs:
           npm install
       - name: download external libraries
         run: |
-          node ./utils/download-deps.js
+          python3 ./download-deps.py
       - name: install vulkan-sdk
         run: |
           choco install vulkan-sdk

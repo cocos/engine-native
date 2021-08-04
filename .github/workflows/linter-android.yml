@@ -27,7 +27,6 @@ jobs:
       - name: Download external
         run: |
           EXT_VERSION=`grep version external/config.json  |awk -F'"' '{print $4}'`
-          rm external/config.json
           python3 ./download-deps.py
 
       - name: Generate bindings
