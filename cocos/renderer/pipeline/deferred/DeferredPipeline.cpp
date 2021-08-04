@@ -32,11 +32,6 @@
 #include "gfx-base/GFXDef.h"
 #include "gfx-base/GFXDescriptorSet.h"
 #include "gfx-base/GFXDevice.h"
-#include "gfx-base/GFXFramebuffer.h"
-#include "gfx-base/GFXQueue.h"
-#include "gfx-base/GFXRenderPass.h"
-#include "gfx-base/GFXSampler.h"
-#include "gfx-base/GFXTexture.h"
 #include "platform/Application.h"
 
 namespace cc {
@@ -308,8 +303,8 @@ gfx::Rect DeferredPipeline::getRenderArea(scene::Camera *camera, bool onScreen) 
     float h;
     if (onScreen) {
         gfx::Swapchain *swapchain = camera->window->swapchain;
-        w = static_cast<float>(swapchain && toNumber(swapchain->getSurfaceTransform()) % 2 ? camera->height : camera->width);
-        h = static_cast<float>(swapchain && toNumber(swapchain->getSurfaceTransform()) % 2 ? camera->width : camera->height);
+        w                         = static_cast<float>(swapchain && toNumber(swapchain->getSurfaceTransform()) % 2 ? camera->height : camera->width);
+        h                         = static_cast<float>(swapchain && toNumber(swapchain->getSurfaceTransform()) % 2 ? camera->width : camera->height);
     } else {
         w = static_cast<float>(camera->width);
         h = static_cast<float>(camera->height);
@@ -341,28 +336,22 @@ bool DeferredPipeline::activeRenderer() {
     _commandBuffers.push_back(_device->getCommandBuffer());
     auto *const sharedData = _pipelineSceneData->getSharedData();
 
-    gfx::SamplerInfo info{
+    gfx::Sampler *const sampler = _device->getSampler({
         gfx::Filter::POINT,
         gfx::Filter::POINT,
         gfx::Filter::NONE,
         gfx::Address::CLAMP,
         gfx::Address::CLAMP,
         gfx::Address::CLAMP,
-        {},
-        {},
-        {},
-        {},
-    };
-    const uint          samplerHash = SamplerLib::genSamplerHash(info);
-    gfx::Sampler *const sampler     = SamplerLib::getSampler(samplerHash);
+    });
 
     // Main light sampler binding
-    this->_descriptorSet->bindSampler(SHADOWMAP::BINDING, sampler);
-    this->_descriptorSet->bindTexture(SHADOWMAP::BINDING, getDefaultTexture());
+    _descriptorSet->bindSampler(SHADOWMAP::BINDING, sampler);
+    _descriptorSet->bindTexture(SHADOWMAP::BINDING, getDefaultTexture());
 
     // Spot light sampler binding
-    this->_descriptorSet->bindSampler(SPOTLIGHTINGMAP::BINDING, sampler);
-    this->_descriptorSet->bindTexture(SPOTLIGHTINGMAP::BINDING, getDefaultTexture());
+    _descriptorSet->bindSampler(SPOTLIGHTINGMAP::BINDING, sampler);
+    _descriptorSet->bindTexture(SPOTLIGHTINGMAP::BINDING, getDefaultTexture());
 
     _descriptorSet->update();
 
@@ -418,9 +407,7 @@ void DeferredPipeline::destroy() {
         _descriptorSet->getBuffer(UBOGlobal::BINDING)->destroy();
         _descriptorSet->getBuffer(UBOCamera::BINDING)->destroy();
         _descriptorSet->getBuffer(UBOShadow::BINDING)->destroy();
-        _descriptorSet->getSampler(SHADOWMAP::BINDING)->destroy();
         _descriptorSet->getTexture(SHADOWMAP::BINDING)->destroy();
-        _descriptorSet->getSampler(SPOTLIGHTINGMAP::BINDING)->destroy();
         _descriptorSet->getTexture(SPOTLIGHTINGMAP::BINDING)->destroy();
     }
 

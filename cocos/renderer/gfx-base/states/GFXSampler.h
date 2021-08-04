@@ -35,9 +35,9 @@ class CC_DLL Sampler : public GFXObject {
 public:
     explicit Sampler(const SamplerInfo &info);
 
-    static uint computeHash(const SamplerInfo &info);
+    static uint32_t computeHash(const SamplerInfo &info);
 
-    inline const SamplerInfo &  getInfo() const { return _info; }
+    inline const SamplerInfo &getInfo() const { return _info; }
 
 protected:
     SamplerInfo _info;

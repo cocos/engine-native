@@ -36,7 +36,7 @@ namespace gfx {
 
 SwapchainValidator::SwapchainValidator(Swapchain *actor)
 : Agent<Swapchain>(actor) {
-    _typedID = generateObjectID<decltype(this)>();
+    _typedID = actor->getTypedID();
 }
 
 SwapchainValidator::~SwapchainValidator() {

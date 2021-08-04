@@ -34,7 +34,7 @@ namespace gfx {
 
 BufferAgent::BufferAgent(Buffer *actor)
 : Agent<Buffer>(actor) {
-    _typedID = generateObjectID<decltype(this)>();
+    _typedID = actor->getTypedID();
 }
 
 BufferAgent::~BufferAgent() {

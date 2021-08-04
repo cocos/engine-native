@@ -42,7 +42,7 @@ unordered_map<Format, Feature> featureCheckMap{
 
 TextureValidator::TextureValidator(Texture *actor)
 : Agent<Texture>(actor) {
-    _typedID = generateObjectID<decltype(this)>();
+    _typedID = actor->getTypedID();
 }
 
 TextureValidator::~TextureValidator() {

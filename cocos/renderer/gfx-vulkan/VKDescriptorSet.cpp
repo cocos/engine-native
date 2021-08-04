@@ -31,9 +31,9 @@
 #include "VKDescriptorSetLayout.h"
 #include "VKDevice.h"
 #include "VKPipelineLayout.h"
-#include "states/VKSampler.h"
 #include "VKShader.h"
 #include "VKTexture.h"
+#include "states/VKSampler.h"
 
 namespace cc {
 namespace gfx {

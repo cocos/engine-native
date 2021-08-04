@@ -23,9 +23,9 @@
  THE SOFTWARE.
 ****************************************************************************/
 
+#include "VKSampler.h"
 #include "../VKCommands.h"
 #include "../VKDevice.h"
-#include "VKSampler.h"
 
 namespace cc {
 namespace gfx {
@@ -46,7 +46,7 @@ CCVKSampler::CCVKSampler(const SamplerInfo &info) : Sampler(info) {
     cmdFuncCCVKCreateSampler(CCVKDevice::getInstance(), _gpuSampler);
 }
 
-CCVKSampler::~CCVKSampler() {
+CCVKSampler::~CCVKSampler() { // NOLINT(bugprone-exception-escape) garbage collect may throw
     if (_gpuSampler) {
         CCVKDevice::getInstance()->gpuDescriptorHub()->disengage(_gpuSampler);
         CCVKDevice::getInstance()->gpuRecycleBin()->collect(_gpuSampler);

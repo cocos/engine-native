@@ -515,54 +515,6 @@ const gfx::UniformStorageImage REFLECTIONSTORAGE::LAYOUT = {
     1,
 };
 
-uint SamplerLib::defaultSamplerHash{genSamplerHash(gfx::SamplerInfo())};
-
-unordered_map<uint, gfx::Sampler *> SamplerLib::samplerCache{};
-
-uint SamplerLib::genSamplerHash(const gfx::SamplerInfo &info) {
-    uint hash = 0;
-    hash |= static_cast<uint>(info.minFilter);
-    hash |= static_cast<uint>(info.magFilter) << 2;
-    hash |= static_cast<uint>(info.mipFilter) << 4;
-    hash |= static_cast<uint>(info.addressU) << 6;
-    hash |= static_cast<uint>(info.addressV) << 8;
-    hash |= static_cast<uint>(info.addressW) << 10;
-    hash |= static_cast<uint>(info.maxAnisotropy) << 12;
-    hash |= static_cast<uint>(info.cmpFunc) << 16;
-    hash |= static_cast<uint>(info.mipLODBias) << 28;
-    return hash;
-}
-
-gfx::Sampler *SamplerLib::getSampler(uint hash) {
-    if (hash == 0) {
-        hash = defaultSamplerHash;
-    }
-
-    if (samplerCache.count(hash)) {
-        return samplerCache[hash];
-    }
-
-    gfx::SamplerInfo info;
-    info.minFilter     = static_cast<gfx::Filter>(hash & 3);
-    info.magFilter     = static_cast<gfx::Filter>((hash >> 2) & 3);
-    info.mipFilter     = static_cast<gfx::Filter>((hash >> 4) & 3);
-    info.addressU      = static_cast<gfx::Address>((hash >> 6) & 3);
-    info.addressV      = static_cast<gfx::Address>((hash >> 8) & 3);
-    info.addressW      = static_cast<gfx::Address>((hash >> 10) & 3);
-    info.maxAnisotropy = ((hash >> 12) & 15);
-    info.cmpFunc       = static_cast<gfx::ComparisonFunc>((hash >> 16) & 15);
-    info.mipLODBias    = static_cast<float>((hash >> 28) & 15);
-
-    return samplerCache[hash] = gfx::Device::getInstance()->createSampler(info);
-}
-
-void SamplerLib::destroyAll() {
-    for (auto &pair : samplerCache) {
-        CC_SAFE_DESTROY(pair.second);
-    }
-    samplerCache.clear();
-}
-
 uint skyboxFlag = static_cast<uint>(gfx::ClearFlagBit::STENCIL) << 1;
 
 uint nextPow2(uint val) {

@@ -25,8 +25,8 @@
 
 #include "base/CoreStd.h"
 
-#include "GFXTexture.h"
 #include "GFXSwapchain.h"
+#include "GFXTexture.h"
 
 namespace cc {
 namespace gfx {

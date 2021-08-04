@@ -1129,7 +1129,6 @@ inline bool sevalue_to_native(const se::Value &from, void **to, se::Object * /*c
     return false;
 }
 
-
 template <>
 inline bool sevalue_to_native(const se::Value &from, std::string **to, se::Object * /*ctx*/) {
     **to = from.toString();

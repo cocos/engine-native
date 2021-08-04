@@ -35,7 +35,7 @@ namespace gfx {
 
 BufferValidator::BufferValidator(Buffer *actor)
 : Agent<Buffer>(actor) {
-    _typedID = generateObjectID<decltype(this)>();
+    _typedID = actor->getTypedID();
 }
 
 BufferValidator::~BufferValidator() {

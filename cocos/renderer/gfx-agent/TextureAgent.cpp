@@ -36,7 +36,7 @@ namespace gfx {
 
 TextureAgent::TextureAgent(Texture *actor)
 : Agent<Texture>(actor) {
-    _typedID = generateObjectID<decltype(this)>();
+    _typedID = actor->getTypedID();
 }
 
 TextureAgent::~TextureAgent() {

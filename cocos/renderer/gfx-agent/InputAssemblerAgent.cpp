@@ -35,7 +35,7 @@ namespace gfx {
 
 InputAssemblerAgent::InputAssemblerAgent(InputAssembler *actor)
 : Agent<InputAssembler>(actor) {
-    _typedID = generateObjectID<decltype(this)>();
+    _typedID = actor->getTypedID();
 }
 
 InputAssemblerAgent::~InputAssemblerAgent() {

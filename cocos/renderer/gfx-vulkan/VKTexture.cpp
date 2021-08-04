@@ -128,7 +128,7 @@ void CCVKTexture::doResize(uint width, uint height, uint size) {
 
 ///////////////////////////// Swapchian Specific /////////////////////////////
 
-void CCVKTexture::doInit(const SwapchainTextureInfo &/*info*/) {
+void CCVKTexture::doInit(const SwapchainTextureInfo & /*info*/) {
     _gpuTexture              = CC_NEW(CCVKGPUTexture);
     _gpuTexture->type        = _info.type;
     _gpuTexture->format      = _info.format;

@@ -658,8 +658,6 @@ cocos_source_files(
                  cocos/renderer/gfx-base/GFXDevice.h
                  cocos/renderer/gfx-base/GFXFramebuffer.cpp
                  cocos/renderer/gfx-base/GFXFramebuffer.h
-                 cocos/renderer/gfx-base/GFXGlobalBarrier.cpp
-                 cocos/renderer/gfx-base/GFXGlobalBarrier.h
                  cocos/renderer/gfx-base/GFXInputAssembler.cpp
                  cocos/renderer/gfx-base/GFXInputAssembler.h
                  cocos/renderer/gfx-base/GFXDescriptorSet.cpp
@@ -674,16 +672,18 @@ cocos_source_files(
                  cocos/renderer/gfx-base/GFXQueue.h
                  cocos/renderer/gfx-base/GFXRenderPass.cpp
                  cocos/renderer/gfx-base/GFXRenderPass.h
-                 cocos/renderer/gfx-base/GFXSampler.cpp
-                 cocos/renderer/gfx-base/GFXSampler.h
                  cocos/renderer/gfx-base/GFXShader.cpp
                  cocos/renderer/gfx-base/GFXShader.h
                  cocos/renderer/gfx-base/GFXSwapchain.cpp
                  cocos/renderer/gfx-base/GFXSwapchain.h
                  cocos/renderer/gfx-base/GFXTexture.cpp
                  cocos/renderer/gfx-base/GFXTexture.h
-                 cocos/renderer/gfx-base/GFXTextureBarrier.cpp
-                 cocos/renderer/gfx-base/GFXTextureBarrier.h
+                 cocos/renderer/gfx-base/states/GFXGlobalBarrier.cpp
+                 cocos/renderer/gfx-base/states/GFXGlobalBarrier.h
+                 cocos/renderer/gfx-base/states/GFXSampler.cpp
+                 cocos/renderer/gfx-base/states/GFXSampler.h
+                 cocos/renderer/gfx-base/states/GFXTextureBarrier.cpp
+                 cocos/renderer/gfx-base/states/GFXTextureBarrier.h
 
                  cocos/renderer/gfx-agent/BufferAgent.h
                  cocos/renderer/gfx-agent/BufferAgent.cpp
@@ -707,8 +707,6 @@ cocos_source_files(
                  cocos/renderer/gfx-agent/QueueAgent.cpp
                  cocos/renderer/gfx-agent/RenderPassAgent.h
                  cocos/renderer/gfx-agent/RenderPassAgent.cpp
-                 cocos/renderer/gfx-agent/SamplerAgent.h
-                 cocos/renderer/gfx-agent/SamplerAgent.cpp
                  cocos/renderer/gfx-agent/SwapchainAgent.h
                  cocos/renderer/gfx-agent/SwapchainAgent.cpp
                  cocos/renderer/gfx-agent/ShaderAgent.h
@@ -738,8 +736,6 @@ cocos_source_files(
                  cocos/renderer/gfx-validator/QueueValidator.cpp
                  cocos/renderer/gfx-validator/RenderPassValidator.h
                  cocos/renderer/gfx-validator/RenderPassValidator.cpp
-                 cocos/renderer/gfx-validator/SamplerValidator.h
-                 cocos/renderer/gfx-validator/SamplerValidator.cpp
                  cocos/renderer/gfx-validator/ShaderValidator.h
                  cocos/renderer/gfx-validator/ShaderValidator.cpp
                  cocos/renderer/gfx-validator/SwapchainValidator.h
@@ -771,8 +767,6 @@ cocos_source_files(
                  cocos/renderer/gfx-empty/EmptyQueue.cpp
                  cocos/renderer/gfx-empty/EmptyRenderPass.h
                  cocos/renderer/gfx-empty/EmptyRenderPass.cpp
-                 cocos/renderer/gfx-empty/EmptySampler.h
-                 cocos/renderer/gfx-empty/EmptySampler.cpp
                  cocos/renderer/gfx-empty/EmptyShader.h
                  cocos/renderer/gfx-empty/EmptyShader.cpp
                  cocos/renderer/gfx-empty/EmptySwapchain.h
@@ -928,8 +922,6 @@ if(CC_USE_GLES2)
                      cocos/renderer/gfx-gles2/GLES2Queue.h
                      cocos/renderer/gfx-gles2/GLES2RenderPass.cpp
                      cocos/renderer/gfx-gles2/GLES2RenderPass.h
-                     cocos/renderer/gfx-gles2/GLES2Sampler.cpp
-                     cocos/renderer/gfx-gles2/GLES2Sampler.h
                      cocos/renderer/gfx-gles2/GLES2Shader.cpp
                      cocos/renderer/gfx-gles2/GLES2Shader.h
                      cocos/renderer/gfx-gles2/GLES2Swapchain.cpp
@@ -938,18 +930,11 @@ if(CC_USE_GLES2)
                      cocos/renderer/gfx-gles2/GLES2Std.h
                      cocos/renderer/gfx-gles2/GLES2Texture.cpp
                      cocos/renderer/gfx-gles2/GLES2Texture.h
+                     cocos/renderer/gfx-gles2/GLES2Wrangler.cpp
                      cocos/renderer/gfx-gles2/GLES2Wrangler.h
+                     cocos/renderer/gfx-gles2/states/GLES2Sampler.cpp
+                     cocos/renderer/gfx-gles2/states/GLES2Sampler.h
     )
-
-    if(APPLE)
-        cocos_source_files(
-            NO_WERROR    cocos/renderer/gfx-gles2/GLES2Wrangler.mm
-        )
-    else()
-        cocos_source_files(
-                         cocos/renderer/gfx-gles2/GLES2Wrangler.cpp
-        )
-    endif()
 endif()
 
 if(CC_USE_GLES3)
@@ -965,8 +950,6 @@ if(CC_USE_GLES3)
                      cocos/renderer/gfx-gles3/GLES3Device.h
                      cocos/renderer/gfx-gles3/GLES3Framebuffer.cpp
                      cocos/renderer/gfx-gles3/GLES3Framebuffer.h
-                     cocos/renderer/gfx-gles3/GLES3GlobalBarrier.cpp
-                     cocos/renderer/gfx-gles3/GLES3GlobalBarrier.h
                      cocos/renderer/gfx-gles3/GLES3GPUContext.cpp
                      cocos/renderer/gfx-gles3/GLES3GPUObjects.h
                      cocos/renderer/gfx-gles3/GLES3InputAssembler.cpp
@@ -985,8 +968,6 @@ if(CC_USE_GLES3)
                      cocos/renderer/gfx-gles3/GLES3Queue.h
                      cocos/renderer/gfx-gles3/GLES3RenderPass.cpp
                      cocos/renderer/gfx-gles3/GLES3RenderPass.h
-                     cocos/renderer/gfx-gles3/GLES3Sampler.cpp
-                     cocos/renderer/gfx-gles3/GLES3Sampler.h
                      cocos/renderer/gfx-gles3/GLES3Shader.cpp
                      cocos/renderer/gfx-gles3/GLES3Shader.h
                      cocos/renderer/gfx-gles3/GLES3Swapchain.cpp
@@ -995,17 +976,13 @@ if(CC_USE_GLES3)
                      cocos/renderer/gfx-gles3/GLES3Std.h
                      cocos/renderer/gfx-gles3/GLES3Texture.cpp
                      cocos/renderer/gfx-gles3/GLES3Texture.h
+                     cocos/renderer/gfx-gles3/GLES3Wrangler.cpp
                      cocos/renderer/gfx-gles3/GLES3Wrangler.h
+                     cocos/renderer/gfx-gles3/states/GLES3GlobalBarrier.cpp
+                     cocos/renderer/gfx-gles3/states/GLES3GlobalBarrier.h
+                     cocos/renderer/gfx-gles3/states/GLES3Sampler.cpp
+                     cocos/renderer/gfx-gles3/states/GLES3Sampler.h
     )
-    if(APPLE)
-        cocos_source_files(
-            NO_WERROR    cocos/renderer/gfx-gles3/GLES3Wrangler.mm
-        )
-    else()
-        cocos_source_files(
-                         cocos/renderer/gfx-gles3/GLES3Wrangler.cpp
-        )
-    endif()
 endif()
 
 if(CC_USE_METAL)
@@ -1071,8 +1048,6 @@ if(CC_USE_VULKAN)
                      cocos/renderer/gfx-vulkan/VKDevice.h
                      cocos/renderer/gfx-vulkan/VKFramebuffer.cpp
                      cocos/renderer/gfx-vulkan/VKFramebuffer.h
-                     cocos/renderer/gfx-vulkan/VKGlobalBarrier.cpp
-                     cocos/renderer/gfx-vulkan/VKGlobalBarrier.h
                      cocos/renderer/gfx-vulkan/VKGPUContext.cpp
                      cocos/renderer/gfx-vulkan/VKGPUObjects.h
                      cocos/renderer/gfx-vulkan/VKInputAssembler.cpp
@@ -1089,8 +1064,6 @@ if(CC_USE_VULKAN)
                      cocos/renderer/gfx-vulkan/VKQueue.h
                      cocos/renderer/gfx-vulkan/VKRenderPass.cpp
                      cocos/renderer/gfx-vulkan/VKRenderPass.h
-                     cocos/renderer/gfx-vulkan/VKSampler.cpp
-                     cocos/renderer/gfx-vulkan/VKSampler.h
                      cocos/renderer/gfx-vulkan/VKShader.cpp
                      cocos/renderer/gfx-vulkan/VKShader.h
                      cocos/renderer/gfx-vulkan/VKStd.cpp
@@ -1099,12 +1072,16 @@ if(CC_USE_VULKAN)
                      cocos/renderer/gfx-vulkan/VKSwapchain.h
                      cocos/renderer/gfx-vulkan/VKTexture.cpp
                      cocos/renderer/gfx-vulkan/VKTexture.h
-                     cocos/renderer/gfx-vulkan/VKTextureBarrier.cpp
-                     cocos/renderer/gfx-vulkan/VKTextureBarrier.h
                      cocos/renderer/gfx-vulkan/VKUtils.cpp
                      cocos/renderer/gfx-vulkan/VKUtils.h
                      cocos/renderer/gfx-vulkan/volk.c
                      cocos/renderer/gfx-vulkan/volk.h
+                     cocos/renderer/gfx-vulkan/states/VKGlobalBarrier.cpp
+                     cocos/renderer/gfx-vulkan/states/VKGlobalBarrier.h
+                     cocos/renderer/gfx-vulkan/states/VKSampler.cpp
+                     cocos/renderer/gfx-vulkan/states/VKSampler.h
+                     cocos/renderer/gfx-vulkan/states/VKTextureBarrier.cpp
+                     cocos/renderer/gfx-vulkan/states/VKTextureBarrier.h
     )
 
     if(ANDROID)

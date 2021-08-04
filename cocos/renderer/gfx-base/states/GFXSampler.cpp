@@ -35,17 +35,16 @@ Sampler::Sampler(const SamplerInfo &info)
     _info = info;
 }
 
-uint Sampler::computeHash(const SamplerInfo &info) {
-    uint seed = 8;
-    seed ^= static_cast<uint>(info.minFilter) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    seed ^= static_cast<uint>(info.magFilter) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    seed ^= static_cast<uint>(info.mipFilter) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    seed ^= static_cast<uint>(info.addressU) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    seed ^= static_cast<uint>(info.addressV) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    seed ^= static_cast<uint>(info.addressW) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    seed ^= static_cast<uint>(info.maxAnisotropy) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    seed ^= static_cast<uint>(info.cmpFunc) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    return seed;
+uint32_t Sampler::computeHash(const SamplerInfo &info) {
+    uint32_t hash = toNumber(info.minFilter);
+    hash |= (toNumber(info.magFilter) << 2);
+    hash |= (toNumber(info.mipFilter) << 4);
+    hash |= (toNumber(info.addressU) << 6);
+    hash |= (toNumber(info.addressV) << 8);
+    hash |= (toNumber(info.addressW) << 10);
+    hash |= (info.maxAnisotropy << 12);
+    hash |= (toNumber(info.cmpFunc) << 16);
+    return hash;
 }
 
 } // namespace gfx

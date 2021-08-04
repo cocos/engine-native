@@ -30,12 +30,12 @@
 #include "GLES3DescriptorSet.h"
 #include "GLES3Device.h"
 #include "GLES3Framebuffer.h"
-#include "states/GLES3GlobalBarrier.h"
 #include "GLES3InputAssembler.h"
 #include "GLES3PipelineState.h"
 #include "GLES3PrimaryCommandBuffer.h"
 #include "GLES3RenderPass.h"
 #include "GLES3Texture.h"
+#include "states/GLES3GlobalBarrier.h"
 
 namespace cc {
 namespace gfx {

@@ -36,7 +36,7 @@ namespace gfx {
 
 InputAssemblerValidator::InputAssemblerValidator(InputAssembler *actor)
 : Agent<InputAssembler>(actor) {
-    _typedID = generateObjectID<decltype(this)>();
+    _typedID = actor->getTypedID();
 }
 
 InputAssemblerValidator::~InputAssemblerValidator() {

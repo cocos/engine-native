@@ -26,7 +26,6 @@
 #pragma once
 
 #include "VKStd.h"
-#include "gfx-base/GFXDef-common.h"
 #include "gfx-base/GFXDevice.h"
 
 namespace cc {
@@ -119,12 +118,12 @@ protected:
     PipelineLayout *     createPipelineLayout() override;
     PipelineState *      createPipelineState() override;
 
-    Sampler *            createSampler(const SamplerInfo &info) override;
-    GlobalBarrier *      createGlobalBarrier(const GlobalBarrierInfo &info) override;
-    TextureBarrier *     createTextureBarrier(const TextureBarrierInfo &info) override;
+    Sampler *       createSampler(const SamplerInfo &info) override;
+    GlobalBarrier * createGlobalBarrier(const GlobalBarrierInfo &info) override;
+    TextureBarrier *createTextureBarrier(const TextureBarrierInfo &info) override;
 
-    void                 copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) override;
-    void                 copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint count) override;
+    void copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) override;
+    void copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint count) override;
 
     void destroySwapchain();
     bool checkSwapchainStatus();

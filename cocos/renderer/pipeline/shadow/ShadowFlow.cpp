@@ -175,7 +175,7 @@ void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const scene::Li
     const auto  width         = static_cast<uint>(shadowMapSize.x);
     const auto  height        = static_cast<uint>(shadowMapSize.y);
     const auto  format        = supportsHalfFloatTexture(device) ? gfx::Format::R32F : gfx::Format::RGBA8;
-    
+
     const gfx::ColorAttachment colorAttachment = {
         format,
         gfx::SampleCount::ONE,

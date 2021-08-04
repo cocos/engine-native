@@ -442,19 +442,6 @@ struct CC_DLL UBOShadow : public Object {
     static const String                          NAME;
 };
 
-class CC_DLL SamplerLib : public Object {
-public:
-    static gfx::Sampler *getSampler(uint hash);
-    static uint          genSamplerHash(const gfx::SamplerInfo &info);
-
-    static void destroyAll();
-
-protected:
-    static uint defaultSamplerHash;
-
-    static unordered_map<uint, gfx::Sampler *> samplerCache;
-};
-
 struct CC_DLL DescriptorSetLayoutInfos {
     gfx::DescriptorSetLayoutBindingList               bindings;
     unordered_map<String, gfx::UniformBlock>          blocks;

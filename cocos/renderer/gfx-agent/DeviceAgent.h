@@ -80,17 +80,17 @@ public:
     PipelineLayout *     createPipelineLayout() override;
     PipelineState *      createPipelineState() override;
 
-    Sampler *            createSampler(const SamplerInfo &info) override;
-    GlobalBarrier *      createGlobalBarrier(const GlobalBarrierInfo &info) override;
-    TextureBarrier *     createTextureBarrier(const TextureBarrierInfo &info) override;
+    Sampler *       createSampler(const SamplerInfo &info) override;
+    GlobalBarrier * createGlobalBarrier(const GlobalBarrierInfo &info) override;
+    TextureBarrier *createTextureBarrier(const TextureBarrierInfo &info) override;
 
-    void                 copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) override;
-    void                 copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint count) override;
-    void                 flushCommands(CommandBuffer *const *cmdBuffs, uint count) override;
-    MemoryStatus &       getMemoryStatus() override { return _actor->getMemoryStatus(); }
-    uint                 getNumDrawCalls() const override { return _actor->getNumDrawCalls(); }
-    uint                 getNumInstances() const override { return _actor->getNumInstances(); }
-    uint                 getNumTris() const override { return _actor->getNumTris(); }
+    void          copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) override;
+    void          copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint count) override;
+    void          flushCommands(CommandBuffer *const *cmdBuffs, uint count) override;
+    MemoryStatus &getMemoryStatus() override { return _actor->getMemoryStatus(); }
+    uint          getNumDrawCalls() const override { return _actor->getNumDrawCalls(); }
+    uint          getNumInstances() const override { return _actor->getNumInstances(); }
+    uint          getNumTris() const override { return _actor->getNumTris(); }
 
     uint getCurrentIndex() const { return _currentIndex; }
     void setMultithreaded(bool multithreaded);

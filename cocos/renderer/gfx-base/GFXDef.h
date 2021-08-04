@@ -31,10 +31,10 @@ namespace cc {
 namespace gfx {
 
 struct SwapchainTextureInfo {
-    Swapchain*  swapchain{nullptr};
-    Format      format{Format::UNKNOWN};
-    uint32_t    width{0};
-    uint32_t    height{0};
+    Swapchain* swapchain{nullptr};
+    Format     format{Format::UNKNOWN};
+    uint32_t   width{0};
+    uint32_t   height{0};
 };
 
 constexpr TextureUsage TEXTURE_USAGE_TRANSIENT = static_cast<TextureUsage>(

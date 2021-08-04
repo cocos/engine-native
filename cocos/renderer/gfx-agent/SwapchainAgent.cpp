@@ -35,7 +35,7 @@ namespace gfx {
 
 SwapchainAgent::SwapchainAgent(Swapchain *actor)
 : Agent<Swapchain>(actor) {
-    _typedID = generateObjectID<decltype(this)>();
+    _typedID = actor->getTypedID();
 }
 
 SwapchainAgent::~SwapchainAgent() {

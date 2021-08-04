@@ -45,7 +45,7 @@ CCVKSwapchain::~CCVKSwapchain() {
     destroy();
 }
 
-void CCVKSwapchain::doInit(const SwapchainInfo &/*info*/) {
+void CCVKSwapchain::doInit(const SwapchainInfo & /*info*/) {
     auto *      gpuDevice  = CCVKDevice::getInstance()->gpuDevice();
     const auto *gpuContext = CCVKDevice::getInstance()->gpuContext();
     _gpuSwapchain          = CC_NEW(CCVKGPUSwapchain);
@@ -383,7 +383,7 @@ void CCVKSwapchain::doDestroySurface() {
     _gpuSwapchain->vkSurface = VK_NULL_HANDLE;
 }
 
-void CCVKSwapchain::doCreateSurface(void */*windowHandle*/) {
+void CCVKSwapchain::doCreateSurface(void * /*windowHandle*/) {
     if (!_gpuSwapchain || _gpuSwapchain->vkSurface != VK_NULL_HANDLE) return;
     createVkSurface();
     checkSwapchainStatus();

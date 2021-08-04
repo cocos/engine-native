@@ -23,9 +23,9 @@
  THE SOFTWARE.
 ****************************************************************************/
 
+#include "GLES3Sampler.h"
 #include "../GLES3Commands.h"
 #include "../GLES3Device.h"
-#include "GLES3Sampler.h"
 
 namespace cc {
 namespace gfx {

@@ -102,6 +102,7 @@ enum class ObjectType : uint32_t {
     GLOBAL_BARRIER,
     TEXTURE_BARRIER,
     BUFFER_BARRIER,
+    COUNT,
 };
 CC_ENUM_CONVERSION_OPERATOR(ObjectType);
 

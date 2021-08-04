@@ -23,8 +23,8 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "../GLES3Commands.h"
 #include "GLES3GlobalBarrier.h"
+#include "../GLES3Commands.h"
 
 namespace cc {
 namespace gfx {

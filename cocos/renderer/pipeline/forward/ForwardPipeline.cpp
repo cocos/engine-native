@@ -27,14 +27,7 @@
 #include "../SceneCulling.h"
 #include "../shadow/ShadowFlow.h"
 #include "ForwardFlow.h"
-#include "gfx-base/GFXBuffer.h"
-#include "gfx-base/GFXCommandBuffer.h"
-#include "gfx-base/GFXDescriptorSet.h"
 #include "gfx-base/GFXDevice.h"
-#include "gfx-base/GFXQueue.h"
-#include "gfx-base/GFXRenderPass.h"
-#include "gfx-base/GFXSampler.h"
-#include "gfx-base/GFXTexture.h"
 #include "platform/Application.h"
 #include "scene/RenderScene.h"
 
@@ -144,28 +137,22 @@ bool ForwardPipeline::activeRenderer() {
     _commandBuffers.push_back(_device->getCommandBuffer());
     auto *const sharedData = _pipelineSceneData->getSharedData();
 
-    gfx::SamplerInfo info{
+    gfx::Sampler *const shadowMapSampler = _device->getSampler({
         gfx::Filter::POINT,
         gfx::Filter::POINT,
         gfx::Filter::NONE,
         gfx::Address::CLAMP,
         gfx::Address::CLAMP,
         gfx::Address::CLAMP,
-        {},
-        {},
-        {},
-        {},
-    };
-    const uint          shadowMapSamplerHash = SamplerLib::genSamplerHash(info);
-    gfx::Sampler *const shadowMapSampler     = SamplerLib::getSampler(shadowMapSamplerHash);
+    });
 
     // Main light sampler binding
-    this->_descriptorSet->bindSampler(SHADOWMAP::BINDING, shadowMapSampler);
-    this->_descriptorSet->bindTexture(SHADOWMAP::BINDING, getDefaultTexture());
+    _descriptorSet->bindSampler(SHADOWMAP::BINDING, shadowMapSampler);
+    _descriptorSet->bindTexture(SHADOWMAP::BINDING, getDefaultTexture());
 
     // Spot light sampler binding
-    this->_descriptorSet->bindSampler(SPOTLIGHTINGMAP::BINDING, shadowMapSampler);
-    this->_descriptorSet->bindTexture(SPOTLIGHTINGMAP::BINDING, getDefaultTexture());
+    _descriptorSet->bindSampler(SPOTLIGHTINGMAP::BINDING, shadowMapSampler);
+    _descriptorSet->bindTexture(SPOTLIGHTINGMAP::BINDING, getDefaultTexture());
 
     _descriptorSet->update();
     // update global defines when all states initialized.
@@ -180,9 +167,7 @@ void ForwardPipeline::destroy() {
         _descriptorSet->getBuffer(UBOGlobal::BINDING)->destroy();
         _descriptorSet->getBuffer(UBOCamera::BINDING)->destroy();
         _descriptorSet->getBuffer(UBOShadow::BINDING)->destroy();
-        _descriptorSet->getSampler(SHADOWMAP::BINDING)->destroy();
         _descriptorSet->getTexture(SHADOWMAP::BINDING)->destroy();
-        _descriptorSet->getSampler(SPOTLIGHTINGMAP::BINDING)->destroy();
         _descriptorSet->getTexture(SPOTLIGHTINGMAP::BINDING)->destroy();
     }
 

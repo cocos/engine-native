@@ -35,7 +35,7 @@ namespace gfx {
 
 RenderPassValidator::RenderPassValidator(RenderPass *actor)
 : Agent<RenderPass>(actor) {
-    _typedID = generateObjectID<decltype(this)>();
+    _typedID = actor->getTypedID();
 }
 
 RenderPassValidator::~RenderPassValidator() {

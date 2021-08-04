@@ -55,7 +55,7 @@ void GLES3PipelineLayout::doInit(const PipelineLayoutInfo & /*info*/) {
 
         for (uint32_t j = 0U; j < dynamicCount; j++) {
             uint32_t binding = gpuSetLayout->dynamicBindings[j];
-            if (indices[binding] < 0) indices[binding] = offset + j;
+            if (indices[binding] < 0) indices[binding] = static_cast<int32_t>(offset + j);
         }
         _gpuPipelineLayout->dynamicOffsetOffsets.push_back(offset);
         _gpuPipelineLayout->setLayouts.push_back(gpuSetLayout);

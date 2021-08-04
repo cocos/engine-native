@@ -141,7 +141,7 @@ void cmdFuncCCVKCreateTexture(CCVKDevice *device, CCVKGPUTexture *gpuTexture) {
             createInfo.usage = usageFlags | VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT;
             allocInfo.usage  = VMA_MEMORY_USAGE_GPU_LAZILY_ALLOCATED;
             VkResult result  = vmaCreateImage(device->gpuDevice()->memoryAllocator, &createInfo, &allocInfo,
-                                              pVkImage, pVmaAllocation, &res);
+                                             pVkImage, pVmaAllocation, &res);
             if (!result) {
                 gpuTexture->memoryless = true;
                 return;

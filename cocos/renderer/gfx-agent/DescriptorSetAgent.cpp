@@ -37,7 +37,7 @@ namespace gfx {
 
 DescriptorSetAgent::DescriptorSetAgent(DescriptorSet *actor)
 : Agent<DescriptorSet>(actor) {
-    _typedID = generateObjectID<decltype(this)>();
+    _typedID = actor->getTypedID();
 }
 
 DescriptorSetAgent::~DescriptorSetAgent() {

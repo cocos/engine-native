@@ -23,9 +23,9 @@
  THE SOFTWARE.
 ****************************************************************************/
 
+#include "VKTextureBarrier.h"
 #include "../VKGPUObjects.h"
 #include "../VKQueue.h"
-#include "VKTextureBarrier.h"
 
 namespace cc {
 namespace gfx {
