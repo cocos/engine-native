@@ -87,7 +87,7 @@ private:
 private:
     static MemoryHook*   _instance;
     std::recursive_mutex _mutex;
-    bool                 _hooking;
+    bool                 _hooking{false};
     RecordMap            _records;
 };
 
