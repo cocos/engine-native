@@ -21,6 +21,7 @@ jobs:
       - name: Download external libraries
         run: |
           EXT_VERSION=`grep version external/config.json  |awk -F'"' '{print $4}'`
+          python3 -m pip install urllib3
           python3 ./download-deps.py
       - name: Run genbindings.py
         run: |

@@ -16,6 +16,7 @@ jobs:
         shell: bash
         run: |
           EXT_VERSION=`grep version external/config.json  |awk -F'"' '{print $4}'`
+          python3 -m pip install urllib3
           python3 ./download-deps.py
       - name: Install deps
         run: |
@@ -58,6 +59,7 @@ jobs:
         shell: bash
         run: |
           EXT_VERSION=`grep version external/config.json  |awk -F'"' '{print $4}'`
+          python3 -m pip install urllib3
           python3 ./download-deps.py
       - name: Generate bindings
         run: |
@@ -115,6 +117,7 @@ jobs:
         shell: bash
         run: |
           EXT_VERSION=`grep version external/config.json  |awk -F'"' '{print $4}'`
+          python3 -m pip install urllib3
           python3 ./download-deps.py
       - name: Generate bindings
         run: |
@@ -165,6 +168,7 @@ jobs:
         shell: bash
         run: |
           EXT_VERSION=`grep version external/config.json  |awk -F'"' '{print $4}'`
+          python3 -m pip install urllib3
           python3 ./download-deps.py
       - name: Generate bindings
         run: |

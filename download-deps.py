@@ -68,7 +68,7 @@ def delete_folder_except(folder_path, excepts):
             os.remove(full_path)
 
 
-class UnrecognizedFormat:
+class UnrecognizedFormat(BaseException):
     def __init__(self, prompt):
         self._prompt = prompt
 
@@ -111,11 +111,12 @@ class CocosZipInstaller(object):
         ret.rstrip(" \t")
         return ret
 
-    def open_url3(slef):
+    def open_url3(self):
         import urllib3
         try:
-            u = urllib3.urlopen(self._url)
-        except urllib3.HTTPError as e:
+            http = urllib3.PoolManager()
+            u = http.request("GET", self._url, preload_content=False)
+        except urllib3.exceptions.HTTPError as e:
             if e.code == 404:
                 print("==> Error: Could not find the file from url: '%s'" % (self._url))
             print("==> Http request failed, error code: " + str(e.code) + ", reason: " + e.read())
@@ -123,7 +124,7 @@ class CocosZipInstaller(object):
 
         return u
 
-    def open_url2(slef):
+    def open_url2(self):
         import urllib2
         try:
             u = urllib2.urlopen(self._url)
@@ -180,9 +181,8 @@ class CocosZipInstaller(object):
                     status = r"Downloaded: %6dK / Total: %dK, Percent: %3.2f%%, Speed: %6.2f KB/S " % (file_size_dl / 1000, file_size / 1000, percent, speed)
                 else:
                     status = r"Downloaded: %6dK, Speed: %6.2f KB/S " % (file_size_dl / 1000, speed)
-                print(status),
+                print(status, end='\r'),
                 sys.stdout.flush()
-                print("\r"),
                 block_size_per_second = 0
                 old_time = new_time
 
