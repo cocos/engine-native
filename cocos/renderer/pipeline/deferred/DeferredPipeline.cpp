@@ -67,6 +67,7 @@ framegraph::StringHandle DeferredPipeline::fgStrHandleGbufferTexture[GBUFFER_COU
     framegraph::FrameGraph::stringToHandle("gbufferEmissiveTexture")
 };
 framegraph::StringHandle DeferredPipeline::fgStrHandleDepthTexture = framegraph::FrameGraph::stringToHandle("depthTexture");
+framegraph::StringHandle DeferredPipeline::fgStrHandleDepthTexturePost = framegraph::FrameGraph::stringToHandle("depthTexturePost");
 framegraph::StringHandle DeferredPipeline::fgStrHandleLightingOutTexture = framegraph::FrameGraph::stringToHandle("lightingOutputTexture");
 framegraph::StringHandle DeferredPipeline::fgStrHandleBackBufferTexture = framegraph::FrameGraph::stringToHandle("backBufferTexture");
 
@@ -164,9 +165,6 @@ void DeferredPipeline::initFrameGraphExternalTexture() {
 
     fgTextureDepth = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(depthInfo);
     fgTextureDepth->createPersistent();
-
-    // backbuffer
-    fgTextureBackBuffer = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>();
 }
 
 void DeferredPipeline::destroyFrameGraphExternalTexture() {
@@ -185,15 +183,12 @@ void DeferredPipeline::destroyFrameGraphExternalTexture() {
         CC_SAFE_DELETE(depthTex);
         CC_SAFE_DELETE(fgTextureDepth);
     }
-
-    if (fgTextureBackBuffer) {
-        CC_SAFE_DELETE(fgTextureBackBuffer);
-    }
 }
 
 void DeferredPipeline::prepareFrameGraph() {
-    // repare for the backbuffer, if the gfx::Texture is nullptr, cocos will use swapchain texture when create framebuffer
-    _fg.getBlackboard().put(fgStrHandleBackBufferTexture, _fg.importExternal(fgStrHandleBackBufferTexture, *fgTextureBackBuffer));
+    // prepare for the backbuffer, if the gfx::Texture is nullptr, cocos will use swapchain texture when create framebuffer
+    _fg.getBlackboard().put(fgStrHandleBackBufferTexture, _fg.importExternal(fgStrHandleBackBufferTexture, fgTextureBackBuffer));
+    _fg.getBlackboard().put(fgStrHandleDepthTexturePost, _fg.importExternal(fgStrHandleDepthTexturePost, fgTextureDepthPost));
 
     for (uint i = 0; i < 4; ++i) {
         _fg.getBlackboard().put(fgStrHandleGbufferTexture[i], _fg.importExternal(fgStrHandleGbufferTexture[i], *fgTextureGbuffer[i]));

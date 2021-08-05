@@ -116,6 +116,7 @@ public:
     // deferred resource name declear
     static framegraph::StringHandle fgStrHandleGbufferTexture[4];        // deal as external resource
     static framegraph::StringHandle fgStrHandleDepthTexture;             // deal as external resource
+    static framegraph::StringHandle fgStrHandleDepthTexturePost;         // deal as external resource
     static framegraph::StringHandle fgStrHandleLightingOutTexture;
     static framegraph::StringHandle fgStrHandleBackBufferTexture;        // buffer get from swapchain, used for queuepresent
 
@@ -132,9 +133,11 @@ public:
     // In deferred pipeline, all passes use the same global descriptorset.
     // In vulkan spec, a descriptorset cannot update after first use, so we should bind all bindings before any pass executing
     // So gbuffer should create gfx texture and binding to global descriptorset in DeferredPipeline::activeRenderer
+    // gbuffer's depth is not the same as post-process
     framegraph::Texture *fgTextureGbuffer[GBUFFER_COUNT] = {nullptr};
     framegraph::Texture *fgTextureDepth = nullptr;
-    framegraph::Texture *fgTextureBackBuffer = nullptr;
+    framegraph::Texture fgTextureDepthPost;
+    framegraph::Texture fgTextureBackBuffer;
 };
 
 } // namespace pipeline
