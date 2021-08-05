@@ -113,5 +113,5 @@
 #endif
 
 #ifndef USE_MEMORY_LEAK_DETECTOR
-    #define USE_MEMORY_LEAK_DETECTOR 1
+    #define USE_MEMORY_LEAK_DETECTOR 0
 #endif

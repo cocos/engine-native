@@ -602,3 +602,11 @@ It should work same as apples CFSwapInt32LittleToHost(..)
 #define ENABLE_IF_T_RET(t1)          std::enable_if_t<std::is_same<t1, T>::value, RET>
 #define ENABLE_IF_T2_RET(t1, t2)     std::enable_if_t<std::is_same<t1, T>::value || std::is_same<t2, T>::value, RET>
 #define ENABLE_IF_T3_RET(t1, t2, t3) std::enable_if_t<std::is_same<t1, T>::value || std::is_same<t2, T>::value || std::is_same<t3, T>::value, void>
+
+#if defined(__GNUC__) && __GNUC__ >= 4
+    #define LIKELY_IF(x)   if(__builtin_expect((x), 1))
+    #define UNLIKELY_IF(x) if(__builtin_expect((x), 0))
+#else
+    #define LIKELY_IF(x)   if(x)
+    #define UNLIKELY_IF(x) if(x)
+#endif

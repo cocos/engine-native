@@ -35,8 +35,13 @@
 #include <vector>
 #include <mutex>
 
-namespace cc {
+typedef void* (*MallocType)(size_t size);
+typedef void (*FreeType)(void* ptr);
 
+typedef void (*NewHookType)(const void* ptr, size_t size);
+typedef void (*DeleteHookType)(const void* ptr);
+
+namespace cc {
 
 struct CC_DLL MemoryRecord {
     uint64_t            address{0};
@@ -46,16 +51,8 @@ struct CC_DLL MemoryRecord {
 
 class CC_DLL MemoryHook {
 public:
-    /**
-     *  @brief Gets or creates the instance of MemoryHook.
-     *  @return The MemoryHook instance.
-     */
-    static MemoryHook* getInstance();
-
-    /**
-     *  @brief Destroys the instance of MemoryHook.
-     */
-    static void destroyInstance();
+    MemoryHook();
+    ~MemoryHook();
 
     /**
      * RecordMap's key is memory address.
@@ -65,14 +62,13 @@ public:
     void addRecord(uint64_t address, size_t size);
     void removeRecord(uint64_t address);
 
+private:
     /**
      * Dump all memory leaks to output window
      */
     void dumpMemoryLeak();
 
-private:
-    MemoryHook();
-    ~MemoryHook();
+    static void log(const std::string& msg);
 
     /**
      * Register all malloc hooks
@@ -85,27 +81,12 @@ private:
     void unRegisterAll();
 
 private:
-    static MemoryHook*   _instance;
     std::recursive_mutex _mutex;
     bool                 _hooking{false};
     RecordMap            _records;
 };
 
-class MemoryHookGuard {
-public:
-    MemoryHookGuard() {
-        MemoryHook::getInstance();
-    }
-
-    ~MemoryHookGuard() {
-        MemoryHook::destroyInstance();
-    }
-
-    MemoryHookGuard(const MemoryHookGuard&) = delete;
-    MemoryHookGuard(MemoryHookGuard&&) = delete;
-    MemoryHookGuard& operator=(const MemoryHookGuard&) = delete;
-    MemoryHookGuard& operator=(MemoryHookGuard&&) = delete;
-};
+extern MemoryHook GMemoryHook;
 
 } // namespace cc
 

@@ -39,7 +39,6 @@
 #endif
 
 #include <sstream>
-#include "base/Log.h"
 
 namespace cc {
 
@@ -102,14 +101,7 @@ std::vector<void*> CallStack::backtrace() {
     std::vector<void*> callstack;
     callstack.reserve(MAX_STACK_FRAMES);
 
-    static int i = 1;
-    auto start = std::chrono::steady_clock::now();
-
     _Unwind_Backtrace(backtraceCallback, (void*)&callstack);
-
-    auto end      = std::chrono::steady_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
-    CC_LOG_ERROR("stanley backtrace [%d]: %d", i++, (int)duration);
 
     return callstack;
 
