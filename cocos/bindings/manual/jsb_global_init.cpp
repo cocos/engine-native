@@ -24,6 +24,10 @@
 ****************************************************************************/
 
 // clang-format: off
+#if CC_PLATFORM == CC_PLATFORM_WINDOWS
+// Fix ssize_t defination
+#include "cocos/bindings/jswrapper/config.h"
+#endif
 #include "uv.h"
 // clang-format: on
 
