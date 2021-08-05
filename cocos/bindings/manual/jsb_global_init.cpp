@@ -71,8 +71,8 @@ static int selectPort(int port) {
             return port; // allow failure
         }
         uv_ip4_addr("0.0.0.0", startPort, &addr);
-        uv_tcp_bind(&server, (const struct sockaddr *)&addr, 0);
-        int r = uv_listen((uv_stream_t *)&server, 5, nullptr);
+        uv_tcp_bind(&server, reinterpret_cast<const struct sockaddr *>(&addr), 0);
+        int r = uv_listen(reinterpret_cast<uv_stream_t *>(&server), 5, nullptr);
         if (r) {
             SE_LOGD("Failed to listen port %d, error: %s. Try next port\n", startPort, uv_strerror(r));
             startPort += 1;
@@ -199,9 +199,9 @@ bool jsb_enable_debugger(const std::string &debuggerServerAddr, uint32_t port, b
         return false;
     }
 
-    port = selectPort(port);
+    port = static_cast<uint32_t>(selectPort(static_cast<int>(port)));
 
-    auto se = se::ScriptEngine::getInstance();
+    auto *se = se::ScriptEngine::getInstance();
     se->enableDebugger(debuggerServerAddr, port, isWaitForConnect);
 
     // For debugger main loop
