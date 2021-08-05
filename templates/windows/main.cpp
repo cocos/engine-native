@@ -27,10 +27,6 @@
 #include "AppDelegate.h"
 #include "sdl2/SDL.h"
 
-#if USE_MEMORY_LEAK_DETECTOR
-#include "base/memory/MemoryHook.h"
-#endif
-
 using namespace cc;
 
 // uncomment below line, open debug console
@@ -38,9 +34,6 @@ using namespace cc;
 
 int SDL_main(int argc, char *argv[])
 {
-#if USE_MEMORY_LEAK_DETECTOR
-    cc::MemoryHookGuard hook;
-#endif
 
 #ifdef USE_WIN32_CONSOLE
     AllocConsole();
