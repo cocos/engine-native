@@ -106,8 +106,7 @@ void PrintDebuggerReadyMessage(const std::string &             host,
         return;
     }
 
-    std::vector<std::tuple<std::string, bool, std::string>>
-        ipList;
+    std::vector<std::tuple<std::string, bool, std::string>> ipList;
 
     {
         char                    buf[512];
