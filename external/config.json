@@ -1,10 +1,9 @@
 {
-    "version": "v3d-gfx-55",
+    "version": "v3d-gfx-62",
     "from": {
         "type": "github",
         "owner": "cocos-creator",
         "name": "engine-native-external",
-        "checkout": "v3d-gfx-55",
-        "commit": "3ade5ba374dd4e83ef3ca1699e7c9d59dca3bb7b"
+        "checkout": "v3d-gfx-62"
     }
 }
