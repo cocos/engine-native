@@ -30,17 +30,10 @@ THE SOFTWARE.
 #include <stdint.h>
 #include <android/log.h>
 #include "audio/android/cutils/bitops.h"
+#include "base/Macros.h"
 
 #define PROPERTY_VALUE_MAX 256
 #define CONSTEXPR          constexpr
-
-#ifdef __cplusplus
-    #define CC_LIKELY(exp)   (__builtin_expect(!!(exp), true))
-    #define CC_UNLIKELY(exp) (__builtin_expect(!!(exp), false))
-#else
-    #define CC_LIKELY(exp)   (__builtin_expect(!!(exp), 1))
-    #define CC_UNLIKELY(exp) (__builtin_expect(!!(exp), 0))
-#endif
 
 /* special audio session values
  * (XXX: should this be living in the audio effects land?)
