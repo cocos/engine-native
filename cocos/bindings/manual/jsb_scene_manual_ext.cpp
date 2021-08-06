@@ -1,7 +1,5 @@
 
 #include "bindings/auto/jsb_scene_auto.h"
-#include "bindings/event/CustomEventTypes.h"
-#include "bindings/event/EventDispatcher.h"
 #include "jsb_scene_manual.h"
 #include "scene/Model.h"
 #include "scene/Node.h"
