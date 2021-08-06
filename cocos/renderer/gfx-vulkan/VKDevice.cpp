@@ -40,6 +40,7 @@
 #include "VKSwapchain.h"
 #include "VKTexture.h"
 #include "VKUtils.h"
+#include "gfx-vulkan/SPIRVUtils.h"
 #include "states/VKGlobalBarrier.h"
 #include "states/VKSampler.h"
 #include "states/VKTextureBarrier.h"
@@ -193,6 +194,8 @@ bool CCVKDevice::doInit(const DeviceInfo & /*info*/) {
     VK_CHECK(vkCreateDevice(_gpuContext->physicalDevice, &deviceCreateInfo, nullptr, &_gpuDevice->vkDevice));
 
     volkLoadDevice(_gpuDevice->vkDevice);
+
+    SPIRVUtils::getInstance()->initialize(static_cast<int>(_gpuDevice->minorVersion));
 
     ///////////////////// Gather Device Properties /////////////////////
 
@@ -447,6 +450,8 @@ bool CCVKDevice::doInit(const DeviceInfo & /*info*/) {
 
 void CCVKDevice::doDestroy() {
     waitAllFences();
+
+    SPIRVUtils::getInstance()->destroy();
 
     for (CCVKTexture *texture : _depthStencilTextures) {
         CC_SAFE_DESTROY(texture)

@@ -681,15 +681,15 @@ void cmdFuncCCVKCreateFramebuffer(CCVKDevice *device, CCVKGPUFramebuffer *gpuFra
 }
 
 void cmdFuncCCVKCreateShader(CCVKDevice *device, CCVKGPUShader *gpuShader) {
-    static SPIRVUtils spirv(static_cast<int>(device->gpuDevice()->minorVersion));
+    SPIRVUtils *spirv = SPIRVUtils::getInstance();
 
     for (CCVKGPUShaderStage &stage : gpuShader->gpuStages) {
-        spirv.compileGLSL(stage.type, "#version 450\n" + stage.source);
-        if (stage.type == ShaderStageFlagBit::VERTEX) spirv.compressInputLocations(gpuShader->attributes);
+        spirv->compileGLSL(stage.type, "#version 450\n" + stage.source);
+        if (stage.type == ShaderStageFlagBit::VERTEX) spirv->compressInputLocations(gpuShader->attributes);
 
         VkShaderModuleCreateInfo createInfo{VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO};
-        createInfo.codeSize = spirv.getOutputSize();
-        createInfo.pCode    = spirv.getOutputData();
+        createInfo.codeSize = spirv->getOutputSize();
+        createInfo.pCode    = spirv->getOutputData();
         VK_CHECK(vkCreateShaderModule(device->gpuDevice()->vkDevice, &createInfo, nullptr, &stage.vkShader));
     }
 

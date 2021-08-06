@@ -84,12 +84,19 @@ struct Id {
 };
 } // namespace
 
-SPIRVUtils::SPIRVUtils(int vulkanMinorVersion) {
+SPIRVUtils SPIRVUtils::instance;
+
+void SPIRVUtils::initialize(int vulkanMinorVersion) {
     glslang::InitializeProcess();
 
     _clientInputSemanticsVersion = 100 + vulkanMinorVersion * 10;
     _clientVersion               = getClientVersion(vulkanMinorVersion);
     _targetVersion               = getTargetVersion(vulkanMinorVersion);
+}
+
+void SPIRVUtils::destroy() {
+    glslang::FinalizeProcess();
+    _output.clear();
 }
 
 void SPIRVUtils::compileGLSL(ShaderStageFlagBit type, const String& source) {

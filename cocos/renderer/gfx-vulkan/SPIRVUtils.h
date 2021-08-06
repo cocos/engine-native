@@ -34,10 +34,12 @@ namespace gfx {
 
 class SPIRVUtils {
 public:
-    explicit SPIRVUtils(int vulkanMinorVersion);
+    static SPIRVUtils* getInstance() { return &instance; }
+
+    void initialize(int vulkanMinorVersion);
+    void destroy();
 
     void compileGLSL(ShaderStageFlagBit type, const String& source);
-
     void compressInputLocations(gfx::AttributeList& attributes);
 
     inline uint32_t* getOutputData() {
@@ -51,13 +53,15 @@ public:
     }
 
 private:
-    int                               _clientInputSemanticsVersion;
-    glslang::EShTargetClientVersion   _clientVersion;
-    glslang::EShTargetLanguageVersion _targetVersion;
+    int                               _clientInputSemanticsVersion{0};
+    glslang::EShTargetClientVersion   _clientVersion{glslang::EShTargetClientVersion::EShTargetVulkan_1_0};
+    glslang::EShTargetLanguageVersion _targetVersion{glslang::EShTargetLanguageVersion::EShTargetSpv_1_0};
 
-    std::unique_ptr<glslang::TShader>  _shader;
-    std::unique_ptr<glslang::TProgram> _program;
+    std::unique_ptr<glslang::TShader>  _shader{nullptr};
+    std::unique_ptr<glslang::TProgram> _program{nullptr};
     vector<uint32_t>                   _output;
+
+    static SPIRVUtils instance;
 };
 
 } // namespace gfx
