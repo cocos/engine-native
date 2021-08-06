@@ -28,6 +28,9 @@
 #include "../Config.h"
 #if USE_MEMORY_LEAK_DETECTOR
 
+#if CC_PLATFORM == CC_PLATFORM_WINDOWS
+#include <Windows.h>
+#endif
 #include "../Macros.h"
 #include <string>
 #include <vector>
@@ -59,6 +62,14 @@ public:
 
     static std::vector<void*>      backtrace();
     static std::vector<StackFrame> backtraceSymbols(const std::vector<void*>& callstack);
+
+#if CC_PLATFORM == CC_PLATFORM_WINDOWS
+    static void   initSym();
+    static void   cleanupSym();
+
+private:
+    static HANDLE _process;
+#endif
 };
 
 } // namespace cc
