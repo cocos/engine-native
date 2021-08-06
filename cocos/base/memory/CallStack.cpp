@@ -46,7 +46,7 @@ std::string StackFrame::toString() {
     static std::string unknown("unknown");
 #if CC_PLATFORM == CC_PLATFORM_ANDROID
     std::stringstream stream;
-    stream << "\tfile: " << (file.empty() ? unknown : file)
+    stream << "\tmodule: " << (module.empty() ? unknown : module)
            << "\tfunction: " << (function.empty() ? unknown : function);
 
     return stream.str();
@@ -101,7 +101,55 @@ std::vector<void*> CallStack::backtrace() {
     std::vector<void*> callstack;
     callstack.reserve(MAX_STACK_FRAMES);
 
+    // Note: _Unwind_Backtrace is too slow
+    // Note: __builtin_frame_address will crash with a non-zero parameter
+#ifdef SLOW_UNWIND
     _Unwind_Backtrace(backtraceCallback, (void*)&callstack);
+#else defined(FAST_UNWIND)
+    static_assert(MAX_STACK_FRAMES == 32, "Call BACKTRACE_LEVEL MAX_STACK_FRAMES times");
+
+#define BACKTRACE_LEVEL(x)  if ((x) < MAX_STACK_FRAMES && __builtin_frame_address((x))) \
+                                { callstack.push_back(__builtin_return_address((x))); } \
+                            else                                                        \
+                                { break; }
+
+    do {
+        BACKTRACE_LEVEL(0);
+        BACKTRACE_LEVEL(1);
+        BACKTRACE_LEVEL(2);
+        BACKTRACE_LEVEL(3);
+        BACKTRACE_LEVEL(4);
+        BACKTRACE_LEVEL(5);
+        BACKTRACE_LEVEL(6);
+        BACKTRACE_LEVEL(7);
+        BACKTRACE_LEVEL(8);
+        BACKTRACE_LEVEL(9);
+        BACKTRACE_LEVEL(10);
+        BACKTRACE_LEVEL(11);
+        BACKTRACE_LEVEL(12);
+        BACKTRACE_LEVEL(13);
+        BACKTRACE_LEVEL(14);
+        BACKTRACE_LEVEL(15);
+        BACKTRACE_LEVEL(16);
+        BACKTRACE_LEVEL(17);
+        BACKTRACE_LEVEL(18);
+        BACKTRACE_LEVEL(19);
+        BACKTRACE_LEVEL(20);
+        BACKTRACE_LEVEL(21);
+        BACKTRACE_LEVEL(22);
+        BACKTRACE_LEVEL(23);
+        BACKTRACE_LEVEL(24);
+        BACKTRACE_LEVEL(25);
+        BACKTRACE_LEVEL(26);
+        BACKTRACE_LEVEL(27);
+        BACKTRACE_LEVEL(28);
+        BACKTRACE_LEVEL(29);
+        BACKTRACE_LEVEL(30);
+        BACKTRACE_LEVEL(31);
+    } while(0);
+
+#undef TRACE_LEVEL
+#endif
 
     return callstack;
 
@@ -140,12 +188,12 @@ std::vector<StackFrame> CallStack::backtraceSymbols(const std::vector<void*>& ca
         Dl_info info;
         StackFrame frame;
         if (dladdr(callstack[i], &info)) {
-            if (info.dli_sname && strlen(info.dli_sname) > 0) {
-                frame.function = info.dli_sname;
+            if (info.dli_fname && strlen(info.dli_fname) > 0) {
+                frame.module = info.dli_fname;
             }
 
-            if (info.dli_fname && strlen(info.dli_fname) > 0) {
-                frame.file = info.dli_fname;
+            if (info.dli_sname && strlen(info.dli_sname) > 0) {
+                frame.function = info.dli_sname;
             }
         }
 
@@ -170,16 +218,6 @@ std::vector<StackFrame> CallStack::backtraceSymbols(const std::vector<void*>& ca
     return frames;
 
 #elif CC_PLATFORM == CC_PLATFORM_WINDOWS
-    static bool initSym = false;
-    static HANDLE process = GetCurrentProcess();
-    if (!initSym) {
-        initSym = true;
-        if (SymInitialize(process, NULL, TRUE) == FALSE) {
-            CCASSERT(0, "Failed to call SymInitialize.");
-        }
-        SymSetOptions(SYMOPT_LOAD_LINES);
-    }
-
     std::vector<StackFrame> frames;
 
     #if _WIN64
@@ -197,7 +235,7 @@ std::vector<StackFrame> CallStack::backtraceSymbols(const std::vector<void*>& ca
         #if _WIN64
         PTR_DWORD moduleBase = SymGetModuleBase64(process, address);
         #else
-        PTR_DWORD moduleBase = SymGetModuleBase(process, address);
+        PTR_DWORD moduleBase = SymGetModuleBase(_process, address);
         #endif
         if (moduleBase && GetModuleFileNameA((HINSTANCE)moduleBase, moduelName, MAX_PATH)) {
             frame.module = basename(moduelName);
@@ -209,7 +247,7 @@ std::vector<StackFrame> CallStack::backtraceSymbols(const std::vector<void*>& ca
         symbol->SizeOfStruct    = sizeof(SYMBOL_INFO);
         symbol->MaxNameLen      = MAX_SYMBOL_LENGTH - 1;
 
-        if (SymFromAddr(process, address, &offset, symbol)) {
+        if (SymFromAddr(_process, address, &offset, symbol)) {
             frame.function = symbol->Name;
         }
 
@@ -217,7 +255,7 @@ std::vector<StackFrame> CallStack::backtraceSymbols(const std::vector<void*>& ca
         line.SizeOfStruct = sizeof(IMAGEHLP_LINE);
         DWORD offset_ln   = 0;
         
-        if (SymGetLineFromAddr(process, address, &offset_ln, &line)) {
+        if (SymGetLineFromAddr(_process, address, &offset_ln, &line)) {
             frame.file = line.FileName;
             frame.line = line.LineNumber;
         }
@@ -231,6 +269,22 @@ std::vector<StackFrame> CallStack::backtraceSymbols(const std::vector<void*>& ca
     return {};
 #endif
 }
+
+#if CC_PLATFORM == CC_PLATFORM_WINDOWS
+void CallStack::initSym() {
+    _process = GetCurrentProcess();
+    if (SymInitialize(_process, NULL, TRUE) == FALSE) {
+        CCASSERT(0, "Failed to call SymInitialize.");
+    }
+    SymSetOptions(SYMOPT_LOAD_LINES);
+}
+
+void CallStack::cleanupSym() {
+    SymCleanup(_process);
+}
+
+HANDLE CallStack::_process = 0;
+#endif
 
 } // namespace cc
 

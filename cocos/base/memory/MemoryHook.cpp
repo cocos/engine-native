@@ -43,12 +43,12 @@ void free(void* ptr) __attribute__ ((weak));
 // Use strong symbol to overwrite the weak one.
 void* malloc(size_t size) {
     static MallocType system_malloc = nullptr;
-    UNLIKELY_IF(system_malloc == nullptr) {
+    if (CC_UNLIKELY(system_malloc == nullptr)) {
         system_malloc = (MallocType)dlsym(RTLD_NEXT, "malloc");
     }
 
     void* ptr = system_malloc(size);
-    LIKELY_IF(g_new_hooker != nullptr) {
+    if (CC_LIKELY(g_new_hooker != nullptr)) {
         g_new_hooker(ptr, size);
     }
 
@@ -57,12 +57,12 @@ void* malloc(size_t size) {
 
 void free(void* ptr) {
     static FreeType system_free = nullptr;
-    UNLIKELY_IF(system_free == nullptr) {
+    if (CC_UNLIKELY(system_free == nullptr)) {
         system_free = (FreeType)dlsym(RTLD_NEXT, "free");
     }
 
     system_free(ptr);
-    LIKELY_IF(g_delete_hooker != nullptr) {
+    if (CC_LIKELY(g_delete_hooker != nullptr)) {
         g_delete_hooker(ptr);
     }
 }
@@ -193,7 +193,10 @@ void MemoryHook::removeRecord(uint64_t address) {
 
 void MemoryHook::dumpMemoryLeak() {
     std::lock_guard<std::recursive_mutex> lock(_mutex);
-    
+#if CC_PLATFORM == CC_PLATFORM_WINDOWS
+    CallStack::initSym();
+#endif
+
     std::stringstream startStream;
     startStream << std::endl;
     startStream << "---------------------------------------------------------------------------------------------------------" << std::endl;
@@ -232,6 +235,10 @@ void MemoryHook::dumpMemoryLeak() {
     endStream << "--------------------------------------memory leak report end---------------------------------------------" << std::endl;
     endStream << "---------------------------------------------------------------------------------------------------------" << std::endl;
     log(endStream.str());
+
+#if CC_PLATFORM == CC_PLATFORM_WINDOWS
+    CallStack::cleanupSym();
+#endif
 }
 
 void MemoryHook::log(const std::string& msg) {
