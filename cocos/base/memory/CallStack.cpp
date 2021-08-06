@@ -103,9 +103,9 @@ std::vector<void*> CallStack::backtrace() {
 
     // Note: _Unwind_Backtrace is too slow
     // Note: __builtin_frame_address will crash with a non-zero parameter
-#ifdef SLOW_UNWIND
+#if defined(SLOW_UNWIND)
     _Unwind_Backtrace(backtraceCallback, (void*)&callstack);
-#else defined(FAST_UNWIND)
+#elif defined(FAST_UNWIND)
     static_assert(MAX_STACK_FRAMES == 32, "Call BACKTRACE_LEVEL MAX_STACK_FRAMES times");
 
 #define BACKTRACE_LEVEL(x)  if ((x) < MAX_STACK_FRAMES && __builtin_frame_address((x))) \
