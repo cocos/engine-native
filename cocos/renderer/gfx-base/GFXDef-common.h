@@ -743,48 +743,48 @@ using ClearFlags = ClearFlagBit;
 CC_ENUM_BITWISE_OPERATORS(ClearFlagBit);
 
 struct Size {
-    uint32_t x = 0U;
-    uint32_t y = 0U;
-    uint32_t z = 0U;
+    uint32_t x{0U};
+    uint32_t y{0U};
+    uint32_t z{0U};
 };
 
 struct DeviceCaps {
-    uint32_t maxVertexAttributes            = 0U;
-    uint32_t maxVertexUniformVectors        = 0U;
-    uint32_t maxFragmentUniformVectors      = 0U;
-    uint32_t maxTextureUnits                = 0U;
-    uint32_t maxImageUnits                  = 0U;
-    uint32_t maxVertexTextureUnits          = 0U;
-    uint32_t maxColorRenderTargets          = 0U;
-    uint32_t maxShaderStorageBufferBindings = 0U;
-    uint32_t maxShaderStorageBlockSize      = 0U;
-    uint32_t maxUniformBufferBindings       = 0U;
-    uint32_t maxUniformBlockSize            = 0U;
-    uint32_t maxTextureSize                 = 0U;
-    uint32_t maxCubeMapTextureSize          = 0U;
-    uint32_t uboOffsetAlignment             = 1U;
+    uint32_t maxVertexAttributes{0U};
+    uint32_t maxVertexUniformVectors{0U};
+    uint32_t maxFragmentUniformVectors{0U};
+    uint32_t maxTextureUnits{0U};
+    uint32_t maxImageUnits{0U};
+    uint32_t maxVertexTextureUnits{0U};
+    uint32_t maxColorRenderTargets{0U};
+    uint32_t maxShaderStorageBufferBindings{0U};
+    uint32_t maxShaderStorageBlockSize{0U};
+    uint32_t maxUniformBufferBindings{0U};
+    uint32_t maxUniformBlockSize{0U};
+    uint32_t maxTextureSize{0U};
+    uint32_t maxCubeMapTextureSize{0U};
+    uint32_t uboOffsetAlignment{1U};
 
-    uint32_t maxComputeSharedMemorySize     = 0U;
-    uint32_t maxComputeWorkGroupInvocations = 0U;
+    uint32_t maxComputeSharedMemorySize{0U};
+    uint32_t maxComputeWorkGroupInvocations{0U};
     Size     maxComputeWorkGroupSize;
     Size     maxComputeWorkGroupCount;
 
-    float clipSpaceMinZ    = -1.0F;
-    float screenSpaceSignY = 1.0F;
-    float clipSpaceSignY   = 1.0F;
+    float clipSpaceMinZ{-1.F};
+    float screenSpaceSignY{1.F};
+    float clipSpaceSignY{1.F};
 };
 
 struct Offset {
-    int32_t x = 0;
-    int32_t y = 0;
-    int32_t z = 0;
+    int32_t x{0};
+    int32_t y{0};
+    int32_t z{0};
 };
 
 struct Rect {
-    int32_t  x      = 0;
-    int32_t  y      = 0;
-    uint32_t width  = 0U;
-    uint32_t height = 0U;
+    int32_t  x{0};
+    int32_t  y{0};
+    uint32_t width{0U};
+    uint32_t height{0U};
 
     bool operator==(const Rect &rs) const {
         return x == rs.x &&
@@ -799,22 +799,22 @@ struct Rect {
 };
 
 struct Extent {
-    uint32_t width  = 0U;
-    uint32_t height = 0U;
-    uint32_t depth  = 1U;
+    uint32_t width{0U};
+    uint32_t height{0U};
+    uint32_t depth{1U};
 };
 
 struct TextureSubresLayers {
-    uint32_t mipLevel       = 0U;
-    uint32_t baseArrayLayer = 0U;
-    uint32_t layerCount     = 1U;
+    uint32_t mipLevel{0U};
+    uint32_t baseArrayLayer{0U};
+    uint32_t layerCount{1U};
 };
 
 struct TextureSubresRange {
-    uint32_t baseMipLevel   = 0U;
-    uint32_t levelCount     = 1U;
-    uint32_t baseArrayLayer = 0U;
-    uint32_t layerCount     = 1U;
+    uint32_t baseMipLevel{0U};
+    uint32_t levelCount{1U};
+    uint32_t baseArrayLayer{0U};
+    uint32_t layerCount{1U};
 };
 
 struct TextureCopy {
@@ -836,8 +836,8 @@ struct TextureBlit {
 using TextureBlitList = vector<TextureBlit>;
 
 struct BufferTextureCopy {
-    uint32_t            buffStride    = 0;
-    uint32_t            buffTexHeight = 0;
+    uint32_t            buffStride{0U};
+    uint32_t            buffTexHeight{0U};
     Offset              texOffset;
     Extent              texExtent;
     TextureSubresLayers texSubres;
@@ -845,12 +845,12 @@ struct BufferTextureCopy {
 using BufferTextureCopyList = vector<BufferTextureCopy>;
 
 struct Viewport {
-    int32_t  left     = 0;
-    int32_t  top      = 0;
-    uint32_t width    = 0;
-    uint32_t height   = 0;
-    float    minDepth = 0.0F;
-    float    maxDepth = 1.0F;
+    int32_t  left{0};
+    int32_t  top{0};
+    uint32_t width{0U};
+    uint32_t height{0U};
+    float    minDepth{0.F};
+    float    maxDepth{1.F};
 
     bool operator==(const Viewport &rs) const {
         return (left == rs.left &&
@@ -867,10 +867,10 @@ struct Viewport {
 };
 
 struct Color {
-    float x = 0.0F;
-    float y = 0.0F;
-    float z = 0.0F;
-    float w = 0.0F;
+    float x{0.F};
+    float y{0.F};
+    float z{0.F};
+    float w{0.F};
 
     bool operator==(const Color &rhs) const {
         return (math::IsEqualF(x, rhs.x) &&
@@ -895,15 +895,15 @@ using ColorList = vector<Color>;
 struct BindingMappingInfo {
     std::vector<int32_t> bufferOffsets;
     std::vector<int32_t> samplerOffsets;
-    uint32_t             flexibleSet = 0U;
+    uint32_t             flexibleSet{0U};
 };
 
 struct SwapchainInfo {
-    void *    windowHandle = nullptr; // @ts-overrides { type: 'HTMLCanvasElement' }
-    VsyncMode vsyncMode    = VsyncMode::RELAXED;
+    void *    windowHandle{nullptr}; // @ts-overrides { type: 'HTMLCanvasElement' }
+    VsyncMode vsyncMode{VsyncMode::RELAXED};
 
-    uint32_t width  = 0U;
-    uint32_t height = 0U;
+    uint32_t width{0U};
+    uint32_t height{0U};
 };
 
 struct DeviceInfo {
@@ -911,38 +911,38 @@ struct DeviceInfo {
 };
 
 struct BufferInfo {
-    BufferUsage usage    = BufferUsageBit::NONE;
-    MemoryUsage memUsage = MemoryUsageBit::NONE;
-    uint32_t    size     = 0U;
-    uint32_t    stride   = 0U; // in bytes
-    BufferFlags flags    = BufferFlagBit::NONE;
+    BufferUsage usage{BufferUsageBit::NONE};
+    MemoryUsage memUsage{MemoryUsageBit::NONE};
+    uint32_t    size{0U};
+    uint32_t    stride{0U}; // in bytes
+    BufferFlags flags{BufferFlagBit::NONE};
 };
 
 struct BufferViewInfo {
-    Buffer * buffer = nullptr;
-    uint32_t offset = 0U;
-    uint32_t range  = 0U;
+    Buffer * buffer{nullptr};
+    uint32_t offset{0U};
+    uint32_t range{0U};
 };
 
 struct DrawInfo {
-    uint32_t vertexCount   = 0U;
-    uint32_t firstVertex   = 0U;
-    uint32_t indexCount    = 0U;
-    uint32_t firstIndex    = 0U;
-    int32_t  vertexOffset  = 0;
-    uint32_t instanceCount = 0U;
-    uint32_t firstInstance = 0U;
+    uint32_t vertexCount{0U};
+    uint32_t firstVertex{0U};
+    uint32_t indexCount{0U};
+    uint32_t firstIndex{0U};
+    int32_t  vertexOffset{0};
+    uint32_t instanceCount{0U};
+    uint32_t firstInstance{0U};
 };
 
 using DrawInfoList = vector<DrawInfo>;
 
 struct DispatchInfo {
-    uint32_t groupCountX = 0U;
-    uint32_t groupCountY = 0U;
-    uint32_t groupCountZ = 0U;
+    uint32_t groupCountX{0U};
+    uint32_t groupCountY{0U};
+    uint32_t groupCountZ{0U};
 
-    Buffer * indirectBuffer = nullptr; // @ts-nullable
-    uint32_t indirectOffset = 0U;
+    Buffer * indirectBuffer{nullptr}; // @ts-nullable
+    uint32_t indirectOffset{0U};
 };
 
 using DispatchInfoList = vector<DispatchInfo>;
@@ -952,118 +952,119 @@ struct IndirectBuffer {
 };
 
 struct TextureInfo {
-    TextureType  type       = TextureType::TEX2D;
-    TextureUsage usage      = TextureUsageBit::NONE;
-    Format       format     = Format::UNKNOWN;
-    uint32_t     width      = 0U;
-    uint32_t     height     = 0U;
-    TextureFlags flags      = TextureFlagBit::NONE;
-    uint32_t     layerCount = 1U;
-    uint32_t     levelCount = 1U;
-    SampleCount  samples    = SampleCount::ONE;
-    uint32_t     depth      = 1U;
+    TextureType  type{TextureType::TEX2D};
+    TextureUsage usage{TextureUsageBit::NONE};
+    Format       format{Format::UNKNOWN};
+    uint32_t     width{0U};
+    uint32_t     height{0U};
+    TextureFlags flags{TextureFlagBit::NONE};
+    uint32_t     layerCount{1U};
+    uint32_t     levelCount{1U};
+    SampleCount  samples{SampleCount::ONE};
+    uint32_t     depth{1U};
+    void *       iosurface{nullptr};
 };
 
 struct TextureViewInfo {
-    Texture *   texture    = nullptr;
-    TextureType type       = TextureType::TEX2D;
-    Format      format     = Format::UNKNOWN;
-    uint32_t    baseLevel  = 0U;
-    uint32_t    levelCount = 1U;
-    uint32_t    baseLayer  = 0U;
-    uint32_t    layerCount = 1U;
+    Texture *   texture{nullptr};
+    TextureType type{TextureType::TEX2D};
+    Format      format{Format::UNKNOWN};
+    uint32_t    baseLevel{0U};
+    uint32_t    levelCount{1U};
+    uint32_t    baseLayer{0U};
+    uint32_t    layerCount{1U};
 };
 
 struct SamplerInfo {
-    Filter         minFilter     = Filter::LINEAR;
-    Filter         magFilter     = Filter::LINEAR;
-    Filter         mipFilter     = Filter::NONE;
-    Address        addressU      = Address::WRAP;
-    Address        addressV      = Address::WRAP;
-    Address        addressW      = Address::WRAP;
-    uint32_t       maxAnisotropy = 0U;
-    ComparisonFunc cmpFunc       = ComparisonFunc::ALWAYS;
+    Filter         minFilter{Filter::LINEAR};
+    Filter         magFilter{Filter::LINEAR};
+    Filter         mipFilter{Filter::NONE};
+    Address        addressU{Address::WRAP};
+    Address        addressV{Address::WRAP};
+    Address        addressW{Address::WRAP};
+    uint32_t       maxAnisotropy{0U};
+    ComparisonFunc cmpFunc{ComparisonFunc::ALWAYS};
 };
 
 struct Uniform {
     String   name;
-    Type     type  = Type::UNKNOWN;
-    uint32_t count = 0U;
+    Type     type{Type::UNKNOWN};
+    uint32_t count{0U};
 };
 
 using UniformList = vector<Uniform>;
 
 struct UniformBlock {
-    uint32_t    set     = 0U;
-    uint32_t    binding = 0U;
+    uint32_t    set{0U};
+    uint32_t    binding{0U};
     String      name;
     UniformList members;
-    uint32_t    count = 0U;
+    uint32_t    count{0U};
 };
 
 using UniformBlockList = vector<UniformBlock>;
 
 struct UniformSamplerTexture {
-    uint32_t set     = 0U;
-    uint32_t binding = 0U;
+    uint32_t set{0U};
+    uint32_t binding{0U};
     String   name;
-    Type     type  = Type::UNKNOWN;
-    uint32_t count = 0U;
+    Type     type{Type::UNKNOWN};
+    uint32_t count{0U};
 };
 
 using UniformSamplerTextureList = vector<UniformSamplerTexture>;
 
 struct UniformSampler {
-    uint32_t set     = 0U;
-    uint32_t binding = 0U;
+    uint32_t set{0U};
+    uint32_t binding{0U};
     String   name;
-    uint32_t count = 0U;
+    uint32_t count{0U};
 };
 
 using UniformSamplerList = vector<UniformSampler>;
 
 struct UniformTexture {
-    uint32_t set     = 0U;
-    uint32_t binding = 0U;
+    uint32_t set{0U};
+    uint32_t binding{0U};
     String   name;
-    Type     type  = Type::UNKNOWN;
-    uint32_t count = 0U;
+    Type     type{Type::UNKNOWN};
+    uint32_t count{0U};
 };
 
 using UniformTextureList = vector<UniformTexture>;
 
 struct UniformStorageImage {
-    uint32_t     set     = 0U;
-    uint32_t     binding = 0U;
+    uint32_t     set{0U};
+    uint32_t     binding{0U};
     String       name;
-    Type         type         = Type::UNKNOWN;
-    uint32_t     count        = 0U;
-    MemoryAccess memoryAccess = MemoryAccessBit::READ_WRITE;
+    Type         type{Type::UNKNOWN};
+    uint32_t     count{0U};
+    MemoryAccess memoryAccess{MemoryAccessBit::READ_WRITE};
 };
 
 using UniformStorageImageList = vector<UniformStorageImage>;
 
 struct UniformStorageBuffer {
-    uint32_t     set     = 0U;
-    uint32_t     binding = 0U;
+    uint32_t     set{0U};
+    uint32_t     binding{0U};
     String       name;
-    uint32_t     count        = 0U;
-    MemoryAccess memoryAccess = MemoryAccessBit::READ_WRITE;
+    uint32_t     count{0U};
+    MemoryAccess memoryAccess{MemoryAccessBit::READ_WRITE};
 };
 
 using UniformStorageBufferList = vector<UniformStorageBuffer>;
 
 struct UniformInputAttachment {
-    uint32_t set     = 0U;
-    uint32_t binding = 0U;
+    uint32_t set{0U};
+    uint32_t binding{0U};
     String   name;
-    uint32_t count = 0U;
+    uint32_t count{0U};
 };
 
 using UniformInputAttachmentList = vector<UniformInputAttachment>;
 
 struct ShaderStage {
-    ShaderStageFlagBit stage = ShaderStageFlagBit::NONE;
+    ShaderStageFlagBit stage{ShaderStageFlagBit::NONE};
     String             source;
 };
 
@@ -1071,11 +1072,11 @@ using ShaderStageList = vector<ShaderStage>;
 
 struct Attribute {
     String   name;
-    Format   format       = Format::UNKNOWN;
-    bool     isNormalized = false;
-    uint32_t stream       = 0;
-    bool     isInstanced  = false;
-    uint32_t location     = 0;
+    Format   format{Format::UNKNOWN};
+    bool     isNormalized{false};
+    uint32_t stream{0U};
+    bool     isInstanced{false};
+    uint32_t location{0U};
 };
 
 using AttributeList = vector<Attribute>;
@@ -1096,32 +1097,32 @@ struct ShaderInfo {
 struct InputAssemblerInfo {
     AttributeList attributes;
     BufferList    vertexBuffers;
-    Buffer *      indexBuffer    = nullptr; // @ts-nullable
-    Buffer *      indirectBuffer = nullptr; // @ts-nullable
+    Buffer *      indexBuffer{nullptr};    // @ts-nullable
+    Buffer *      indirectBuffer{nullptr}; // @ts-nullable
 };
 
 struct ColorAttachment {
-    Format                  format      = Format::UNKNOWN;
-    SampleCount             sampleCount = SampleCount::ONE;
-    LoadOp                  loadOp      = LoadOp::CLEAR;
-    StoreOp                 storeOp     = StoreOp::STORE;
+    Format                  format{Format::UNKNOWN};
+    SampleCount             sampleCount{SampleCount::ONE};
+    LoadOp                  loadOp{LoadOp::CLEAR};
+    StoreOp                 storeOp{StoreOp::STORE};
     std::vector<AccessType> beginAccesses;
     std::vector<AccessType> endAccesses{AccessType::COLOR_ATTACHMENT_WRITE};
-    bool                    isGeneralLayout = false;
+    bool                    isGeneralLayout{false};
 };
 
 using ColorAttachmentList = vector<ColorAttachment>;
 
 struct DepthStencilAttachment {
-    Format                  format         = Format::UNKNOWN;
-    SampleCount             sampleCount    = SampleCount::ONE;
-    LoadOp                  depthLoadOp    = LoadOp::CLEAR;
-    StoreOp                 depthStoreOp   = StoreOp::STORE;
-    LoadOp                  stencilLoadOp  = LoadOp::CLEAR;
-    StoreOp                 stencilStoreOp = StoreOp::STORE;
+    Format                  format{Format::UNKNOWN};
+    SampleCount             sampleCount{SampleCount::ONE};
+    LoadOp                  depthLoadOp{LoadOp::CLEAR};
+    StoreOp                 depthStoreOp{StoreOp::STORE};
+    LoadOp                  stencilLoadOp{LoadOp::CLEAR};
+    StoreOp                 stencilStoreOp{StoreOp::STORE};
     std::vector<AccessType> beginAccesses;
     std::vector<AccessType> endAccesses{AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
-    bool                    isGeneralLayout = false;
+    bool                    isGeneralLayout{false};
 };
 
 struct SubpassInfo {
@@ -1130,17 +1131,17 @@ struct SubpassInfo {
     std::vector<uint32_t> resolves;
     std::vector<uint32_t> preserves;
 
-    uint32_t    depthStencil        = INVALID_BINDING;
-    uint32_t    depthStencilResolve = INVALID_BINDING;
-    ResolveMode depthResolveMode    = ResolveMode::NONE;
-    ResolveMode stencilResolveMode  = ResolveMode::NONE;
+    uint32_t    depthStencil{INVALID_BINDING};
+    uint32_t    depthStencilResolve{INVALID_BINDING};
+    ResolveMode depthResolveMode{ResolveMode::NONE};
+    ResolveMode stencilResolveMode{ResolveMode::NONE};
 };
 
 using SubpassInfoList = vector<SubpassInfo>;
 
 struct SubpassDependency {
-    uint32_t                srcSubpass = 0U;
-    uint32_t                dstSubpass = 0U;
+    uint32_t                srcSubpass{0U};
+    uint32_t                dstSubpass{0U};
     std::vector<AccessType> srcAccesses;
     std::vector<AccessType> dstAccesses;
 };
@@ -1164,24 +1165,24 @@ struct TextureBarrierInfo {
     std::vector<AccessType> prevAccesses;
     std::vector<AccessType> nextAccesses;
 
-    bool discardContents = false;
+    bool discardContents{false};
 
-    Queue *srcQueue = nullptr; // @ts-nullable
-    Queue *dstQueue = nullptr; // @ts-nullable
+    Queue *srcQueue{nullptr}; // @ts-nullable
+    Queue *dstQueue{nullptr}; // @ts-nullable
 };
 using TextureBarrierInfoList = vector<TextureBarrierInfo>;
 
 struct FramebufferInfo {
-    RenderPass *renderPass = nullptr;
+    RenderPass *renderPass{nullptr};
     TextureList colorTextures;
-    Texture *   depthStencilTexture = nullptr; // @ts-nullable
+    Texture *   depthStencilTexture{nullptr}; // @ts-nullable
 };
 
 struct DescriptorSetLayoutBinding {
-    uint32_t         binding        = INVALID_BINDING;
-    DescriptorType   descriptorType = DescriptorType::UNKNOWN;
-    uint32_t         count          = 0;
-    ShaderStageFlags stageFlags     = ShaderStageFlagBit::NONE;
+    uint32_t         binding{INVALID_BINDING};
+    DescriptorType   descriptorType{DescriptorType::UNKNOWN};
+    uint32_t         count{0U};
+    ShaderStageFlags stageFlags{ShaderStageFlagBit::NONE};
     SamplerList      immutableSamplers;
 };
 using DescriptorSetLayoutBindingList = vector<DescriptorSetLayoutBinding>;
@@ -1191,7 +1192,7 @@ struct DescriptorSetLayoutInfo {
 };
 
 struct DescriptorSetInfo {
-    DescriptorSetLayout *layout = nullptr;
+    DescriptorSetLayout *layout{nullptr};
 };
 
 struct PipelineLayoutInfo {
@@ -1204,120 +1205,120 @@ struct InputState {
 
 // Use uint32_t for all boolean values to convert memory to RasterizerState* in shared memory.
 struct RasterizerState {
-    uint32_t    isDiscard        = 0;
-    PolygonMode polygonMode      = PolygonMode::FILL;
-    ShadeModel  shadeModel       = ShadeModel::GOURAND;
-    CullMode    cullMode         = CullMode::BACK;
-    uint32_t    isFrontFaceCCW   = 1;
-    uint32_t    depthBiasEnabled = 0;
-    float       depthBias        = 0.0F;
-    float       depthBiasClamp   = 0.0F;
-    float       depthBiasSlop    = 0.0F;
-    uint32_t    isDepthClip      = 1;
-    uint32_t    isMultisample    = 0;
-    float       lineWidth        = 1.0F;
+    uint32_t    isDiscard{0U};
+    PolygonMode polygonMode{PolygonMode::FILL};
+    ShadeModel  shadeModel{ShadeModel::GOURAND};
+    CullMode    cullMode{CullMode::BACK};
+    uint32_t    isFrontFaceCCW{1U};
+    uint32_t    depthBiasEnabled{0U};
+    float       depthBias{0.F};
+    float       depthBiasClamp{0.F};
+    float       depthBiasSlop{0.F};
+    uint32_t    isDepthClip{1U};
+    uint32_t    isMultisample{0U};
+    float       lineWidth{1.F};
 };
 
 // Use uint32_t for all boolean values to convert memory to DepthStencilState* in shared memory.
 struct DepthStencilState {
-    uint32_t       depthTest             = 1;
-    uint32_t       depthWrite            = 1;
-    ComparisonFunc depthFunc             = ComparisonFunc::LESS;
-    uint32_t       stencilTestFront      = 0;
-    ComparisonFunc stencilFuncFront      = ComparisonFunc::ALWAYS;
-    uint32_t       stencilReadMaskFront  = 0xffffffff;
-    uint32_t       stencilWriteMaskFront = 0xffffffff;
-    StencilOp      stencilFailOpFront    = StencilOp::KEEP;
-    StencilOp      stencilZFailOpFront   = StencilOp::KEEP;
-    StencilOp      stencilPassOpFront    = StencilOp::KEEP;
-    uint32_t       stencilRefFront       = 1;
-    uint32_t       stencilTestBack       = 0;
-    ComparisonFunc stencilFuncBack       = ComparisonFunc::ALWAYS;
-    uint32_t       stencilReadMaskBack   = 0xffffffff;
-    uint32_t       stencilWriteMaskBack  = 0xffffffff;
-    StencilOp      stencilFailOpBack     = StencilOp::KEEP;
-    StencilOp      stencilZFailOpBack    = StencilOp::KEEP;
-    StencilOp      stencilPassOpBack     = StencilOp::KEEP;
-    uint32_t       stencilRefBack        = 1;
+    uint32_t       depthTest{1U};
+    uint32_t       depthWrite{1U};
+    ComparisonFunc depthFunc{ComparisonFunc::LESS};
+    uint32_t       stencilTestFront{0U};
+    ComparisonFunc stencilFuncFront{ComparisonFunc::ALWAYS};
+    uint32_t       stencilReadMaskFront{0xffffffffU};
+    uint32_t       stencilWriteMaskFront{0xffffffffU};
+    StencilOp      stencilFailOpFront{StencilOp::KEEP};
+    StencilOp      stencilZFailOpFront{StencilOp::KEEP};
+    StencilOp      stencilPassOpFront{StencilOp::KEEP};
+    uint32_t       stencilRefFront{1U};
+    uint32_t       stencilTestBack{0U};
+    ComparisonFunc stencilFuncBack{ComparisonFunc::ALWAYS};
+    uint32_t       stencilReadMaskBack{0xffffffffU};
+    uint32_t       stencilWriteMaskBack{0xffffffffU};
+    StencilOp      stencilFailOpBack{StencilOp::KEEP};
+    StencilOp      stencilZFailOpBack{StencilOp::KEEP};
+    StencilOp      stencilPassOpBack{StencilOp::KEEP};
+    uint32_t       stencilRefBack{1U};
 };
 
 // Use uint32_t for all boolean values to do convert memory to BlendTarget* in shared memory.
 struct BlendTarget {
-    uint32_t    blend          = 0;
-    BlendFactor blendSrc       = BlendFactor::ONE;
-    BlendFactor blendDst       = BlendFactor::ZERO;
-    BlendOp     blendEq        = BlendOp::ADD;
-    BlendFactor blendSrcAlpha  = BlendFactor::ONE;
-    BlendFactor blendDstAlpha  = BlendFactor::ZERO;
-    BlendOp     blendAlphaEq   = BlendOp::ADD;
-    ColorMask   blendColorMask = ColorMask::ALL;
+    uint32_t    blend{0U};
+    BlendFactor blendSrc{BlendFactor::ONE};
+    BlendFactor blendDst{BlendFactor::ZERO};
+    BlendOp     blendEq{BlendOp::ADD};
+    BlendFactor blendSrcAlpha{BlendFactor::ONE};
+    BlendFactor blendDstAlpha{BlendFactor::ZERO};
+    BlendOp     blendAlphaEq{BlendOp::ADD};
+    ColorMask   blendColorMask{ColorMask::ALL};
 };
 
 using BlendTargetList = vector<BlendTarget>;
 
 // Use uint32_t for all boolean values to do memeory copy in shared memory.
 struct BlendState {
-    uint32_t        isA2C      = 0;
-    uint32_t        isIndepend = 0;
+    uint32_t        isA2C{0U};
+    uint32_t        isIndepend{0U};
     Color           blendColor;
-    BlendTargetList targets{1};
+    BlendTargetList targets{1U};
 };
 
 struct PipelineStateInfo {
-    Shader *          shader         = nullptr;
-    PipelineLayout *  pipelineLayout = nullptr;
-    RenderPass *      renderPass     = nullptr;
+    Shader *          shader{nullptr};
+    PipelineLayout *  pipelineLayout{nullptr};
+    RenderPass *      renderPass{nullptr};
     InputState        inputState;
     RasterizerState   rasterizerState;
     DepthStencilState depthStencilState;
     BlendState        blendState;
-    PrimitiveMode     primitive     = PrimitiveMode::TRIANGLE_LIST;
-    DynamicStateFlags dynamicStates = DynamicStateFlagBit::NONE;
-    PipelineBindPoint bindPoint     = PipelineBindPoint::GRAPHICS;
-    uint32_t          subpass       = 0U;
+    PrimitiveMode     primitive{PrimitiveMode::TRIANGLE_LIST};
+    DynamicStateFlags dynamicStates{DynamicStateFlagBit::NONE};
+    PipelineBindPoint bindPoint{PipelineBindPoint::GRAPHICS};
+    uint32_t          subpass{0U};
 };
 
 struct CommandBufferInfo {
-    Queue *           queue = nullptr;
-    CommandBufferType type  = CommandBufferType::PRIMARY;
+    Queue *           queue{nullptr};
+    CommandBufferType type{CommandBufferType::PRIMARY};
 };
 
 struct QueueInfo {
-    QueueType type = QueueType::GRAPHICS;
+    QueueType type{QueueType::GRAPHICS};
 };
 
 struct FormatInfo {
     const String     name;
-    const uint32_t   size         = 0;
-    const uint32_t   count        = 0;
-    const FormatType type         = FormatType::NONE;
-    const bool       hasAlpha     = false;
-    const bool       hasDepth     = false;
-    const bool       hasStencil   = false;
-    const bool       isCompressed = false;
+    const uint32_t   size{0U};
+    const uint32_t   count{0U};
+    const FormatType type{FormatType::NONE};
+    const bool       hasAlpha{false};
+    const bool       hasDepth{false};
+    const bool       hasStencil{false};
+    const bool       isCompressed{false};
 };
 
 struct MemoryStatus {
-    uint32_t bufferSize  = 0;
-    uint32_t textureSize = 0;
+    uint32_t bufferSize{0U};
+    uint32_t textureSize{0U};
 };
 
 struct DynamicStencilStates {
-    uint32_t writeMask   = 0U;
-    uint32_t compareMask = 0U;
-    uint32_t reference   = 0U;
+    uint32_t writeMask{0U};
+    uint32_t compareMask{0U};
+    uint32_t reference{0U};
 };
 
 struct DynamicStates {
     Viewport viewport;
     Rect     scissor;
     Color    blendConstant;
-    float    lineWidth         = 1.F;
-    float    depthBiasConstant = 0.F;
-    float    depthBiasClamp    = 0.F;
-    float    depthBiasSlope    = 0.F;
-    float    depthMinBounds    = 0.F;
-    float    depthMaxBounds    = 0.F;
+    float    lineWidth{1.F};
+    float    depthBiasConstant{0.F};
+    float    depthBiasClamp{0.F};
+    float    depthBiasSlope{0.F};
+    float    depthMinBounds{0.F};
+    float    depthMaxBounds{0.F};
 
     DynamicStencilStates stencilStatesFront;
     DynamicStencilStates stencilStatesBack;

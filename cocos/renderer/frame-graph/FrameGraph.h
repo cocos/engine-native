@@ -121,7 +121,7 @@ TypedHandle<ResourceType> FrameGraph::create(const StringHandle &name, const typ
 
 template <typename ResourceType>
 TypedHandle<ResourceType> FrameGraph::importExternal(const StringHandle &name, ResourceType &resource) noexcept {
-    //CC_ASSERT(resource.Get()); // back buffer doesn't have a device resource instance, for now
+    CC_ASSERT(resource.Get());
     auto *const virtualResource = new ResourceEntry<ResourceType>(name, static_cast<ID>(_virtualResources.size()), resource);
     return TypedHandle<ResourceType>(create(virtualResource));
 }

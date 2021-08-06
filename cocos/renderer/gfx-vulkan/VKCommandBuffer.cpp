@@ -530,9 +530,9 @@ void CCVKCommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, co
     if (gpuTextureDst->swapchain) {
         VkImageMemoryBarrier barrier{VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER};
         barrier.srcAccessMask       = VK_ACCESS_TRANSFER_WRITE_BIT;
-        barrier.dstAccessMask       = 0;
         barrier.oldLayout           = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-        barrier.newLayout           = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+        barrier.dstAccessMask       = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+        barrier.newLayout           = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
         barrier.srcQueueFamilyIndex = barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 
         barrier.image                       = dstImage;
@@ -540,7 +540,7 @@ void CCVKCommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, co
         barrier.subresourceRange.levelCount = barrier.subresourceRange.layerCount = 1;
 
         vkCmdPipelineBarrier(_gpuCommandBuffer->vkCommandBuffer,
-                             VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, VK_DEPENDENCY_BY_REGION_BIT,
+                             VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_DEPENDENCY_BY_REGION_BIT,
                              0, nullptr, 0, nullptr, 1, &barrier);
     }
 }

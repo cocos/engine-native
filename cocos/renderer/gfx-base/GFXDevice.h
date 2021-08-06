@@ -113,6 +113,9 @@ protected:
 
     Device();
 
+    void destroySurface(void *windowHandle);
+    void createSurface(void *windowHandle);
+
     virtual bool doInit(const DeviceInfo &info) = 0;
     virtual void doDestroy()                    = 0;
 
@@ -159,6 +162,9 @@ protected:
     unordered_map<uint, Sampler *>        _samplers;
     unordered_map<uint, GlobalBarrier *>  _globalBarriers;
     unordered_map<uint, TextureBarrier *> _textureBarriers;
+
+private:
+    vector<Swapchain *> _swapchains;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -178,6 +184,7 @@ Queue *Device::createQueue(const QueueInfo &info) {
 Swapchain *Device::createSwapchain(const SwapchainInfo &info) {
     Swapchain *res = createSwapchain();
     res->initialize(info);
+    _swapchains.push_back(res);
     return res;
 }
 

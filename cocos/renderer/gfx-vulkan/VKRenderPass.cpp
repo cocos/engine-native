@@ -48,21 +48,14 @@ void CCVKRenderPass::doInit(const RenderPassInfo & /*info*/) {
     _gpuRenderPass->dependencies           = _dependencies;
 
     // assign a dummy subpass if not specified
-    // the depth stencil attachment is the default fallback
-    // when none are specified in subpass
-    const bool hasDepth = _depthStencilAttachment.format != Format::UNKNOWN;
     if (_gpuRenderPass->subpasses.empty()) {
         auto &subpass = _gpuRenderPass->subpasses.emplace_back();
         subpass.colors.resize(_colorAttachments.size());
         for (uint i = 0U; i < _colorAttachments.size(); ++i) {
             subpass.colors[i] = i;
         }
-        subpass.depthStencil = hasDepth ? utils::toUint(_colorAttachments.size()) : INVALID_BINDING;
-    } else {
-        for (auto &subpass : _gpuRenderPass->subpasses) {
-            if (hasDepth && subpass.depthStencil == INVALID_BINDING) {
-                subpass.depthStencil = utils::toUint(_colorAttachments.size());
-            }
+        if (_depthStencilAttachment.format != Format::UNKNOWN) {
+            subpass.depthStencil = _colorAttachments.size();
         }
     }
 

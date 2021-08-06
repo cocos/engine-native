@@ -123,7 +123,7 @@ const getMemberList = (() => {
 })();
 
 const structRE = /struct\s+(\w+).*?{\s*(.+?)\s*};/gs;
-const structMemberRE = /^\s*(const\w*\s*)?([\w[\]]+)\s+?(\w+)(?:\s*=?\s*(.*?))?;(?:\s*\/\/\s*@ts-(.*?)$)?/gm;
+const structMemberRE = /^\s*(const\w*\s*)?([\w[\]]+)\s+?(\w+)(?:\s*[={]?\s*(.*?)\s*}*\s*)?;(?:\s*\/\/\s*@ts-(.*?)$)?/gm;
 const structMap = {};
 const replaceConstants = (() => {
     const strMap = {
@@ -142,6 +142,12 @@ const replaceConstants = (() => {
     const constantsRE = new RegExp(Object.keys(strMap).reduce((acc, cur) => `${acc}|${cur}`, '').slice(1), 'g');
     return (str) => str.replace(constantsRE, (match) => strMap[match]);
 })();
+const getArrayValue = (decayedType, value) => {
+    const count = Number.parseInt(value);
+    if (Number.isNaN(count)) { return `[${value}]`; }
+    const ctorStr = `new ${decayedType}(), `;
+    return `[${ctorStr.repeat(count).slice(0, -2)}]`;
+};
 let structCap = structRE.exec(header);
 while (structCap) {
     const struct = structMap[structCap[1]] = {};
@@ -172,12 +178,7 @@ while (structCap) {
             if (!value.startsWith('0x')) { value = n; } // keep hexadecimal numbers
         } else if (value) {
             value = replaceConstants(value);
-            value = value.replace(/{(.*?)}/, (_, value) => {
-                const count = Number.parseInt(value);
-                if (Number.isNaN(count)) { return `[${value}]`; }
-                const ctorStr = `new ${type.slice(0, -2)}(), `;
-                return `[${ctorStr.repeat(count).slice(0, -2)}]`;
-            });
+            if (isArray) { value = getArrayValue(decayedType, value); }
         } else {
             if (isArray) { value = '[]'; }
             else if (type === 'string') { value = '\'\''; }
@@ -202,12 +203,12 @@ while (structCap) {
             }
         }
 
+        if (info.type === 'number' && info.value === 'null!') { info.value = 0; }
         memberCap = structMemberRE.exec(memberList);
     }
 
     structCap = structRE.exec(header);
 }
-
 
 let output = '';
 

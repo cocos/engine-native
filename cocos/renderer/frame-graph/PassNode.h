@@ -60,7 +60,6 @@ private:
     RenderTargetAttachment *getRenderTargetAttachment(const FrameGraph &graph, const VirtualResource *resource) noexcept;
     void                    requestTransientResources() noexcept;
     void                    releaseTransientResources() noexcept;
-    bool                    check(FrameGraph &graph, const Handle &checkingHandle, std::vector<Handle> const &handles) const noexcept;
     void                    setDevicePassId(ID id) noexcept;
     Handle                  getWriteResourceNodeHandle(const FrameGraph &graph, const VirtualResource *resource) const noexcept;
 

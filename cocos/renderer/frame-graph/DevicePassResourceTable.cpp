@@ -25,9 +25,9 @@
 
 #include "DevicePassResourceTable.h"
 
+#include <algorithm>
 #include "FrameGraph.h"
 #include "PassNode.h"
-#include <algorithm>
 
 namespace cc {
 namespace framegraph {
@@ -39,13 +39,12 @@ gfx::GFXObject *DevicePassResourceTable::get(const ResourceDictionary &from, Han
 
 void DevicePassResourceTable::extract(const FrameGraph &                       graph,
                                       const PassNode *const                    passNode,
-                                      bool                                     multiSubPass,
                                       std::vector<const gfx::Texture *> const &renderTargets) noexcept {
-    extract(graph, passNode->_reads, _reads, multiSubPass, renderTargets);
+    extract(graph, passNode->_reads, _reads, false, renderTargets);
     extract(graph, passNode->_writes, _writes, true, renderTargets);
 
     if (passNode->_next) {
-        extract(graph, passNode->_next, multiSubPass, renderTargets);
+        extract(graph, passNode->_next, renderTargets);
     }
 }
 
@@ -81,9 +80,7 @@ void DevicePassResourceTable::extract(const FrameGraph &                       g
             }
         }
 
-        if (deviceResource) {
-            to.emplace(handle, deviceResource);
-        }
+        to[handle] = deviceResource;
     });
 }
 

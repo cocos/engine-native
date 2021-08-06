@@ -563,7 +563,7 @@ void CCVKDevice::acquire(Swapchain *const *swapchains, uint32_t count) {
         gpuSwapchains[i]->curImageIndex = vkSwapchainIndices[i];
         queue->gpuQueue()->lastSignaledSemaphores.push_back(acquireSemaphore);
 
-        // We allow different swapchain indices
+        // swapchain indices may be different
         //CCASSERT(_gpuDevice->curBackBufferIndex == vkSwapchainIndices[i], "wrong image index?");
     }
 }

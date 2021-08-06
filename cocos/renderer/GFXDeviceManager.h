@@ -92,14 +92,14 @@ public:
         CC_SAFE_DESTROY(Device::instance);
     }
 
-    static void addCustomEvent() {
+    static void addSurfaceEventListener() {
         Device *device = Device::instance;
         EventDispatcher::addCustomEventListener(EVENT_DESTROY_WINDOW, [device](const CustomEvent &e) -> void {
-            device->releaseSurface(reinterpret_cast<uintptr_t>(e.args->ptrVal));
+            device->destroySurface(e.args->ptrVal);
         });
 
         EventDispatcher::addCustomEventListener(EVENT_RECREATE_WINDOW, [device](const CustomEvent &e) -> void {
-            device->acquireSurface(reinterpret_cast<uintptr_t>(e.args->ptrVal));
+            device->createSurface(e.args->ptrVal);
         });
     }
 
@@ -121,7 +121,7 @@ private:
             return false;
         }
 
-        addCustomEvent();
+        addSurfaceEventListener();
         *pDevice = device;
 
         return true;

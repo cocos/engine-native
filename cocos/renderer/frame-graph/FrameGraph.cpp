@@ -429,8 +429,8 @@ void FrameGraph::generateDevicePasses() {
 
     ID passId = 1;
 
-    static std::vector<PassNode *> subPassNodes;
-    subPassNodes.clear();
+    static std::vector<PassNode *> subpassNodes;
+    subpassNodes.clear();
 
     for (const auto &passNode : _passNodes) {
         if (passNode->_refCount == 0) {
@@ -438,25 +438,25 @@ void FrameGraph::generateDevicePasses() {
         }
 
         if (passId != passNode->_devicePassId) {
-            _devicePasses.emplace_back(new DevicePass(*this, subPassNodes));
+            _devicePasses.emplace_back(new DevicePass(*this, subpassNodes));
 
-            for (PassNode *const p : subPassNodes) {
+            for (PassNode *const p : subpassNodes) {
                 p->releaseTransientResources();
             }
 
-            subPassNodes.clear();
+            subpassNodes.clear();
             passId = passNode->_devicePassId;
         }
 
         passNode->requestTransientResources();
-        subPassNodes.emplace_back(passNode.get());
+        subpassNodes.emplace_back(passNode.get());
     }
 
-    CC_ASSERT(subPassNodes.size() == 1);
+    CC_ASSERT(subpassNodes.size() == 1);
 
-    _devicePasses.emplace_back(new DevicePass(*this, subPassNodes));
+    _devicePasses.emplace_back(new DevicePass(*this, subpassNodes));
 
-    for (PassNode *const p : subPassNodes) {
+    for (PassNode *const p : subpassNodes) {
         p->releaseTransientResources();
     }
 }

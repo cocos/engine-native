@@ -115,8 +115,6 @@ bool ForwardPipeline::activate(gfx::Swapchain *swapchain) {
 }
 
 void ForwardPipeline::render(const vector<scene::Camera *> &cameras) {
-    static gfx::TextureBarrier *present{_device->createTextureBarrier({{gfx::AccessType::COLOR_ATTACHMENT_WRITE}, {gfx::AccessType::PRESENT}})};
-    static gfx::Texture *       backBuffer{nullptr};
     _commandBuffers[0]->begin();
     _pipelineUBO->updateGlobalUBO(cameras[0]->window->swapchain);
     _pipelineUBO->updateMultiCameraUBO(cameras);
@@ -127,7 +125,7 @@ void ForwardPipeline::render(const vector<scene::Camera *> &cameras) {
         }
         _pipelineUBO->incCameraUBOOffset();
     }
-    _commandBuffers[0]->pipelineBarrier(nullptr, &present, &backBuffer, 1);
+    insertPresentBarrier(_commandBuffers[0], cameras);
     _commandBuffers[0]->end();
     _device->flushCommands(_commandBuffers);
     _device->getQueue()->submit(_commandBuffers);

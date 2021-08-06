@@ -24,9 +24,9 @@
 ****************************************************************************/
 
 #include "PassNode.h"
+#include <algorithm>
 #include "FrameGraph.h"
 #include "ResourceNode.h"
-#include <algorithm>
 
 namespace cc {
 namespace framegraph {
@@ -39,8 +39,7 @@ PassNode::PassNode(const PassInsertPoint inserPoint, const StringHandle name, co
     CC_ASSERT(_name.isValid());
 }
 
-Handle PassNode::read(FrameGraph &graph, const Handle &input) noexcept {
-    CC_ASSERT(check(graph, input, _writes));
+Handle PassNode::read(FrameGraph & /*graph*/, const Handle &input) noexcept {
     const auto it = std::find_if(_reads.begin(), _reads.end(), [input](const Handle handle) {
         return input == handle;
     });
@@ -53,7 +52,6 @@ Handle PassNode::read(FrameGraph &graph, const Handle &input) noexcept {
 }
 
 Handle PassNode::write(FrameGraph &graph, const Handle &output) noexcept {
-    CC_ASSERT(check(graph, output, _reads));
     CC_ASSERT(std::find_if(_writes.begin(), _writes.end(), [output](const Handle handle) {
                   return output == handle;
               }) == _writes.end());
@@ -152,7 +150,8 @@ void PassNode::requestTransientResources() noexcept {
 }
 
 void PassNode::releaseTransientResources() noexcept {
-    std::for_each(_resourceReleaseArray.begin(), _resourceReleaseArray.end(), [](VirtualResource *const resource) {
+    // resources should be release in the reverse order to stabilize usages between frames
+    std::for_each(_resourceReleaseArray.rbegin(), _resourceReleaseArray.rend(), [](VirtualResource *const resource) {
         if (!resource->isImported()) {
             resource->release();
         }
@@ -161,23 +160,6 @@ void PassNode::releaseTransientResources() noexcept {
     if (_next) {
         _next->releaseTransientResources();
     }
-}
-
-bool PassNode::check(FrameGraph &graph, const Handle &checkingHandle, std::vector<Handle> const &handles) const noexcept {
-    // render target can not do both read & write
-    const VirtualResource *const inputResource = graph.getResourceNode(checkingHandle).virtualResource;
-    const auto                   it            = std::find_if(handles.begin(), handles.end(), [&](Handle handle) {
-        return inputResource == graph.getResourceNode(handle).virtualResource;
-    });
-
-    if (it == handles.end()) {
-        return true;
-    }
-
-    const Handle output = *it;
-    return std::find_if(_attachments.cbegin(), _attachments.cend(), [&output](const RenderTargetAttachment &attachment) {
-               return attachment.textureHandle == output;
-           }) == _attachments.end();
 }
 
 void PassNode::setDevicePassId(ID const id) noexcept {

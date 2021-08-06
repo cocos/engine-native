@@ -25,10 +25,10 @@
 
 #pragma once
 
+#include <unordered_map>
 #include "Handle.h"
 #include "RenderTargetAttachment.h"
 #include "Resource.h"
-#include <unordered_map>
 
 namespace cc {
 namespace framegraph {
@@ -60,7 +60,7 @@ private:
     using ResourceDictionary = std::unordered_map<Handle, gfx::GFXObject *, Handle::Hasher>;
 
     static gfx::GFXObject *get(const ResourceDictionary &from, Handle handle) noexcept;
-    void                   extract(const FrameGraph &graph, const PassNode *const passNode, bool multiSubPass, std::vector<const gfx::Texture *> const &renderTargets) noexcept;
+    void                   extract(const FrameGraph &graph, const PassNode *passNode, std::vector<const gfx::Texture *> const &renderTargets) noexcept;
     void                   extract(const FrameGraph &graph, std::vector<Handle> const &from, ResourceDictionary &to, bool ignoreRenderTarget, std::vector<const gfx::Texture *> const &renderTargets) noexcept;
 
     ResourceDictionary _reads{};

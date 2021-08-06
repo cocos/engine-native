@@ -64,6 +64,8 @@ public:
 
     void setPipelineSharedSceneData(scene::PipelineSharedSceneData *data);
 
+    void insertPresentBarrier(gfx::CommandBuffer *cmdBuff, const vector<scene::Camera *> &cameras);
+
     inline const RenderFlowList &                  getFlows() const { return _flows; }
     inline uint                                    getTag() const { return _tag; }
     inline const map<String, InternalBindingInst> &getGlobalBindings() const { return _globalBindings; }

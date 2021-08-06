@@ -77,5 +77,23 @@ void Device::destroy() {
     doDestroy();
 }
 
+void Device::destroySurface(void *windowHandle) {
+    for (auto *swapchain :_swapchains) {
+        if (swapchain->getWindowHandle() == windowHandle) {
+            swapchain->destroySurface();
+            break;
+        }
+    }
+}
+
+void Device::createSurface(void *windowHandle) {
+    for (auto *swapchain :_swapchains) {
+        if (!swapchain->getWindowHandle()) {
+            swapchain->createSurface(windowHandle);
+            break;
+        }
+    }
+}
+
 } // namespace gfx
 } // namespace cc
