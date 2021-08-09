@@ -144,7 +144,6 @@ public:
     // descriptor infos
     VkImageView vkImageView = VK_NULL_HANDLE;
 };
-using CCVKGPUTextureViewList = vector<CCVKGPUTextureView *>;
 
 class CCVKGPUSampler final : public Object {
 public:
@@ -186,24 +185,31 @@ public:
     // for barrier manager
     vector<ThsvsAccessType> renderAccessTypes; // gathered from descriptor sets
     ThsvsAccessType         transferAccess = THSVS_ACCESS_NONE;
+
+    VkDeviceSize getStartOffset(uint curBackBufferIndex) const {
+        return startOffset + instanceSize * curBackBufferIndex;
+    }
 };
-using CCVKGPUBufferList = vector<CCVKGPUBuffer *>;
 
 class CCVKGPUBufferView final : public Object {
 public:
     CCVKGPUBuffer *gpuBuffer = nullptr;
     uint           offset    = 0U;
     uint           range     = 0U;
+
+    VkDeviceSize getStartOffset(uint curBackBufferIndex) const {
+        return gpuBuffer->getStartOffset(curBackBufferIndex) + offset;
+    }
 };
 
 class CCVKGPUFramebuffer final : public Object {
 public:
-    CCVKGPURenderPass *    gpuRenderPass = nullptr;
-    CCVKGPUTextureViewList gpuColorViews;
-    CCVKGPUTextureView *   gpuDepthStencilView = nullptr;
-    VkFramebuffer          vkFramebuffer       = VK_NULL_HANDLE;
-    CCVKGPUSwapchain *     swapchain           = nullptr;
-    bool                   isOffscreen         = true;
+    CCVKGPURenderPass *          gpuRenderPass = nullptr;
+    vector<CCVKGPUTextureView *> gpuColorViews;
+    CCVKGPUTextureView *         gpuDepthStencilView = nullptr;
+    VkFramebuffer                vkFramebuffer       = VK_NULL_HANDLE;
+    CCVKGPUSwapchain *           swapchain           = nullptr;
+    bool                         isOffscreen         = true;
 };
 
 using FramebufferList        = vector<VkFramebuffer>;
@@ -254,25 +260,24 @@ struct CCVKGPUShaderStage {
     String             source;
     VkShaderModule     vkShader = VK_NULL_HANDLE;
 };
-using CCVKGPUShaderStageList = vector<CCVKGPUShaderStage>;
 
 class CCVKGPUShader final : public Object {
 public:
-    String                 name;
-    AttributeList          attributes;
-    UniformBlockList       blocks;
-    UniformSamplerList     samplers;
-    CCVKGPUShaderStageList gpuStages;
+    String                     name;
+    AttributeList              attributes;
+    UniformBlockList           blocks;
+    UniformSamplerList         samplers;
+    vector<CCVKGPUShaderStage> gpuStages;
 };
 
 class CCVKGPUInputAssembler final : public Object {
 public:
-    AttributeList        attributes;
-    CCVKGPUBufferList    gpuVertexBuffers;
-    CCVKGPUBuffer *      gpuIndexBuffer    = nullptr;
-    CCVKGPUBuffer *      gpuIndirectBuffer = nullptr;
-    vector<VkBuffer>     vertexBuffers;
-    vector<VkDeviceSize> vertexBufferOffsets;
+    AttributeList               attributes;
+    vector<CCVKGPUBufferView *> gpuVertexBuffers;
+    CCVKGPUBufferView *         gpuIndexBuffer    = nullptr;
+    CCVKGPUBufferView *         gpuIndirectBuffer = nullptr;
+    vector<VkBuffer>            vertexBuffers;
+    vector<VkDeviceSize>        vertexBufferOffsets;
 };
 
 union CCVKDescriptorInfo {
@@ -287,12 +292,11 @@ struct CCVKGPUDescriptor {
     CCVKGPUTextureView *    gpuTextureView = nullptr;
     CCVKGPUSampler *        gpuSampler     = nullptr;
 };
-using CCVKGPUDescriptorList = vector<CCVKGPUDescriptor>;
 
 class CCVKGPUDescriptorSetLayout;
 class CCVKGPUDescriptorSet final : public Object {
 public:
-    CCVKGPUDescriptorList gpuDescriptors;
+    vector<CCVKGPUDescriptor> gpuDescriptors;
 
     // references
     CCVKGPUDescriptorSetLayout *gpuLayout = nullptr;
@@ -307,11 +311,9 @@ public:
     uint layoutID = 0U;
 };
 
-using CCVKGPUDescriptorSetLayoutList = vector<CCVKGPUDescriptorSetLayout *>;
-
 class CCVKGPUPipelineLayout final : public Object {
 public:
-    CCVKGPUDescriptorSetLayoutList setLayouts;
+    vector<CCVKGPUDescriptorSetLayout *> setLayouts;
 
     VkPipelineLayout vkPipelineLayout = VK_NULL_HANDLE;
 
@@ -1007,9 +1009,8 @@ public:
 
 private:
     void doUpdate(const CCVKGPUBufferView *buffer, VkDescriptorBufferInfo *descriptor) {
-        VkDeviceSize instanceOffset = _bufferInstanceIndices[descriptor] * buffer->gpuBuffer->instanceSize;
         descriptor->buffer          = buffer->gpuBuffer->vkBuffer;
-        descriptor->offset          = buffer->gpuBuffer->startOffset + instanceOffset + buffer->offset;
+        descriptor->offset          = buffer->getStartOffset(_bufferInstanceIndices[descriptor]);
         descriptor->range           = buffer->range;
     }
 

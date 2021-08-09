@@ -250,9 +250,9 @@ void cmdFuncCCVKCreateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer) {
         bufferInfo.usage |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
         allocInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
     } else if (gpuBuffer->memUsage == (MemoryUsage::HOST | MemoryUsage::DEVICE)) {
-        //gpuBuffer->instanceSize = roundUp(gpuBuffer->size, device->getCapabilities().uboOffsetAlignment);
-        //bufferInfo.size         = gpuBuffer->instanceSize * device->gpuDevice()->backBufferCount;
-        //allocInfo.flags         = VMA_ALLOCATION_CREATE_MAPPED_BIT;
+        gpuBuffer->instanceSize = roundUp(gpuBuffer->size, device->getCapabilities().uboOffsetAlignment);
+        bufferInfo.size         = gpuBuffer->instanceSize * device->gpuDevice()->backBufferCount;
+        allocInfo.flags         = VMA_ALLOCATION_CREATE_MAPPED_BIT;
         allocInfo.usage         = VMA_MEMORY_USAGE_CPU_TO_GPU;
         bufferInfo.usage |= VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
     }
@@ -770,7 +770,7 @@ void cmdFuncCCVKCreateComputePipelineState(CCVKDevice *device, CCVKGPUPipelineSt
 
     ///////////////////// Shader Stage /////////////////////
 
-    const CCVKGPUShaderStageList &  stages = gpuPipelineState->gpuShader->gpuStages;
+    const auto &                    stages = gpuPipelineState->gpuShader->gpuStages;
     VkPipelineShaderStageCreateInfo stageInfo{VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO};
     stageInfo.stage  = mapVkShaderStageFlagBits(stages[0].type);
     stageInfo.module = stages[0].vkShader;
@@ -797,8 +797,8 @@ void cmdFuncCCVKCreateGraphicsPipelineState(CCVKDevice *device, CCVKGPUPipelineS
 
     ///////////////////// Shader Stage /////////////////////
 
-    const CCVKGPUShaderStageList &stages     = gpuPipelineState->gpuShader->gpuStages;
-    const size_t                  stageCount = stages.size();
+    const auto & stages     = gpuPipelineState->gpuShader->gpuStages;
+    const size_t stageCount = stages.size();
 
     stageInfos.resize(stageCount, {VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO});
     for (size_t i = 0U; i < stageCount; ++i) {
@@ -1049,7 +1049,7 @@ void cmdFuncCCVKUpdateBuffer(CCVKDevice *device, CCVKGPUBuffer *gpuBuffer, const
 
     VkBufferCopy region{
         stagingBuffer.startOffset,
-        gpuBuffer->startOffset + backBufferIndex * gpuBuffer->instanceSize,
+        gpuBuffer->getStartOffset(backBufferIndex),
         sizeToUpload,
     };
     auto upload = [&stagingBuffer, &gpuBuffer, &region](const CCVKGPUCommandBuffer *gpuCommandBuffer) {
@@ -1540,8 +1540,8 @@ void CCVKGPUBufferHub::flush(CCVKGPUTransportHub *transportHub) {
             VkBufferCopy region;
             for (auto &buffer : buffers) {
                 if (buffer.second.canMemcpy) continue;
-                region.srcOffset = buffer.first->startOffset + buffer.second.srcIndex * buffer.first->instanceSize;
-                region.dstOffset = buffer.first->startOffset + _device->curBackBufferIndex * buffer.first->instanceSize;
+                region.srcOffset = buffer.first->getStartOffset(buffer.second.srcIndex);
+                region.dstOffset = buffer.first->getStartOffset(_device->curBackBufferIndex);
                 region.size      = buffer.second.size;
                 vkCmdCopyBuffer(gpuCommandBuffer->vkCommandBuffer, buffer.first->vkBuffer, buffer.first->vkBuffer, 1, &region);
             }

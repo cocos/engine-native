@@ -105,7 +105,7 @@ void CCVKDescriptorSet::doInit(const DescriptorSetInfo & /*info*/) {
             for (uint j = 0; j < binding.count; ++j, ++k) {
                 if (hasFlag(DESCRIPTOR_BUFFER_TYPE, binding.descriptorType)) {
                     instance.descriptorInfos[k].buffer.buffer = gpuDevice->defaultBuffer.vkBuffer;
-                    instance.descriptorInfos[k].buffer.offset = gpuDevice->defaultBuffer.startOffset;
+                    instance.descriptorInfos[k].buffer.offset = gpuDevice->defaultBuffer.getStartOffset(t);
                     instance.descriptorInfos[k].buffer.range  = gpuDevice->defaultBuffer.size;
                 } else if (hasFlag(DESCRIPTOR_TEXTURE_TYPE, binding.descriptorType)) {
                     instance.descriptorInfos[k].image.sampler     = gpuDevice->defaultSampler.vkSampler;

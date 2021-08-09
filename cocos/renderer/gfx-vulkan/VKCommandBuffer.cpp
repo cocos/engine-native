@@ -232,17 +232,18 @@ void CCVKCommandBuffer::bindInputAssembler(InputAssembler *ia) {
             gpuInputAssembler->vertexBufferOffsets.resize(vbCount);
         }
 
+        CCVKGPUDevice *gpuDevice = CCVKDevice::getInstance()->gpuDevice();
         for (uint i = 0U; i < vbCount; ++i) {
-            gpuInputAssembler->vertexBuffers[i]       = gpuInputAssembler->gpuVertexBuffers[i]->vkBuffer;
-            gpuInputAssembler->vertexBufferOffsets[i] = gpuInputAssembler->gpuVertexBuffers[i]->startOffset;
+            gpuInputAssembler->vertexBuffers[i]       = gpuInputAssembler->gpuVertexBuffers[i]->gpuBuffer->vkBuffer;
+            gpuInputAssembler->vertexBufferOffsets[i] = gpuInputAssembler->gpuVertexBuffers[i]->getStartOffset(gpuDevice->curBackBufferIndex);
         }
 
         vkCmdBindVertexBuffers(_gpuCommandBuffer->vkCommandBuffer, 0, vbCount,
                                gpuInputAssembler->vertexBuffers.data(), gpuInputAssembler->vertexBufferOffsets.data());
 
         if (gpuInputAssembler->gpuIndexBuffer) {
-            vkCmdBindIndexBuffer(_gpuCommandBuffer->vkCommandBuffer, gpuInputAssembler->gpuIndexBuffer->vkBuffer, 0,
-                                 gpuInputAssembler->gpuIndexBuffer->stride == 4 ? VK_INDEX_TYPE_UINT32 : VK_INDEX_TYPE_UINT16);
+            vkCmdBindIndexBuffer(_gpuCommandBuffer->vkCommandBuffer, gpuInputAssembler->gpuIndexBuffer->gpuBuffer->vkBuffer, 0,
+                                 gpuInputAssembler->gpuIndexBuffer->gpuBuffer->stride == 4 ? VK_INDEX_TYPE_UINT32 : VK_INDEX_TYPE_UINT16);
         }
         _curGPUInputAssember = gpuInputAssembler;
     }
@@ -358,31 +359,31 @@ void CCVKCommandBuffer::draw(const DrawInfo &info) {
         bindDescriptorSets(VK_PIPELINE_BIND_POINT_GRAPHICS);
     }
 
-    CCVKGPUBuffer *gpuIndirectBuffer = _curGPUInputAssember->gpuIndirectBuffer;
+    const auto *gpuIndirectBuffer = _curGPUInputAssember->gpuIndirectBuffer;
 
     if (gpuIndirectBuffer) {
-        uint           drawInfoCount = gpuIndirectBuffer->count;
+        uint           drawInfoCount = gpuIndirectBuffer->range / gpuIndirectBuffer->gpuBuffer->stride;
         CCVKGPUDevice *gpuDevice     = CCVKDevice::getInstance()->gpuDevice();
-        VkDeviceSize   offset        = gpuIndirectBuffer->startOffset + gpuDevice->curBackBufferIndex * gpuIndirectBuffer->instanceSize;
+        VkDeviceSize   offset        = gpuIndirectBuffer->getStartOffset(gpuDevice->curBackBufferIndex);
         if (gpuDevice->useMultiDrawIndirect) {
-            if (gpuIndirectBuffer->isDrawIndirectByIndex) {
+            if (gpuIndirectBuffer->gpuBuffer->isDrawIndirectByIndex) {
                 vkCmdDrawIndexedIndirect(_gpuCommandBuffer->vkCommandBuffer,
-                                         gpuIndirectBuffer->vkBuffer,
+                                         gpuIndirectBuffer->gpuBuffer->vkBuffer,
                                          offset,
                                          drawInfoCount,
                                          sizeof(VkDrawIndexedIndirectCommand));
             } else {
                 vkCmdDrawIndirect(_gpuCommandBuffer->vkCommandBuffer,
-                                  gpuIndirectBuffer->vkBuffer,
+                                  gpuIndirectBuffer->gpuBuffer->vkBuffer,
                                   offset,
                                   drawInfoCount,
                                   sizeof(VkDrawIndirectCommand));
             }
         } else {
-            if (gpuIndirectBuffer->isDrawIndirectByIndex) {
+            if (gpuIndirectBuffer->gpuBuffer->isDrawIndirectByIndex) {
                 for (VkDeviceSize j = 0U; j < drawInfoCount; ++j) {
                     vkCmdDrawIndexedIndirect(_gpuCommandBuffer->vkCommandBuffer,
-                                             gpuIndirectBuffer->vkBuffer,
+                                             gpuIndirectBuffer->gpuBuffer->vkBuffer,
                                              offset + j * sizeof(VkDrawIndexedIndirectCommand),
                                              1,
                                              sizeof(VkDrawIndexedIndirectCommand));
@@ -390,7 +391,7 @@ void CCVKCommandBuffer::draw(const DrawInfo &info) {
             } else {
                 for (VkDeviceSize j = 0U; j < drawInfoCount; ++j) {
                     vkCmdDrawIndirect(_gpuCommandBuffer->vkCommandBuffer,
-                                      gpuIndirectBuffer->vkBuffer,
+                                      gpuIndirectBuffer->gpuBuffer->vkBuffer,
                                       offset + j * sizeof(VkDrawIndirectCommand),
                                       1,
                                       sizeof(VkDrawIndirectCommand));
@@ -584,9 +585,10 @@ void CCVKCommandBuffer::dispatch(const DispatchInfo &info) {
     }
 
     if (info.indirectBuffer) {
+        CCVKGPUDevice *gpuDevice = CCVKDevice::getInstance()->gpuDevice();
         auto *indirectBuffer = static_cast<CCVKBuffer *>(info.indirectBuffer);
         vkCmdDispatchIndirect(_gpuCommandBuffer->vkCommandBuffer, indirectBuffer->gpuBuffer()->vkBuffer,
-                              indirectBuffer->gpuBuffer()->startOffset + indirectBuffer->gpuBufferView()->offset + info.indirectOffset);
+                              indirectBuffer->gpuBufferView()->getStartOffset(gpuDevice->curBackBufferIndex) + info.indirectOffset);
     } else {
         vkCmdDispatch(_gpuCommandBuffer->vkCommandBuffer, info.groupCountX, info.groupCountY, info.groupCountZ);
     }
