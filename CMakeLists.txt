@@ -2073,6 +2073,7 @@ if(OHOS)
         rawfile.z
         z
         OpenSLES
+        hilog_ndk.z
         ${CC_EXTERNAL_LIBS}
     )
 endif()
@@ -2145,11 +2146,13 @@ if(MSVC)
         file(GLOB_RECURSE WIN32_DLLS
             ${CWD}/external/win32/libs/*.dll
             ${CWD}/external/win32/libs/Debug/*.dll
+            ${CWD}/external/win32/libs/glslang/*.dll
         )
     else()
         file(GLOB_RECURSE WIN32_DLLS
             ${CWD}/external/win64/libs/*.dll
             ${CWD}/external/win64/libs/Debug/*.dll
+            ${CWD}/external/win64/libs/glslang/*.dll
         )
     endif()
     target_compile_options(cocos2d PUBLIC /MP)
