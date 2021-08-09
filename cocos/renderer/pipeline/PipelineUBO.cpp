@@ -61,7 +61,7 @@ void PipelineUBO::quantizeDirLightShadowCamera(const RenderPipeline *pipeline, s
     Mat4::fromRT(rotation, Vec3::ZERO, &matWorldTrans);
 
     Mat4 matShadowProj;
-    Mat4::createOrthographic(-radius * 0.5F, radius * 0.5F, -radius * 0.5F, radius * 0.5F, -range, radius, &matShadowProj);
+    Mat4::createOrthographic(-radius, radius, -radius, radius, -range, radius, &matShadowProj);
 
     // snap to whole texels
     Mat4 matWorldTransInv;
@@ -415,7 +415,7 @@ void PipelineUBO::updateMultiCameraUBO(const vector<scene::Camera *> &cameras) {
     auto *      device       = _pipeline->getDevice();
     const uint  uboAlignment = device->getCapabilities().uboOffsetAlignment;
     _alignedCameraUBOSize    = static_cast<uint>(std::ceil(UBOCamera::SIZE / static_cast<float>(uboAlignment))) * uboAlignment;
-    const uint cameraCount   = cameras.size();
+    const uint cameraCount   = static_cast<uint>(cameras.size());
     const uint totalUboSize  = _alignedCameraUBOSize * cameraCount;
 
     _cameraUBOs.resize(totalUboSize);

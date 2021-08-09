@@ -50,17 +50,17 @@ public:
     /**
      * The x-coordinate.
      */
-    float x;
+    float x{};
 
     /**
      * The y-coordinate.
      */
-    float y;
+    float y{};
 
     /**
      * The z-coordinate.
      */
-    float z;
+    float z{};
 
     /**
      * Constructs a new vector initialized to all zeros.

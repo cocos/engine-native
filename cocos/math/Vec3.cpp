@@ -40,7 +40,7 @@ Vec3::Vec3(float xx, float yy, float zz)
   z(zz) {
 }
 
-Vec3::Vec3(const float *array) noexcept {
+Vec3::Vec3(const float *array) {
     set(array);
 }
 
