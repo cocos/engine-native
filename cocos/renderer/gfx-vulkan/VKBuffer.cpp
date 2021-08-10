@@ -97,7 +97,7 @@ void CCVKBuffer::doResize(uint size, uint count) {
     CCVKDevice::getInstance()->getMemoryStatus().bufferSize -= _size;
     CCVKDevice::getInstance()->gpuRecycleBin()->collect(_gpuBuffer);
 
-    _gpuBuffer->size = size;
+    _gpuBuffer->size = static_cast<VkDeviceSize>(size);
     _gpuBuffer->count = count;
     cmdFuncCCVKCreateBuffer(CCVKDevice::getInstance(), _gpuBuffer);
 
