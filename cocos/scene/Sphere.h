@@ -57,7 +57,7 @@ public:
 
 private:
     float _radius{-1.0F};
-    Vec3  _center{};
+    Vec3  _center;
 };
 
 } // namespace scene

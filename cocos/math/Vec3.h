@@ -188,9 +188,11 @@ public:
     void cross(const Vec3 &v);
 
     /**
-     * Sets this vector to the cross product between itself and the specified vector.
+     * Calculate cross product.
      *
-     * @param v1 The vector to compute the cross product with.
+     * @param v1 is a vector.
+     * @param v2 is a vector.
+     * @param dst is a vector used to calculate the cross product of v1 and v2. 
      */
     static void crossProduct(const Vec3 &v1, const Vec3 &v2, Vec3 *dst);
 
