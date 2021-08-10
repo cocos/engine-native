@@ -83,14 +83,14 @@ void Frustum::split(float start, float end, float aspect, float fov, const Mat4&
     const Vec3  nearTemp(start * w, start * h, start);
     const Vec3  farTemp(end * w, end * h, end);
 
-    vertices[0] = transform * Vec3(nearTemp.x, nearTemp.y, nearTemp.z);
-    vertices[1] = transform * Vec3(nearTemp.x, nearTemp.y, nearTemp.z);
-    vertices[2] = transform * Vec3(nearTemp.x, nearTemp.y, nearTemp.z);
-    vertices[3] = transform * Vec3(nearTemp.x, nearTemp.y, nearTemp.z);
-    vertices[4] = transform * Vec3(farTemp.x, farTemp.y, farTemp.z);
-    vertices[5] = transform * Vec3(farTemp.x, farTemp.y, farTemp.z);
-    vertices[6] = transform * Vec3(farTemp.x, farTemp.y, farTemp.z);
-    vertices[7] = transform * Vec3(farTemp.x, farTemp.y, farTemp.z);
+    vertices[0].transformMat4(Vec3(nearTemp.x, nearTemp.y, nearTemp.z), transform);
+    vertices[1].transformMat4(Vec3(nearTemp.x, nearTemp.y, nearTemp.z), transform);
+    vertices[2].transformMat4(Vec3(nearTemp.x, nearTemp.y, nearTemp.z), transform);
+    vertices[3].transformMat4(Vec3(nearTemp.x, nearTemp.y, nearTemp.z), transform);
+    vertices[4].transformMat4(Vec3(farTemp.x, farTemp.y, farTemp.z), transform);
+    vertices[5].transformMat4(Vec3(farTemp.x, farTemp.y, farTemp.z), transform);
+    vertices[6].transformMat4(Vec3(farTemp.x, farTemp.y, farTemp.z), transform);
+    vertices[7].transformMat4(Vec3(farTemp.x, farTemp.y, farTemp.z), transform);
 
     updatePlanes();
 }

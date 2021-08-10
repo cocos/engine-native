@@ -208,9 +208,9 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
 
         // update dirLightFrustum
         if (mainLight && mainLight->getNode()) {
-            scene::Sphere *cameraBoundingSphere = sceneData->getCameraBoundingSphere();
-            const Mat4 matWorldTrans = getCameraWorldMatrix(camera);
             const Quaternion &rotation             = mainLight->getNode()->getWorldRotation();
+            scene::Sphere *   cameraBoundingSphere = sceneData->getCameraBoundingSphere();
+            const Mat4        matWorldTrans        = getCameraWorldMatrix(camera);
             validFrustum->split(shadowInfo->nearValue, shadowInfo->farValue, camera->aspect, camera->fov, matWorldTrans);
             cameraBoundingSphere->mergeFrustum(*validFrustum);
             updateDirFrustum(cameraBoundingSphere, rotation, shadowInfo->range, dirLightFrustum);
