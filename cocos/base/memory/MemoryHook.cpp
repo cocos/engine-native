@@ -95,7 +95,7 @@ cc_malloc_logger(uint32_t aType,
 
             if (CC_LIKELY(g_new_hooker != nullptr)) {
                 const void* new_ptr  = reinterpret_cast<const void*>(aResult);
-                g_new_hooker(ptr, new_size);
+                g_new_hooker(new_ptr, new_size);
             }
         }
         else {
