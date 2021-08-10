@@ -88,19 +88,19 @@ cc_malloc_logger(uint32_t aType,
         size_t new_size = reinterpret_cast<size_t>(aArg3);
         if (new_size != 0) {
             // realloc
-            LIKELY_IF(g_delete_hooker != nullptr) {
+            if (CC_LIKELY(g_delete_hooker != nullptr)) {
                 const void* ptr = reinterpret_cast<const void*>(aArg2);
                 g_delete_hooker(ptr);
             }
 
-            LIKELY_IF(g_new_hooker != nullptr) {
+            if (CC_LIKELY(g_new_hooker != nullptr)) {
                 const void* new_ptr  = reinterpret_cast<const void*>(aResult);
                 g_new_hooker(ptr, new_size);
             }
         }
         else {
             // malloc/calloc/valloc
-            LIKELY_IF(g_new_hooker != nullptr) {
+            if (CC_LIKELY(g_new_hooker != nullptr)) {
                 const void* ptr  = reinterpret_cast<const void*>(aResult);
                 size_t      size = reinterpret_cast<size_t>(aArg2);
                 g_new_hooker(ptr, size);
@@ -109,7 +109,7 @@ cc_malloc_logger(uint32_t aType,
     }
     else {
         // free
-        LIKELY_IF(g_delete_hooker != nullptr) {
+        if (CC_LIKELY(g_delete_hooker != nullptr)) {
             const void* ptr = reinterpret_cast<const void*>(aArg2);
             g_delete_hooker(ptr);
         }
