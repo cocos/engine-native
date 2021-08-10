@@ -211,7 +211,8 @@ void PipelineUBO::updateShadowUBOView(const RenderPipeline *pipeline, std::array
     if (shadowInfo->enabled) {
         if (mainLight && shadowInfo->shadowType == scene::ShadowType::SHADOWMAP) {
             // light proj
-            float nearClamp, farClamp;
+            float nearClamp;
+            float farClamp;
             if (!shadowInfo->fixedArea) {
                 const scene::Sphere *cameraBoundingSphere = sceneData->getCameraBoundingSphere();
                 const float          radius               = cameraBoundingSphere->getRadius();
@@ -267,7 +268,8 @@ void PipelineUBO::updateShadowUBOLightView(const RenderPipeline *pipeline, std::
     const float packing            = hFTexture ? 0.0F : 1.0F;
     switch (light->getType()) {
         case scene::LightType::DIRECTIONAL: {
-            float nearClamp, farClamp;
+            float nearClamp;
+            float farClamp;
             if (!shadowInfo->fixedArea) {
                 const scene::Sphere *cameraBoundingSphere = sceneData->getCameraBoundingSphere();
                 const float          radius               = cameraBoundingSphere->getRadius();
