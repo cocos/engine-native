@@ -65,7 +65,7 @@ public:
     /**
      * Constructs a new vector initialized to all zeros.
      */
-    Vec3();
+    Vec3() = default;
 
     /**
      * Constructs a new vector initialized to the specified values.
@@ -81,7 +81,7 @@ public:
      *
      * @param array An array containing the elements of the vector in the order x, y, z.
      */
-    Vec3(const float *array);
+    explicit Vec3(const float *array);
 
     /**
      * Constructs a vector that describes the direction between the specified points.
@@ -111,7 +111,7 @@ public:
     /**
      * Destructor.
      */
-    ~Vec3();
+    ~Vec3() = default;
 
     /**
      * Indicates whether this vector contains all zeros.
@@ -190,7 +190,7 @@ public:
     /**
      * Sets this vector to the cross product between itself and the specified vector.
      *
-     * @param v The vector to compute the cross product with.
+     * @param v1 The vector to compute the cross product with.
      */
     static void crossProduct(const Vec3 &v1, const Vec3 &v2, Vec3 *dst);
 
@@ -531,8 +531,9 @@ public:
      * @return bool
      */
     inline bool operator<(const Vec3 &rhs) const {
-        if (x < rhs.x && y < rhs.y && z < rhs.z)
+        if (x < rhs.x && y < rhs.y && z < rhs.z) {
             return true;
+        }  
         return false;
     }
 
@@ -544,8 +545,9 @@ public:
      * @return bool
      */
     inline bool operator>(const Vec3 &rhs) const {
-        if (x > rhs.x && y > rhs.y && z > rhs.z)
+        if (x > rhs.x && y > rhs.y && z > rhs.z) {
             return true;
+        }
         return false;
     }
 
