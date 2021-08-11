@@ -48,6 +48,14 @@ ShadowMapBatchedQueue::ShadowMapBatchedQueue(RenderPipeline *pipeline)
     _batchedQueue   = CC_NEW(RenderBatchedQueue);
 }
 
+ShadowMapBatchedQueue::~ShadowMapBatchedQueue() {
+    CC_SAFE_DELETE(_batchedQueue);
+
+    CC_SAFE_DELETE(_instancedQueue);
+
+    _buffer = nullptr;
+}
+
 void ShadowMapBatchedQueue::gatherLightPasses(const scene::Light *light, gfx::CommandBuffer *cmdBuffer) {
     clear();
 
@@ -99,11 +107,11 @@ void ShadowMapBatchedQueue::add(const scene::Model *model, gfx::CommandBuffer *c
         const auto  batchingScheme = pass->getBatchingScheme();
 
         if (batchingScheme == scene::BatchingSchemes::INSTANCING) {
-            auto *instancedBuffer = InstancedBuffer::get(subModel->getPass(shadowPassIdx));
+            auto *instancedBuffer = InstancedBuffer::getInstance(subModel->getPass(shadowPassIdx));
             instancedBuffer->merge(model, subModel, shadowPassIdx);
             _instancedQueue->add(instancedBuffer);
         } else if (batchingScheme == scene::BatchingSchemes::VB_MERGING) {
-            auto *batchedBuffer = BatchedBuffer::get(subModel->getPass(shadowPassIdx));
+            auto *batchedBuffer = BatchedBuffer::getInstance(subModel->getPass(shadowPassIdx));
             batchedBuffer->merge(subModel, shadowPassIdx, model);
             _batchedQueue->add(batchedBuffer);
         } else { // standard draw
@@ -134,14 +142,6 @@ void ShadowMapBatchedQueue::recordCommandBuffer(gfx::Device *device, gfx::Render
         cmdBuffer->bindInputAssembler(ia);
         cmdBuffer->draw(ia);
     }
-}
-
-void ShadowMapBatchedQueue::destroy() {
-    CC_SAFE_DELETE(_batchedQueue);
-
-    CC_SAFE_DELETE(_instancedQueue);
-
-    _buffer = nullptr;
 }
 
 int ShadowMapBatchedQueue::getShadowPassIndex(const scene::Model *model) const {

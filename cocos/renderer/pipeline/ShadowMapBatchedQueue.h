@@ -25,7 +25,6 @@
 
 #pragma once
 
-#include "Define.h"
 #include "scene/Light.h"
 #include "scene/Model.h"
 #include "scene/SubModel.h"
@@ -42,8 +41,7 @@ class RenderPipeline;
 class CC_DLL ShadowMapBatchedQueue : public Object {
 public:
     explicit ShadowMapBatchedQueue(RenderPipeline *);
-    ~ShadowMapBatchedQueue() override = default;
-    void destroy();
+    ~ShadowMapBatchedQueue();
 
     void clear();
     void gatherLightPasses(const scene::Light *, gfx::CommandBuffer *);

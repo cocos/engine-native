@@ -113,31 +113,28 @@ void ForwardStage::render(scene::Camera *camera) {
         queue->clear();
     }
 
-    uint   subModelIdx = 0;
-    uint   passIdx     = 0;
-    size_t k           = 0;
     for (auto ro : renderObjects) {
         const auto *const model = ro.model;
         const auto& subModels = model->getSubModels();
-        auto subModelCount = subModels.size();
-        for (subModelIdx = 0; subModelIdx < subModelCount; ++subModelIdx) {
+        const uint subModelCount = subModels.size();
+        for (uint subModelIdx = 0; subModelIdx < subModelCount; ++subModelIdx) {
             const auto& subModel = subModels[subModelIdx];
             const auto& passes = subModel->getPasses();
-            auto passCount = passes.size();
-            for (passIdx = 0; passIdx < passCount; ++passIdx) {
+            const uint passCount = passes.size();
+            for (uint passIdx = 0; passIdx < passCount; ++passIdx) {
                 const auto& pass          = passes[passIdx];
                 if (pass->getPhase() != _phaseID) continue;
                 if (pass->getBatchingScheme() == scene::BatchingSchemes::INSTANCING) {
-                    auto *instancedBuffer = InstancedBuffer::get(pass);
+                    auto *instancedBuffer = InstancedBuffer::getInstance(pass);
                     instancedBuffer->merge(model, subModel, passIdx);
                     _instancedQueue->add(instancedBuffer);
                 } else if (pass->getBatchingScheme() == scene::BatchingSchemes::VB_MERGING) {
-                    auto *batchedBuffer = BatchedBuffer::get(pass);
+                    auto *batchedBuffer = BatchedBuffer::getInstance(pass);
                     batchedBuffer->merge(subModel, passIdx, model);
                     _batchedQueue->add(batchedBuffer);
                 } else {
-                    for (k = 0; k < _renderQueues.size(); k++) {
-                        _renderQueues[k]->insertRenderPass(ro, subModelIdx, passIdx);
+                    for (auto& _renderQueue : _renderQueues) {
+                        _renderQueue->insertRenderPass(ro, subModelIdx, passIdx);
                     }
                 }
             }

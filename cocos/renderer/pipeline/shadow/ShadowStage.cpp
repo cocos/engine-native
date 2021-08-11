@@ -89,7 +89,7 @@ void ShadowStage::render(scene::Camera *camera) {
 }
 
 void ShadowStage::destroy() {
-    CC_SAFE_DESTROY(_additiveShadowQueue);
+    CC_SAFE_DELETE(_additiveShadowQueue);
 
     RenderStage::destroy();
 }

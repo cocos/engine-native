@@ -40,7 +40,6 @@
 #include "gfx-base/GFXDescriptorSet.h"
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXFramebuffer.h"
-#include "gfx-base/GFXSampler.h"
 #include "gfx-base/GFXTexture.h"
 #include "scene/RenderScene.h"
 #include "scene/Sphere.h"
@@ -203,14 +202,14 @@ void RenderAdditiveLightQueue::addRenderQueue(const scene::Pass *pass, const sce
     const auto batchingScheme = pass->getBatchingScheme();
     if (batchingScheme == scene::BatchingSchemes::INSTANCING) { // instancing
         for (auto idx : _lightIndices) {
-            auto *buffer = InstancedBuffer::get(subModel->getPass(lightPassIdx), idx);
+            auto *buffer = InstancedBuffer::getInstance(subModel->getPass(lightPassIdx), idx);
             buffer->merge(model, subModel, lightPassIdx);
             buffer->setDynamicOffset(0, _lightBufferStride * idx);
             _instancedQueue->add(buffer);
         }
     } else if (batchingScheme == scene::BatchingSchemes::VB_MERGING) { // vb-merging
         for (auto idx : _lightIndices) {
-            auto *buffer = BatchedBuffer::get(subModel->getPass(lightPassIdx), idx);
+            auto *buffer = BatchedBuffer::getInstance(subModel->getPass(lightPassIdx), idx);
             buffer->merge(subModel, lightPassIdx, model);
             buffer->setDynamicOffset(0, _lightBufferStride * idx);
             _batchedQueue->add(buffer);

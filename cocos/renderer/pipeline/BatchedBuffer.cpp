@@ -32,14 +32,25 @@
 namespace cc {
 namespace pipeline {
 map<scene::Pass *, map<uint, BatchedBuffer *>> BatchedBuffer::buffers;
-BatchedBuffer *                                BatchedBuffer::get(scene::Pass *pass) {
-    return BatchedBuffer::get(pass, 0);
+BatchedBuffer *                                BatchedBuffer::getInstance(scene::Pass *pass) {
+    return getInstance(pass, 0);
 }
-BatchedBuffer *BatchedBuffer::get(scene::Pass *pass, uint extraKey) {
-    auto &record = BatchedBuffer::buffers[pass];
+BatchedBuffer *BatchedBuffer::getInstance(scene::Pass *pass, uint extraKey) {
+    auto &record = buffers[pass];
     auto &buffer = record[extraKey];
     if (buffer == nullptr) buffer = CC_NEW(BatchedBuffer(pass));
     return buffer;
+}
+
+void BatchedBuffer::destroyInstance() {
+    for (auto &pair : buffers) {
+        const map<uint, BatchedBuffer *> &batchedItem = pair.second;
+        for (const auto &item : batchedItem) {
+            BatchedBuffer *batchedBuffer = item.second;
+            CC_SAFE_DELETE(batchedBuffer);
+        }
+    }
+    buffers.clear();
 }
 
 BatchedBuffer::BatchedBuffer(const scene::Pass *pass)
@@ -47,9 +58,7 @@ BatchedBuffer::BatchedBuffer(const scene::Pass *pass)
   _device(gfx::Device::getInstance()) {
 }
 
-BatchedBuffer::~BatchedBuffer() = default;
-
-void BatchedBuffer::destroy() {
+BatchedBuffer::~BatchedBuffer() {
     for (auto &batch : _batches) {
         for (auto *vb : batch.vbs) {
             vb->destroy();
@@ -171,7 +180,6 @@ void BatchedBuffer::merge(const scene::SubModel *subModel, uint passIdx, const s
             flatBuffer.count * flatBuffer.stride,
             flatBuffer.stride,
         });
-        auto        size       = 0U;
         newVB->update(flatBuffer.data, flatBuffer.size);
 
         vbs[i]     = newVB;

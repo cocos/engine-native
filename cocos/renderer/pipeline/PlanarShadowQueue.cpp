@@ -45,6 +45,10 @@ PlanarShadowQueue::PlanarShadowQueue(RenderPipeline *pipeline)
     _instancedQueue = CC_NEW(RenderInstancedQueue);
 }
 
+PlanarShadowQueue::~PlanarShadowQueue() {
+    CC_SAFE_DELETE(_instancedQueue);
+}
+
 void PlanarShadowQueue::gatherShadowPasses(scene::Camera *camera, gfx::CommandBuffer *cmdBuffer) {
     clear();
     auto *const sceneData  = _pipeline->getPipelineSceneData();
@@ -64,7 +68,7 @@ void PlanarShadowQueue::gatherShadowPasses(scene::Camera *camera, gfx::CommandBu
     }
 
     const auto &models          = scene->getModels();
-    auto *      instancedBuffer = InstancedBuffer::get(shadowInfo->instancePass);
+    auto *      instancedBuffer = InstancedBuffer::getInstance(shadowInfo->instancePass);
 
     for (const auto *model : models) {
         if (!model->getEnabled() || !model->getCastShadow() || !model->getNode()) {
@@ -127,10 +131,6 @@ void PlanarShadowQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass
             cmdBuffer->draw(ia);
         }
     }
-}
-
-void PlanarShadowQueue::destroy() {
-    CC_SAFE_DELETE(_instancedQueue);
 }
 
 } // namespace pipeline

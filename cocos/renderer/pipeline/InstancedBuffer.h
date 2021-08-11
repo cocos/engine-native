@@ -25,7 +25,6 @@
 
 #pragma once
 
-#include "Define.h"
 #include "scene/Model.h"
 #include "scene/Pass.h"
 #include "scene/SubModel.h"
@@ -59,14 +58,13 @@ class InstancedBuffer : public Object {
 public:
     static constexpr uint   INITIAL_CAPACITY = 32;
     static constexpr uint   MAX_CAPACITY     = 1024;
-    static InstancedBuffer *get(scene::Pass *pass);
-    static InstancedBuffer *get(scene::Pass *, uint extraKey);
-    static void             destroyInstancedBuffer();
+    static InstancedBuffer *getInstance(scene::Pass *pass);
+    static InstancedBuffer *getInstance(scene::Pass *, uint extraKey);
+    static void             destroyInstance();
 
     explicit InstancedBuffer(const scene::Pass *pass);
     ~InstancedBuffer() override;
 
-    void destroy();
     void merge(const scene::Model *, const scene::SubModel *, uint);
     void merge(const scene::Model *, const scene::SubModel *, uint, gfx::Shader *);
     void uploadBuffers(gfx::CommandBuffer *cmdBuff);

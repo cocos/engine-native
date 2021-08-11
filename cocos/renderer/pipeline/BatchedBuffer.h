@@ -53,13 +53,13 @@ using DynamicOffsetList = vector<uint>;
 
 class CC_DLL BatchedBuffer : public Object {
 public:
-    static BatchedBuffer *get(scene::Pass *pass);
-    static BatchedBuffer *get(scene::Pass *pass, uint extraKey);
+    static BatchedBuffer *getInstance(scene::Pass *pass);
+    static BatchedBuffer *getInstance(scene::Pass *pass, uint extraKey);
+    static void           destroyInstance();
 
     explicit BatchedBuffer(const scene::Pass *pass);
     ~BatchedBuffer() override;
 
-    void destroy();
     void merge(const scene::SubModel *, uint passIdx, const scene::Model *);
     void clear();
     void setDynamicOffset(uint idx, uint value);

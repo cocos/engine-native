@@ -34,10 +34,10 @@
 namespace cc {
 namespace pipeline {
 map<scene::Pass *, map<uint, InstancedBuffer *>> InstancedBuffer::buffers;
-InstancedBuffer *                                InstancedBuffer::get(scene::Pass *pass) {
-    return InstancedBuffer::get(pass, 0);
+InstancedBuffer *                                InstancedBuffer::getInstance(scene::Pass *pass) {
+    return InstancedBuffer::getInstance(pass, 0);
 }
-InstancedBuffer *InstancedBuffer::get(scene::Pass *pass, uint extraKey) {
+InstancedBuffer *InstancedBuffer::getInstance(scene::Pass *pass, uint extraKey) {
     auto &record = buffers[pass];
     auto &buffer = record[extraKey];
     if (buffer == nullptr) buffer = CC_NEW(InstancedBuffer(pass));
@@ -45,17 +45,15 @@ InstancedBuffer *InstancedBuffer::get(scene::Pass *pass, uint extraKey) {
     return buffer;
 }
 
-void InstancedBuffer::destroyInstancedBuffer() {
-    for (auto &pair : InstancedBuffer::buffers) {
+void InstancedBuffer::destroyInstance() {
+    for (auto &pair : buffers) {
         const map<uint, InstancedBuffer *> &instanceItem = pair.second;
         for (const auto &item : instanceItem) {
             InstancedBuffer *instanceBuffer = item.second;
-            if (instanceBuffer) {
-                instanceBuffer->destroy();
-            }
+            CC_SAFE_DELETE(instanceBuffer);
         }
     }
-    InstancedBuffer::buffers.clear();
+    buffers.clear();
 }
 
 InstancedBuffer::InstancedBuffer(const scene::Pass *pass)
@@ -63,9 +61,7 @@ InstancedBuffer::InstancedBuffer(const scene::Pass *pass)
   _device(gfx::Device::getInstance()) {
 }
 
-InstancedBuffer::~InstancedBuffer() = default;
-
-void InstancedBuffer::destroy() {
+InstancedBuffer::~InstancedBuffer(){
     for (auto &instance : _instances) {
         CC_SAFE_DESTROY(instance.vb);
         CC_SAFE_DESTROY(instance.ia);
@@ -79,8 +75,8 @@ void InstancedBuffer::merge(const scene::Model *model, const scene::SubModel *su
 }
 
 void InstancedBuffer::merge(const scene::Model *model, const scene::SubModel *subModel, uint passIdx, gfx::Shader *shaderImplant) {
-    auto        stride          = model->getInstancedBufferSize();
-    const auto *instancedBuffer = model->getInstancedBuffer();
+    const uint32_t          stride = model->getInstancedBufferSize();
+    const uint8_t *instancedBuffer = model->getInstancedBuffer();
 
     if (!stride) return; // we assume per-instance attributes are always present
     auto *sourceIA      = subModel->getInputAssembler();
@@ -122,8 +118,8 @@ void InstancedBuffer::merge(const scene::Model *model, const scene::SubModel *su
     }
 
     // Create a new instance
-    auto  newSize = stride * INITIAL_CAPACITY;
-    auto *vb      = _device->createBuffer({
+    const uint  newSize = stride * INITIAL_CAPACITY;
+    auto            *vb = _device->createBuffer({
         gfx::BufferUsageBit::VERTEX | gfx::BufferUsageBit::TRANSFER_DST,
         gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE,
         static_cast<uint>(newSize),
@@ -148,7 +144,7 @@ void InstancedBuffer::merge(const scene::Model *model, const scene::SubModel *su
     auto *data = static_cast<uint8_t *>(CC_MALLOC(newSize));
     memcpy(data, instancedBuffer, stride);
     vertexBuffers.emplace_back(vb);
-    gfx::InputAssemblerInfo iaInfo = {attributes, vertexBuffers, indexBuffer};
+    const gfx::InputAssemblerInfo iaInfo = {attributes, vertexBuffers, indexBuffer};
     auto *                  ia     = _device->createInputAssembler(iaInfo);
     InstancedItem           item   = {1, INITIAL_CAPACITY, vb, data, ia, stride, shader, descriptorSet, lightingMap};
     _instances.emplace_back(item);

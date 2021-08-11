@@ -302,7 +302,7 @@ void LightingStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
 void LightingStage::destroy() {
     CC_SAFE_DESTROY(_descriptorSet);
     CC_SAFE_DESTROY(_descLayout);
-    CC_SAFE_DESTROY(_planarShadowQueue);
+    CC_SAFE_DELETE(_planarShadowQueue);
     CC_SAFE_DELETE(_reflectionRenderQueue);
     RenderStage::destroy();
 

@@ -90,7 +90,7 @@ void GbufferStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
 void GbufferStage::destroy() {
     CC_SAFE_DELETE(_batchedQueue);
     CC_SAFE_DELETE(_instancedQueue);
-    CC_SAFE_DESTROY(_planarShadowQueue);
+    CC_SAFE_DELETE(_planarShadowQueue);
     RenderStage::destroy();
 }
 
@@ -122,11 +122,11 @@ void GbufferStage::render(scene::Camera *camera) {
                 const auto &pass = passes[passIdx];
                 if (pass->getPhase() != _phaseID) continue;
                 if (pass->getBatchingScheme() == scene::BatchingSchemes::INSTANCING) {
-                    auto *instancedBuffer = InstancedBuffer::get(pass);
+                    auto *instancedBuffer = InstancedBuffer::getInstance(pass);
                     instancedBuffer->merge(model, subModel, passIdx);
                     _instancedQueue->add(instancedBuffer);
                 } else if (pass->getBatchingScheme() == scene::BatchingSchemes::VB_MERGING) {
-                    auto *batchedBuffer = BatchedBuffer::get(pass);
+                    auto *batchedBuffer = BatchedBuffer::getInstance(pass);
                     batchedBuffer->merge(subModel, passIdx, model);
                     _batchedQueue->add(batchedBuffer);
                 } else {
