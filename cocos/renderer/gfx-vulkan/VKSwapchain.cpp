@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -45,7 +45,7 @@ CCVKSwapchain::~CCVKSwapchain() {
     destroy();
 }
 
-void CCVKSwapchain::doInit(const SwapchainInfo & /*info*/) {
+void CCVKSwapchain::doInit(const SwapchainInfo &info) {
     auto *      gpuDevice  = CCVKDevice::getInstance()->gpuDevice();
     const auto *gpuContext = CCVKDevice::getInstance()->gpuContext();
     _gpuSwapchain          = CC_NEW(CCVKGPUSwapchain);
@@ -210,6 +210,8 @@ void CCVKSwapchain::doInit(const SwapchainInfo & /*info*/) {
 
     textureInfo.format = depthStencilFmt;
     initTexture(textureInfo, _depthStencilTexture);
+
+    checkSwapchainStatus();
 }
 
 void CCVKSwapchain::doDestroy() {
@@ -234,8 +236,8 @@ void CCVKSwapchain::doDestroy() {
     CC_SAFE_DELETE(_gpuSwapchain)
 }
 
-// no-op since we maintain surface size internally
 void CCVKSwapchain::doResize(uint32_t width, uint32_t height) {
+    checkSwapchainStatus();
 }
 
 bool CCVKSwapchain::checkSwapchainStatus() {

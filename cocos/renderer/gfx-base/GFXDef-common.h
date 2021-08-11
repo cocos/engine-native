@@ -962,7 +962,7 @@ struct TextureInfo {
     uint32_t     levelCount{1U};
     SampleCount  samples{SampleCount::ONE};
     uint32_t     depth{1U};
-    void *       iosurface{nullptr};
+    void *       externalRes{nullptr}; // CVPixelBuffer for Metal, EGLImage for GLES
 };
 
 struct TextureViewInfo {

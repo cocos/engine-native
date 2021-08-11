@@ -36,7 +36,6 @@ class GLES2GPUContext;
 class GLES2GPUSwapchain;
 class GLES2GPUStateCache;
 class GLES2GPUBlitManager;
-class GLES2GPUStagingBufferPool;
 class GLES2GPUConstantRegistry;
 class GLES2GPUFramebufferCacheMap;
 
@@ -69,7 +68,6 @@ public:
     inline GLES2GPUContext *            context() const { return _gpuContext; }
     inline GLES2GPUStateCache *         stateCache() const { return _gpuStateCache; }
     inline GLES2GPUBlitManager *        blitManager() const { return _gpuBlitManager; }
-    inline GLES2GPUStagingBufferPool *  stagingBufferPool() const { return _gpuStagingBufferPool; }
     inline GLES2GPUConstantRegistry *   constantRegistry() const { return _gpuConstantRegistry; }
     inline GLES2GPUFramebufferCacheMap *framebufferCacheMap() const { return _gpuFramebufferCacheMap; }
 
@@ -116,7 +114,6 @@ protected:
     GLES2GPUContext *            _gpuContext{nullptr};
     GLES2GPUStateCache *         _gpuStateCache{nullptr};
     GLES2GPUBlitManager *        _gpuBlitManager{nullptr};
-    GLES2GPUStagingBufferPool *  _gpuStagingBufferPool{nullptr};
     GLES2GPUConstantRegistry *   _gpuConstantRegistry{nullptr};
     GLES2GPUFramebufferCacheMap *_gpuFramebufferCacheMap{nullptr};
 

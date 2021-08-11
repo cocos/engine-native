@@ -73,7 +73,6 @@ bool GLES3Device::doInit(const DeviceInfo & /*info*/) {
     _gpuContext             = CC_NEW(GLES3GPUContext);
     _gpuStateCache          = CC_NEW(GLES3GPUStateCache);
     _gpuConstantRegistry    = CC_NEW(GLES3GPUConstantRegistry);
-    _gpuStagingBufferPool   = CC_NEW(GLES3GPUStagingBufferPool);
     _gpuFramebufferCacheMap = CC_NEW(GLES3GPUFramebufferCacheMap(_gpuStateCache));
 
     if (!_gpuContext->initialize(_gpuStateCache, _gpuConstantRegistry)) {
@@ -240,7 +239,6 @@ bool GLES3Device::doInit(const DeviceInfo & /*info*/) {
 void GLES3Device::doDestroy() {
     CC_SAFE_DELETE(_gpuFramebufferCacheMap)
     CC_SAFE_DELETE(_gpuConstantRegistry)
-    CC_SAFE_DELETE(_gpuStagingBufferPool)
     CC_SAFE_DELETE(_gpuStateCache)
 
     CCASSERT(!_memoryStatus.bufferSize, "Buffer memory leaked");
@@ -252,8 +250,6 @@ void GLES3Device::doDestroy() {
 }
 
 void GLES3Device::acquire(Swapchain *const *swapchains, uint32_t count) {
-    _gpuStagingBufferPool->reset();
-
     _swapchains.clear();
     for (uint32_t i = 0; i < count; ++i) {
         _swapchains.push_back(static_cast<GLES3Swapchain *>(swapchains[i])->gpuSwapchain());

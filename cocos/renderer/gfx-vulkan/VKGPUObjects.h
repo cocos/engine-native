@@ -1009,9 +1009,9 @@ public:
 
 private:
     void doUpdate(const CCVKGPUBufferView *buffer, VkDescriptorBufferInfo *descriptor) {
-        descriptor->buffer          = buffer->gpuBuffer->vkBuffer;
-        descriptor->offset          = buffer->getStartOffset(_bufferInstanceIndices[descriptor]);
-        descriptor->range           = buffer->range;
+        descriptor->buffer = buffer->gpuBuffer->vkBuffer;
+        descriptor->offset = buffer->getStartOffset(_bufferInstanceIndices[descriptor]);
+        descriptor->range  = buffer->range;
     }
 
     static void doUpdate(const CCVKGPUTextureView *texture, VkDescriptorImageInfo *descriptor) {

@@ -1056,6 +1056,8 @@ void cmdFuncGLES2CreateShader(GLES2Device *device, GLES2GPUShader *gpuShader) {
     } // for
 
     // calculate offset & size
+    // WARNING: we can't handle inactive uniform arrays with wrong input sizes
+    // and there is no way to detect that for now
     for (auto &gpuBlock : gpuShader->glBlocks) {
         for (auto &gpuUniform : gpuBlock.glUniforms) {
             gpuUniform.offset = gpuBlock.size;

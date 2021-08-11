@@ -529,7 +529,7 @@ void FrameGraph::exportGraphViz(const std::string &path) {
             if (attachment) {
                 switch (attachment->desc.loadOp) {
                     case gfx::LoadOp::DISCARD:
-                        out << "Discard";
+                        out << "DontCare";
                         break;
                     case gfx::LoadOp::CLEAR:
                         out << "Clear";
@@ -547,8 +547,9 @@ void FrameGraph::exportGraphViz(const std::string &path) {
         }
 
         out << "\", style=filled, fillcolor="
-            << ((node.virtualResource->isImported()) ? (node.virtualResource->_refCount ? "palegreen" : "palegreen4") : node.version == 0 ? "pink"
-                                                                                                                                          : (node.virtualResource->_refCount ? "skyblue" : "skyblue4"))
+            << ((node.virtualResource->isImported())
+                    ? (node.virtualResource->_refCount ? "palegreen" : "palegreen4")
+                    : (node.version == 0 ? "pink" : (node.virtualResource->_refCount ? "skyblue" : "skyblue4")))
             << "]\n";
     }
 

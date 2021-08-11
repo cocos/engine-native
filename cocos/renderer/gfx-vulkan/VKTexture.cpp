@@ -126,7 +126,7 @@ void CCVKTexture::doResize(uint width, uint height, uint size) {
     cmdFuncCCVKCreateTextureView(CCVKDevice::getInstance(), _gpuTextureView);
 }
 
-///////////////////////////// Swapchian Specific /////////////////////////////
+///////////////////////////// Swapchain Specific /////////////////////////////
 
 void CCVKTexture::doInit(const SwapchainTextureInfo & /*info*/) {
     _gpuTexture              = CC_NEW(CCVKGPUTexture);

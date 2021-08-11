@@ -575,49 +575,5 @@ private:
     CacheMap _textureMap;      // texture -> mip level -> framebuffer
 };
 
-constexpr size_t                CHUNK_SIZE = 16 * 1024 * 1024; // 16M per block by default
-class GLES3GPUStagingBufferPool final : public Object {
-public:
-    ~GLES3GPUStagingBufferPool() override {
-        for (Buffer &buffer : _pool) {
-            CC_FREE(buffer.mappedData);
-        }
-        _pool.clear();
-    }
-
-    uint8_t *alloc(size_t size) {
-        size_t  bufferCount = _pool.size();
-        Buffer *buffer      = nullptr;
-        for (size_t idx = 0U; idx < bufferCount; idx++) {
-            Buffer *cur = &_pool[idx];
-            if (CHUNK_SIZE - cur->curOffset >= size) {
-                buffer = cur;
-                break;
-            }
-        }
-        if (!buffer) {
-            _pool.resize(bufferCount + 1);
-            buffer             = &_pool.back();
-            buffer->mappedData = static_cast<uint8_t *>(CC_MALLOC(CHUNK_SIZE));
-        }
-        uint8_t *data = buffer->mappedData + buffer->curOffset;
-        buffer->curOffset += size;
-        return data;
-    }
-
-    void reset() {
-        for (Buffer &buffer : _pool) {
-            buffer.curOffset = 0U;
-        }
-    }
-
-private:
-    struct Buffer {
-        uint8_t *mappedData = nullptr;
-        size_t   curOffset  = 0U;
-    };
-    vector<Buffer> _pool;
-};
-
 } // namespace gfx
 } // namespace cc

@@ -73,7 +73,6 @@ bool GLES2Device::doInit(const DeviceInfo & /*info*/) {
     _gpuStateCache          = CC_NEW(GLES2GPUStateCache);
     _gpuBlitManager         = CC_NEW(GLES2GPUBlitManager);
     _gpuConstantRegistry    = CC_NEW(GLES2GPUConstantRegistry);
-    _gpuStagingBufferPool   = CC_NEW(GLES2GPUStagingBufferPool);
     _gpuFramebufferCacheMap = CC_NEW(GLES2GPUFramebufferCacheMap(_gpuStateCache));
 
     if (!_gpuContext->initialize(_gpuStateCache, _gpuConstantRegistry)) {
@@ -236,7 +235,6 @@ void GLES2Device::doDestroy() {
 
     CC_SAFE_DELETE(_gpuFramebufferCacheMap)
     CC_SAFE_DELETE(_gpuConstantRegistry)
-    CC_SAFE_DELETE(_gpuStagingBufferPool)
     CC_SAFE_DELETE(_gpuBlitManager)
     CC_SAFE_DELETE(_gpuStateCache)
 
@@ -249,8 +247,6 @@ void GLES2Device::doDestroy() {
 }
 
 void GLES2Device::acquire(Swapchain *const *swapchains, uint32_t count) {
-    _gpuStagingBufferPool->reset();
-
     _swapchains.clear();
     for (uint32_t i = 0; i < count; ++i) {
         _swapchains.push_back(static_cast<GLES2Swapchain *>(swapchains[i])->gpuSwapchain());

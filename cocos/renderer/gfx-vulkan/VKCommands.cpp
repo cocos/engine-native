@@ -170,6 +170,7 @@ void cmdFuncCCVKCreateTexture(CCVKDevice *device, CCVKGPUTexture *gpuTexture) {
                 gpuTexture->swapchainVkImages[i] = gpuTexture->swapchain->swapchainImages[i];
             }
         }
+        gpuTexture->memoryless = true;
     } else {
         createFn(&gpuTexture->vkImage, &gpuTexture->vmaAllocation);
     }
