@@ -253,12 +253,12 @@ if(USE_AUDIO)
     elseif(APPLE)
         cocos_source_files(
                          cocos/audio/apple/AudioDecoder.h
-                         cocos/audio/apple/AudioPlayer.mm
-                         cocos/audio/apple/AudioDecoder.mm
+            NO_WERROR    cocos/audio/apple/AudioPlayer.mm
+            NO_WERROR    cocos/audio/apple/AudioDecoder.mm
                          cocos/audio/apple/AudioPlayer.h
             NO_WERROR    cocos/audio/apple/AudioEngine-inl.mm
                          cocos/audio/apple/AudioMacros.h
-                         cocos/audio/apple/AudioCache.mm
+            NO_WERROR    cocos/audio/apple/AudioCache.mm
                          cocos/audio/apple/AudioCache.h
                          cocos/audio/apple/AudioEngine-inl.h
         )
@@ -1621,7 +1621,7 @@ if(USE_SE_V8)
                      cocos/bindings/jswrapper/v8/Object.h
                      cocos/bindings/jswrapper/v8/ObjectWrap.cpp
                      cocos/bindings/jswrapper/v8/ObjectWrap.h
-        NO_WERROR    cocos/bindings/jswrapper/v8/ScriptEngine.cpp
+                     cocos/bindings/jswrapper/v8/ScriptEngine.cpp
                      cocos/bindings/jswrapper/v8/ScriptEngine.h
                      cocos/bindings/jswrapper/v8/SeApi.h
                      cocos/bindings/jswrapper/v8/Utils.cpp
