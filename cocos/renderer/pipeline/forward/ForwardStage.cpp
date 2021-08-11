@@ -133,8 +133,8 @@ void ForwardStage::render(scene::Camera *camera) {
                     batchedBuffer->merge(subModel, passIdx, model);
                     _batchedQueue->add(batchedBuffer);
                 } else {
-                    for (auto& _renderQueue : _renderQueues) {
-                        _renderQueue->insertRenderPass(ro, subModelIdx, passIdx);
+                    for (auto& renderQueue : _renderQueues) {
+                        renderQueue->insertRenderPass(ro, subModelIdx, passIdx);
                     }
                 }
             }

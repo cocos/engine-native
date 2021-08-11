@@ -41,7 +41,7 @@ class RenderPipeline;
 class CC_DLL ShadowMapBatchedQueue : public Object {
 public:
     explicit ShadowMapBatchedQueue(RenderPipeline *);
-    ~ShadowMapBatchedQueue();
+    ~ShadowMapBatchedQueue() override;
 
     void clear();
     void gatherLightPasses(const scene::Light *, gfx::CommandBuffer *);
