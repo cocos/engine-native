@@ -27,6 +27,7 @@
 #include "InstancedBuffer.h"
 #include "PipelineStateManager.h"
 #include "gfx-base/GFXCommandBuffer.h"
+#include "scene/RenderScene.h"
 
 namespace cc {
 namespace pipeline {
