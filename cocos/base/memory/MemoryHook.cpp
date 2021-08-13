@@ -26,29 +26,29 @@
 #include "MemoryHook.h"
 #if USE_MEMORY_LEAK_DETECTOR
 
-#include <sstream>
+    #include <sstream>
 
-#if CC_PLATFORM == CC_PLATFORM_ANDROID
-#define __GNU_SOURCE
-#include <dlfcn.h>
+    #if CC_PLATFORM == CC_PLATFORM_ANDROID
+        #define __GNU_SOURCE
+        #include <dlfcn.h>
 
-static NewHookType g_new_hooker = nullptr;
+static NewHookType    g_new_hooker    = nullptr;
 static DeleteHookType g_delete_hooker = nullptr;
 
 extern "C" {
 
-void* malloc(size_t size) __attribute__ ((weak));
-void free(void* ptr) __attribute__ ((weak));
+void* malloc(size_t size) __attribute__((weak));
+void  free(void* ptr) __attribute__((weak));
 
 // Use strong symbol to overwrite the weak one.
 void* malloc(size_t size) {
     static MallocType system_malloc = nullptr;
-    if (CC_UNLIKELY(system_malloc == nullptr)) {
+    if (CC_PREDICT_FALSE(system_malloc == nullptr)) {
         system_malloc = (MallocType)dlsym(RTLD_NEXT, "malloc");
     }
 
     void* ptr = system_malloc(size);
-    if (CC_LIKELY(g_new_hooker != nullptr)) {
+    if (CC_PREDICT_TRUE(g_new_hooker != nullptr)) {
         g_new_hooker(ptr, size);
     }
 
@@ -57,67 +57,63 @@ void* malloc(size_t size) {
 
 void free(void* ptr) {
     static FreeType system_free = nullptr;
-    if (CC_UNLIKELY(system_free == nullptr)) {
+    if (CC_PREDICT_FALSE(system_free == nullptr)) {
         system_free = (FreeType)dlsym(RTLD_NEXT, "free");
     }
 
     system_free(ptr);
-    if (CC_LIKELY(g_delete_hooker != nullptr)) {
+    if (CC_PREDICT_TRUE(g_delete_hooker != nullptr)) {
         g_delete_hooker(ptr);
     }
 }
-
 }
 
-#elif CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX
-typedef void malloc_logger_t(uint32_t aType,
-                uintptr_t aArg1, uintptr_t aArg2, uintptr_t aArg3,
-                uintptr_t aResult, uint32_t aNumHotFramesToSkip);
+    #elif CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX
+typedef void malloc_logger_t(uint32_t  aType,
+                             uintptr_t aArg1, uintptr_t aArg2, uintptr_t aArg3,
+                             uintptr_t aResult, uint32_t aNumHotFramesToSkip);
 
 extern malloc_logger_t* malloc_logger;
 static malloc_logger_t* g_system_malloc_logger = nullptr;
-static NewHookType      g_new_hooker    = nullptr;
-static DeleteHookType   g_delete_hooker = nullptr;
+static NewHookType      g_new_hooker           = nullptr;
+static DeleteHookType   g_delete_hooker        = nullptr;
 
 static void
-cc_malloc_logger(uint32_t aType,
+cc_malloc_logger(uint32_t  aType,
                  uintptr_t aArg1, uintptr_t aArg2, uintptr_t aArg3,
-                 uintptr_t aResult, uint32_t aNumHotFramesToSkip)
-{
+                 uintptr_t aResult, uint32_t aNumHotFramesToSkip) {
     if (aResult != 0) {
         size_t new_size = reinterpret_cast<size_t>(aArg3);
         if (new_size != 0) {
             // realloc
-            if (CC_LIKELY(g_delete_hooker != nullptr)) {
+            if (CC_PREDICT_TRUE(g_delete_hooker != nullptr)) {
                 const void* ptr = reinterpret_cast<const void*>(aArg2);
                 g_delete_hooker(ptr);
             }
 
-            if (CC_LIKELY(g_new_hooker != nullptr)) {
-                const void* new_ptr  = reinterpret_cast<const void*>(aResult);
+            if (CC_PREDICT_TRUE(g_new_hooker != nullptr)) {
+                const void* new_ptr = reinterpret_cast<const void*>(aResult);
                 g_new_hooker(new_ptr, new_size);
             }
-        }
-        else {
+        } else {
             // malloc/calloc/valloc
-            if (CC_LIKELY(g_new_hooker != nullptr)) {
+            if (CC_PREDICT_TRUE(g_new_hooker != nullptr)) {
                 const void* ptr  = reinterpret_cast<const void*>(aResult);
                 size_t      size = reinterpret_cast<size_t>(aArg2);
                 g_new_hooker(ptr, size);
             }
         }
-    }
-    else {
+    } else {
         // free
-        if (CC_LIKELY(g_delete_hooker != nullptr)) {
+        if (CC_PREDICT_TRUE(g_delete_hooker != nullptr)) {
             const void* ptr = reinterpret_cast<const void*>(aArg2);
             g_delete_hooker(ptr);
         }
     }
 }
 
-#elif CC_PLATFORM == CC_PLATFORM_WINDOWS
-#include <Windows.h>
+    #elif CC_PLATFORM == CC_PLATFORM_WINDOWS
+        #include <Windows.h>
 
 extern "C" {
 typedef void (*MallocHook_NewHook)(const void* ptr, size_t size);
@@ -129,7 +125,7 @@ int MallocHook_AddDeleteHook(MallocHook_DeleteHook hook);
 int MallocHook_RemoveDeleteHook(MallocHook_DeleteHook hook);
 }
 
-#endif
+    #endif
 
 namespace cc {
 
@@ -157,18 +153,18 @@ void MemoryHook::addRecord(uint64_t address, size_t size) {
     if (_hooking) {
         return;
     }
-  
+
     _hooking = true;
 
     // {} is necessary here to make variables being destroyed before _hooking = false
     {
         MemoryRecord record;
-        record.address      = address;
-        record.size         = size;
-        record.callstack    = CallStack::backtrace();
+        record.address   = address;
+        record.size      = size;
+        record.callstack = CallStack::backtrace();
         _records.insert({address, record});
     }
-    
+
     _hooking = false;
 }
 
@@ -193,9 +189,9 @@ void MemoryHook::removeRecord(uint64_t address) {
 
 void MemoryHook::dumpMemoryLeak() {
     std::lock_guard<std::recursive_mutex> lock(_mutex);
-#if CC_PLATFORM == CC_PLATFORM_WINDOWS
+    #if CC_PLATFORM == CC_PLATFORM_WINDOWS
     CallStack::initSym();
-#endif
+    #endif
 
     std::stringstream startStream;
     startStream << std::endl;
@@ -211,15 +207,16 @@ void MemoryHook::dumpMemoryLeak() {
         log(stream.str());
     }
 
-    int i = 0;
+    int    i     = 0;
     size_t total = 0;
     for (const auto& iter : _records) {
         std::stringstream stream;
-        int k = 0;
+        int               k = 0;
         total += iter.second.size;
 
         stream << std::endl;
-        stream << "<" << ++i << ">:" << "leak " << iter.second.size << " bytes at 0x" << std::hex << iter.second.address << std::dec << std::endl;
+        stream << "<" << ++i << ">:"
+               << "leak " << iter.second.size << " bytes at 0x" << std::hex << iter.second.address << std::dec << std::endl;
         stream << "\tcallstack:" << std::endl;
         auto frames = CallStack::backtraceSymbols(iter.second.callstack);
         for (auto& frame : frames) {
@@ -230,55 +227,56 @@ void MemoryHook::dumpMemoryLeak() {
     }
 
     std::stringstream endStream;
-    endStream << std::endl << "Total Leak: " << total << " bytes" << std::endl;
+    endStream << std::endl
+              << "Total Leak: " << total << " bytes" << std::endl;
     endStream << "---------------------------------------------------------------------------------------------------------" << std::endl;
     endStream << "--------------------------------------memory leak report end---------------------------------------------" << std::endl;
     endStream << "---------------------------------------------------------------------------------------------------------" << std::endl;
     log(endStream.str());
 
-#if CC_PLATFORM == CC_PLATFORM_WINDOWS
+    #if CC_PLATFORM == CC_PLATFORM_WINDOWS
     CallStack::cleanupSym();
-#endif
+    #endif
 }
 
 void MemoryHook::log(const std::string& msg) {
-#if (CC_PLATFORM == CC_PLATFORM_ANDROID)
+    #if (CC_PLATFORM == CC_PLATFORM_ANDROID)
     __android_log_write(ANDROID_LOG_WARN, "Cocos", msg.c_str());
-#elif CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX
+    #elif CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX
     fputs(msg.c_str(), stdout);
-#elif (CC_PLATFORM == CC_PLATFORM_WINDOWS)
+    #elif (CC_PLATFORM == CC_PLATFORM_WINDOWS)
     OutputDebugStringA(msg.c_str());
-#endif
+    #endif
 }
 
 void MemoryHook::registerAll() {
     #if CC_PLATFORM == CC_PLATFORM_ANDROID
-    g_new_hooker = newHook;
+    g_new_hooker    = newHook;
     g_delete_hooker = deleteHook;
-    free(malloc(1));    // force to init system_malloc/system_free
+    free(malloc(1)); // force to init system_malloc/system_free
     #elif CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX
     g_system_malloc_logger = malloc_logger;
-    malloc_logger = cc_malloc_logger;
-    g_new_hooker = newHook;
-    g_delete_hooker = deleteHook;
-#elif CC_PLATFORM_WINDOWS
+    malloc_logger          = cc_malloc_logger;
+    g_new_hooker           = newHook;
+    g_delete_hooker        = deleteHook;
+    #elif CC_PLATFORM_WINDOWS
     MallocHook_AddNewHook(&newHook);
     MallocHook_AddDeleteHook(&deleteHook);
-#endif
+    #endif
 }
 
 void MemoryHook::unRegisterAll() {
-#if CC_PLATFORM == CC_PLATFORM_ANDROID
-    g_new_hooker = nullptr;
+    #if CC_PLATFORM == CC_PLATFORM_ANDROID
+    g_new_hooker    = nullptr;
     g_delete_hooker = nullptr;
-#elif CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX
+    #elif CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX
     malloc_logger   = g_system_malloc_logger;
-    g_new_hooker = nullptr;
+    g_new_hooker    = nullptr;
     g_delete_hooker = nullptr;
-#elif CC_PLATFORM_WINDOWS
+    #elif CC_PLATFORM_WINDOWS
     MallocHook_RemoveNewHook(&newHook);
     MallocHook_RemoveDeleteHook(&deleteHook);
-#endif
+    #endif
 }
 
 } // namespace cc
