@@ -24,6 +24,7 @@
 ****************************************************************************/
 
 #include "WGPUContext.h"
+#include "WGPUDevice.h"
 #include "WGPUObject.h"
 
 namespace cc {

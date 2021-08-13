@@ -29,24 +29,24 @@
 
 namespace cc {
 
-namspace gfx {
-    class CCWGPUContextObject;
-    class CCWGPUDevice;
-    class CCWGPUContext final : public Context {
-    public:
-        CCWGPUContext(CCWGPUDevice* device);
-        ~CCWGPUDevice();
+namespace gfx {
+class CCWGPUContextObject;
+class CCWGPUDevice;
+class CCWGPUContext final : public Context {
+public:
+    CCWGPUContext(CCWGPUDevice* device);
+    ~CCWGPUContext();
 
-        void present() override;
+    void present() override;
 
-    protected:
-        CCWGPUContext() = delete;
+protected:
+    CCWGPUContext() = delete;
 
-        bool doInit(const ContextInfo& info) override;
-        void doDestroy() override;
+    bool doInit(const ContextInfo& info) override;
+    void doDestroy() override;
 
-        CCWGPUContextObject* _gpuContextObj = nullptr;
-        CCWGPUDevice*        _device        = nullptr;
-    };
-}
+    CCWGPUContextObject* _gpuContextObj = nullptr;
+    CCWGPUDevice*        _device        = nullptr;
+};
+} // namespace gfx
 } // namespace cc
