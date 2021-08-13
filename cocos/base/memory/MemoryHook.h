@@ -28,12 +28,13 @@
 #include "../Config.h"
 #if USE_MEMORY_LEAK_DETECTOR
 
-#include "../Macros.h"
-#include "CallStack.h"
+    #include "../Macros.h"
+    #include "CallStack.h"
 
-#include <unordered_map>
-#include <vector>
-#include <mutex>
+    #include <mutex>
+    #include <unordered_map>
+    #include <vector>
+
 
 typedef void* (*MallocType)(size_t size);
 typedef void (*FreeType)(void* ptr);
@@ -44,9 +45,9 @@ typedef void (*DeleteHookType)(const void* ptr);
 namespace cc {
 
 struct CC_DLL MemoryRecord {
-    uint64_t            address{0};
-    size_t              size{0};
-    std::vector<void*>  callstack;
+    uint64_t           address{0};
+    size_t             size{0};
+    std::vector<void*> callstack;
 };
 
 class CC_DLL MemoryHook {

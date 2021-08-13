@@ -28,18 +28,19 @@
 #include "../Config.h"
 #if USE_MEMORY_LEAK_DETECTOR
 
-#if CC_PLATFORM == CC_PLATFORM_WINDOWS
-#include <Windows.h>
-#endif
-#include "../Macros.h"
-#include <string>
-#include <vector>
-#include <cstdint>
+    #if CC_PLATFORM == CC_PLATFORM_WINDOWS
+        #include <Windows.h>
+    #endif
+    #include <cstdint>
+    #include <string>
+    #include <vector>
+    #include "../Macros.h"
+
 
 namespace cc {
 
-#define MAX_STACK_FRAMES        32
-#define MAX_SYMBOL_LENGTH       255
+    #define MAX_STACK_FRAMES  32
+    #define MAX_SYMBOL_LENGTH 255
 
 /**
  * A single frame of callstack.
@@ -58,20 +59,20 @@ struct CC_DLL StackFrame {
  */
 class CC_DLL CallStack {
 public:
-    static std::string             basename(const std::string& path);
+    static std::string basename(const std::string& path);
 
     static std::vector<void*>      backtrace();
     static std::vector<StackFrame> backtraceSymbols(const std::vector<void*>& callstack);
 
-#if CC_PLATFORM == CC_PLATFORM_WINDOWS
-    static void   initSym();
-    static void   cleanupSym();
+    #if CC_PLATFORM == CC_PLATFORM_WINDOWS
+    static void initSym();
+    static void cleanupSym();
 
 private:
     static HANDLE _process;
-#endif
+    #endif
 };
 
 } // namespace cc
 
-#endif 
+#endif
