@@ -51,7 +51,7 @@ CCWGPUDevice::~CCWGPUDevice() {
     CC_DELETE(_gpuDeviceObj);
 }
 
-bool CCWGPUDevice::doInit(const DeviceInfo& /*info*/) {
+bool CCWGPUDevice::doInit(const DeviceInfo& info) {
     _gpuDeviceObj             = CC_NEW(CCWGPUDeviceObject);
     _gpuDeviceObj->wgpuDevice = emscripten_webgpu_get_device();
 
@@ -63,6 +63,7 @@ bool CCWGPUDevice::doInit(const DeviceInfo& /*info*/) {
         destroy();
         return false;
     }
+    return true;
 }
 
 } // namespace gfx

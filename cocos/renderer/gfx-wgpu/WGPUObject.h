@@ -33,7 +33,7 @@ namespace cc {
 
 namespace gfx {
 
-using wgpuDefaultHandle = nullptr;
+const decltype(nullptr) wgpuDefaultHandle = nullptr;
 
 class CCWGPUDeviceObject final : public Object {
 public:

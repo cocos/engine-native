@@ -75,7 +75,7 @@ protected:
 
     CCWGPUContext *     _context      = nullptr;
     CCWGPUDeviceObject *_gpuDeviceObj = nullptr;
-}
+};
 
 } // namespace gfx
 
