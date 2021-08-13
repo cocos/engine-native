@@ -243,7 +243,7 @@ std::vector<StackFrame> CallStack::backtraceSymbols(const std::vector<void*>& ca
 
         char moduelName[MAX_PATH];
         #if _WIN64
-        PTR_DWORD moduleBase = SymGetModuleBase64(process, address);
+        PTR_DWORD moduleBase = SymGetModuleBase64(_process, address);
         #else
         PTR_DWORD moduleBase = SymGetModuleBase(_process, address);
         #endif
