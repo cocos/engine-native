@@ -80,16 +80,16 @@ std::string getStacktrace(uint skip, uint maxDepth) {
 
 #if USE_MEMORY_LEAK_DETECTOR
 
-// Make sure GMemoryHook to be initialized first.
-#if (CC_COMPILER == CC_COMPILER_MSVC)
-    #pragma warning(push)
-    #pragma warning(disable:4073)
-    #pragma init_seg(lib)
-    MemoryHook GMemoryHook;
-    #pragma warning(pop)
-#elif (CC_COMPILER == CC_COMPILER_GNUC || CC_COMPILER == CC_COMPILER_CLANG)
-    MemoryHook GMemoryHook __attribute__((init_priority(101)));
-#endif
+    // Make sure GMemoryHook to be initialized first.
+    #if (CC_COMPILER == CC_COMPILER_MSVC)
+        #pragma warning(push)
+        #pragma warning(disable : 4073)
+        #pragma init_seg(lib)
+MemoryHook GMemoryHook;
+        #pragma warning(pop)
+    #elif (CC_COMPILER == CC_COMPILER_GNUC || CC_COMPILER == CC_COMPILER_CLANG)
+MemoryHook GMemoryHook __attribute__((init_priority(101)));
+    #endif
 
 #endif
 } // namespace cc
