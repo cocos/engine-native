@@ -586,5 +586,9 @@ struct CC_DLL REFLECTIONSTORAGE : public Object {
     static const String                          NAME;
 };
 
+static constexpr uint CLUSTER_LIGHT_BINDING       = 0;
+static constexpr uint CLUSTER_LIGHT_INDEX_BINDING = 1;
+static constexpr uint CLUSTER_LIGHT_GRID_BINDING  = 2;
+
 } // namespace pipeline
 } // namespace cc
