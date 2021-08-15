@@ -9,7 +9,7 @@ include(${ENGINE_ROOT_DIR}/cmake/predefine.cmake)
 
 message("yoooooooooooooooooooooooooooooooooooooooooooooooooo")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wno-nonportable-include-path -fno-exceptions")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-nonportable-include-path -fno-exceptions")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g3 -D_DEBUG=1 -Wno-unused -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -g0 -DNDEBUG=1 -flto -O3")
 
@@ -18,7 +18,12 @@ AUX_SOURCE_DIRECTORY(
     WGPU_SRC
 )
 
+set(PLATFORM_COMMON
+    ../../../cocos/platform/StdC.h
+)
+
 set(PLATFORM_DEPENDS
+    ${PLATFORM_COMMON}
     ../../../cocos/platform/win32/Utils-win32.cpp
 )
 
@@ -62,15 +67,15 @@ set(RENDERER
 )
 
 set(NATIVE_SRC
+    ${PLATFORM_DEPENDS}
     ${COCOS_BASE}
     ${RENDERER}
-    ${PLATFORM_DEPENDS}
     ${WGPU_SRC}
 )
 
 set(EXPORTS
-    ../gfx-base/GFXDevice.cpp 
-    ../gfx-base/GFXDevice.h
+    ../gfx-wgpu/WGPUDevice.h
+    ../gfx-wgpu/WGPUDevice.cpp
 )
 
 add_executable(${APP_NAME}WASM ${EXPORTS} ${NATIVE_SRC})
@@ -84,10 +89,9 @@ target_include_directories(
 	${ENGINE_ROOT_DIR}/cocos/renderer
 	${ENGINE_ROOT_DIR}/cocos/platform
 	${ENGINE_ROOT_DIR}/cocos/renderer/core
+    ${ENGINE_ROOT_DIR}/cocos/platform/win32
 	#$<$<BOOL:USE_SE_JSC>:${CWD}/cocos/bindings/jswrapper>
 	${CC_EXTERNAL_PRIVATE_INCLUDES}
 )
 
-message(${ENGINE_ROOT_DIR}/cocos)
 set_target_properties(${APP_NAME}WASM PROPERTIES LINK_FLAGS "--bind")
-message("${CWD}cocos/renderer")
