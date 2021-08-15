@@ -37,21 +37,19 @@ CCWGPUDevice* CCWGPUDevice::getInstance() {
     return instance;
 }
 
-CCWGPUDevice::CCWGPUDevice() {
-    _api                   = API::WEBGPU;
-    _deviceName            = "webGPU";
-    _caps.clipSpaceMinZ    = 0.0F;
-    _caps.screenSpaceSignY = -1.0F;
-    _caps.clipSpaceSignY   = -1.0F;
-    instance               = this;
-}
-
 CCWGPUDevice::~CCWGPUDevice() {
     instance = nullptr;
     CC_DELETE(_gpuDeviceObj);
 }
 
 bool CCWGPUDevice::doInit(const DeviceInfo& info) {
+    _api                   = API::WEBGPU;
+    _deviceName            = "webGPU";
+    _caps.clipSpaceMinZ    = 0.0F;
+    _caps.screenSpaceSignY = -1.0F;
+    _caps.clipSpaceSignY   = -1.0F;
+    instance               = this;
+
     _gpuDeviceObj             = CC_NEW(CCWGPUDeviceObject);
     _gpuDeviceObj->wgpuDevice = emscripten_webgpu_get_device();
 
@@ -64,6 +62,13 @@ bool CCWGPUDevice::doInit(const DeviceInfo& info) {
         return false;
     }
     return true;
+}
+
+EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
+    class_<Device>("Device")
+        .allow_subclass<CCWGPUDevice>("CCWGPUDevice")
+        .class_function("getInstance", &Device::getInstance, pure_virtual(), allow_raw_pointers())
+        .function("initialize", &Device::initialize, allow_raw_pointer<arg<0>>());
 }
 
 } // namespace gfx

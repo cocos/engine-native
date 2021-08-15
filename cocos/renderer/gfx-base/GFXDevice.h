@@ -25,7 +25,6 @@
 
 #pragma once
 
-#include <emscripten/bind.h>
 #include <array>
 #include "GFXBuffer.h"
 #include "GFXCommandBuffer.h"
@@ -47,8 +46,6 @@
 
 namespace cc {
 namespace gfx {
-
-using namespace emscripten;
 
 class CC_DLL Device : public Object {
 public:
@@ -297,13 +294,6 @@ void Device::flushCommands(const vector<CommandBuffer *> &cmdBuffs) {
 
 void Device::acquire(const vector<Swapchain *> &swapchains) {
     acquire(swapchains.data(), utils::toUint(swapchains.size()));
-}
-
-EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
-    class_<Device>("Device")
-        .constructor<>()
-        .class_function("getInstance", &Device::getInstance)
-        .function("initialize", &Device::initialize);
 }
 
 } // namespace gfx

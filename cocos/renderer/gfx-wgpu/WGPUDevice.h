@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include <emscripten/bind.h>
 #include "gfx-base/GFXDevice.h"
 
 namespace cc {
@@ -33,8 +34,12 @@ namespace gfx {
 class CCWGPUDeviceObject;
 class CCWGPUContext;
 
-class CCWGPUDevice final : public Device {
+using namespace emscripten;
+
+class CCWGPUDevice final : public wrapper<Device> {
 public:
+    EMSCRIPTEN_WRAPPER(CCWGPUDevice);
+
     static CCWGPUDevice *getInstance();
 
     ~CCWGPUDevice();
@@ -48,7 +53,7 @@ public:
 protected:
     static CCWGPUDevice *instance;
 
-    CCWGPUDevice();
+    //CCWGPUDevice();
 
     bool                 doInit(const DeviceInfo &info) override;
     void                 doDestroy() override;
