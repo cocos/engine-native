@@ -207,7 +207,7 @@ std::vector<StackFrame> CallStack::backtraceSymbols(const std::vector<void*>& ca
             }
         }
 
-        frames.push_back(frame);
+        frames.push_back(std::move(frame));
     }
     return frames;
 
@@ -222,7 +222,7 @@ std::vector<StackFrame> CallStack::backtraceSymbols(const std::vector<void*>& ca
     for (size_t i = 0; i < size; i++) {
         StackFrame frame;
         frame.file = strs[i];
-        frames.push_back(frame);
+        frames.push_back(std::move(frame));
     }
 
     return frames;
@@ -270,7 +270,7 @@ std::vector<StackFrame> CallStack::backtraceSymbols(const std::vector<void*>& ca
             frame.line = line.LineNumber;
         }
 
-        frames.push_back(frame);
+        frames.push_back(std::move(frame));
     }
 
     return frames;
