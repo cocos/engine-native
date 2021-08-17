@@ -25,7 +25,12 @@
 
 #pragma once
 
+#if (CC_PLATFORM == CC_PLATFORM_WINDOWS)
+    #include <windows.h>
+#endif
+
 #include <emscripten/bind.h>
+#include "WGPUUtils.h"
 #include "gfx-base/GFXDevice.h"
 
 namespace cc {
@@ -47,6 +52,23 @@ public:
     void resize(uint32_t width, uint32_t height) override;
     void acquire() override;
     void present() override;
+
+    using Device::copyBuffersToTexture;
+    using Device::createBuffer;
+    using Device::createCommandBuffer;
+    using Device::createDescriptorSet;
+    using Device::createDescriptorSetLayout;
+    using Device::createFramebuffer;
+    using Device::createGlobalBarrier;
+    using Device::createInputAssembler;
+    using Device::createPipelineLayout;
+    using Device::createPipelineState;
+    using Device::createQueue;
+    using Device::createRenderPass;
+    using Device::createSampler;
+    using Device::createShader;
+    using Device::createTexture;
+    using Device::createTextureBarrier;
 
     inline CCWGPUDeviceObject *gpuDeviceObject() { return _gpuDeviceObj; }
 

@@ -24,8 +24,6 @@
 ****************************************************************************/
 
 #include "ValidationUtils.h"
-
-#include "bindings/jswrapper/SeApi.h"
 #include "gfx-base/GFXInputAssembler.h"
 #include "gfx-base/GFXPipelineState.h"
 #include "gfx-base/GFXRenderPass.h"
@@ -33,10 +31,16 @@
 namespace cc {
 
 namespace utils {
-
+#if !CC_WGPU_WASM
+    #include "bindings/jswrapper/SeApi.h"
 String getStacktraceJS() {
     return se::ScriptEngine::getInstance()->getCurrentStackTrace();
 }
+#else()
+String getStacktraceJS() {
+    return "";
+}
+#endif()
 
 } // namespace utils
 

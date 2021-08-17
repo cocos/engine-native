@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(APP_NAME "CocosGame" CACHE STRING "Project Name")
-project(${APP_NAME}WASM)
+set(APP_NAME "webgpu" CACHE STRING "Project Name")
+project(${APP_NAME}_wasm)
 
 set(ENGINE_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/../../..)
 
 include(${ENGINE_ROOT_DIR}/cmake/predefine.cmake)
 
-message("yoooooooooooooooooooooooooooooooooooooooooooooooooo")
+include (${ENGINE_ROOT_DIR}/external/CMakeLists.txt)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-nonportable-include-path -fno-exceptions")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g3 -D_DEBUG=1 -Wno-unused -O0")
@@ -16,15 +16,6 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -g0 -DNDEBUG=1 -flto -O3
 AUX_SOURCE_DIRECTORY(
     .
     WGPU_SRC
-)
-
-set(PLATFORM_COMMON
-    ../../../cocos/platform/StdC.h
-)
-
-set(PLATFORM_DEPENDS
-    ${PLATFORM_COMMON}
-    ../../../cocos/platform/win32/Utils-win32.cpp
 )
 
 AUX_SOURCE_DIRECTORY(
@@ -52,10 +43,10 @@ AUX_SOURCE_DIRECTORY(
     GFX_EMPTY
 )
 
-AUX_SOURCE_DIRECTORY(
-    ../../../cocos/renderer/pipeline
-    PIPELINE
-)
+# AUX_SOURCE_DIRECTORY(
+#     ../../../cocos/renderer/pipeline
+#     PIPELINE
+# )
 
 set(RENDERER
     ../../../cocos/renderer/GFXDeviceManager.h
@@ -63,11 +54,10 @@ set(RENDERER
     ${GFX_AGENT}
     ${GFX_VALIDATOR}
     ${GFX_EMPTY}
-    ${PIPELINE}
+    #${PIPELINE}
 )
 
 set(NATIVE_SRC
-    ${PLATFORM_DEPENDS}
     ${COCOS_BASE}
     ${RENDERER}
     ${WGPU_SRC}
@@ -78,10 +68,10 @@ set(EXPORTS
     ../gfx-wgpu/WGPUDevice.cpp
 )
 
-add_executable(${APP_NAME}WASM ${EXPORTS} ${NATIVE_SRC})
+add_executable(${APP_NAME}_wasm ${EXPORTS} ${NATIVE_SRC})
 
 target_include_directories(
-	${APP_NAME}WASM PRIVATE "${CMAKE_CURRENT_LIST_DIR}/inc"
+	${APP_NAME}_wasm PRIVATE "${CMAKE_CURRENT_LIST_DIR}/inc"
 	${CC_EXTERNAL_INCLUDES}
 	${ENGINE_ROOT_DIR}
 	${ENGINE_ROOT_DIR}/cocos
@@ -89,9 +79,12 @@ target_include_directories(
 	${ENGINE_ROOT_DIR}/cocos/renderer
 	${ENGINE_ROOT_DIR}/cocos/platform
 	${ENGINE_ROOT_DIR}/cocos/renderer/core
-    ${ENGINE_ROOT_DIR}/cocos/platform/win32
-	#$<$<BOOL:USE_SE_JSC>:${CWD}/cocos/bindings/jswrapper>
 	${CC_EXTERNAL_PRIVATE_INCLUDES}
 )
 
-set_target_properties(${APP_NAME}WASM PROPERTIES LINK_FLAGS "--bind")
+target_link_libraries(
+    ${APP_NAME}_wasm PRIVATE PUBLIC
+        ${CC_EXTERNAL_LIBS}
+    )
+    
+set_target_properties(${APP_NAME}_wasm PROPERTIES LINK_FLAGS "--bind -s WASM=1 -s USE_WEBGPU=1 -s NO_EXIT_RUNTIME=1")
