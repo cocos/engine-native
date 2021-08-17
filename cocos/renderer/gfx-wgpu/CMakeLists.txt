@@ -84,7 +84,11 @@ target_include_directories(
 
 target_link_libraries(
     ${APP_NAME}_wasm PRIVATE PUBLIC
-        ${CC_EXTERNAL_LIBS}
-    )
-    
-set_target_properties(${APP_NAME}_wasm PROPERTIES LINK_FLAGS "--bind -s WASM=1 -s USE_WEBGPU=1 -s NO_EXIT_RUNTIME=1")
+    ${CC_EXTERNAL_LIBS}
+)
+
+set(EMS_LINK_FLAGS
+"--bind --no-entry -s MODULARIZE=1 -s ENVIRONMENT=web -s WASM=1 -s USE_WEBGPU=1 -s NO_EXIT_RUNTIME=1 -s LLD_REPORT_UNDEFINED"
+)
+
+set_target_properties(${APP_NAME}_wasm PROPERTIES LINK_FLAGS ${EMS_LINK_FLAGS})
