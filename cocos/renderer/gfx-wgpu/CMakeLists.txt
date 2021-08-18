@@ -88,7 +88,7 @@ target_link_libraries(
 )
 
 set(EMS_LINK_FLAGS
-"--bind --no-entry -s MODULARIZE=1 -s ENVIRONMENT=web -s WASM=1 -s USE_WEBGPU=1 -s NO_EXIT_RUNTIME=1 -s LLD_REPORT_UNDEFINED"
+"--bind --no-entry -s MODULARIZE=1 -s EXPORT_NAME='wasmDevice' -s ENVIRONMENT=web -s WASM=1 -s USE_WEBGPU=1 -s NO_EXIT_RUNTIME=1 -s LLD_REPORT_UNDEFINED"
 )
 
 set_target_properties(${APP_NAME}_wasm PROPERTIES LINK_FLAGS ${EMS_LINK_FLAGS})
