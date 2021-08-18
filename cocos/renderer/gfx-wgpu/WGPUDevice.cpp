@@ -24,6 +24,7 @@
 ****************************************************************************/
 
 #include "WGPUDevice.h"
+#include <emscripten/val.h>
 #include "WGPUContext.h"
 #include "WGPUObject.h"
 
@@ -34,7 +35,21 @@ namespace gfx {
 CCWGPUDevice* CCWGPUDevice::instance = nullptr;
 
 CCWGPUDevice* CCWGPUDevice::getInstance() {
+    // if JS
+    if (!instance) {
+        instance = new CCWGPUDevice();
+    }
+    // endif
     return instance;
+}
+
+CCWGPUDevice::CCWGPUDevice() : wrapper<Device>(val::object()) {
+    _api                   = API::WEBGPU;
+    _deviceName            = "webGPU";
+    _caps.clipSpaceMinZ    = 0.0F;
+    _caps.screenSpaceSignY = -1.0F;
+    _caps.clipSpaceSignY   = -1.0F;
+    instance               = this;
 }
 
 CCWGPUDevice::~CCWGPUDevice() {
@@ -43,13 +58,6 @@ CCWGPUDevice::~CCWGPUDevice() {
 }
 
 bool CCWGPUDevice::doInit(const DeviceInfo& info) {
-    _api                   = API::WEBGPU;
-    _deviceName            = "webGPU";
-    _caps.clipSpaceMinZ    = 0.0F;
-    _caps.screenSpaceSignY = -1.0F;
-    _caps.clipSpaceSignY   = -1.0F;
-    instance               = this;
-
     _gpuDeviceObj             = CC_NEW(CCWGPUDeviceObject);
     _gpuDeviceObj->wgpuDevice = emscripten_webgpu_get_device();
 
@@ -150,27 +158,71 @@ void CCWGPUDevice::present() {
 
 EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     class_<Device>("Device")
-        .allow_subclass<CCWGPUDevice>("CCWGPUDevice")
-        .class_function("getInstance", &Device::getInstance, pure_virtual(), allow_raw_pointers())
         .function("initialize", &Device::initialize, allow_raw_pointer<arg<0>>())
-        .function("createQueue", select_overload<Queue*(const QueueInfo&)>(&Device::createQueue), allow_raw_pointer<arg<0>>())
-        .function("createBuffer", select_overload<Buffer*(const BufferInfo&)>(&Device::createBuffer), allow_raw_pointer<arg<0>>())
-        .function("createBuffer", select_overload<Buffer*(const BufferViewInfo&)>(&Device::createBuffer), allow_raw_pointer<arg<0>>())
-        .function("createTexture", select_overload<Texture*(const TextureInfo&)>(&Device::createTexture), allow_raw_pointer<arg<0>>())
-        .function("createTexture", select_overload<Texture*(const TextureViewInfo&)>(&Device::createTexture), allow_raw_pointer<arg<0>>())
-        .function("createSampler", select_overload<Sampler*(const SamplerInfo&)>(&Device::createSampler), allow_raw_pointer<arg<0>>())
-        .function("createShader", select_overload<Shader*(const ShaderInfo&)>(&Device::createShader), allow_raw_pointer<arg<0>>())
-        .function("createInputAssembler", select_overload<InputAssembler*(const InputAssemblerInfo&)>(&Device::createInputAssembler), allow_raw_pointer<arg<0>>())
-        .function("createRenderPass", select_overload<RenderPass*(const RenderPassInfo&)>(&Device::createRenderPass), allow_raw_pointer<arg<0>>())
-        .function("createFramebuffer", select_overload<Framebuffer*(const FramebufferInfo&)>(&Device::createFramebuffer), allow_raw_pointer<arg<0>>())
-        .function("createDescriptorSet", select_overload<DescriptorSet*(const DescriptorSetInfo&)>(&Device::createDescriptorSet), allow_raw_pointer<arg<0>>())
-        .function("createDescriptorSetLayout", select_overload<DescriptorSetLayout*(const DescriptorSetLayoutInfo&)>(&Device::createDescriptorSetLayout), allow_raw_pointer<arg<0>>())
-        .function("createPipelineLayout", select_overload<PipelineLayout*(const PipelineLayoutInfo&)>(&Device::createPipelineLayout), allow_raw_pointer<arg<0>>())
-        .function("createPipelineState", select_overload<PipelineState*(const PipelineStateInfo&)>(&Device::createPipelineState), allow_raw_pointer<arg<0>>())
-        .function("createGlobalBarrier", select_overload<GlobalBarrier*(const GlobalBarrierInfo&)>(&Device::createGlobalBarrier), allow_raw_pointer<arg<0>>())
-        .function("createTextureBarrier", select_overload<TextureBarrier*(const TextureBarrierInfo&)>(&Device::createTextureBarrier), allow_raw_pointer<arg<0>>())
+        .function("createQueue", select_overload<Queue*(const QueueInfo&)>(&Device::createQueue),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createBuffer", select_overload<Buffer*(const BufferInfo&)>(&Device::createBuffer),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createBuffer", select_overload<Buffer*(const BufferViewInfo&)>(&Device::createBuffer),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createTexture", select_overload<Texture*(const TextureInfo&)>(&Device::createTexture),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createTexture", select_overload<Texture*(const TextureViewInfo&)>(&Device::createTexture),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createSampler", select_overload<Sampler*(const SamplerInfo&)>(&Device::createSampler),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createShader", select_overload<Shader*(const ShaderInfo&)>(&Device::createShader),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createInputAssembler", select_overload<InputAssembler*(const InputAssemblerInfo&)>(&Device::createInputAssembler),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createRenderPass", select_overload<RenderPass*(const RenderPassInfo&)>(&Device::createRenderPass),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createFramebuffer", select_overload<Framebuffer*(const FramebufferInfo&)>(&Device::createFramebuffer),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createDescriptorSet", select_overload<DescriptorSet*(const DescriptorSetInfo&)>(&Device::createDescriptorSet),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createDescriptorSetLayout", select_overload<DescriptorSetLayout*(const DescriptorSetLayoutInfo&)>(&Device::createDescriptorSetLayout),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createPipelineLayout", select_overload<PipelineLayout*(const PipelineLayoutInfo&)>(&Device::createPipelineLayout),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createPipelineState", select_overload<PipelineState*(const PipelineStateInfo&)>(&Device::createPipelineState),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createGlobalBarrier", select_overload<GlobalBarrier*(const GlobalBarrierInfo&)>(&Device::createGlobalBarrier),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createTextureBarrier", select_overload<TextureBarrier*(const TextureBarrierInfo&)>(&Device::createTextureBarrier),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>());
+    class_<CCWGPUDevice, base<Device>>("CCWGPUDevice")
+        .class_function("getInstance", &CCWGPUDevice::getInstance, allow_raw_pointers());
 
-        ;
+    // struct DeviceInfo {
+    // bool               isAntiAlias  = false;
+    // uintptr_t          windowHandle = 0U;
+    // uint               width        = 0U;
+    // uint               height       = 0U;
+    // float              pixelRatio   = 1.0F;
+    // BindingMappingInfo bindingMappingInfo;
+    //};
+
+    // struct BindingMappingInfo {
+    // std::vector<int> bufferOffsets;
+    // std::vector<int> samplerOffsets;
+    // uint             flexibleSet = 0U;
+    // };
+
+    register_vector<int>("vector_int");
+
+    value_object<BindingMappingInfo>("BindingMappingInfo")
+        .field("bufferOffsets", &BindingMappingInfo::bufferOffsets)
+        .field("samplerOffsets", &BindingMappingInfo::samplerOffsets)
+        .field("flexibleSet", &BindingMappingInfo::flexibleSet);
+
+    value_object<DeviceInfo>("DeviceInfo")
+        .field("isAntiAlias", &DeviceInfo::isAntiAlias)
+        .field("windowHandle", &DeviceInfo::windowHandle)
+        .field("width", &DeviceInfo::width)
+        .field("height", &DeviceInfo::height)
+        .field("pixelRatio", &DeviceInfo::pixelRatio)
+        .field("bindingMappingInfo", &DeviceInfo::bindingMappingInfo);
 }
 
 } // namespace gfx

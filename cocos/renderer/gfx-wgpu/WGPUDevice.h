@@ -75,7 +75,7 @@ public:
 protected:
     static CCWGPUDevice *instance;
 
-    //CCWGPUDevice();
+    CCWGPUDevice();
 
     bool                 doInit(const DeviceInfo &info) override;
     void                 doDestroy() override;
