@@ -1139,7 +1139,7 @@ void cmdFuncGLES3CreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
 
     for (size_t i = 0; i < gpuShader->gpuStages.size(); ++i) {
         GLES3GPUShaderStage &gpuStage = gpuShader->gpuStages[i];
-        uint                 version  = 300;
+        uint                 version  = 310;
 
         switch (gpuStage.type) {
             case ShaderStageFlagBit::VERTEX: {

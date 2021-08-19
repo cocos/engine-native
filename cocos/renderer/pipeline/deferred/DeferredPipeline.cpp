@@ -134,6 +134,8 @@ void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
     _pipelineUBO->updateMultiCameraUBO(cameras);
     for (auto *camera : cameras) {
         sceneCulling(this, camera);
+        _clusterComp->update(camera, _pipelineUBO->getCurrentCameraUBOOffset());
+        _clusterComp->clusterLightCulling();
         for (auto *const flow : _flows) {
             flow->render(camera);
         }
@@ -357,6 +359,10 @@ bool DeferredPipeline::activeRenderer() {
     _descriptorSet->bindSampler(
         static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP), sampler);
 
+    // cluster component resource
+    _clusterComp = new ClusterComponent(this);
+    _clusterComp->initialize(this->getDevice());
+
     return true;
 }
 
@@ -449,6 +455,7 @@ void DeferredPipeline::destroy() {
 
     CC_SAFE_DESTROY(_gbufferRenderPass);
     CC_SAFE_DESTROY(_lightingRenderPass);
+    CC_SAFE_DELETE(_clusterComp);
 
     RenderPipeline::destroy();
 }

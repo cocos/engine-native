@@ -27,6 +27,7 @@
 
 #include <array>
 
+#include "../ClusterComponent.h"
 #include "gfx-base/GFXBuffer.h"
 #include "gfx-base/GFXInputAssembler.h"
 #include "pipeline/RenderPipeline.h"
@@ -94,6 +95,8 @@ private:
     gfx::RenderPass *   _lightingRenderPass = nullptr;
     uint                _width;
     uint                _height;
+
+    ClusterComponent *_clusterComp{nullptr};
 };
 
 } // namespace pipeline
