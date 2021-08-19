@@ -125,8 +125,8 @@ void ClusterComponent::update(scene::Camera* camera, uint cameraIndex) {
     auto* const sceneData  = _pipeline->getPipelineSceneData();
     auto* const sharedData = sceneData->getSharedData();
 
-    _constants[NEAR_FAR_OFFSET + 0]  = camera->nearClip;
-    _constants[NEAR_FAR_OFFSET + 1]  = camera->farClip;
+    _constants[NEAR_FAR_OFFSET + 0]  = static_cast<float>(camera->nearClip);
+    _constants[NEAR_FAR_OFFSET + 1]  = static_cast<float>(camera->farClip);
     _constants[VIEW_PORT_OFFSET + 0] = camera->viewPort.x * static_cast<float>(camera->width) * sharedData->shadingScale;
     _constants[VIEW_PORT_OFFSET + 1] = camera->viewPort.y * static_cast<float>(camera->height) * sharedData->shadingScale;
     _constants[VIEW_PORT_OFFSET + 2] = camera->viewPort.z * static_cast<float>(camera->width) * sharedData->shadingScale;
