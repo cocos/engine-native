@@ -16,7 +16,7 @@ struct ShaderStrings {
 
 class ClusterComponent {
 public:
-    ClusterComponent(RenderPipeline* pipeline) : _pipeline(pipeline){};
+    explicit ClusterComponent(RenderPipeline* pipeline) : _pipeline(pipeline){};
     ~ClusterComponent();
 
     static constexpr uint CLUSTERS_X = 16;
@@ -71,7 +71,14 @@ private:
 
     void updateLights(scene::Camera* camera);
 
-    bool IsProjMatChange(Mat4& curProj, Mat4& oldProj);
+    static bool isProjMatChange(Mat4& curProj, Mat4& oldProj) {
+        for (uint i = 0; i < sizeof(curProj.m) / sizeof(float); i++) {
+            if (math::IsNotEqualF(curProj.m[i], oldProj.m[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     gfx::Device* _device{nullptr};
 

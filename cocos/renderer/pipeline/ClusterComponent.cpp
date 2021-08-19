@@ -148,7 +148,7 @@ void ClusterComponent::update(scene::Camera* camera, uint cameraIndex) {
         _oldCamProjMats.resize(nextLength, Mat4::ZERO);
         _oldCamProjMats[cameraIndex] = camera->matProj;
     } else {
-        _rebuildClusters             = IsProjMatChange(camera->matProj, _oldCamProjMats[cameraIndex]);
+        _rebuildClusters             = ClusterComponent::isProjMatChange(camera->matProj, _oldCamProjMats[cameraIndex]);
         _oldCamProjMats[cameraIndex] = camera->matProj;
     }
 
@@ -254,15 +254,6 @@ void ClusterComponent::updateLights(scene::Camera* camera) {
 
     gfx::CommandBuffer* cmdBuf = _pipeline->getCommandBuffers()[0];
     cmdBuf->updateBuffer(_lightBuffer, _lightBufferData.data(), static_cast<uint>(_lightBufferData.size() * sizeof(float)));
-}
-
-bool ClusterComponent::IsProjMatChange(Mat4& curProj, Mat4& oldProj) {
-    for (uint i = 0; i < sizeof(curProj.m) / sizeof(float); i++) {
-        if (math::IsNotEqualF(curProj.m[i], oldProj.m[i])) {
-            return true;
-        }
-    }
-    return false;
 }
 
 void ClusterComponent::initBuildingSatge() {
