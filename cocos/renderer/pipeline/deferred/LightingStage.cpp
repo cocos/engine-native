@@ -222,7 +222,7 @@ void LightingStage::initLightingBuffer() {
     auto *const device = _pipeline->getDevice();
 
     // color/pos/dir/angle 都是vec4存储, 最后一个vec4只要x存储光源个数
-    uint stride = utils::alignTo(sizeof(Vec4) * 4, device->getCapabilities().uboOffsetAlignment);
+    uint stride    = utils::alignTo(sizeof(Vec4) * 4, device->getCapabilities().uboOffsetAlignment);
     uint totalSize = stride * _maxDeferredLights;
 
     // create lighting buffer and view
@@ -258,16 +258,18 @@ void LightingStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
         RenderQueueCreateInfo info     = {descriptor.isTransparent, phase, sortFunc};
         _renderQueues.emplace_back(CC_NEW(RenderQueue(std::move(info))));
     }
+    // if not support cluster shading, go normal deferred render path
+    if (!_device->hasFeature(gfx::Feature::COMPUTE_SHADER)) {
+        // create descriptorset/layout
+        gfx::DescriptorSetLayoutInfo layoutInfo = {localDescriptorSetLayout.bindings};
+        _descLayout                             = device->createDescriptorSetLayout(layoutInfo);
 
-    // create descriptorset/layout
-    gfx::DescriptorSetLayoutInfo layoutInfo = {localDescriptorSetLayout.bindings};
-    _descLayout                             = device->createDescriptorSetLayout(layoutInfo);
+        gfx::DescriptorSetInfo setInfo = {_descLayout};
+        _descriptorSet                 = device->createDescriptorSet(setInfo);
 
-    gfx::DescriptorSetInfo setInfo = {_descLayout};
-    _descriptorSet                 = device->createDescriptorSet(setInfo);
-
-    // create lighting buffer and view
-    initLightingBuffer();
+        //  create lighting buffer and view
+        initLightingBuffer();
+    }
 
     _planarShadowQueue = CC_NEW(PlanarShadowQueue(_pipeline));
 
@@ -323,14 +325,15 @@ void LightingStage::render(scene::Camera *camera) {
     }
 
     auto *cmdBuff = pipeline->getCommandBuffers()[0];
+    // if not support cluster shading, go normal deferred render path
+    if (!_device->hasFeature(gfx::Feature::COMPUTE_SHADER)) {
+        // lighting info
+        gatherLights(camera);
+        _descriptorSet->update();
 
-    // lighting info
-    gatherLights(camera);
-    _descriptorSet->update();
-
-    vector<uint> dynamicOffsets = {0};
-    cmdBuff->bindDescriptorSet(localSet, _descriptorSet, dynamicOffsets);
-
+        vector<uint> dynamicOffsets = {0};
+        cmdBuff->bindDescriptorSet(localSet, _descriptorSet, dynamicOffsets);
+    }
     // draw quad
     gfx::Rect renderArea = pipeline->getRenderArea(camera, false);
 

@@ -774,6 +774,8 @@ cocos_source_files(
 
                  cocos/renderer/pipeline/BatchedBuffer.cpp
                  cocos/renderer/pipeline/BatchedBuffer.h
+                 cocos/renderer/pipeline/ClusterComponent.cpp
+                 cocos/renderer/pipeline/ClusterComponent.h
                  cocos/renderer/pipeline/Define.h
                  cocos/renderer/pipeline/Define.cpp
                  cocos/renderer/pipeline/GlobalDescriptorSetManager.h

@@ -24,6 +24,7 @@
 ****************************************************************************/
 
 #include "RenderPipeline.h"
+#include "InstancedBuffer.h"
 #include "PipelineStateManager.h"
 #include "RenderFlow.h"
 #include "gfx-base/GFXCommandBuffer.h"
@@ -31,7 +32,6 @@
 #include "gfx-base/GFXDescriptorSetLayout.h"
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXTexture.h"
-#include "InstancedBuffer.h"
 
 namespace cc {
 namespace pipeline {
@@ -129,10 +129,12 @@ void RenderPipeline::generateConstantMacros() {
     _constantMacros = StringUtil::format(
         R"(
 #define CC_DEVICE_SUPPORT_FLOAT_TEXTURE %d
+#define CC_DEVICE_SUPPORT_COMPUTE_SHADER %d
 #define CC_DEVICE_MAX_VERTEX_UNIFORM_VECTORS %d
 #define CC_DEVICE_MAX_FRAGMENT_UNIFORM_VECTORS %d
         )",
         _device->hasFeature(gfx::Feature::TEXTURE_FLOAT) ? 1 : 0,
+        _device->hasFeature(gfx::Feature::COMPUTE_SHADER) ? 1 : 0,
         _device->getCapabilities().maxVertexUniformVectors,
         _device->getCapabilities().maxFragmentUniformVectors);
 }
