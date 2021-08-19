@@ -26,6 +26,7 @@
 #pragma once
 
 #include "renderer/gfx-base/GFXFramebuffer.h"
+#include "renderer/gfx-base/GFXTexture.h"
 
 namespace cc {
 namespace scene {
@@ -33,6 +34,9 @@ namespace scene {
 struct RenderWindow final {
     gfx::Swapchain *  swapchain{nullptr};
     gfx::Framebuffer *frameBuffer{nullptr};
+
+    inline uint getWidth() const { return frameBuffer->getColorTextures()[0]->getWidth(); }
+    inline uint getHeight() const { return frameBuffer->getColorTextures()[0]->getHeight(); }
 };
 
 } // namespace scene

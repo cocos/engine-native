@@ -48,8 +48,6 @@ namespace {
     (dst)[(offset) + 1] = (src).y; \
     (dst)[(offset) + 2] = (src).z; \
     (dst)[(offset) + 3] = (src).w;
-
-const uint GBUFFER_POS_INDEX = 1;
 } // namespace
 
 void srgbToLinear(gfx::Color *out, const gfx::Color &gamma) {
@@ -65,9 +63,7 @@ framegraph::StringHandle DeferredPipeline::fgStrHandleGbufferTexture[GBUFFER_COU
     framegraph::FrameGraph::stringToHandle("gbufferEmissiveTexture")
 };
 framegraph::StringHandle DeferredPipeline::fgStrHandleDepthTexture = framegraph::FrameGraph::stringToHandle("depthTexture");
-framegraph::StringHandle DeferredPipeline::fgStrHandleDepthTexturePost = framegraph::FrameGraph::stringToHandle("depthTexturePost");
 framegraph::StringHandle DeferredPipeline::fgStrHandleLightingOutTexture = framegraph::FrameGraph::stringToHandle("lightingOutputTexture");
-framegraph::StringHandle DeferredPipeline::fgStrHandleBackBufferTexture = framegraph::FrameGraph::stringToHandle("backBufferTexture");
 
 framegraph::StringHandle DeferredPipeline::fgStrHandleGbufferPass = framegraph::FrameGraph::stringToHandle("deferredGbufferPass");
 framegraph::StringHandle DeferredPipeline::fgStrHandleLightingPass = framegraph::FrameGraph::stringToHandle("deferredLightingPass");
@@ -99,7 +95,7 @@ bool DeferredPipeline::activate(gfx::Swapchain *swapchain) {
         return false;
     }
 
-    if (!activeRenderer()) {
+    if (!activeRenderer(swapchain)) {
         CC_LOG_ERROR("DeferredPipeline startup failed!");
         return false;
     }
@@ -107,102 +103,14 @@ bool DeferredPipeline::activate(gfx::Swapchain *swapchain) {
     return true;
 }
 
-void DeferredPipeline::initFrameGraphExternalTexture() {
-    // gbuffer descriptorset setup
-    gfx::SamplerInfo sinfo{
-        gfx::Filter::LINEAR,
-        gfx::Filter::LINEAR,
-        gfx::Filter::NONE,
-        gfx::Address::CLAMP,
-        gfx::Address::CLAMP,
-        gfx::Address::CLAMP,
-    };
-    const auto  samplerHash = SamplerLib::genSamplerHash(sinfo);
-    auto *const sampler     = SamplerLib::getSampler(samplerHash);
-
-    // create external gbuffer and depth
-    gfx::TextureInfo info = {
-        gfx::TextureType::TEX2D,
-        gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
-        gfx::Format::RGBA8,
-        _width,
-        _height,
-    };
-
-    gfx::TextureInfo infoPos = {
-        gfx::TextureType::TEX2D,
-        gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
-        gfx::Format::RGBA16F,       // POSITON cannot use RGBA8
-        _width,
-        _height,
-    };
-
-    for (uint i = 0; i < GBUFFER_COUNT; ++i) {
-        if (i != GBUFFER_POS_INDEX) {
-            fgTextureGbuffer[i] = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(info);
-            fgTextureGbuffer[i]->createPersistent();
-        } else {
-            fgTextureGbuffer[i] = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(infoPos);
-            fgTextureGbuffer[i]->createPersistent();
-        }
-
-        // bind global descriptor
-        auto *tex = static_cast<gfx::Texture *>(fgTextureGbuffer[i]->getDeviceObject());
-        _descriptorSet->bindSampler(static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_ALBEDOMAP) + i, sampler);
-        _descriptorSet->bindTexture(static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_ALBEDOMAP) + i, tex);
-    }
-    _descriptorSet->update();
-
-    gfx::TextureInfo depthInfo = {
-        gfx::TextureType::TEX2D,
-        gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT,
-        gfx::Format::DEPTH_STENCIL,
-        _width,
-        _height,
-    };
-
-    fgTextureDepth = new framegraph::Resource<gfx::Texture, gfx::TextureInfo>(depthInfo);
-    fgTextureDepth->createPersistent();
-}
-
-void DeferredPipeline::destroyFrameGraphExternalTexture() {
-    // gbuffer descriptorset setup
-    for (auto *node : fgTextureGbuffer) {
-        // bind global descriptor
-        if (node) {
-            auto *tex = static_cast<gfx::Texture *>(node->getDeviceObject());
-            CC_SAFE_DELETE(tex);
-            CC_SAFE_DELETE(node);
-        }
-    }
-
-    if (fgTextureDepth) {
-        auto *depthTex = static_cast<gfx::Texture *>(fgTextureDepth->getDeviceObject());
-        CC_SAFE_DELETE(depthTex);
-        CC_SAFE_DELETE(fgTextureDepth);
-    }
-}
-
-void DeferredPipeline::prepareFrameGraph() {
-    // prepare for the backbuffer, if the gfx::Texture is nullptr, cocos will use swapchain texture when create framebuffer
-    _fg.getBlackboard().put(fgStrHandleBackBufferTexture, _fg.importExternal(fgStrHandleBackBufferTexture, fgTextureBackBuffer));
-    _fg.getBlackboard().put(fgStrHandleDepthTexturePost, _fg.importExternal(fgStrHandleDepthTexturePost, fgTextureDepthPost));
-
-    for (uint i = 0; i < 4; ++i) {
-        _fg.getBlackboard().put(fgStrHandleGbufferTexture[i], _fg.importExternal(fgStrHandleGbufferTexture[i], *fgTextureGbuffer[i]));
-    }
-
-    _fg.getBlackboard().put(fgStrHandleDepthTexture, _fg.importExternal(fgStrHandleDepthTexture, *fgTextureDepth));
-}
-
 void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
     _commandBuffers[0]->begin();
-    _pipelineUBO->updateGlobalUBO(cameras[0]->window->swapchain);
+    _pipelineUBO->updateGlobalUBO(cameras[0]);
     _pipelineUBO->updateMultiCameraUBO(cameras);
+    static bool exported = false;
 
     for (auto *camera : cameras) {
         _fg.reset();
-        prepareFrameGraph();
         sceneCulling(this, camera);
         _frameGraphCamera = camera;
         for (auto *const flow : _flows) {
@@ -210,7 +118,10 @@ void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
         }
 
         _fg.compile();
-        //_fg.exportGraphViz("fg_vis.dot");
+        if (!exported) {
+            _fg.exportGraphViz("fg_vis.dot");
+            exported = true;
+        }
         _fg.execute();
         _pipelineUBO->incCameraUBOOffset();
     }
@@ -331,7 +242,7 @@ void DeferredPipeline::destroyQuadInputAssembler() {
     _quadIA.clear();
 }
 
-bool DeferredPipeline::activeRenderer() {
+bool DeferredPipeline::activeRenderer(gfx::Swapchain *swapchain) {
     _commandBuffers.push_back(_device->getCommandBuffer());
     auto *const sharedData = _pipelineSceneData->getSharedData();
 
@@ -373,9 +284,8 @@ bool DeferredPipeline::activeRenderer() {
     unsigned int ibData[] = {0, 1, 2, 1, 3, 2};
     _quadIB->update(ibData, sizeof(ibData));
 
-    _width  = _device->getWidth();
-    _height = _device->getHeight();
-    initFrameGraphExternalTexture();
+    _width  = swapchain->getWidth();
+    _height = swapchain->getHeight();
 
     return true;
 }
@@ -386,29 +296,10 @@ void DeferredPipeline::resize(uint width, uint height) {
     }
     _width  = width;
     _height = height;
-    destroyDeferredData();
-
-    destroyFrameGraphExternalTexture();
-    initFrameGraphExternalTexture();
 }
 
 void DeferredPipeline::destroy() {
     destroyQuadInputAssembler();
-    destroyDeferredData();
-
-    for (auto *node : fgTextureGbuffer) {
-        CC_SAFE_DELETE(node);
-    }
-
-    CC_SAFE_DELETE(fgTextureDepth);
-
-    if (_descriptorSet) {
-        _descriptorSet->getBuffer(UBOGlobal::BINDING)->destroy();
-        _descriptorSet->getBuffer(UBOCamera::BINDING)->destroy();
-        _descriptorSet->getBuffer(UBOShadow::BINDING)->destroy();
-        _descriptorSet->getTexture(SHADOWMAP::BINDING)->destroy();
-        _descriptorSet->getTexture(SPOTLIGHTINGMAP::BINDING)->destroy();
-    }
 
     for (auto &it : _renderPasses) {
         CC_DESTROY(it.second);
@@ -418,9 +309,6 @@ void DeferredPipeline::destroy() {
     _commandBuffers.clear();
 
     RenderPipeline::destroy();
-}
-
-void DeferredPipeline::destroyDeferredData() {
 }
 
 gfx::Color DeferredPipeline::getClearcolor(scene::Camera *camera) {

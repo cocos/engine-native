@@ -135,6 +135,9 @@ const gfx::UniformBlock UBOShadow::LAYOUT = {
         {"cc_matLightPlaneProj", gfx::Type::MAT4, 1},
         {"cc_matLightView", gfx::Type::MAT4, 1},
         {"cc_matLightViewProj", gfx::Type::MAT4, 1},
+        {"cc_shadowInvProjDepthInfo", gfx::Type::FLOAT4, 1},
+        {"cc_shadowProjDepthInfo", gfx::Type::FLOAT4, 1},
+        {"cc_shadowProjInfo", gfx::Type::FLOAT4, 1},
         {"cc_shadowNFLSInfo", gfx::Type::FLOAT4, 1},
         {"cc_shadowWHPBInfo", gfx::Type::FLOAT4, 1},
         {"cc_shadowLPNNInfo", gfx::Type::FLOAT4, 1},
@@ -271,86 +274,6 @@ const gfx::UniformSamplerTexture SHADOWMAP::LAYOUT = {
     globalSet,
     SHADOWMAP::BINDING,
     SHADOWMAP::NAME,
-    gfx::Type::SAMPLER2D,
-    1,
-};
-
-const String                          SAMPLERGBUFFERALBEDOMAP::NAME       = "cc_gbuffer_albedoMap";
-const gfx::DescriptorSetLayoutBinding SAMPLERGBUFFERALBEDOMAP::DESCRIPTOR = {
-    SAMPLERGBUFFERALBEDOMAP::BINDING,
-    gfx::DescriptorType::SAMPLER_TEXTURE,
-    1,
-    gfx::ShaderStageFlagBit::FRAGMENT,
-    {},
-};
-const gfx::UniformSamplerTexture SAMPLERGBUFFERALBEDOMAP::LAYOUT = {
-    globalSet,
-    SAMPLERGBUFFERALBEDOMAP::BINDING,
-    SAMPLERGBUFFERALBEDOMAP::NAME,
-    gfx::Type::SAMPLER2D,
-    1,
-};
-
-const String                          SAMPLERGBUFFERPOSITIONMAP::NAME       = "cc_gbuffer_positionMap";
-const gfx::DescriptorSetLayoutBinding SAMPLERGBUFFERPOSITIONMAP::DESCRIPTOR = {
-    SAMPLERGBUFFERPOSITIONMAP::BINDING,
-    gfx::DescriptorType::SAMPLER_TEXTURE,
-    1,
-    gfx::ShaderStageFlagBit::FRAGMENT,
-    {},
-};
-const gfx::UniformSamplerTexture SAMPLERGBUFFERPOSITIONMAP::LAYOUT = {
-    globalSet,
-    SAMPLERGBUFFERPOSITIONMAP::BINDING,
-    SAMPLERGBUFFERPOSITIONMAP::NAME,
-    gfx::Type::SAMPLER2D,
-    1,
-};
-
-const String                          SAMPLERGBUFFERNORMALMAP::NAME       = "cc_gbuffer_normalMap";
-const gfx::DescriptorSetLayoutBinding SAMPLERGBUFFERNORMALMAP::DESCRIPTOR = {
-    SAMPLERGBUFFERNORMALMAP::BINDING,
-    gfx::DescriptorType::SAMPLER_TEXTURE,
-    1,
-    gfx::ShaderStageFlagBit::FRAGMENT,
-    {},
-};
-const gfx::UniformSamplerTexture SAMPLERGBUFFERNORMALMAP::LAYOUT = {
-    globalSet,
-    SAMPLERGBUFFERNORMALMAP::BINDING,
-    SAMPLERGBUFFERNORMALMAP::NAME,
-    gfx::Type::SAMPLER2D,
-    1,
-};
-
-const String                          SAMPLERGBUFFEREMISSIVEMAP::NAME       = "cc_gbuffer_emissiveMap";
-const gfx::DescriptorSetLayoutBinding SAMPLERGBUFFEREMISSIVEMAP::DESCRIPTOR = {
-    SAMPLERGBUFFEREMISSIVEMAP::BINDING,
-    gfx::DescriptorType::SAMPLER_TEXTURE,
-    1,
-    gfx::ShaderStageFlagBit::FRAGMENT,
-    {},
-};
-const gfx::UniformSamplerTexture SAMPLERGBUFFEREMISSIVEMAP::LAYOUT = {
-    globalSet,
-    SAMPLERGBUFFEREMISSIVEMAP::BINDING,
-    SAMPLERGBUFFEREMISSIVEMAP::NAME,
-    gfx::Type::SAMPLER2D,
-    1,
-};
-
-const String                          SAMPLERLIGHTINGRESULTMAP::NAME       = "cc_lighting_resultMap";
-const gfx::DescriptorSetLayoutBinding SAMPLERLIGHTINGRESULTMAP::DESCRIPTOR = {
-    SAMPLERLIGHTINGRESULTMAP::BINDING,
-    gfx::DescriptorType::SAMPLER_TEXTURE,
-    1,
-    gfx::ShaderStageFlagBit::FRAGMENT,
-    {},
-};
-const gfx::UniformSamplerTexture SAMPLERLIGHTINGRESULTMAP::LAYOUT = {
-    globalSet,
-    SAMPLERLIGHTINGRESULTMAP::BINDING,
-    SAMPLERLIGHTINGRESULTMAP::NAME,
     gfx::Type::SAMPLER2D,
     1,
 };

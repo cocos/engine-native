@@ -46,13 +46,13 @@ namespace pipeline {
 
 Mat4 matShadowViewProj;
 
-void PipelineUBO::updateGlobalUBOView(const gfx::Swapchain *swapchain, std::array<float, UBOGlobal::COUNT> *bufferView) {
+void PipelineUBO::updateGlobalUBOView(const scene::Camera *camera, std::array<float, UBOGlobal::COUNT> *bufferView) {
     auto *const root          = scene::Root::instance;
     auto *      device        = gfx::Device::getInstance();
     auto &      uboGlobalView = *bufferView;
 
-    const auto shadingWidth  = std::floor(swapchain->getWidth());
-    const auto shadingHeight = std::floor(swapchain->getHeight());
+    const auto shadingWidth  = std::floor(camera->window->getWidth());
+    const auto shadingHeight = std::floor(camera->window->getHeight());
 
     // update UBOGlobal
     uboGlobalView[UBOGlobal::TIME_OFFSET + 0] = root->cumulativeTime;
@@ -84,8 +84,8 @@ void PipelineUBO::updateCameraUBOView(const RenderPipeline *pipeline, float *out
 
     auto *device = gfx::Device::getInstance();
 
-    const auto shadingWidth  = std::floor(camera->window->swapchain->getWidth());
-    const auto shadingHeight = std::floor(camera->window->swapchain->getHeight());
+    const auto shadingWidth  = std::floor(camera->window->getWidth());
+    const auto shadingHeight = std::floor(camera->window->getHeight());
 
     output[UBOCamera::SCREEN_SCALE_OFFSET + 0] = static_cast<float>(camera->width / shadingWidth * shadingScale);
     output[UBOCamera::SCREEN_SCALE_OFFSET + 1] = static_cast<float>(camera->height / shadingHeight * shadingScale);
@@ -373,11 +373,11 @@ void PipelineUBO::destroy() {
     _ubos.clear();
 }
 
-void PipelineUBO::updateGlobalUBO(const gfx::Swapchain *swapchain) {
+void PipelineUBO::updateGlobalUBO(const scene::Camera *camera) {
     auto *const globalDSManager = _pipeline->getGlobalDSManager();
     auto *const ds              = _pipeline->getDescriptorSet();
     ds->update();
-    PipelineUBO::updateGlobalUBOView(swapchain, &_globalUBO);
+    PipelineUBO::updateGlobalUBOView(camera, &_globalUBO);
     ds->getBuffer(UBOGlobal::BINDING)->update(_globalUBO.data(), UBOGlobal::SIZE);
 
     globalDSManager->bindBuffer(UBOGlobal::BINDING, ds->getBuffer(UBOGlobal::BINDING));

@@ -603,6 +603,11 @@ void cmdFuncGLES2CreateTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture)
         }
     }
 
+    if (gpuTexture->glTexture) {
+        gpuTexture->glTarget = GL_TEXTURE_EXTERNAL_OES;
+        return;
+    }
+
     if (gpuTexture->glSamples <= 1) {
 #if CC_PLATFORM == CC_PLATFORM_WINDOWS // PVRVFrame issue
         gpuTexture->glInternalFmt = mapGLInternalFormat(gpuTexture->format);
@@ -706,7 +711,9 @@ void cmdFuncGLES2DestroyTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture
                 glTexture = 0;
             }
         }
-        GL_CHECK(glDeleteTextures(1, &gpuTexture->glTexture));
+        if (gpuTexture->glTarget != GL_TEXTURE_EXTERNAL_OES) {
+            GL_CHECK(glDeleteTextures(1, &gpuTexture->glTexture));
+        }
         gpuTexture->glTexture = 0;
 
     } else if (gpuTexture->glRenderbuffer) {
@@ -721,7 +728,7 @@ void cmdFuncGLES2DestroyTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture
 }
 
 void cmdFuncGLES2ResizeTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture) {
-    if (gpuTexture->memoryless) return;
+    if (gpuTexture->memoryless || gpuTexture->glTarget == GL_TEXTURE_EXTERNAL_OES) return;
 
     if (gpuTexture->glSamples <= 1) {
         switch (gpuTexture->type) {

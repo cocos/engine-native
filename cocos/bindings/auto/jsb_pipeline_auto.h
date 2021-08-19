@@ -194,14 +194,11 @@ bool js_register_cc_pipeline_DeferredPipeline(se::Object* obj);
 bool register_all_pipeline(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::pipeline::DeferredPipeline);
-SE_DECLARE_FUNC(js_pipeline_DeferredPipeline_destroyFrameGraphExternalTexture);
 SE_DECLARE_FUNC(js_pipeline_DeferredPipeline_getClearcolor);
 SE_DECLARE_FUNC(js_pipeline_DeferredPipeline_getFrameGraph);
 SE_DECLARE_FUNC(js_pipeline_DeferredPipeline_getFrameGraphCamera);
 SE_DECLARE_FUNC(js_pipeline_DeferredPipeline_getHeight);
 SE_DECLARE_FUNC(js_pipeline_DeferredPipeline_getWidth);
-SE_DECLARE_FUNC(js_pipeline_DeferredPipeline_initFrameGraphExternalTexture);
-SE_DECLARE_FUNC(js_pipeline_DeferredPipeline_prepareFrameGraph);
 SE_DECLARE_FUNC(js_pipeline_DeferredPipeline_DeferredPipeline);
 
 extern se::Object* __jsb_cc_pipeline_MainFlow_proto;
@@ -243,7 +240,6 @@ bool js_register_cc_pipeline_PostprocessStage(se::Object* obj);
 bool register_all_pipeline(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::pipeline::PostprocessStage);
-SE_DECLARE_FUNC(js_pipeline_PostprocessStage_getGlobalSet);
 SE_DECLARE_FUNC(js_pipeline_PostprocessStage_getInitializeInfo);
 SE_DECLARE_FUNC(js_pipeline_PostprocessStage_PostprocessStage);
 

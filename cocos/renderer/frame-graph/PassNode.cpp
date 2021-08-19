@@ -31,7 +31,7 @@
 namespace cc {
 namespace framegraph {
 
-PassNode::PassNode(const PassInsertPoint inserPoint, const StringHandle name, const ID &id, Executable *pass) noexcept
+PassNode::PassNode(const PassInsertPoint inserPoint, const StringHandle name, const ID &id, Executable *pass)
 : _pass(pass),
   _name(name),
   _id(id),
@@ -39,7 +39,7 @@ PassNode::PassNode(const PassInsertPoint inserPoint, const StringHandle name, co
     CC_ASSERT(_name.isValid());
 }
 
-Handle PassNode::read(FrameGraph & /*graph*/, const Handle &input) noexcept {
+Handle PassNode::read(FrameGraph & /*graph*/, const Handle &input) {
     const auto it = std::find_if(_reads.begin(), _reads.end(), [input](const Handle handle) {
         return input == handle;
     });
@@ -51,7 +51,7 @@ Handle PassNode::read(FrameGraph & /*graph*/, const Handle &input) noexcept {
     return input;
 }
 
-Handle PassNode::write(FrameGraph &graph, const Handle &output) noexcept {
+Handle PassNode::write(FrameGraph &graph, const Handle &output) {
     CC_ASSERT(std::find_if(_writes.begin(), _writes.end(), [output](const Handle handle) {
                   return output == handle;
               }) == _writes.end());
@@ -66,7 +66,7 @@ Handle PassNode::write(FrameGraph &graph, const Handle &output) noexcept {
     return handle;
 }
 
-void PassNode::createRenderTargetAttachment(RenderTargetAttachment &&attachment) noexcept {
+void PassNode::createRenderTargetAttachment(RenderTargetAttachment &&attachment) {
     if (attachment.desc.usage == RenderTargetAttachment::Usage::COLOR) {
         if (attachment.desc.slot == 0xff) {
             for (uint8_t i = 0; i < RenderTargetAttachment::DEPTH_STENCIL_SLOT_START; ++i) {
@@ -96,7 +96,7 @@ void PassNode::createRenderTargetAttachment(RenderTargetAttachment &&attachment)
     _hasClearedAttachment = _hasClearedAttachment || (attachment.desc.loadOp == gfx::LoadOp::CLEAR);
 }
 
-bool PassNode::canMerge(const FrameGraph &graph, const PassNode &passNode) const noexcept {
+bool PassNode::canMerge(const FrameGraph &graph, const PassNode &passNode) const {
     const size_t attachmentCount = _attachments.size();
 
     if (passNode._hasClearedAttachment || attachmentCount != passNode._attachments.size()) {
@@ -121,7 +121,7 @@ bool PassNode::canMerge(const FrameGraph &graph, const PassNode &passNode) const
     return true;
 }
 
-RenderTargetAttachment *PassNode::getRenderTargetAttachment(const Handle &handle) noexcept {
+RenderTargetAttachment *PassNode::getRenderTargetAttachment(const Handle &handle) {
     const auto it = std::find_if(_attachments.begin(), _attachments.end(), [&handle](const RenderTargetAttachment &attachment) {
         return attachment.textureHandle == handle;
     });
@@ -129,7 +129,7 @@ RenderTargetAttachment *PassNode::getRenderTargetAttachment(const Handle &handle
     return it == _attachments.end() ? nullptr : &(*it);
 }
 
-RenderTargetAttachment *PassNode::getRenderTargetAttachment(const FrameGraph &graph, const VirtualResource *const resource) noexcept {
+RenderTargetAttachment *PassNode::getRenderTargetAttachment(const FrameGraph &graph, const VirtualResource *const resource) {
     const auto it = std::find_if(_attachments.begin(), _attachments.end(), [&](const RenderTargetAttachment &attachment) {
         return graph.getResourceNode(attachment.textureHandle).virtualResource == resource;
     });
@@ -137,40 +137,43 @@ RenderTargetAttachment *PassNode::getRenderTargetAttachment(const FrameGraph &gr
     return it == _attachments.end() ? nullptr : &(*it);
 }
 
-void PassNode::requestTransientResources() noexcept {
-    std::for_each(_resourceRequestArray.begin(), _resourceRequestArray.end(), [](VirtualResource *const resource) {
-        if (!resource->isImported()) {
-            resource->request();
-        }
-    });
+void PassNode::requestTransientResources() {
+    PassNode *it = this;
 
-    if (_next) {
-        _next->requestTransientResources();
-    }
+    do {
+        std::for_each(_resourceRequestArray.begin(), _resourceRequestArray.end(), [](VirtualResource *const resource) {
+            if (!resource->isImported()) {
+                resource->request();
+            }
+        });
+        it = it->_next;
+    } while (it);
 }
 
-void PassNode::releaseTransientResources() noexcept {
-    // resources should be release in the reverse order to stabilize usages between frames
-    std::for_each(_resourceReleaseArray.rbegin(), _resourceReleaseArray.rend(), [](VirtualResource *const resource) {
-        if (!resource->isImported()) {
-            resource->release();
-        }
-    });
+void PassNode::releaseTransientResources() {
+    PassNode *it = this;
 
-    if (_next) {
-        _next->releaseTransientResources();
-    }
+    do {
+        // resources should be release in the reverse order to stabilize usages between frames
+        std::for_each(_resourceReleaseArray.rbegin(), _resourceReleaseArray.rend(), [](VirtualResource *const resource) {
+            if (!resource->isImported()) {
+                resource->release();
+            }
+        });
+        it = it->_next;
+    } while (it);
 }
 
-void PassNode::setDevicePassId(ID const id) noexcept {
-    _devicePassId = id;
+void PassNode::setDevicePassId(ID const id) {
+    PassNode *it = this;
 
-    if (_next) {
-        _next->setDevicePassId(id);
-    }
+    do {
+        _devicePassId = id;
+        it            = it->_next;
+    } while (it);
 }
 
-Handle PassNode::getWriteResourceNodeHandle(const FrameGraph &graph, const VirtualResource *const resource) const noexcept {
+Handle PassNode::getWriteResourceNodeHandle(const FrameGraph &graph, const VirtualResource *const resource) const {
     const auto it = std::find_if(_writes.begin(), _writes.end(), [&](const Handle handle) {
         return graph.getResourceNode(handle).virtualResource == resource;
     });

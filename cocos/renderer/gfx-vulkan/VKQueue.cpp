@@ -65,14 +65,14 @@ void CCVKQueue::submit(CommandBuffer *const *cmdBuffs, uint count) {
 #endif
     device->gpuBufferHub()->flush(device->gpuTransportHub());
 
-    if (!device->gpuTransportHub()->empty()) {
-        _gpuQueue->commandBuffers.push(device->gpuTransportHub()->packageForFlight());
+    if (!device->gpuTransportHub()->empty(false)) {
+        _gpuQueue->commandBuffers.push_back(device->gpuTransportHub()->packageForFlight(false));
     }
 
     for (uint i = 0U; i < count; ++i) {
         auto *cmdBuff = static_cast<CCVKCommandBuffer *>(cmdBuffs[i]);
         if (!cmdBuff->_pendingQueue.empty()) {
-            _gpuQueue->commandBuffers.push(cmdBuff->_pendingQueue.front());
+            _gpuQueue->commandBuffers.push_back(cmdBuff->_pendingQueue.front());
             cmdBuff->_pendingQueue.pop();
 
             _numDrawCalls += cmdBuff->_numDrawCalls;
@@ -81,17 +81,21 @@ void CCVKQueue::submit(CommandBuffer *const *cmdBuffs, uint count) {
         }
     }
 
-    VkSemaphore signal             = device->gpuSemaphorePool()->alloc();
+    if (!device->gpuTransportHub()->empty(true)) {
+        _gpuQueue->commandBuffers.push_back(device->gpuTransportHub()->packageForFlight(true));
+    }
+
     size_t      waitSemaphoreCount = _gpuQueue->lastSignaledSemaphores.size();
+    VkSemaphore signal             = waitSemaphoreCount ? device->gpuSemaphorePool()->alloc() : VK_NULL_HANDLE;
     _gpuQueue->submitStageMasks.resize(waitSemaphoreCount, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
 
     VkSubmitInfo submitInfo{VK_STRUCTURE_TYPE_SUBMIT_INFO};
-    submitInfo.waitSemaphoreCount   = utils::toUint(_gpuQueue->lastSignaledSemaphores.size());
+    submitInfo.waitSemaphoreCount   = utils::toUint(waitSemaphoreCount);
     submitInfo.pWaitSemaphores      = _gpuQueue->lastSignaledSemaphores.data();
     submitInfo.pWaitDstStageMask    = _gpuQueue->submitStageMasks.data();
     submitInfo.commandBufferCount   = utils::toUint(_gpuQueue->commandBuffers.size());
     submitInfo.pCommandBuffers      = &_gpuQueue->commandBuffers[0];
-    submitInfo.signalSemaphoreCount = 1;
+    submitInfo.signalSemaphoreCount = waitSemaphoreCount ? 1 : 0;
     submitInfo.pSignalSemaphores    = &signal;
 
     VkFence vkFence = device->gpuFencePool()->alloc();

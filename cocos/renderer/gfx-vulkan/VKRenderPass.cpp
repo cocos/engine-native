@@ -55,7 +55,7 @@ void CCVKRenderPass::doInit(const RenderPassInfo & /*info*/) {
             subpass.colors[i] = i;
         }
         if (_depthStencilAttachment.format != Format::UNKNOWN) {
-            subpass.depthStencil = _colorAttachments.size();
+            subpass.depthStencil = utils::toUint(_colorAttachments.size());
         }
     }
 

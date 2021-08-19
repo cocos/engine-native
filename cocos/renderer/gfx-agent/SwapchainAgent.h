@@ -36,6 +36,8 @@ public:
     explicit SwapchainAgent(Swapchain *actor);
     ~SwapchainAgent() override;
 
+    uint32_t getWidth() const override { return _actor->getWidth(); }
+    uint32_t getHeight() const override { return _actor->getHeight(); }
     SurfaceTransform getSurfaceTransform() const override { return _actor->getSurfaceTransform(); }
 
 protected:

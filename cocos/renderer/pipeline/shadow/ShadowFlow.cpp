@@ -181,8 +181,8 @@ void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const scene::Li
         gfx::SampleCount::ONE,
         gfx::LoadOp::CLEAR,
         gfx::StoreOp::STORE,
-        {},
-        {},
+        {gfx::AccessType::COLOR_ATTACHMENT_WRITE},
+        {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE},
     };
 
     const gfx::DepthStencilAttachment depthStencilAttachment = {
@@ -192,8 +192,8 @@ void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const scene::Li
         gfx::StoreOp::DISCARD,
         gfx::LoadOp::CLEAR,
         gfx::StoreOp::DISCARD,
-        {},
-        {},
+        {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE},
+        {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE},
     };
 
     gfx::RenderPassInfo rpInfo;

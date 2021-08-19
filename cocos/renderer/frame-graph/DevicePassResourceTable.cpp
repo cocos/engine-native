@@ -38,14 +38,13 @@ gfx::GFXObject *DevicePassResourceTable::get(const ResourceDictionary &from, Han
 }
 
 void DevicePassResourceTable::extract(const FrameGraph &                       graph,
-                                      const PassNode *const                    passNode,
+                                      const PassNode *                         passNode,
                                       std::vector<const gfx::Texture *> const &renderTargets) noexcept {
-    extract(graph, passNode->_reads, _reads, false, renderTargets);
-    extract(graph, passNode->_writes, _writes, true, renderTargets);
-
-    if (passNode->_next) {
-        extract(graph, passNode->_next, renderTargets);
-    }
+    do {
+        extract(graph, passNode->_reads, _reads, false, renderTargets);
+        extract(graph, passNode->_writes, _writes, true, renderTargets);
+        passNode = passNode->_next;
+    } while (passNode);
 }
 
 void DevicePassResourceTable::extract(const FrameGraph &                       graph,

@@ -5,6 +5,9 @@ namespace cc {
 
 ReflectionComp::~ReflectionComp() {
 
+    CC_DELETE(_compDescriptorSet->getLayout());
+    CC_DELETE(_compPipelineState->getPipelineLayout());
+
     CC_SAFE_DESTROY(_compShader);
     CC_SAFE_DESTROY(_compDescriptorSetLayout);
     CC_SAFE_DESTROY(_compPipelineState);

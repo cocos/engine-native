@@ -6381,6 +6381,44 @@ bool js_register_scene_RenderScene(se::Object* obj) // NOLINT(readability-identi
 se::Object* __jsb_cc_scene_RenderWindow_proto = nullptr;
 se::Class* __jsb_cc_scene_RenderWindow_class = nullptr;
 
+static bool js_scene_RenderWindow_getHeight(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::RenderWindow>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_RenderWindow_getHeight : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getHeight();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_scene_RenderWindow_getHeight : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_scene_RenderWindow_getHeight)
+
+static bool js_scene_RenderWindow_getWidth(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::RenderWindow>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_RenderWindow_getWidth : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        unsigned int result = cobj->getWidth();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_scene_RenderWindow_getWidth : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_scene_RenderWindow_getWidth)
+
 static bool js_scene_RenderWindow_get_swapchain(se::State& s) // NOLINT(readability-identifier-naming)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::RenderWindow>(s);
@@ -6534,6 +6572,8 @@ bool js_register_scene_RenderWindow(se::Object* obj) // NOLINT(readability-ident
 
     cls->defineProperty("swapchain", _SE(js_scene_RenderWindow_get_swapchain), _SE(js_scene_RenderWindow_set_swapchain));
     cls->defineProperty("frameBuffer", _SE(js_scene_RenderWindow_get_frameBuffer), _SE(js_scene_RenderWindow_set_frameBuffer));
+    cls->defineFunction("getHeight", _SE(js_scene_RenderWindow_getHeight));
+    cls->defineFunction("getWidth", _SE(js_scene_RenderWindow_getWidth));
     cls->defineFinalizeFunction(_SE(js_cc_scene_RenderWindow_finalize));
     cls->install();
     JSBClassType::registerClass<cc::scene::RenderWindow>(cls);

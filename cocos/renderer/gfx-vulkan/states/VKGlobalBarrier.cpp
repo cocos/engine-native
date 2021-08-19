@@ -43,9 +43,9 @@ CCVKGlobalBarrier::CCVKGlobalBarrier(const GlobalBarrierInfo &info) : GlobalBarr
         _gpuBarrier->accessTypes[index++] = THSVS_ACCESS_TYPES[static_cast<uint>(type)];
     }
 
-    _gpuBarrier->barrier.prevAccessCount = info.prevAccesses.size();
+    _gpuBarrier->barrier.prevAccessCount = utils::toUint(info.prevAccesses.size());
     _gpuBarrier->barrier.pPrevAccesses   = _gpuBarrier->accessTypes.data();
-    _gpuBarrier->barrier.nextAccessCount = info.nextAccesses.size();
+    _gpuBarrier->barrier.nextAccessCount = utils::toUint(info.nextAccesses.size());
     _gpuBarrier->barrier.pNextAccesses   = _gpuBarrier->accessTypes.data() + info.prevAccesses.size();
 
     thsvsGetVulkanMemoryBarrier(_gpuBarrier->barrier, &_gpuBarrier->srcStageMask, &_gpuBarrier->dstStageMask, &_gpuBarrier->vkBarrier);

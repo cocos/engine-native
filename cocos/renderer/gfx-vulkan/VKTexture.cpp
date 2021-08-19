@@ -107,6 +107,8 @@ void CCVKTexture::doDestroy() {
 }
 
 void CCVKTexture::doResize(uint width, uint height, uint size) {
+    if (!width || !height) return;
+
     if (!_gpuTexture->memoryless) {
         CCVKDevice::getInstance()->getMemoryStatus().textureSize -= _size;
     }

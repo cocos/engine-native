@@ -532,9 +532,36 @@ void CCVKDevice::doDestroy() {
 }
 
 namespace {
-vector<VkSwapchainKHR>     vkSwapchains;
-vector<uint32_t>           vkSwapchainIndices;
-vector<CCVKGPUSwapchain *> gpuSwapchains;
+vector<VkSwapchainKHR>       vkSwapchains;
+vector<uint32_t>             vkSwapchainIndices;
+vector<CCVKGPUSwapchain *>   gpuSwapchains;
+vector<VkImageMemoryBarrier> vkAcquireBarriers;
+vector<VkImageMemoryBarrier> vkPresentBarriers;
+
+VkImageMemoryBarrier acquireBarrier{
+    VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+    nullptr,
+    0,
+    VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+    VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+    VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+    VK_QUEUE_FAMILY_IGNORED,
+    VK_QUEUE_FAMILY_IGNORED,
+    0,
+    {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1},
+};
+VkImageMemoryBarrier presentBarrier{
+    VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+    nullptr,
+    VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+    0,
+    VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+    VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+    VK_QUEUE_FAMILY_IGNORED,
+    VK_QUEUE_FAMILY_IGNORED,
+    0,
+    {VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1},
+};
 } // namespace
 
 void CCVKDevice::acquire(Swapchain *const *swapchains, uint32_t count) {
@@ -543,8 +570,10 @@ void CCVKDevice::acquire(Swapchain *const *swapchains, uint32_t count) {
     vkSwapchainIndices.clear();
     gpuSwapchains.clear();
     vkSwapchains.clear();
+    vkAcquireBarriers.resize(count, acquireBarrier);
+    vkPresentBarriers.resize(count, presentBarrier);
 
-    for (uint32_t i = 0; i < count; ++i) {
+    for (uint32_t i = 0U; i < count; ++i) {
         auto *swapchain = static_cast<CCVKSwapchain *>(swapchains[i]);
         if (!swapchain->checkSwapchainStatus()) continue;
         vkSwapchains.push_back(swapchain->gpuSwapchain()->vkSwapchain);
@@ -564,7 +593,24 @@ void CCVKDevice::acquire(Swapchain *const *swapchains, uint32_t count) {
 
         // swapchain indices may be different
         //CCASSERT(_gpuDevice->curBackBufferIndex == vkSwapchainIndices[i], "wrong image index?");
+
+        vkAcquireBarriers[i].image = gpuSwapchains[i]->swapchainImages[vkSwapchainIndices[i]];
+        vkPresentBarriers[i].image = gpuSwapchains[i]->swapchainImages[vkSwapchainIndices[i]];
     }
+
+    _gpuTransportHub->checkIn(
+        [&](const CCVKGPUCommandBuffer *gpuCommandBuffer) {
+            vkCmdPipelineBarrier(gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+                                 0, 0, nullptr, 0, nullptr, utils::toUint(vkSwapchains.size()), vkAcquireBarriers.data());
+        },
+        false, false);
+
+    _gpuTransportHub->checkIn(
+        [&](const CCVKGPUCommandBuffer *gpuCommandBuffer) {
+            vkCmdPipelineBarrier(gpuCommandBuffer->vkCommandBuffer, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+                                 0, 0, nullptr, 0, nullptr, utils::toUint(vkSwapchains.size()), vkPresentBarriers.data());
+        },
+        false, true);
 }
 
 void CCVKDevice::present() {
@@ -575,6 +621,9 @@ void CCVKDevice::present() {
     queue->_numDrawCalls = 0;
     queue->_numInstances = 0;
     queue->_numTriangles = 0;
+
+    if (!_gpuTransportHub->empty(false)) _gpuTransportHub->packageForFlight(false);
+    if (!_gpuTransportHub->empty(true)) _gpuTransportHub->packageForFlight(true);
 
     if (!vkSwapchains.empty()) { // don't present if not acquired
         VkPresentInfoKHR presentInfo{VK_STRUCTURE_TYPE_PRESENT_INFO_KHR};

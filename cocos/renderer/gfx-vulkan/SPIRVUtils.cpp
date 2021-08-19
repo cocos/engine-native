@@ -127,9 +127,12 @@ void SPIRVUtils::compileGLSL(ShaderStageFlagBit type, const String& source) {
     spv::SpvBuildLogger logger;
     glslang::SpvOptions spvOptions;
     spvOptions.disableOptimizer = false;
-    spvOptions.optimizeSize     = true;
-    spvOptions.stripDebugInfo   = true;
+#if CC_DEBUG > 0
     //spvOptions.validate = true;
+#else
+    spvOptions.optimizeSize   = true;
+    spvOptions.stripDebugInfo = true;
+#endif
     glslang::GlslangToSpv(*_program->getIntermediate(stage), _output, &logger, &spvOptions);
 }
 
@@ -191,7 +194,7 @@ void SPIRVUtils::compressInputLocations(gfx::AttributeList& attributes) {
 
     uint32_t location       = 0;
     uint32_t unusedLocation = activeCount;
-    newLocations.resize(attributes.size());
+    newLocations.assign(attributes.size(), UINT_MAX);
 
     for (auto& id : ids) {
         if (id.opcode == SpvOpVariable && id.storageClass == SpvStorageClassInput) {
@@ -222,6 +225,11 @@ void SPIRVUtils::compressInputLocations(gfx::AttributeList& attributes) {
     for (size_t i = 0; i < attributes.size(); ++i) {
         attributes[i].location = newLocations[i];
     }
+
+    attributes.erase(std::remove_if(attributes.begin(), attributes.end(), [](const auto& attr) {
+                         return attr.location == UINT_MAX;
+                     }),
+                     attributes.end());
 }
 
 } // namespace gfx

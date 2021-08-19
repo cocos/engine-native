@@ -45,7 +45,7 @@ CCVKSwapchain::~CCVKSwapchain() {
     destroy();
 }
 
-void CCVKSwapchain::doInit(const SwapchainInfo &info) {
+void CCVKSwapchain::doInit(const SwapchainInfo & /*info*/) {
     auto *      gpuDevice  = CCVKDevice::getInstance()->gpuDevice();
     const auto *gpuContext = CCVKDevice::getInstance()->gpuContext();
     _gpuSwapchain          = CC_NEW(CCVKGPUSwapchain);
@@ -236,7 +236,7 @@ void CCVKSwapchain::doDestroy() {
     CC_SAFE_DELETE(_gpuSwapchain)
 }
 
-void CCVKSwapchain::doResize(uint32_t width, uint32_t height) {
+void CCVKSwapchain::doResize(uint32_t /*width*/, uint32_t /*height*/) {
     checkSwapchainStatus();
 }
 
@@ -276,6 +276,8 @@ bool CCVKSwapchain::checkSwapchainStatus() {
 
     if (newWidth == 0 || newHeight == 0) {
         _gpuSwapchain->lastPresentResult = VK_SUBOPTIMAL_KHR;
+        _colorTexture->resize(newWidth, newHeight);
+        _depthStencilTexture->resize(newWidth, newHeight);
         return false;
     }
 

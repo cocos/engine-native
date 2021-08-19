@@ -55,7 +55,7 @@ const char *FrameGraph::handleToString(const StringHandle &handle) noexcept {
     return getStringPool().handleToString(handle);
 }
 
-void FrameGraph::present(const TextureHandle &input, gfx::Swapchain *swapchain) {
+void FrameGraph::present(const TextureHandle &input, gfx::Texture *target) {
     static const StringHandle S_NAME_PRESENT = FrameGraph::stringToHandle("Present");
     const ResourceNode &      resourceNode   = getResourceNode(input);
     CC_ASSERT(resourceNode.writer);
@@ -70,32 +70,32 @@ void FrameGraph::present(const TextureHandle &input, gfx::Swapchain *swapchain) 
             data.input = builder.read(input);
             builder.sideEffect();
         },
-        [swapchain](const PassDataPresent &data, const DevicePassResourceTable &table) {
+        [target](const PassDataPresent &data, const DevicePassResourceTable &table) {
             auto *cmdBuff = gfx::Device::getInstance()->getCommandBuffer();
 
             gfx::Texture *input = table.getRead(data.input);
-            if (input) {
+            if (input && input != target) {
                 gfx::TextureBlit region;
                 region.srcExtent.width  = input->getWidth();
                 region.srcExtent.height = input->getHeight();
                 region.dstExtent.width  = input->getWidth();
                 region.dstExtent.height = input->getHeight();
-                cmdBuff->blitTexture(input, swapchain->getColorTexture(), &region, 1, gfx::Filter::POINT);
+                cmdBuff->blitTexture(input, target, &region, 1, gfx::Filter::POINT);
             }
         });
 }
 
-void FrameGraph::presentLastVersion(const VirtualResource *const virtualResource, gfx::Swapchain *swapchain) {
+void FrameGraph::presentLastVersion(const VirtualResource *const virtualResource, gfx::Texture *target) {
     const auto it = std::find_if(_resourceNodes.rbegin(), _resourceNodes.rend(), [&virtualResource](const ResourceNode &node) {
         return node.virtualResource == virtualResource;
     });
 
     CC_ASSERT(it != _resourceNodes.rend());
-    present(TextureHandle(static_cast<Handle::IndexType>(it.base() - _resourceNodes.begin() - 1)), swapchain);
+    present(TextureHandle(static_cast<Handle::IndexType>(it.base() - _resourceNodes.begin() - 1)), target);
 }
 
-void FrameGraph::presentFromBlackboard(const StringHandle &inputName, gfx::Swapchain *swapchain) {
-    present(TextureHandle(_blackboard.get(inputName)), swapchain);
+void FrameGraph::presentFromBlackboard(const StringHandle &inputName, gfx::Texture *target) {
+    present(TextureHandle(_blackboard.get(inputName)), target);
 }
 
 void FrameGraph::compile() {
@@ -417,7 +417,6 @@ void FrameGraph::computeStoreActionAndMemoryless() {
 
         renderTarget->_memoryless     = renderTarget->_neverLoaded && renderTarget->_neverStored;
         renderTarget->_memorylessMSAA = textureDesc.samples != gfx::SampleCount::ONE && renderTarget->_writerCount < 2;
-        // TODO(minggo): memoryless gfx::Texture
     }
 }
 

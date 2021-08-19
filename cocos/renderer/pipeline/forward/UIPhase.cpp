@@ -42,27 +42,19 @@ void UIPhase::render(scene::Camera *camera, gfx::RenderPass *renderPass) {
     const auto &batches = camera->scene->getDrawBatch2Ds();
     // Notice: The batches[0] is batchCount
     for (auto *batch : batches) {
-        bool visible = false;
-        if (camera->visibility & batch->visFlags) {
-            visible = true;
-        }
-
-        if (!visible) continue;
-        int i = 0;
-        for (const auto *pass : batch->passes) {
+        if (!(camera->visibility & batch->visFlags)) continue;
+        for (size_t i = 0; i < batch->shaders.size(); ++i) {
+            const auto *pass = batch->passes[i];
             if (pass->getPhase() != _phaseID) continue;
-            auto *const shader         = batch->shaders[i];
-            if (shader == nullptr) break;
-            auto *const inputAssembler = batch->inputAssembler;
-            auto *const ds             = batch->descriptorSet;
-            auto *      pso            = cc::pipeline::PipelineStateManager::getOrCreatePipelineState(pass, shader, inputAssembler, renderPass);
+            auto *shader         = batch->shaders[i];
+            auto *inputAssembler = batch->inputAssembler;
+            auto *ds             = batch->descriptorSet;
+            auto *pso            = cc::pipeline::PipelineStateManager::getOrCreatePipelineState(pass, shader, inputAssembler, renderPass);
             cmdBuff->bindPipelineState(pso);
             cmdBuff->bindDescriptorSet(materialSet, pass->getDescriptorSet());
             cmdBuff->bindDescriptorSet(localSet, ds);
             cmdBuff->bindInputAssembler(inputAssembler);
             cmdBuff->draw(inputAssembler);
-
-            ++i;
         }
     }
 }

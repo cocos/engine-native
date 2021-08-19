@@ -46,12 +46,11 @@ public:
     inline void *    getWindowHandle() const { return _windowHandle; }
     inline VsyncMode getVSyncMode() const { return _vsyncMode; }
 
-    inline uint32_t getWidth() const { return _colorTexture->getWidth(); }
-    inline uint32_t getHeight() const { return _colorTexture->getHeight(); }
-
     inline Texture *getColorTexture() const { return _colorTexture; }
     inline Texture *getDepthStencilTexture() const { return _depthStencilTexture; }
 
+    virtual uint32_t getWidth() const { return _colorTexture->getWidth(); }
+    virtual uint32_t getHeight() const { return _colorTexture->getHeight(); }
     virtual SurfaceTransform getSurfaceTransform() const { return _transform; }
 
 protected:

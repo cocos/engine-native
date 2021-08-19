@@ -47,7 +47,7 @@ void RenderPassValidator::doInit(const RenderPassInfo &info) {
     bool hasDepth = info.depthStencilAttachment.format != Format::UNKNOWN;
     if (!hasDepth) {
         for (const auto &subpass : info.subpasses) {
-            CCASSERT(subpass.depthStencil == INVALID_BINDING && subpass.depthStencil < info.colorAttachments.size(),
+            CCASSERT(subpass.depthStencil == INVALID_BINDING || subpass.depthStencil < info.colorAttachments.size(),
                      "Invalid depth stencil attachment index");
         }
     }

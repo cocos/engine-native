@@ -26,11 +26,11 @@
 #include "DevicePass.h"
 #include <algorithm>
 #include "CallbackPass.h"
+#include "DevicePassResourceTable.h"
 #include "FrameGraph.h"
 #include "PassNode.h"
 #include "ResourceNode.h"
 #include "gfx-base/GFXCommandBuffer.h"
-#include "DevicePassResourceTable.h"
 
 namespace cc {
 namespace framegraph {
@@ -61,7 +61,6 @@ DevicePass::DevicePass(const FrameGraph &graph, std::vector<PassNode *> const &s
     for (PassNode *const passNode : subpassNodes) {
         _resourceTable.extract(graph, passNode, renderTargets);
     }
-    _resourceTable._devicePass = this;
 }
 
 void DevicePass::execute() {
@@ -170,10 +169,6 @@ void DevicePass::append(const FrameGraph &graph, const RenderTargetAttachment &a
     }
 }
 
-const RenderPass &DevicePassResourceTable::getRenderPass() const {
-    return _devicePass->getRenderPass();
-}
-
 void DevicePass::begin(gfx::CommandBuffer *cmdBuff) {
     if (_attachments.empty()) return;
 
@@ -210,7 +205,7 @@ void DevicePass::begin(gfx::CommandBuffer *cmdBuff) {
             attachmentInfo.beginAccesses   = attachElem.attachment.desc.beginAccesses;
             attachmentInfo.endAccesses     = attachElem.attachment.desc.endAccesses;
             attachmentInfo.isGeneralLayout = attachElem.attachment.isGeneralLayout;
-            fboInfo.depthStencilTexture = attachElem.renderTarget;
+            fboInfo.depthStencilTexture    = attachElem.renderTarget;
             _viewport.width = _scissor.width = attachment->getWidth();
             _viewport.height = _scissor.height = attachment->getHeight();
             clearDepth                         = attachElem.attachment.desc.clearDepth;
@@ -224,6 +219,7 @@ void DevicePass::begin(gfx::CommandBuffer *cmdBuff) {
 
     _renderPass = RenderPass(rpInfo);
     _renderPass.createTransient();
+    _resourceTable._renderPass = _renderPass.get();
 
     fboInfo.renderPass = _renderPass.get();
     _fbo               = Framebuffer(fboInfo);

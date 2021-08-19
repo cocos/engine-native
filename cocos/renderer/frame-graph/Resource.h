@@ -70,16 +70,13 @@ public:
     Resource &operator=(const Resource &) = default;
     Resource &operator=(Resource &&) noexcept = default;
 
-    void                       createTransient() noexcept;
-    void                       createPersistent() noexcept;
+    void createTransient() noexcept;
+    void createPersistent() noexcept;
 
-    // temporary api. framegraph donot create _deviceObject, it come from window
-    void                       createPersistent(DeviceResourceType *external) noexcept;
     void                       destroyTransient() noexcept;
     void                       destroyPersistent() noexcept;
     inline DeviceResourceType *get() const noexcept;
     inline const Descriptor &  getDesc() const noexcept;
-    DeviceResourceType *getDeviceObject() const { return _deviceObject; }
 
 private:
     void computeHash() noexcept;
@@ -87,9 +84,6 @@ private:
     Descriptor          _desc;
     DescriptorHash      _hash{0};
     DeviceResourceType *_deviceObject{nullptr};
-
-    // true : _deviceObject come form window, framegraph donot need to release it
-    bool                _devcieObjectFromWindow = false;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -103,16 +97,6 @@ template <typename DeviceResourceType, typename DescriptorType, typename DeviceR
 void Resource<DeviceResourceType, DescriptorType, DeviceResourceCreatorType, DescriptorHasherType>::createTransient() noexcept {
     computeHash();
     _deviceObject = Allocator::getInstance().alloc(_desc, _hash);
-}
-
-template <typename DeviceResourceType, typename DescriptorType, typename DeviceResourceCreatorType, typename DescriptorHasherType>
-void Resource<DeviceResourceType, DescriptorType, DeviceResourceCreatorType, DescriptorHasherType>::createPersistent(DeviceResourceType *external) noexcept {
-    computeHash();
-
-    if (!_deviceObject) {
-        _devcieObjectFromWindow = true;
-        _deviceObject = external;
-    }
 }
 
 template <typename DeviceResourceType, typename DescriptorType, typename DeviceResourceCreatorType, typename DescriptorHasherType>
@@ -134,7 +118,7 @@ void Resource<DeviceResourceType, DescriptorType, DeviceResourceCreatorType, Des
 
 template <typename DeviceResourceType, typename DescriptorType, typename DeviceResourceCreatorType, typename DescriptorHasherType>
 void Resource<DeviceResourceType, DescriptorType, DeviceResourceCreatorType, DescriptorHasherType>::destroyPersistent() noexcept {
-    if (_deviceObject && !_devcieObjectFromWindow) {
+    if (_deviceObject) {
         delete _deviceObject;
         _deviceObject = nullptr;
     }

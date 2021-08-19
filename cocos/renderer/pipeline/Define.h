@@ -214,13 +214,8 @@ enum class CC_DLL PipelineGlobalBindings {
     UBO_SHADOW,
 
     SAMPLER_SHADOWMAP,
-    SAMPLER_ENVIRONMENT, // don't put this as the first sampler binding due to Mac GL driver issues: cubemap at texture unit 0 causes rendering issues
+    SAMPLER_ENVIRONMENT,
     SAMPLER_SPOT_LIGHTING_MAP,
-    SAMPLER_GBUFFER_ALBEDOMAP,
-    SAMPLER_GBUFFER_POSITIONMAP,
-    SAMPLER_GBUFFER_NORMALMAP,
-    SAMPLER_GBUFFER_EMISSIVEMAP,
-    SAMPLER_LIGHTING_RESULTMAP,
 
     COUNT,
 };
@@ -380,9 +375,9 @@ enum class CC_DLL DeferredStagePriority {
 CC_ENUM_CONVERSION_OPERATOR(DeferredStagePriority)
 
 enum class CC_DLL DeferredFlowPriority {
-    SHADOW   = 0,
-    MAIN     = 1,
-    UI       = 10
+    SHADOW = 0,
+    MAIN   = 1,
+    UI     = 10
 };
 CC_ENUM_CONVERSION_OPERATOR(DeferredFlowPriority)
 
@@ -478,41 +473,6 @@ extern CC_DLL uint skyboxFlag;
 
 struct CC_DLL SHADOWMAP : public Object {
     static constexpr uint                        BINDING = static_cast<uint>(PipelineGlobalBindings::SAMPLER_SHADOWMAP);
-    static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
-    static const gfx::UniformSamplerTexture      LAYOUT;
-    static const String                          NAME;
-};
-
-struct CC_DLL SAMPLERGBUFFERALBEDOMAP : public Object {
-    static constexpr uint                        BINDING = static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_ALBEDOMAP);
-    static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
-    static const gfx::UniformSamplerTexture      LAYOUT;
-    static const String                          NAME;
-};
-
-struct CC_DLL SAMPLERGBUFFERPOSITIONMAP : public Object {
-    static constexpr uint                        BINDING = static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_POSITIONMAP);
-    static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
-    static const gfx::UniformSamplerTexture      LAYOUT;
-    static const String                          NAME;
-};
-
-struct CC_DLL SAMPLERGBUFFERNORMALMAP : public Object {
-    static constexpr uint                        BINDING = static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_NORMALMAP);
-    static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
-    static const gfx::UniformSamplerTexture      LAYOUT;
-    static const String                          NAME;
-};
-
-struct CC_DLL SAMPLERGBUFFEREMISSIVEMAP : public Object {
-    static constexpr uint                        BINDING = static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_EMISSIVEMAP);
-    static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
-    static const gfx::UniformSamplerTexture      LAYOUT;
-    static const String                          NAME;
-};
-
-struct CC_DLL SAMPLERLIGHTINGRESULTMAP : public Object {
-    static constexpr uint                        BINDING = static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP);
     static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
     static const gfx::UniformSamplerTexture      LAYOUT;
     static const String                          NAME;

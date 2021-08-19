@@ -882,6 +882,11 @@ void cmdFuncGLES3CreateTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture)
         return;
     }
 
+    if (gpuTexture->glTexture) {
+        gpuTexture->glTarget = GL_TEXTURE_EXTERNAL_OES;
+        return;
+    }
+
     if (gpuTexture->glSamples <= 1) {
         switch (gpuTexture->type) {
             case TextureType::TEX2D: {
@@ -980,14 +985,15 @@ void cmdFuncGLES3CreateTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture)
 
 void cmdFuncGLES3DestroyTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture) {
     device->framebufferCacheMap()->onTextureDestroy(gpuTexture);
-
     if (gpuTexture->glTexture) {
         for (GLuint &glTexture : device->stateCache()->glTextures) {
             if (glTexture == gpuTexture->glTexture) {
                 glTexture = 0;
             }
         }
-        GL_CHECK(glDeleteTextures(1, &gpuTexture->glTexture));
+        if (gpuTexture->glTarget != GL_TEXTURE_EXTERNAL_OES) {
+            GL_CHECK(glDeleteTextures(1, &gpuTexture->glTexture));
+        }
         gpuTexture->glTexture = 0;
 
     } else if (gpuTexture->glRenderbuffer) {
@@ -1002,7 +1008,7 @@ void cmdFuncGLES3DestroyTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture
 }
 
 void cmdFuncGLES3ResizeTexture(GLES3Device *device, GLES3GPUTexture *gpuTexture) {
-    if (gpuTexture->memoryless) return;
+    if (gpuTexture->memoryless || gpuTexture->glTarget == GL_TEXTURE_EXTERNAL_OES) return;
 
     if (gpuTexture->glSamples <= 1) {
         switch (gpuTexture->type) {

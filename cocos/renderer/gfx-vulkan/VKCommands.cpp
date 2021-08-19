@@ -388,7 +388,7 @@ void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
                 isGeneralLayout                            = desc.isGeneralLayout;
                 dsFormat                                   = desc.format;
                 sampleCount                                = std::max(sampleCount, attachment.samples);
-                attachmentIdx                              = colorAttachmentCount;
+                attachmentIdx                              = utils::toUint(colorAttachmentCount);
             } else {
                 const ColorAttachment &         desc       = gpuRenderPass->colorAttachments[subpassInfo.depthStencil];
                 const VkAttachmentDescription2 &attachment = attachmentDescriptions[subpassInfo.depthStencil];
@@ -1225,9 +1225,7 @@ void cmdFuncCCVKCopyBuffersToTexture(CCVKDevice *device, const uint8_t *const *b
     device->gpuBarrierManager()->checkIn(gpuTexture);
 }
 
-CC_VULKAN_API void cmdFuncCCVKCopyTextureToBuffers(CCVKDevice *device, CCVKGPUTexture *srcTexture, CCVKGPUBuffer *destBuffer, const BufferTextureCopy *regions, uint count, const CCVKGPUCommandBuffer *gpuCommandBuffer) {
-    (void)device; // fix clang-tidy error
-
+CC_VULKAN_API void cmdFuncCCVKCopyTextureToBuffers(CCVKDevice * /*device*/, CCVKGPUTexture *srcTexture, CCVKGPUBuffer *destBuffer, const BufferTextureCopy *regions, uint count, const CCVKGPUCommandBuffer *gpuCommandBuffer) {
     ThsvsImageBarrier barrier{};
     barrier.image                       = srcTexture->vkImage;
     barrier.discardContents             = false;

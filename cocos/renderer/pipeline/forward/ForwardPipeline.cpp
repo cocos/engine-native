@@ -116,7 +116,7 @@ bool ForwardPipeline::activate(gfx::Swapchain *swapchain) {
 
 void ForwardPipeline::render(const vector<scene::Camera *> &cameras) {
     _commandBuffers[0]->begin();
-    _pipelineUBO->updateGlobalUBO(cameras[0]->window->swapchain);
+    _pipelineUBO->updateGlobalUBO(cameras[0]);
     _pipelineUBO->updateMultiCameraUBO(cameras);
     for (auto *camera : cameras) {
         sceneCulling(this, camera);
@@ -125,7 +125,6 @@ void ForwardPipeline::render(const vector<scene::Camera *> &cameras) {
         }
         _pipelineUBO->incCameraUBOOffset();
     }
-    insertPresentBarrier(_commandBuffers[0], cameras);
     _commandBuffers[0]->end();
     _device->flushCommands(_commandBuffers);
     _device->getQueue()->submit(_commandBuffers);
@@ -161,14 +160,6 @@ bool ForwardPipeline::activeRenderer() {
 }
 
 void ForwardPipeline::destroy() {
-    if (_descriptorSet) {
-        _descriptorSet->getBuffer(UBOGlobal::BINDING)->destroy();
-        _descriptorSet->getBuffer(UBOCamera::BINDING)->destroy();
-        _descriptorSet->getBuffer(UBOShadow::BINDING)->destroy();
-        _descriptorSet->getTexture(SHADOWMAP::BINDING)->destroy();
-        _descriptorSet->getTexture(SPOTLIGHTINGMAP::BINDING)->destroy();
-    }
-
     for (auto &it : _renderPasses) {
         CC_SAFE_DESTROY(it.second);
     }
