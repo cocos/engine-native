@@ -30,7 +30,6 @@
 #endif
 
 #include <emscripten/bind.h>
-#include "WGPUUtils.h"
 #include "gfx-base/GFXDevice.h"
 
 namespace cc {
@@ -71,6 +70,7 @@ public:
     using Device::createTextureBarrier;
 
     inline CCWGPUDeviceObject *gpuDeviceObject() { return _gpuDeviceObj; }
+    inline CCWGPUContext *     gpuContextObject() { return _context; }
 
 protected:
     static CCWGPUDevice *instance;

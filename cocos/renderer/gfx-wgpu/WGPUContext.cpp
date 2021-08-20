@@ -42,15 +42,13 @@ void CCWGPUContext::present() {
 }
 
 bool CCWGPUContext::doInit(const ContextInfo& info) {
-    WGPUChainedStruct chainedStruct;
-    chainedStruct.next  = nullptr;
-    chainedStruct.sType = WGPUSType_SurfaceDescriptorFromCanvasHTMLSelector;
+    WGPUSurfaceDescriptorFromCanvasHTMLSelector canvDesc = {};
+    canvDesc.chain.sType                                 = WGPUSType_SurfaceDescriptorFromCanvasHTMLSelector;
+    canvDesc.selector                                    = "canvas";
 
-    WGPUSurfaceDescriptor surfDesc;
-    surfDesc.nextInChain = &chainedStruct;
-    surfDesc.label       = "defaultSurfaceDesc";
-
-    WGPUSurface surface = wgpuInstanceCreateSurface(nullptr, &surfDesc);
+    WGPUSurfaceDescriptor surfDesc = {};
+    surfDesc.nextInChain           = reinterpret_cast<WGPUChainedStruct*>(&canvDesc);
+    WGPUSurface surface            = wgpuInstanceCreateSurface(nullptr, &surfDesc);
 
     WGPUPresentMode presentMode;
     switch (info.vsyncMode) {
@@ -87,6 +85,7 @@ bool CCWGPUContext::doInit(const ContextInfo& info) {
     _gpuContextObj->wgpuSwapChain = swapChain;
     _gpuContextObj->wgpuSurface   = surface;
 
+    // TODO: wgpuInstance
     return true;
 }
 

@@ -9,7 +9,7 @@ include(${ENGINE_ROOT_DIR}/cmake/predefine.cmake)
 
 include (${ENGINE_ROOT_DIR}/external/CMakeLists.txt)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-nonportable-include-path -fno-exceptions")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-nonportable-include-path -fno-exceptions -v")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g3 -D_DEBUG=1 -Wno-unused -O0")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -g0 -DNDEBUG=1 -flto -O3")
 
@@ -63,16 +63,17 @@ set(NATIVE_SRC
     ${WGPU_SRC}
 )
 
-set(EXPORTS
-    ../gfx-wgpu/WGPUDevice.h
-    ../gfx-wgpu/WGPUDevice.cpp
+AUX_SOURCE_DIRECTORY(
+    ./
+    WASM_EXPORTS
 )
 
-add_executable(${APP_NAME}_wasm ${EXPORTS} ${NATIVE_SRC})
+add_executable(${APP_NAME}_wasm ${WASM_EXPORTS} ${NATIVE_SRC})
 
 target_include_directories(
 	${APP_NAME}_wasm PRIVATE "${CMAKE_CURRENT_LIST_DIR}/inc"
 	${CC_EXTERNAL_INCLUDES}
+    ${CMAKE_CURRENT_LIST_DIR}
 	${ENGINE_ROOT_DIR}
 	${ENGINE_ROOT_DIR}/cocos
     ${ENGINE_ROOT_DIR}/cocos/base
@@ -88,7 +89,7 @@ target_link_libraries(
 )
 
 set(EMS_LINK_FLAGS
-"--bind --no-entry -s MODULARIZE=1 -s EXPORT_NAME='wasmDevice' -s ENVIRONMENT=web -s WASM=1 -s USE_WEBGPU=1 -s NO_EXIT_RUNTIME=1 -s LLD_REPORT_UNDEFINED"
+"--bind --no-entry -s MODULARIZE=1 -s EXPORT_NAME='wasmDevice' -s ENVIRONMENT=web -s WASM=1 -s USE_WEBGPU=1 -s NO_EXIT_RUNTIME=1 -s LLD_REPORT_UNDEFINED -s ALLOW_MEMORY_GROWTH=1 -s ASSERTIONS=1"
 )
 
 set_target_properties(${APP_NAME}_wasm PROPERTIES LINK_FLAGS ${EMS_LINK_FLAGS})
