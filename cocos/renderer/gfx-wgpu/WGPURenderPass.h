@@ -24,42 +24,28 @@
 ****************************************************************************/
 
 #pragma once
-#include <emscripten/html5_webgpu.h>
-#include <utility>
-#include "base/Utils.h"
-#include "gfx-base/GFXDef.h"
-class WGPURenderPassDescriptor;
-class WGPUComputePassDescriptor;
+
+#include <emscripten/bind.h>
+#include "gfx-base/GFXRenderPass.h"
 
 namespace cc {
-
 namespace gfx {
 
-constexpr uint8_t CC_WGPU_MAX_ATTACHMENTS = 16;
+class CCWGPURenderPassObject;
+class CCWGPURenderPassHelper;
 
-constexpr decltype(nullptr) wgpuDefaultHandle = nullptr;
-
-class CCWGPUDeviceObject final : public Object {
+class CCWGPURenderPass final : public emscripten::wrapper<RenderPass> {
 public:
-    WGPUDevice wgpuDevice = wgpuDefaultHandle;
-    WGPUQueue  wgpuQueue  = wgpuDefaultHandle;
-};
+    CCWGPURenderPass();
+    ~CCWGPURenderPass() = default;
 
-class CCWGPUContextObject final : public Object {
-public:
-    WGPUSwapChain wgpuSwapChain = wgpuDefaultHandle;
-    WGPUSurface   wgpuSurface   = wgpuDefaultHandle;
-    WGPUInstance  wgpuInstance  = wgpuDefaultHandle;
-};
+protected:
+    void doInit(const RenderPassInfo& info) override;
+    void doDestroy() override;
 
-class CCWGPURenderPassObject final : public Object {
-public:
-    RenderPassInfo info;
-    String         label;
-
-    WGPURenderPassDescriptor* renderPassDesc;
+    CCWGPURenderPassObject* _renderPassObject = nullptr;
+    CCWGPURenderPassHelper* _rpHelper         = nullptr;
 };
 
 } // namespace gfx
-
 } // namespace cc
