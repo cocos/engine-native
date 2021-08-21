@@ -24,31 +24,25 @@
 ****************************************************************************/
 
 #pragma once
-
 #include <emscripten/bind.h>
-#include "gfx-base/GFXRenderPass.h"
+#include "gfx-base/GFXTexture.h"
 
 namespace cc {
 namespace gfx {
 
-class CCWGPURenderPassObject;
-class CCWGPURenderPassHelper;
-
-class CCWGPURenderPass final : public emscripten::wrapper<RenderPass> {
+class CCWGPUTexture final : public emscripten::wrapper<Texture> {
 public:
-    EMSCRIPTEN_WRAPPER(CCWGPURenderPass);
-    CCWGPURenderPass();
-    ~CCWGPURenderPass() = default;
+    CCWGPUTexture();
+    ~CCWGPUTexture() = default;
 
 protected:
-    void doInit(const RenderPassInfo& info) override;
+    void doInit(const TextureInfo& info) override;
+    void doInit(const TextureViewInfo& info) override;
     void doDestroy() override;
-
-    CCWGPURenderPassObject* _renderPassObject = nullptr;
-    CCWGPURenderPassHelper* _rpHelper         = nullptr;
+    void doResize(uint width, uint height, uint size) override;
 };
 
-inline CCWGPURenderPass* getThis(CCWGPURenderPass* that) {
+inline CCWGPUTexture* getThis(CCWGPUTexture* that) {
     return that;
 }
 

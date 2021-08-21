@@ -24,33 +24,21 @@
 ****************************************************************************/
 
 #pragma once
-
 #include <emscripten/bind.h>
-#include "gfx-base/GFXRenderPass.h"
+#include "gfx-base/GFXFramebuffer.h"
 
 namespace cc {
 namespace gfx {
 
-class CCWGPURenderPassObject;
-class CCWGPURenderPassHelper;
-
-class CCWGPURenderPass final : public emscripten::wrapper<RenderPass> {
+class CCWGPUFramebuffer final : public emscripten::wrapper<Framebuffer> {
 public:
-    EMSCRIPTEN_WRAPPER(CCWGPURenderPass);
-    CCWGPURenderPass();
-    ~CCWGPURenderPass() = default;
+    CCWGPUFramebuffer();
+    ~CCWGPUFramebuffer() = default;
 
 protected:
-    void doInit(const RenderPassInfo& info) override;
+    void doInit(const FramebufferInfo &info) override;
     void doDestroy() override;
-
-    CCWGPURenderPassObject* _renderPassObject = nullptr;
-    CCWGPURenderPassHelper* _rpHelper         = nullptr;
 };
-
-inline CCWGPURenderPass* getThis(CCWGPURenderPass* that) {
-    return that;
-}
 
 } // namespace gfx
 } // namespace cc
