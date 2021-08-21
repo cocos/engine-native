@@ -26,6 +26,7 @@
 #include "WGPUDevice.h"
 #include <emscripten/val.h>
 #include "WGPUContext.h"
+#include "WGPUDevice.h"
 #include "WGPUExports.h"
 #include "WGPUObject.h"
 #include "WGPURenderPass.h"
@@ -87,7 +88,7 @@ Buffer* CCWGPUDevice::createBuffer() {
 }
 
 Texture* CCWGPUDevice::createTexture() {
-    return nullptr;
+    return CC_NEW(CCWGPUTexture);
 }
 
 Sampler* CCWGPUDevice::createSampler() {

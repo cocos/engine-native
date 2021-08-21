@@ -1,6 +1,8 @@
 #pragma once
 #include "WGPUDevice.h"
+#include "WGPUFrameBuffer.h"
 #include "WGPURenderPass.h"
+#include "WGPUTexture.h"
 namespace cc {
 namespace gfx {
 DeviceInfo DeviceInfoInstance() {
@@ -30,6 +32,49 @@ SubpassDependency SubpassDependencyInstance() {
 RenderPassInfo RenderPassInfoInstance() {
     return RenderPassInfo();
 }
+
+TextureInfo TextureInfoInstance() {
+    return TextureInfo();
+}
+
+// struct with pointers
+class TextureViewInfoInstance {
+public:
+    TextureViewInfoInstance() = default;
+
+    inline void setTexture(Texture* tex) { info.texture = tex; }
+    inline void setType(TextureType type) { info.type = type; }
+    inline void setFormat(Format format) { info.format = format; }
+    inline void setBaseLevel(uint baseLevel) { info.baseLevel = baseLevel; }
+    inline void setLevelCount(uint levelCount) { info.levelCount = levelCount; }
+    inline void setBaseLayer(uint baseLayer) { info.baseLayer = baseLayer; }
+    inline void setLayerCount(uint layerCount) { info.layerCount = layerCount; }
+
+    operator TextureViewInfo() { return info; }
+
+private:
+    TextureViewInfo info;
+};
+
+// value_object<FramebufferInfo>("FramebufferInfo")
+//     .field("renderPass", &FramebufferInfo::renderPass)
+//     .field("colorTextures", &FramebufferInfo::colorTextures)
+//     .field("depthStencilTexture", &FramebufferInfo::depthStencilTexture);
+// function("FramebufferInfoInstance", &cc::gfx::FramebufferInfoInstance, allow_raw_pointers());
+
+class FramebufferInfoInstance {
+public:
+    FramebufferInfoInstance() = default;
+
+    inline void setRenderPass(RenderPass* renderPass) { info.renderPass = renderPass; }
+    inline void setColorTextures(TextureList colors) { info.colorTextures = colors; }
+    inline void setDepthStencilTexture(Texture* tex) { info.depthStencilTexture = tex; }
+
+    operator FramebufferInfo() { return info; }
+
+private:
+    FramebufferInfo info;
+};
 
 EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     // TODO_Zeqiang: compile time traverse enum
@@ -79,6 +124,30 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .value("AVERAGE", ResolveMode::AVERAGE)
         .value("MIN", ResolveMode::MIN)
         .value("MAX", ResolveMode::MAX);
+
+    enum_<TextureType>("TextureType")
+        .value("TEX1D", TextureType::TEX1D)
+        .value("TEX2D", TextureType::TEX2D)
+        .value("TEX3D", TextureType::TEX3D)
+        .value("CUBE", TextureType::CUBE)
+        .value("TEX1D_ARRAY", TextureType::TEX1D_ARRAY)
+        .value("TEX2D_ARRAY", TextureType::TEX2D_ARRAY);
+
+    enum_<TextureUsage>("TextureUsage")
+        .value("NONE", TextureUsageBit::NONE)
+        .value("TRANSFER_SRC", TextureUsageBit::TRANSFER_SRC)
+        .value("TRANSFER_DST", TextureUsageBit::TRANSFER_DST)
+        .value("SAMPLED", TextureUsageBit::SAMPLED)
+        .value("STORAGE", TextureUsageBit::STORAGE)
+        .value("COLOR_ATTACHMENT", TextureUsageBit::COLOR_ATTACHMENT)
+        .value("DEPTH_STENCIL_ATTACHMENT", TextureUsageBit::DEPTH_STENCIL_ATTACHMENT)
+        .value("INPUT_ATTACHMENT", TextureUsageBit::INPUT_ATTACHMENT);
+
+    enum_<TextureFlags>("TextureFlags")
+        .value("NONE", TextureFlagBit::NONE)
+        .value("GEN_MIPMAP", TextureFlagBit::GEN_MIPMAP)
+        .value("IMMUTABLE", TextureFlagBit::IMMUTABLE)
+        .value("GENERAL_LAYOUT", TextureFlagBit::GENERAL_LAYOUT);
 
     //-----------------------------------------------STRUCT-------------------------------------------------------------------
     value_object<ColorAttachment>("ColorAttachment")
@@ -143,13 +212,55 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .field("bindingMappingInfo", &DeviceInfo::bindingMappingInfo);
     function("DeviceInfoInstance", &cc::gfx::DeviceInfoInstance);
 
-    //--------------------------------------------------CONTAINER-----------------------------------------------------------------------
-    register_vector<int>("vector_int");
-    register_vector<uint>("vector_uint");
-    register_vector<AccessType>("AccessTypeList");
-    register_vector<SubpassInfo>("SubpassInfoList");
-    register_vector<ColorAttachment>("ColorAttachmentList");
-    register_vector<SubpassDependency>("SubpassDependencyList");
+    value_object<TextureInfo>("TextureInfo")
+        .field("type", &TextureInfo::type)
+        .field("usage", &TextureInfo::usage)
+        .field("format", &TextureInfo::format)
+        .field("width", &TextureInfo::width)
+        .field("height", &TextureInfo::height)
+        .field("flags", &TextureInfo::flags)
+        .field("layerCount", &TextureInfo::layerCount)
+        .field("levelCount", &TextureInfo::levelCount)
+        .field("samples", &TextureInfo::samples)
+        .field("depth", &TextureInfo::depth);
+    function("TextureInfoInstance", &cc::gfx::TextureInfoInstance);
+
+    // struct with pointers
+    class_<TextureViewInfoInstance>("TextureViewInfoInstance")
+        .constructor<>()
+        .function("setTexture", &TextureViewInfoInstance::setTexture, allow_raw_pointer<arg<0>>())
+        .function("setType", &TextureViewInfoInstance::setType)
+        .function("setFormat", &TextureViewInfoInstance::setFormat)
+        .function("setBaseLevel", &TextureViewInfoInstance::setBaseLevel)
+        .function("setLevelCount", &TextureViewInfoInstance::setLevelCount)
+        .function("setBaseLayer", &TextureViewInfoInstance::setBaseLayer)
+        .function("setLayerCount", &TextureViewInfoInstance::setLayerCount);
+
+    class_<FramebufferInfoInstance>("FramebufferInfoInstance")
+        .constructor<>()
+        .function("setRenderPass", &FramebufferInfoInstance::setRenderPass, allow_raw_pointer<arg<0>>())
+        .function("setColorTextures", &FramebufferInfoInstance::setDepthStencilTexture, allow_raw_pointer<arg<0>>())
+        .function("setDepthStencilTextures", &FramebufferInfoInstance::setDepthStencilTexture, allow_raw_pointer<arg<0>>());
+
+    // value_object<TextureViewInfo>("TextureViewInfo")
+    //     //.field("texture", &TextureViewInfo::texture)
+    //     .field("type", &TextureViewInfo::type)
+    //     .field("format", &TextureViewInfo::format)
+    //     .field("baseLevel", &TextureViewInfo::baseLevel)
+    //     .field("levelCount", &TextureViewInfo::levelCount)
+    //     .field("baseLayer", &TextureViewInfo::baseLayer)
+    //     .field("layerCount", &TextureViewInfo::layerCount);
+    //function("TextureViewInfoInstance", &cc::gfx::TextureViewInfoInstance, allow_raw_pointers());
+
+    // struct TextureViewInfo {
+    //     Texture *   texture    = nullptr;
+    //     TextureType type       = TextureType::TEX2D;
+    //     Format      format     = Format::UNKNOWN;
+    //     uint        baseLevel  = 0U;
+    //     uint        levelCount = 1U;
+    //     uint        baseLayer  = 0U;
+    //     uint        layerCount = 1U;
+    // };
 
     //--------------------------------------------------CLASS---------------------------------------------------------------------------
     class_<Device>("Device")
@@ -198,7 +309,8 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .class_function("getInstance", &CCWGPUDevice::getInstance, allow_raw_pointers());
 
     class_<cc::gfx::RenderPass>("RenderPass")
-        .function("initialize", &cc::gfx::RenderPass::initialize)
+        .class_function("computeHash", select_overload<uint(const RenderPassInfo&)>(&RenderPass::computeHash), allow_raw_pointer<arg<0>>())
+        .function("initialize", &cc::gfx::RenderPass::initialize, allow_raw_pointer<arg<0>>())
         .function("destroy", &cc::gfx::RenderPass::destroy)
         .function("getColorAttachments", &cc::gfx::RenderPass::getColorAttachments)
         .function("DepthStencilAttachment", &cc::gfx::RenderPass::getDepthStencilAttachment)
@@ -206,7 +318,37 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("SubpassDependencyList", &cc::gfx::RenderPass::getDependencies)
         .function("getHash", &cc::gfx::RenderPass::getHash);
     class_<CCWGPURenderPass, base<RenderPass>>("CCWGPURenderPass")
+        .constructor<>()
+        .function("getThis", select_overload<CCWGPURenderPass*(CCWGPURenderPass*)>(&cc::gfx::getThis), allow_raw_pointer<arg<0>>());
+
+    class_<cc::gfx::Texture>("Texture")
+        .class_function("computeHash", select_overload<uint(const TextureInfo&)>(&Texture::computeHash), allow_raw_pointer<arg<0>>())
+        .function("initialize", select_overload<void(const TextureInfo&)>(&cc::gfx::Texture::initialize), allow_raw_pointer<arg<0>>())
+        .function("initialize", select_overload<void(const TextureViewInfo&)>(&cc::gfx::Texture::initialize), allow_raw_pointer<arg<0>>())
+        .function("destroy", &cc::gfx::Texture::destroy)
+        .function("resize", &cc::gfx::Texture::resize);
+    class_<CCWGPUTexture, base<cc::gfx::Texture>>("CCWGPUTexture")
+        .constructor<>()
+        .function("getThis", select_overload<CCWGPUTexture*(CCWGPUTexture*)>(&cc::gfx::getThis), allow_raw_pointer<arg<0>>());
+
+    class_<cc::gfx::Framebuffer>("Framebuffer")
+        .class_function("computeHash", select_overload<uint(const FramebufferInfo&)>(&Framebuffer::computeHash), allow_raw_pointer<arg<0>>())
+        .function("initialize", &cc::gfx::Framebuffer::initialize, allow_raw_pointer<arg<0>>())
+        .function("destroy", &cc::gfx::Framebuffer::destroy)
+        .function("getRenderPass", &cc::gfx::Framebuffer::getRenderPass, allow_raw_pointer<arg<0>>())
+        .function("getColorTextures", &cc::gfx::Framebuffer::getColorTextures, allow_raw_pointer<arg<0>>())
+        .function("getDepthStencilTexture", &cc::gfx::Framebuffer::getDepthStencilTexture, allow_raw_pointer<arg<0>>());
+    class_<CCWGPUFramebuffer, base<Framebuffer>>("CCWGPUFramebuffer")
         .constructor<>();
+
+    //--------------------------------------------------CONTAINER-----------------------------------------------------------------------
+    register_vector<int>("vector_int");
+    register_vector<uint>("vector_uint");
+    register_vector<AccessType>("AccessTypeList");
+    register_vector<SubpassInfo>("SubpassInfoList");
+    register_vector<ColorAttachment>("ColorAttachmentList");
+    register_vector<SubpassDependency>("SubpassDependencyList");
+    register_vector<Texture*>("TextureList");
 };
 
 } // namespace gfx

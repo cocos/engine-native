@@ -23,33 +23,19 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#pragma once
+#include "WGPUFrameBuffer.h"
 
-#include <emscripten/bind.h>
-#include "gfx-base/GFXRenderPass.h"
-
+using namespace emscripten;
 namespace cc {
 namespace gfx {
 
-class CCWGPURenderPassObject;
-class CCWGPURenderPassHelper;
+CCWGPUFramebuffer::CCWGPUFramebuffer() : wrapper<Framebuffer>(val::object()) {
+}
 
-class CCWGPURenderPass final : public emscripten::wrapper<RenderPass> {
-public:
-    EMSCRIPTEN_WRAPPER(CCWGPURenderPass);
-    CCWGPURenderPass();
-    ~CCWGPURenderPass() = default;
+void CCWGPUFramebuffer::doInit(const FramebufferInfo &info) {
+}
 
-protected:
-    void doInit(const RenderPassInfo& info) override;
-    void doDestroy() override;
-
-    CCWGPURenderPassObject* _renderPassObject = nullptr;
-    CCWGPURenderPassHelper* _rpHelper         = nullptr;
-};
-
-inline CCWGPURenderPass* getThis(CCWGPURenderPass* that) {
-    return that;
+void CCWGPUFramebuffer::doDestroy() {
 }
 
 } // namespace gfx

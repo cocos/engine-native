@@ -23,33 +23,30 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#pragma once
-
-#include <emscripten/bind.h>
-#include "gfx-base/GFXRenderPass.h"
+#include "WGPUTexture.h"
+#include <webgpu/webgpu.h>
+#include "WGPUDevice.h"
+#include "WGPUObject.h"
+#include "WGPUUtils.h"
 
 namespace cc {
 namespace gfx {
 
-class CCWGPURenderPassObject;
-class CCWGPURenderPassHelper;
+using namespace emscripten;
 
-class CCWGPURenderPass final : public emscripten::wrapper<RenderPass> {
-public:
-    EMSCRIPTEN_WRAPPER(CCWGPURenderPass);
-    CCWGPURenderPass();
-    ~CCWGPURenderPass() = default;
+CCWGPUTexture::CCWGPUTexture() : wrapper<Texture>(val::object()) {
+}
 
-protected:
-    void doInit(const RenderPassInfo& info) override;
-    void doDestroy() override;
+void CCWGPUTexture::doInit(const TextureInfo &info) {
+}
 
-    CCWGPURenderPassObject* _renderPassObject = nullptr;
-    CCWGPURenderPassHelper* _rpHelper         = nullptr;
-};
+void CCWGPUTexture::doInit(const TextureViewInfo &info) {
+}
 
-inline CCWGPURenderPass* getThis(CCWGPURenderPass* that) {
-    return that;
+void CCWGPUTexture::doDestroy() {
+}
+
+void CCWGPUTexture::doResize(uint width, uint height, uint size) {
 }
 
 } // namespace gfx
