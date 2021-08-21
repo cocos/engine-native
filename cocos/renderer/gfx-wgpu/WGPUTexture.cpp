@@ -38,6 +38,10 @@ CCWGPUTexture::CCWGPUTexture() : wrapper<Texture>(val::object()) {
 }
 
 void CCWGPUTexture::doInit(const TextureInfo &info) {
+    WGPUTextureDescriptor desc;
+    desc.usage     = toWGPUTextureUsage(info.usage);
+    desc.dimension = toWGPUTextureDimension(info.type);
+    desc.size      = {info.width, info.height, info.depth};
 }
 
 void CCWGPUTexture::doInit(const TextureViewInfo &info) {
