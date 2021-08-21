@@ -42,7 +42,7 @@ class CC_DLL PipelineUBO : public Object {
 public:
     static void    quantizeDirLightShadowCamera(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> *bufferView, const scene::Camera *camera);
     static void    updateGlobalUBOView(const RenderPipeline *pipeline, std::array<float, UBOGlobal::COUNT> *bufferView);
-    static void    updateCameraUBOView(const RenderPipeline *pipeline, std::array<float, UBOCamera::COUNT> *bufferView, const scene::Camera *camera);
+    static void    updateCameraUBOView(const RenderPipeline *pipeline, float *output, const scene::Camera *camera);
     static void    updateShadowUBOView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> *bufferView, const scene::Camera *camera);
     static void    updateShadowUBOLightView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> *bufferView, const scene::Light *light, const scene::Camera *camera);
     static uint8_t getCombineSignY();
@@ -53,7 +53,7 @@ public:
     void destroy();
     void updateGlobalUBO();
     void updateCameraUBO(const scene::Camera *camera);
-    void updateMultiCameraUBO(const vector<scene::Camera*> &cameras);
+    void updateMultiCameraUBO(const vector<scene::Camera *> &cameras);
     void updateShadowUBO(const scene::Camera *camera);
     void updateShadowUBOLight(const scene::Light *light, const scene::Camera *camera);
     void updateShadowUBORange(uint offset, const Mat4 *data);
@@ -66,12 +66,12 @@ private:
     gfx::Device *   _device   = nullptr;
 
     std::array<float, UBOGlobal::COUNT> _globalUBO;
-    std::array<float, UBOCamera::COUNT> _cameraUBO;
     std::array<float, UBOShadow::COUNT> _shadowUBO;
 
     std::vector<gfx::Buffer *> _ubos;
     void                       initCombineSignY();
-    std::vector<std::byte>     _cameraUBOs;
+    std::vector<float>         _cameraUBOs;
+    gfx::Buffer *              _cameraBuffer{nullptr};
     uint                       _currentCameraUBOOffset{0};
     uint                       _alignedCameraUBOSize{0};
 };

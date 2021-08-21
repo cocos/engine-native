@@ -44,47 +44,7 @@ namespace pipeline {
     (dst)[(offset) + 2] = (src).z; \
     (dst)[(offset) + 3] = (src).w;
 
-void PipelineUBO::quantizeDirLightShadowCamera(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> *bufferView, const scene::Camera *camera) {
-    const auto *const                    scene                = camera->scene;
-    const scene::DirectionalLight *      mainLight            = scene->getMainLight();
-    PipelineSceneData *const             sceneData            = pipeline->getPipelineSceneData();
-    scene::Shadow *const                 shadowInfo           = sceneData->getSharedData()->shadow;
-    std::array<float, UBOShadow::COUNT> &shadowUBO            = *bufferView;
-    const float                          shadowMapWidth       = shadowInfo->size.x;
-    const scene::Sphere *                cameraBoundingSphere = sceneData->getCameraBoundingSphere();
-    const float                          radius               = cameraBoundingSphere->getRadius();
-    const Vec3 &                         position             = cameraBoundingSphere->getCenter();
-    const Quaternion &                   rotation             = mainLight->getNode()->getWorldRotation();
-    const float                          range                = shadowInfo->range;
-
-    Mat4 matWorldTrans;
-    Mat4::fromRT(rotation, Vec3::ZERO, &matWorldTrans);
-
-    Mat4 matShadowProj;
-    Mat4::createOrthographic(-radius, radius, -radius, radius, -range, radius, &matShadowProj);
-
-    // snap to whole texels
-    Mat4 matWorldTransInv;
-    Mat4 matShadowViewProj;
-    if (shadowMapWidth > 0.0) {
-        matWorldTransInv          = matWorldTrans.getInversed();
-        matShadowViewProj         = matShadowProj * matWorldTransInv;
-        const Vec3  projPos       = matShadowViewProj * position;
-        const float invActualSize = 2.0F / shadowMapWidth;
-        const Vec2  texelSize(invActualSize, invActualSize);
-        const float modX = std::fmodf(projPos.x, texelSize.x);
-        const float modY = std::fmodf(projPos.y, texelSize.y);
-        const Vec3  projSnap(projPos.x - modX, projPos.y - modY, projPos.z);
-        const Mat4  matShadowViewProjInv = matShadowViewProj.getInversed();
-        const Vec3  snap                 = matShadowViewProjInv * projSnap;
-        Mat4::fromRT(rotation, snap, &matWorldTrans);
-    }
-    memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_OFFSET, matWorldTrans.m, sizeof(matWorldTrans));
-
-    matWorldTransInv = matWorldTrans.getInversed();
-    matShadowViewProj = matShadowProj * matWorldTransInv;
-    memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
-}
+Mat4 matShadowViewProj;
 
 void PipelineUBO::updateGlobalUBOView(const RenderPipeline * /*pipeline*/, std::array<float, UBOGlobal::COUNT> *bufferView) {
     auto *const root          = scene::Root::instance;
@@ -110,8 +70,7 @@ void PipelineUBO::updateGlobalUBOView(const RenderPipeline * /*pipeline*/, std::
     uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET + 3] = 1.0F / uboGlobalView[UBOGlobal::NATIVE_SIZE_OFFSET + 1];
 }
 
-void PipelineUBO::updateCameraUBOView(const RenderPipeline *pipeline, std::array<float, UBOCamera::COUNT> *bufferView,
-                                      const scene::Camera *camera) {
+void PipelineUBO::updateCameraUBOView(const RenderPipeline *pipeline, float *output, const scene::Camera *camera) {
     const auto *const              scene         = camera->scene;
     const scene::DirectionalLight *mainLight     = scene->getMainLight();
     auto *                         sceneData     = pipeline->getPipelineSceneData();
@@ -123,41 +82,40 @@ void PipelineUBO::updateCameraUBOView(const RenderPipeline *pipeline, std::array
     const auto                     isHDR         = sharedData->isHDR;
     const auto                     shadingScale  = sharedData->shadingScale;
 
-    auto *device        = gfx::Device::getInstance();
-    auto &uboCameraView = *bufferView;
+    auto *device = gfx::Device::getInstance();
 
-    const auto shadingWidth  = std::floorf(static_cast<float>(device->getWidth()));
-    const auto shadingHeight = std::floorf(static_cast<float>(device->getHeight()));
+    const auto shadingWidth  = std::floor(device->getWidth());
+    const auto shadingHeight = std::floor(device->getHeight());
 
-    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 0] = static_cast<float>(camera->width) / shadingWidth * shadingScale;
-    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 1] = static_cast<float>(camera->height) / shadingHeight * shadingScale;
-    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 2] = 1.0F / uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET];
-    uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 3] = 1.0F / uboCameraView[UBOCamera::SCREEN_SCALE_OFFSET + 1];
+    output[UBOCamera::SCREEN_SCALE_OFFSET + 0] = static_cast<float>(camera->width / shadingWidth * shadingScale);
+    output[UBOCamera::SCREEN_SCALE_OFFSET + 1] = static_cast<float>(camera->height / shadingHeight * shadingScale);
+    output[UBOCamera::SCREEN_SCALE_OFFSET + 2] = 1.0F / output[UBOCamera::SCREEN_SCALE_OFFSET];
+    output[UBOCamera::SCREEN_SCALE_OFFSET + 3] = 1.0F / output[UBOCamera::SCREEN_SCALE_OFFSET + 1];
 
-    const auto exposure                           = camera->exposure;
-    uboCameraView[UBOCamera::EXPOSURE_OFFSET + 0] = exposure;
-    uboCameraView[UBOCamera::EXPOSURE_OFFSET + 1] = 1.0F / exposure;
-    uboCameraView[UBOCamera::EXPOSURE_OFFSET + 2] = isHDR ? 1.0F : 0.0F;
-    uboCameraView[UBOCamera::EXPOSURE_OFFSET + 3] = fpScale / exposure;
+    const auto exposure                    = camera->exposure;
+    output[UBOCamera::EXPOSURE_OFFSET + 0] = exposure;
+    output[UBOCamera::EXPOSURE_OFFSET + 1] = 1.0F / exposure;
+    output[UBOCamera::EXPOSURE_OFFSET + 2] = isHDR ? 1.0F : 0.0F;
+    output[UBOCamera::EXPOSURE_OFFSET + 3] = fpScale / exposure;
 
     if (mainLight) {
-        TO_VEC3(uboCameraView, mainLight->getDirection(), UBOCamera::MAIN_LIT_DIR_OFFSET)
-        TO_VEC3(uboCameraView, mainLight->getColor(), UBOCamera::MAIN_LIT_COLOR_OFFSET)
+        TO_VEC3(output, mainLight->getDirection(), UBOCamera::MAIN_LIT_DIR_OFFSET);
+        TO_VEC3(output, mainLight->getColor(), UBOCamera::MAIN_LIT_COLOR_OFFSET);
         if (mainLight->getUseColorTemperature()) {
             const auto &colorTempRGB = mainLight->getColorTemperatureRGB();
-            uboCameraView[UBOCamera::MAIN_LIT_COLOR_OFFSET + 0] *= colorTempRGB.x;
-            uboCameraView[UBOCamera::MAIN_LIT_COLOR_OFFSET + 1] *= colorTempRGB.y;
-            uboCameraView[UBOCamera::MAIN_LIT_COLOR_OFFSET + 2] *= colorTempRGB.z;
+            output[UBOCamera::MAIN_LIT_COLOR_OFFSET + 0] *= colorTempRGB.x;
+            output[UBOCamera::MAIN_LIT_COLOR_OFFSET + 1] *= colorTempRGB.y;
+            output[UBOCamera::MAIN_LIT_COLOR_OFFSET + 2] *= colorTempRGB.z;
         }
 
         if (isHDR) {
-            uboCameraView[UBOCamera::MAIN_LIT_COLOR_OFFSET + 3] = mainLight->getIlluminance() * fpScale;
+            output[UBOCamera::MAIN_LIT_COLOR_OFFSET + 3] = mainLight->getIlluminance() * fpScale;
         } else {
-            uboCameraView[UBOCamera::MAIN_LIT_COLOR_OFFSET + 3] = mainLight->getIlluminance() * exposure;
+            output[UBOCamera::MAIN_LIT_COLOR_OFFSET + 3] = mainLight->getIlluminance() * exposure;
         }
     } else {
-        TO_VEC3(uboCameraView, Vec3::UNIT_Z, UBOCamera::MAIN_LIT_DIR_OFFSET)
-        TO_VEC4(uboCameraView, Vec4::ZERO, UBOCamera::MAIN_LIT_COLOR_OFFSET)
+        TO_VEC3(output, Vec3::UNIT_Z, UBOCamera::MAIN_LIT_DIR_OFFSET);
+        TO_VEC4(output, Vec4::ZERO, UBOCamera::MAIN_LIT_COLOR_OFFSET);
     }
 
     Vec4 skyColor = ambient->skyColor;
@@ -166,89 +124,104 @@ void PipelineUBO::updateCameraUBOView(const RenderPipeline *pipeline, std::array
     } else {
         skyColor.w = ambient->skyIllum * exposure;
     }
-    TO_VEC4(uboCameraView, skyColor, UBOCamera::AMBIENT_SKY_OFFSET)
+    TO_VEC4(output, skyColor, UBOCamera::AMBIENT_SKY_OFFSET);
 
-    uboCameraView[UBOCamera::AMBIENT_GROUND_OFFSET + 0] = ambient->groundAlbedo.x;
-    uboCameraView[UBOCamera::AMBIENT_GROUND_OFFSET + 1] = ambient->groundAlbedo.y;
-    uboCameraView[UBOCamera::AMBIENT_GROUND_OFFSET + 2] = ambient->groundAlbedo.z;
-    auto *const envmap                                  = descriptorSet->getTexture(static_cast<uint>(PipelineGlobalBindings::SAMPLER_ENVIRONMENT));
+    output[UBOCamera::AMBIENT_GROUND_OFFSET + 0] = ambient->groundAlbedo.x;
+    output[UBOCamera::AMBIENT_GROUND_OFFSET + 1] = ambient->groundAlbedo.y;
+    output[UBOCamera::AMBIENT_GROUND_OFFSET + 2] = ambient->groundAlbedo.z;
+    auto *const envmap                           = descriptorSet->getTexture(static_cast<uint>(PipelineGlobalBindings::SAMPLER_ENVIRONMENT));
     if (envmap) {
-        uboCameraView[UBOCamera::AMBIENT_GROUND_OFFSET + 3] = static_cast<float>(envmap->getLevelCount());
+        output[UBOCamera::AMBIENT_GROUND_OFFSET + 3] = static_cast<float>(envmap->getLevelCount());
     }
 
-    memcpy(uboCameraView.data() + UBOCamera::MAT_VIEW_OFFSET, camera->matView.m, sizeof(cc::Mat4));
-    memcpy(uboCameraView.data() + UBOCamera::MAT_VIEW_INV_OFFSET, camera->node->getWorldMatrix().m, sizeof(cc::Mat4));
-    TO_VEC3(uboCameraView, camera->position, UBOCamera::CAMERA_POS_OFFSET)
+    memcpy(output + UBOCamera::MAT_VIEW_OFFSET, camera->matView.m, sizeof(cc::Mat4));
+    memcpy(output + UBOCamera::MAT_VIEW_INV_OFFSET, camera->node->getWorldMatrix().m, sizeof(cc::Mat4));
+    TO_VEC3(output, camera->position, UBOCamera::CAMERA_POS_OFFSET);
 
-    memcpy(uboCameraView.data() + UBOCamera::MAT_PROJ_OFFSET, camera->matProj.m, sizeof(cc::Mat4));
-    memcpy(uboCameraView.data() + UBOCamera::MAT_PROJ_INV_OFFSET, camera->matProjInv.m, sizeof(cc::Mat4));
-    memcpy(uboCameraView.data() + UBOCamera::MAT_VIEW_PROJ_OFFSET, camera->matViewProj.m, sizeof(cc::Mat4));
-    memcpy(uboCameraView.data() + UBOCamera::MAT_VIEW_PROJ_INV_OFFSET, camera->matViewProjInv.m, sizeof(cc::Mat4));
-    uboCameraView[UBOCamera::CAMERA_POS_OFFSET + 3] = getCombineSignY();
+    memcpy(output + UBOCamera::MAT_PROJ_OFFSET, camera->matProj.m, sizeof(cc::Mat4));
+    memcpy(output + UBOCamera::MAT_PROJ_INV_OFFSET, camera->matProjInv.m, sizeof(cc::Mat4));
+    memcpy(output + UBOCamera::MAT_VIEW_PROJ_OFFSET, camera->matViewProj.m, sizeof(cc::Mat4));
+    memcpy(output + UBOCamera::MAT_VIEW_PROJ_INV_OFFSET, camera->matViewProjInv.m, sizeof(cc::Mat4));
+    output[UBOCamera::CAMERA_POS_OFFSET + 3] = getCombineSignY();
 
     if (fog->enabled) {
-        TO_VEC4(uboCameraView, fog->color, UBOCamera::GLOBAL_FOG_COLOR_OFFSET)
+        TO_VEC4(output, fog->color, UBOCamera::GLOBAL_FOG_COLOR_OFFSET);
 
-        uboCameraView[UBOCamera::GLOBAL_FOG_BASE_OFFSET + 0] = fog->start;
-        uboCameraView[UBOCamera::GLOBAL_FOG_BASE_OFFSET + 1] = fog->end;
-        uboCameraView[UBOCamera::GLOBAL_FOG_BASE_OFFSET + 2] = fog->density;
+        output[UBOCamera::GLOBAL_FOG_BASE_OFFSET + 0] = fog->start;
+        output[UBOCamera::GLOBAL_FOG_BASE_OFFSET + 1] = fog->end;
+        output[UBOCamera::GLOBAL_FOG_BASE_OFFSET + 2] = fog->density;
 
-        uboCameraView[UBOCamera::GLOBAL_FOG_ADD_OFFSET + 0] = fog->top;
-        uboCameraView[UBOCamera::GLOBAL_FOG_ADD_OFFSET + 1] = fog->range;
-        uboCameraView[UBOCamera::GLOBAL_FOG_ADD_OFFSET + 2] = fog->atten;
+        output[UBOCamera::GLOBAL_FOG_ADD_OFFSET + 0] = fog->top;
+        output[UBOCamera::GLOBAL_FOG_ADD_OFFSET + 1] = fog->range;
+        output[UBOCamera::GLOBAL_FOG_ADD_OFFSET + 2] = fog->atten;
     }
 }
 
 void PipelineUBO::updateShadowUBOView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> *bufferView, const scene::Camera *camera) {
-    const auto *const              scene      = camera->scene;
-    const scene::DirectionalLight *mainLight  = scene->getMainLight();
-    auto *                         device     = gfx::Device::getInstance();
-    auto *const                    sceneData  = pipeline->getPipelineSceneData();
-    auto *const                    shadowInfo = sceneData->getSharedData()->shadow;
-    auto &                         shadowUBO  = *bufferView;
-    const bool                     hFTexture  = supportsHalfFloatTexture(device);
+    const auto *const              scene     = camera->scene;
+    const scene::DirectionalLight *mainLight = scene->getMainLight();
+
+    auto *      device     = gfx::Device::getInstance();
+    auto *const sceneData  = pipeline->getPipelineSceneData();
+    auto *const shadowInfo = sceneData->getSharedData()->shadow;
+    auto &      shadowUBO  = *bufferView;
+    auto *      sphere     = sceneData->getSphere();
+    const bool  hFTexture  = supportsHalfFloatTexture(device);
 
     if (shadowInfo->enabled) {
         if (mainLight && shadowInfo->shadowType == scene::ShadowType::SHADOWMAP) {
+            auto *const node = mainLight->getNode();
+            cc::Mat4    matShadowCamera;
+
             // light proj
-            float nearClamp;
+            float x;
+            float y;
             float farClamp;
-            if (!shadowInfo->fixedArea) {
-                const scene::Sphere *cameraBoundingSphere = sceneData->getCameraBoundingSphere();
-                const float          radius               = cameraBoundingSphere->getRadius();
-                const float          range                = shadowInfo->range;
-                nearClamp                                 = -range;
-                farClamp                                  = radius;
+            if (shadowInfo->autoAdapt) {
+                Vec3 tmpCenter;
+                getShadowWorldMatrix(sphere, node->getWorldRotation(), mainLight->getDirection(), &matShadowCamera, &tmpCenter);
 
-                quantizeDirLightShadowCamera(pipeline, bufferView, camera);
+                const float radius = sphere->getRadius();
+                x                  = radius;
+                y                  = radius;
+
+                const float halfFar = tmpCenter.distance(sphere->getCenter());
+                farClamp            = std::min(halfFar * COEFFICIENT_OF_EXPANSION, SHADOW_CAMERA_MAX_FAR);
             } else {
-                const Mat4 matWorldTrans = mainLight->getNode()->getWorldMatrix();
-                memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_OFFSET, matWorldTrans.m, sizeof(matWorldTrans));
+                matShadowCamera = mainLight->getNode()->getWorldMatrix();
 
-                const float x = shadowInfo->orthoSize;
-                const float y = shadowInfo->orthoSize;
-                nearClamp     = shadowInfo->nearValue;
-                farClamp      = shadowInfo->farValue;
+                x = shadowInfo->orthoSize;
+                y = shadowInfo->orthoSize;
 
-                Mat4        matShadowProj;
-                const float projectionSinY = device->getCapabilities().clipSpaceSignY;
-                Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, farClamp, device->getCapabilities().clipSpaceMinZ, projectionSinY, &matShadowProj);
-
-                const Mat4 matWorldTransInv  = matWorldTrans.getInversed();
-                const Mat4 matShadowViewProj = matShadowProj * matWorldTransInv;
-                memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
+                farClamp = shadowInfo->farValue;
             }
+            const auto matShadowView = matShadowCamera.getInversed();
+
+            const auto projectionSinY = device->getCapabilities().clipSpaceSignY;
+            Mat4 matShadowProj;
+            Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, farClamp, device->getCapabilities().clipSpaceMinZ, projectionSinY, &matShadowProj);
+            matShadowViewProj = matShadowProj;
+            matShadowViewProj.multiply(matShadowView);
+
+            memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_OFFSET, matShadowView.m, sizeof(matShadowView));
+            memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
 
             const float linear             = hFTexture ? 1.0F : 0.0F;
-            const float shadowNFLSInfos[4] = {nearClamp, farClamp, linear, 1.0F - shadowInfo->saturation};
+            float       shadowNFLSInfos[4] = {shadowInfo->nearValue, farClamp, linear, 1.0F - shadowInfo->saturation};
             memcpy(shadowUBO.data() + UBOShadow::SHADOW_NEAR_FAR_LINEAR_SATURATION_INFO_OFFSET, &shadowNFLSInfos, sizeof(shadowNFLSInfos));
 
-            const float shadowWHPBInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, static_cast<float>(shadowInfo->pcfType), shadowInfo->bias};
+            float shadowWHPBInfos[4] = {shadowInfo->size.x, shadowInfo->size.y, static_cast<float>(shadowInfo->pcfType), shadowInfo->bias};
             memcpy(shadowUBO.data() + UBOShadow::SHADOW_WIDTH_HEIGHT_PCF_BIAS_INFO_OFFSET, &shadowWHPBInfos, sizeof(shadowWHPBInfos));
 
             const float packing            = hFTexture ? 0.0F : 1.0F;
-            const float shadowLPNNInfos[4] = {0.0F, packing, shadowInfo->normalBias, 0.0F};
+            float       shadowLPNNInfos[4] = {0.0F, packing, shadowInfo->normalBias, 0.0F};
             memcpy(shadowUBO.data() + UBOShadow::SHADOW_LIGHT_PACKING_NBIAS_NULL_INFO_OFFSET, &shadowLPNNInfos, sizeof(shadowLPNNInfos));
+
+            float shadowProjDepthInfos[4] = {matShadowProj.m[10], matShadowProj.m[14], matShadowProj.m[11], matShadowProj.m[15]};
+            memcpy(shadowUBO.data() + UBOShadow::SHADOW_PROJ_DEPTH_INFO_OFFSET, &shadowProjDepthInfos, sizeof(shadowProjDepthInfos));
+
+            float shadowProjInfos[4] = {matShadowProj.m[00], matShadowProj.m[05], 1.0F / matShadowProj.m[00], 1.0F / matShadowProj.m[05]};
+            memcpy(shadowUBO.data() + UBOShadow::SHADOW_PROJ_INFO_OFFSET, &shadowProjInfos, sizeof(shadowProjInfos));
         } else if (mainLight && shadowInfo->shadowType == scene::ShadowType::PLANAR) {
             updateDirLight(shadowInfo, mainLight, &shadowUBO);
         }
@@ -258,71 +231,72 @@ void PipelineUBO::updateShadowUBOView(const RenderPipeline *pipeline, std::array
     }
 }
 
-void PipelineUBO::updateShadowUBOLightView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> *bufferView, const scene::Light *light, const scene::Camera *camera) {
-    auto *const sceneData          = pipeline->getPipelineSceneData();
-    auto *      shadowInfo         = sceneData->getSharedData()->shadow;
-    auto *      device             = gfx::Device::getInstance();
-    auto &      shadowUBO          = *bufferView;
-    const bool  hFTexture          = supportsHalfFloatTexture(device);
-    const float linear             = hFTexture ? 1.0F : 0.0F;
-    const float packing            = hFTexture ? 0.0F : 1.0F;
+void PipelineUBO::updateShadowUBOLightView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> *bufferView, const scene::Light *light) {
+    auto *const sceneData  = pipeline->getPipelineSceneData();
+    auto *      shadowInfo = sceneData->getSharedData()->shadow;
+    auto *      device     = gfx::Device::getInstance();
+    auto *      sphere     = sceneData->getSphere();
+    auto &      shadowUBO  = *bufferView;
+    const bool  hFTexture  = supportsHalfFloatTexture(device);
+    const float linear     = 0.0F;
+    const float packing    = hFTexture ? 0.0F : 1.0F;
     switch (light->getType()) {
         case scene::LightType::DIRECTIONAL: {
-            float nearClamp;
+            const auto *directionalLight = static_cast<const scene::DirectionalLight *>(light);
+            cc::Mat4    matShadowCamera;
+
+            float x;
+            float y;
             float farClamp;
-            if (!shadowInfo->fixedArea) {
-                const scene::Sphere *cameraBoundingSphere = sceneData->getCameraBoundingSphere();
-                const float          radius               = cameraBoundingSphere->getRadius();
-                const float          range                = shadowInfo->range;
-                nearClamp                                 = -range;
-                farClamp                                  = radius;
+            if (shadowInfo->autoAdapt) {
+                Vec3 tmpCenter;
+                getShadowWorldMatrix(sphere, directionalLight->getNode()->getWorldRotation(), directionalLight->getDirection(), &matShadowCamera, &tmpCenter);
 
-                quantizeDirLightShadowCamera(pipeline, bufferView, camera);
+                const auto radius = sphere->getRadius();
+                x                 = radius;
+                y                 = radius;
+
+                const float halfFar = tmpCenter.distance(sphere->getCenter());
+                farClamp            = std::min(halfFar * COEFFICIENT_OF_EXPANSION, SHADOW_CAMERA_MAX_FAR);
             } else {
-                const Mat4 matWorldTrans = light->getNode()->getWorldMatrix();
-                memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_OFFSET, matWorldTrans.m, sizeof(matWorldTrans));
+                matShadowCamera = light->getNode()->getWorldMatrix();
 
-                const float x = shadowInfo->orthoSize;
-                const float y = shadowInfo->orthoSize;
-                nearClamp     = shadowInfo->nearValue;
-                farClamp      = shadowInfo->farValue;
+                x = shadowInfo->orthoSize;
+                y = shadowInfo->orthoSize;
 
-                Mat4        matShadowProj;
-                const float projectionSinY = device->getCapabilities().clipSpaceSignY;
-                Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, farClamp, device->getCapabilities().clipSpaceMinZ, projectionSinY, &matShadowProj);
-
-                const Mat4 matWorldTransInv  = matWorldTrans.getInversed();
-                const Mat4 matShadowViewProj = matShadowProj * matWorldTransInv;
-                memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
+                farClamp = shadowInfo->farValue;
             }
+            const auto matShadowView = matShadowCamera.getInversed();
+            memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_OFFSET, matShadowView.m, sizeof(matShadowView));
 
-            const float shadowNFLSInfos[4] = {nearClamp, farClamp, linear, 1.0F - shadowInfo->saturation};
+            const auto projectionSinY = device->getCapabilities().clipSpaceSignY;
+            Mat4::createOrthographicOffCenter(-x, x, -y, y, shadowInfo->nearValue, farClamp, device->getCapabilities().clipSpaceMinZ, projectionSinY, &matShadowViewProj);
+
+            matShadowViewProj.multiply(matShadowView);
+            memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
+
+            float shadowNFLSInfos[4] = {shadowInfo->nearValue, farClamp, linear, 1.0F - shadowInfo->saturation};
             memcpy(shadowUBO.data() + UBOShadow::SHADOW_NEAR_FAR_LINEAR_SATURATION_INFO_OFFSET, &shadowNFLSInfos, sizeof(shadowNFLSInfos));
 
-            const float shadowLPNNInfos[4] = {0.0F, packing, shadowInfo->normalBias, 0.0F};
+            float shadowLPNNInfos[4] = {0.0F, packing, shadowInfo->normalBias, 0.0F};
             memcpy(shadowUBO.data() + UBOShadow::SHADOW_LIGHT_PACKING_NBIAS_NULL_INFO_OFFSET, &shadowLPNNInfos, sizeof(shadowLPNNInfos));
         } break;
         case scene::LightType::SPOT: {
             const auto *spotLight       = static_cast<const scene::SpotLight *>(light);
             const auto &matShadowCamera = spotLight->getNode()->getWorldMatrix();
-            memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_OFFSET, matShadowCamera.m, sizeof(matShadowCamera));
+            const auto  matShadowView   = matShadowCamera.getInversed();
+            memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_OFFSET, matShadowView.m, sizeof(matShadowView));
 
-            Mat4       matShadowViewProj;
-            const auto matShadowView = matShadowCamera.getInversed();
-            Mat4::createPerspective(spotLight->getSpotAngle(), spotLight->getAspect(), 0.001F, spotLight->getRange(), &matShadowViewProj);
+            cc::Mat4::createPerspective(spotLight->getSpotAngle(), spotLight->getAspect(), 0.001F, spotLight->getRange(), &matShadowViewProj);
 
             matShadowViewProj.multiply(matShadowView);
             memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
 
-            const float shadowNFLSInfos[4] = {0.01F, spotLight->getRange(), linear, 1.0F - shadowInfo->saturation};
+            float shadowNFLSInfos[4] = {0.01F, spotLight->getRange(), linear, 1.0F - shadowInfo->saturation};
             memcpy(shadowUBO.data() + UBOShadow::SHADOW_NEAR_FAR_LINEAR_SATURATION_INFO_OFFSET, &shadowNFLSInfos, sizeof(shadowNFLSInfos));
 
-            const float shadowLPNNInfos[4] = {1.0F, packing, shadowInfo->normalBias, 0.0F};
+            float shadowLPNNInfos[4] = {1.0F, packing, shadowInfo->normalBias, 0.0F};
             memcpy(shadowUBO.data() + UBOShadow::SHADOW_LIGHT_PACKING_NBIAS_NULL_INFO_OFFSET, &shadowLPNNInfos, sizeof(shadowLPNNInfos));
-        } break;
-        case scene::LightType::SPHERE: {
-        } break;
-        case scene::LightType::UNKNOWN: {
         } break;
         default:
             break;
@@ -362,12 +336,21 @@ void PipelineUBO::activate(gfx::Device *device, RenderPipeline *pipeline) {
     descriptorSet->bindBuffer(UBOGlobal::BINDING, globalUBO);
     _ubos.push_back(globalUBO);
 
-    auto *cameraUBO = _device->createBuffer({
+    _alignedCameraUBOSize = utils::alignTo(UBOCamera::SIZE, _device->getCapabilities().uboOffsetAlignment);
+
+    _cameraBuffer = _device->createBuffer({
         gfx::BufferUsageBit::UNIFORM | gfx::BufferUsageBit::TRANSFER_DST,
         gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE,
+        _alignedCameraUBOSize,
+        _alignedCameraUBOSize,
+    });
+    _ubos.push_back(_cameraBuffer);
+    _cameraUBOs.resize(_alignedCameraUBOSize / sizeof(float));
+
+    auto *cameraUBO = _device->createBuffer({
+        _cameraBuffer,
+        0,
         UBOCamera::SIZE,
-        UBOCamera::SIZE,
-        gfx::BufferFlagBit::NONE,
     });
     descriptorSet->bindBuffer(UBOCamera::BINDING, cameraUBO);
     _ubos.push_back(cameraUBO);
@@ -385,7 +368,7 @@ void PipelineUBO::activate(gfx::Device *device, RenderPipeline *pipeline) {
 
 void PipelineUBO::destroy() {
     for (auto &ubo : _ubos) {
-        CC_SAFE_DESTROY(ubo)
+        CC_SAFE_DESTROY(ubo);
     }
     _ubos.clear();
 }
@@ -405,37 +388,29 @@ void PipelineUBO::updateCameraUBO(const scene::Camera *camera) {
     auto *const globalDSManager = _pipeline->getGlobalDSManager();
     auto *const ds              = _pipeline->getDescriptorSet();
     auto *const cmdBuffer       = _pipeline->getCommandBuffers()[0];
-    PipelineUBO::updateCameraUBOView(_pipeline, &_cameraUBO, camera);
-    cmdBuffer->updateBuffer(ds->getBuffer(UBOCamera::BINDING), _cameraUBO.data(), UBOCamera::SIZE);
-
-    globalDSManager->bindBuffer(UBOCamera::BINDING, ds->getBuffer(UBOCamera::BINDING));
-    globalDSManager->update();
+    PipelineUBO::updateCameraUBOView(_pipeline, _cameraUBOs.data(), camera);
+    cmdBuffer->updateBuffer(_cameraBuffer, _cameraUBOs.data());
 }
 
 void PipelineUBO::updateMultiCameraUBO(const vector<scene::Camera *> &cameras) {
     auto *const ds           = _pipeline->getDescriptorSet();
     auto *      device       = _pipeline->getDevice();
-    const uint  uboAlignment = device->getCapabilities().uboOffsetAlignment;
-    _alignedCameraUBOSize    = static_cast<uint>(std::ceil(UBOCamera::SIZE / static_cast<float>(uboAlignment))) * uboAlignment;
-    const uint cameraCount   = static_cast<uint>(cameras.size());
-    const uint totalUboSize  = _alignedCameraUBOSize * cameraCount;
+    auto        cameraCount  = cameras.size();
+    auto        totalUboSize = static_cast<uint>(_alignedCameraUBOSize * cameraCount);
 
-    _cameraUBOs.resize(totalUboSize);
-    _currentCameraUBOOffset = 0;
+    if (_cameraBuffer->getSize() < totalUboSize) {
+        _cameraBuffer->resize(totalUboSize);
+        _cameraUBOs.resize(totalUboSize / sizeof(float));
+    }
+
     for (uint cameraIdx = 0; cameraIdx < cameraCount; ++cameraIdx) {
         auto *camera = cameras[cameraIdx];
-        PipelineUBO::updateCameraUBOView(_pipeline, &_cameraUBO, camera);
-        auto offset = cameraIdx * _alignedCameraUBOSize;
-        memcpy(&_cameraUBOs[offset], _cameraUBO.data(), UBOCamera::SIZE);
+        auto  offset = cameraIdx * _alignedCameraUBOSize / sizeof(float);
+        PipelineUBO::updateCameraUBOView(_pipeline, &_cameraUBOs[offset], camera);
     }
-    auto *uboBuffer = ds->getBuffer(UBOCamera::BINDING);
-    if (uboBuffer->getSize() < totalUboSize) {
-        uboBuffer->resize(totalUboSize);
-    }
-    uboBuffer->update(_cameraUBOs.data(), totalUboSize);
+    _cameraBuffer->update(_cameraUBOs.data());
 
-    ds->bindBuffer(UBOCamera::BINDING, uboBuffer);
-    ds->update();
+    _currentCameraUBOOffset = 0;
 }
 
 void PipelineUBO::updateShadowUBO(const scene::Camera *camera) {
@@ -461,10 +436,10 @@ void PipelineUBO::updateShadowUBO(const scene::Camera *camera) {
     cmdBuffer->updateBuffer(ds->getBuffer(UBOShadow::BINDING), _shadowUBO.data(), UBOShadow::SIZE);
 }
 
-void PipelineUBO::updateShadowUBOLight(const scene::Light *light, const scene::Camera *camera) {
+void PipelineUBO::updateShadowUBOLight(const scene::Light *light) {
     auto *const ds        = _pipeline->getDescriptorSet();
     auto *const cmdBuffer = _pipeline->getCommandBuffers()[0];
-    PipelineUBO::updateShadowUBOLightView(_pipeline, &_shadowUBO, light, camera);
+    PipelineUBO::updateShadowUBOLightView(_pipeline, &_shadowUBO, light);
     cmdBuffer->updateBuffer(ds->getBuffer(UBOShadow::BINDING), _shadowUBO.data(), UBOShadow::SIZE);
 }
 
