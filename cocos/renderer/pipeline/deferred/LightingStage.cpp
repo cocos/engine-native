@@ -439,6 +439,10 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         assert(renderPass != nullptr);
 
         stage->recordCommandsLit(pipeline, renderPass);
+
+        // If transparent is a seperate pass, framegraph cannot merge gbuffer and transparent pass
+        stage->putTransparentObj2Queue();
+        stage->recordCommandsTransparent(pipeline, renderPass);
     };
 
     pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(DeferredInsertPoint::IP_LIGHTING), DeferredPipeline::fgStrHandleLightingPass, lightingSetup, lightingExec);
@@ -853,14 +857,10 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
 
 void LightingStage::render(scene::Camera *camera) {
     auto *pipeline = static_cast<DeferredPipeline *>(RenderPipeline::getInstance());
-
-    // if gbuffer pass is inexistent, depthHandle is invalid, and then lighting pass is needless.
-    // transparent objects drawed in lighting pass, canbe put in its own pass
-    if (pipeline->getFrameGraph().isPassExist(DeferredPipeline::fgStrHandleGbufferPass)) {
+    const auto &renderObjects = _pipeline->getPipelineSceneData()->getRenderObjects();
+    if (!renderObjects.empty()) {
         fgLightingPass(camera);
     }
-
-    fgTransparent(camera);
 
     // if lighting pass is inexistence, ignore sspr pass now.
     // when clear image api is available, better way can be applied.
