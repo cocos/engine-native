@@ -107,7 +107,7 @@ void AABB::merge(const cc::Vec3& point) {
     if (point.z > maxPos.z)
         maxPos.z = point.z;
 
-    const Vec3 center = minPos + maxPos;
+    const Vec3 center = (minPos + maxPos) * 0.5F;
     setCenter(center);
     setHalfExtents(maxPos.x - center.x, maxPos.y - center.y, maxPos.z - center.z);
 }
