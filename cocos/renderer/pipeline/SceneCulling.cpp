@@ -200,8 +200,10 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
     const scene::DirectionalLight *       mainLight       = scene->getMainLight();
     scene::Frustum *                      dirLightFrustum = sceneData->getDirLightFrustum();
     scene::Frustum *                      validFrustum    = sceneData->getValidFrustum();
+    scene::AABB *                         castBoundingBox = sceneData->getCastBoundingBox();
 
     RenderObjectList shadowObjects;
+    scene::AABB::fromPoints(Vec3(1000.0F, 1000.0F, 1000.0F), Vec3(-1000.0F, -1000.0F, -1000.0F), castBoundingBox);
     bool             isShadowMap = false;
     if (shadowInfo->enabled && shadowInfo->shadowType == scene::ShadowType::SHADOWMAP) {
         isShadowMap = true;
@@ -212,7 +214,9 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
             scene::Sphere *   cameraBoundingSphere = sceneData->getCameraBoundingSphere();
             const Mat4        matWorldTrans        = getCameraWorldMatrix(camera);
             validFrustum->split(shadowInfo->nearValue, shadowInfo->farValue, camera->aspect, camera->fov, matWorldTrans);
-            cameraBoundingSphere->mergeFrustum(*validFrustum);
+            castBoundingBox->merge(*validFrustum);
+            cameraBoundingSphere->setCenter(castBoundingBox->getCenter());
+            cameraBoundingSphere->setRadius(validFrustum->vertices[0].distance(validFrustum->vertices[6]));
             updateDirFrustum(cameraBoundingSphere, rotation, shadowInfo->range, dirLightFrustum);
         } else {
             dirLightFrustum->zero();

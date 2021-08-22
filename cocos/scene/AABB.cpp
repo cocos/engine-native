@@ -92,30 +92,24 @@ void AABB::merge(const AABB &aabb) {
 }
 
 void AABB::merge(const cc::Vec3& point) {
-    Vec3 minPos;
-    Vec3 maxPos;
-    this->getBoundary(&minPos, &maxPos);
-    if (point.x < minPos.x) {
+    cc::Vec3 minPos = getCenter() - getHalfExtents();
+    cc::Vec3 maxPos = getCenter() + getHalfExtents();
+    if (point.x < minPos.x)
         minPos.x = point.x;
-    }
-    if (point.y < minPos.y) {
+    if (point.y < minPos.y)
         minPos.y = point.y;
-    }
-    if (point.z < minPos.z) {
+    if (point.z < minPos.z)
         minPos.z = point.z;
-    }
-    if (point.x > maxPos.x) {
+    if (point.x > maxPos.x)
         maxPos.x = point.x;
-    }
-    if (point.y > maxPos.y) {
+    if (point.y > maxPos.y)
         maxPos.y = point.y;
-    }
-    if (point.z > maxPos.z) {
+    if (point.z > maxPos.z)
         maxPos.z = point.z;
-    }
 
-    setCenter(minPos + maxPos);
-    setHalfExtents(maxPos.x - minPos.x, maxPos.y - minPos.y, maxPos.z - minPos.z);
+    const Vec3 center = minPos + maxPos;
+    setCenter(center);
+    setHalfExtents(maxPos.x - center.x, maxPos.y - center.y, maxPos.z - center.z);
 }
 
 void AABB::merge(const Frustum& frustum) {
