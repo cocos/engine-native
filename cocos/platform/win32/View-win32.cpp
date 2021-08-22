@@ -79,8 +79,7 @@ bool View::init() {
     }
     _inited = true;
     // Create window
-    uint32_t flags = SDL_WINDOW_SHOWN |
-                     SDL_WINDOW_RESIZABLE |
+    uint32_t flags = SDL_WINDOW_RESIZABLE |
                      SDL_WINDOW_INPUT_FOCUS;
     _window = SDL_CreateWindow(_title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _width, _height, flags);
     if (_window == NULL) {
@@ -88,7 +87,7 @@ bool View::init() {
         CC_LOG_ERROR("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         return false;
     }
-
+    //SDL_HideWindow(_window);
     return true;
 }
 
@@ -230,6 +229,10 @@ HWND View::getWindowHandler() {
 
 void View::setCursorEnabeld(bool enable) {
     SDL_SetRelativeMouseMode(enable ? SDL_FALSE : SDL_TRUE);
+}
+
+SDL_Window *View::getWindow() {
+    return _window;
 }
 
 } // namespace cc

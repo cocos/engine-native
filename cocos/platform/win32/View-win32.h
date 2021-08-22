@@ -58,6 +58,8 @@ public:
 
     void setCursorEnabeld(bool);
 
+    SDL_Window * getWindow();
+
 private:
     std::string _title;
     int         _width  = 0;
