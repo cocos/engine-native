@@ -95,19 +95,6 @@ void Frustum::split(float start, float end, float aspect, float fov, const Mat4&
     updatePlanes();
 }
 
-void Frustum::zero() {
-    vertices[0] = Mat4::ZERO * vertices[0];
-    vertices[1] = Mat4::ZERO * vertices[1];
-    vertices[2] = Mat4::ZERO * vertices[2];
-    vertices[3] = Mat4::ZERO * vertices[3];
-    vertices[4] = Mat4::ZERO * vertices[4];
-    vertices[5] = Mat4::ZERO * vertices[5];
-    vertices[6] = Mat4::ZERO * vertices[6];
-    vertices[7] = Mat4::ZERO * vertices[7];
-
-    updatePlanes();
-}
-
 void Frustum::updatePlanes() {
     // left plane
     planes[0].define(vertices[1], vertices[5], vertices[6]);

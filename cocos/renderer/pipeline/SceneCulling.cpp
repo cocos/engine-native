@@ -219,7 +219,10 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
             cameraBoundingSphere->setRadius(validFrustum->vertices[0].distance(validFrustum->vertices[6]));
             updateDirFrustum(cameraBoundingSphere, rotation, shadowInfo->range, dirLightFrustum);
         } else {
-            dirLightFrustum->zero();
+            for (Vec3 &vertex : dirLightFrustum->vertices) {
+                vertex.setZero();
+            }
+            dirLightFrustum->updatePlanes();
         }
     }
 
