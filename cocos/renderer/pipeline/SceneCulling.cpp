@@ -203,7 +203,8 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
     scene::AABB *                         castBoundingBox = sceneData->getCastBoundingBox();
 
     RenderObjectList shadowObjects;
-    scene::AABB::fromPoints(Vec3(1000.0F, 1000.0F, 1000.0F), Vec3(-1000.0F, -1000.0F, -1000.0F), castBoundingBox);
+    castBoundingBox->setHalfExtents(0.0F, 0.0F, 0.F);
+    castBoundingBox->setCenter(0.0F, 0.0F, 0.0F);
     bool             isShadowMap = false;
     if (shadowInfo->enabled && shadowInfo->shadowType == scene::ShadowType::SHADOWMAP) {
         isShadowMap = true;
