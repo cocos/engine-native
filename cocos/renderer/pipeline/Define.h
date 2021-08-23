@@ -216,6 +216,7 @@ enum class CC_DLL PipelineGlobalBindings {
     SAMPLER_GBUFFER_NORMALMAP,
     SAMPLER_GBUFFER_EMISSIVEMAP,
     SAMPLER_LIGHTING_RESULTMAP,
+    SAMPLER_BLOOM,
 
     COUNT,
 };
@@ -363,8 +364,9 @@ enum class CC_DLL DeferredStagePriority {
     GBUFFER     = 10,
     LIGHTING    = 15,
     TRANSPARANT = 18,
-    POSTPROCESS = 19,
-    UI          = 20
+    BLOOM       = 19,
+    POSTPROCESS = 20,
+    UI          = 30
 };
 
 enum class CC_DLL DeferredFlowPriority {
@@ -377,7 +379,8 @@ struct CC_DLL UBOGlobal : public Object {
     static constexpr uint                        TIME_OFFSET        = 0;
     static constexpr uint                        SCREEN_SIZE_OFFSET = UBOGlobal::TIME_OFFSET + 4;
     static constexpr uint                        NATIVE_SIZE_OFFSET = UBOGlobal::SCREEN_SIZE_OFFSET + 4;
-    static constexpr uint                        COUNT              = UBOGlobal::NATIVE_SIZE_OFFSET + 4;
+    static constexpr uint                        TEXTURE_SIZE_OFFSET = UBOGlobal::NATIVE_SIZE_OFFSET + 4;
+    static constexpr uint                        COUNT              = UBOGlobal::TEXTURE_SIZE_OFFSET + 4;
     static constexpr uint                        SIZE               = UBOGlobal::COUNT * 4;
     static constexpr uint                        BINDING            = static_cast<uint>(PipelineGlobalBindings::UBO_GLOBAL);
     static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
@@ -502,6 +505,13 @@ struct CC_DLL SAMPLERGBUFFERNORMALMAP : public Object {
 
 struct CC_DLL SAMPLERGBUFFEREMISSIVEMAP : public Object {
     static constexpr uint                        BINDING = static_cast<uint>(PipelineGlobalBindings::SAMPLER_GBUFFER_EMISSIVEMAP);
+    static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
+    static const gfx::UniformSamplerTexture      LAYOUT;
+    static const String                          NAME;
+};
+
+struct CC_DLL SAMPLERBLOOMTEXTURE : public Object {
+    static constexpr uint                        BINDING = static_cast<uint>(PipelineGlobalBindings::SAMPLER_BLOOM);
     static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
     static const gfx::UniformSamplerTexture      LAYOUT;
     static const String                          NAME;

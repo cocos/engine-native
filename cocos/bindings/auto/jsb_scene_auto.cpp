@@ -3718,6 +3718,222 @@ static bool js_scene_PipelineSharedSceneData_set_deferredLightPassShader(se::Sta
 }
 SE_BIND_PROP_SET(js_scene_PipelineSharedSceneData_set_deferredLightPassShader)
 
+static bool js_scene_PipelineSharedSceneData_get_deferredBloomPrefilterPass(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::PipelineSharedSceneData>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_PipelineSharedSceneData_get_deferredBloomPrefilterPass : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= nativevalue_to_se(cobj->deferredBloomPrefilterPass, jsret, s.thisObject() /*ctx*/);
+    s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->deferredBloomPrefilterPass, s.thisObject(), s.rval());
+    return true;
+}
+SE_BIND_PROP_GET(js_scene_PipelineSharedSceneData_get_deferredBloomPrefilterPass)
+
+static bool js_scene_PipelineSharedSceneData_set_deferredBloomPrefilterPass(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    const auto& args = s.args();
+    auto* cobj = SE_THIS_OBJECT<cc::scene::PipelineSharedSceneData>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_PipelineSharedSceneData_set_deferredBloomPrefilterPass : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= sevalue_to_native(args[0], &cobj->deferredBloomPrefilterPass, s.thisObject());
+    SE_PRECONDITION2(ok, false, "js_scene_PipelineSharedSceneData_set_deferredBloomPrefilterPass : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_scene_PipelineSharedSceneData_set_deferredBloomPrefilterPass)
+
+static bool js_scene_PipelineSharedSceneData_get_deferredBloomPrefilterPassShader(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::PipelineSharedSceneData>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_PipelineSharedSceneData_get_deferredBloomPrefilterPassShader : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= nativevalue_to_se(cobj->deferredBloomPrefilterPassShader, jsret, s.thisObject() /*ctx*/);
+    s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->deferredBloomPrefilterPassShader, s.thisObject(), s.rval());
+    return true;
+}
+SE_BIND_PROP_GET(js_scene_PipelineSharedSceneData_get_deferredBloomPrefilterPassShader)
+
+static bool js_scene_PipelineSharedSceneData_set_deferredBloomPrefilterPassShader(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    const auto& args = s.args();
+    auto* cobj = SE_THIS_OBJECT<cc::scene::PipelineSharedSceneData>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_PipelineSharedSceneData_set_deferredBloomPrefilterPassShader : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= sevalue_to_native(args[0], &cobj->deferredBloomPrefilterPassShader, s.thisObject());
+    SE_PRECONDITION2(ok, false, "js_scene_PipelineSharedSceneData_set_deferredBloomPrefilterPassShader : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_scene_PipelineSharedSceneData_set_deferredBloomPrefilterPassShader)
+
+static bool js_scene_PipelineSharedSceneData_get_deferredBloomDownsamplePass(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::PipelineSharedSceneData>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_PipelineSharedSceneData_get_deferredBloomDownsamplePass : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= nativevalue_to_se(cobj->deferredBloomDownsamplePass, jsret, s.thisObject() /*ctx*/);
+    s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->deferredBloomDownsamplePass, s.thisObject(), s.rval());
+    return true;
+}
+SE_BIND_PROP_GET(js_scene_PipelineSharedSceneData_get_deferredBloomDownsamplePass)
+
+static bool js_scene_PipelineSharedSceneData_set_deferredBloomDownsamplePass(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    const auto& args = s.args();
+    auto* cobj = SE_THIS_OBJECT<cc::scene::PipelineSharedSceneData>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_PipelineSharedSceneData_set_deferredBloomDownsamplePass : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= sevalue_to_native(args[0], &cobj->deferredBloomDownsamplePass, s.thisObject());
+    SE_PRECONDITION2(ok, false, "js_scene_PipelineSharedSceneData_set_deferredBloomDownsamplePass : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_scene_PipelineSharedSceneData_set_deferredBloomDownsamplePass)
+
+static bool js_scene_PipelineSharedSceneData_get_deferredBloomDownsamplePassShader(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::PipelineSharedSceneData>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_PipelineSharedSceneData_get_deferredBloomDownsamplePassShader : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= nativevalue_to_se(cobj->deferredBloomDownsamplePassShader, jsret, s.thisObject() /*ctx*/);
+    s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->deferredBloomDownsamplePassShader, s.thisObject(), s.rval());
+    return true;
+}
+SE_BIND_PROP_GET(js_scene_PipelineSharedSceneData_get_deferredBloomDownsamplePassShader)
+
+static bool js_scene_PipelineSharedSceneData_set_deferredBloomDownsamplePassShader(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    const auto& args = s.args();
+    auto* cobj = SE_THIS_OBJECT<cc::scene::PipelineSharedSceneData>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_PipelineSharedSceneData_set_deferredBloomDownsamplePassShader : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= sevalue_to_native(args[0], &cobj->deferredBloomDownsamplePassShader, s.thisObject());
+    SE_PRECONDITION2(ok, false, "js_scene_PipelineSharedSceneData_set_deferredBloomDownsamplePassShader : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_scene_PipelineSharedSceneData_set_deferredBloomDownsamplePassShader)
+
+static bool js_scene_PipelineSharedSceneData_get_deferredBloomUpsamplePass(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::PipelineSharedSceneData>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_PipelineSharedSceneData_get_deferredBloomUpsamplePass : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= nativevalue_to_se(cobj->deferredBloomUpsamplePass, jsret, s.thisObject() /*ctx*/);
+    s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->deferredBloomUpsamplePass, s.thisObject(), s.rval());
+    return true;
+}
+SE_BIND_PROP_GET(js_scene_PipelineSharedSceneData_get_deferredBloomUpsamplePass)
+
+static bool js_scene_PipelineSharedSceneData_set_deferredBloomUpsamplePass(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    const auto& args = s.args();
+    auto* cobj = SE_THIS_OBJECT<cc::scene::PipelineSharedSceneData>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_PipelineSharedSceneData_set_deferredBloomUpsamplePass : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= sevalue_to_native(args[0], &cobj->deferredBloomUpsamplePass, s.thisObject());
+    SE_PRECONDITION2(ok, false, "js_scene_PipelineSharedSceneData_set_deferredBloomUpsamplePass : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_scene_PipelineSharedSceneData_set_deferredBloomUpsamplePass)
+
+static bool js_scene_PipelineSharedSceneData_get_deferredBloomUpsamplePassShader(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::PipelineSharedSceneData>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_PipelineSharedSceneData_get_deferredBloomUpsamplePassShader : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= nativevalue_to_se(cobj->deferredBloomUpsamplePassShader, jsret, s.thisObject() /*ctx*/);
+    s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->deferredBloomUpsamplePassShader, s.thisObject(), s.rval());
+    return true;
+}
+SE_BIND_PROP_GET(js_scene_PipelineSharedSceneData_get_deferredBloomUpsamplePassShader)
+
+static bool js_scene_PipelineSharedSceneData_set_deferredBloomUpsamplePassShader(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    const auto& args = s.args();
+    auto* cobj = SE_THIS_OBJECT<cc::scene::PipelineSharedSceneData>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_PipelineSharedSceneData_set_deferredBloomUpsamplePassShader : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= sevalue_to_native(args[0], &cobj->deferredBloomUpsamplePassShader, s.thisObject());
+    SE_PRECONDITION2(ok, false, "js_scene_PipelineSharedSceneData_set_deferredBloomUpsamplePassShader : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_scene_PipelineSharedSceneData_set_deferredBloomUpsamplePassShader)
+
+static bool js_scene_PipelineSharedSceneData_get_deferredBloomCombinePass(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::PipelineSharedSceneData>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_PipelineSharedSceneData_get_deferredBloomCombinePass : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= nativevalue_to_se(cobj->deferredBloomCombinePass, jsret, s.thisObject() /*ctx*/);
+    s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->deferredBloomCombinePass, s.thisObject(), s.rval());
+    return true;
+}
+SE_BIND_PROP_GET(js_scene_PipelineSharedSceneData_get_deferredBloomCombinePass)
+
+static bool js_scene_PipelineSharedSceneData_set_deferredBloomCombinePass(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    const auto& args = s.args();
+    auto* cobj = SE_THIS_OBJECT<cc::scene::PipelineSharedSceneData>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_PipelineSharedSceneData_set_deferredBloomCombinePass : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= sevalue_to_native(args[0], &cobj->deferredBloomCombinePass, s.thisObject());
+    SE_PRECONDITION2(ok, false, "js_scene_PipelineSharedSceneData_set_deferredBloomCombinePass : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_scene_PipelineSharedSceneData_set_deferredBloomCombinePass)
+
+static bool js_scene_PipelineSharedSceneData_get_deferredBloomCombinePassShader(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::PipelineSharedSceneData>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_PipelineSharedSceneData_get_deferredBloomCombinePassShader : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= nativevalue_to_se(cobj->deferredBloomCombinePassShader, jsret, s.thisObject() /*ctx*/);
+    s.rval() = jsret;
+    SE_HOLD_RETURN_VALUE(cobj->deferredBloomCombinePassShader, s.thisObject(), s.rval());
+    return true;
+}
+SE_BIND_PROP_GET(js_scene_PipelineSharedSceneData_get_deferredBloomCombinePassShader)
+
+static bool js_scene_PipelineSharedSceneData_set_deferredBloomCombinePassShader(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    const auto& args = s.args();
+    auto* cobj = SE_THIS_OBJECT<cc::scene::PipelineSharedSceneData>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_PipelineSharedSceneData_set_deferredBloomCombinePassShader : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    ok &= sevalue_to_native(args[0], &cobj->deferredBloomCombinePassShader, s.thisObject());
+    SE_PRECONDITION2(ok, false, "js_scene_PipelineSharedSceneData_set_deferredBloomCombinePassShader : Error processing new value");
+    return true;
+}
+SE_BIND_PROP_SET(js_scene_PipelineSharedSceneData_set_deferredBloomCombinePassShader)
+
 static bool js_scene_PipelineSharedSceneData_get_deferredPostPass(se::State& s) // NOLINT(readability-identifier-naming)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::PipelineSharedSceneData>(s);
@@ -3821,6 +4037,38 @@ bool sevalue_to_native(const se::Value &from, cc::scene::PipelineSharedSceneData
     if(!field.isNullOrUndefined()) {
         ok &= sevalue_to_native(field, &(to->deferredLightPassShader), ctx);
     }
+    json->getProperty("deferredBloomPrefilterPass", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->deferredBloomPrefilterPass), ctx);
+    }
+    json->getProperty("deferredBloomPrefilterPassShader", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->deferredBloomPrefilterPassShader), ctx);
+    }
+    json->getProperty("deferredBloomDownsamplePass", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->deferredBloomDownsamplePass), ctx);
+    }
+    json->getProperty("deferredBloomDownsamplePassShader", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->deferredBloomDownsamplePassShader), ctx);
+    }
+    json->getProperty("deferredBloomUpsamplePass", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->deferredBloomUpsamplePass), ctx);
+    }
+    json->getProperty("deferredBloomUpsamplePassShader", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->deferredBloomUpsamplePassShader), ctx);
+    }
+    json->getProperty("deferredBloomCombinePass", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->deferredBloomCombinePass), ctx);
+    }
+    json->getProperty("deferredBloomCombinePassShader", &field);
+    if(!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->deferredBloomCombinePassShader), ctx);
+    }
     json->getProperty("deferredPostPass", &field);
     if(!field.isNullOrUndefined()) {
         ok &= sevalue_to_native(field, &(to->deferredPostPass), ctx);
@@ -3895,10 +4143,34 @@ static bool js_scene_PipelineSharedSceneData_constructor(se::State& s) // NOLINT
         ok &= sevalue_to_native(args[8], &(cobj->deferredLightPassShader), nullptr);
     }
     if (argc > 9 && !args[9].isUndefined()) {
-        ok &= sevalue_to_native(args[9], &(cobj->deferredPostPass), nullptr);
+        ok &= sevalue_to_native(args[9], &(cobj->deferredBloomPrefilterPass), nullptr);
     }
     if (argc > 10 && !args[10].isUndefined()) {
-        ok &= sevalue_to_native(args[10], &(cobj->deferredPostPassShader), nullptr);
+        ok &= sevalue_to_native(args[10], &(cobj->deferredBloomPrefilterPassShader), nullptr);
+    }
+    if (argc > 11 && !args[11].isUndefined()) {
+        ok &= sevalue_to_native(args[11], &(cobj->deferredBloomDownsamplePass), nullptr);
+    }
+    if (argc > 12 && !args[12].isUndefined()) {
+        ok &= sevalue_to_native(args[12], &(cobj->deferredBloomDownsamplePassShader), nullptr);
+    }
+    if (argc > 13 && !args[13].isUndefined()) {
+        ok &= sevalue_to_native(args[13], &(cobj->deferredBloomUpsamplePass), nullptr);
+    }
+    if (argc > 14 && !args[14].isUndefined()) {
+        ok &= sevalue_to_native(args[14], &(cobj->deferredBloomUpsamplePassShader), nullptr);
+    }
+    if (argc > 15 && !args[15].isUndefined()) {
+        ok &= sevalue_to_native(args[15], &(cobj->deferredBloomCombinePass), nullptr);
+    }
+    if (argc > 16 && !args[16].isUndefined()) {
+        ok &= sevalue_to_native(args[16], &(cobj->deferredBloomCombinePassShader), nullptr);
+    }
+    if (argc > 17 && !args[17].isUndefined()) {
+        ok &= sevalue_to_native(args[17], &(cobj->deferredPostPass), nullptr);
+    }
+    if (argc > 18 && !args[18].isUndefined()) {
+        ok &= sevalue_to_native(args[18], &(cobj->deferredPostPassShader), nullptr);
     }
 
     if(!ok) {
@@ -3941,6 +4213,14 @@ bool js_register_scene_PipelineSharedSceneData(se::Object* obj) // NOLINT(readab
     cls->defineProperty("fog", _SE(js_scene_PipelineSharedSceneData_get_fog), _SE(js_scene_PipelineSharedSceneData_set_fog));
     cls->defineProperty("deferredLightPass", _SE(js_scene_PipelineSharedSceneData_get_deferredLightPass), _SE(js_scene_PipelineSharedSceneData_set_deferredLightPass));
     cls->defineProperty("deferredLightPassShader", _SE(js_scene_PipelineSharedSceneData_get_deferredLightPassShader), _SE(js_scene_PipelineSharedSceneData_set_deferredLightPassShader));
+    cls->defineProperty("deferredBloomPrefilterPass", _SE(js_scene_PipelineSharedSceneData_get_deferredBloomPrefilterPass), _SE(js_scene_PipelineSharedSceneData_set_deferredBloomPrefilterPass));
+    cls->defineProperty("deferredBloomPrefilterPassShader", _SE(js_scene_PipelineSharedSceneData_get_deferredBloomPrefilterPassShader), _SE(js_scene_PipelineSharedSceneData_set_deferredBloomPrefilterPassShader));
+    cls->defineProperty("deferredBloomDownsamplePass", _SE(js_scene_PipelineSharedSceneData_get_deferredBloomDownsamplePass), _SE(js_scene_PipelineSharedSceneData_set_deferredBloomDownsamplePass));
+    cls->defineProperty("deferredBloomDownsamplePassShader", _SE(js_scene_PipelineSharedSceneData_get_deferredBloomDownsamplePassShader), _SE(js_scene_PipelineSharedSceneData_set_deferredBloomDownsamplePassShader));
+    cls->defineProperty("deferredBloomUpsamplePass", _SE(js_scene_PipelineSharedSceneData_get_deferredBloomUpsamplePass), _SE(js_scene_PipelineSharedSceneData_set_deferredBloomUpsamplePass));
+    cls->defineProperty("deferredBloomUpsamplePassShader", _SE(js_scene_PipelineSharedSceneData_get_deferredBloomUpsamplePassShader), _SE(js_scene_PipelineSharedSceneData_set_deferredBloomUpsamplePassShader));
+    cls->defineProperty("deferredBloomCombinePass", _SE(js_scene_PipelineSharedSceneData_get_deferredBloomCombinePass), _SE(js_scene_PipelineSharedSceneData_set_deferredBloomCombinePass));
+    cls->defineProperty("deferredBloomCombinePassShader", _SE(js_scene_PipelineSharedSceneData_get_deferredBloomCombinePassShader), _SE(js_scene_PipelineSharedSceneData_set_deferredBloomCombinePassShader));
     cls->defineProperty("deferredPostPass", _SE(js_scene_PipelineSharedSceneData_get_deferredPostPass), _SE(js_scene_PipelineSharedSceneData_set_deferredPostPass));
     cls->defineProperty("deferredPostPassShader", _SE(js_scene_PipelineSharedSceneData_get_deferredPostPassShader), _SE(js_scene_PipelineSharedSceneData_set_deferredPostPassShader));
     cls->defineFinalizeFunction(_SE(js_cc_scene_PipelineSharedSceneData_finalize));

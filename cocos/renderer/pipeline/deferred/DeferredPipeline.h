@@ -53,6 +53,7 @@ enum class DeferredInsertPoint {
     IP_LIGHTING = 200,
     IP_TRANSPARENT = 220,
     IP_SSPR = 300,
+    IP_BLOOM = 350,
     IP_POSTPROCESS = 400,
     IP_INVALID
 };
@@ -61,6 +62,8 @@ class CC_DLL DeferredPipeline : public RenderPipeline {
 public:
     DeferredPipeline()           = default;
     ~DeferredPipeline() override = default;
+
+    static const bool bloomSwitch = false;
 
     bool initialize(const RenderPipelineInfo &info) override;
     void destroy() override;
@@ -118,6 +121,7 @@ public:
     static framegraph::StringHandle fgStrHandleDepthTexture;             // deal as external resource
     static framegraph::StringHandle fgStrHandleDepthTexturePost;         // deal as external resource
     static framegraph::StringHandle fgStrHandleLightingOutTexture;
+    static framegraph::StringHandle fgStrHandleBloomOutTexture;
     static framegraph::StringHandle fgStrHandleBackBufferTexture;        // buffer get from swapchain, used for queuepresent
 
     // deferred pass name declear

@@ -102,7 +102,7 @@ void PostprocessStage::destroy() {
 void PostprocessStage::render(scene::Camera *camera) {
     _fgStrHandlePostOut = DeferredPipeline::fgStrHandleBackBufferTexture;
     struct RenderData {
-        framegraph::TextureHandle lightingOut;      // read from lighting output
+        framegraph::TextureHandle inputTex;         // read from lighting or bloom output
         framegraph::TextureHandle backBuffer;       // write to back buffer
         framegraph::TextureHandle depth;
         framegraph::TextureHandle placerholder;
@@ -136,19 +136,23 @@ void PostprocessStage::render(scene::Camera *camera) {
     }
 
     auto postSetup = [&] (framegraph::PassNodeBuilder &builder, RenderData &data) {
-        data.lightingOut = framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::fgStrHandleLightingOutTexture));
-        if (!data.lightingOut.isValid()) {
+        if (DeferredPipeline::bloomSwitch) {
+            data.inputTex = framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::fgStrHandleBloomOutTexture));
+        } else {
+            data.inputTex = framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::fgStrHandleLightingOutTexture));
+        }
+        if (!data.inputTex.isValid()) {
             framegraph::Texture::Descriptor colorTexInfo;
             colorTexInfo.format = gfx::Format::RGBA16F;
             colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
             colorTexInfo.width  = pipeline->getWidth();
             colorTexInfo.height = pipeline->getHeight();
 
-            data.lightingOut = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleLightingOutTexture, colorTexInfo);
+            data.inputTex = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleLightingOutTexture, colorTexInfo);
         }
 
-        data.lightingOut = builder.read(data.lightingOut);
-        builder.writeToBlackboard(DeferredPipeline::fgStrHandleLightingOutTexture, data.lightingOut);
+        data.inputTex = builder.read(data.inputTex);
+        builder.writeToBlackboard(DeferredPipeline::fgStrHandleLightingOutTexture, data.inputTex);
 
         // backbuffer is as an attachment
         if (camera->window->frameBuffer->getColorTextures()[0] != nullptr) {
@@ -201,7 +205,7 @@ void PostprocessStage::render(scene::Camera *camera) {
         assert(renderPass != nullptr);
 
         // bind descriptor
-        auto *lightingOut = static_cast<gfx::Texture *>(table.getRead(data.lightingOut));
+        auto *inputTex = static_cast<gfx::Texture *>(table.getRead(data.inputTex));
 
         gfx::SamplerInfo info{
             gfx::Filter::LINEAR,
@@ -218,7 +222,7 @@ void PostprocessStage::render(scene::Camera *camera) {
         const auto  samplerHash = SamplerLib::genSamplerHash(info);
         auto *const sampler     = SamplerLib::getSampler(samplerHash);
         stage->getGlobalSet()->bindSampler(static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP), sampler);
-        stage->getGlobalSet()->bindTexture(static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP), lightingOut);
+        stage->getGlobalSet()->bindTexture(static_cast<uint>(PipelineGlobalBindings::SAMPLER_LIGHTING_RESULTMAP), inputTex);
         stage->getGlobalSet()->update();
 
         uint const globalOffsets[] = {pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};

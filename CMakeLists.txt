@@ -380,7 +380,7 @@ elseif(USE_JOB_SYSTEM_TBB)
         cocos/base/job-system/job-system-tbb/TBBJobSystem.h
         cocos/base/job-system/job-system-tbb/TBBJobSystem.cpp
     )
-else() 
+else()
     cocos_source_files(
         cocos/base/job-system/job-system-dummy/DummyJobGraph.h
         cocos/base/job-system/job-system-dummy/DummyJobGraph.cpp
@@ -572,7 +572,7 @@ elseif(ANDROID)
         ${CWD}/cocos/platform/java/jni/JniImp.cpp
         ${CWD}/cocos/platform/java/jni/JniImp.h
     )
-    
+
     cocos_source_files(MODULE ccfilesystem
         cocos/platform/android/FileUtils-android.cpp
         cocos/platform/android/FileUtils-android.h
@@ -612,7 +612,7 @@ elseif(APPLE)
                      cocos/platform/ios/Reachability.h
                      cocos/platform/ios/Reachability.cpp
     )
-    
+
     cocos_source_files(MODULE ccfilesystem
         cocos/platform/apple/FileUtils-apple.h
         cocos/platform/apple/FileUtils-apple.mm
@@ -822,6 +822,8 @@ cocos_source_files(
                  cocos/renderer/pipeline/deferred/GbufferStage.h
                  cocos/renderer/pipeline/deferred/LightingStage.cpp
                  cocos/renderer/pipeline/deferred/LightingStage.h
+                 cocos/renderer/pipeline/deferred/BloomStage.cpp
+                 cocos/renderer/pipeline/deferred/BloomStage.h
                  cocos/renderer/pipeline/deferred/PostprocessStage.cpp
                  cocos/renderer/pipeline/deferred/PostprocessStage.h
                  cocos/renderer/pipeline/deferred/ReflectionComp.cpp
@@ -1609,7 +1611,7 @@ elseif(WIN32)
     )
 endif()
 
-############# module bindings 
+############# module bindings
 if(USE_SE_V8)
     cocos_source_files(MODULE ccbindings
                      cocos/bindings/jswrapper/v8/Base.h
@@ -1854,12 +1856,12 @@ if(USE_MODULES)
     target_link_libraries(ccunzip PUBLIC
         ${ZLIB}
     )
-    target_link_libraries(ccfilesystem PUBLIC 
-        ccunzip 
+    target_link_libraries(ccfilesystem PUBLIC
+        ccunzip
         ccutils
         cclog
     )
-    target_link_libraries(ccbindings PUBLIC 
+    target_link_libraries(ccbindings PUBLIC
         ccfilesystem
         cclog
         ${se_libs_name}
@@ -2014,7 +2016,7 @@ target_compile_definitions(cocos2d
         ${CC_EXTERNAL_PRIVATE_DEFINITIONS}
 )
 if(NOT OHOS)
-    target_include_directories(cocos2d PUBLIC 
+    target_include_directories(cocos2d PUBLIC
         ${CWD}/external/sources/EGL
         ${CWD}/external/sources/khronos
     )

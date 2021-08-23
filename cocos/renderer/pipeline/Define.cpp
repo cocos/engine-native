@@ -64,6 +64,7 @@ const gfx::UniformBlock UBOGlobal::LAYOUT = {
         {"cc_time", gfx::Type::FLOAT4, 1},
         {"cc_screenSize", gfx::Type::FLOAT4, 1},
         {"cc_nativeSize", gfx::Type::FLOAT4, 1},
+        {"cc_textureSize", gfx::Type::FLOAT4, 1},
     },
     1,
 };
@@ -351,6 +352,22 @@ const gfx::UniformSamplerTexture SAMPLERLIGHTINGRESULTMAP::LAYOUT = {
     globalSet,
     SAMPLERLIGHTINGRESULTMAP::BINDING,
     SAMPLERLIGHTINGRESULTMAP::NAME,
+    gfx::Type::SAMPLER2D,
+    1,
+};
+
+const String                          SAMPLERBLOOMTEXTURE::NAME       = "cc_bloomTexture";
+const gfx::DescriptorSetLayoutBinding SAMPLERBLOOMTEXTURE::DESCRIPTOR = {
+    SAMPLERBLOOMTEXTURE::BINDING,
+    gfx::DescriptorType::SAMPLER_TEXTURE,
+    1,
+    gfx::ShaderStageFlagBit::FRAGMENT,
+    {},
+};
+const gfx::UniformSamplerTexture SAMPLERBLOOMTEXTURE::LAYOUT = {
+    globalSet,
+    SAMPLERBLOOMTEXTURE::BINDING,
+    SAMPLERBLOOMTEXTURE::NAME,
     gfx::Type::SAMPLER2D,
     1,
 };

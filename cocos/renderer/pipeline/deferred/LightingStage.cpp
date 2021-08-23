@@ -74,7 +74,7 @@ void initStrHandle() {
         tmp = std::string("denoiseTexureHandle") + std::to_string(i);
         denoiseTexHandle[i] = framegraph::FrameGraph::stringToHandle(tmp.c_str());
 
-        tmp = std::string("ssprClearPss") + std::to_string(i);
+        tmp = std::string("ssprClearPass") + std::to_string(i);
         ssprClearPass[i] = framegraph::FrameGraph::stringToHandle(tmp.c_str());
 
         tmp = std::string("ssprReflectPass") + std::to_string(i);
