@@ -94,18 +94,24 @@ void AABB::merge(const AABB &aabb) {
 void AABB::merge(const cc::Vec3& point) {
     cc::Vec3 minPos = getCenter() - getHalfExtents();
     cc::Vec3 maxPos = getCenter() + getHalfExtents();
-    if (point.x < minPos.x)
+    if (point.x < minPos.x) {
         minPos.x = point.x;
-    if (point.y < minPos.y)
+    } 
+    if (point.y < minPos.y) {
         minPos.y = point.y;
-    if (point.z < minPos.z)
+    }
+    if (point.z < minPos.z) {
         minPos.z = point.z;
-    if (point.x > maxPos.x)
+    } 
+    if (point.x > maxPos.x) {
         maxPos.x = point.x;
-    if (point.y > maxPos.y)
+    }  
+    if (point.y > maxPos.y) {
         maxPos.y = point.y;
-    if (point.z > maxPos.z)
+    }
+    if (point.z > maxPos.z) {
         maxPos.z = point.z;
+    }
 
     const Vec3 center = (minPos + maxPos) * 0.5F;
     setCenter(center);
