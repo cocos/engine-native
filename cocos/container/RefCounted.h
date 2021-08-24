@@ -70,17 +70,17 @@ public:
     inline int weakRefs() const { return _refCount->_weakRefs - 1; }
 
     /// Return pointer to the reference count structure.
-    inline RefCount* refCountPtr() const { return _refCount; }
+    inline RefCount *refCountPtr() const { return _refCount; }
 
 private:
     /// Prevent copy construction.
-    RefCounted(const RefCounted& rhs) = delete;
+    RefCounted(const RefCounted &rhs) = delete;
 
     /// Prevent assignment.
-    RefCounted& operator= (const RefCounted& rhs) = delete;
+    RefCounted &operator= (const RefCounted& rhs) = delete;
 
     /// Pointer to the reference count structure.
-    RefCount* _refCount;
+    RefCount *_refCount;
 };
 
 } // namespace container

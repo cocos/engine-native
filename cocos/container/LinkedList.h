@@ -37,7 +37,7 @@ struct CC_DLL LinkedListNode {
     }
 
     /// Pointer to next node.
-    LinkedListNode* _next;
+    LinkedListNode *_next;
 };
 
 /// Singly-linked list template class. Elements must inherit from LinkedListNode.
@@ -54,16 +54,18 @@ public:
 
     /// Remove all elements.
     void clear() const {
-        T* element = _head;
+        T *element = _head;
         while (element) {
-            T* next = next(element);
-            delete element;
+            T *next = next(element);
+            if (next) {
+                delete element;
+            }
             element = next;
         }
     }
 
     /// Insert an element at the beginning.
-    void insertFront(T* element) {
+    void insertFront(T *element) {
         if (element) {
             element->_next = _head;
             _head          = element;
@@ -71,9 +73,9 @@ public:
     }
 
     /// Insert an element at the end.
-    void insert(T* element) {
+    void insert(T *element) {
         if (_head) {
-            T* tail        = last();
+            T *tail        = last();
             element->_next = tail->_next;
             tail->_next    = element;
         } else {
@@ -83,7 +85,7 @@ public:
     }
 
     /// Erase an element. Return true if successful.
-    bool erase(T* element) {
+    bool erase(T *element) {
         if (element && _head) {
             if (element == _head) {
                 _head = next(element);
@@ -91,7 +93,7 @@ public:
                 return true;
             }
 
-            T* tail = _head;
+            T *tail = _head;
             while (tail && tail->_next != element)
                 tail = next(tail);
             if (tail) {
@@ -105,7 +107,7 @@ public:
     }
 
     /// Erase an element when the previous element is known (optimization.) Return true if successful.
-    bool erase(T* element, T* previous) {
+    bool erase(T *element, T *previous) {
         if (previous && previous->_next == element) {
             previous->_next = element->_next;
             delete element;
@@ -124,11 +126,11 @@ public:
     }
 
     /// Return first element, or null if empty.
-    T* first() const { return _head; }
+    T *first() const { return _head; }
 
     /// Return last element, or null if empty.
-    T* last() const {
-        T* element = _head;
+    T *last() const {
+        T *element = _head;
         if (element) {
             while (element->_next)
                 element = next(element);
@@ -137,14 +139,14 @@ public:
     }
 
     /// Return next element, or null if no more elements.
-    T* next(T* element) const { return element ? static_cast<T*>(element->_next) : nullptr; }
+    T *next(T *element) const { return element ? static_cast<T*>(element->_next) : nullptr; }
 
     /// Return whether is empty.
     bool empty() const { return _head == nullptr; }
 
 private:
     /// First element.
-    T* _head;
+    T *_head;
 };
 
 } // namespace container
