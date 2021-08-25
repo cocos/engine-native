@@ -994,8 +994,6 @@ if(CC_USE_METAL)
                      cocos/renderer/gfx-metal/MTLBuffer.mm
                      cocos/renderer/gfx-metal/MTLCommandBuffer.h
                      cocos/renderer/gfx-metal/MTLCommandBuffer.mm
-                     cocos/renderer/gfx-metal/MTLContext.h
-        NO_WERROR    cocos/renderer/gfx-metal/MTLContext.mm     # CAMetalLayer bug for apple
                      cocos/renderer/gfx-metal/MTLDevice.h
         NO_WERROR    cocos/renderer/gfx-metal/MTLDevice.mm      # CAMetalLayer bug for apple
                      cocos/renderer/gfx-metal/MTLFramebuffer.mm
@@ -1030,6 +1028,8 @@ if(CC_USE_METAL)
                      cocos/renderer/gfx-metal/MTLCommandEncoder.h
                      cocos/renderer/gfx-metal/MTLConfig.h
                      cocos/renderer/gfx-metal/MTLSemaphore.h
+                     cocos/renderer/gfx-metal/MTLSwapChain.h
+                     cocos/renderer/gfx-metal/MTLSwapChain.mm
     )
 endif()
 

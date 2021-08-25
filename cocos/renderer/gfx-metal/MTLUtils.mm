@@ -654,27 +654,30 @@ MTLPixelFormat mu::toMTLPixelFormat(Format format) {
         case Format::RGB9E5: return MTLPixelFormatRGB9E5Float;
         case Format::RGB10A2UI: return MTLPixelFormatRGB10A2Uint;
         case Format::R11G11B10F: return MTLPixelFormatRG11B10Float;
-        case Format::D16: {
+//        case Format::D16: {
+//#if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
+//            return MTLPixelFormatDepth16Unorm;
+//#else
+//            if (@available(iOS 13.0, *))
+//                return MTLPixelFormatDepth16Unorm;
+//            else
+//                break;
+//#endif
+//        }
+        case Format::DEPTH: return MTLPixelFormatDepth32Float;
 #if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-            return MTLPixelFormatDepth16Unorm;
-#else
-            if (@available(iOS 13.0, *))
-                return MTLPixelFormatDepth16Unorm;
-            else
-                break;
-#endif
-        }
-        case Format::D32F: return MTLPixelFormatDepth32Float;
-        case Format::D32F_S8: return MTLPixelFormatDepth32Float_Stencil8;
-#if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-        case Format::D24S8: return MTLPixelFormatDepth24Unorm_Stencil8;
+        case Format::DEPTH_STENCIL: return MTLPixelFormatDepth24Unorm_Stencil8;
+        case Format::BC1:
         case Format::BC1_ALPHA: return MTLPixelFormatBC1_RGBA;
         case Format::BC1_SRGB_ALPHA: return MTLPixelFormatBC1_RGBA_sRGB;
         case Format::BC2: return MTLPixelFormatBC2_RGBA;
         case Format::BC2_SRGB: return MTLPixelFormatBC2_RGBA_sRGB;
         case Format::BC3: return MTLPixelFormatBC3_RGBA;
         case Format::BC3_SRGB: return MTLPixelFormatBC3_RGBA_sRGB;
+        case Format::BC4: return MTLPixelFormatBC4_RUnorm;
+        case Format::BC4_SNORM: return MTLPixelFormatBC4_RSnorm;
 #else
+        case Format::DEPTH_STENCIL: return MTLPixelFormatDepth32Float_Stencil8;
         case Format::ASTC_RGBA_4X4: return MTLPixelFormatASTC_4x4_LDR;
         case Format::ASTC_RGBA_5X4: return MTLPixelFormatASTC_5x4_LDR;
         case Format::ASTC_RGBA_5X5: return MTLPixelFormatASTC_5x5_LDR;
@@ -903,14 +906,15 @@ MTLTextureType mu::toMTLTextureType(TextureType type) {
 }
 
 NSUInteger mu::toMTLSampleCount(SampleCount count) {
+    //TODO_Zeqiang: query from device.
     switch (count) {
-        case SampleCount::X1: return 1;
-        case SampleCount::X2: return 2;
-        case SampleCount::X4: return 4;
-        case SampleCount::X8: return 8;
-        case SampleCount::X16: return 16;
-        case SampleCount::X32: return 32;
-        case SampleCount::X64: return 64;
+        case SampleCount::ONE: return 1;
+        case SampleCount::MULTIPLE_PERFORMANCE: return 2;
+        case SampleCount::MULTIPLE_BALANCE: return 4;
+        case SampleCount::MULTIPLE_QUALITY: return 8;
+//        case SampleCount::X16: return 16;
+//        case SampleCount::X32: return 32;
+//        case SampleCount::X64: return 64;
     }
 }
 
@@ -1491,47 +1495,48 @@ bool mu::isIndirectCommandBufferSupported(MTLFeatureSet featureSet) {
     return false;
 }
 bool mu::isDepthStencilFormatSupported(id<MTLDevice> device, Format format, uint family) {
-    GPUFamily gpuFamily = static_cast<GPUFamily>(family);
-    switch (format) {
-        case Format::D16:
-            switch (gpuFamily) {
-                case GPUFamily::Apple1:
-                case GPUFamily::Apple2:
-                case GPUFamily::Apple3:
-                case GPUFamily::Apple4:
-                case GPUFamily::Apple5:
-                case GPUFamily::Apple6:
-                case GPUFamily::Mac1:
-                case GPUFamily::Mac2:
-                    return true;
-            }
-        case Format::D32F:
-        case Format::D32F_S8:
-            switch (gpuFamily) {
-                case GPUFamily::Apple1:
-                case GPUFamily::Apple2:
-                case GPUFamily::Apple3:
-                case GPUFamily::Apple4:
-                case GPUFamily::Apple5:
-                case GPUFamily::Apple6:
-#ifdef TARGET_OS_SIMULATOR
-                    return true;
-#else
-                    return false;
-#endif
-                case GPUFamily::Mac1:
-                case GPUFamily::Mac2:
-                    return true;
-            }
-        case Format::D24S8:
-#if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-            return [device isDepth24Stencil8PixelFormatSupported];
-#else
-            return false;
-#endif
-        default:
-            return false;
-    }
+    return true;
+//    GPUFamily gpuFamily = static_cast<GPUFamily>(family);
+//    switch (format) {
+//        case Format::D16:
+//            switch (gpuFamily) {
+//                case GPUFamily::Apple1:
+//                case GPUFamily::Apple2:
+//                case GPUFamily::Apple3:
+//                case GPUFamily::Apple4:
+//                case GPUFamily::Apple5:
+//                case GPUFamily::Apple6:
+//                case GPUFamily::Mac1:
+//                case GPUFamily::Mac2:
+//                    return true;
+//            }
+//        case Format::D32F:
+//        case Format::D32F_S8:
+//            switch (gpuFamily) {
+//                case GPUFamily::Apple1:
+//                case GPUFamily::Apple2:
+//                case GPUFamily::Apple3:
+//                case GPUFamily::Apple4:
+//                case GPUFamily::Apple5:
+//                case GPUFamily::Apple6:
+//#ifdef TARGET_OS_SIMULATOR
+//                    return true;
+//#else
+//                    return false;
+//#endif
+//                case GPUFamily::Mac1:
+//                case GPUFamily::Mac2:
+//                    return true;
+//            }
+//        case Format::D24S8:
+//#if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
+//            return [device isDepth24Stencil8PixelFormatSupported];
+//#else
+//            return false;
+//#endif
+//        default:
+//            return false;
+//    }
 }
 
 bool mu::isIndirectDrawSupported(uint family) {
@@ -1543,16 +1548,11 @@ bool mu::isIndirectDrawSupported(uint family) {
 }
 
 MTLPixelFormat mu::getSupportedDepthStencilFormat(id<MTLDevice> device, uint family, uint &depthBits) {
-    vector<std::tuple<cc::gfx::Format, uint>> formats = {{Format::D24S8, 24}, {Format::D32F_S8, 32}, {Format::D16S8, 16}};
-    Format format;
-    for (const auto &formatPair : formats) {
-        std::tie(format, depthBits) = formatPair;
-        if (isDepthStencilFormatSupported(device, format, family))
-            return toMTLPixelFormat(format);
-        else
-            continue;
-    }
-    return MTLPixelFormatInvalid;
+#if CC_PLATFORM == CC_PLATFORM_MAC_OSX
+    return MTLPixelFormatDepth24Unorm_Stencil8;
+#else
+    return MTLPixelFormatDepth32Unorm_Stencil8;
+#endif
 }
 
 String mu::featureSetToString(MTLFeatureSet featureSet) {

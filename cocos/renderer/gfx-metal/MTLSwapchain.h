@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -23,48 +23,42 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "MTLStd.h"
-
-#include "MTLContext.h"
-#include "MTLDevice.h"
-
-#import <MetalKit/MTKView.h>
+#pragma once
+#import <QuartzCore/CAMetalLayer.h>
+#import "gfx-base/GFXSwapchain.h"
+#import "MTLTexture.h"
 
 namespace cc {
 namespace gfx {
 
-namespace {
-Format toFormat(MTLPixelFormat format) {
-    switch (format) {
-        case MTLPixelFormatRGBA8Unorm: return Format::RGBA8;
-        case MTLPixelFormatBGRA8Unorm: return Format::BGRA8;
-#if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-        case MTLPixelFormatDepth24Unorm_Stencil8: return Format::D24S8;
-#endif
-        case MTLPixelFormatDepth32Float_Stencil8: return Format::D32F_S8;
-        default:
-            CC_LOG_ERROR("invalid MTLPixelFormat.");
-            return Format::UNKNOWN;
-    }
-}
-}
+struct CCMTLGPUSwapChainObject;
+class CCMTLTexture;
 
-CCMTLContext::CCMTLContext()
-: Context() {
-}
+class CCMTLSwapchain final : public Swapchain {
+public:
+    CCMTLSwapchain();
+    ~CCMTLSwapchain();
 
-bool CCMTLContext::doInit(const ContextInfo &info) {
-    _vsyncMode = info.vsyncMode;
-    _windowHandle = info.windowHandle;
+    inline CCMTLGPUSwapChainObject* gpuSwapChainObj() { return _gpuSwapchainObj; }
+    CCMTLTexture* colorTexture();
+    CCMTLTexture* depthStencilTexture();
+    
+    id<CAMetalDrawable> currentDrawable();
+    
+    void acquire();
+    
+    void release();
+    
+protected:
+    void doInit(const SwapchainInfo &info) override;
+    void doDestroy() override;
+    void doResize(uint32_t width, uint32_t height) override;
+    void doDestroySurface() override;
+    void doCreateSurface(void *windowHandle) override;
 
-    CCMTLDevice *device = CCMTLDevice::getInstance();
-    CAMetalLayer *layer = (CAMetalLayer *)device->getMTLLayer();
-    _colorFmt = toFormat(layer.pixelFormat);
-    id<MTLTexture> dsTex = (id<MTLTexture>)device->getDSTexture();
-    _depthStencilFmt = toFormat(dsTex.pixelFormat);
-
-    return true;
-}
+private:
+    CCMTLGPUSwapChainObject* _gpuSwapchainObj = nullptr;
+};
 
 } // namespace gfx
 } // namespace cc
