@@ -776,6 +776,25 @@ static bool js_pipeline_RenderPipeline_getGlobalDSManager(se::State& s) // NOLIN
 }
 SE_BIND_PROP_GET(js_pipeline_RenderPipeline_getGlobalDSManager)
 
+static bool js_pipeline_RenderPipeline_getProfiler(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::pipeline::RenderPipeline>(s);
+    SE_PRECONDITION2(cobj, false, "js_pipeline_RenderPipeline_getProfiler : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 0) {
+        cc::scene::Model* result = cobj->getProfiler();
+        ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+        SE_PRECONDITION2(ok, false, "js_pipeline_RenderPipeline_getProfiler : Error processing arguments");
+        SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_pipeline_RenderPipeline_getProfiler)
+
 static bool js_pipeline_RenderPipeline_getRenderstageByName(se::State& s) // NOLINT(readability-identifier-naming)
 {
     auto* cobj = SE_THIS_OBJECT<cc::pipeline::RenderPipeline>(s);
@@ -879,6 +898,25 @@ static bool js_pipeline_RenderPipeline_setPipelineSharedSceneData(se::State& s) 
 }
 SE_BIND_FUNC(js_pipeline_RenderPipeline_setPipelineSharedSceneData)
 
+static bool js_pipeline_RenderPipeline_setProfiler(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::pipeline::RenderPipeline>(s);
+    SE_PRECONDITION2(cobj, false, "js_pipeline_RenderPipeline_setProfiler : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<cc::scene::Model*, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_pipeline_RenderPipeline_setProfiler : Error processing arguments");
+        cobj->setProfiler(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_pipeline_RenderPipeline_setProfiler)
+
 static bool js_pipeline_RenderPipeline_setValue(se::State& s) // NOLINT(readability-identifier-naming)
 {
     auto* cobj = SE_THIS_OBJECT<cc::pipeline::RenderPipeline>(s);
@@ -930,11 +968,13 @@ bool js_register_pipeline_RenderPipeline(se::Object* obj) // NOLINT(readability-
     cls->defineFunction("activate", _SE(js_pipeline_RenderPipeline_activate));
     cls->defineFunction("destroy", _SE(js_pipeline_RenderPipeline_destroy));
     cls->defineFunction("getDevice", _SE(js_pipeline_RenderPipeline_getDevice));
+    cls->defineFunction("getProfiler", _SE(js_pipeline_RenderPipeline_getProfiler));
     cls->defineFunction("getRenderstageByName", _SE(js_pipeline_RenderPipeline_getRenderstageByName));
     cls->defineFunction("initialize", _SE(js_pipeline_RenderPipeline_initialize));
     cls->defineFunction("render", _SE(js_pipeline_RenderPipeline_render));
     cls->defineFunction("resize", _SE(js_pipeline_RenderPipeline_resize));
     cls->defineFunction("setPipelineSharedSceneData", _SE(js_pipeline_RenderPipeline_setPipelineSharedSceneData));
+    cls->defineFunction("setProfiler", _SE(js_pipeline_RenderPipeline_setProfiler));
     cls->defineFunction("setValue", _SE(js_pipeline_RenderPipeline_setValue));
     cls->defineStaticFunction("getInstance", _SE(js_pipeline_RenderPipeline_getInstance));
     cls->install();

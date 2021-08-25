@@ -35,7 +35,7 @@ namespace cc {
 namespace framegraph {
 
 namespace {
-// using function scoped static member
+// use function scoped static member
 // to ensure correct initialization order
 StringPool &getStringPool() {
     static StringPool pool;
@@ -69,6 +69,9 @@ void FrameGraph::present(const TextureHandle &input, gfx::Texture *target) {
         [&](PassNodeBuilder &builder, PassDataPresent &data) {
             data.input = builder.read(input);
             builder.sideEffect();
+
+            auto resource = getResourceNode(data.input);
+            // resource.virtualResource.
         },
         [target](const PassDataPresent &data, const DevicePassResourceTable &table) {
             auto *cmdBuff = gfx::Device::getInstance()->getCommandBuffer();

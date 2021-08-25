@@ -60,15 +60,14 @@ framegraph::StringHandle DeferredPipeline::fgStrHandleGbufferTexture[GBUFFER_COU
     framegraph::FrameGraph::stringToHandle("gbufferAlbedoTexture"),
     framegraph::FrameGraph::stringToHandle("gbufferPositionTexture"),
     framegraph::FrameGraph::stringToHandle("gbufferNormalTexture"),
-    framegraph::FrameGraph::stringToHandle("gbufferEmissiveTexture")
-};
-framegraph::StringHandle DeferredPipeline::fgStrHandleDepthTexture = framegraph::FrameGraph::stringToHandle("depthTexture");
+    framegraph::FrameGraph::stringToHandle("gbufferEmissiveTexture")};
+framegraph::StringHandle DeferredPipeline::fgStrHandleDepthTexture       = framegraph::FrameGraph::stringToHandle("depthTexture");
 framegraph::StringHandle DeferredPipeline::fgStrHandleLightingOutTexture = framegraph::FrameGraph::stringToHandle("lightingOutputTexture");
 
-framegraph::StringHandle DeferredPipeline::fgStrHandleGbufferPass = framegraph::FrameGraph::stringToHandle("deferredGbufferPass");
-framegraph::StringHandle DeferredPipeline::fgStrHandleLightingPass = framegraph::FrameGraph::stringToHandle("deferredLightingPass");
+framegraph::StringHandle DeferredPipeline::fgStrHandleGbufferPass     = framegraph::FrameGraph::stringToHandle("deferredGbufferPass");
+framegraph::StringHandle DeferredPipeline::fgStrHandleLightingPass    = framegraph::FrameGraph::stringToHandle("deferredLightingPass");
 framegraph::StringHandle DeferredPipeline::fgStrHandleTransparentPass = framegraph::FrameGraph::stringToHandle("deferredTransparentPass");
-framegraph::StringHandle DeferredPipeline::fgStrHandleSsprPass = framegraph::FrameGraph::stringToHandle("deferredSSPRPass");
+framegraph::StringHandle DeferredPipeline::fgStrHandleSsprPass        = framegraph::FrameGraph::stringToHandle("deferredSSPRPass");
 framegraph::StringHandle DeferredPipeline::fgStrHandlePostprocessPass = framegraph::FrameGraph::stringToHandle("deferredPostPass");
 
 bool DeferredPipeline::initialize(const RenderPipelineInfo &info) {
@@ -107,7 +106,6 @@ void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
     _commandBuffers[0]->begin();
     _pipelineUBO->updateGlobalUBO(cameras[0]);
     _pipelineUBO->updateMultiCameraUBO(cameras);
-    static bool exported = false;
 
     for (auto *camera : cameras) {
         _fg.reset();
@@ -118,10 +116,15 @@ void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
         }
 
         _fg.compile();
+
+        /* *
+        static bool exported = false;
         if (!exported) {
             _fg.exportGraphViz("fg_vis.dot");
             exported = true;
         }
+        /* */
+
         _fg.execute();
         _pipelineUBO->incCameraUBOOffset();
     }
@@ -144,7 +147,7 @@ gfx::InputAssembler *DeferredPipeline::getIAByRenderArea(const gfx::Rect &rect) 
         return _quadIA[value];
     }
 
-    gfx::Buffer *vb = nullptr;
+    gfx::Buffer *        vb = nullptr;
     gfx::InputAssembler *ia = nullptr;
     createQuadInputAssembler(_quadIB, &vb, &ia);
     _quadVB.push_back(vb);
@@ -312,9 +315,9 @@ void DeferredPipeline::destroy() {
 }
 
 gfx::Color DeferredPipeline::getClearcolor(scene::Camera *camera) {
-    auto *const sceneData     = getPipelineSceneData();
-    auto *const sharedData    = sceneData->getSharedData();
-    gfx::Color clearColor{0.0, 0.0, 0.0, 1.0F};
+    auto *const sceneData  = getPipelineSceneData();
+    auto *const sharedData = sceneData->getSharedData();
+    gfx::Color  clearColor{0.0, 0.0, 0.0, 1.0F};
     if (camera->clearFlag & static_cast<uint>(gfx::ClearFlagBit::COLOR)) {
         if (sharedData->isHDR) {
             srgbToLinear(&clearColor, camera->clearColor);

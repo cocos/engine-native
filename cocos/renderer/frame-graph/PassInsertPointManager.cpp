@@ -34,18 +34,18 @@ PassInsertPointManager &PassInsertPointManager::getInstance() noexcept {
     return instance;
 }
 
-PassInsertPoint PassInsertPointManager::record(const char *const name, const PassInsertPoint  point) noexcept {
+PassInsertPoint PassInsertPointManager::record(const char *const name, const PassInsertPoint point) noexcept {
     StringHandle nameHandle = _stringPool.find(name);
 
     if (nameHandle.isValid()) {
         CC_ASSERT(point == get(nameHandle));
         return get(nameHandle);
-    } else {
-        nameHandle = _stringPool.stringToHandle(name);
-        CC_ASSERT(nameHandle == _insertPoints.size());
-        _insertPoints.emplace_back(point);
-        return point;
     }
+
+    nameHandle = _stringPool.stringToHandle(name);
+    CC_ASSERT(nameHandle == _insertPoints.size());
+    _insertPoints.emplace_back(point);
+    return point;
 }
 
 PassInsertPoint PassInsertPointManager::get(const char *const name) const noexcept {

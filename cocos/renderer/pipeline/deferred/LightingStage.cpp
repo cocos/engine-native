@@ -285,7 +285,7 @@ void LightingStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
         _renderQueues.emplace_back(CC_NEW(RenderQueue(std::move(info))));
     }
 
-    // create descriptorset/layout
+    // create descriptor set/layout
     gfx::DescriptorSetLayoutInfo layoutInfo = {localDescriptorSetLayout.bindings};
     _descLayout                             = device->createDescriptorSetLayout(layoutInfo);
 
@@ -381,7 +381,7 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
 
         uint const globalOffsets[] = {pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
         cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
-        // get pso and draw quad
+        // get PSO and draw quad
         auto rendeArea = pipeline->getRenderArea(pipeline->getFrameGraphCamera(), false);
 
         scene::Pass *        pass           = sceneData->getSharedData()->deferredLightPass;
@@ -449,6 +449,16 @@ void LightingStage::fgTransparent(scene::Camera *camera) {
         data.lightOutput = builder.write(data.lightOutput, colorAttachmentInfo);
         builder.writeToBlackboard(DeferredPipeline::fgStrHandleLightingOutTexture, data.lightOutput);
 
+        framegraph::RenderTargetAttachment::Descriptor depthAttachmentInfo;
+        depthAttachmentInfo.usage         = framegraph::RenderTargetAttachment::Usage::DEPTH;
+        depthAttachmentInfo.loadOp        = gfx::LoadOp::LOAD;
+        depthAttachmentInfo.beginAccesses = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
+        depthAttachmentInfo.endAccesses   = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
+
+        data.depth = framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::fgStrHandleDepthTexture));
+        data.depth = builder.write(data.depth, depthAttachmentInfo);
+        builder.writeToBlackboard(DeferredPipeline::fgStrHandleDepthTexture, data.depth);
+
         // set render area
         auto          renderArea = pipeline->getRenderArea(camera, false);
         gfx::Viewport viewport{renderArea.x, renderArea.y, renderArea.width, renderArea.height, 0.F, 1.F};
@@ -506,7 +516,7 @@ void LightingStage::putTransparentObj2Queue() {
         const auto *const model = ro.model;
         for (auto *subModel : model->getSubModels()) {
             for (auto *pass : subModel->getPasses()) {
-                // TODO(xwx): need fallback of unlit and gizmo material.
+                // TODO(xwx): need to fallback unlit and gizmo material.
                 if (pass->getPhase() != _phaseID) continue;
                 for (k = 0; k < _renderQueues.size(); k++) {
                     _renderQueues[k]->insertRenderPass(ro, m, p);
@@ -520,7 +530,7 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
     // The max reflector objects is 5.
     // for each reflector, there are 4 pass, clear pass/reflection pass/denoise pass/render pass
     // each reflector has its own denoise texture, and will be used in render pass
-    // All the reflectors use the same reflect texture which is temp resoruce for the reflectors, and the reflect texture should be cleared for each reflector
+    // All the reflectors use the same reflect texture which is temp resource for the reflectors, and the reflect texture should be cleared for each reflector
     // we first calculate denoise textures of all reflectors one by one, the first 3 pass will be executed
     // then we render all reflectors one by one, the last render pass will be executed
 
@@ -533,7 +543,7 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
     _matViewProj  = camera->matViewProj;
     _reflectionElems.clear();
 
-    // step 1 prepare clear model's reflection texture pass. if imageclear command is supported, this pass can be replaced by it
+    // step 1 prepare clear model's reflection texture pass. should switch to image clear command after available
     uint minSize   = 512;
     _ssprTexWidth  = pipeline->getWidth();
     _ssprTexHeight = pipeline->getHeight();
@@ -577,8 +587,8 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
     };
 
     auto compReflectSetup = [&](framegraph::PassNodeBuilder &builder, DataCompReflect &data) {
-        // if there is no attachment in the pass, renderpass willn't be created
-        // read lightingout as input
+        // if there is no attachment in the pass, render pass will not be created
+        // read lighting out as input
         data.lightingOut = builder.read(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::fgStrHandleLightingOutTexture)));
         builder.writeToBlackboard(DeferredPipeline::fgStrHandleLightingOutTexture, data.lightingOut);
 
@@ -617,7 +627,7 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
         auto *texLightingOut = static_cast<gfx::Texture *>(table.getRead(data.lightingOut));
         auto *texPositon     = static_cast<gfx::Texture *>(table.getRead(data.gbufferPosition));
 
-        // step 1 pipelinebarrier before exec
+        // step 1 pipeline barrier before exec
         auto *cmdBuff = pipeline->getCommandBuffers()[0];
         cmdBuff->pipelineBarrier(reflectionComp->getBarrierPre());
 
@@ -661,7 +671,7 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
     };
 
     auto compDenoiseSetup = [&](framegraph::PassNodeBuilder &builder, DataCompDenoise &data) {
-        // if there is no attachment in the pass, renderpass willn't be created
+        // if there is no attachment in the pass, render pass will not be created
         // read reflectTexHandle
         data.reflection = builder.read(framegraph::TextureHandle(builder.readFromBlackboard(reflectTexHandle)));
         builder.writeToBlackboard(reflectTexHandle, data.reflection);
@@ -693,7 +703,7 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
         auto *cmdBuff = pipeline->getCommandBuffers()[0];
         cmdBuff->pipelineBarrier(nullptr, const_cast<gfx::TextureBarrierList &>(reflectionComp->getBarrierBeforeDenoise()), {reflectionTex, denoiseTex});
 
-        // bind descriptorset
+        // bind descriptor set
         reflectionComp->getDenoiseDescriptorSet()->bindTexture(0, reflectionTex);
         reflectionComp->getDenoiseDescriptorSet()->bindSampler(0, reflectionComp->getSampler());
         reflectionComp->getDenoiseDescriptorSet()->update();
@@ -729,7 +739,7 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
         data.denoise = builder.read(framegraph::TextureHandle(builder.readFromBlackboard(denoiseTexHandle[_denoiseIndex])));
         builder.writeToBlackboard(denoiseTexHandle[_denoiseIndex], data.denoise);
 
-        // write lightingOut, as an attachment
+        // write lighting out, as an attachment
         framegraph::RenderTargetAttachment::Descriptor colorAttachmentInfo;
         colorAttachmentInfo.usage         = framegraph::RenderTargetAttachment::Usage::COLOR;
         colorAttachmentInfo.loadOp        = gfx::LoadOp::LOAD;
@@ -767,7 +777,7 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
         // bind descriptor
         cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet());
 
-        gfx::DescriptorSet *descLocal  = elem.set; // submodel's descriptorset
+        gfx::DescriptorSet *descLocal  = elem.set; // sub model descriptor set
         auto *              denoiseTex = static_cast<gfx::Texture *>(table.getRead(data.denoise));
 
         descLocal->bindTexture(static_cast<uint>(ModelLocalBindings::SAMPLER_REFLECTION), denoiseTex);
@@ -822,16 +832,16 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
 void LightingStage::render(scene::Camera *camera) {
     auto *pipeline = static_cast<DeferredPipeline *>(RenderPipeline::getInstance());
 
-    // if gbuffer pass is inexistent, depthHandle is invalid, and then lighting pass is needless.
-    // transparent objects drawed in lighting pass, canbe put in its own pass
+    // if gbuffer pass does not exist, skip lighting pass.
+    // transparent objects draw after lighting pass, can be automatically merged by FG
     if (pipeline->getFrameGraph().isPassExist(DeferredPipeline::fgStrHandleGbufferPass)) {
         fgLightingPass(camera);
     }
 
     fgTransparent(camera);
 
-    // if lighting pass is inexistence, ignore sspr pass now.
-    // when clear image api is available, better way can be applied.
+    // if lighting pass does not exist, skip SSPR pass.
+    // switch to clear image API when available
     if (pipeline->getFrameGraph().isPassExist(DeferredPipeline::fgStrHandleLightingPass)) {
         fgSsprPass(camera);
     }

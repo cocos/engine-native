@@ -185,8 +185,6 @@ void PostprocessStage::render(scene::Camera *camera) {
         uint const globalOffsets[] = {pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
         cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
 
-        stage->getUIPhase()->render(pipeline->getFrameGraphCamera(), renderPass);
-
         if (!pipeline->getPipelineSceneData()->getRenderObjects().empty()) {
             // post process
             auto *const  sceneData = pipeline->getPipelineSceneData();
@@ -216,6 +214,8 @@ void PostprocessStage::render(scene::Camera *camera) {
             cmdBuff->bindInputAssembler(ia);
             cmdBuff->draw(ia);
         }
+
+        stage->getUIPhase()->render(pipeline->getFrameGraphCamera(), renderPass);
     };
 
     // add pass

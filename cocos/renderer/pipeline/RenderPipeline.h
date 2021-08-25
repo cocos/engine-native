@@ -32,6 +32,7 @@
 #include "base/CoreStd.h"
 #include "helper/DefineMap.h"
 #include "scene/Camera.h"
+#include "scene/Model.h"
 
 namespace cc {
 namespace gfx {
@@ -80,6 +81,9 @@ public:
     inline gfx::Device *                           getDevice() { return _device; }
     RenderStage *                                  getRenderstageByName(const String &name) const;
 
+    inline scene::Model *getProfiler() const { return _profiler; }
+    inline void          setProfiler(scene::Model *value) { _profiler = value; }
+
 protected:
     static RenderPipeline *instance;
 
@@ -97,6 +101,7 @@ protected:
     gfx::DescriptorSet *_descriptorSet     = nullptr;
     PipelineUBO *       _pipelineUBO       = nullptr;
     PipelineSceneData * _pipelineSceneData = nullptr;
+    scene::Model *      _profiler          = nullptr;
     // has not initBuiltinRes,
     // create temporary default Texture to binding sampler2d
     gfx::Texture *_defaultTexture = nullptr;
