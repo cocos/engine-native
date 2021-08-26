@@ -141,11 +141,12 @@ void PassNode::requestTransientResources() {
     PassNode *it = this;
 
     do {
-        std::for_each(_resourceRequestArray.begin(), _resourceRequestArray.end(), [](VirtualResource *const resource) {
+        std::for_each(it->_resourceRequestArray.begin(), it->_resourceRequestArray.end(), [](VirtualResource *const resource) {
             if (!resource->isImported()) {
                 resource->request();
             }
         });
+
         it = it->_next;
     } while (it);
 }
@@ -155,11 +156,12 @@ void PassNode::releaseTransientResources() {
 
     do {
         // resources should be release in the reverse order to stabilize usages between frames
-        std::for_each(_resourceReleaseArray.rbegin(), _resourceReleaseArray.rend(), [](VirtualResource *const resource) {
+        std::for_each(it->_resourceReleaseArray.rbegin(), it->_resourceReleaseArray.rend(), [](VirtualResource *const resource) {
             if (!resource->isImported()) {
                 resource->release();
             }
         });
+
         it = it->_next;
     } while (it);
 }
@@ -168,8 +170,9 @@ void PassNode::setDevicePassId(ID const id) {
     PassNode *it = this;
 
     do {
-        _devicePassId = id;
-        it            = it->_next;
+        it->_devicePassId = id;
+
+        it = it->_next;
     } while (it);
 }
 

@@ -70,7 +70,7 @@ void FrameGraph::present(const TextureHandle &input, gfx::Texture *target) {
             data.input = builder.read(input);
             builder.sideEffect();
 
-            auto resource = getResourceNode(data.input);
+            //auto resource = getResourceNode(data.input);
             // resource.virtualResource.
         },
         [target](const PassDataPresent &data, const DevicePassResourceTable &table) {

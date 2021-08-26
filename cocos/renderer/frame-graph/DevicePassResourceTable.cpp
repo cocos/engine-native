@@ -43,6 +43,7 @@ void DevicePassResourceTable::extract(const FrameGraph &                       g
     do {
         extract(graph, passNode->_reads, _reads, false, renderTargets);
         extract(graph, passNode->_writes, _writes, true, renderTargets);
+
         passNode = passNode->_next;
     } while (passNode);
 }
