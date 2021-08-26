@@ -243,7 +243,6 @@ void quantizeDirLightShadowCamera(RenderPipeline *pipeline, const scene::Camera 
     // use lerp(min, accurate_max) to save shadowmap usage
     const float orthoSize = orthoSizeMin * 0.8F + orthoSizeMax * 0.2F;
     sceneData->setShadowDistance(r + range);
-    out->createOrtho(orthoSize, orthoSize, 0.1F, sceneData->getShadowDistance(), matShadowViewInv);
 
     // snap to whole texels
     const float halfOrthoSize = orthoSize * 0.5F;
@@ -268,6 +267,8 @@ void quantizeDirLightShadowCamera(RenderPipeline *pipeline, const scene::Camera 
         snap.transformMat4(projSnap, matShadowViewProjArbitaryPosInv);
         Mat4::fromRT(rotation, snap, &matShadowTrans);
         matShadowView = matShadowTrans.getInversed();
+        matShadowViewInv = matShadowView.getInversed();
+        out->createOrtho(orthoSize, orthoSize, 0.1F, sceneData->getShadowDistance(), matShadowViewInv);
     } else {
         for (uint i = 0; i < 8; i++) {
             out->vertices[i].setZero();
