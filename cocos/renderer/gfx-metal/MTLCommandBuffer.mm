@@ -309,9 +309,10 @@ void CCMTLCommandBuffer::updateDepthStencilState(uint32_t index, MTLRenderPassDe
 void CCMTLCommandBuffer::bindPipelineState(PipelineState *pso) {
     PipelineBindPoint bindPoint = pso->getBindPoint();
     CCMTLGPUPipelineState* pplState = nullptr;
+    auto* ccPipeline = static_cast<CCMTLPipelineState *>(pso);
     if (bindPoint == PipelineBindPoint::GRAPHICS) {
-        auto ccPipeline = static_cast<CCMTLPipelineState *>(pso);
-        ccPipeline->check();
+        
+        ccPipeline->check(_gpuCommandBufferObj->renderPass);
         pplState = ccPipeline->getGPUPipelineState();
         _mtlPrimitiveType = pplState->primitiveType;
 
@@ -330,10 +331,10 @@ void CCMTLCommandBuffer::bindPipelineState(PipelineState *pso) {
         if (!_computeEncoder.isInitialized()) {
             _computeEncoder.initialize(_gpuCommandBufferObj->mtlCommandBuffer);
         }
-        pplState = static_cast<CCMTLPipelineState *>(pso)->getGPUPipelineState();
+        pplState = ccPipeline->getGPUPipelineState();
         _computeEncoder.setComputePipelineState(pplState->mtlComputePipelineState);
     }
-    _gpuCommandBufferObj->pipelineState = pplState;
+    _gpuCommandBufferObj->pipelineState = ccPipeline;
 }
 
 void CCMTLCommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) {
@@ -629,7 +630,7 @@ void CCMTLCommandBuffer::execute(CommandBuffer *const *commandBuffs, uint32_t co
 
 void CCMTLCommandBuffer::bindDescriptorSets() {
     CCMTLInputAssembler* inputAssembler = _gpuCommandBufferObj->inputAssembler;
-    CCMTLGPUPipelineState* pipelineStateObj = _gpuCommandBufferObj->pipelineState;
+    CCMTLGPUPipelineState* pipelineStateObj = _gpuCommandBufferObj->pipelineState->getGPUPipelineState();
     const auto &vertexBuffers = inputAssembler->getVertexBuffers();
     for (const auto &bindingInfo : pipelineStateObj->vertexBufferBindingInfo) {
         auto index  = std::get<0>(bindingInfo);
@@ -700,8 +701,15 @@ void CCMTLCommandBuffer::bindDescriptorSets() {
 
 void CCMTLCommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlit *regions, uint count, Filter filter) {
     if (srcTexture && dstTexture && regions) {
-        id<MTLCommandBuffer> mtlCmdBuffer = [static_cast<CCMTLQueue*>(_queue)->gpuQueueObj()->mtlCommandQueue commandBuffer];
-        [mtlCmdBuffer enqueue];
+        
+        bool cmdActivated = _gpuCommandBufferObj->mtlCommandBuffer;
+        id<MTLCommandBuffer> mtlCmdBuffer = nil;
+        if(cmdActivated) {
+            mtlCmdBuffer = _gpuCommandBufferObj->mtlCommandBuffer;
+        } else {
+            mtlCmdBuffer = [static_cast<CCMTLQueue*>(_queue)->gpuQueueObj()->mtlCommandQueue commandBufferWithUnretainedReferences];
+            [mtlCmdBuffer enqueue];
+        }
         auto* ccSrcTex = static_cast<CCMTLTexture*>(srcTexture);
         auto* ccDstTex = static_cast<CCMTLTexture*>(dstTexture);
         
@@ -724,11 +732,8 @@ void CCMTLCommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, c
         [conversion encodeToCommandBuffer:mtlCmdBuffer sourceTexture:src destinationTexture:dst];
         [conversion release];
         
-        [mtlCmdBuffer commit];
-        
-        [mtlCmdBuffer addCompletedHandler:^(id<MTLCommandBuffer> cmdBuffer) {
-            [cmdBuffer release];
-        }];
+        if(!cmdActivated)
+            [mtlCmdBuffer commit];
     }
 }
 

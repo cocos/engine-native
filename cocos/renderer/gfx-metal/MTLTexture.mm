@@ -30,6 +30,9 @@
 #import "MTLTexture.h"
 #import "MTLUtils.h"
 #import "MTLSwapChain.h"
+#import <CoreVideo/CVPixelBuffer.h>
+#import <CoreVideo/CVMetalTexture.h>
+#import <CoreVideo/CVMetalTextureCache.h>
 
 namespace cc {
 namespace gfx {
@@ -51,6 +54,43 @@ void CCMTLTexture::doInit(const TextureInfo &info) {
         _info.format == Format::PVRTC2_2BPP ||
         _info.format == Format::PVRTC2_4BPP) {
         _isPVRTC = true;
+    }
+    
+    if(_info.externalRes) {
+        auto pixelBuffer = static_cast<CVPixelBufferRef>(_info.externalRes);
+        size_t width = CVPixelBufferGetWidth(pixelBuffer);
+        size_t height = CVPixelBufferGetHeight(pixelBuffer);
+        
+        CVReturn cvret;
+        CVMetalTextureCacheRef CVMTLTextureCache;
+        cvret = CVMetalTextureCacheCreate(
+                        kCFAllocatorDefault,
+                        nil,
+                        (id<MTLDevice>)CCMTLDevice::getInstance()->getMTLDevice(),
+                        nil,
+                        &CVMTLTextureCache);
+
+        CCASSERT(cvret == kCVReturnSuccess, @"Failed to create Metal texture cache");
+        
+        _convertedFormat = mu::convertGFXPixelFormat(_info.format);
+        MTLPixelFormat mtlFormat = mu::toMTLPixelFormat(_convertedFormat);
+        CVMetalTextureRef CVMTLTexture;
+        cvret = CVMetalTextureCacheCreateTextureFromImage(
+                        kCFAllocatorDefault,
+                        CVMTLTextureCache,
+                        pixelBuffer, nil,
+                        mtlFormat,
+                        width, height,
+                        0,
+                        &CVMTLTexture);
+        
+        CCASSERT(cvret == kCVReturnSuccess, @"Failed to create CoreVideo Metal texture from image");
+        
+        _mtlTexture = CVMetalTextureGetTexture(CVMTLTexture);
+        CFRelease(CVMTLTexture);
+        CFRelease(CVMTLTextureCache);
+        
+        CCASSERT(_mtlTexture, @"Failed to create Metal texture CoreVideo Metal Texture");
     }
 
     if (!createMTLTexture()) {

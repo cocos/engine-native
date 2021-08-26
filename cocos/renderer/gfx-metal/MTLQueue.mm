@@ -72,13 +72,6 @@ void CCMTLQueue::submit(CommandBuffer *const *cmdBuffs, uint count) {
         _gpuQueueObj->numInstances += cmdBuffer->getNumInstances();
         _gpuQueueObj->numTriangles += cmdBuffer->getNumTris();
         id<MTLCommandBuffer> mtlCmdBuffer = cmdBuffer->gpuCommandBufferObj()->mtlCommandBuffer;
-
-        if (i < count-1) {
-            [mtlCmdBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
-                [commandBuffer release];
-            }];
-        }
-        
         [mtlCmdBuffer commit];
         cmdBuffer->reset();
     }

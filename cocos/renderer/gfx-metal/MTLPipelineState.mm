@@ -99,7 +99,9 @@ bool CCMTLPipelineState::initRenderPipeline() {
     return true;
 }
 
-void CCMTLPipelineState::check() {
+void CCMTLPipelineState::check(CCMTLRenderPass* renderPass) {
+    if(renderPass)
+        _renderPass = renderPass;
     if(!_renderPipelineReady) {
         initRenderPipeline();
     }

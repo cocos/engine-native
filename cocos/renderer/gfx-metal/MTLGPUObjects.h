@@ -46,7 +46,7 @@ class CCMTLQueue;
 class CCMTLRenderPass;
 class CCMTLFramebuffer;
 class CCMTLInputAssembler;
-class CCMTLGPUPipelineState;
+class CCMTLPipelineState;
 
 namespace {
     constexpr size_t MegaBytesToBytes = 1024 * 1024;
@@ -341,7 +341,7 @@ struct CCMTLGPUCommandBufferObject {
     CCMTLRenderPass *renderPass = nullptr;
     CCMTLFramebuffer *fbo = nullptr;
     CCMTLInputAssembler *inputAssembler = nullptr;
-    CCMTLGPUPipelineState *pipelineState = nullptr;
+    CCMTLPipelineState *pipelineState = nullptr;
     id<MTLCommandBuffer> mtlCommandBuffer = nil;
     bool isSecondary = false;
 };
