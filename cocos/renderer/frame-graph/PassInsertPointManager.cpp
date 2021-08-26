@@ -29,12 +29,12 @@
 namespace cc {
 namespace framegraph {
 
-PassInsertPointManager &PassInsertPointManager::getInstance() noexcept {
+PassInsertPointManager &PassInsertPointManager::getInstance() {
     static PassInsertPointManager instance;
     return instance;
 }
 
-PassInsertPoint PassInsertPointManager::record(const char *const name, const PassInsertPoint point) noexcept {
+PassInsertPoint PassInsertPointManager::record(const char *const name, const PassInsertPoint point) {
     StringHandle nameHandle = _stringPool.find(name);
 
     if (nameHandle.isValid()) {
@@ -48,7 +48,7 @@ PassInsertPoint PassInsertPointManager::record(const char *const name, const Pas
     return point;
 }
 
-PassInsertPoint PassInsertPointManager::get(const char *const name) const noexcept {
+PassInsertPoint PassInsertPointManager::get(const char *const name) const {
     const StringHandle nameHandle = _stringPool.find(name);
     CC_ASSERT(nameHandle.isValid());
     return get(nameHandle);

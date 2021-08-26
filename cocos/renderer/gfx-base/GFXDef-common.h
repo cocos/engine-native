@@ -413,8 +413,8 @@ CC_ENUM_BITWISE_OPERATORS(MemoryAccessBit);
 
 enum class MemoryUsageBit : uint32_t {
     NONE   = 0,
-    DEVICE = 0x1,
-    HOST   = 0x2,
+    DEVICE = 0x1, // for rarely-updated resources, use MemoryUsageBit::DEVICE
+    HOST   = 0x2, // for frequently-updated resources, use MemoryUsageBit::DEVICE | MemoryUsageBit::HOST
 };
 using MemoryUsage = MemoryUsageBit;
 CC_ENUM_BITWISE_OPERATORS(MemoryUsageBit);

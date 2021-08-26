@@ -24,11 +24,14 @@
 ****************************************************************************/
 
 #include "base/CoreStd.h"
+#include "base/Log.h"
+#include "base/Macros.h"
 #include "base/threading/MessageQueue.h"
 
 #include "BufferValidator.h"
 #include "DeviceValidator.h"
 #include "ValidationUtils.h"
+#include "gfx-base/GFXDef-common.h"
 
 namespace cc {
 namespace gfx {
@@ -41,15 +44,29 @@ BufferValidator::BufferValidator(Buffer *actor)
 BufferValidator::~BufferValidator() {
     DeviceResourceTracker<Buffer>::erase(this);
     CC_SAFE_DELETE(_actor);
+
+    uint lifeTime = DeviceValidator::getInstance()->currentFrame() - _creationFrame;
+    CCASSERT(_isBufferView || !hasFlag(_memUsage, MemoryUsageBit::HOST) || _totalUpdateTimes > lifeTime / 3,
+             "Triple buffer enabled for infrequently-updated buffer, consider using MemoryUsageBit::DEVICE instead");
 }
 
 void BufferValidator::doInit(const BufferInfo &info) {
-    CCASSERT(info.usage != BufferUsageBit::NONE, "invalid source buffer");
-    CCASSERT(info.memUsage != MemoryUsageBit::NONE, "invalid source buffer");
+    CCASSERT(info.usage != BufferUsageBit::NONE, "invalid buffer param");
+    CCASSERT(info.memUsage != MemoryUsageBit::NONE, "invalid buffer param");
     // CCASSERT(info.size, "zero-sized buffer?"); // be more lenient on this for now
+
+    _creationFrame = DeviceValidator::getInstance()->currentFrame();
+    _totalUpdateTimes = 0U;
 
     if (hasFlag(info.usage, BufferUsageBit::VERTEX) && !info.stride) {
         CCASSERT(false, "invalid stride for vertex buffer");
+    }
+
+    if (hasAnyFlags(info.usage, BufferUsageBit::VERTEX | BufferUsageBit::INDEX) &&
+        hasFlag(info.memUsage, MemoryUsageBit::HOST)) {
+        CC_LOG_WARNING(
+            "Triple buffer enabled for Vertex/Index buffers are discouraged, \
+            for rarely-updated buffers, consider using MemoryUsageBit::DEVICE instead");
     }
 
     /////////// execute ///////////
@@ -99,6 +116,7 @@ void BufferValidator::update(const void *buffer, uint size) {
     }
 
     sanityCheck(buffer, size);
+    ++_totalUpdateTimes; // only count direct updates
 
     /////////// execute ///////////
 

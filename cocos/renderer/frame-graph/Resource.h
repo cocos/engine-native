@@ -144,22 +144,21 @@ void Resource<DeviceResourceType, DescriptorType, DeviceResourceCreatorType, Des
 
 //////////////////////////////////////////////////////////////////////////
 
-#define DEFINE_GFX_RESOURCE(Type)                                                                           \
-    template <>                                                                                             \
-    struct ResourceDescriptorHasher<gfx::Type##Info> final {                                                \
-        inline uint32_t operator()(const gfx::Type##Info &desc) const {                                     \
-            return gfx::Type::computeHash(desc);                                                            \
-        }                                                                                                   \
-    };                                                                                                      \
-                                                                                                            \
-    template <>                                                                                             \
-    struct DeviceResourceCreator<gfx::Type, gfx::Type##Info> final {                                        \
-        inline gfx::Type *operator()(const gfx::Type##Info &desc) const {                                   \
-            return gfx::Device::getInstance()->create##Type(desc);                                          \
-        }                                                                                                   \
-    };                                                                                                      \
-                                                                                                            \
-    using Type         = Resource<gfx::Type, gfx::Type##Info>; /* NOLINT(bugprone-macro-parentheses) N/A */ \
+#define DEFINE_GFX_RESOURCE(Type)                                         \
+    template <>                                                           \
+    struct ResourceDescriptorHasher<gfx::Type##Info> final {              \
+        inline uint32_t operator()(const gfx::Type##Info &desc) const {   \
+            return gfx::Type::computeHash(desc);                          \
+        }                                                                 \
+    };                                                                    \
+                                                                          \
+    template <>                                                           \
+    struct DeviceResourceCreator<gfx::Type, gfx::Type##Info> final {      \
+        inline gfx::Type *operator()(const gfx::Type##Info &desc) const { \
+            return gfx::Device::getInstance()->create##Type(desc);        \
+        }                                                                 \
+    };                                                                    \
+    using Type         = Resource<gfx::Type, gfx::Type##Info>;            \
     using Type##Handle = TypedHandle<Type>;
 
 DEFINE_GFX_RESOURCE(Buffer)
