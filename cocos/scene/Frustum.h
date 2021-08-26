@@ -50,6 +50,7 @@ struct Plane final {
     void  define(const Vec3 &v0, const Vec3 &v1, const Vec3 &v2);
     void  define(const Vec3 &normal, const Vec3 &point);
     float distance(const Vec3 &point) const;
+    Plane clone() const;
 };
 
 struct Frustum final {
@@ -59,8 +60,9 @@ struct Frustum final {
     void       createOrtho(float width, float height, float near, float far, const Mat4 &transform);
     void       split(float start, float end, float aspect, float fov, const Mat4 &transform);
     void       updatePlanes();
-    void       zero();
     void       update(const Mat4 &m, const Mat4 &inv);
+    Frustum    clone();
+    void       transform(const Mat4 &transform);
     ShapeEnums type{ShapeEnums::SHAPE_FRUSTUM};
 };
 

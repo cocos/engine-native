@@ -55,11 +55,14 @@ public:
     inline const RenderObjectList &                                            getShadowObjects() const { return _shadowObjects; }
     inline void                                                                setRenderObjects(RenderObjectList &&ro) { _renderObjects = std::forward<RenderObjectList>(ro); }
     inline void                                                                setShadowObjects(RenderObjectList &&ro) { _shadowObjects = std::forward<RenderObjectList>(ro); }
-    inline scene::Sphere *                                                     getSphere() const { return _sphere; }
-    inline scene::Sphere *                                                     getCameraBoundingSphere() const { return _cameraBoundingSphere; }
-    inline scene::Frustum *                                                    getDirLightFrustum() const { return _dirLightFrustum; }
-    inline scene::Frustum *                                                    getValidFrustum() const  { return _validFrustum; }
-    inline scene::AABB *                                                       getCastBoundingBox() const { return _castBoundingBox; }
+    inline float                                                               getShadowDistance() const { return _shadowDistance; }
+    inline void                                                                setShadowDistance(float shadowDistance) { _shadowDistance = shadowDistance; }
+    inline Mat4                                                                getMatShadowView() const { return _matShadowView; }
+    inline void                                                                setMatShadowView(Mat4 matShadowView) { _matShadowView = matShadowView; }
+    inline Mat4                                                                getMatShadowProj() const { return _matShadowProj; }
+    inline void                                                                setMatShadowProj(Mat4 matShadowProj) { _matShadowProj = matShadowProj; }
+    inline Mat4                                                                getMatShadowViewProj() const { return _matShadowViewProj; }
+    inline void                                                                setMatShadowViewProj(Mat4 matShadowViewProj) { _matShadowViewProj = matShadowViewProj; }
 
 private:
     RenderObjectList _renderObjects;
@@ -68,11 +71,10 @@ private:
     scene::PipelineSharedSceneData *_sharedSceneData      = nullptr;
     RenderPipeline *                _pipeline             = nullptr;
     gfx::Device *                   _device               = nullptr;
-    scene::Sphere *                 _sphere               = nullptr;
-    scene::Sphere *                 _cameraBoundingSphere = nullptr;
-    scene::Frustum *                _dirLightFrustum      = nullptr;
-    scene::Frustum *                _validFrustum         = nullptr;
-    scene::AABB *                   _castBoundingBox      = nullptr;
+    float                           _shadowDistance       = 0.0F;
+    Mat4                            _matShadowView;
+    Mat4                            _matShadowProj;
+    Mat4                            _matShadowViewProj;
 
     std::unordered_map<const scene::Light *, gfx::Framebuffer *> _shadowFrameBufferMap;
 };

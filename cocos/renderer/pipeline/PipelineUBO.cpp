@@ -157,62 +157,6 @@ void PipelineUBO::updateCameraUBOView(const RenderPipeline *pipeline, float *out
     }
 }
 
-void PipelineUBO::quantizeDirLightShadowCamera(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> *bufferView, const scene::Camera *camera) {
-    gfx::Device *                        device               = gfx::Device::getInstance();
-    const scene::RenderScene *const      scene                = camera->scene;
-    const scene::DirectionalLight *      mainLight            = scene->getMainLight();
-    PipelineSceneData *                  sceneData            = pipeline->getPipelineSceneData();
-    scene::Shadow *const                 shadowInfo           = sceneData->getSharedData()->shadow;
-    const float                          shadowMapWidth       = shadowInfo->size.x;
-    const scene::Sphere *                cameraBoundingSphere = sceneData->getCameraBoundingSphere();
-    const float                          radius               = cameraBoundingSphere->getRadius();
-    const Vec3 &                         position             = cameraBoundingSphere->getCenter();
-    const Quaternion &                   rotation             = mainLight->getNode()->getWorldRotation();
-    const float                          range                = shadowInfo->range;
-    std::array<float, UBOShadow::COUNT> &shadowUBO            = *bufferView;
-
-    Mat4 matShadowTrans;
-    Mat4::fromRT(rotation, Vec3::ZERO, &matShadowTrans);
-
-    Mat4        matShadowProj;
-    const float projectionSinY = device->getCapabilities().clipSpaceSignY;
-    const float clipSpaceMinZ  = device->getCapabilities().clipSpaceMinZ;
-    Mat4::createOrthographicOffCenter(-radius, radius, -radius, radius, -range,
-                                      radius, clipSpaceMinZ, projectionSinY, &matShadowProj);
-
-    float shadowProjDepthInfos[4] = {matShadowProj.m[10], matShadowProj.m[14], matShadowProj.m[11], matShadowProj.m[15]};
-    memcpy(shadowUBO.data() + UBOShadow::SHADOW_PROJ_DEPTH_INFO_OFFSET, &shadowProjDepthInfos, sizeof(shadowProjDepthInfos));
-
-    float shadowProjInfos[4] = {matShadowProj.m[00], matShadowProj.m[05], 1.0F / matShadowProj.m[00], 1.0F / matShadowProj.m[05]};
-    memcpy(shadowUBO.data() + UBOShadow::SHADOW_PROJ_INFO_OFFSET, &shadowProjInfos, sizeof(shadowProjInfos));
-
-    // snap to whole texels
-    Mat4 matShadowView;
-    Mat4 matShadowViewProj;
-    if (shadowMapWidth > 0.0) {
-        matShadowView     = matShadowTrans.getInversed();
-        matShadowViewProj = matShadowProj * matShadowView;
-        Vec3 projPos;
-        projPos.transformMat4(position, matShadowViewProj);
-        const float invActualSize = 2.0F / shadowMapWidth;
-        const Vec2  texelSize(invActualSize, invActualSize);
-        const float modX = fmodf(projPos.x, texelSize.x);
-        const float modY = fmodf(projPos.y, texelSize.y);
-        const Vec3  projSnap(projPos.x - modX, projPos.y - modY, projPos.z);
-
-        const Mat4 matShadowViewProjInv = matShadowViewProj.getInversed();
-        Vec3 snap;
-        snap.transformMat4(projSnap, matShadowViewProjInv);
-        Mat4::fromRT(rotation, snap, &matShadowTrans);
-    }
-
-    matShadowView = matShadowTrans.getInversed();
-    memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_OFFSET, matShadowView.m, sizeof(matShadowView));
-
-    matShadowViewProj = matShadowProj * matShadowView;
-    memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
-}
-
 void PipelineUBO::updateShadowUBOView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> *bufferView, const scene::Camera *camera) {
     const scene::RenderScene *const      scene      = camera->scene;
     const scene::DirectionalLight *      mainLight  = scene->getMainLight();
@@ -226,37 +170,39 @@ void PipelineUBO::updateShadowUBOView(const RenderPipeline *pipeline, std::array
         if (mainLight && shadowInfo->shadowType == scene::ShadowType::SHADOWMAP) {
             float nearClamp;
             float farClamp;
+            Mat4 matShadowView;
+            Mat4 matShadowProj;
+            Mat4 matShadowViewProj;
             if (!shadowInfo->fixedArea) {
-                const scene::Sphere *cameraBoundingSphere = sceneData->getCameraBoundingSphere();
-                const float          radius               = cameraBoundingSphere->getRadius();
-                const float          range                = shadowInfo->range;
-                nearClamp                                     = -range;
-                farClamp                                  = radius;
-                quantizeDirLightShadowCamera(pipeline, bufferView, camera);
+                nearClamp         = shadowInfo->nearValue;
+                farClamp          = sceneData->getShadowDistance();
+                matShadowView     = sceneData->getMatShadowView();
+                matShadowProj     = sceneData->getMatShadowProj();
+                matShadowViewProj = sceneData->getMatShadowViewProj();
             } else {
-                auto *const node          = mainLight->getNode();
-                Mat4 matShadowView = node->getWorldMatrix().getInversed();
-                memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_OFFSET, matShadowView.m, sizeof(matShadowView));
-
-                const float x = shadowInfo->orthoSize;
-                const float y = shadowInfo->orthoSize;
-                nearClamp     = shadowInfo->nearValue;
-                farClamp      = shadowInfo->farValue;
-                Mat4        matShadowProj;
+                auto *const node           = mainLight->getNode();
+                matShadowView              = node->getWorldMatrix().getInversed();
+                const float x              = shadowInfo->orthoSize;
+                const float y              = shadowInfo->orthoSize;
+                nearClamp                  = shadowInfo->nearValue;
+                farClamp                   = shadowInfo->farValue;
                 const float projectionSinY = device->getCapabilities().clipSpaceSignY;
                 const float clipSpaceMinZ  = device->getCapabilities().clipSpaceMinZ;
                 Mat4::createOrthographicOffCenter(-x, x, -y, y, -nearClamp,
                                                   farClamp, clipSpaceMinZ, projectionSinY, &matShadowProj);
-
-                float shadowProjDepthInfos[4] = {matShadowProj.m[10], matShadowProj.m[14], matShadowProj.m[11], matShadowProj.m[15]};
-                memcpy(shadowUBO.data() + UBOShadow::SHADOW_PROJ_DEPTH_INFO_OFFSET, &shadowProjDepthInfos, sizeof(shadowProjDepthInfos));
-
-                float shadowProjInfos[4] = {matShadowProj.m[00], matShadowProj.m[05], 1.0F / matShadowProj.m[00], 1.0F / matShadowProj.m[05]};
-                memcpy(shadowUBO.data() + UBOShadow::SHADOW_PROJ_INFO_OFFSET, &shadowProjInfos, sizeof(shadowProjInfos));
-
                 matShadowViewProj = matShadowProj * matShadowView;
-                memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
             }
+
+            memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_OFFSET, matShadowView.m, sizeof(matShadowView));
+
+            float shadowProjDepthInfos[4] = {matShadowProj.m[10], matShadowProj.m[14], matShadowProj.m[11], matShadowProj.m[15]};
+            memcpy(shadowUBO.data() + UBOShadow::SHADOW_PROJ_DEPTH_INFO_OFFSET, &shadowProjDepthInfos, sizeof(shadowProjDepthInfos));
+
+            float shadowProjInfos[4] = {matShadowProj.m[00], matShadowProj.m[05], 1.0F / matShadowProj.m[00], 1.0F / matShadowProj.m[05]};
+            memcpy(shadowUBO.data() + UBOShadow::SHADOW_PROJ_INFO_OFFSET, &shadowProjInfos, sizeof(shadowProjInfos));
+
+            memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
+
             const float linear             = 0.0F;
             float       shadowNFLSInfos[4] = {nearClamp, farClamp, linear, 1.0F - shadowInfo->saturation};
             memcpy(shadowUBO.data() + UBOShadow::SHADOW_NEAR_FAR_LINEAR_SATURATION_INFO_OFFSET, &shadowNFLSInfos, sizeof(shadowNFLSInfos));
@@ -289,37 +235,38 @@ void PipelineUBO::updateShadowUBOLightView(const RenderPipeline *pipeline, std::
         case scene::LightType::DIRECTIONAL: {
             float nearClamp;
             float farClamp;
+            Mat4  matShadowView;
+            Mat4  matShadowProj;
+            Mat4  matShadowViewProj;
             if (!shadowInfo->fixedArea) {
-                const scene::Sphere *cameraBoundingSphere = sceneData->getCameraBoundingSphere();
-                const float          radius               = cameraBoundingSphere->getRadius();
-                const float          range                = shadowInfo->range;
-                nearClamp                                 = -range;
-                farClamp                                  = radius;
-                quantizeDirLightShadowCamera(pipeline, bufferView, camera);
+                nearClamp         = 0.1F;
+                farClamp          = sceneData->getShadowDistance();
+                matShadowView     = sceneData->getMatShadowView();
+                matShadowProj     = sceneData->getMatShadowProj();
+                matShadowViewProj = sceneData->getMatShadowViewProj();
             } else {
-                auto *const node             = static_cast<const scene::DirectionalLight *>(light)->getNode();
-                Mat4        matShadowView    = node->getWorldMatrix().getInversed();
-                memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_OFFSET, matShadowView.m, sizeof(matShadowView));
-
-                const float x = shadowInfo->orthoSize;
-                const float y = shadowInfo->orthoSize;
-                nearClamp     = shadowInfo->nearValue;
-                farClamp      = shadowInfo->farValue;
-                Mat4        matShadowProj;
+                auto *const node           = light->getNode();
+                matShadowView              = node->getWorldMatrix().getInversed();
+                const float x              = shadowInfo->orthoSize;
+                const float y              = shadowInfo->orthoSize;
+                nearClamp                  = shadowInfo->nearValue;
+                farClamp                   = shadowInfo->farValue;
                 const float projectionSinY = device->getCapabilities().clipSpaceSignY;
                 const float clipSpaceMinZ  = device->getCapabilities().clipSpaceMinZ;
                 Mat4::createOrthographicOffCenter(-x, x, -y, y, -nearClamp,
                                                   farClamp, clipSpaceMinZ, projectionSinY, &matShadowProj);
-
-                float shadowProjDepthInfos[4] = {matShadowProj.m[10], matShadowProj.m[14], matShadowProj.m[11], matShadowProj.m[15]};
-                memcpy(shadowUBO.data() + UBOShadow::SHADOW_PROJ_DEPTH_INFO_OFFSET, &shadowProjDepthInfos, sizeof(shadowProjDepthInfos));
-
-                float shadowProjInfos[4] = {matShadowProj.m[00], matShadowProj.m[05], 1.0F / matShadowProj.m[00], 1.0F / matShadowProj.m[05]};
-                memcpy(shadowUBO.data() + UBOShadow::SHADOW_PROJ_INFO_OFFSET, &shadowProjInfos, sizeof(shadowProjInfos));
-
                 matShadowViewProj = matShadowProj * matShadowView;
-                memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
             }
+
+            memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_OFFSET, matShadowView.m, sizeof(matShadowView));
+
+            float shadowProjDepthInfos[4] = {matShadowProj.m[10], matShadowProj.m[14], matShadowProj.m[11], matShadowProj.m[15]};
+            memcpy(shadowUBO.data() + UBOShadow::SHADOW_PROJ_DEPTH_INFO_OFFSET, &shadowProjDepthInfos, sizeof(shadowProjDepthInfos));
+
+            float shadowProjInfos[4] = {matShadowProj.m[00], matShadowProj.m[05], 1.0F / matShadowProj.m[00], 1.0F / matShadowProj.m[05]};
+            memcpy(shadowUBO.data() + UBOShadow::SHADOW_PROJ_INFO_OFFSET, &shadowProjInfos, sizeof(shadowProjInfos));
+
+            memcpy(shadowUBO.data() + UBOShadow::MAT_LIGHT_VIEW_PROJ_OFFSET, matShadowViewProj.m, sizeof(matShadowViewProj));
 
             float shadowNFLSInfos[4] = {nearClamp, farClamp, linear, 1.0F - shadowInfo->saturation};
             memcpy(shadowUBO.data() + UBOShadow::SHADOW_NEAR_FAR_LINEAR_SATURATION_INFO_OFFSET, &shadowNFLSInfos, sizeof(shadowNFLSInfos));

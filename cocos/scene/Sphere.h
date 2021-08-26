@@ -47,13 +47,13 @@ public:
     inline void        setRadius(float val) { _radius = val; }
 
     void define(const AABB &aabb);
-    void mergeAABB(const AABB *aabb);
-    void mergePoint(const Vec3 &point);
+    void merge(const AABB *aabb);
+    void merge(const Vec3 &point);
     bool interset(const Frustum &frustum) const;
     int  interset(const Plane &plane) const;
     int  spherePlane(const Plane &plane);
     bool sphereFrustum(const Frustum &frustum) const;
-    void mergeFrustum(const Frustum &frustum);
+    void merge(const Frustum &frustum);
 
 private:
     float _radius{-1.0F};

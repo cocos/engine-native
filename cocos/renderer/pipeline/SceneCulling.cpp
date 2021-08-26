@@ -29,8 +29,7 @@
 #include "Define.h"
 #include "RenderPipeline.h"
 #include "SceneCulling.h"
-#include "gfx-base/GFXBuffer.h"
-#include "gfx-base/GFXDescriptorSet.h"
+#include "gfx-base/GFXDevice.h"
 #include "math/Quaternion.h"
 #include "platform/Application.h"
 #include "scene/AABB.h"
@@ -191,6 +190,96 @@ void updateDirFrustum(const scene::Sphere *cameraBoundingSphere, const Quaternio
     dirLightFrustum->createOrtho(radius, radius, -range, radius, matWorldTrans);
 }
 
+void quantizeDirLightShadowCamera(RenderPipeline *pipeline, const scene::Camera *camera, scene::Frustum *out) {
+    gfx::Device *                         device         = gfx::Device::getInstance();
+    PipelineSceneData *const              sceneData      = pipeline->getPipelineSceneData();
+    scene::PipelineSharedSceneData *const sharedData     = sceneData->getSharedData();
+    scene::Shadow *const                  shadowInfo     = sharedData->shadow;
+    const scene::RenderScene *const       scene          = camera->scene;
+    const scene::DirectionalLight *       mainLight      = scene->getMainLight();
+    const float                           range          = shadowInfo->range;
+    const float                           shadowMapWidth = shadowInfo->size.x;
+    auto *const                           node           = static_cast<const scene::DirectionalLight *>(mainLight)->getNode();
+    const Quaternion &                    rotation       = node->getWorldRotation();
+
+    // Raw data.
+    const Mat4     matWorldTrans = getCameraWorldMatrix(camera);
+    scene::Frustum validFrustum;
+    validFrustum.type = scene::ShapeEnums::SHAPE_FRUSTUM_ACCURATE;
+    validFrustum.split(shadowInfo->nearValue, shadowInfo->farValue, camera->aspect, camera->fov, matWorldTrans);
+    scene::Frustum lightViewFrustum = validFrustum.clone();
+
+    // view matrix with range back.
+    Mat4 matShadowTrans;
+    Mat4::fromRT(rotation, Vec3::ZERO, &matShadowTrans);
+    Mat4 matShadowView    = matShadowTrans.getInversed();
+    Mat4 matShadowViewInv = matShadowView.getInversed();
+
+    const Mat4 shadowViewArbitaryPos = matShadowView.clone();
+    lightViewFrustum.transform(matShadowView);
+    // bounding box in light space.
+    scene::AABB castLightViewBounds;
+    scene::AABB::fromPoints(Vec3(10000000.0F, 10000000.0F, 10000000.0F), Vec3(-10000000.0F, -10000000.0F, -10000000.0F), &castLightViewBounds);
+    castLightViewBounds.merge(lightViewFrustum);
+
+    const float r = castLightViewBounds.getHalfExtents().z * 2.0F;
+    Vec3        shadowPos(castLightViewBounds.getCenter().x, castLightViewBounds.getCenter().y,
+                   castLightViewBounds.getCenter().z + castLightViewBounds.getHalfExtents().z + range);
+    shadowPos.transformMat4(shadowPos, matShadowViewInv);
+
+    Mat4::fromRT(rotation, shadowPos, &matShadowTrans);
+    matShadowView    = matShadowTrans.getInversed();
+    matShadowViewInv = matShadowView.getInversed();
+
+    // calculate projection matrix params.
+    // min value may lead to some shadow leaks.
+    const float orthoSizeMin = validFrustum.vertices[0].distance(validFrustum.vertices[6]);
+    // max value is accurate but poor usage for shadowMap
+    scene::Sphere cameraBoundingSphere;
+    cameraBoundingSphere.setCenter(Vec3(0.0F, 0.0F, 0.0F));
+    cameraBoundingSphere.setRadius(-1.0F);
+    cameraBoundingSphere.merge(validFrustum);
+    const float orthoSizeMax = cameraBoundingSphere.getRadius() * 2.0F;
+    // use lerp(min, accurate_max) to save shadowmap usage
+    const float orthoSize = orthoSizeMin * 0.8F + orthoSizeMax * 0.2F;
+    sceneData->setShadowDistance(r + range);
+    out->createOrtho(orthoSize, orthoSize, 0.1F, sceneData->getShadowDistance(), matShadowViewInv);
+
+    // snap to whole texels
+    const float halfOrthoSize = orthoSize * 0.5F;
+    Mat4        matShadowProj;
+    const float projectionSinY = device->getCapabilities().clipSpaceSignY;
+    const float clipSpaceMinZ  = device->getCapabilities().clipSpaceMinZ;
+    Mat4::createOrthographicOffCenter(-halfOrthoSize, halfOrthoSize, -halfOrthoSize, halfOrthoSize, 0.1F, sceneData->getShadowDistance(),
+                                      clipSpaceMinZ, projectionSinY, &matShadowProj);
+
+    if (shadowMapWidth > 0.0) {
+        const Mat4 matShadowViewProjArbitaryPos = matShadowProj * shadowViewArbitaryPos;
+        Vec3 projPos;
+        projPos.transformMat4(shadowPos, matShadowViewProjArbitaryPos);
+        const float invActualSize = 2.0F / shadowMapWidth;
+        const Vec2  texelSize(invActualSize, invActualSize);
+        const float modX = fmodf(projPos.x, texelSize.x);
+        const float modY = fmodf(projPos.y, texelSize.y);
+        const Vec3  projSnap(projPos.x - modX, projPos.y - modY, projPos.z);
+
+        const Mat4 matShadowViewProjArbitaryPosInv = matShadowViewProjArbitaryPos.getInversed();
+        Vec3 snap;
+        snap.transformMat4(projSnap, matShadowViewProjArbitaryPosInv);
+        Mat4::fromRT(rotation, snap, &matShadowTrans);
+        matShadowView = matShadowTrans.getInversed();
+    } else {
+        for (uint i = 0; i < 8; i++) {
+            out->vertices[i].setZero();
+        }
+        out->updatePlanes();
+    }
+
+    const Mat4 matShadowViewProj = matShadowProj * matShadowView;
+    sceneData->setMatShadowView(matShadowView);
+    sceneData->setMatShadowProj(matShadowProj);
+    sceneData->setMatShadowViewProj(matShadowViewProj);
+}
 void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
     PipelineSceneData *const              sceneData       = pipeline->getPipelineSceneData();
     scene::PipelineSharedSceneData *const sharedData      = sceneData->getSharedData();
@@ -198,32 +287,21 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
     scene::Skybox *const                  skyBox          = sharedData->skybox;
     const scene::RenderScene *const       scene           = camera->scene;
     const scene::DirectionalLight *       mainLight       = scene->getMainLight();
-    scene::Frustum *                      dirLightFrustum = sceneData->getDirLightFrustum();
-    scene::Frustum *                      validFrustum    = sceneData->getValidFrustum();
-    scene::AABB *                         castBoundingBox = sceneData->getCastBoundingBox();
+    scene::Frustum                      dirLightFrustum;
 
     RenderObjectList shadowObjects;
-    castBoundingBox->setHalfExtents(0.0F, 0.0F, 0.F);
-    castBoundingBox->setCenter(0.0F, 0.0F, 0.0F);
     bool             isShadowMap = false;
     if (shadowInfo->enabled && shadowInfo->shadowType == scene::ShadowType::SHADOWMAP) {
         isShadowMap = true;
 
         // update dirLightFrustum
         if (mainLight && mainLight->getNode()) {
-            const Quaternion &rotation             = mainLight->getNode()->getWorldRotation();
-            scene::Sphere *   cameraBoundingSphere = sceneData->getCameraBoundingSphere();
-            const Mat4        matWorldTrans        = getCameraWorldMatrix(camera);
-            validFrustum->split(shadowInfo->nearValue, shadowInfo->farValue, camera->aspect, camera->fov, matWorldTrans);
-            castBoundingBox->merge(*validFrustum);
-            cameraBoundingSphere->setCenter(castBoundingBox->getCenter());
-            cameraBoundingSphere->setRadius(validFrustum->vertices[0].distance(validFrustum->vertices[6]));
-            updateDirFrustum(cameraBoundingSphere, rotation, shadowInfo->range, dirLightFrustum);
+            quantizeDirLightShadowCamera(pipeline, camera, &dirLightFrustum);
         } else {
-            for (Vec3 &vertex : dirLightFrustum->vertices) {
+            for (Vec3 &vertex : dirLightFrustum.vertices) {
                 vertex.setZero();
             }
-            dirLightFrustum->updatePlanes();
+            dirLightFrustum.updatePlanes();
         }
     }
 
@@ -243,11 +321,9 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
                 // shadow render Object
                 const auto *modelWorldBounds = model->getWorldBounds();
                 if (isShadowMap && model->getCastShadow() && modelWorldBounds) {
-
-                    if (modelWorldBounds->aabbFrustum(*dirLightFrustum)){
+                    if (!modelWorldBounds->aabbFrustum(dirLightFrustum)){
                         shadowObjects.emplace_back(genRenderObject(model, camera));
-                    }
-                    
+                    }   
                 }
                 // frustum culling
                 if (modelWorldBounds && !modelWorldBounds->aabbFrustum(camera->frustum)) {

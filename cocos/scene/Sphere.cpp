@@ -53,7 +53,7 @@ bool Sphere::interset(const Frustum &frustum) const {
                        [self](const Plane &plane) { return self->interset(plane) != -1; });
 }
 
-void Sphere::mergePoint(const Vec3 &point) {
+void Sphere::merge(const Vec3 &point) {
     if (_radius < 0.0F) {
         _center = point;
         _radius = 0.0F;
@@ -87,12 +87,12 @@ void Sphere::define(const AABB &aabb) {
     _center += (half / dist) * offset;
 }
 
-void Sphere::mergeAABB(const AABB *aabb) {
+void Sphere::merge(const AABB *aabb) {
     cc::Vec3 minPos;
     cc::Vec3 maxPos;
     aabb->getBoundary(&minPos, &maxPos);
-    mergePoint(minPos);
-    mergePoint(maxPos);
+    merge(minPos);
+    merge(maxPos);
 }
 
 int Sphere::spherePlane(const Plane &plane) {
@@ -116,10 +116,10 @@ bool Sphere::sphereFrustum(const Frustum &frustum) const {
                        [self](const Plane &plane) { return self->interset(plane) != -1; });
 }
 
-void Sphere::mergeFrustum(const Frustum &frustum) {
+void Sphere::merge(const Frustum &frustum) {
     const std::array<Vec3, 8> &vertices = frustum.vertices;
     for (uint i = 0; i < vertices.max_size(); ++i) {
-        mergePoint(vertices[i]);
+        merge(vertices[i]);
     }
 }
 

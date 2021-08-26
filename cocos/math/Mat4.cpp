@@ -722,6 +722,11 @@ void Mat4::getBackVector(Vec3 *dst) const {
     dst->z = m[10];
 }
 
+Mat4 Mat4::clone() const {
+    Mat4 mat(*this);
+    return mat;
+}
+
 Mat4 Mat4::getInversed() const {
     Mat4 mat(*this);
     mat.inverse();
