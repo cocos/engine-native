@@ -35,22 +35,71 @@ namespace gfx {
 using namespace emscripten;
 
 CCWGPUTexture::CCWGPUTexture() : wrapper<Texture>(val::object()) {
+    _gpuTextureObj = CC_NEW(CCWGPUTextureObject);
 }
 
 void CCWGPUTexture::doInit(const TextureInfo &info) {
-    WGPUTextureDescriptor desc;
-    desc.usage     = toWGPUTextureUsage(info.usage);
-    desc.dimension = toWGPUTextureDimension(info.type);
-    desc.size      = {info.width, info.height, info.depth};
+    WGPUTextureDescriptor descriptor;
+    descriptor.usage         = toWGPUTextureUsage(info.usage);
+    descriptor.dimension     = toWGPUTextureDimension(info.type);
+    descriptor.size          = {info.width, info.height, info.depth};
+    descriptor.format        = toWGPUTextureFormat(info.format);
+    descriptor.mipLevelCount = info.levelCount;
+    descriptor.sampleCount   = toWGPUSampleCount(info.samples);
+
+    _gpuTextureObj->wgpuTexture = wgpuDeviceCreateTexture(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
 }
 
 void CCWGPUTexture::doInit(const TextureViewInfo &info) {
+    WGPUTextureViewDescriptor descriptor = {
+        .nextInChain     = nullptr,
+        .label           = nullptr,
+        .format          = toWGPUTextureFormat(info.format),
+        .dimension       = toWGPUTextureViewDimension(info.type),
+        .baseMipLevel    = info.baseLevel,
+        .mipLevelCount   = info.levelCount,
+        .baseArrayLayer  = info.baseLayer,
+        .arrayLayerCount = info.layerCount,
+        .aspect          = textureAspectTrait(info.format),
+    };
+
+    auto *      ccTexture   = static_cast<CCWGPUTexture *>(info.texture);
+    WGPUTexture wgpuTexture = ccTexture->gpuTextureObject()->wgpuTexture;
+
+    _gpuTextureObj->wgpuTextureView = wgpuTextureCreateView(wgpuTexture, &descriptor);
 }
 
 void CCWGPUTexture::doDestroy() {
+    if (_gpuTextureObj) {
+        if (_gpuTextureObj->wgpuTexture) {
+            wgpuTextureDestroy(_gpuTextureObj->wgpuTexture);
+        }
+    }
+
+    CC_SAFE_DELETE(_gpuTextureObj);
 }
 
 void CCWGPUTexture::doResize(uint width, uint height, uint size) {
+    if (_isTextureView) {
+        CC_LOG_ERROR("Resize is not support on texture view!");
+        return;
+    }
+    if (_gpuTextureObj->wgpuTexture) {
+        wgpuTextureDestroy(_gpuTextureObj->wgpuTexture);
+    }
+
+    _width  = width;
+    _height = height;
+
+    WGPUTextureDescriptor descriptor;
+    descriptor.usage         = toWGPUTextureUsage(_usage);
+    descriptor.dimension     = toWGPUTextureDimension(_type);
+    descriptor.size          = {_width, _height, _depth};
+    descriptor.format        = toWGPUTextureFormat(_format);
+    descriptor.mipLevelCount = _levelCount;
+    descriptor.sampleCount   = toWGPUSampleCount(_samples);
+
+    _gpuTextureObj->wgpuTexture = wgpuDeviceCreateTexture(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
 }
 
 } // namespace gfx

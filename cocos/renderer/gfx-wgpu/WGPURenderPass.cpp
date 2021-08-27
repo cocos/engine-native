@@ -76,9 +76,9 @@ CCWGPURenderPass::CCWGPURenderPass() : wrapper<RenderPass>(val::object()) {
 }
 
 void CCWGPURenderPass::doInit(const RenderPassInfo& info) {
-    _renderPassObject                 = new CCWGPURenderPassObject();
-    _rpHelper                         = new CCWGPURenderPassHelper(info);
-    _renderPassObject->renderPassDesc = _rpHelper->renderPassDesc;
+    _renderPassObject                     = new CCWGPURenderPassObject();
+    _rpHelper                             = new CCWGPURenderPassHelper(info);
+    _renderPassObject->wgpuRenderPassDesc = _rpHelper->renderPassDesc;
 }
 
 void CCWGPURenderPass::doDestroy() {

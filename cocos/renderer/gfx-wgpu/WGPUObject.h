@@ -39,25 +39,32 @@ constexpr uint8_t CC_WGPU_MAX_ATTACHMENTS = 16;
 
 constexpr decltype(nullptr) wgpuDefaultHandle = nullptr;
 
-class CCWGPUDeviceObject final : public Object {
-public:
+class CCWGPUTexture;
+
+struct CCWGPUDeviceObject {
     WGPUDevice wgpuDevice = wgpuDefaultHandle;
     WGPUQueue  wgpuQueue  = wgpuDefaultHandle;
 };
 
-class CCWGPUContextObject final : public Object {
-public:
+struct CCWGPUSwapchainObject {
     WGPUSwapChain wgpuSwapChain = wgpuDefaultHandle;
     WGPUSurface   wgpuSurface   = wgpuDefaultHandle;
     WGPUInstance  wgpuInstance  = wgpuDefaultHandle;
+
+    CCWGPUTexture* swapchainColor        = nullptr;
+    CCWGPUTexture* swapchainDepthStencil = nullptr;
 };
 
-class CCWGPURenderPassObject final : public Object {
-public:
+struct CCWGPURenderPassObject {
     RenderPassInfo info;
     String         label;
 
-    WGPURenderPassDescriptor* renderPassDesc;
+    WGPURenderPassDescriptor* wgpuRenderPassDesc = wgpuDefaultHandle;
+};
+
+struct CCWGPUTextureObject {
+    WGPUTexture     wgpuTexture     = wgpuDefaultHandle;
+    WGPUTextureView wgpuTextureView = wgpuDefaultHandle;
 };
 
 } // namespace gfx

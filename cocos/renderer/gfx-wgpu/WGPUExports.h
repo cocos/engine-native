@@ -306,7 +306,9 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("copyTextureToBuffers", select_overload<void(Texture*, uint8_t* const*, const BufferTextureCopy*, uint)>(&Device::copyTextureToBuffers),
                   /* pure_virtual(), */ allow_raw_pointers());
     class_<CCWGPUDevice, base<Device>>("CCWGPUDevice")
-        .class_function("getInstance", &CCWGPUDevice::getInstance, allow_raw_pointers());
+        .class_function("getInstance", &CCWGPUDevice::getInstance, allow_raw_pointer<arg<0>>())
+        .function("swapchainColor", &cc::gfx::swapchainColor, allow_raw_pointer<arg<0>>())
+        .function("swapchainDepthStencil", &cc::gfx::swapchainDepthStencil, allow_raw_pointer<arg<0>>());
 
     class_<cc::gfx::RenderPass>("RenderPass")
         .class_function("computeHash", select_overload<uint(const RenderPassInfo&)>(&RenderPass::computeHash), allow_raw_pointer<arg<0>>())
