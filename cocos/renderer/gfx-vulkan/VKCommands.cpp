@@ -25,7 +25,7 @@
 
 #include "VKStd.h"
 
-#include "SPIRVUtils.h"
+#include "gfx-base/SPIRVUtils.h"
 #include "VKCommands.h"
 #include "VKDevice.h"
 #include "VKGPUObjects.h"

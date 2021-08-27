@@ -646,8 +646,8 @@ endif()
 cocos_source_files(
                  cocos/renderer/GFXDeviceManager.h
 
-                cocos/renderer/gfx-base/SPIRVUtils.h
-                cocos/renderer/gfx-base/SPIRVUtils.cpp
+                 cocos/renderer/gfx-base/SPIRVUtils.h
+                 cocos/renderer/gfx-base/SPIRVUtils.cpp
                  cocos/renderer/gfx-base/GFXObject.h
                  cocos/renderer/gfx-base/GFXObject.cpp
                  cocos/renderer/gfx-base/GFXBase.h
