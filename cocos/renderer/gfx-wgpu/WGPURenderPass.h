@@ -31,7 +31,7 @@
 namespace cc {
 namespace gfx {
 
-class CCWGPURenderPassObject;
+struct CCWGPURenderPassObject;
 class CCWGPURenderPassHelper;
 
 class CCWGPURenderPass final : public emscripten::wrapper<RenderPass> {

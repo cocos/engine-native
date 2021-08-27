@@ -1,5 +1,6 @@
 #pragma once
 #include <webgpu/webgpu.h>
+#include "cocos/base/Log.h"
 #include "cocos/base/Macros.h"
 #include "gfx-base/GFXDef-common.h"
 namespace cc {
@@ -31,19 +32,21 @@ static WGPUStoreOp toWGPUStoreOp(StoreOp op) {
 
 static WGPUTextureUsage toWGPUTextureUsage(TextureUsage usage) {
     switch (usage) {
-        case TextureUsage::None:
+        case cc::gfx::TextureUsageBit::NONE:
             return WGPUTextureUsage::WGPUTextureUsage_None;
-        case TextureUsage::CopySrc:
+        case cc::gfx::TextureUsageBit::TRANSFER_SRC:
             return WGPUTextureUsage::WGPUTextureUsage_CopySrc;
-        case TextureUsage::CopyDst:
+        case cc::gfx::TextureUsageBit::TRANSFER_DST:
             return WGPUTextureUsage::WGPUTextureUsage_CopyDst;
-        case TextureUsage::Sampled:
+        case cc::gfx::TextureUsageBit::SAMPLED:
             return WGPUTextureUsage::WGPUTextureUsage_Sampled;
-        case TextureUsage::Storage:
+        case cc::gfx::TextureUsageBit::STORAGE:
             return WGPUTextureUsage::WGPUTextureUsage_Storage;
-        case TextureUsage::OutputAttachment:
+        case cc::gfx::TextureUsageBit::INPUT_ATTACHMENT:
+            return WGPUTextureUsage::WGPUTextureUsage_Sampled;
+        case cc::gfx::TextureUsageBit::COLOR_ATTACHMENT:
             return WGPUTextureUsage::WGPUTextureUsage_OutputAttachment;
-        case TextureUsage::RenderAttachment:
+        case cc::gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT:
             return WGPUTextureUsage::WGPUTextureUsage_RenderAttachment;
         default:
             return WGPUTextureUsage::WGPUTextureUsage_Force32;
@@ -65,64 +68,32 @@ static WGPUTextureDimension toWGPUTextureDimension(TextureType type) {
             return WGPUTextureDimension::WGPUTextureDimension_Force32;
     }
 }
-/*
-    WGPUTextureFormat_Undefined = 0x00000000,
-    WGPUTextureFormat_R8Unorm = 0x00000001,
-    WGPUTextureFormat_R8Snorm = 0x00000002,
-    WGPUTextureFormat_R8Uint = 0x00000003,
-    WGPUTextureFormat_R8Sint = 0x00000004,
-    WGPUTextureFormat_R16Uint = 0x00000005,
-    WGPUTextureFormat_R16Sint = 0x00000006,
-    WGPUTextureFormat_R16Float = 0x00000007,
-    WGPUTextureFormat_RG8Unorm = 0x00000008,
-    WGPUTextureFormat_RG8Snorm = 0x00000009,
-    WGPUTextureFormat_RG8Uint = 0x0000000A,
-    WGPUTextureFormat_RG8Sint = 0x0000000B,
-    WGPUTextureFormat_R32Float = 0x0000000C,
-    WGPUTextureFormat_R32Uint = 0x0000000D,
-    WGPUTextureFormat_R32Sint = 0x0000000E,
-    WGPUTextureFormat_RG16Uint = 0x0000000F,
-    WGPUTextureFormat_RG16Sint = 0x00000010,
-    WGPUTextureFormat_RG16Float = 0x00000011,
-    WGPUTextureFormat_RGBA8Unorm = 0x00000012,
-    WGPUTextureFormat_RGBA8UnormSrgb = 0x00000013,
-    WGPUTextureFormat_RGBA8Snorm = 0x00000014,
-    WGPUTextureFormat_RGBA8Uint = 0x00000015,
-    WGPUTextureFormat_RGBA8Sint = 0x00000016,
-    WGPUTextureFormat_BGRA8Unorm = 0x00000017,
-    WGPUTextureFormat_BGRA8UnormSrgb = 0x00000018,
-    WGPUTextureFormat_RGB10A2Unorm = 0x00000019,
-    WGPUTextureFormat_RG11B10Ufloat = 0x0000001A,
-    WGPUTextureFormat_RGB9E5Ufloat = 0x0000001B,
-    WGPUTextureFormat_RG32Float = 0x0000001C,
-    WGPUTextureFormat_RG32Uint = 0x0000001D,
-    WGPUTextureFormat_RG32Sint = 0x0000001E,
-    WGPUTextureFormat_RGBA16Uint = 0x0000001F,
-    WGPUTextureFormat_RGBA16Sint = 0x00000020,
-    WGPUTextureFormat_RGBA16Float = 0x00000021,
-    WGPUTextureFormat_RGBA32Float = 0x00000022,
-    WGPUTextureFormat_RGBA32Uint = 0x00000023,
-    WGPUTextureFormat_RGBA32Sint = 0x00000024,
-    WGPUTextureFormat_Depth32Float = 0x00000025,
-    WGPUTextureFormat_Depth24Plus = 0x00000026,
-    WGPUTextureFormat_Stencil8 = 0x00000027,
-    WGPUTextureFormat_Depth24PlusStencil8 = 0x00000028,
-    WGPUTextureFormat_BC1RGBAUnorm = 0x00000029,
-    WGPUTextureFormat_BC1RGBAUnormSrgb = 0x0000002A,
-    WGPUTextureFormat_BC2RGBAUnorm = 0x0000002B,
-    WGPUTextureFormat_BC2RGBAUnormSrgb = 0x0000002C,
-    WGPUTextureFormat_BC3RGBAUnorm = 0x0000002D,
-    WGPUTextureFormat_BC3RGBAUnormSrgb = 0x0000002E,
-    WGPUTextureFormat_BC4RUnorm = 0x0000002F,
-    WGPUTextureFormat_BC4RSnorm = 0x00000030,
-    WGPUTextureFormat_BC5RGUnorm = 0x00000031,
-    WGPUTextureFormat_BC5RGSnorm = 0x00000032,
-    WGPUTextureFormat_BC6HRGBUfloat = 0x00000033,
-    WGPUTextureFormat_BC6HRGBFloat = 0x00000034,
-    WGPUTextureFormat_BC7RGBAUnorm = 0x00000035,
-    WGPUTextureFormat_BC7RGBAUnormSrgb = 0x00000036,
-    WGPUTextureFormat_Force32 = 0x7FFFFFFF
-*/
+
+static WGPUTextureViewDimension toWGPUTextureViewDimension(TextureType type) {
+    switch (type) {
+        case TextureType::TEX1D:
+        case TextureType::TEX1D_ARRAY:
+            return WGPUTextureViewDimension::WGPUTextureViewDimension_1D;
+        case TextureType::TEX2D:
+        case TextureType::TEX2D_ARRAY:
+            return WGPUTextureViewDimension::WGPUTextureViewDimension_2D;
+        case TextureType::TEX3D:
+        case TextureType::CUBE:
+            return WGPUTextureViewDimension::WGPUTextureViewDimension_3D;
+        default:
+            return WGPUTextureViewDimension::WGPUTextureViewDimension_Undefined;
+    }
+}
+
+static WGPUTextureAspect textureAspectTrait(Format format) {
+    switch (format) {
+        case Format::D24:
+            return WGPUTextureAspect_DepthOnly;
+        default:
+            return WGPUTextureAspect_All;
+    }
+}
+
 static WGPUTextureFormat toWGPUTextureFormat(Format format) {
     switch (format) {
         case Format::UNKNOWN:
@@ -230,6 +201,27 @@ static WGPUTextureFormat toWGPUTextureFormat(Format format) {
         default:
             CC_LOG_ERROR("unsupport WebGPU texture format.");
             return WGPUTextureFormat::WGPUTextureFormat_Force32;
+    }
+}
+
+static uint32_t toWGPUSampleCount(SampleCount sampleCount) {
+    switch (sampleCount) {
+        case SampleCount::X1:
+            return 1;
+        case SampleCount::X2:
+            return 2;
+        case SampleCount::X4:
+            return 4;
+        case SampleCount::X8:
+            return 8;
+        case SampleCount::X16:
+            return 16;
+        case SampleCount::X32:
+            return 32;
+        case SampleCount::X64:
+            return 64;
+        default:
+            return 1;
     }
 }
 

@@ -35,8 +35,9 @@
 namespace cc {
 namespace gfx {
 
-class CCWGPUDeviceObject;
-class CCWGPUContext;
+struct CCWGPUDeviceObject;
+
+class CCWGPUSwapchain;
 
 using namespace emscripten;
 
@@ -70,7 +71,10 @@ public:
     using Device::createTextureBarrier;
 
     inline CCWGPUDeviceObject *gpuDeviceObject() { return _gpuDeviceObj; }
-    inline CCWGPUContext *     gpuContextObject() { return _context; }
+    inline CCWGPUSwapchain *   gpuSwapchainObject() { return _context; }
+
+    inline CCWGPUTexture *swapchainColor() { return _gpuDeviceObj->swapchainColor; }
+    inline CCWGPUTexture *swapchainDepthStencil() { return _gpuDeviceObj->swapchainDepthStencil; }
 
 protected:
     static CCWGPUDevice *instance;
@@ -100,9 +104,17 @@ protected:
     void releaseSurface(uintptr_t windowHandle) override;
     void acquireSurface(uintptr_t windowHandle) override;
 
-    CCWGPUContext *     _context      = nullptr;
+    CCWGPUSwapchain *   _swapchain    = nullptr;
     CCWGPUDeviceObject *_gpuDeviceObj = nullptr;
 };
+
+CCWGPUTexture *swapchainColor(CCWGPUDevice *device) {
+    return device->swapchainColor();
+}
+
+CCWGPUTexture *swapchainDepthStencil(CCWGPUDevice *device) {
+    return device->swapchainDepthStencil();
+}
 
 } // namespace gfx
 

@@ -30,23 +30,23 @@
 namespace cc {
 
 namespace gfx {
-class CCWGPUContextObject;
+struct CCWGPUContextObject;
 class CCWGPUDevice;
-class CCWGPUContext final : public Context {
+class CCWGPUSwapchain final : public Context {
 public:
-    CCWGPUContext(CCWGPUDevice* device);
-    ~CCWGPUContext();
+    CCWGPUSwapchain(CCWGPUDevice* device);
+    ~CCWGPUSwapchain();
 
     void present() override;
 
 protected:
-    CCWGPUContext() = delete;
+    CCWGPUSwapchain() = delete;
 
     bool doInit(const ContextInfo& info) override;
     void doDestroy() override;
 
-    CCWGPUContextObject* _gpuContextObj = nullptr;
-    CCWGPUDevice*        _device        = nullptr;
+    CCWGPUContextObject* _gpuSwapchainObj = nullptr;
+    CCWGPUDevice*        _device          = nullptr;
 };
 } // namespace gfx
 } // namespace cc

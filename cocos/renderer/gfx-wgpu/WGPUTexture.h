@@ -30,16 +30,22 @@
 namespace cc {
 namespace gfx {
 
+struct CCWGPUTextureObject;
+
 class CCWGPUTexture final : public emscripten::wrapper<Texture> {
 public:
     CCWGPUTexture();
     ~CCWGPUTexture() = default;
+
+    inline CCWGPUTextureObject* gpuTextureObject() { return _gpuTextureObj; }
 
 protected:
     void doInit(const TextureInfo& info) override;
     void doInit(const TextureViewInfo& info) override;
     void doDestroy() override;
     void doResize(uint width, uint height, uint size) override;
+
+    CCWGPUTextureObject* _gpuTextureObj = nullptr;
 };
 
 inline CCWGPUTexture* getThis(CCWGPUTexture* that) {

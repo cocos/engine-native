@@ -25,11 +25,11 @@
 
 #include "WGPUDevice.h"
 #include <emscripten/val.h>
-#include "WGPUContext.h"
 #include "WGPUDevice.h"
 #include "WGPUExports.h"
 #include "WGPUObject.h"
 #include "WGPURenderPass.h"
+#include "WGPUSwapchain.h"
 #include "WGPUUtils.h"
 
 namespace cc {
@@ -65,11 +65,11 @@ bool CCWGPUDevice::doInit(const DeviceInfo& info) {
     _gpuDeviceObj             = CC_NEW(CCWGPUDeviceObject);
     _gpuDeviceObj->wgpuDevice = emscripten_webgpu_get_device();
     _gpuDeviceObj->wgpuQueue  = wgpuDeviceGetQueue(_gpuDeviceObj->wgpuDevice);
-    _context                  = CC_NEW(CCWGPUContext(this));
+    _swapchain                = CC_NEW(CCWGPUSwapchain(this));
     ContextInfo ctxInfo;
     ctxInfo.msaaEnabled = info.isAntiAlias;
     ctxInfo.performance = Performance::HIGH_QUALITY;
-    if (!_context->initialize(ctxInfo)) {
+    if (!_swapchain->initialize(ctxInfo)) {
         destroy();
         return false;
     }
