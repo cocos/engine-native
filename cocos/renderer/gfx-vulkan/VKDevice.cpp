@@ -40,7 +40,7 @@
 #include "VKSwapchain.h"
 #include "VKTexture.h"
 #include "VKUtils.h"
-#include "gfx-vulkan/SPIRVUtils.h"
+#include "gfx-base/SPIRVUtils.h"
 #include "states/VKGlobalBarrier.h"
 #include "states/VKSampler.h"
 #include "states/VKTextureBarrier.h"

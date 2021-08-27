@@ -646,6 +646,8 @@ endif()
 cocos_source_files(
                  cocos/renderer/GFXDeviceManager.h
 
+                cocos/renderer/gfx-base/SPIRVUtils.h
+                cocos/renderer/gfx-base/SPIRVUtils.cpp
                  cocos/renderer/gfx-base/GFXObject.h
                  cocos/renderer/gfx-base/GFXObject.cpp
                  cocos/renderer/gfx-base/GFXBase.h
@@ -1037,8 +1039,6 @@ if(CC_USE_VULKAN)
 
     cocos_source_files(
                      cocos/renderer/gfx-vulkan/GFXVulkan.h
-                     cocos/renderer/gfx-vulkan/SPIRVUtils.h
-                     cocos/renderer/gfx-vulkan/SPIRVUtils.cpp
                      cocos/renderer/gfx-vulkan/vk_mem_alloc.h
                      cocos/renderer/gfx-vulkan/VKBuffer.cpp
                      cocos/renderer/gfx-vulkan/VKBuffer.h
