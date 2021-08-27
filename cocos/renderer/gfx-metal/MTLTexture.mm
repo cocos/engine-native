@@ -215,7 +215,7 @@ void CCMTLTexture::doDestroy() {
 
     CCMTLDevice::getInstance()->getMemoryStatus().textureSize -= _size;
 
-    std::function<void(void)> destroyFunc = [&mtlTexure]() {
+    std::function<void(void)> destroyFunc = [mtlTexure]() {
         if (mtlTexure) {
             [mtlTexure setPurgeableState:MTLPurgeableStateEmpty];
             [mtlTexure release];
