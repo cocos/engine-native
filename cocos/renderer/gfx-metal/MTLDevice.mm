@@ -92,15 +92,6 @@ bool CCMTLDevice::doInit(const DeviceInfo &info) {
     _icbSuppored = mu::isIndirectCommandBufferSupported(MTLFeatureSet(_mtlFeatureSet));
     _isSamplerDescriptorCompareFunctionSupported = mu::isSamplerDescriptorCompareFunctionSupported(gpuFamily);
 
-//    ContextInfo ctxInfo;
-//    ctxInfo.windowHandle = _windowHandle;
-//
-//    _context = CC_NEW(CCMTLContext);
-//    if (!_context->initialize(ctxInfo)) {
-//        destroy();
-//        return false;
-//    }
-
     QueueInfo queueInfo;
     queueInfo.type = QueueType::GRAPHICS;
     _queue         = createQueue(queueInfo);
