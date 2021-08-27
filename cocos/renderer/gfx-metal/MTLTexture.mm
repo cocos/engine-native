@@ -121,7 +121,11 @@ void CCMTLTexture::doInit(const TextureViewInfo &info) {
 
 void CCMTLTexture::doInit(const SwapchainTextureInfo &info) {
     _swapchain = info.swapchain;
-    _mtlTexture = [static_cast<CCMTLSwapchain*>(_swapchain)->currentDrawable() texture];
+    if (info.format == Format::DEPTH_STENCIL) {
+        createMTLTexture();
+    } else {
+        _mtlTexture = [static_cast<CCMTLSwapchain*>(_swapchain)->currentDrawable() texture];
+    }
 }
 
 void CCMTLTexture::update() {
