@@ -51,6 +51,8 @@ protected:
     uint _lastUpdateFrame{0U};
     uint _totalUpdateTimes{0U};
     uint _creationFrame{0U};
+
+    String _initStack;
 };
 
 } // namespace gfx

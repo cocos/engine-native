@@ -56,11 +56,13 @@ void CCMTLSwapchain::doInit(const SwapchainInfo &info) {
 
     //----------------------acquire layer-----------------------------------
     auto* view = (CCView*)info.windowHandle;
-#ifdef CC_USE_METAL
     CAMetalLayer *layer = static_cast<CAMetalLayer *>(view.layer);
+<<<<<<< HEAD
 #else
     CAMetalLayer *layer = static_cast<CAMetalLayer *>(view);
 #endif
+=======
+>>>>>>> f6a59387a (fix some triple buffer issues)
 
     if (layer.pixelFormat == MTLPixelFormatInvalid) {
         layer.pixelFormat = MTLPixelFormatBGRA8Unorm;

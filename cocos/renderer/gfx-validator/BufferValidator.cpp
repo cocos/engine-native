@@ -28,6 +28,8 @@
 #include "base/Macros.h"
 #include "base/threading/MessageQueue.h"
 
+#include "bindings/jswrapper/SeApi.h"
+
 #include "BufferValidator.h"
 #include "DeviceValidator.h"
 #include "ValidationUtils.h"
@@ -46,8 +48,11 @@ BufferValidator::~BufferValidator() {
     CC_SAFE_DELETE(_actor);
 
     uint lifeTime = DeviceValidator::getInstance()->currentFrame() - _creationFrame;
-    CCASSERT(_isBufferView || !hasFlag(_memUsage, MemoryUsageBit::HOST) || _totalUpdateTimes > lifeTime / 3,
-             "Triple buffer enabled for infrequently-updated buffer, consider using MemoryUsageBit::DEVICE instead");
+    // skip those that have never been updated
+    if (!_isBufferView && hasFlag(_memUsage, MemoryUsageBit::HOST) && _totalUpdateTimes && _totalUpdateTimes < lifeTime / 3) {
+        CC_LOG_WARNING("Triple buffer enabled for infrequently-updated buffer, consider using MemoryUsageBit::DEVICE instead");
+        CC_LOG_DEBUG("Init Stacktrace: %s", _initStack.c_str());
+    }
 }
 
 void BufferValidator::doInit(const BufferInfo &info) {
@@ -55,18 +60,13 @@ void BufferValidator::doInit(const BufferInfo &info) {
     CCASSERT(info.memUsage != MemoryUsageBit::NONE, "invalid buffer param");
     // CCASSERT(info.size, "zero-sized buffer?"); // be more lenient on this for now
 
+    _initStack = se::ScriptEngine::getInstance()->getCurrentStackTrace();
+
     _creationFrame = DeviceValidator::getInstance()->currentFrame();
     _totalUpdateTimes = 0U;
 
     if (hasFlag(info.usage, BufferUsageBit::VERTEX) && !info.stride) {
         CCASSERT(false, "invalid stride for vertex buffer");
-    }
-
-    if (hasAnyFlags(info.usage, BufferUsageBit::VERTEX | BufferUsageBit::INDEX) &&
-        hasFlag(info.memUsage, MemoryUsageBit::HOST)) {
-        CC_LOG_WARNING(
-            "Triple buffer enabled for Vertex/Index buffers are discouraged, \
-            for rarely-updated buffers, consider using MemoryUsageBit::DEVICE instead");
     }
 
     /////////// execute ///////////

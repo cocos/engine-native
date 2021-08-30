@@ -64,8 +64,8 @@ protected:
     uint32_t      _attributesHash = 0;
 
     BufferList _vertexBuffers;
-    Buffer *   _indexBuffer    = nullptr;
-    Buffer *   _indirectBuffer = nullptr;
+    Buffer *   _indexBuffer{nullptr};
+    Buffer *   _indirectBuffer{nullptr};
 
     DrawInfo _drawInfo;
 };

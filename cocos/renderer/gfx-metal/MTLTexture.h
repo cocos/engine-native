@@ -26,8 +26,8 @@
 #pragma once
 
 #import "gfx-base/GFXTexture.h"
+
 #import <Metal/MTLTexture.h>
-#import "MTLSwapChain.h"
 
 namespace cc {
 namespace gfx {
@@ -58,17 +58,17 @@ protected:
     void doInit(const TextureViewInfo &info) override;
     void doDestroy() override;
     void doResize(uint width, uint height, uint size) override;
-    void doInit(const SwapchainTextureInfo &info);
+    void doInit(const SwapchainTextureInfo &info) override;
 
     bool createMTLTexture();
-    
+
     //update drawable from swapchain.
     void update();
 
     Format _convertedFormat = Format::UNKNOWN;
     bool _isArray = false;
     bool _isPVRTC = false;
-    
+
     id<MTLTexture> _mtlTexture = nil;
     id<MTLTexture> _mtlTextureView = nil;
 };

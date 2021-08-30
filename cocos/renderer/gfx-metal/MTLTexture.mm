@@ -29,7 +29,7 @@
 #import "MTLGPUObjects.h"
 #import "MTLTexture.h"
 #import "MTLUtils.h"
-#import "MTLSwapChain.h"
+#import "MTLSwapchain.h"
 #import <CoreVideo/CVPixelBuffer.h>
 #import <CoreVideo/CVMetalTexture.h>
 #import <CoreVideo/CVMetalTextureCache.h>
@@ -55,12 +55,12 @@ void CCMTLTexture::doInit(const TextureInfo &info) {
         _info.format == Format::PVRTC2_4BPP) {
         _isPVRTC = true;
     }
-    
+
     if(_info.externalRes) {
         auto pixelBuffer = static_cast<CVPixelBufferRef>(_info.externalRes);
         size_t width = CVPixelBufferGetWidth(pixelBuffer);
         size_t height = CVPixelBufferGetHeight(pixelBuffer);
-        
+
         CVReturn cvret;
         CVMetalTextureCacheRef CVMTLTextureCache;
         cvret = CVMetalTextureCacheCreate(
@@ -71,7 +71,7 @@ void CCMTLTexture::doInit(const TextureInfo &info) {
                         &CVMTLTextureCache);
 
         CCASSERT(cvret == kCVReturnSuccess, @"Failed to create Metal texture cache");
-        
+
         _convertedFormat = mu::convertGFXPixelFormat(_info.format);
         MTLPixelFormat mtlFormat = mu::toMTLPixelFormat(_convertedFormat);
         CVMetalTextureRef CVMTLTexture;
@@ -83,13 +83,13 @@ void CCMTLTexture::doInit(const TextureInfo &info) {
                         width, height,
                         0,
                         &CVMTLTexture);
-        
+
         CCASSERT(cvret == kCVReturnSuccess, @"Failed to create CoreVideo Metal texture from image");
-        
+
         _mtlTexture = CVMetalTextureGetTexture(CVMTLTexture);
         CFRelease(CVMTLTexture);
         CFRelease(CVMTLTextureCache);
-        
+
         CCASSERT(_mtlTexture, @"Failed to create Metal texture CoreVideo Metal Texture");
     }
 
@@ -173,7 +173,7 @@ bool CCMTLTexture::createMTLTexture() {
     descriptor.textureType = descriptor.sampleCount > 1 ? MTLTextureType2DMultisample : mu::toMTLTextureType(_info.type);
     descriptor.mipmapLevelCount = _info.levelCount;
     descriptor.arrayLength = _info.type == TextureType::CUBE ? 1 : _info.layerCount;
-    
+
     if(hasAllFlags(TextureUsage::COLOR_ATTACHMENT | TextureUsage::DEPTH_STENCIL_ATTACHMENT | TextureUsage::INPUT_ATTACHMENT, _info.usage) && mu::isImageBlockSupported()) {
         //xcode OS version warning
         if (@available(macOS 11.0, *)) {
@@ -207,7 +207,7 @@ void CCMTLTexture::doDestroy() {
         _mtlTexture = nil;
         return;
     }
-    
+
     id<MTLTexture> mtlTexure =  nil;
     if(_isTextureView) {
         mtlTexure = _mtlTextureView;
@@ -237,9 +237,9 @@ void CCMTLTexture::doResize(uint width, uint height, uint size) {
     auto oldSize = _size;
     auto oldWidth = _info.width;
     auto oldHeight = _info.height;
-    
+
     id<MTLTexture> oldMTLTexture = _mtlTexture;
-    
+
     _info.width = width;
     _info.height = height;
     _size = size;

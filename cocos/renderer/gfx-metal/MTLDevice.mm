@@ -40,6 +40,7 @@
 #import "MTLSampler.h"
 #import "MTLSemaphore.h"
 #import "MTLShader.h"
+#import "MTLSwapchain.h"
 #import "MTLTexture.h"
 #import "cocos/bindings/event/CustomEventTypes.h"
 #import "cocos/bindings/event/EventDispatcher.h"
@@ -154,9 +155,9 @@ void CCMTLDevice::doDestroy() {
 //        EventDispatcher::removeCustomEventListener(EVENT_MEMORY_WARNING, _memoryAlarmListenerId);
 //        _memoryAlarmListenerId = 0;
 //    }
-    
+
     CC_DELETE(_gpuDeviceObj);
-    
+
     if (_autoreleasePool) {
         [(NSAutoreleasePool*)_autoreleasePool drain];
         _autoreleasePool = nullptr;
@@ -185,7 +186,7 @@ void CCMTLDevice::doDestroy() {
 
 void CCMTLDevice::acquire(Swapchain *const *swapchains, uint32_t count) {
     _inFlightSemaphore->wait();
-    
+
     for (CCMTLSwapchain* swapchain : _swapchains) {
         swapchain->acquire();
     }
@@ -210,11 +211,11 @@ void CCMTLDevice::present() {
     //hold this pointer before update _currentFrameIndex
     _currentBufferPoolId = _currentFrameIndex;
     _currentFrameIndex = (_currentFrameIndex + 1) % MAX_FRAMES_IN_FLIGHT;
-    
+
     id<MTLCommandBuffer> cmdBuffer = [queue->gpuQueueObj()->mtlCommandQueue commandBufferWithUnretainedReferences];
-    
+
     [cmdBuffer enqueue];
-    
+
     for (CCMTLSwapchain* swapchain: _swapchains) {
         if (swapchain->currentDrawable()) {
             [cmdBuffer presentDrawable:swapchain->currentDrawable()];
@@ -224,7 +225,7 @@ void CCMTLDevice::present() {
             onPresentCompleted();
         }];
     }
-    
+
     [cmdBuffer commit];
 
     if (_autoreleasePool) {

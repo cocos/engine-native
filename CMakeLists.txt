@@ -46,8 +46,6 @@ elseif(OHOS)
     cc_set_if_undefined(CC_USE_GLES2 OFF)
 endif()
 
-set(CC_USE_METAL OFF)
-
 if(USE_PHYSICS_PHYSX)
     if (ANDROID AND CMAKE_ANDROID_ARCH_ABI MATCHES x86)
         set(USE_PHYSICS_PHYSX OFF)
@@ -1030,8 +1028,8 @@ if(CC_USE_METAL)
                      cocos/renderer/gfx-metal/MTLCommandEncoder.h
                      cocos/renderer/gfx-metal/MTLConfig.h
                      cocos/renderer/gfx-metal/MTLSemaphore.h
-                     cocos/renderer/gfx-metal/MTLSwapChain.h
-                     cocos/renderer/gfx-metal/MTLSwapChain.mm
+                     cocos/renderer/gfx-metal/MTLSwapchain.h
+                     cocos/renderer/gfx-metal/MTLSwapchain.mm
     )
 endif()
 

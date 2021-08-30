@@ -357,7 +357,7 @@ void PipelineUBO::activate(gfx::Device *device, RenderPipeline *pipeline) {
 
     auto *shadowUBO = _device->createBuffer({
         gfx::BufferUsageBit::UNIFORM | gfx::BufferUsageBit::TRANSFER_DST,
-        gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE,
+        gfx::MemoryUsageBit::DEVICE,
         UBOShadow::SIZE,
         UBOShadow::SIZE,
         gfx::BufferFlagBit::NONE,

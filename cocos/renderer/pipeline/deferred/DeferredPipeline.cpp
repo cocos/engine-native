@@ -192,7 +192,7 @@ bool DeferredPipeline::createQuadInputAssembler(gfx::Buffer *quadIB, gfx::Buffer
 
     if (*quadVB == nullptr) {
         *quadVB = _device->createBuffer({gfx::BufferUsageBit::VERTEX | gfx::BufferUsageBit::TRANSFER_DST,
-                                         gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE, vbSize, vbStride});
+                                         gfx::MemoryUsageBit::DEVICE, vbSize, vbStride});
     }
 
     if (*quadVB == nullptr) {
@@ -277,7 +277,7 @@ bool DeferredPipeline::activeRenderer(gfx::Swapchain *swapchain) {
     uint ibSize   = ibStride * 6;
     if (_quadIB == nullptr) {
         _quadIB = _device->createBuffer({gfx::BufferUsageBit::INDEX | gfx::BufferUsageBit::TRANSFER_DST,
-                                         gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE, ibSize, ibStride});
+                                         gfx::MemoryUsageBit::DEVICE, ibSize, ibStride});
     }
 
     if (_quadIB == nullptr) {
