@@ -58,11 +58,11 @@ public:
     inline float                                                               getShadowDistance() const { return _shadowDistance; }
     inline void                                                                setShadowDistance(float shadowDistance) { _shadowDistance = shadowDistance; }
     inline Mat4                                                                getMatShadowView() const { return _matShadowView; }
-    inline void                                                                setMatShadowView(Mat4 matShadowView) { _matShadowView = matShadowView; }
+    inline void                                                                setMatShadowView(const Mat4 &matShadowView) { _matShadowView = matShadowView; }
     inline Mat4                                                                getMatShadowProj() const { return _matShadowProj; }
-    inline void                                                                setMatShadowProj(Mat4 matShadowProj) { _matShadowProj = matShadowProj; }
+    inline void                                                                setMatShadowProj(const Mat4 &matShadowProj) { _matShadowProj = matShadowProj; }
     inline Mat4                                                                getMatShadowViewProj() const { return _matShadowViewProj; }
-    inline void                                                                setMatShadowViewProj(Mat4 matShadowViewProj) { _matShadowViewProj = matShadowViewProj; }
+    inline void                                                                setMatShadowViewProj(const Mat4 &matShadowViewProj) { _matShadowViewProj = matShadowViewProj; }
 
 private:
     RenderObjectList _renderObjects;

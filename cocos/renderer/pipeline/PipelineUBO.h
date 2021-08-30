@@ -43,7 +43,7 @@ public:
     static void    updateGlobalUBOView(const RenderPipeline *pipeline, std::array<float, UBOGlobal::COUNT> *bufferView);
     static void    updateCameraUBOView(const RenderPipeline *pipeline, float *output, const scene::Camera *camera);
     static void    updateShadowUBOView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> *bufferView, const scene::Camera *camera);
-    static void    updateShadowUBOLightView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> *bufferView, const scene::Light *light, const scene::Camera *camera);
+    static void    updateShadowUBOLightView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> *bufferView, const scene::Light *light);
     static uint8_t getCombineSignY();
 
     PipelineUBO()           = default;
@@ -54,7 +54,7 @@ public:
     void updateCameraUBO(const scene::Camera *camera);
     void updateMultiCameraUBO(const vector<scene::Camera *> &cameras);
     void updateShadowUBO(const scene::Camera *camera);
-    void updateShadowUBOLight(const scene::Light *light, const scene::Camera *camera);
+    void updateShadowUBOLight(const scene::Light *light);
     void updateShadowUBORange(uint offset, const Mat4 *data);
 
     uint getCurrentCameraUBOOffset() const;

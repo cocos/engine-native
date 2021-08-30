@@ -223,7 +223,7 @@ void PipelineUBO::updateShadowUBOView(const RenderPipeline *pipeline, std::array
 }
 
 void PipelineUBO::updateShadowUBOLightView(const RenderPipeline *pipeline, std::array<float, UBOShadow::COUNT> *bufferView,
-    const scene::Light *light, const scene::Camera *camera) {
+    const scene::Light *light) {
     auto *const sceneData  = pipeline->getPipelineSceneData();
     auto *      shadowInfo = sceneData->getSharedData()->shadow;
     auto *      device     = gfx::Device::getInstance();
@@ -425,10 +425,10 @@ void PipelineUBO::updateShadowUBO(const scene::Camera *camera) {
     cmdBuffer->updateBuffer(ds->getBuffer(UBOShadow::BINDING), _shadowUBO.data(), UBOShadow::SIZE);
 }
 
-void PipelineUBO::updateShadowUBOLight(const scene::Light *light, const scene::Camera *camera) {
+void PipelineUBO::updateShadowUBOLight(const scene::Light *light) {
     auto *const ds        = _pipeline->getDescriptorSet();
     auto *const cmdBuffer = _pipeline->getCommandBuffers()[0];
-    PipelineUBO::updateShadowUBOLightView(_pipeline, &_shadowUBO, light, camera);
+    PipelineUBO::updateShadowUBOLightView(_pipeline, &_shadowUBO, light);
     cmdBuffer->updateBuffer(ds->getBuffer(UBOShadow::BINDING), _shadowUBO.data(), UBOShadow::SIZE);
 }
 

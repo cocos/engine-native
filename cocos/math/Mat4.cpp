@@ -99,7 +99,7 @@ void Mat4::createPerspective(float fieldOfView, float aspectRatio,
                              float zNearPlane, float zFarPlane, Mat4 *dst) {
     GP_ASSERT(dst);
     GP_ASSERT(zFarPlane != zNearPlane);
-    GP_ASSERT(fieldOfView != 0.0f);
+    GP_ASSERT(fieldOfView != 0.0F);
 
     const float minClipZ        = -1.0F;
     const float projectionSignY = 1.0F;
