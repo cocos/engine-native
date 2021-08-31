@@ -225,7 +225,7 @@ public:
     VkSwapchainKHR     vkSwapchain   = VK_NULL_HANDLE;
     FramebufferListMap vkSwapchainFramebufferListMap;
     vector<VkBool32>   queueFamilyPresentables;
-    VkResult           lastPresentResult = VK_SUCCESS;
+    VkResult           lastPresentResult = VK_NOT_READY;
 
     // external references
     vector<VkImage> swapchainImages;

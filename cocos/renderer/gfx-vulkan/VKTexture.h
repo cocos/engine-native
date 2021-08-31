@@ -43,6 +43,8 @@ public:
     inline CCVKGPUTextureView *gpuTextureView() const { return _gpuTextureView; }
 
 protected:
+    friend class CCVKSwapchain;
+
     void doInit(const TextureInfo &info) override;
     void doInit(const TextureViewInfo &info) override;
     void doInit(const SwapchainTextureInfo &info) override;

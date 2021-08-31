@@ -92,14 +92,15 @@ void SwapchainAgent::doDestroy() {
         });
 }
 
-void SwapchainAgent::doResize(uint32_t width, uint32_t height) {
-    ENQUEUE_MESSAGE_3(
+void SwapchainAgent::doResize(uint32_t width, uint32_t height, SurfaceTransform transform) {
+    ENQUEUE_MESSAGE_4(
         DeviceAgent::getInstance()->getMessageQueue(), SwapchainResize,
         actor, getActor(),
         width, width,
         height, height,
+        transform, transform,
         {
-            actor->resize(width, height);
+            actor->resize(width, height, transform);
         });
 }
 

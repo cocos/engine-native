@@ -58,8 +58,6 @@ CC_ENABLE_WARNINGS()
 namespace cc {
 namespace gfx {
 
-//#define DISABLE_PRE_TRANSFORM
-
 static VkResult VKAPI_PTR vkCreateRenderPass2KHRFallback(
     VkDevice                       device,
     const VkRenderPassCreateInfo2 *pCreateInfo,
@@ -575,7 +573,9 @@ void CCVKDevice::acquire(Swapchain *const *swapchains, uint32_t count) {
 
     for (uint32_t i = 0U; i < count; ++i) {
         auto *swapchain = static_cast<CCVKSwapchain *>(swapchains[i]);
-        if (!swapchain->checkSwapchainStatus()) continue;
+        if (swapchain->gpuSwapchain()->lastPresentResult == VK_NOT_READY) {
+            if (!swapchain->checkSwapchainStatus()) continue;
+        }
         vkSwapchains.push_back(swapchain->gpuSwapchain()->vkSwapchain);
         gpuSwapchains.push_back(swapchain->gpuSwapchain());
         vkSwapchainIndices.push_back(swapchain->gpuSwapchain()->curImageIndex);
@@ -634,24 +634,22 @@ void CCVKDevice::present() {
         presentInfo.pImageIndices      = vkSwapchainIndices.data();
 
         VkResult res = vkQueuePresentKHR(queue->gpuQueue()->vkQueue, &presentInfo);
-#ifndef DISABLE_PRE_TRANSFORM
         for (auto *gpuSwapchain : gpuSwapchains) {
             gpuSwapchain->lastPresentResult = res;
         }
-#endif
-
-        _gpuDevice->curBackBufferIndex = (_gpuDevice->curBackBufferIndex + 1) % _gpuDevice->backBufferCount;
-
-        uint fenceCount = gpuFencePool()->size();
-        if (fenceCount) {
-            VK_CHECK(vkWaitForFences(_gpuDevice->vkDevice, fenceCount,
-                                     gpuFencePool()->data(), VK_TRUE, DEFAULT_TIMEOUT));
-        }
-
-        gpuFencePool()->reset();
-        gpuRecycleBin()->clear();
-        gpuStagingBufferPool()->reset();
     }
+
+    _gpuDevice->curBackBufferIndex = (_gpuDevice->curBackBufferIndex + 1) % _gpuDevice->backBufferCount;
+
+    uint fenceCount = gpuFencePool()->size();
+    if (fenceCount) {
+        VK_CHECK(vkWaitForFences(_gpuDevice->vkDevice, fenceCount,
+                                 gpuFencePool()->data(), VK_TRUE, DEFAULT_TIMEOUT));
+    }
+
+    gpuFencePool()->reset();
+    gpuRecycleBin()->clear();
+    gpuStagingBufferPool()->reset();
 }
 
 CCVKGPUFencePool *        CCVKDevice::gpuFencePool() { return _gpuFencePools[_gpuDevice->curBackBufferIndex]; }

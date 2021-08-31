@@ -78,8 +78,8 @@ void SwapchainValidator::doDestroy() {
     _actor->destroy();
 }
 
-void SwapchainValidator::doResize(uint32_t width, uint32_t height) {
-    _actor->resize(width, height);
+void SwapchainValidator::doResize(uint32_t width, uint32_t height, SurfaceTransform transform) {
+    _actor->resize(width, height, transform);
 }
 
 void SwapchainValidator::doDestroySurface() {

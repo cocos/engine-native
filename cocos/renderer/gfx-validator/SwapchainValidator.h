@@ -36,14 +36,12 @@ public:
     explicit SwapchainValidator(Swapchain *actor);
     ~SwapchainValidator() override;
 
-    uint32_t getWidth() const override { return _actor->getWidth(); }
-    uint32_t getHeight() const override { return _actor->getHeight(); }
-    SurfaceTransform getSurfaceTransform() const override { return _actor->getSurfaceTransform(); }
+    bool isPreRotationEnabled() override { return _actor->isPreRotationEnabled(); }
 
 protected:
     void doInit(const SwapchainInfo &info) override;
     void doDestroy() override;
-    void doResize(uint32_t width, uint32_t height) override;
+    void doResize(uint32_t width, uint32_t height, SurfaceTransform transform) override;
     void doDestroySurface() override;
     void doCreateSurface(void *windowHandle) override;
 };

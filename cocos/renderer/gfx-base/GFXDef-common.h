@@ -900,7 +900,7 @@ struct BindingMappingInfo {
 
 struct SwapchainInfo {
     void *    windowHandle{nullptr}; // @ts-overrides { type: 'HTMLCanvasElement' }
-    VsyncMode vsyncMode{VsyncMode::RELAXED};
+    VsyncMode vsyncMode{VsyncMode::ON};
 
     uint32_t width{0U};
     uint32_t height{0U};

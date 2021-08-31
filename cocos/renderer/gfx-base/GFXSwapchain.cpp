@@ -51,12 +51,13 @@ void Swapchain::destroy() {
     _windowHandle = nullptr;
 }
 
-void Swapchain::resize(uint32_t width, uint32_t height) {
-    if (width != _colorTexture->_info.width || height != _colorTexture->_info.height) {
-        doResize(width, height);
+void Swapchain::resize(uint32_t width, uint32_t height, SurfaceTransform transform) {
+    if (width != _colorTexture->getWidth() || height != _colorTexture->getHeight()) {
+        doResize(width, height, transform);
 
         _colorTexture->_info.width = _depthStencilTexture->_info.width = width;
         _colorTexture->_info.height = _depthStencilTexture->_info.height = height;
+        if (isPreRotationEnabled()) _transform = transform;
     }
 }
 

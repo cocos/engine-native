@@ -1494,7 +1494,7 @@ MTLPixelFormat mu::getSupportedDepthStencilFormat(id<MTLDevice> device, uint fam
 #if CC_PLATFORM == CC_PLATFORM_MAC_OSX
     return MTLPixelFormatDepth24Unorm_Stencil8;
 #else
-    return MTLPixelFormatDepth32Unorm_Stencil8;
+    return MTLPixelFormatDepth32Float_Stencil8;
 #endif
 }
 

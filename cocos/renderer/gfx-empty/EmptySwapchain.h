@@ -35,7 +35,7 @@ public:
 protected:
     void doInit(const SwapchainInfo &info) override;
     void doDestroy() override;
-    void doResize(uint width, uint height) override;
+    void doResize(uint width, uint height, SurfaceTransform transform) override;
     void doDestroySurface() override;
     void doCreateSurface(void *windowHandle) override;
 };

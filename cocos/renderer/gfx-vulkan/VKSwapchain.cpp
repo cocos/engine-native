@@ -38,7 +38,8 @@ namespace cc {
 namespace gfx {
 
 CCVKSwapchain::CCVKSwapchain() {
-    _typedID = generateObjectID<decltype(this)>();
+    _typedID            = generateObjectID<decltype(this)>();
+    _preRotationEnabled = ENABLE_PRE_ROTATION;
 }
 
 CCVKSwapchain::~CCVKSwapchain() {
@@ -236,7 +237,7 @@ void CCVKSwapchain::doDestroy() {
     CC_SAFE_DELETE(_gpuSwapchain)
 }
 
-void CCVKSwapchain::doResize(uint32_t /*width*/, uint32_t /*height*/) {
+void CCVKSwapchain::doResize(uint32_t /*width*/, uint32_t /*height*/, SurfaceTransform /*transform*/) {
     checkSwapchainStatus();
 }
 
@@ -275,9 +276,7 @@ bool CCVKSwapchain::checkSwapchainStatus() {
     }
 
     if (newWidth == 0 || newHeight == 0) {
-        _gpuSwapchain->lastPresentResult = VK_SUBOPTIMAL_KHR;
-        _colorTexture->resize(newWidth, newHeight);
-        _depthStencilTexture->resize(newWidth, newHeight);
+        _gpuSwapchain->lastPresentResult = VK_NOT_READY;
         return false;
     }
 
@@ -306,6 +305,9 @@ bool CCVKSwapchain::checkSwapchainStatus() {
 
     CCASSERT(imageCount == _gpuSwapchain->createInfo.minImageCount, "swapchain image count assumption is broken");
 
+    // should skip size check, since the old swapchain has already been destroyed
+    static_cast<CCVKTexture *>(_colorTexture)->_info.width        = 0;
+    static_cast<CCVKTexture *>(_depthStencilTexture)->_info.width = 0;
     _colorTexture->resize(newWidth, newHeight);
     _depthStencilTexture->resize(newWidth, newHeight);
 
@@ -381,7 +383,7 @@ void CCVKSwapchain::doDestroySurface() {
 
     CCVKDevice::getInstance()->waitAllFences();
     destroySwapchain(gpuDevice);
-    _gpuSwapchain->lastPresentResult = VK_SUBOPTIMAL_KHR;
+    _gpuSwapchain->lastPresentResult = VK_NOT_READY;
 
     vkDestroySurfaceKHR(gpuContext->vkInstance, _gpuSwapchain->vkSurface, nullptr);
     _gpuSwapchain->vkSurface = VK_NULL_HANDLE;

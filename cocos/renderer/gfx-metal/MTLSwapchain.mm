@@ -57,12 +57,6 @@ void CCMTLSwapchain::doInit(const SwapchainInfo &info) {
     //----------------------acquire layer-----------------------------------
     auto* view = (CCView*)info.windowHandle;
     CAMetalLayer *layer = static_cast<CAMetalLayer *>(view.layer);
-<<<<<<< HEAD
-#else
-    CAMetalLayer *layer = static_cast<CAMetalLayer *>(view);
-#endif
-=======
->>>>>>> f6a59387a (fix some triple buffer issues)
 
     if (layer.pixelFormat == MTLPixelFormatInvalid) {
         layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
@@ -141,7 +135,7 @@ void CCMTLSwapchain::doDestroySurface() {
     }
 }
 
-void CCMTLSwapchain::doResize(uint32_t width, uint32_t height) {
+void CCMTLSwapchain::doResize(uint32_t width, uint32_t height, SurfaceTransform /*transform*/) {
     _colorTexture->resize(width, height);
     _depthStencilTexture->resize(width, height);
 }

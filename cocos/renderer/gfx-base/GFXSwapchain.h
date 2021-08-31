@@ -37,8 +37,11 @@ public:
     ~Swapchain() override;
 
     void initialize(const SwapchainInfo &info);
-    void resize(uint32_t width, uint32_t height);
+    void resize(uint32_t width, uint32_t height, SurfaceTransform transform);
     void destroy();
+
+    // TO BE REMOVED
+    inline void resize(uint32_t width, uint32_t height) { resize(width, height, SurfaceTransform::IDENTITY); }
 
     inline void destroySurface();
     inline void createSurface(void *windowHandle);
@@ -49,14 +52,16 @@ public:
     inline Texture *getColorTexture() const { return _colorTexture; }
     inline Texture *getDepthStencilTexture() const { return _depthStencilTexture; }
 
-    virtual uint32_t getWidth() const { return _colorTexture->getWidth(); }
-    virtual uint32_t getHeight() const { return _colorTexture->getHeight(); }
-    virtual SurfaceTransform getSurfaceTransform() const { return _transform; }
+    inline uint32_t getWidth() const { return _colorTexture->getWidth(); }
+    inline uint32_t getHeight() const { return _colorTexture->getHeight(); }
+    inline SurfaceTransform getSurfaceTransform() const { return _transform; }
+
+    virtual bool isPreRotationEnabled() { return _preRotationEnabled; }
 
 protected:
     virtual void doInit(const SwapchainInfo &info)         = 0;
     virtual void doDestroy()                               = 0;
-    virtual void doResize(uint32_t width, uint32_t height) = 0;
+    virtual void doResize(uint32_t width, uint32_t height, SurfaceTransform transform) = 0;
     virtual void doDestroySurface()                        = 0;
     virtual void doCreateSurface(void *windowHandle)       = 0;
 
@@ -65,6 +70,7 @@ protected:
     void *           _windowHandle{nullptr};
     VsyncMode        _vsyncMode{VsyncMode::RELAXED};
     SurfaceTransform _transform{SurfaceTransform::IDENTITY};
+    bool             _preRotationEnabled{false};
 
     Texture *_colorTexture{nullptr};
     Texture *_depthStencilTexture{nullptr};

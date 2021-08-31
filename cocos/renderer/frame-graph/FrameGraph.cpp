@@ -69,9 +69,6 @@ void FrameGraph::present(const TextureHandle &input, gfx::Texture *target) {
         [&](PassNodeBuilder &builder, PassDataPresent &data) {
             data.input = builder.read(input);
             builder.sideEffect();
-
-            //auto resource = getResourceNode(data.input);
-            // resource.virtualResource.
         },
         [target](const PassDataPresent &data, const DevicePassResourceTable &table) {
             auto *cmdBuff = gfx::Device::getInstance()->getCommandBuffer();

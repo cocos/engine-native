@@ -2102,6 +2102,7 @@ if(APPLE)
             "-framework UIKit"
             "-framework AVKit"
             "-framework WebKit"
+            "-framework CoreVideo"
             "-framework CoreMotion"
             "-framework CFNetwork"
             "-framework CoreMedia"
