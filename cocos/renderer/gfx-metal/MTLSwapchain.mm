@@ -23,8 +23,13 @@
  THE SOFTWARE.
 ****************************************************************************/
 #import "../gfx-base/GFXDef-common.h"
-#import "MTLSwapChain.h"
-#import <AppKit/NSView.h>
+#import "MTLSwapchain.h"
+#if CC_PLATFORM == CC_PLATFORM_MAC_OSX
+    #import <AppKit/NSView.h>
+#else
+    #import <UIKit/UIView.h>
+#endif
+
 #import "MTLGPUObjects.h"
 #import "MTLDevice.h"
 #import "MTLGPUObjects.h"
@@ -48,7 +53,7 @@ CCMTLSwapchain::~CCMTLSwapchain() {
 
 void CCMTLSwapchain::doInit(const SwapchainInfo &info) {
     _gpuSwapchainObj = CC_NEW(CCMTLGPUSwapChainObject);
-    
+
     //----------------------acquire layer-----------------------------------
     auto* view = (CCView*)info.windowHandle;
 #ifdef CC_USE_METAL
@@ -56,7 +61,7 @@ void CCMTLSwapchain::doInit(const SwapchainInfo &info) {
 #else
     CAMetalLayer *layer = static_cast<CAMetalLayer *>(view);
 #endif
-    
+
     if (layer.pixelFormat == MTLPixelFormatInvalid) {
         layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
     }
@@ -80,7 +85,7 @@ void CCMTLSwapchain::doInit(const SwapchainInfo &info) {
             break;
     }
     _gpuSwapchainObj->mtlLayer = layer;
-    
+
 //    MTLPixelFormatBGRA8Unorm
 //    MTLPixelFormatBGRA8Unorm_sRGB
 //    MTLPixelFormatRGBA16Float
@@ -92,10 +97,10 @@ void CCMTLSwapchain::doInit(const SwapchainInfo &info) {
 //    MTLPixelFormatBGR10_XR_sRGB
     Format colorFmt        = Format::BGRA8;
     Format depthStencilFmt = Format::DEPTH_STENCIL;
-    
+
     _colorTexture = CC_NEW(CCMTLTexture);
     _depthStencilTexture = CC_NEW(CCMTLTexture);
-    
+
     SwapchainTextureInfo textureInfo;
     textureInfo.swapchain = this;
     textureInfo.format    = colorFmt;
@@ -105,7 +110,7 @@ void CCMTLSwapchain::doInit(const SwapchainInfo &info) {
 
     textureInfo.format = depthStencilFmt;
     initTexture(textureInfo, _depthStencilTexture);
-    
+
     CCMTLDevice::getInstance()->registerSwapchain(this);
 }
 
@@ -114,14 +119,14 @@ void CCMTLSwapchain::doDestroy(){
     if(_gpuSwapchainObj) {
         _gpuSwapchainObj->currentDrawable = nil;
         _gpuSwapchainObj->mtlLayer = nil;
-        
+
         CC_SAFE_DELETE(_gpuSwapchainObj);
     }
-    
+
     if(_colorTexture) {
         CC_SAFE_DESTROY(_colorTexture);
     }
-    
+
     if(_depthStencilTexture) {
         CC_SAFE_DESTROY(_depthStencilTexture);
     }
@@ -171,4 +176,3 @@ void CCMTLSwapchain::doCreateSurface(void *windowHandle) {
 
 }
 }
-
