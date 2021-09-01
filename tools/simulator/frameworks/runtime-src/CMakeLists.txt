@@ -97,7 +97,6 @@ if(WINDOWS)
 elseif(MACOSX)
     set(UI_RESOURCES
         proj.ios_mac/mac/Simulator.entitlements
-        proj.ios_mac/mac/Icon.icns
         proj.ios_mac/mac/Base.lproj/ConsoleWindow.xib
         proj.ios_mac/mac/Base.lproj/MainMenu.xib
         proj.ios_mac/mac/en.lproj/MainMenu.xib
