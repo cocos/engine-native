@@ -71,6 +71,8 @@ struct Shadow {
     bool       shadowMapDirty{false};
     bool       fixedArea{false};
     ShadowType shadowType{ShadowType::PLANAR};
+    float      invisibleOcclusionRange{0.0F};
+    float      shadowDistance{0.0F};
     float      distance{0.0F};
     Pass *     instancePass{nullptr};
     Pass *     planarPass{nullptr};
@@ -81,7 +83,6 @@ struct Shadow {
     float      normalBias{0.0F};
     float      saturation{0.0F};
     float      orthoSize{0.0F};
-    float      range{0.0F};
 
     Vec4 color;
     Vec2 size;

@@ -55,8 +55,8 @@ public:
     inline const RenderObjectList &                                            getShadowObjects() const { return _shadowObjects; }
     inline void                                                                setRenderObjects(RenderObjectList &&ro) { _renderObjects = std::forward<RenderObjectList>(ro); }
     inline void                                                                setShadowObjects(RenderObjectList &&ro) { _shadowObjects = std::forward<RenderObjectList>(ro); }
-    inline float                                                               getShadowDistance() const { return _shadowDistance; }
-    inline void                                                                setShadowDistance(float shadowDistance) { _shadowDistance = shadowDistance; }
+    inline float                                                               getShadowCameraFar() const { return _shadowCameraFar; }
+    inline void                                                                setShadowCameraFar(float shadowDistance) { _shadowCameraFar = shadowDistance; }
     inline Mat4                                                                getMatShadowView() const { return _matShadowView; }
     inline void                                                                setMatShadowView(const Mat4 &matShadowView) { _matShadowView = matShadowView; }
     inline Mat4                                                                getMatShadowProj() const { return _matShadowProj; }
@@ -71,7 +71,7 @@ private:
     scene::PipelineSharedSceneData *_sharedSceneData      = nullptr;
     RenderPipeline *                _pipeline             = nullptr;
     gfx::Device *                   _device               = nullptr;
-    float                           _shadowDistance       = 0.0F;
+    float                           _shadowCameraFar       = 0.0F;
     Mat4                            _matShadowView;
     Mat4                            _matShadowProj;
     Mat4                            _matShadowViewProj;
