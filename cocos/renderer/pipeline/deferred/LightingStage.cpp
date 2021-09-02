@@ -456,6 +456,16 @@ void LightingStage::fgTransparent(scene::Camera *camera) {
         depthAttachmentInfo.endAccesses   = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
 
         data.depth = framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::fgStrHandleDepthTexture));
+        if (!data.depth.isValid()) { // when there is no opaque object present
+            gfx::TextureInfo depthTexInfo = {
+                gfx::TextureType::TEX2D,
+                gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT,
+                gfx::Format::DEPTH_STENCIL,
+                pipeline->getWidth(),
+                pipeline->getHeight(),
+            };
+            data.depth = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleDepthTexture, depthTexInfo);
+        }
         data.depth = builder.write(data.depth, depthAttachmentInfo);
         builder.writeToBlackboard(DeferredPipeline::fgStrHandleDepthTexture, data.depth);
 

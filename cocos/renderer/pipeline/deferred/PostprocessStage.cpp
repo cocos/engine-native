@@ -100,7 +100,6 @@ void PostprocessStage::render(scene::Camera *camera) {
         framegraph::TextureHandle lightingOut; // read from lighting output
         framegraph::TextureHandle backBuffer;  // write to back buffer
         framegraph::TextureHandle depth;
-        framegraph::TextureHandle placerholder;
     };
 
     if (hasFlag(static_cast<gfx::ClearFlags>(camera->clearFlag), gfx::ClearFlagBit::COLOR)) {
@@ -159,7 +158,7 @@ void PostprocessStage::render(scene::Camera *camera) {
         depthAttachmentInfo.usage         = framegraph::RenderTargetAttachment::Usage::DEPTH;
         depthAttachmentInfo.loadOp        = gfx::LoadOp::CLEAR;
         depthAttachmentInfo.beginAccesses = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
-        depthAttachmentInfo.endAccesses   = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_READ};
+        depthAttachmentInfo.endAccesses   = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
 
         data.depth = framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::fgStrHandleDepthTexture));
         if (data.depth.isValid()) {
