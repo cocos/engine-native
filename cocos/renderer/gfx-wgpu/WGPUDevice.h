@@ -38,6 +38,7 @@ namespace gfx {
 struct CCWGPUDeviceObject;
 
 class CCWGPUSwapchain;
+class CCWGPUTexture;
 
 using namespace emscripten;
 
@@ -71,7 +72,7 @@ public:
     using Device::createTextureBarrier;
 
     inline CCWGPUDeviceObject *gpuDeviceObject() { return _gpuDeviceObj; }
-    inline CCWGPUSwapchain *   gpuSwapchainObject() { return _context; }
+    inline CCWGPUSwapchain *   gpuSwapchainObject() { return _swapchain; }
 
     inline CCWGPUTexture *swapchainColor() { return _gpuDeviceObj->swapchainColor; }
     inline CCWGPUTexture *swapchainDepthStencil() { return _gpuDeviceObj->swapchainDepthStencil; }
