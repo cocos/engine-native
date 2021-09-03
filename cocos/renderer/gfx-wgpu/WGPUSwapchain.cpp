@@ -26,6 +26,7 @@
 #include "WGPUSwapchain.h"
 #include "WGPUDevice.h"
 #include "WGPUObject.h"
+#include "WGPUTexture.h"
 
 namespace cc {
 namespace gfx {
@@ -38,10 +39,7 @@ CCWGPUSwapchain::~CCWGPUSwapchain() {
     _device = nullptr;
 }
 
-void CCWGPUSwapchain::present() {
-}
-
-bool CCWGPUSwapchain::doInit(const ContextInfo& info) {
+void CCWGPUSwapchain::doInit(const SwapchainInfo& info) {
     WGPUSurfaceDescriptorFromCanvasHTMLSelector canvDesc = {};
     canvDesc.chain.sType                                 = WGPUSType_SurfaceDescriptorFromCanvasHTMLSelector;
     canvDesc.selector                                    = "canvas";
@@ -69,14 +67,14 @@ bool CCWGPUSwapchain::doInit(const ContextInfo& info) {
             break;
     }
 
-    const auto*             device = CCWGPUDevice::getInstance();
+    auto*                   device = CCWGPUDevice::getInstance();
     WGPUSwapChainDescriptor swapChainDesc;
     swapChainDesc.nextInChain = nullptr;
     swapChainDesc.label       = "defaultSwapChain";
     swapChainDesc.usage       = WGPUTextureUsage_RenderAttachment;
     swapChainDesc.format      = WGPUTextureFormat_BGRA8Unorm;
-    swapChainDesc.width       = device->getWidth();
-    swapChainDesc.height      = device->getHeight();
+    swapChainDesc.width       = info.width;
+    swapChainDesc.height      = info.height;
     swapChainDesc.presentMode = presentMode;
 
     CCWGPUDeviceObject* gpuDeviceObj = device->gpuDeviceObject();
@@ -97,27 +95,46 @@ bool CCWGPUSwapchain::doInit(const ContextInfo& info) {
     // SampleCount  samples    = SampleCount::X1;
     // uint         depth      = 1U;
     // uint         swapchain  = 0; // 0: none, 1: yes
-    TextureInfo info{
-        .type      = TextureType::TEX2D,
-        .usage     = TextureUsageBit::COLOR_ATTACHMENT,
-        .width     = device->getWidth(),
-        .height    = device->getHeight(),
-        .swapchain = 1,
+
+    SwapchainTextureInfo textureInfo = {
+        .swapchain = this,
+        .format    = Format::BGRA8,
+        .width     = info.width,
+        .height    = info.height,
     };
-    _gpuSwapchainObj->swapchainColor = static_cast<CCWGPUTexture*>(device->createTexture(info));
 
-    info.usage = TextureUsageBit::DEPTH_STENCIL_ATTACHMENT;
+    _gpuSwapchainObj->swapchainColor = CC_NEW(CCWGPUTexture);
+    initTexture(textureInfo, _gpuSwapchainObj->swapchainColor);
 
-    _gpuSwapchainObj->swapchainDepthStencil = static_cast<CCWGPUTexture*>(device->createTexture(info));
+    textureInfo.format                      = Format::DEPTH_STENCIL;
+    _gpuSwapchainObj->swapchainDepthStencil = CC_NEW(CCWGPUTexture);
+    initTexture(textureInfo, _gpuSwapchainObj->swapchainDepthStencil);
+
     // TODO: wgpuInstance
-    return true;
+
+    device->registerSwapchain(this);
 }
 
 void CCWGPUSwapchain::doDestroy() {
     // wgpuSurfaceRelease(_gpuSwapchainObj->wgpuSurface);
     // wgpuSwapChainRelease(_gpuSwapchainObj->wgpuSwapChain);
 
+    CCWGPUDevice::getInstance()->unRegisterSwapchain(this);
+
+    CC_DELETE(_gpuSwapchainObj->swapchainColor);
+    CC_DELETE(_gpuSwapchainObj->swapchainDepthStencil);
     CC_DELETE(_gpuSwapchainObj);
+}
+
+void CCWGPUSwapchain::doResize(uint32_t width, uint32_t height, SurfaceTransform transform) {
+    _colorTexture->resize(width, height);
+    _depthStencilTexture->resize(height, height);
+}
+
+void CCWGPUSwapchain::doDestroySurface() {
+}
+
+void CCWGPUSwapchain::doCreateSurface(void* windowHandle) {
 }
 
 } // namespace gfx

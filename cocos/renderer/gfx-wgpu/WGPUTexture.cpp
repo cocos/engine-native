@@ -27,6 +27,7 @@
 #include <webgpu/webgpu.h>
 #include "WGPUDevice.h"
 #include "WGPUObject.h"
+#include "WGPUSwapchain.h"
 #include "WGPUUtils.h"
 
 namespace cc {
@@ -69,6 +70,13 @@ void CCWGPUTexture::doInit(const TextureViewInfo &info) {
     _gpuTextureObj->wgpuTextureView = wgpuTextureCreateView(wgpuTexture, &descriptor);
 }
 
+void CCWGPUTexture::doInit(const SwapchainTextureInfo &info) {
+    if (_swapchain) {
+        auto *swapchain                 = static_cast<CCWGPUSwapchain *>(_swapchain);
+        _gpuTextureObj->wgpuTextureView = wgpuSwapChainGetCurrentTextureView(swapchain->gpuSwapchainObject()->wgpuSwapChain);
+    }
+}
+
 void CCWGPUTexture::doDestroy() {
     if (_gpuTextureObj) {
         if (_gpuTextureObj->wgpuTexture) {
@@ -79,7 +87,7 @@ void CCWGPUTexture::doDestroy() {
     CC_SAFE_DELETE(_gpuTextureObj);
 }
 
-void CCWGPUTexture::doResize(uint width, uint height, uint size) {
+void CCWGPUTexture::doResize(uint32_t width, uint32_t height, uint32_t size) {
     if (_isTextureView) {
         CC_LOG_ERROR("Resize is not support on texture view!");
         return;
@@ -88,16 +96,13 @@ void CCWGPUTexture::doResize(uint width, uint height, uint size) {
         wgpuTextureDestroy(_gpuTextureObj->wgpuTexture);
     }
 
-    _width  = width;
-    _height = height;
-
     WGPUTextureDescriptor descriptor;
-    descriptor.usage         = toWGPUTextureUsage(_usage);
-    descriptor.dimension     = toWGPUTextureDimension(_type);
-    descriptor.size          = {_width, _height, _depth};
-    descriptor.format        = toWGPUTextureFormat(_format);
-    descriptor.mipLevelCount = _levelCount;
-    descriptor.sampleCount   = toWGPUSampleCount(_samples);
+    descriptor.usage         = toWGPUTextureUsage(_info.usage);
+    descriptor.dimension     = toWGPUTextureDimension(_info.type);
+    descriptor.size          = {_info.width, _info.height, _info.depth};
+    descriptor.format        = toWGPUTextureFormat(_info.format);
+    descriptor.mipLevelCount = _info.levelCount;
+    descriptor.sampleCount   = toWGPUSampleCount(_info.samples);
 
     _gpuTextureObj->wgpuTexture = wgpuDeviceCreateTexture(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
 }

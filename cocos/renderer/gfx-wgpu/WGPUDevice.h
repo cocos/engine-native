@@ -30,6 +30,7 @@
 #endif
 
 #include <emscripten/bind.h>
+#include "WGPUDef.h"
 #include "gfx-base/GFXDevice.h"
 
 namespace cc {
@@ -50,8 +51,7 @@ public:
 
     ~CCWGPUDevice();
 
-    void resize(uint32_t width, uint32_t height) override;
-    void acquire() override;
+    void acquire(Swapchain *const *swapchains, uint32_t count) override;
     void present() override;
 
     using Device::copyBuffersToTexture;
@@ -72,10 +72,19 @@ public:
     using Device::createTextureBarrier;
 
     inline CCWGPUDeviceObject *gpuDeviceObject() { return _gpuDeviceObj; }
-    inline CCWGPUSwapchain *   gpuSwapchainObject() { return _swapchain; }
 
-    inline CCWGPUTexture *swapchainColor() { return _gpuDeviceObj->swapchainColor; }
-    inline CCWGPUTexture *swapchainDepthStencil() { return _gpuDeviceObj->swapchainDepthStencil; }
+    inline void registerSwapchain(CCWGPUSwapchain *swapchain) { _swapchains.push_back(swapchain); }
+    inline void unRegisterSwapchain(CCWGPUSwapchain *swapchain) {
+        auto iter = std::find(_swapchains.begin(), _swapchains.end(), swapchain);
+        if (iter != _swapchains.end()) {
+            _swapchains.erase(iter);
+        }
+    }
+
+    // ems export override
+    Swapchain *createSwapchain(const SwapchainInfoInstance &info) {
+        return this->Device::createSwapchain(static_cast<const SwapchainInfo &>(info));
+    }
 
 protected:
     static CCWGPUDevice *instance;
@@ -88,7 +97,6 @@ protected:
     Queue *              createQueue() override;
     Buffer *             createBuffer() override;
     Texture *            createTexture() override;
-    Sampler *            createSampler() override;
     Shader *             createShader() override;
     InputAssembler *     createInputAssembler() override;
     RenderPass *         createRenderPass() override;
@@ -97,25 +105,16 @@ protected:
     DescriptorSetLayout *createDescriptorSetLayout() override;
     PipelineLayout *     createPipelineLayout() override;
     PipelineState *      createPipelineState() override;
-    GlobalBarrier *      createGlobalBarrier() override;
-    TextureBarrier *     createTextureBarrier() override;
+    GlobalBarrier *      createGlobalBarrier(const GlobalBarrierInfo &info) override;
+    TextureBarrier *     createTextureBarrier(const TextureBarrierInfo &info) override;
+    Sampler *            createSampler(const SamplerInfo &info) override;
+    Swapchain *          createSwapchain() override;
     void                 copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) override;
     void                 copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint count) override;
 
-    void releaseSurface(uintptr_t windowHandle) override;
-    void acquireSurface(uintptr_t windowHandle) override;
-
-    CCWGPUSwapchain *   _swapchain    = nullptr;
-    CCWGPUDeviceObject *_gpuDeviceObj = nullptr;
+    CCWGPUDeviceObject *           _gpuDeviceObj = nullptr;
+    std::vector<CCWGPUSwapchain *> _swapchains;
 };
-
-CCWGPUTexture *swapchainColor(CCWGPUDevice *device) {
-    return device->swapchainColor();
-}
-
-CCWGPUTexture *swapchainDepthStencil(CCWGPUDevice *device) {
-    return device->swapchainDepthStencil();
-}
 
 } // namespace gfx
 

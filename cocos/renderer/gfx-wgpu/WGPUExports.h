@@ -1,8 +1,11 @@
 #pragma once
+#include "WGPUDef.h"
 #include "WGPUDevice.h"
 #include "WGPUFrameBuffer.h"
 #include "WGPURenderPass.h"
+#include "WGPUSwapchain.h"
 #include "WGPUTexture.h"
+
 namespace cc {
 namespace gfx {
 DeviceInfo DeviceInfoInstance() {
@@ -37,45 +40,6 @@ TextureInfo TextureInfoInstance() {
     return TextureInfo();
 }
 
-// struct with pointers
-class TextureViewInfoInstance {
-public:
-    TextureViewInfoInstance() = default;
-
-    inline void setTexture(Texture* tex) { info.texture = tex; }
-    inline void setType(TextureType type) { info.type = type; }
-    inline void setFormat(Format format) { info.format = format; }
-    inline void setBaseLevel(uint baseLevel) { info.baseLevel = baseLevel; }
-    inline void setLevelCount(uint levelCount) { info.levelCount = levelCount; }
-    inline void setBaseLayer(uint baseLayer) { info.baseLayer = baseLayer; }
-    inline void setLayerCount(uint layerCount) { info.layerCount = layerCount; }
-
-    operator TextureViewInfo() { return info; }
-
-private:
-    TextureViewInfo info;
-};
-
-// value_object<FramebufferInfo>("FramebufferInfo")
-//     .field("renderPass", &FramebufferInfo::renderPass)
-//     .field("colorTextures", &FramebufferInfo::colorTextures)
-//     .field("depthStencilTexture", &FramebufferInfo::depthStencilTexture);
-// function("FramebufferInfoInstance", &cc::gfx::FramebufferInfoInstance, allow_raw_pointers());
-
-class FramebufferInfoInstance {
-public:
-    FramebufferInfoInstance() = default;
-
-    inline void setRenderPass(RenderPass* renderPass) { info.renderPass = renderPass; }
-    inline void setColorTextures(TextureList colors) { info.colorTextures = colors; }
-    inline void setDepthStencilTexture(Texture* tex) { info.depthStencilTexture = tex; }
-
-    operator FramebufferInfo() { return info; }
-
-private:
-    FramebufferInfo info;
-};
-
 EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     // TODO_Zeqiang: compile time traverse enum
 
@@ -91,14 +55,18 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .value("RGBA32F", Format::RGBA32F);
     // ... so on
 
+    enum_<VsyncMode>("VsyncMode")
+        .value("OFF", VsyncMode::OFF)
+        .value("ON", VsyncMode::ON)
+        .value("RELAXED", VsyncMode::RELAXED)
+        .value("MAILBOX", VsyncMode::MAILBOX)
+        .value("HALF", VsyncMode::HALF);
+
     enum_<SampleCount>("SampleCount")
-        .value("X1", SampleCount::X1)
-        .value("X2", SampleCount::X2)
-        .value("X4", SampleCount::X4)
-        .value("X8", SampleCount::X8)
-        .value("X16", SampleCount::X16)
-        .value("X32", SampleCount::X32)
-        .value("X64", SampleCount::X64);
+        .value("ONE", SampleCount::ONE)
+        .value("MULTIPLE_PERFORMANCE", SampleCount::MULTIPLE_PERFORMANCE)
+        .value("MULTIPLE_BALANCE", SampleCount::MULTIPLE_BALANCE)
+        .value("MULTIPLE_QUALITY", SampleCount::MULTIPLE_QUALITY);
 
     enum_<LoadOp>("LoadOp")
         .value("LOAD", LoadOp::LOAD)
@@ -146,8 +114,14 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     enum_<TextureFlags>("TextureFlags")
         .value("NONE", TextureFlagBit::NONE)
         .value("GEN_MIPMAP", TextureFlagBit::GEN_MIPMAP)
-        .value("IMMUTABLE", TextureFlagBit::IMMUTABLE)
+        .value("RESIZABLE", TextureFlagBit::RESIZABLE)
         .value("GENERAL_LAYOUT", TextureFlagBit::GENERAL_LAYOUT);
+
+    enum_<SurfaceTransform>("SurfaceTransform")
+        .value("IDENTITY", SurfaceTransform::IDENTITY)
+        .value("ROTATE_90", SurfaceTransform::ROTATE_90)
+        .value("ROTATE_180", SurfaceTransform::ROTATE_180)
+        .value("ROTATE_270", SurfaceTransform::ROTATE_270);
 
     //-----------------------------------------------STRUCT-------------------------------------------------------------------
     value_object<ColorAttachment>("ColorAttachment")
@@ -204,11 +178,6 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     function("BindingMappingInfoInstance", &cc::gfx::BindingMappingInfoInstance);
 
     value_object<DeviceInfo>("DeviceInfo")
-        .field("isAntiAlias", &DeviceInfo::isAntiAlias)
-        .field("windowHandle", &DeviceInfo::windowHandle)
-        .field("width", &DeviceInfo::width)
-        .field("height", &DeviceInfo::height)
-        .field("pixelRatio", &DeviceInfo::pixelRatio)
         .field("bindingMappingInfo", &DeviceInfo::bindingMappingInfo);
     function("DeviceInfoInstance", &cc::gfx::DeviceInfoInstance);
 
@@ -242,6 +211,13 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("setColorTextures", &FramebufferInfoInstance::setDepthStencilTexture, allow_raw_pointer<arg<0>>())
         .function("setDepthStencilTextures", &FramebufferInfoInstance::setDepthStencilTexture, allow_raw_pointer<arg<0>>());
 
+    class_<SwapchainInfoInstance>("SwapchainInfoInstance")
+        .constructor<>()
+        .function("setTexture", &SwapchainInfoInstance::setWindowHandle, allow_raw_pointer<arg<0>>())
+        .function("setType", &SwapchainInfoInstance::setVsyncMode)
+        .function("setFormat", &SwapchainInfoInstance::setWidth)
+        .function("setBaseLevel", &SwapchainInfoInstance::setHeight);
+
     // value_object<TextureViewInfo>("TextureViewInfo")
     //     //.field("texture", &TextureViewInfo::texture)
     //     .field("type", &TextureViewInfo::type)
@@ -263,12 +239,24 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     // };
 
     //--------------------------------------------------CLASS---------------------------------------------------------------------------
+    class_<cc::gfx::Swapchain>("Swapchain")
+        .function("initialize", &cc::gfx::Swapchain::initialize, allow_raw_pointer<arg<0>>())
+        .function("destroy", &cc::gfx::Swapchain::destroy)
+        .function("resize", select_overload<void(uint32_t, uint32_t, SurfaceTransform)>(&cc::gfx::Swapchain::resize))
+        .function("destroySurface", &cc::gfx::Swapchain::destroySurface)
+        .function("createSurface", &cc::gfx::Swapchain::createSurface, allow_raw_pointer<arg<0>>())
+        .function("getWidth", &cc::gfx::Swapchain::getWidth)
+        .function("getHeight", &cc::gfx::Swapchain::getHeight);
+    class_<CCWGPUSwapchain, base<Swapchain>>("CCWGPUSwapchain")
+        .function("getColorTexture", select_overload<CCWGPUTexture*(void)>(&cc::gfx::CCWGPUSwapchain::getColorTexture), allow_raw_pointer<arg<0>>())
+        .function("getDepthStencilTexture", select_overload<CCWGPUTexture*(void)>(&cc::gfx::CCWGPUSwapchain::getDepthStencilTexture), allow_raw_pointer<arg<0>>());
+
     class_<Device>("Device")
         .function("initialize", &Device::initialize, allow_raw_pointer<arg<0>>())
         .function("destroy", &Device::destroy, pure_virtual())
-        .function("resize", &Device::resize, pure_virtual())
-        .function("acquire", &Device::acquire, pure_virtual())
         .function("present", &Device::present, pure_virtual())
+        .function("createCommandBuffer", select_overload<CommandBuffer*(const CommandBufferInfo&)>(&Device::createCommandBuffer),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createQueue", select_overload<Queue*(const QueueInfo&)>(&Device::createQueue),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createBuffer", select_overload<Buffer*(const BufferInfo&)>(&Device::createBuffer),
@@ -279,8 +267,8 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createTexture", select_overload<Texture*(const TextureViewInfo&)>(&Device::createTexture),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createSampler", select_overload<Sampler*(const SamplerInfo&)>(&Device::createSampler),
-                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        // .function("createSampler", select_overload<Sampler*(const SamplerInfo&)>(&Device::createSampler),
+        //           /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createShader", select_overload<Shader*(const ShaderInfo&)>(&Device::createShader),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createInputAssembler", select_overload<InputAssembler*(const InputAssemblerInfo&)>(&Device::createInputAssembler),
@@ -297,18 +285,22 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createPipelineState", select_overload<PipelineState*(const PipelineStateInfo&)>(&Device::createPipelineState),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createGlobalBarrier", select_overload<GlobalBarrier*(const GlobalBarrierInfo&)>(&Device::createGlobalBarrier),
-                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createTextureBarrier", select_overload<TextureBarrier*(const TextureBarrierInfo&)>(&Device::createTextureBarrier),
-                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        // .function("createGlobalBarrier", select_overload<GlobalBarrier*(const GlobalBarrierInfo&)>(&Device::createGlobalBarrier),
+        //           /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        // .function("createTextureBarrier", select_overload<TextureBarrier*(const TextureBarrierInfo&)>(&Device::createTextureBarrier),
+        //           /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("copyBuffersToTexture", select_overload<void(const BufferDataList&, Texture*, const BufferTextureCopyList&)>(&Device::copyBuffersToTexture),
                   /* pure_virtual(), */ allow_raw_pointers())
         .function("copyTextureToBuffers", select_overload<void(Texture*, uint8_t* const*, const BufferTextureCopy*, uint)>(&Device::copyTextureToBuffers),
-                  /* pure_virtual(), */ allow_raw_pointers());
+                  /* pure_virtual(), */ allow_raw_pointers())
+        .function("acquire", select_overload<void(Swapchain* const*, uint32_t)>(&Device::acquire),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("present", select_overload<void(void)>(&Device::present),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>());
     class_<CCWGPUDevice, base<Device>>("CCWGPUDevice")
         .class_function("getInstance", &CCWGPUDevice::getInstance, allow_raw_pointer<arg<0>>())
-        .function("swapchainColor", &cc::gfx::swapchainColor, allow_raw_pointer<arg<0>>())
-        .function("swapchainDepthStencil", &cc::gfx::swapchainDepthStencil, allow_raw_pointer<arg<0>>());
+        .function("createSwapchain", select_overload<Swapchain*(const SwapchainInfoInstance&)>(&CCWGPUDevice::createSwapchain),
+                  /* pure_virtual(), */ allow_raw_pointers());
 
     class_<cc::gfx::RenderPass>("RenderPass")
         .class_function("computeHash", select_overload<uint(const RenderPassInfo&)>(&RenderPass::computeHash), allow_raw_pointer<arg<0>>())

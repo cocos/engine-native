@@ -4182,13 +4182,10 @@ var ASM_CONSTS = {
       return WebGPU.mgrSurface.create(canvas);
     }
 
-  function _wgpuSurfaceRelease(id) {
-    WebGPU.mgrSurface.release(id);
-  }
-
-  function _wgpuSwapChainRelease(id) {
-    WebGPU.mgrSwapChain.release(id);
-  }
+  function _wgpuSwapChainGetCurrentTextureView(swapChainId) {
+      var swapChain = WebGPU.mgrSwapChain.get(swapChainId);
+      return WebGPU.mgrTextureView.create(swapChain["getCurrentTexture"]()["createView"]());
+    }
 
   function _wgpuTextureCreateView(textureId, descriptor) {
       var desc;
@@ -4292,8 +4289,7 @@ var asmLibraryArg = {
   "wgpuDeviceCreateTexture": _wgpuDeviceCreateTexture,
   "wgpuDeviceGetQueue": _wgpuDeviceGetQueue,
   "wgpuInstanceCreateSurface": _wgpuInstanceCreateSurface,
-  "wgpuSurfaceRelease": _wgpuSurfaceRelease,
-  "wgpuSwapChainRelease": _wgpuSwapChainRelease,
+  "wgpuSwapChainGetCurrentTextureView": _wgpuSwapChainGetCurrentTextureView,
   "wgpuTextureCreateView": _wgpuTextureCreateView,
   "wgpuTextureDestroy": _wgpuTextureDestroy
 };
@@ -4302,10 +4298,10 @@ var asm = createWasm();
 var ___wasm_call_ctors = Module["___wasm_call_ctors"] = createExportWrapper("__wasm_call_ctors");
 
 /** @type {function(...*):?} */
-var _free = Module["_free"] = createExportWrapper("free");
+var _malloc = Module["_malloc"] = createExportWrapper("malloc");
 
 /** @type {function(...*):?} */
-var _malloc = Module["_malloc"] = createExportWrapper("malloc");
+var _free = Module["_free"] = createExportWrapper("free");
 
 /** @type {function(...*):?} */
 var _fflush = Module["_fflush"] = createExportWrapper("fflush");

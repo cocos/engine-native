@@ -87,9 +87,9 @@ static WGPUTextureViewDimension toWGPUTextureViewDimension(TextureType type) {
 
 static WGPUTextureAspect textureAspectTrait(Format format) {
     switch (format) {
-        case Format::D24:
+        case Format::DEPTH:
             return WGPUTextureAspect_DepthOnly;
-        default:
+        case Format::DEPTH_STENCIL:
             return WGPUTextureAspect_All;
     }
 }
@@ -168,9 +168,9 @@ static WGPUTextureFormat toWGPUTextureFormat(Format format) {
             return WGPUTextureFormat::WGPUTextureFormat_RGBA32Uint;
         case Format::RGBA32I:
             return WGPUTextureFormat::WGPUTextureFormat_RGBA32Sint;
-        case Format::D32F:
+        case Format::DEPTH:
             return WGPUTextureFormat::WGPUTextureFormat_Depth32Float;
-        case Format::D24S8:
+        case Format::DEPTH_STENCIL:
             return WGPUTextureFormat::WGPUTextureFormat_Depth24PlusStencil8;
         case Format::BC1:
             return WGPUTextureFormat::WGPUTextureFormat_BC1RGBAUnorm;
@@ -204,22 +204,17 @@ static WGPUTextureFormat toWGPUTextureFormat(Format format) {
     }
 }
 
+//TODO_Zeqiang: more flexible strategy
 static uint32_t toWGPUSampleCount(SampleCount sampleCount) {
     switch (sampleCount) {
-        case SampleCount::X1:
+        case SampleCount::ONE:
             return 1;
-        case SampleCount::X2:
+        case SampleCount::MULTIPLE_PERFORMANCE:
             return 2;
-        case SampleCount::X4:
+        case SampleCount::MULTIPLE_BALANCE:
             return 4;
-        case SampleCount::X8:
+        case SampleCount::MULTIPLE_QUALITY:
             return 8;
-        case SampleCount::X16:
-            return 16;
-        case SampleCount::X32:
-            return 32;
-        case SampleCount::X64:
-            return 64;
         default:
             return 1;
     }
