@@ -37,6 +37,12 @@
 
     #include <memory>
 
+    // DEBUG ONLY:
+    // Set `__object_id__` && `__native_class_name__` for js object
+    #ifndef CC_DEBUG_JS_OBJECT_ID_
+        #define CC_DEBUG_JS_OBJECT_ID_ 0
+    #endif
+
 namespace se {
 
 class Class;
@@ -387,7 +393,7 @@ public:
     bool _isNativeFunction() const;
     //
 
-    #if CC_DEBUG
+    #if CC_DEBUG && CC_DEBUG_JS_OBJECT_ID_
     uint32_t getObjectId() const { return _objectId; }
     #endif
 
@@ -410,7 +416,7 @@ private:
     V8FinalizeFunc         _finalizeCb;
     internal::PrivateData *_internalData;
 
-    #if CC_DEBUG
+    #if CC_DEBUG && CC_DEBUG_JS_OBJECT_ID_
     uint32_t _objectId = 0;
     #endif
     friend class ScriptEngine;
