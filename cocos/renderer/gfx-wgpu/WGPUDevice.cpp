@@ -59,24 +59,21 @@ CCWGPUDevice::CCWGPUDevice() : wrapper<Device>(val::object()) {
 CCWGPUDevice::~CCWGPUDevice() {
     instance = nullptr;
     CC_DELETE(_gpuDeviceObj);
+    delete this;
 }
 
 bool CCWGPUDevice::doInit(const DeviceInfo& info) {
     _gpuDeviceObj             = CC_NEW(CCWGPUDeviceObject);
     _gpuDeviceObj->wgpuDevice = emscripten_webgpu_get_device();
     _gpuDeviceObj->wgpuQueue  = wgpuDeviceGetQueue(_gpuDeviceObj->wgpuDevice);
-    _swapchain                = CC_NEW(CCWGPUSwapchain(this));
-    ContextInfo ctxInfo;
-    ctxInfo.msaaEnabled = info.isAntiAlias;
-    ctxInfo.performance = Performance::HIGH_QUALITY;
-    if (!_swapchain->initialize(ctxInfo)) {
-        destroy();
-        return false;
-    }
     return true;
 }
 
 void CCWGPUDevice::doDestroy() {
+}
+
+Swapchain* CCWGPUDevice::createSwapchain() {
+    return new CCWGPUSwapchain(this);
 }
 
 Queue* CCWGPUDevice::createQueue() {
@@ -89,10 +86,6 @@ Buffer* CCWGPUDevice::createBuffer() {
 
 Texture* CCWGPUDevice::createTexture() {
     return CC_NEW(CCWGPUTexture);
-}
-
-Sampler* CCWGPUDevice::createSampler() {
-    return nullptr;
 }
 
 Shader* CCWGPUDevice::createShader() {
@@ -127,20 +120,6 @@ PipelineState* CCWGPUDevice::createPipelineState() {
     return nullptr;
 }
 
-GlobalBarrier* CCWGPUDevice::createGlobalBarrier() {
-    return nullptr;
-}
-
-TextureBarrier* CCWGPUDevice::createTextureBarrier() {
-    return nullptr;
-}
-
-void CCWGPUDevice::acquireSurface(uintptr_t window) {
-}
-
-void CCWGPUDevice::releaseSurface(uintptr_t window) {
-}
-
 CommandBuffer* CCWGPUDevice::createCommandBuffer(const CommandBufferInfo& info, bool hasAgent) {
     return nullptr;
 }
@@ -151,13 +130,19 @@ void CCWGPUDevice::copyBuffersToTexture(const uint8_t* const* buffers, Texture* 
 void CCWGPUDevice::copyTextureToBuffers(Texture* src, uint8_t* const* buffers, const BufferTextureCopy* region, uint count) {
 }
 
-void CCWGPUDevice::resize(uint32_t width, uint32_t height) {
-}
-
-void CCWGPUDevice::acquire() {
+void CCWGPUDevice::acquire(Swapchain* const* swapchains, uint32_t count) {
 }
 
 void CCWGPUDevice::present() {
+}
+
+GlobalBarrier* CCWGPUDevice::createGlobalBarrier(const GlobalBarrierInfo& info) {
+}
+
+TextureBarrier* CCWGPUDevice::createTextureBarrier(const TextureBarrierInfo& info) {
+}
+
+Sampler* CCWGPUDevice::createSampler(const SamplerInfo& info) {
 }
 
 } // namespace gfx

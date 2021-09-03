@@ -25,28 +25,38 @@
 
 #pragma once
 
-#include "gfx-base/GFXContext.h"
+#include "gfx-base/GFXSwapchain.h"
 
 namespace cc {
 
 namespace gfx {
-struct CCWGPUContextObject;
+struct CCWGPUSwapchainObject;
+
+class CCWGPUTexture;
 class CCWGPUDevice;
-class CCWGPUSwapchain final : public Context {
+class CCWGPUSwapchain final : public Swapchain {
 public:
     CCWGPUSwapchain(CCWGPUDevice* device);
     ~CCWGPUSwapchain();
 
-    void present() override;
+    inline CCWGPUSwapchainObject* gpuSwapchainObject() { return _gpuSwapchainObj; }
+
+    CCWGPUTexture* getColorTexture() {}
+
+    CCWGPUTexture* getDepthStencilTexture() {}
 
 protected:
     CCWGPUSwapchain() = delete;
 
-    bool doInit(const ContextInfo& info) override;
+    void doInit(const SwapchainInfo& info) override;
     void doDestroy() override;
+    void doResize(uint32_t width, uint32_t height, SurfaceTransform transform) override;
+    void doDestroySurface() override;
+    void doCreateSurface(void* windowHandle) override;
 
-    CCWGPUContextObject* _gpuSwapchainObj = nullptr;
-    CCWGPUDevice*        _device          = nullptr;
+    CCWGPUSwapchainObject* _gpuSwapchainObj = nullptr;
+    CCWGPUDevice*          _device          = nullptr;
 };
+
 } // namespace gfx
 } // namespace cc
