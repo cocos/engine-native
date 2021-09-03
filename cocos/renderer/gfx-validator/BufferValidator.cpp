@@ -28,7 +28,9 @@
 #include "base/Macros.h"
 #include "base/threading/MessageQueue.h"
 
-#include "bindings/jswrapper/SeApi.h"
+#ifndef CC_WGPU_WASM
+    #include "bindings/jswrapper/SeApi.h"
+#endif
 
 #include "BufferValidator.h"
 #include "DeviceValidator.h"
@@ -63,8 +65,9 @@ void BufferValidator::doInit(const BufferInfo &info) {
     CCASSERT(info.memUsage != MemoryUsageBit::NONE, "invalid buffer param");
     // CCASSERT(info.size, "zero-sized buffer?"); // be more lenient on this for now
 
+#ifndef CC_WGPU_WASM
     _initStack = se::ScriptEngine::getInstance()->getCurrentStackTrace();
-
+#endif
     _creationFrame    = DeviceValidator::getInstance()->currentFrame();
     _totalUpdateTimes = 0U;
 
