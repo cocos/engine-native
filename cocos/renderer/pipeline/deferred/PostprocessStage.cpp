@@ -173,7 +173,7 @@ void PostprocessStage::render(scene::Camera *camera) {
         builder.setViewport(viewport, renderArea);
     };
 
-    auto postExec = [&](RenderData const &data, const framegraph::DevicePassResourceTable &table) {
+    auto postExec = [](RenderData const &data, const framegraph::DevicePassResourceTable &table) {
         auto *           pipeline   = static_cast<DeferredPipeline *>(RenderPipeline::getInstance());
         auto *           stage      = static_cast<PostprocessStage *>(pipeline->getRenderstageByName(STAGE_NAME));
         gfx::RenderPass *renderPass = table.getRenderPass();
