@@ -1,9 +1,11 @@
 #include "AppDelegate.h"
 
+// clang-format: off
 #include <MMSystem.h>
 #include <Windows.h>
 #include <shellapi.h>
 #include <sstream>
+// clang-format: on
 
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "platform/StdC.h"
@@ -64,9 +66,10 @@ bool setCanvasCallback(se::Object* global) {
         if constexpr (sizeof(windowPtr) == 4) {
             ss << static_cast<uint32_t>(windowPtr) << ";";
         }
-        se->evalString(ss.str().c_str());
-        return true;
     }
+    se->evalString(ss.str().c_str());
+    return true;
+}
 } // namespace
 
 //exported function
