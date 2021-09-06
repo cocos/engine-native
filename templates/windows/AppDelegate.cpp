@@ -1,11 +1,11 @@
 #include "AppDelegate.h"
 
-// clang-format: off
-#include <MMSystem.h>
+// clang-format off
 #include <Windows.h>
 #include <shellapi.h>
+#include <MMSystem.h>
 #include <sstream>
-// clang-format: on
+// clang-format on
 
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "platform/StdC.h"
