@@ -103,17 +103,16 @@ bool setCanvasCallback(se::Object *global) {
     uintptr_t         windowHandle = reinterpret_cast<uintptr_t>(UIApplication.sharedApplication.delegate.window.rootViewController.view);
     std::stringstream ss;
     {
-        auto windowPtr = reinterpret_cast<uintptr_t>(windowHandle);
         ss << "window.innerWidth = " << viewLogicalSize.x
            << "; window.innerHeight = " << viewLogicalSize.y
            << "; window.nativeWidth= " << nativeWidth
            << "; window.nativeHeight = " << nativeHeight
            << "; window.windowHandler = ";
-        if constexpr (sizeof(windowPtr) == 8) { // use bigint
-            ss << static_cast<uint64_t>(windowPtr) << "n;";
+        if constexpr (sizeof(windowHandle) == 8) { // use bigint
+            ss << static_cast<uint64_t>(windowHandle) << "n;";
         }
-        if constexpr (sizeof(windowPtr) == 4) {
-            ss << static_cast<uint32_t>(windowPtr) << ";";
+        if constexpr (sizeof(windowHandle) == 4) {
+            ss << static_cast<uint32_t>(windowHandle) << ";";
         }
     }
     se->evalString(ss.str().c_str());
