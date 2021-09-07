@@ -40,16 +40,29 @@ CCWGPUTexture::CCWGPUTexture() : wrapper<Texture>(val::object()) {
 }
 
 void CCWGPUTexture::doInit(const TextureInfo &info) {
-    WGPUTextureDescriptor descriptor;
-    descriptor.usage         = toWGPUTextureUsage(info.usage);
-    descriptor.dimension     = toWGPUTextureDimension(info.type);
-    descriptor.size          = {info.width, info.height, info.depth};
-    descriptor.format        = toWGPUTextureFormat(info.format);
-    descriptor.mipLevelCount = info.levelCount;
-    descriptor.sampleCount   = toWGPUSampleCount(info.samples);
+    //     WGPUChainedStruct const * nextInChain;
+    // char const * label;
+    // WGPUTextureUsageFlags usage;
+    // WGPUTextureDimension dimension;
+    // WGPUExtent3D size;
+    // WGPUTextureFormat format;
+    // uint32_t mipLevelCount;
+    // uint32_t sampleCount;
+    WGPUTextureDescriptor descriptor = {
+        .nextInChain   = nullptr,
+        .label         = nullptr,
+        .usage         = toWGPUTextureUsage(info.usage),
+        .dimension     = toWGPUTextureDimension(info.type),
+        .size          = {info.width, info.height, info.depth},
+        .format        = toWGPUTextureFormat(info.format),
+        .mipLevelCount = info.levelCount,
+        .sampleCount   = toWGPUSampleCount(info.samples),
+    };
+    printf("create tex from %d to %d\n", info.format, descriptor.format);
 
     _gpuTextureObj->wgpuTexture = wgpuDeviceCreateTexture(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
-}
+    printf("create tex done.\n");
+} // namespace gfx
 
 void CCWGPUTexture::doInit(const TextureViewInfo &info) {
     WGPUTextureViewDescriptor descriptor = {

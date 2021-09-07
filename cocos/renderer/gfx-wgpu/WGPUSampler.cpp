@@ -23,22 +23,38 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "WGPUFrameBuffer.h"
+#include "WGPUSampler.h"
+#include <webgpu/webgpu.h>
+#include "WGPUDevice.h"
+#include "WGPUUtils.h"
 
-using namespace emscripten;
 namespace cc {
 namespace gfx {
 
-CCWGPUFramebuffer::CCWGPUFramebuffer() : wrapper<Framebuffer>(val::object()) {
+using namespace emscripten;
+
+CCWGPUSampler::CCWGPUSampler(const SamplerInfo& info) : wrapper<Sampler>(val::object(), info) {
+    WGPUSamplerDescriptor descriptor = {
+        .nextInChain   = nullptr,
+        .label         = nullptr,
+        .addressModeU  = toWGPUAddressMode(info.addressU),
+        .addressModeV  = toWGPUAddressMode(info.addressV),
+        .addressModeW  = toWGPUAddressMode(info.addressW),
+        .magFilter     = toWGPUFilterMode(info.magFilter),
+        .minFilter     = toWGPUFilterMode(info.minFilter),
+        .mipmapFilter  = toWGPUFilterMode(info.mipFilter),
+        .lodMinClamp   = 0.1f,
+        .lodMaxClamp   = 1000.0f,
+        .compare       = toWGPUCompareFunction(info.cmpFunc),
+        .maxAnisotropy = static_cast<uint16_t>(info.maxAnisotropy),
+    };
+
+    auto* device = CCWGPUDevice::getInstance();
+    _wgpuSampler = wgpuDeviceCreateSampler(device->gpuDeviceObject()->wgpuDevice, &descriptor);
 }
 
-void CCWGPUFramebuffer::doInit(const FramebufferInfo &info) {
-    _renderPass          = info.renderPass;
-    _colorTextures       = info.colorTextures;
-    _depthStencilTexture = info.depthStencilTexture;
-}
-
-void CCWGPUFramebuffer::doDestroy() {
+CCWGPUSampler::~CCWGPUSampler() {
+    wgpuSamplerRelease(_wgpuSampler);
 }
 
 } // namespace gfx

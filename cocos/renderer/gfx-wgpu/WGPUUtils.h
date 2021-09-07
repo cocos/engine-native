@@ -204,6 +204,61 @@ static WGPUTextureFormat toWGPUTextureFormat(Format format) {
     }
 }
 
+static WGPUAddressMode toWGPUAddressMode(Address addrMode) {
+    switch (addrMode) {
+        case Address::WRAP:
+            return WGPUAddressMode::WGPUAddressMode_Repeat;
+        case Address::CLAMP:
+            return WGPUAddressMode::WGPUAddressMode_ClampToEdge;
+        case Address::BORDER:
+            return WGPUAddressMode::WGPUAddressMode_ClampToEdge;
+        case Address::MIRROR:
+            return WGPUAddressMode::WGPUAddressMode_MirrorRepeat;
+    }
+}
+
+static WGPUFilterMode toWGPUFilterMode(Filter filter) {
+    switch (filter) {
+        case Filter::NONE:
+            return WGPUFilterMode::WGPUFilterMode_Force32;
+        case Filter::POINT:
+            return WGPUFilterMode::WGPUFilterMode_Nearest;
+        case Filter::LINEAR:
+            return WGPUFilterMode::WGPUFilterMode_Linear;
+        case Filter::ANISOTROPIC:
+            return WGPUFilterMode::WGPUFilterMode_Linear;
+    }
+}
+// NEVER,
+// LESS,
+// EQUAL,
+// LESS_EQUAL,
+// GREATER,
+// NOT_EQUAL,
+// GREATER_EQUAL,
+// ALWAYS,
+
+static WGPUCompareFunction toWGPUCompareFunction(ComparisonFunc compareFunc) {
+    switch (compareFunc) {
+        case ComparisonFunc::NEVER:
+            return WGPUCompareFunction::WGPUCompareFunction_Never;
+        case ComparisonFunc::LESS:
+            return WGPUCompareFunction::WGPUCompareFunction_Less;
+        case ComparisonFunc::EQUAL:
+            return WGPUCompareFunction::WGPUCompareFunction_Equal;
+        case ComparisonFunc::LESS_EQUAL:
+            return WGPUCompareFunction::WGPUCompareFunction_LessEqual;
+        case ComparisonFunc::GREATER:
+            return WGPUCompareFunction::WGPUCompareFunction_Greater;
+        case ComparisonFunc::NOT_EQUAL:
+            return WGPUCompareFunction::WGPUCompareFunction_NotEqual;
+        case ComparisonFunc::GREATER_EQUAL:
+            return WGPUCompareFunction::WGPUCompareFunction_GreaterEqual;
+        case ComparisonFunc::ALWAYS:
+            return WGPUCompareFunction::WGPUCompareFunction_Always;
+    }
+}
+
 //TODO_Zeqiang: more flexible strategy
 static uint32_t toWGPUSampleCount(SampleCount sampleCount) {
     switch (sampleCount) {
