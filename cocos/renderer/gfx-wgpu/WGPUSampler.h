@@ -23,23 +23,24 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "WGPUFrameBuffer.h"
+#pragma once
+#include <emscripten/bind.h>
+#include "gfx-base/states/GFXSampler.h"
 
-using namespace emscripten;
+#include "WGPUobject.h"
+
 namespace cc {
 namespace gfx {
 
-CCWGPUFramebuffer::CCWGPUFramebuffer() : wrapper<Framebuffer>(val::object()) {
-}
+class CCWGPUSampler final : public emscripten::wrapper<Sampler> {
+public:
+    EMSCRIPTEN_WRAPPER(CCWGPUSampler);
+    explicit CCWGPUSampler(const SamplerInfo& info);
+    ~CCWGPUSampler();
 
-void CCWGPUFramebuffer::doInit(const FramebufferInfo &info) {
-    _renderPass          = info.renderPass;
-    _colorTextures       = info.colorTextures;
-    _depthStencilTexture = info.depthStencilTexture;
-}
-
-void CCWGPUFramebuffer::doDestroy() {
-}
+protected:
+    WGPUSampler _wgpuSampler = wgpuDefaultHandle;
+};
 
 } // namespace gfx
 } // namespace cc

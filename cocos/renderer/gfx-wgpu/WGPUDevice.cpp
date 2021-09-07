@@ -27,8 +27,10 @@
 #include <emscripten/val.h>
 #include "WGPUDevice.h"
 #include "WGPUExports.h"
+#include "WGPUFrameBuffer.h"
 #include "WGPUObject.h"
 #include "WGPURenderPass.h"
+#include "WGPUSampler.h"
 #include "WGPUSwapchain.h"
 #include "WGPUUtils.h"
 
@@ -101,7 +103,7 @@ RenderPass* CCWGPUDevice::createRenderPass() {
 }
 
 Framebuffer* CCWGPUDevice::createFramebuffer() {
-    return nullptr;
+    return CC_NEW(CCWGPUFramebuffer);
 }
 
 DescriptorSet* CCWGPUDevice::createDescriptorSet() {
@@ -143,6 +145,7 @@ TextureBarrier* CCWGPUDevice::createTextureBarrier(const TextureBarrierInfo& inf
 }
 
 Sampler* CCWGPUDevice::createSampler(const SamplerInfo& info) {
+    return new CCWGPUSampler(info);
 }
 
 } // namespace gfx

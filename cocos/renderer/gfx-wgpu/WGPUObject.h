@@ -67,6 +67,21 @@ struct CCWGPUTextureObject {
     WGPUTextureView wgpuTextureView = wgpuDefaultHandle;
 };
 
+struct CCWGPUSamplerObject {
+    WGPUSampler wgpuSampler = wgpuDefaultHandle;
+
+    WGPUAddressMode     addressModeU  = WGPUAddressMode_Repeat;
+    WGPUAddressMode     addressModeV  = WGPUAddressMode_Repeat;
+    WGPUAddressMode     addressModeW  = WGPUAddressMode_Repeat;
+    WGPUFilterMode      magFilter     = WGPUFilterMode_Linear;
+    WGPUFilterMode      minFilter     = WGPUFilterMode_Linear;
+    WGPUFilterMode      mipmapFilter  = WGPUFilterMode_Linear;
+    float               lodMinClamp   = 0.1f;
+    float               lodMaxClamp   = 1000.0f;
+    WGPUCompareFunction compare       = WGPUCompareFunction_Always;
+    uint16_t            maxAnisotropy = 0;
+};
+
 } // namespace gfx
 
 } // namespace cc

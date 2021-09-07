@@ -72,6 +72,7 @@ class Context;
 
 using TextureBarrierList = vector<TextureBarrier *>;
 using BufferDataList     = vector<const uint8_t *>;
+using BufferSrcList      = vector<uint8_t *>;
 using CommandBufferList  = vector<CommandBuffer *>;
 
 constexpr uint32_t MAX_ATTACHMENTS  = 4U;

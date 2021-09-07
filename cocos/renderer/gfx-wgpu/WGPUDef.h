@@ -4,6 +4,28 @@ namespace cc {
 namespace gfx {
 
 //emscripten export struct with pointers.
+class TextureInfoInstance {
+public:
+    TextureInfoInstance() = default;
+
+    inline void setType(TextureType type) { info.type = type; }
+    inline void setUsage(TextureUsage usage) { info.usage = usage; }
+    inline void setFormat(Format format) { info.format = format; }
+    inline void setWidth(uint32_t width) { info.width = width; }
+    inline void setHeight(uint32_t height) { info.height = height; }
+    inline void setFlags(TextureFlagBit flags) { info.flags = flags; }
+    inline void setLevelCount(uint levelCount) { info.levelCount = levelCount; }
+    inline void setLayerCount(uint layerCount) { info.layerCount = layerCount; }
+    inline void setSamples(SampleCount sample) { info.samples = sample; }
+    inline void setDepth(uint32_t depth) { info.depth = depth; }
+    inline void setImageBuffer(intptr_t imgBuff) { info.externalRes = reinterpret_cast<void*>(imgBuff); }
+
+    explicit operator const TextureInfo() const { return info; }
+
+private:
+    TextureInfo info;
+};
+
 class TextureViewInfoInstance {
 public:
     TextureViewInfoInstance() = default;
@@ -16,7 +38,7 @@ public:
     inline void setBaseLayer(uint baseLayer) { info.baseLayer = baseLayer; }
     inline void setLayerCount(uint layerCount) { info.layerCount = layerCount; }
 
-    operator TextureViewInfo() { return info; }
+    explicit operator const TextureViewInfo() const { return info; }
 
 private:
     TextureViewInfo info;
@@ -45,7 +67,7 @@ public:
     inline void setColorTextures(TextureList colors) { info.colorTextures = colors; }
     inline void setDepthStencilTexture(Texture* tex) { info.depthStencilTexture = tex; }
 
-    operator FramebufferInfo() { return info; }
+    explicit operator const FramebufferInfo() const { return info; }
 
 private:
     FramebufferInfo info;

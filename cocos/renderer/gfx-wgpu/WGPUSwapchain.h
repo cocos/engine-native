@@ -41,9 +41,9 @@ public:
 
     inline CCWGPUSwapchainObject* gpuSwapchainObject() { return _gpuSwapchainObj; }
 
-    CCWGPUTexture* getColorTexture() {}
+    CCWGPUTexture* getColorTexture();
 
-    CCWGPUTexture* getDepthStencilTexture() {}
+    CCWGPUTexture* getDepthStencilTexture();
 
 protected:
     CCWGPUSwapchain() = delete;

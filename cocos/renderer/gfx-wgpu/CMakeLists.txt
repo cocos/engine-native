@@ -30,6 +30,11 @@ AUX_SOURCE_DIRECTORY(
 list(FILTER GFX_BASE EXCLUDE REGEX "[\\w+]*SPIRVUtils.cpp")
 
 AUX_SOURCE_DIRECTORY(
+    ../../../cocos/renderer/gfx-base/states
+    GFX_BASE_STATES
+)
+
+AUX_SOURCE_DIRECTORY(
     ../../../cocos/renderer/gfx-agent
     GFX_AGENT
 )
@@ -55,6 +60,7 @@ set(RENDERER
     ${GFX_AGENT}
     ${GFX_VALIDATOR}
     ${GFX_EMPTY}
+    ${GFX_BASE_STATES}
     #${PIPELINE}
 )
 

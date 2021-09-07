@@ -4086,6 +4086,35 @@ var ASM_CONSTS = {
       return ret;
     }
 
+  function _wgpuDeviceCreateSampler(deviceId, descriptor) {
+      assert(descriptor);assert(HEAP32[((descriptor)>>2)] === 0);
+  
+      var desc = {
+        "label": undefined,
+        "addressModeU": WebGPU.AddressMode[
+            HEAPU32[(((descriptor)+(8))>>2)]],
+        "addressModeV": WebGPU.AddressMode[
+            HEAPU32[(((descriptor)+(12))>>2)]],
+        "addressModeW": WebGPU.AddressMode[
+            HEAPU32[(((descriptor)+(16))>>2)]],
+        "magFilter": WebGPU.FilterMode[
+            HEAPU32[(((descriptor)+(20))>>2)]],
+        "minFilter": WebGPU.FilterMode[
+            HEAPU32[(((descriptor)+(24))>>2)]],
+        "mipmapFilter": WebGPU.FilterMode[
+            HEAPU32[(((descriptor)+(28))>>2)]],
+        "lodMinClamp": HEAPF32[(((descriptor)+(32))>>2)],
+        "lodMaxClamp": HEAPF32[(((descriptor)+(36))>>2)],
+        "compare": WebGPU.CompareFunction[
+            HEAPU32[(((descriptor)+(40))>>2)]],
+      };
+      var labelPtr = HEAP32[(((descriptor)+(4))>>2)];
+      if (labelPtr) desc["label"] = UTF8ToString(labelPtr);
+  
+      var device = WebGPU["mgrDevice"].get(deviceId);
+      return WebGPU.mgrSampler.create(device["createSampler"](desc));
+    }
+
   function _wgpuDeviceCreateSwapChain(deviceId, surfaceId, descriptor) {
       assert(descriptor);assert(HEAP32[((descriptor)>>2)] === 0);
       var device = WebGPU["mgrDevice"].get(deviceId);
@@ -4181,6 +4210,10 @@ var ASM_CONSTS = {
   
       return WebGPU.mgrSurface.create(canvas);
     }
+
+  function _wgpuSamplerRelease(id) {
+    WebGPU.mgrSampler.release(id);
+  }
 
   function _wgpuSwapChainGetCurrentTextureView(swapChainId) {
       var swapChain = WebGPU.mgrSwapChain.get(swapChainId);
@@ -4285,10 +4318,12 @@ var asmLibraryArg = {
   "fd_write": _fd_write,
   "setTempRet0": _setTempRet0,
   "time": _time,
+  "wgpuDeviceCreateSampler": _wgpuDeviceCreateSampler,
   "wgpuDeviceCreateSwapChain": _wgpuDeviceCreateSwapChain,
   "wgpuDeviceCreateTexture": _wgpuDeviceCreateTexture,
   "wgpuDeviceGetQueue": _wgpuDeviceGetQueue,
   "wgpuInstanceCreateSurface": _wgpuInstanceCreateSurface,
+  "wgpuSamplerRelease": _wgpuSamplerRelease,
   "wgpuSwapChainGetCurrentTextureView": _wgpuSwapChainGetCurrentTextureView,
   "wgpuTextureCreateView": _wgpuTextureCreateView,
   "wgpuTextureDestroy": _wgpuTextureDestroy

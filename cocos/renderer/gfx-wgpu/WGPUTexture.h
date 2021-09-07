@@ -34,6 +34,7 @@ struct CCWGPUTextureObject;
 
 class CCWGPUTexture final : public emscripten::wrapper<Texture> {
 public:
+    EMSCRIPTEN_WRAPPER(CCWGPUTexture);
     CCWGPUTexture();
     ~CCWGPUTexture() = default;
 

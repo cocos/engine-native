@@ -84,18 +84,6 @@ void CCWGPUSwapchain::doInit(const SwapchainInfo& info) {
     _gpuSwapchainObj->wgpuSwapChain = swapChain;
     _gpuSwapchainObj->wgpuSurface   = surface;
 
-    // TextureType  type       = TextureType::TEX2D;
-    // TextureUsage usage      = TextureUsageBit::NONE;
-    // Format       format     = Format::UNKNOWN;
-    // uint         width      = 0U;
-    // uint         height     = 0U;
-    // TextureFlags flags      = TextureFlagBit::NONE;
-    // uint         layerCount = 1U;
-    // uint         levelCount = 1U;
-    // SampleCount  samples    = SampleCount::X1;
-    // uint         depth      = 1U;
-    // uint         swapchain  = 0; // 0: none, 1: yes
-
     SwapchainTextureInfo textureInfo = {
         .swapchain = this,
         .format    = Format::BGRA8,
@@ -103,11 +91,11 @@ void CCWGPUSwapchain::doInit(const SwapchainInfo& info) {
         .height    = info.height,
     };
 
-    _gpuSwapchainObj->swapchainColor = CC_NEW(CCWGPUTexture);
+    _colorTexture = _gpuSwapchainObj->swapchainColor = CC_NEW(CCWGPUTexture);
     initTexture(textureInfo, _gpuSwapchainObj->swapchainColor);
 
-    textureInfo.format                      = Format::DEPTH_STENCIL;
-    _gpuSwapchainObj->swapchainDepthStencil = CC_NEW(CCWGPUTexture);
+    textureInfo.format   = Format::DEPTH_STENCIL;
+    _depthStencilTexture = _gpuSwapchainObj->swapchainDepthStencil = CC_NEW(CCWGPUTexture);
     initTexture(textureInfo, _gpuSwapchainObj->swapchainDepthStencil);
 
     // TODO: wgpuInstance
@@ -129,6 +117,14 @@ void CCWGPUSwapchain::doDestroy() {
 void CCWGPUSwapchain::doResize(uint32_t width, uint32_t height, SurfaceTransform transform) {
     _colorTexture->resize(width, height);
     _depthStencilTexture->resize(height, height);
+}
+
+CCWGPUTexture* CCWGPUSwapchain::getColorTexture() {
+    return static_cast<CCWGPUTexture*>(_colorTexture);
+}
+
+CCWGPUTexture* CCWGPUSwapchain::getDepthStencilTexture() {
+    return static_cast<CCWGPUTexture*>(_depthStencilTexture);
 }
 
 void CCWGPUSwapchain::doDestroySurface() {

@@ -86,6 +86,18 @@ public:
         return this->Device::createSwapchain(static_cast<const SwapchainInfo &>(info));
     }
 
+    Framebuffer *createFramebuffer(const FramebufferInfoInstance &info) {
+        return this->Device::createFramebuffer(static_cast<const FramebufferInfo &>(info));
+    }
+
+    Texture *createTexture(const TextureInfoInstance &info) {
+        return this->Device::createTexture(static_cast<const TextureInfo &>(info));
+    }
+
+    Texture *createTexture(const TextureViewInfoInstance &info) {
+        return this->Device::createTexture(static_cast<const TextureViewInfo &>(info));
+    }
+
 protected:
     static CCWGPUDevice *instance;
 
