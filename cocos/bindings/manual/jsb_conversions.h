@@ -932,8 +932,8 @@ inline bool sevalue_to_native(const se::Value &from, int64_t *to, se::Object * /
 #if CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX
 template <>
 inline bool sevalue_to_native(const se::Value &from, unsigned long *to, se::Object * /*ctx*/) {
+    // on mac: unsiged long  === uintptr_t
     CC_STATIC_ASSERT(sizeof(*to) == 8);
-    // on mac: unsiged long  === uint64_ptr
     *to = static_cast<unsigned long>(from.toUint64());
     return true;
 }
