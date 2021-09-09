@@ -40,6 +40,8 @@ public:
 
     inline CCWGPUTextureObject* gpuTextureObject() { return _gpuTextureObj; }
 
+    static CCWGPUTexture* defaultTexture();
+
 protected:
     void doInit(const TextureInfo& info) override;
     void doInit(const TextureViewInfo& info) override;
@@ -50,10 +52,6 @@ protected:
 
     CCWGPUTextureObject* _gpuTextureObj = nullptr;
 };
-
-inline CCWGPUTexture* getThis(CCWGPUTexture* that) {
-    return that;
-}
 
 } // namespace gfx
 } // namespace cc

@@ -24,26 +24,33 @@
 ****************************************************************************/
 
 #pragma once
-#include <emscripten/bind.h>
-#include "gfx-base/states/GFXSampler.h"
 
-#include "WGPUobject.h"
+#include <emscripten/bind.h>
+#include "gfx-base/GFXDescriptorSetLayout.h"
 
 namespace cc {
 namespace gfx {
 
-class CCWGPUSampler final : public emscripten::wrapper<Sampler> {
+struct CCWGPUBindGroupLayoutObject;
+class CCWGPUTexture;
+
+class CCWGPUDescriptorSetLayout final : public emscripten::wrapper<DescriptorSetLayout> {
 public:
-    EMSCRIPTEN_WRAPPER(CCWGPUSampler);
-    explicit CCWGPUSampler(const SamplerInfo& info);
-    ~CCWGPUSampler();
+    EMSCRIPTEN_WRAPPER(CCWGPUDescriptorSetLayout);
+    CCWGPUDescriptorSetLayout();
+    ~CCWGPUDescriptorSetLayout() = default;
 
-    inline WGPUSampler gpuSampler() { return _wgpuSampler; }
+    inline CCWGPUBindGroupLayoutObject *gpuLayoutEntryObject() { return _gpuLayoutEntryObj; }
 
-    static CCWGPUSampler* defaultSampler();
+    void updateTextureLayout(uint8_t binding, const CCWGPUTexture *tex);
+
+    void prepare();
 
 protected:
-    WGPUSampler _wgpuSampler = wgpuDefaultHandle;
+    void doInit(const DescriptorSetLayoutInfo &info) override;
+    void doDestroy() override;
+
+    CCWGPUBindGroupLayoutObject *_gpuLayoutEntryObj = nullptr;
 };
 
 } // namespace gfx

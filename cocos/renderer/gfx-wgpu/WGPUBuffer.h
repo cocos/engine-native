@@ -25,25 +25,34 @@
 
 #pragma once
 #include <emscripten/bind.h>
-#include "gfx-base/states/GFXSampler.h"
-
-#include "WGPUobject.h"
+#include "gfx-base/GFXBuffer.h"
 
 namespace cc {
 namespace gfx {
 
-class CCWGPUSampler final : public emscripten::wrapper<Sampler> {
+struct CCWGPUBufferObject;
+
+class CCWGPUBuffer final : public emscripten::wrapper<Buffer> {
 public:
-    EMSCRIPTEN_WRAPPER(CCWGPUSampler);
-    explicit CCWGPUSampler(const SamplerInfo& info);
-    ~CCWGPUSampler();
+    EMSCRIPTEN_WRAPPER(CCWGPUBuffer);
+    CCWGPUBuffer();
+    ~CCWGPUBuffer() = default;
 
-    inline WGPUSampler gpuSampler() { return _wgpuSampler; }
+    void update(const void* buffer, uint size) override;
 
-    static CCWGPUSampler* defaultSampler();
+    inline CCWGPUBufferObject* gpuBufferObject() { return _gpuBufferObject; }
+
+    static CCWGPUBuffer* defaultBuffer();
+
+    inline uint getOffset() { return _offset; }
 
 protected:
-    WGPUSampler _wgpuSampler = wgpuDefaultHandle;
+    void doInit(const BufferInfo& info) override;
+    void doInit(const BufferViewInfo& info) override;
+    void doDestroy() override;
+    void doResize(uint size, uint count) override;
+
+    CCWGPUBufferObject* _gpuBufferObject = nullptr;
 };
 
 } // namespace gfx

@@ -26,6 +26,7 @@
 #pragma once
 #include <emscripten/html5_webgpu.h>
 #include <utility>
+#include "WGPUDef.h"
 #include "base/Utils.h"
 #include "gfx-base/GFXDef.h"
 class WGPURenderPassDescriptor;
@@ -40,10 +41,20 @@ constexpr uint8_t CC_WGPU_MAX_ATTACHMENTS = 16;
 constexpr decltype(nullptr) wgpuDefaultHandle = nullptr;
 
 class CCWGPUTexture;
+class CCWGPUBuffer;
+class CCWGPUSampler;
+
+struct CCWGPUResource {
+    CCWGPUTexture* texture = nullptr;
+    CCWGPUBuffer*  buffer  = nullptr;
+    CCWGPUSampler* sampler = nullptr;
+};
 
 struct CCWGPUDeviceObject {
     WGPUDevice wgpuDevice = wgpuDefaultHandle;
     WGPUQueue  wgpuQueue  = wgpuDefaultHandle;
+
+    CCWGPUResource defaultResources;
 };
 
 struct CCWGPUSwapchainObject {
@@ -65,6 +76,11 @@ struct CCWGPURenderPassObject {
 struct CCWGPUTextureObject {
     WGPUTexture     wgpuTexture     = wgpuDefaultHandle;
     WGPUTextureView wgpuTextureView = wgpuDefaultHandle;
+    WGPUTextureView selfView        = wgpuDefaultHandle;
+};
+
+struct CCWGPUBufferObject {
+    WGPUBuffer wgpuBuffer = wgpuDefaultHandle;
 };
 
 struct CCWGPUSamplerObject {
@@ -80,6 +96,16 @@ struct CCWGPUSamplerObject {
     float               lodMaxClamp   = 1000.0f;
     WGPUCompareFunction compare       = WGPUCompareFunction_Always;
     uint16_t            maxAnisotropy = 0;
+};
+
+struct CCWGPUBindGroupLayoutObject {
+    WGPUBindGroupLayout                   bindGroupLayout = wgpuDefaultHandle;
+    std::vector<WGPUBindGroupLayoutEntry> bindGroupLayoutEntries;
+};
+
+struct CCWGPUBindGroupObject {
+    WGPUBindGroup                   bindgroup = wgpuDefaultHandle;
+    std::vector<WGPUBindGroupEntry> bindGroupEntries;
 };
 
 } // namespace gfx

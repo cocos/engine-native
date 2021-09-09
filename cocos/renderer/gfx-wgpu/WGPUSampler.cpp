@@ -31,6 +31,10 @@
 namespace cc {
 namespace gfx {
 
+namespace anoymous {
+CCWGPUSampler* defaultSampler = nullptr;
+}
+
 using namespace emscripten;
 
 CCWGPUSampler::CCWGPUSampler(const SamplerInfo& info) : wrapper<Sampler>(val::object(), info) {
@@ -55,6 +59,24 @@ CCWGPUSampler::CCWGPUSampler(const SamplerInfo& info) : wrapper<Sampler>(val::ob
 
 CCWGPUSampler::~CCWGPUSampler() {
     wgpuSamplerRelease(_wgpuSampler);
+}
+
+CCWGPUSampler* CCWGPUSampler::defaultSampler() {
+    if (anoymous::defaultSampler) {
+        SamplerInfo info = {
+            .minFilter     = Filter::LINEAR,
+            .magFilter     = Filter::LINEAR,
+            .mipFilter     = Filter::NONE,
+            .addressU      = Address::WRAP,
+            .addressV      = Address::WRAP,
+            .addressW      = Address::WRAP,
+            .maxAnisotropy = 0,
+            .cmpFunc       = ComparisonFunc::ALWAYS,
+        };
+
+        anoymous::defaultSampler = new CCWGPUSampler(info);
+    }
+    return anoymous::defaultSampler;
 }
 
 } // namespace gfx

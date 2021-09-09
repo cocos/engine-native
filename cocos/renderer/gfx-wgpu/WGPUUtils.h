@@ -2,6 +2,7 @@
 #include <webgpu/webgpu.h>
 #include "cocos/base/Log.h"
 #include "cocos/base/Macros.h"
+#include "cocos/base/TypeDef.h"
 #include "gfx-base/GFXDef-common.h"
 namespace cc {
 namespace gfx {
@@ -82,6 +83,53 @@ static WGPUTextureViewDimension toWGPUTextureViewDimension(TextureType type) {
             return WGPUTextureViewDimension::WGPUTextureViewDimension_3D;
         default:
             return WGPUTextureViewDimension::WGPUTextureViewDimension_Undefined;
+    }
+}
+
+static WGPUTextureSampleType textureSampleTypeTrait(Format format) {
+    switch (format) {
+        case Format::R8:
+        case Format::R8UI:
+        case Format::R16UI:
+        case Format::RG8SN:
+        case Format::RG8UI:
+        case Format::RG8:
+        case Format::R32UI:
+        case Format::RG16UI:
+        case Format::RGBA8:
+        case Format::BGRA8:
+        case Format::RGBA8UI:
+        case Format::RG32UI:
+        case Format::SRGB8_A8:
+        case Format::RGBA32UI:
+        case Format::RGBA16UI:
+        case Format::RGB10A2:
+            return WGPUTextureSampleType::WGPUTextureSampleType_Uint;
+        case Format::R8SN:
+        case Format::R8I:
+        case Format::R16I:
+        case Format::RG8I:
+        case Format::RG16I:
+        case Format::RGBA8SN:
+        case Format::RGBA8I:
+        case Format::RG32I:
+        case Format::RGBA16I:
+        case Format::RGBA32I:
+        case Format::R32I:
+            return WGPUTextureSampleType::WGPUTextureSampleType_Sint;
+        case Format::R16F:
+        case Format::R32F:
+        case Format::RG16F:
+        case Format::R11G11B10F:
+        case Format::RGB9E5:
+        case Format::RG32F:
+        case Format::RGBA16F:
+        case Format::RGBA32F:
+            return WGPUTextureSampleType::WGPUTextureSampleType_Float;
+        case Format::DEPTH:
+            return WGPUTextureSampleType::WGPUTextureSampleType_Depth;
+        default:
+            CC_LOG_ERROR("unsupport texture sample type yet, github@hana-alice to fix.");
     }
 }
 
@@ -229,14 +277,6 @@ static WGPUFilterMode toWGPUFilterMode(Filter filter) {
             return WGPUFilterMode::WGPUFilterMode_Linear;
     }
 }
-// NEVER,
-// LESS,
-// EQUAL,
-// LESS_EQUAL,
-// GREATER,
-// NOT_EQUAL,
-// GREATER_EQUAL,
-// ALWAYS,
 
 static WGPUCompareFunction toWGPUCompareFunction(ComparisonFunc compareFunc) {
     switch (compareFunc) {
@@ -259,6 +299,30 @@ static WGPUCompareFunction toWGPUCompareFunction(ComparisonFunc compareFunc) {
     }
 }
 
+static WGPUShaderStageFlags toWGPUShaderStageFlag(ShaderStageFlagBit flag) {
+    WGPUShaderStageFlags result = WGPUShaderStage::WGPUShaderStage_None;
+    if (flag == ShaderStageFlagBit::NONE) {
+        return WGPUShaderStage_None;
+    }
+
+    if (flag & ShaderStageFlagBit::ALL || flag & ShaderStageFlagBit::VERTEX) {
+        result |= WGPUShaderStage::WGPUShaderStage_Vertex;
+    }
+
+    if (flag & ShaderStageFlagBit::ALL || flag & ShaderStageFlagBit::FRAGMENT) {
+        result |= WGPUShaderStage::WGPUShaderStage_Fragment;
+    }
+
+    if (flag & ShaderStageFlagBit::ALL || flag & ShaderStageFlagBit::COMPUTE) {
+        result |= WGPUShaderStage::WGPUShaderStage_Compute;
+    }
+
+    if (result == WGPUShaderStage_None) {
+        CC_LOG_ERROR("unsupport shader stage detected");
+    }
+    return result;
+}
+
 //TODO_Zeqiang: more flexible strategy
 static uint32_t toWGPUSampleCount(SampleCount sampleCount) {
     switch (sampleCount) {
@@ -275,9 +339,43 @@ static uint32_t toWGPUSampleCount(SampleCount sampleCount) {
     }
 }
 
+// NONE         = 0,
+// TRANSFER_SRC = 0x1,
+// TRANSFER_DST = 0x2,
+// INDEX        = 0x4,
+// VERTEX       = 0x8,
+// UNIFORM      = 0x10,
+// STORAGE      = 0x20,
+// INDIRECT     = 0x40,
+
+static WGPUBufferUsageFlags toWGPUBufferUsage(BufferUsageBit usage) {
+    switch (usage) {
+        case BufferUsageBit::NONE:
+            return WGPUBufferUsage_None;
+        case BufferUsageBit::TRANSFER_SRC:
+            return WGPUBufferUsage_CopySrc;
+        case BufferUsageBit::TRANSFER_DST:
+            return WGPUBufferUsage_CopyDst;
+        case BufferUsageBit::INDEX:
+            return WGPUBufferUsage_Index;
+        case BufferUsageBit::VERTEX:
+            return WGPUBufferUsage_Vertex;
+        case BufferUsageBit::UNIFORM:
+            return WGPUBufferUsage_Uniform;
+        case BufferUsageBit::STORAGE:
+            return WGPUBufferUsage_Storage;
+        case BufferUsageBit::INDIRECT:
+            return WGPUBufferUsage_Indirect;
+        default:
+            return WGPUBufferUsage_Force32;
+    }
+}
+
 static constexpr WGPUColor defaultClearColor{0.2, 0.2, 0.2, 1.0};
 
 static constexpr float defaultClearDepth = 1.0f;
+
+static constexpr uint16_t maxTextureSlot = 16;
 
 } // namespace gfx
 } // namespace cc
