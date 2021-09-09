@@ -27,6 +27,7 @@
 #include "Value.h"
 #include <sstream>
 #include "Object.h"
+#include "base/Log.h"
 
 namespace se {
 
@@ -415,13 +416,17 @@ float Value::toFloat() const {
 }
 
 double Value::toDouble() const {
-    assert(_type == Type::Number || _type == Type::Boolean);
+    assert(_type == Type::Number || _type == Type::Boolean || _type == Type::BigInt);
     // assert(_type != Type::BigInt);
     if (_type == Type::Boolean) {
         if (_u._boolean) {
             return 1.0;
         }
         return 0.0;
+    }
+    if (_type == Type::BigInt) {
+        // CC_LOG_WARNING("convert int64 to double");
+        return static_cast<double>(_u._bigint);
     }
     return _u._number;
 }
