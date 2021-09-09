@@ -25,6 +25,9 @@
 
 #include "WGPUDevice.h"
 #include <emscripten/val.h>
+#include "WGPUBuffer.h"
+#include "WGPUDescriptorSet.h"
+#include "WGPUDescriptorSetLayout.h"
 #include "WGPUDevice.h"
 #include "WGPUExports.h"
 #include "WGPUFrameBuffer.h"
@@ -65,9 +68,13 @@ CCWGPUDevice::~CCWGPUDevice() {
 }
 
 bool CCWGPUDevice::doInit(const DeviceInfo& info) {
-    _gpuDeviceObj             = CC_NEW(CCWGPUDeviceObject);
-    _gpuDeviceObj->wgpuDevice = emscripten_webgpu_get_device();
-    _gpuDeviceObj->wgpuQueue  = wgpuDeviceGetQueue(_gpuDeviceObj->wgpuDevice);
+    _gpuDeviceObj                           = CC_NEW(CCWGPUDeviceObject);
+    _gpuDeviceObj->wgpuDevice               = emscripten_webgpu_get_device();
+    _gpuDeviceObj->wgpuQueue                = wgpuDeviceGetQueue(_gpuDeviceObj->wgpuDevice);
+    _gpuDeviceObj->defaultResources.texture = CCWGPUTexture::defaultTexture();
+    _gpuDeviceObj->defaultResources.buffer  = CCWGPUBuffer::defaultBuffer();
+    _gpuDeviceObj->defaultResources.sampler = CCWGPUSampler::defaultSampler();
+
     return true;
 }
 
@@ -83,7 +90,7 @@ Queue* CCWGPUDevice::createQueue() {
 }
 
 Buffer* CCWGPUDevice::createBuffer() {
-    return nullptr;
+    return CC_NEW(CCWGPUBuffer);
 }
 
 Texture* CCWGPUDevice::createTexture() {
@@ -107,11 +114,11 @@ Framebuffer* CCWGPUDevice::createFramebuffer() {
 }
 
 DescriptorSet* CCWGPUDevice::createDescriptorSet() {
-    return nullptr;
+    return CC_NEW(CCWGPUDescriptorSet);
 }
 
 DescriptorSetLayout* CCWGPUDevice::createDescriptorSetLayout() {
-    return nullptr;
+    return CC_NEW(CCWGPUDescriptorSetLayout);
 }
 
 PipelineLayout* CCWGPUDevice::createPipelineLayout() {

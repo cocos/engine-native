@@ -33,6 +33,10 @@
 namespace cc {
 namespace gfx {
 
+namespace anoymous {
+CCWGPUTexture *defaultTexture = nullptr;
+}
+
 using namespace emscripten;
 
 CCWGPUTexture::CCWGPUTexture() : wrapper<Texture>(val::object()) {
@@ -40,14 +44,6 @@ CCWGPUTexture::CCWGPUTexture() : wrapper<Texture>(val::object()) {
 }
 
 void CCWGPUTexture::doInit(const TextureInfo &info) {
-    //     WGPUChainedStruct const * nextInChain;
-    // char const * label;
-    // WGPUTextureUsageFlags usage;
-    // WGPUTextureDimension dimension;
-    // WGPUExtent3D size;
-    // WGPUTextureFormat format;
-    // uint32_t mipLevelCount;
-    // uint32_t sampleCount;
     WGPUTextureDescriptor descriptor = {
         .nextInChain   = nullptr,
         .label         = nullptr,
@@ -58,10 +54,21 @@ void CCWGPUTexture::doInit(const TextureInfo &info) {
         .mipLevelCount = info.levelCount,
         .sampleCount   = toWGPUSampleCount(info.samples),
     };
-    printf("create tex from %d to %d\n", info.format, descriptor.format);
 
     _gpuTextureObj->wgpuTexture = wgpuDeviceCreateTexture(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
-    printf("create tex done.\n");
+
+    WGPUTextureViewDescriptor texViewDesc = {
+        .nextInChain     = nullptr,
+        .label           = nullptr,
+        .format          = descriptor.format,
+        .dimension       = toWGPUTextureViewDimension(info.type),
+        .baseMipLevel    = 0,
+        .mipLevelCount   = 0,
+        .baseArrayLayer  = 0,
+        .arrayLayerCount = 0,
+        .aspect          = WGPUTextureAspect_All,
+    };
+    _gpuTextureObj->selfView = wgpuTextureCreateView(_gpuTextureObj->wgpuTexture, &texViewDesc);
 } // namespace gfx
 
 void CCWGPUTexture::doInit(const TextureViewInfo &info) {
@@ -77,10 +84,10 @@ void CCWGPUTexture::doInit(const TextureViewInfo &info) {
         .aspect          = textureAspectTrait(info.format),
     };
 
-    auto *      ccTexture   = static_cast<CCWGPUTexture *>(info.texture);
-    WGPUTexture wgpuTexture = ccTexture->gpuTextureObject()->wgpuTexture;
-
+    auto *      ccTexture           = static_cast<CCWGPUTexture *>(info.texture);
+    WGPUTexture wgpuTexture         = ccTexture->gpuTextureObject()->wgpuTexture;
     _gpuTextureObj->wgpuTextureView = wgpuTextureCreateView(wgpuTexture, &descriptor);
+    _gpuTextureObj->selfView        = ccTexture->gpuTextureObject()->selfView;
 }
 
 void CCWGPUTexture::doInit(const SwapchainTextureInfo &info) {
@@ -95,9 +102,8 @@ void CCWGPUTexture::doDestroy() {
         if (_gpuTextureObj->wgpuTexture) {
             wgpuTextureDestroy(_gpuTextureObj->wgpuTexture);
         }
+        CC_DELETE(_gpuTextureObj);
     }
-
-    CC_SAFE_DELETE(_gpuTextureObj);
 }
 
 void CCWGPUTexture::doResize(uint32_t width, uint32_t height, uint32_t size) {
@@ -118,6 +124,28 @@ void CCWGPUTexture::doResize(uint32_t width, uint32_t height, uint32_t size) {
     descriptor.sampleCount   = toWGPUSampleCount(_info.samples);
 
     _gpuTextureObj->wgpuTexture = wgpuDeviceCreateTexture(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
+}
+
+CCWGPUTexture *CCWGPUTexture::defaultTexture() {
+    if (!anoymous::defaultTexture) {
+        TextureInfo info = {
+            .type        = TextureType::TEX2D,
+            .usage       = TextureUsageBit::NONE,
+            .format      = Format::BGRA8,
+            .width       = 2,
+            .height      = 2,
+            .flags       = TextureFlagBit::NONE,
+            .layerCount  = 1,
+            .levelCount  = 1,
+            .samples     = SampleCount::ONE,
+            .depth       = 1,
+            .externalRes = nullptr,
+        };
+        anoymous::defaultTexture = CC_NEW(CCWGPUTexture);
+        anoymous::defaultTexture->initialize(info);
+    }
+
+    return anoymous::defaultTexture;
 }
 
 } // namespace gfx

@@ -73,5 +73,52 @@ private:
     FramebufferInfo info;
 };
 
+class BufferViewInfoInstance {
+public:
+    BufferViewInfoInstance() = default;
+
+    inline void setBuffer(Buffer* buffer) { info.buffer = buffer; }
+    inline void setOffset(uint32_t offset) { info.offset = offset; }
+    inline void setRange(uint32_t range) { info.range = range; }
+
+    explicit operator const BufferViewInfo() const { return info; }
+
+private:
+    BufferViewInfo info;
+};
+
+class DescriptorSetInfoInstance {
+public:
+    DescriptorSetInfoInstance() = default;
+    inline void setDescriptorSetLayout(DescriptorSetLayout* layout) { info.layout = layout; }
+
+    explicit operator const DescriptorSetInfo() const { return info; }
+
+private:
+    DescriptorSetInfo info;
+};
+
+// struct PipelineLayoutInfo {
+//     DescriptorSetLayoutList setLayouts;
+// };
+
+// struct DescriptorSetLayoutInfo {
+//     DescriptorSetLayoutBindingList bindings;
+// };
+
+class DescriptorSetLayoutBindingInstance {
+public:
+    inline void setBinding(uint32_t binding) { dsBinding.binding = binding; }
+    inline void setDescriptorType(DescriptorType type) { dsBinding.descriptorType = type; }
+    inline void setCount(uint32_t count) { dsBinding.count = count; }
+    inline void setStageFlags(ShaderStageFlags flag) { dsBinding.stageFlags = flag; }
+    inline void setSamplerList(SamplerList samplers) { dsBinding.immutableSamplers = samplers; }
+
+    explicit operator const DescriptorSetLayoutBinding() const { return dsBinding; }
+
+private:
+    DescriptorSetLayoutBinding dsBinding;
+};
+
 } // namespace gfx
 } // namespace cc

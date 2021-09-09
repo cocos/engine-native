@@ -54,23 +54,6 @@ public:
     void acquire(Swapchain *const *swapchains, uint32_t count) override;
     void present() override;
 
-    using Device::copyBuffersToTexture;
-    using Device::createBuffer;
-    using Device::createCommandBuffer;
-    using Device::createDescriptorSet;
-    using Device::createDescriptorSetLayout;
-    using Device::createFramebuffer;
-    using Device::createGlobalBarrier;
-    using Device::createInputAssembler;
-    using Device::createPipelineLayout;
-    using Device::createPipelineState;
-    using Device::createQueue;
-    using Device::createRenderPass;
-    using Device::createSampler;
-    using Device::createShader;
-    using Device::createTexture;
-    using Device::createTextureBarrier;
-
     inline CCWGPUDeviceObject *gpuDeviceObject() { return _gpuDeviceObj; }
 
     inline void registerSwapchain(CCWGPUSwapchain *swapchain) { _swapchains.push_back(swapchain); }
@@ -96,6 +79,14 @@ public:
 
     Texture *createTexture(const TextureViewInfoInstance &info) {
         return this->Device::createTexture(static_cast<const TextureViewInfo &>(info));
+    }
+
+    Buffer *createBuffer(const BufferViewInfoInstance &info) {
+        return this->Device::createBuffer(static_cast<const BufferViewInfo &>(info));
+    }
+
+    DescriptorSet *createDescriptorSet(const DescriptorSetInfoInstance &info) {
+        return this->Device::createDescriptorSet(static_cast<const DescriptorSetInfo &>(info));
     }
 
 protected:

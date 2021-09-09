@@ -1,5 +1,8 @@
 #pragma once
+#include "WGPUBuffer.h"
 #include "WGPUDef.h"
+#include "WGPUDescriptorSet.h"
+#include "WGPUDescriptorSetLayout.h"
 #include "WGPUDevice.h"
 #include "WGPUFrameBuffer.h"
 #include "WGPURenderPass.h"
@@ -54,6 +57,18 @@ BufferTextureCopy BufferTextureCopyInstance() {
 
 SamplerInfo SamplerInfoInstance() {
     return SamplerInfo();
+}
+
+BufferInfo BufferInfoInstance() {
+    return BufferInfo();
+}
+
+DescriptorSetLayoutInfo DescriptorSetLayoutInfoInstance() {
+    return DescriptorSetLayoutInfo();
+}
+
+DescriptorSetLayoutBinding DescriptorSetLayoutBindingInstance() {
+    return DescriptorSetLayoutBinding();
 }
 
 EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
@@ -163,6 +178,46 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .value("GREATER_EQUAL", ComparisonFunc::GREATER_EQUAL)
         .value("ALWAYS", ComparisonFunc::ALWAYS);
 
+    enum_<BufferUsage>("BufferUsage")
+        .value("NONE", BufferUsageBit::NONE)
+        .value("TRANSFER_SRC", BufferUsageBit::TRANSFER_SRC)
+        .value("TRANSFER_DST", BufferUsageBit::TRANSFER_DST)
+        .value("INDEX", BufferUsageBit::INDEX)
+        .value("VERTEX", BufferUsageBit::VERTEX)
+        .value("UNIFORM", BufferUsageBit::UNIFORM)
+        .value("STORAGE", BufferUsageBit::STORAGE)
+        .value("INDIRECT", BufferUsageBit::INDIRECT);
+
+    enum_<MemoryUsage>("MemoryUsage")
+        .value("NONE", MemoryUsageBit::NONE)
+        .value("DEVICE", MemoryUsageBit::DEVICE)
+        .value("HOST", MemoryUsageBit::HOST);
+
+    enum_<BufferFlags>("BufferFlags")
+        .value("NONE", BufferFlagBit::NONE);
+
+    enum_<DescriptorType>("DescriptorType")
+        .value("UNKNOWN", DescriptorType::UNKNOWN)
+        .value("UNIFORM_BUFFER", DescriptorType::UNIFORM_BUFFER)
+        .value("DYNAMIC_UNIFORM_BUFFER", DescriptorType::DYNAMIC_UNIFORM_BUFFER)
+        .value("STORAGE_BUFFER", DescriptorType::STORAGE_BUFFER)
+        .value("DYNAMIC_STORAGE_BUFFER", DescriptorType::DYNAMIC_STORAGE_BUFFER)
+        .value("SAMPLER_TEXTURE", DescriptorType::SAMPLER_TEXTURE)
+        .value("SAMPLER", DescriptorType::SAMPLER)
+        .value("TEXTURE", DescriptorType::TEXTURE)
+        .value("STORAGE_IMAGE", DescriptorType::STORAGE_IMAGE)
+        .value("INPUT_ATTACHMENT", DescriptorType::INPUT_ATTACHMENT);
+
+    enum_<ShaderStageFlags>("ShaderStageFlags")
+        .value("NONE", ShaderStageFlagBit::NONE)
+        .value("VERTEX", ShaderStageFlagBit::VERTEX)
+        .value("CONTROL", ShaderStageFlagBit::CONTROL)
+        .value("EVALUATION", ShaderStageFlagBit::EVALUATION)
+        .value("GEOMETRY", ShaderStageFlagBit::GEOMETRY)
+        .value("FRAGMENT", ShaderStageFlagBit::FRAGMENT)
+        .value("COMPUTE", ShaderStageFlagBit::COMPUTE)
+        .value("ALL", ShaderStageFlagBit::ALL);
+
     //-----------------------------------------------STRUCT-------------------------------------------------------------------
     value_object<ColorAttachment>("ColorAttachment")
         .field("format", &ColorAttachment::format)
@@ -258,6 +313,26 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .field("cmpFunc", &SamplerInfo::cmpFunc);
     function("SamplerInfoInstance", &cc::gfx::SamplerInfoInstance);
 
+    value_object<BufferInfo>("BufferInfo")
+        .field("usage", &BufferInfo::usage)
+        .field("memUsage", &BufferInfo::memUsage)
+        .field("size", &BufferInfo::size)
+        .field("stride", &BufferInfo::stride)
+        .field("flags", &BufferInfo::flags);
+    function("BufferInfoInstance", &cc::gfx::BufferInfoInstance);
+
+    value_object<DescriptorSetLayoutInfo>("DescriptorSetLayoutInfo")
+        .field("bindings", &DescriptorSetLayoutInfo::bindings);
+    function("DescriptorSetLayoutInfoInstance", &cc::gfx::DescriptorSetLayoutInfoInstance);
+
+    value_object<DescriptorSetLayoutBinding>("DescriptorSetLayoutBinding")
+        .field("binding", &DescriptorSetLayoutBinding::binding)
+        .field("descriptorType", &DescriptorSetLayoutBinding::descriptorType)
+        .field("count", &DescriptorSetLayoutBinding::count)
+        .field("stageFlags", &DescriptorSetLayoutBinding::stageFlags)
+        .field("immutableSamplers", &DescriptorSetLayoutBinding::immutableSamplers);
+    function("DescriptorSetLayoutBindingInstance", &cc::gfx::DescriptorSetLayoutBindingInstance);
+
     // struct with pointers
     class_<TextureInfoInstance>("TextureInfoInstance")
         .constructor<>()
@@ -296,25 +371,15 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("setFormat", &SwapchainInfoInstance::setWidth)
         .function("setBaseLevel", &SwapchainInfoInstance::setHeight);
 
-    // value_object<TextureViewInfo>("TextureViewInfo")
-    //     //.field("texture", &TextureViewInfo::texture)
-    //     .field("type", &TextureViewInfo::type)
-    //     .field("format", &TextureViewInfo::format)
-    //     .field("baseLevel", &TextureViewInfo::baseLevel)
-    //     .field("levelCount", &TextureViewInfo::levelCount)
-    //     .field("baseLayer", &TextureViewInfo::baseLayer)
-    //     .field("layerCount", &TextureViewInfo::layerCount);
-    //function("TextureViewInfoInstance", &cc::gfx::TextureViewInfoInstance, allow_raw_pointers());
+    class_<BufferViewInfoInstance>("BufferViewInfoInstance")
+        .constructor<>()
+        .function("setBuffer", &BufferViewInfoInstance::setBuffer, allow_raw_pointer<arg<0>>())
+        .function("setOffset", &BufferViewInfoInstance::setOffset)
+        .function("setRange", &BufferViewInfoInstance::setRange);
 
-    // struct TextureViewInfo {
-    //     Texture *   texture    = nullptr;
-    //     TextureType type       = TextureType::TEX2D;
-    //     Format      format     = Format::UNKNOWN;
-    //     uint        baseLevel  = 0U;
-    //     uint        levelCount = 1U;
-    //     uint        baseLayer  = 0U;
-    //     uint        layerCount = 1U;
-    // };
+    class_<DescriptorSetInfoInstance>("DescriptorSetInfoInstance")
+        .constructor<>()
+        .function("setDescriptorSetLayout", &DescriptorSetInfoInstance::setDescriptorSetLayout, allow_raw_pointer<arg<0>>());
 
     //--------------------------------------------------CLASS---------------------------------------------------------------------------
     class_<cc::gfx::Swapchain>("Swapchain")
@@ -326,63 +391,61 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("getWidth", &cc::gfx::Swapchain::getWidth)
         .function("getHeight", &cc::gfx::Swapchain::getHeight);
     class_<CCWGPUSwapchain, base<Swapchain>>("CCWGPUSwapchain")
-        .function("getColorTexture", select_overload<CCWGPUTexture*(void)>(&cc::gfx::CCWGPUSwapchain::getColorTexture), allow_raw_pointer<arg<0>>())
-        .function("getDepthStencilTexture", select_overload<CCWGPUTexture*(void)>(&cc::gfx::CCWGPUSwapchain::getDepthStencilTexture), allow_raw_pointer<arg<0>>());
+        .function("getColorTexture", select_overload<CCWGPUTexture *(void)>(&cc::gfx::CCWGPUSwapchain::getColorTexture), allow_raw_pointer<arg<0>>())
+        .function("getDepthStencilTexture", select_overload<CCWGPUTexture *(void)>(&cc::gfx::CCWGPUSwapchain::getDepthStencilTexture), allow_raw_pointer<arg<0>>());
 
     class_<Device>("Device")
         .function("initialize", &Device::initialize, allow_raw_pointer<arg<0>>())
         .function("destroy", &Device::destroy, pure_virtual())
         .function("present", &Device::present, pure_virtual())
-        .function("createCommandBuffer", select_overload<CommandBuffer*(const CommandBufferInfo&)>(&Device::createCommandBuffer),
+        .function("createCommandBuffer", select_overload<CommandBuffer *(const CommandBufferInfo &)>(&Device::createCommandBuffer),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createQueue", select_overload<Queue*(const QueueInfo&)>(&Device::createQueue),
+        .function("createQueue", select_overload<Queue *(const QueueInfo &)>(&Device::createQueue),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createBuffer", select_overload<Buffer*(const BufferInfo&)>(&Device::createBuffer),
+        .function("createBuffer", select_overload<Buffer *(const BufferInfo &)>(&Device::createBuffer),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createBuffer", select_overload<Buffer*(const BufferViewInfo&)>(&Device::createBuffer),
-                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        // .function("createSampler", select_overload<Sampler*(const SamplerInfo&)>(&Device::createSampler),
-        //           /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("getSampler", &Device::getSampler, allow_raw_pointer<arg<0>>())
-        .function("createShader", select_overload<Shader*(const ShaderInfo&)>(&Device::createShader),
+        .function("createShader", select_overload<Shader *(const ShaderInfo &)>(&Device::createShader),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createInputAssembler", select_overload<InputAssembler*(const InputAssemblerInfo&)>(&Device::createInputAssembler),
+        .function("createInputAssembler", select_overload<InputAssembler *(const InputAssemblerInfo &)>(&Device::createInputAssembler),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createRenderPass", select_overload<RenderPass*(const RenderPassInfo&)>(&Device::createRenderPass),
+        .function("createRenderPass", select_overload<RenderPass *(const RenderPassInfo &)>(&Device::createRenderPass),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createDescriptorSet", select_overload<DescriptorSet*(const DescriptorSetInfo&)>(&Device::createDescriptorSet),
+        .function("createDescriptorSetLayout", select_overload<DescriptorSetLayout *(const DescriptorSetLayoutInfo &)>(&Device::createDescriptorSetLayout),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createDescriptorSetLayout", select_overload<DescriptorSetLayout*(const DescriptorSetLayoutInfo&)>(&Device::createDescriptorSetLayout),
+        .function("createPipelineLayout", select_overload<PipelineLayout *(const PipelineLayoutInfo &)>(&Device::createPipelineLayout),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createPipelineLayout", select_overload<PipelineLayout*(const PipelineLayoutInfo&)>(&Device::createPipelineLayout),
-                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createPipelineState", select_overload<PipelineState*(const PipelineStateInfo&)>(&Device::createPipelineState),
+        .function("createPipelineState", select_overload<PipelineState *(const PipelineStateInfo &)>(&Device::createPipelineState),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         // .function("createGlobalBarrier", select_overload<GlobalBarrier*(const GlobalBarrierInfo&)>(&Device::createGlobalBarrier),
         //           /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         // .function("createTextureBarrier", select_overload<TextureBarrier*(const TextureBarrierInfo&)>(&Device::createTextureBarrier),
         //           /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("copyBuffersToTexture", select_overload<void(const BufferDataList&, Texture*, const BufferTextureCopyList&)>(&Device::copyBuffersToTexture),
+        .function("copyBuffersToTexture", select_overload<void(const BufferDataList &, Texture *, const BufferTextureCopyList &)>(&Device::copyBuffersToTexture),
                   /* pure_virtual(), */ allow_raw_pointers())
-        .function("copyTextureToBuffers", select_overload<void(Texture*, BufferSrcList&, const BufferTextureCopyList&)>(&Device::copyTextureToBuffers),
+        .function("copyTextureToBuffers", select_overload<void(Texture *, BufferSrcList &, const BufferTextureCopyList &)>(&Device::copyTextureToBuffers),
                   /* pure_virtual(), */ allow_raw_pointers())
-        .function("acquire", select_overload<void(Swapchain* const*, uint32_t)>(&Device::acquire),
+        .function("acquire", select_overload<void(Swapchain *const *, uint32_t)>(&Device::acquire),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("present", select_overload<void(void)>(&Device::present),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>());
     class_<CCWGPUDevice, base<Device>>("CCWGPUDevice")
         .class_function("getInstance", &CCWGPUDevice::getInstance, allow_raw_pointer<arg<0>>())
-        .function("createSwapchain", select_overload<Swapchain*(const SwapchainInfoInstance&)>(&CCWGPUDevice::createSwapchain),
+        .function("createSwapchain", select_overload<Swapchain *(const SwapchainInfoInstance &)>(&CCWGPUDevice::createSwapchain),
                   /* pure_virtual(), */ allow_raw_pointers())
-        .function("createFramebuffer", select_overload<Framebuffer*(const FramebufferInfoInstance&)>(&CCWGPUDevice::createFramebuffer),
+        .function("createFramebuffer", select_overload<Framebuffer *(const FramebufferInfoInstance &)>(&CCWGPUDevice::createFramebuffer),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createTexture", select_overload<Texture*(const TextureInfoInstance&)>(&CCWGPUDevice::createTexture),
+        .function("createTexture", select_overload<Texture *(const TextureInfoInstance &)>(&CCWGPUDevice::createTexture),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createTextureView", select_overload<Texture*(const TextureViewInfoInstance&)>(&CCWGPUDevice::createTexture),
+        .function("createTextureView", select_overload<Texture *(const TextureViewInfoInstance &)>(&CCWGPUDevice::createTexture),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createBufferView", select_overload<Buffer *(const BufferViewInfoInstance &)>(&CCWGPUDevice::createBuffer),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createDescriptorSet", select_overload<DescriptorSet *(const DescriptorSetInfoInstance &)>(&CCWGPUDevice::createDescriptorSet),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>());
 
     class_<cc::gfx::RenderPass>("RenderPass")
-        .class_function("computeHash", select_overload<uint(const RenderPassInfo&)>(&RenderPass::computeHash), allow_raw_pointer<arg<0>>())
+        .class_function("computeHash", select_overload<uint(const RenderPassInfo &)>(&RenderPass::computeHash), allow_raw_pointer<arg<0>>())
         .function("initialize", &cc::gfx::RenderPass::initialize, allow_raw_pointer<arg<0>>())
         .function("destroy", &cc::gfx::RenderPass::destroy)
         .function("getColorAttachments", &cc::gfx::RenderPass::getColorAttachments)
@@ -392,20 +455,19 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("getHash", &cc::gfx::RenderPass::getHash);
     class_<CCWGPURenderPass, base<RenderPass>>("CCWGPURenderPass")
         .constructor<>()
-        .function("getThis", select_overload<CCWGPURenderPass*(CCWGPURenderPass*)>(&cc::gfx::getThis), allow_raw_pointer<arg<0>>());
+        .function("getThis", select_overload<CCWGPURenderPass *(CCWGPURenderPass *)>(&cc::gfx::getThis), allow_raw_pointer<arg<0>>());
 
     class_<cc::gfx::Texture>("Texture")
-        .class_function("computeHash", select_overload<uint(const TextureInfo&)>(&Texture::computeHash), allow_raw_pointer<arg<0>>())
-        .function("initialize", select_overload<void(const TextureInfo&)>(&cc::gfx::Texture::initialize), allow_raw_pointer<arg<0>>())
-        .function("initialize", select_overload<void(const TextureViewInfo&)>(&cc::gfx::Texture::initialize), allow_raw_pointer<arg<0>>())
+        .class_function("computeHash", select_overload<uint(const TextureInfo &)>(&Texture::computeHash), allow_raw_pointer<arg<0>>())
+        .function("initialize", select_overload<void(const TextureInfo &)>(&cc::gfx::Texture::initialize), allow_raw_pointer<arg<0>>())
+        .function("initialize", select_overload<void(const TextureViewInfo &)>(&cc::gfx::Texture::initialize), allow_raw_pointer<arg<0>>())
         .function("destroy", &cc::gfx::Texture::destroy)
         .function("resize", &cc::gfx::Texture::resize);
     class_<CCWGPUTexture, base<cc::gfx::Texture>>("CCWGPUTexture")
-        .constructor<>()
-        .function("getThis", select_overload<CCWGPUTexture*(CCWGPUTexture*)>(&cc::gfx::getThis), allow_raw_pointer<arg<0>>());
+        .constructor<>();
 
     class_<cc::gfx::Framebuffer>("Framebuffer")
-        .class_function("computeHash", select_overload<uint(const FramebufferInfo&)>(&Framebuffer::computeHash), allow_raw_pointer<arg<0>>())
+        .class_function("computeHash", select_overload<uint(const FramebufferInfo &)>(&Framebuffer::computeHash), allow_raw_pointer<arg<0>>())
         .function("initialize", &cc::gfx::Framebuffer::initialize, allow_raw_pointer<arg<0>>())
         .function("destroy", &cc::gfx::Framebuffer::destroy)
         .function("getRenderPass", &cc::gfx::Framebuffer::getRenderPass, allow_raw_pointer<arg<0>>())
@@ -413,10 +475,34 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("getDepthStencilTexture", &cc::gfx::Framebuffer::getDepthStencilTexture, allow_raw_pointer<arg<0>>());
     class_<CCWGPUFramebuffer, base<Framebuffer>>("CCWGPUFramebuffer")
         .constructor<>();
+
     class_<Sampler>("Sampler")
         .function("getInfo", &Sampler::getInfo);
     class_<CCWGPUSampler, base<Sampler>>("CCWGPUSampler")
-        .constructor<const SamplerInfo&>();
+        .constructor<const SamplerInfo &>();
+
+    class_<Buffer>("Buffer")
+        .function("initialize", select_overload<void(const BufferInfo &)>(&Buffer::initialize), allow_raw_pointer<arg<0>>())
+        .function("initialize", select_overload<void(const BufferViewInfo &)>(&Buffer::initialize), allow_raw_pointer<arg<0>>())
+        .function("resize", &Buffer::resize)
+        .function("desctroy", &Buffer::destroy)
+        .function("update", select_overload<void(const void *, uint)>(&Buffer::update), allow_raw_pointer<arg<0>>())
+        .function("update", select_overload<void(const void *)>(&Buffer::update), allow_raw_pointer<arg<0>>());
+    class_<CCWGPUBuffer, base<Buffer>>("CCWGPUBuffer")
+        .constructor<>();
+
+    class_<DescriptorSetLayout>("DescriptorSetLayout")
+        .function("initialize", &DescriptorSetLayout::initialize)
+        .function("destroy", &DescriptorSetLayout::destroy);
+    class_<CCWGPUDescriptorSetLayout, base<DescriptorSetLayout>>("CCWGPUDescriptorSetLayout")
+        .constructor<>();
+
+    class_<DescriptorSet>("DescriptorSet")
+        .function("initialize", &DescriptorSet::initialize)
+        .function("destroy", &DescriptorSet::destroy)
+        .function("update", &DescriptorSet::update);
+    class_<CCWGPUDescriptorSet, base<DescriptorSet>>("CCWGPUDescriptorSet")
+        .constructor<>();
 
     //--------------------------------------------------CONTAINER-----------------------------------------------------------------------
     register_vector<int>("vector_int");
@@ -425,9 +511,11 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     register_vector<SubpassInfo>("SubpassInfoList");
     register_vector<ColorAttachment>("ColorAttachmentList");
     register_vector<SubpassDependency>("SubpassDependencyList");
-    register_vector<Texture*>("TextureList");
-    register_vector<const uint8_t*>("BufferDataList");
+    register_vector<Texture *>("TextureList");
+    register_vector<const uint8_t *>("BufferDataList");
     register_vector<BufferTextureCopy>("BufferTextureCopyList");
+    register_vector<Sampler *>("SamplerList");
+    register_vector<DescriptorSetLayoutBinding>("DescriptorSetLayoutBindingList");
 };
 
 } // namespace gfx
