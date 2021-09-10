@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include "Define.h"
 #include "scene/Light.h"
 #include "scene/Model.h"
 #include "scene/SubModel.h"

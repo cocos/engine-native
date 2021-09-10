@@ -40,6 +40,7 @@
 #include "gfx-base/GFXDescriptorSet.h"
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXFramebuffer.h"
+#include "gfx-base/GFXSampler.h"
 #include "gfx-base/GFXTexture.h"
 #include "scene/RenderScene.h"
 #include "scene/Sphere.h"

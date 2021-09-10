@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include "Define.h"
 #include "scene/Model.h"
 #include "scene/Pass.h"
 #include "scene/SubModel.h"
