@@ -34,7 +34,7 @@ namespace gfx {
 
 class CC_VULKAN_API CCVKCommandBuffer final : public CommandBuffer {
 public:
-    CCVKCommandBuffer() = default;
+    CCVKCommandBuffer();
     ~CCVKCommandBuffer() override;
 
     void begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) override;
@@ -77,8 +77,7 @@ protected:
     vector<CCVKGPUDescriptorSet *> _curGPUDescriptorSets;
     vector<VkDescriptorSet>        _curVkDescriptorSets;
     vector<uint>                   _curDynamicOffsets;
-    vector<const uint *>           _curDynamicOffsetPtrs;
-    vector<uint>                   _curDynamicOffsetCounts;
+    vector<vector<uint>>           _curDynamicOffsetsArray;
     uint                           _firstDirtyDescriptorSet = UINT_MAX;
 
     CCVKGPUInputAssembler *_curGPUInputAssember = nullptr;

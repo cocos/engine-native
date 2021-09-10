@@ -31,14 +31,16 @@
 #include "VKDescriptorSetLayout.h"
 #include "VKDevice.h"
 #include "VKPipelineLayout.h"
-#include "VKSampler.h"
 #include "VKShader.h"
 #include "VKTexture.h"
+#include "states/VKSampler.h"
 
 namespace cc {
 namespace gfx {
 
-CCVKDescriptorSet::CCVKDescriptorSet() = default;
+CCVKDescriptorSet::CCVKDescriptorSet() {
+    _typedID = generateObjectID<decltype(this)>();
+}
 
 CCVKDescriptorSet::~CCVKDescriptorSet() {
     destroy();
@@ -103,12 +105,14 @@ void CCVKDescriptorSet::doInit(const DescriptorSetInfo & /*info*/) {
             for (uint j = 0; j < binding.count; ++j, ++k) {
                 if (hasFlag(DESCRIPTOR_BUFFER_TYPE, binding.descriptorType)) {
                     instance.descriptorInfos[k].buffer.buffer = gpuDevice->defaultBuffer.vkBuffer;
-                    instance.descriptorInfos[k].buffer.offset = gpuDevice->defaultBuffer.startOffset;
+                    instance.descriptorInfos[k].buffer.offset = gpuDevice->defaultBuffer.getStartOffset(t);
                     instance.descriptorInfos[k].buffer.range  = gpuDevice->defaultBuffer.size;
                 } else if (hasFlag(DESCRIPTOR_TEXTURE_TYPE, binding.descriptorType)) {
                     instance.descriptorInfos[k].image.sampler     = gpuDevice->defaultSampler.vkSampler;
                     instance.descriptorInfos[k].image.imageView   = gpuDevice->defaultTextureView.vkImageView;
-                    instance.descriptorInfos[k].image.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                    instance.descriptorInfos[k].image.imageLayout = hasFlag(binding.descriptorType, DescriptorType::STORAGE_IMAGE)
+                                                                        ? VK_IMAGE_LAYOUT_GENERAL
+                                                                        : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
                 }
             }
         }
@@ -165,10 +169,10 @@ void CCVKDescriptorSet::doDestroy() {
 
                 CCVKDescriptorInfo &descriptorInfo = instance.descriptorInfos[i];
                 if (binding.gpuBufferView) {
-                    descriptorHub->disengage(binding.gpuBufferView, &descriptorInfo.buffer);
+                    descriptorHub->disengage(_gpuDescriptorSet, binding.gpuBufferView, &descriptorInfo.buffer);
                 }
                 if (binding.gpuTextureView) {
-                    descriptorHub->disengage(binding.gpuTextureView, &descriptorInfo.image);
+                    descriptorHub->disengage(_gpuDescriptorSet, binding.gpuTextureView, &descriptorInfo.image);
                 }
                 if (binding.gpuSampler) {
                     descriptorHub->disengage(binding.gpuSampler, &descriptorInfo.image);
@@ -205,7 +209,7 @@ void CCVKDescriptorSet::update() {
                             CCVKDescriptorInfo &descriptorInfo = _gpuDescriptorSet->instances[t].descriptorInfos[i];
 
                             if (binding.gpuBufferView) {
-                                descriptorHub->disengage(binding.gpuBufferView, &descriptorInfo.buffer);
+                                descriptorHub->disengage(_gpuDescriptorSet, binding.gpuBufferView, &descriptorInfo.buffer);
                             }
                             if (bufferView) {
                                 descriptorHub->connect(_gpuDescriptorSet, bufferView, &descriptorInfo.buffer, t);
@@ -222,7 +226,7 @@ void CCVKDescriptorSet::update() {
                         for (auto &instance : _gpuDescriptorSet->instances) {
                             CCVKDescriptorInfo &descriptorInfo = instance.descriptorInfos[i];
                             if (binding.gpuTextureView) {
-                                descriptorHub->disengage(binding.gpuTextureView, &descriptorInfo.image);
+                                descriptorHub->disengage(_gpuDescriptorSet, binding.gpuTextureView, &descriptorInfo.image);
                             }
                             if (textureView) {
                                 descriptorHub->connect(_gpuDescriptorSet, textureView, &descriptorInfo.image);

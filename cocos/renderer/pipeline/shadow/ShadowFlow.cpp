@@ -120,7 +120,7 @@ void ShadowFlow::resizeShadowMap(scene::Shadow **shadowInfo) {
     auto *     device    = gfx::Device::getInstance();
     const auto width     = static_cast<uint>((*shadowInfo)->size.x);
     const auto height    = static_cast<uint>((*shadowInfo)->size.y);
-    const auto format    = supportsHalfFloatTexture(device) ? gfx::Format::R16F : gfx::Format::RGBA8;
+    const auto format    = supportsHalfFloatTexture(device) ? gfx::Format::R32F : gfx::Format::RGBA8;
 
     for (const auto &pair : sceneData->getShadowFramebufferMap()) {
         gfx::Framebuffer *framebuffer = pair.second;
@@ -150,7 +150,7 @@ void ShadowFlow::resizeShadowMap(scene::Shadow **shadowInfo) {
         depth = device->createTexture({
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT,
-            device->getDepthStencilFormat(),
+            gfx::Format::DEPTH,
             width,
             height,
         });
@@ -174,26 +174,26 @@ void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const scene::Li
     const auto  shadowMapSize = shadowInfo->size;
     const auto  width         = static_cast<uint>(shadowMapSize.x);
     const auto  height        = static_cast<uint>(shadowMapSize.y);
-    const auto  format        = supportsHalfFloatTexture(device) ? gfx::Format::R16F : gfx::Format::RGBA8;
-    
+    const auto  format        = supportsHalfFloatTexture(device) ? gfx::Format::R32F : gfx::Format::RGBA8;
+
     const gfx::ColorAttachment colorAttachment = {
         format,
-        gfx::SampleCount::X1,
+        gfx::SampleCount::ONE,
         gfx::LoadOp::CLEAR,
         gfx::StoreOp::STORE,
-        {},
-        {},
+        {gfx::AccessType::COLOR_ATTACHMENT_WRITE},
+        {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE},
     };
 
     const gfx::DepthStencilAttachment depthStencilAttachment = {
-        device->getDepthStencilFormat(),
-        gfx::SampleCount::X1,
+        gfx::Format::DEPTH,
+        gfx::SampleCount::ONE,
         gfx::LoadOp::CLEAR,
         gfx::StoreOp::DISCARD,
         gfx::LoadOp::CLEAR,
         gfx::StoreOp::DISCARD,
-        {},
-        {},
+        {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE},
+        {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE},
     };
 
     gfx::RenderPassInfo rpInfo;
@@ -224,7 +224,7 @@ void ShadowFlow::initShadowFrameBuffer(RenderPipeline *pipeline, const scene::Li
     gfx::Texture *depth = device->createTexture({
         gfx::TextureType::TEX2D,
         gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
-        device->getDepthStencilFormat(),
+        gfx::Format::DEPTH,
         width,
         height,
     });

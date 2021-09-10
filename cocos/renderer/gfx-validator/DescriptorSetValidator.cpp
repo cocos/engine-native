@@ -30,7 +30,6 @@
 #include "DescriptorSetLayoutValidator.h"
 #include "DescriptorSetValidator.h"
 #include "DeviceValidator.h"
-#include "SamplerValidator.h"
 #include "TextureValidator.h"
 #include "ValidationUtils.h"
 
@@ -39,7 +38,7 @@ namespace gfx {
 
 DescriptorSetValidator::DescriptorSetValidator(DescriptorSet *actor)
 : Agent<DescriptorSet>(actor) {
-    _typedID = generateObjectID<decltype(this)>();
+    _typedID = actor->getTypedID();
 }
 
 DescriptorSetValidator::~DescriptorSetValidator() {
@@ -75,6 +74,9 @@ void DescriptorSetValidator::bindBuffer(uint binding, Buffer *buffer, uint index
     CCASSERT(binding < bindingIndices.size() && bindingIndices[binding] < bindings.size(), "Illegal binding");
 
     const DescriptorSetLayoutBinding &info = bindings[bindingIndices[binding]];
+    if (hasAnyFlags(info.descriptorType, DESCRIPTOR_DYNAMIC_TYPE)) {
+        CCASSERT(buffer->isBufferView(), "Should bind buffer views for dynamic descriptors");
+    }
     CCASSERT(hasAnyFlags(info.descriptorType, DESCRIPTOR_BUFFER_TYPE), "Setting binding is not DESCRIPTOR_BUFFER_TYPE");
 
     /////////// execute ///////////
@@ -111,7 +113,7 @@ void DescriptorSetValidator::bindSampler(uint binding, Sampler *sampler, uint in
 
     DescriptorSet::bindSampler(binding, sampler, index);
 
-    _actor->bindSampler(binding, static_cast<SamplerValidator *>(sampler)->getActor(), index);
+    _actor->bindSampler(binding, sampler, index);
 }
 
 } // namespace gfx

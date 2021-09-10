@@ -37,9 +37,15 @@
 #include "RenderPassValidator.h"
 #include "TextureValidator.h"
 #include "ValidationUtils.h"
+#include "gfx-base/GFXCommandBuffer.h"
 
 namespace cc {
 namespace gfx {
+
+CommandBufferValidator::CommandBufferValidator(CommandBuffer *actor)
+: Agent<CommandBuffer>(actor) {
+    _typedID = actor->getTypedID();
+}
 
 CommandBufferValidator::~CommandBufferValidator() {
     DeviceResourceTracker<CommandBuffer>::erase(this);
@@ -76,6 +82,7 @@ void CommandBufferValidator::begin(RenderPass *renderPass, uint subpass, Framebu
     _commandsFlushed  = false;
 
     _recorder.clear();
+    _curStates.descriptorSets.assign(_curStates.descriptorSets.size(), nullptr);
 
     /////////// execute ///////////
 
@@ -289,6 +296,14 @@ void CommandBufferValidator::draw(const DrawInfo &info) {
         _recorder.recordDrawcall(_curStates);
     }
 
+    const auto &psoLayouts = _curStates.pipelineState->getPipelineLayout()->getSetLayouts();
+    for (size_t i = 0; i < psoLayouts.size(); ++i) {
+        if (!_curStates.descriptorSets[i]) continue; // there may be inactive sets
+        const auto &dsBindings  = _curStates.descriptorSets[i]->getLayout()->getBindings();
+        const auto &psoBindings = psoLayouts[i]->getBindings();
+        CCASSERT(psoBindings.size() == dsBindings.size(), "Descriptor set layout mismatch");
+    }
+
     /////////// execute ///////////
 
     _actor->draw(info);
@@ -320,6 +335,17 @@ void CommandBufferValidator::copyBuffersToTexture(const uint8_t *const *buffers,
 
 void CommandBufferValidator::blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlit *regions, uint count, Filter filter) {
     CCASSERT(!_insideRenderPass, "Command 'blitTexture' must be recorded outside render passes.");
+
+    for (uint32_t i = 0; i < count; ++i) {
+        const auto &region = regions[i];
+        CCASSERT(region.srcOffset.x + region.srcExtent.width <= srcTexture->getInfo().width, "Invalid src region");
+        CCASSERT(region.srcOffset.y + region.srcExtent.height <= srcTexture->getInfo().height, "Invalid src region");
+        CCASSERT(region.srcOffset.z + region.srcExtent.depth <= srcTexture->getInfo().depth, "Invalid src region");
+
+        CCASSERT(region.dstOffset.x + region.dstExtent.width <= dstTexture->getInfo().width, "Invalid dst region");
+        CCASSERT(region.dstOffset.y + region.dstExtent.height <= dstTexture->getInfo().height, "Invalid dst region");
+        CCASSERT(region.dstOffset.z + region.dstExtent.depth <= dstTexture->getInfo().depth, "Invalid dst region");
+    }
 
     /////////// execute ///////////
 

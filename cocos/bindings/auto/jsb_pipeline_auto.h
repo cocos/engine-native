@@ -17,9 +17,8 @@
 #include "cocos/renderer/pipeline/GlobalDescriptorSetManager.h"
 #include "cocos/renderer/pipeline/InstancedBuffer.h"
 #include "cocos/renderer/pipeline/deferred/DeferredPipeline.h"
-#include "cocos/renderer/pipeline/deferred/GbufferFlow.h"
+#include "cocos/renderer/pipeline/deferred/MainFlow.h"
 #include "cocos/renderer/pipeline/deferred/GbufferStage.h"
-#include "cocos/renderer/pipeline/deferred/LightingFlow.h"
 #include "cocos/renderer/pipeline/deferred/LightingStage.h"
 #include "cocos/renderer/pipeline/deferred/PostprocessStage.h"
 
@@ -72,10 +71,12 @@ JSB_REGISTER_OBJECT_TYPE(cc::pipeline::RenderPipeline);
 SE_DECLARE_FUNC(js_pipeline_RenderPipeline_activate);
 SE_DECLARE_FUNC(js_pipeline_RenderPipeline_destroy);
 SE_DECLARE_FUNC(js_pipeline_RenderPipeline_getDevice);
+SE_DECLARE_FUNC(js_pipeline_RenderPipeline_getProfiler);
+SE_DECLARE_FUNC(js_pipeline_RenderPipeline_getRenderstageByName);
 SE_DECLARE_FUNC(js_pipeline_RenderPipeline_initialize);
 SE_DECLARE_FUNC(js_pipeline_RenderPipeline_render);
-SE_DECLARE_FUNC(js_pipeline_RenderPipeline_resize);
 SE_DECLARE_FUNC(js_pipeline_RenderPipeline_setPipelineSharedSceneData);
+SE_DECLARE_FUNC(js_pipeline_RenderPipeline_setProfiler);
 SE_DECLARE_FUNC(js_pipeline_RenderPipeline_setValue);
 SE_DECLARE_FUNC(js_pipeline_RenderPipeline_getInstance);
 
@@ -106,6 +107,7 @@ bool register_all_pipeline(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::pipeline::RenderFlow);
 SE_DECLARE_FUNC(js_pipeline_RenderFlow_activate);
+SE_DECLARE_FUNC(js_pipeline_RenderFlow_getRenderstageByName);
 SE_DECLARE_FUNC(js_pipeline_RenderFlow_getTag);
 SE_DECLARE_FUNC(js_pipeline_RenderFlow_initialize);
 
@@ -193,17 +195,22 @@ bool js_register_cc_pipeline_DeferredPipeline(se::Object* obj);
 bool register_all_pipeline(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::pipeline::DeferredPipeline);
+SE_DECLARE_FUNC(js_pipeline_DeferredPipeline_ensureEnoughSize);
+SE_DECLARE_FUNC(js_pipeline_DeferredPipeline_getClearcolor);
+SE_DECLARE_FUNC(js_pipeline_DeferredPipeline_getFrameGraph);
+SE_DECLARE_FUNC(js_pipeline_DeferredPipeline_getHeight);
+SE_DECLARE_FUNC(js_pipeline_DeferredPipeline_getWidth);
 SE_DECLARE_FUNC(js_pipeline_DeferredPipeline_DeferredPipeline);
 
-extern se::Object* __jsb_cc_pipeline_GbufferFlow_proto;
-extern se::Class* __jsb_cc_pipeline_GbufferFlow_class;
+extern se::Object* __jsb_cc_pipeline_MainFlow_proto;
+extern se::Class* __jsb_cc_pipeline_MainFlow_class;
 
-bool js_register_cc_pipeline_GbufferFlow(se::Object* obj);
+bool js_register_cc_pipeline_MainFlow(se::Object* obj);
 bool register_all_pipeline(se::Object* obj);
 
-JSB_REGISTER_OBJECT_TYPE(cc::pipeline::GbufferFlow);
-SE_DECLARE_FUNC(js_pipeline_GbufferFlow_getInitializeInfo);
-SE_DECLARE_FUNC(js_pipeline_GbufferFlow_GbufferFlow);
+JSB_REGISTER_OBJECT_TYPE(cc::pipeline::MainFlow);
+SE_DECLARE_FUNC(js_pipeline_MainFlow_getInitializeInfo);
+SE_DECLARE_FUNC(js_pipeline_MainFlow_MainFlow);
 
 extern se::Object* __jsb_cc_pipeline_GbufferStage_proto;
 extern se::Class* __jsb_cc_pipeline_GbufferStage_class;
@@ -214,16 +221,6 @@ bool register_all_pipeline(se::Object* obj);
 JSB_REGISTER_OBJECT_TYPE(cc::pipeline::GbufferStage);
 SE_DECLARE_FUNC(js_pipeline_GbufferStage_getInitializeInfo);
 SE_DECLARE_FUNC(js_pipeline_GbufferStage_GbufferStage);
-
-extern se::Object* __jsb_cc_pipeline_LightingFlow_proto;
-extern se::Class* __jsb_cc_pipeline_LightingFlow_class;
-
-bool js_register_cc_pipeline_LightingFlow(se::Object* obj);
-bool register_all_pipeline(se::Object* obj);
-
-JSB_REGISTER_OBJECT_TYPE(cc::pipeline::LightingFlow);
-SE_DECLARE_FUNC(js_pipeline_LightingFlow_getInitializeInfo);
-SE_DECLARE_FUNC(js_pipeline_LightingFlow_LightingFlow);
 
 extern se::Object* __jsb_cc_pipeline_LightingStage_proto;
 extern se::Class* __jsb_cc_pipeline_LightingStage_class;
@@ -242,5 +239,6 @@ bool js_register_cc_pipeline_PostprocessStage(se::Object* obj);
 bool register_all_pipeline(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::pipeline::PostprocessStage);
+SE_DECLARE_FUNC(js_pipeline_PostprocessStage_getInitializeInfo);
 SE_DECLARE_FUNC(js_pipeline_PostprocessStage_PostprocessStage);
 
