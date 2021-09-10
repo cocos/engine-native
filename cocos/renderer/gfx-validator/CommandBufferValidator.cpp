@@ -76,6 +76,7 @@ void CommandBufferValidator::begin(RenderPass *renderPass, uint subpass, Framebu
     _commandsFlushed  = false;
 
     _recorder.clear();
+    _curStates.descriptorSets.assign(_curStates.descriptorSets.size(), nullptr);
 
     /////////// execute ///////////
 
@@ -287,6 +288,14 @@ void CommandBufferValidator::draw(const DrawInfo &info) {
 
     if (DeviceValidator::getInstance()->isRecording()) {
         _recorder.recordDrawcall(_curStates);
+    }
+
+    const auto &psoLayouts = _curStates.pipelineState->getPipelineLayout()->getSetLayouts();
+    for (size_t i = 0; i < psoLayouts.size(); ++i) {
+        if (!_curStates.descriptorSets[i]) continue; // there may be inactive sets
+        const auto &dsBindings  = _curStates.descriptorSets[i]->getLayout()->getBindings();
+        const auto &psoBindings = psoLayouts[i]->getBindings();
+        CCASSERT(psoBindings.size() == dsBindings.size(), "Descriptor set layout mismatch");
     }
 
     /////////// execute ///////////

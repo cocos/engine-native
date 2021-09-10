@@ -80,8 +80,16 @@ void ShadowMapBatchedQueue::gatherLightPasses(const scene::Light *light, gfx::Co
                         add(model, cmdBuffer);
                     }
                 } break;
-                default:
-                    break;
+
+                case scene::LightType::SPHERE: {
+                } break;
+
+                case scene::LightType::UNKNOWN: {
+                } break;
+
+                default: {
+                    
+                } break;
             }
         }
     }

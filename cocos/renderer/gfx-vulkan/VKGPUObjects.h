@@ -935,6 +935,20 @@ public:
             }
         }
     }
+    // for resize events
+    void update(const CCVKGPUBuffer *buffer, VkDeviceSize oldStartOffset) {
+        for (const auto &it : _buffers) {
+            if (it.first->gpuBuffer != buffer) continue;
+            const auto &info = it.second;
+            for (uint i = 0U; i < info.descriptors.size(); i++) {
+                info.descriptors[i]->buffer = buffer->vkBuffer;
+                info.descriptors[i]->offset += buffer->startOffset - oldStartOffset;
+            }
+            for (const auto *set : info.sets) {
+                _descriptorSetHub->record(set);
+            }
+        }
+    }
 
     void disengage(const CCVKGPUBufferView *buffer) {
         auto it = _buffers.find(buffer);
@@ -944,9 +958,10 @@ public:
         }
         _buffers.erase(it);
     }
-    void disengage(const CCVKGPUBufferView *buffer, VkDescriptorBufferInfo *descriptor) {
+    void disengage(const CCVKGPUDescriptorSet *set, const CCVKGPUBufferView *buffer, VkDescriptorBufferInfo *descriptor) {
         auto it = _buffers.find(buffer);
         if (it == _buffers.end()) return;
+        it->second.sets.erase(set);
         auto &descriptors = it->second.descriptors;
         descriptors.fastRemove(descriptors.indexOf(descriptor));
         _bufferInstanceIndices.erase(descriptor);
@@ -956,9 +971,10 @@ public:
         if (it == _textures.end()) return;
         _textures.erase(it);
     }
-    void disengage(const CCVKGPUTextureView *texture, VkDescriptorImageInfo *descriptor) {
+    void disengage(const CCVKGPUDescriptorSet *set, const CCVKGPUTextureView *texture, VkDescriptorImageInfo *descriptor) {
         auto it = _textures.find(texture);
         if (it == _textures.end()) return;
+        it->second.sets.erase(set);
         auto &descriptors = it->second.descriptors;
         descriptors.fastRemove(descriptors.indexOf(descriptor));
     }
