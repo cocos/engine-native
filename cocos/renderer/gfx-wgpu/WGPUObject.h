@@ -108,6 +108,14 @@ struct CCWGPUBindGroupObject {
     std::vector<WGPUBindGroupEntry> bindGroupEntries;
 };
 
+struct CCWGPUPipelineLayoutObject {
+    WGPUPipelineLayout wgpuPipelineLayout = wgpuDefaultHandle;
+};
+
+struct CCWGPUShaderObject {
+    WGPUShaderModule wgpuShaderModule = wgpuDefaultHandle;
+};
+
 } // namespace gfx
 
 } // namespace cc

@@ -32,8 +32,10 @@
 #include "WGPUExports.h"
 #include "WGPUFrameBuffer.h"
 #include "WGPUObject.h"
+#include "WGPUPipelineLayout.h"
 #include "WGPURenderPass.h"
 #include "WGPUSampler.h"
+#include "WGPUShader.h"
 #include "WGPUSwapchain.h"
 #include "WGPUUtils.h"
 
@@ -98,7 +100,7 @@ Texture* CCWGPUDevice::createTexture() {
 }
 
 Shader* CCWGPUDevice::createShader() {
-    return nullptr;
+    return CC_NEW(CCWGPUShader);
 }
 
 InputAssembler* CCWGPUDevice::createInputAssembler() {
@@ -122,7 +124,7 @@ DescriptorSetLayout* CCWGPUDevice::createDescriptorSetLayout() {
 }
 
 PipelineLayout* CCWGPUDevice::createPipelineLayout() {
-    return nullptr;
+    return CC_NEW(CCWGPUPipelineLayout);
 }
 
 PipelineState* CCWGPUDevice::createPipelineState() {

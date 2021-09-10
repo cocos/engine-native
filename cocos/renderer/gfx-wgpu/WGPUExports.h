@@ -5,71 +5,36 @@
 #include "WGPUDescriptorSetLayout.h"
 #include "WGPUDevice.h"
 #include "WGPUFrameBuffer.h"
+#include "WGPUPipelineLayout.h"
 #include "WGPURenderPass.h"
 #include "WGPUSampler.h"
 #include "WGPUSwapchain.h"
 #include "WGPUTexture.h"
-namespace cc {
-namespace gfx {
-DeviceInfo DeviceInfoInstance() {
-    return DeviceInfo();
-}
 
-BindingMappingInfo BindingMappingInfoInstance() {
-    return BindingMappingInfo();
-}
+// #define OBJECT_EXPORT(c) \
+//     static c c##Instance() { return c(); }
+namespace cc::gfx {
 
-ColorAttachment ColorAttachmentInstance() {
-    return ColorAttachment();
-}
+template <typename T>
+struct GenInstance {
+    static T instance() {
+        return T();
+    }
+};
 
-DepthStencilAttachment DepthStencilAttachmentInstance() {
-    return DepthStencilAttachment();
-}
+// template <typename T, class... Ts>
+// struct GenInstances {
+//     OBJECT_EXPORT(T);
+//     GenInstance<Ts...>;
+// };
 
-SubpassInfo SubpassInfoInstance() {
-    return SubpassInfo();
-}
+// template <typename T>
+// struct GenInstances<T> {
+//     OBJECT_EXPORT(T);
+// };
 
-SubpassDependency SubpassDependencyInstance() {
-    return SubpassDependency();
-}
-
-RenderPassInfo RenderPassInfoInstance() {
-    return RenderPassInfo();
-}
-
-Offset OffsetInstance() {
-    return Offset();
-}
-
-Extent ExtentInstance() {
-    return Extent();
-}
-
-TextureSubresLayers TextureSubresLayersInstance() {
-    return TextureSubresLayers();
-}
-
-BufferTextureCopy BufferTextureCopyInstance() {
-    return BufferTextureCopy();
-}
-
-SamplerInfo SamplerInfoInstance() {
-    return SamplerInfo();
-}
-
-BufferInfo BufferInfoInstance() {
-    return BufferInfo();
-}
-
-DescriptorSetLayoutInfo DescriptorSetLayoutInfoInstance() {
-    return DescriptorSetLayoutInfo();
-}
-
-DescriptorSetLayoutBinding DescriptorSetLayoutBindingInstance() {
-    return DescriptorSetLayoutBinding();
-}
+// GenInstances<DeviceInfo, BindingMappingInfo, ColorAttachment, DepthStencilAttachment, SubpassInfo, SubpassDependency, RenderPassInfo, Offset, Extent, TextureSubresLayers, BufferTextureCopy, SamplerInfo, BufferInfo,
+//              DescriptorSetLayoutInfo, DescriptorSetLayoutBinding, PipelineLayoutInfo, UniformStorageImage, ShaderStage, Attribute, UniformBlock, UniformStorageBuffer>;
 
 EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     // TODO_Zeqiang: compile time traverse enum
@@ -218,6 +183,61 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .value("COMPUTE", ShaderStageFlagBit::COMPUTE)
         .value("ALL", ShaderStageFlagBit::ALL);
 
+    enum_<MemoryAccess>("MemoryAccess")
+        .value("NONE", MemoryAccessBit::NONE)
+        .value("READ_ONLY", MemoryAccessBit::READ_ONLY)
+        .value("WRITE_ONLY", MemoryAccessBit::WRITE_ONLY)
+        .value("READ_WRITE", MemoryAccessBit::READ_WRITE);
+
+    enum_<Type>("Type")
+        .value("UNKNOWN", Type::UNKNOWN)
+        .value("BOOL", Type::BOOL)
+        .value("BOOL2", Type::BOOL2)
+        .value("BOOL3", Type::BOOL3)
+        .value("BOOL4", Type::BOOL4)
+        .value("INT", Type::INT)
+        .value("INT2", Type::INT2)
+        .value("INT3", Type::INT3)
+        .value("INT4", Type::INT4)
+        .value("UINT", Type::UINT)
+        .value("UINT2", Type::UINT2)
+        .value("UINT3", Type::UINT3)
+        .value("UINT4", Type::UINT4)
+        .value("FLOAT", Type::FLOAT)
+        .value("FLOAT2", Type::FLOAT2)
+        .value("FLOAT3", Type::FLOAT3)
+        .value("FLOAT4", Type::FLOAT4)
+        .value("MAT2", Type::MAT2)
+        .value("MAT2X3", Type::MAT2X3)
+        .value("MAT2X4", Type::MAT2X4)
+        .value("MAT3X2", Type::MAT3X2)
+        .value("MAT3X4", Type::MAT3X4)
+        .value("MAT4X2", Type::MAT4X2)
+        .value("MAT4X3", Type::MAT4X3)
+        .value("MAT4", Type::MAT4)
+        .value("SAMPLER1D", Type::SAMPLER1D)
+        .value("SAMPLER1D_ARRAY", Type::SAMPLER1D_ARRAY)
+        .value("SAMPLER2D", Type::SAMPLER2D)
+        .value("SAMPLER2D_ARRAY", Type::SAMPLER2D_ARRAY)
+        .value("SAMPLER3D", Type::SAMPLER3D)
+        .value("SAMPLER_CUBE", Type::SAMPLER_CUBE)
+        .value("SAMPLER", Type::SAMPLER)
+        .value("TEXTURE1D", Type::TEXTURE1D)
+        .value("TEXTURE1D_ARRAY", Type::TEXTURE1D_ARRAY)
+        .value("TEXTURE2D", Type::TEXTURE2D)
+        .value("TEXTURE2D_ARRAY", Type::TEXTURE2D_ARRAY)
+        .value("TEXTURE3D", Type::TEXTURE3D)
+        .value("TEXTURE_CUBE", Type::TEXTURE_CUBE)
+        .value("IMAGE1D", Type::IMAGE1D)
+        .value("IMAGE1D_ARRAY", Type::IMAGE1D_ARRAY)
+        .value("IMAGE2D", Type::IMAGE2D)
+        .value("IMAGE2D_ARRAY", Type::IMAGE2D_ARRAY)
+        .value("IMAGE3D", Type::IMAGE3D)
+        .value("IMAGE_CUBE", Type::IMAGE_CUBE)
+        .value("IMAGE3D", Type::IMAGE3D)
+        .value("SUBPASS_INPUT", Type::SUBPASS_INPUT)
+        .value("COUNT", Type::COUNT);
+
     //-----------------------------------------------STRUCT-------------------------------------------------------------------
     value_object<ColorAttachment>("ColorAttachment")
         .field("format", &ColorAttachment::format)
@@ -227,7 +247,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .field("beginAccesses", &ColorAttachment::beginAccesses)
         .field("endAccesses", &ColorAttachment::endAccesses)
         .field("isGeneralLayout", &ColorAttachment::isGeneralLayout);
-    function("ColorAttachmentInstance", &cc::gfx::ColorAttachmentInstance);
+    function("ColorAttachmentInstance", &GenInstance<ColorAttachment>::instance);
 
     value_object<DepthStencilAttachment>("DepthStencilAttachment")
         .field("format", &DepthStencilAttachment::format)
@@ -239,7 +259,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .field("beginAccesses", &DepthStencilAttachment::beginAccesses)
         .field("endAccesses", &DepthStencilAttachment::endAccesses)
         .field("isGeneralLayout", &DepthStencilAttachment::isGeneralLayout);
-    function("DepthStencilAttachmentInstance", &cc::gfx::DepthStencilAttachmentInstance);
+    function("DepthStencilAttachmentInstance", &GenInstance<DepthStencilAttachment>::instance);
 
     value_object<SubpassInfo>("SubpassInfo")
         .field("inputs", &SubpassInfo::inputs)
@@ -250,49 +270,49 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .field("depthStencilResolve", &SubpassInfo::depthStencilResolve)
         .field("depthResolveMode", &SubpassInfo::depthResolveMode)
         .field("stencilResolveMode", &SubpassInfo::stencilResolveMode);
-    function("SubpassInfoInstance", &cc::gfx::SubpassInfoInstance);
+    function("SubpassInfoInstance", &GenInstance<SubpassInfo>::instance);
 
     value_object<SubpassDependency>("SubpassDependency")
         .field("srcSubpass", &SubpassDependency::srcSubpass)
         .field("dstSubpass", &SubpassDependency::dstSubpass)
         .field("srcAccesses", &SubpassDependency::srcAccesses)
         .field("dstAccesses", &SubpassDependency::dstAccesses);
-    function("SubpassDependencyInstance", &cc::gfx::SubpassDependencyInstance);
+    function("SubpassDependencyInstance", &GenInstance<SubpassDependency>::instance);
 
     value_object<RenderPassInfo>("RenderPassInfo")
         .field("colorAttachments", &RenderPassInfo::colorAttachments)
         .field("depthStencilAttachment", &RenderPassInfo::depthStencilAttachment)
         .field("subpasses", &RenderPassInfo::subpasses)
         .field("dependencies", &RenderPassInfo::dependencies);
-    function("RenderPassInfoInstance", &cc::gfx::RenderPassInfoInstance);
+    function("RenderPassInfoInstance", &GenInstance<RenderPassInfo>::instance);
 
     value_object<BindingMappingInfo>("BindingMappingInfo")
         .field("bufferOffsets", &BindingMappingInfo::bufferOffsets)
         .field("samplerOffsets", &BindingMappingInfo::samplerOffsets)
         .field("flexibleSet", &BindingMappingInfo::flexibleSet);
-    function("BindingMappingInfoInstance", &cc::gfx::BindingMappingInfoInstance);
+    function("BindingMappingInfoInstance", &GenInstance<BindingMappingInfo>::instance);
 
     value_object<DeviceInfo>("DeviceInfo")
         .field("bindingMappingInfo", &DeviceInfo::bindingMappingInfo);
-    function("DeviceInfoInstance", &cc::gfx::DeviceInfoInstance);
+    function("DeviceInfoInstance", &GenInstance<DeviceInfo>::instance);
 
     value_object<Offset>("Offset")
         .field("x", &Offset::x)
         .field("y", &Offset::y)
         .field("z", &Offset::z);
-    function("OffsetInstance", &cc::gfx::OffsetInstance);
+    function("OffsetInstance", &GenInstance<Offset>::instance);
 
     value_object<Extent>("Extent")
         .field("width", &Extent::width)
         .field("height", &Extent::height)
         .field("depth", &Extent::depth);
-    function("ExtentInstance", &cc::gfx::ExtentInstance);
+    function("ExtentInstance", &GenInstance<Extent>::instance);
 
     value_object<TextureSubresLayers>("TextureSubresLayers")
         .field("mipLevel", &TextureSubresLayers::mipLevel)
         .field("baseArrayLayer", &TextureSubresLayers::baseArrayLayer)
         .field("layerCount", &TextureSubresLayers::layerCount);
-    function("TextureSubresLayersInstance", &cc::gfx::TextureSubresLayersInstance);
+    function("TextureSubresLayersInstance", &GenInstance<TextureSubresLayers>::instance);
 
     value_object<BufferTextureCopy>("BufferTextureCopy")
         .field("buffStride", &BufferTextureCopy::buffStride)
@@ -300,7 +320,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .field("texOffset", &BufferTextureCopy::texOffset)
         .field("texExtent", &BufferTextureCopy::texExtent)
         .field("texSubres", &BufferTextureCopy::texSubres);
-    function("BufferTextureCopyInstance", &cc::gfx::BufferTextureCopyInstance);
+    function("BufferTextureCopyInstance", &GenInstance<BufferTextureCopy>::instance);
 
     value_object<SamplerInfo>("SamplerInfo")
         .field("minFilter", &SamplerInfo::minFilter)
@@ -311,7 +331,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .field("addressW", &SamplerInfo::addressW)
         .field("maxAnisotropy", &SamplerInfo::maxAnisotropy)
         .field("cmpFunc", &SamplerInfo::cmpFunc);
-    function("SamplerInfoInstance", &cc::gfx::SamplerInfoInstance);
+    function("SamplerInfoInstance", &GenInstance<SamplerInfo>::instance);
 
     value_object<BufferInfo>("BufferInfo")
         .field("usage", &BufferInfo::usage)
@@ -319,11 +339,11 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .field("size", &BufferInfo::size)
         .field("stride", &BufferInfo::stride)
         .field("flags", &BufferInfo::flags);
-    function("BufferInfoInstance", &cc::gfx::BufferInfoInstance);
+    function("BufferInfoInstance", &GenInstance<BufferInfo>::instance);
 
     value_object<DescriptorSetLayoutInfo>("DescriptorSetLayoutInfo")
         .field("bindings", &DescriptorSetLayoutInfo::bindings);
-    function("DescriptorSetLayoutInfoInstance", &cc::gfx::DescriptorSetLayoutInfoInstance);
+    function("DescriptorSetLayoutInfoInstance", &GenInstance<DescriptorSetLayoutInfo>::instance);
 
     value_object<DescriptorSetLayoutBinding>("DescriptorSetLayoutBinding")
         .field("binding", &DescriptorSetLayoutBinding::binding)
@@ -331,7 +351,93 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .field("count", &DescriptorSetLayoutBinding::count)
         .field("stageFlags", &DescriptorSetLayoutBinding::stageFlags)
         .field("immutableSamplers", &DescriptorSetLayoutBinding::immutableSamplers);
-    function("DescriptorSetLayoutBindingInstance", &cc::gfx::DescriptorSetLayoutBindingInstance);
+    function("DescriptorSetLayoutBindingInstance", &GenInstance<DescriptorSetLayoutBinding>::instance);
+
+    value_object<PipelineLayoutInfo>("PipelineLayoutInfo")
+        .field("setLayouts", &PipelineLayoutInfo::setLayouts);
+    function("PipelineLayoutInfoInstance", &GenInstance<PipelineLayoutInfo>::instance);
+
+    value_object<UniformStorageImage>("UniformStorageImage")
+        .field("set", &UniformStorageImage::set)
+        .field("binding", &UniformStorageImage::binding)
+        .field("name", &UniformStorageImage::name)
+        .field("type", &UniformStorageImage::type)
+        .field("count", &UniformStorageImage::count)
+        .field("memoryAccess", &UniformStorageImage::memoryAccess);
+    function("UniformStorageImageInstance", &GenInstance<UniformStorageImage>::instance);
+
+    value_object<ShaderStage>("ShaderStage")
+        .field("stage", &ShaderStage::stage)
+        .field("source", &ShaderStage::source);
+    function("ShaderStageInstance", &GenInstance<ShaderStage>::instance);
+
+    value_object<Attribute>("Attribute")
+        .field("name", &Attribute::name)
+        .field("format", &Attribute::format)
+        .field("isNormalized", &Attribute::isNormalized)
+        .field("stream", &Attribute::stream)
+        .field("isInstanced", &Attribute::isInstanced)
+        .field("location", &Attribute::location);
+    function("AttributeInstance", &GenInstance<Attribute>::instance);
+
+    value_object<UniformBlock>("UniformBlock")
+        .field("set", &UniformBlock::set)
+        .field("binding", &UniformBlock::binding)
+        .field("name", &UniformBlock::name)
+        .field("members", &UniformBlock::members)
+        .field("count", &UniformBlock::count);
+    function("UniformBlockInstance", &GenInstance<UniformBlock>::instance);
+
+    value_object<UniformStorageBuffer>("UniformStorageBuffer")
+        .field("set", &UniformStorageBuffer::set)
+        .field("binding", &UniformStorageBuffer::binding)
+        .field("name", &UniformStorageBuffer::name)
+        .field("count", &UniformStorageBuffer::count)
+        .field("memoryAccess", &UniformStorageBuffer::memoryAccess);
+    function("UniformBlockInstance", &GenInstance<UniformStorageBuffer>::instance);
+
+    value_object<UniformSamplerTexture>("UniformSamplerTexture")
+        .field("set", &UniformSamplerTexture::set)
+        .field("binding", &UniformSamplerTexture::binding)
+        .field("name", &UniformSamplerTexture::name)
+        .field("type", &UniformSamplerTexture::type)
+        .field("count", &UniformSamplerTexture::count);
+    function("UniformSamplerTextureInstance", &GenInstance<UniformSamplerTexture>::instance);
+
+    value_object<UniformSampler>("UniformSampler")
+        .field("set", &UniformSampler::set)
+        .field("binding", &UniformSampler::binding)
+        .field("name", &UniformSampler::name)
+        .field("count", &UniformSampler::count);
+    function("UniformSamplerInstance", &GenInstance<UniformSampler>::instance);
+
+    value_object<UniformTexture>("UniformTexture")
+        .field("set", &UniformTexture::set)
+        .field("binding", &UniformTexture::binding)
+        .field("name", &UniformTexture::name)
+        .field("type", &UniformTexture::type)
+        .field("count", &UniformTexture::count);
+    function("UniformTextureInstance", &GenInstance<UniformTexture>::instance);
+
+    value_object<UniformInputAttachment>("UniformInputAttachment")
+        .field("set", &UniformInputAttachment::set)
+        .field("binding", &UniformInputAttachment::binding)
+        .field("name", &UniformInputAttachment::name)
+        .field("count", &UniformInputAttachment::count);
+    function("UniformInputAttachmentInstance", &GenInstance<UniformInputAttachment>::instance);
+
+    value_object<ShaderInfo>("ShaderInfo")
+        .field("name", &ShaderInfo::name)
+        .field("stages", &ShaderInfo::stages)
+        .field("attributes", &ShaderInfo::attributes)
+        .field("blocks", &ShaderInfo::blocks)
+        .field("buffers", &ShaderInfo::buffers)
+        .field("samplerTextures", &ShaderInfo::samplerTextures)
+        .field("samplers", &ShaderInfo::samplers)
+        .field("textures", &ShaderInfo::textures)
+        .field("images", &ShaderInfo::images)
+        .field("imsubpassInputsages", &ShaderInfo::subpassInputs);
+    function("ShaderInfoInstance", &GenInstance<ShaderInfo>::instance);
 
     // struct with pointers
     class_<TextureInfoInstance>("TextureInfoInstance")
@@ -504,6 +610,12 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     class_<CCWGPUDescriptorSet, base<DescriptorSet>>("CCWGPUDescriptorSet")
         .constructor<>();
 
+    class_<PipelineLayout>("PipelineLayout")
+        .function("initialize", &PipelineLayout::initialize)
+        .function("destroy", &PipelineLayout::destroy);
+    class_<CCWGPUPipelineLayout, base<PipelineLayout>>("CCWGPUPipelineLayout")
+        .constructor<>();
+
     //--------------------------------------------------CONTAINER-----------------------------------------------------------------------
     register_vector<int>("vector_int");
     register_vector<uint>("vector_uint");
@@ -516,7 +628,16 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     register_vector<BufferTextureCopy>("BufferTextureCopyList");
     register_vector<Sampler *>("SamplerList");
     register_vector<DescriptorSetLayoutBinding>("DescriptorSetLayoutBindingList");
+    register_vector<DescriptorSetLayout *>("DescriptorSetLayoutList");
+    register_vector<UniformStorageImage>("UniformStorageImageList");
+    register_vector<ShaderStage>("ShaderStageList");
+    register_vector<Attribute>("AttributeList");
+    register_vector<UniformBlock>("UniformBlockList");
+    register_vector<UniformStorageBuffer>("UniformStorageBufferList");
+    register_vector<UniformSamplerTexture>("UniformSamplerTextureList");
+    register_vector<UniformTexture>("UniformTextureList");
+    register_vector<UniformSampler>("UniformSamplerList");
+    register_vector<UniformInputAttachment>("UniformInputAttachment");
 };
 
-} // namespace gfx
-} // namespace cc
+} // namespace cc::gfx

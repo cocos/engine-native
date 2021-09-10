@@ -60,7 +60,7 @@ void CCWGPUDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo& info) {
             case DescriptorType::SAMPLER_TEXTURE: {
                 // combined sampler texture.
                 WGPUBindGroupLayoutEntry layoutEntrySampler = _gpuLayoutEntryObj->bindGroupLayoutEntries[i];
-                layoutEntrySampler.binding                  = _bindings[i].binding + maxTextureSlot;
+                layoutEntrySampler.binding                  = _bindings[i].binding + CC_WGPU_MAX_ATTACHMENTS;
                 _gpuLayoutEntryObj->bindGroupLayoutEntries.push_back(layoutEntrySampler);
             } break;
             case DescriptorType::SAMPLER:
@@ -109,7 +109,7 @@ void CCWGPUDescriptorSetLayout::prepare() {
     if (_gpuLayoutEntryObj->bindGroupLayout) {
         wgpuBindGroupLayoutRelease(_gpuLayoutEntryObj->bindGroupLayout);
     }
-
+    printf("prepared\n");
     _gpuLayoutEntryObj->bindGroupLayout = wgpuDeviceCreateBindGroupLayout(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
 }
 

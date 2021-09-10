@@ -375,7 +375,5 @@ static constexpr WGPUColor defaultClearColor{0.2, 0.2, 0.2, 1.0};
 
 static constexpr float defaultClearDepth = 1.0f;
 
-static constexpr uint16_t maxTextureSlot = 16;
-
 } // namespace gfx
 } // namespace cc
