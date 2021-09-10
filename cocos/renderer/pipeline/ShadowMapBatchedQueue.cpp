@@ -51,14 +51,12 @@ ShadowMapBatchedQueue::ShadowMapBatchedQueue(RenderPipeline *pipeline)
 void ShadowMapBatchedQueue::gatherLightPasses(const scene::Camera *camera, const scene::Light *light, gfx::CommandBuffer *cmdBuffer) {
     clear();
 
-    const PipelineSceneData *sceneData         = _pipeline->getPipelineSceneData();
-    const scene::Shadow     *shadowInfo        = sceneData->getSharedData()->shadow;
-    const RenderObjectList & dirShadowObjects  = sceneData->getDirShadowObjects();
-    const RenderObjectList & castShadowObjects = sceneData->getCastShadowObjects();
+    const PipelineSceneData *sceneData        = _pipeline->getPipelineSceneData();
+    const scene::Shadow     *shadowInfo       = sceneData->getSharedData()->shadow;
+    const RenderObjectList &dirShadowObjects  = sceneData->getDirShadowObjects();
+    const RenderObjectList &castShadowObjects = sceneData->getCastShadowObjects();
     if (light && shadowInfo->enabled && shadowInfo->shadowType == scene::ShadowType::SHADOWMAP) {
         _pipeline->getPipelineUBO()->updateShadowUBOLight(light);
-
-
 
             switch (light->getType()) {
                 case scene::LightType::DIRECTIONAL: {
