@@ -25,8 +25,8 @@
 
 // clang-format: off
 #if CC_PLATFORM == CC_PLATFORM_WINDOWS
-// Fix ssize_t defination
-#include "cocos/bindings/jswrapper/config.h"
+    // Fix ssize_t defination
+    #include "cocos/bindings/jswrapper/config.h"
 #endif
 #include "uv.h"
 // clang-format: on
@@ -42,15 +42,16 @@
 #include <chrono>
 #include <regex>
 #include <sstream>
+#include <vector>
 
 using namespace cc; //NOLINT
 
 se::Object *__jsbObj = nullptr; //NOLINT
 se::Object *__glObj  = nullptr; //NOLINT
 
-static std::string xxteaKey;
-void               jsb_set_xxtea_key(const std::string &key) { //NOLINT
-    xxteaKey = key;
+static std::vector<unsigned char> xxteaKey;
+void                              jsb_set_xxtea_key(const std::string &key) { //NOLINT
+    xxteaKey.assign(key.begin(), key.end());
 }
 
 static const char *BYTE_CODE_FILE_EXT = ".jsc"; //NOLINT
