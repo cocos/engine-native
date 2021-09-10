@@ -47,7 +47,7 @@ void fastSetPasses(void *buffer) {
         uint32_t                           passSize;
         AlignedPtr<cc::scene::Pass>        passes[0];
     };
-    static_assert(offsetof(Heap, passes) == 12);
+    //static_assert(offsetof(Heap, passes) == 12); // c++17
 
     Heap *heap   = reinterpret_cast<Heap *>(buffer);
     auto &passes = heap->selfPtr.get()->passes;
