@@ -8,6 +8,7 @@
 #include "WGPUPipelineLayout.h"
 #include "WGPURenderPass.h"
 #include "WGPUSampler.h"
+#include "WGPUShader.h"
 #include "WGPUSwapchain.h"
 #include "WGPUTexture.h"
 
@@ -42,6 +43,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     //------------------------------------------------ENUM------------------------------------------------------------
     enum_<Format>("Format")
         .value("UNKNOWN", Format::UNKNOWN)
+        .value("R32F", Format::R32F)
         .value("RGB8", Format::RGB8)
         .value("RGBA8", Format::RGBA8)
         .value("BGRA8", Format::BGRA8)
@@ -49,6 +51,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .value("RGB8", Format::RGB8)
         .value("RGB16F", Format::RGB16F)
         .value("RGBA32F", Format::RGBA32F)
+        .value("RGB32F", Format::RGB32F)
         .value("DEPTH", Format::DEPTH)
         .value("DEPTH_STENCIL", Format::DEPTH_STENCIL);
     // ... so on
@@ -380,6 +383,12 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .field("location", &Attribute::location);
     function("AttributeInstance", &GenInstance<Attribute>::instance);
 
+    value_object<Uniform>("Uniform")
+        .field("name", &Uniform::name)
+        .field("type", &Uniform::type)
+        .field("count", &Uniform::count);
+    function("UniformInstance", &GenInstance<Uniform>::instance);
+
     value_object<UniformBlock>("UniformBlock")
         .field("set", &UniformBlock::set)
         .field("binding", &UniformBlock::binding)
@@ -394,7 +403,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .field("name", &UniformStorageBuffer::name)
         .field("count", &UniformStorageBuffer::count)
         .field("memoryAccess", &UniformStorageBuffer::memoryAccess);
-    function("UniformBlockInstance", &GenInstance<UniformStorageBuffer>::instance);
+    function("UniformStorageBufferInstance", &GenInstance<UniformStorageBuffer>::instance);
 
     value_object<UniformSamplerTexture>("UniformSamplerTexture")
         .field("set", &UniformSamplerTexture::set)
@@ -616,6 +625,12 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     class_<CCWGPUPipelineLayout, base<PipelineLayout>>("CCWGPUPipelineLayout")
         .constructor<>();
 
+    class_<Shader>("Shader")
+        .function("initialize", &Shader::initialize)
+        .function("destroy", &Shader::destroy);
+    class_<CCWGPUShader>("CCWGPUShader")
+        .constructor<>();
+
     //--------------------------------------------------CONTAINER-----------------------------------------------------------------------
     register_vector<int>("vector_int");
     register_vector<uint>("vector_uint");
@@ -637,7 +652,8 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     register_vector<UniformSamplerTexture>("UniformSamplerTextureList");
     register_vector<UniformTexture>("UniformTextureList");
     register_vector<UniformSampler>("UniformSamplerList");
-    register_vector<UniformInputAttachment>("UniformInputAttachment");
+    register_vector<UniformInputAttachment>("UniformInputAttachmentList");
+    register_vector<Uniform>("UniformList");
 };
 
 } // namespace cc::gfx
