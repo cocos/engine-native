@@ -150,17 +150,7 @@ bool GLES3Device::doInit(const DeviceInfo & /*info*/) {
             _gpuConstantRegistry->mFBF = FBFSupportLevel::COHERENT;
             fbfLevelStr                = "COHERENT";
         }
-        _features[toNumber(Feature::GL_FRAMEBUFFER_FETCH)] = true;
-    }
-
-    if (checkExtension("pixel_local_storage")) {
-        if (checkExtension("pixel_local_storage2")) {
-            _gpuConstantRegistry->mPLS = PLSSupportLevel::LEVEL2;
-        } else {
-            _gpuConstantRegistry->mPLS = PLSSupportLevel::LEVEL1;
-        }
-        glGetIntegerv(GL_MAX_SHADER_PIXEL_LOCAL_STORAGE_SIZE_EXT, reinterpret_cast<GLint *>(&_gpuConstantRegistry->mPLSsize));
-        _features[toNumber(Feature::GL_PIXEL_LOCAL_STORAGE)] = true;
+        _features[toNumber(Feature::INPUT_ATTACHMENT_BENEFIT)] = true;
     }
 #endif
 
@@ -232,7 +222,6 @@ bool GLES3Device::doInit(const DeviceInfo & /*info*/) {
     CC_LOG_INFO("VENDOR: %s", _vendor.c_str());
     CC_LOG_INFO("VERSION: %s", _version.c_str());
     CC_LOG_INFO("COMPRESSED_FORMATS: %s", compressedFmts.c_str());
-    CC_LOG_INFO("PIXEL_LOCAL_STORAGE: level %d, size %d", _gpuConstantRegistry->mPLS, _gpuConstantRegistry->mPLSsize);
     CC_LOG_INFO("FRAMEBUFFER_FETCH: %s", fbfLevelStr.c_str());
 
     return true;

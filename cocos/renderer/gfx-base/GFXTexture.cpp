@@ -39,11 +39,11 @@ Texture::~Texture() = default;
 
 uint Texture::computeHash(const TextureInfo &info) {
     uint seed = 10;
-    seed ^= static_cast<uint>(info.type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    seed ^= static_cast<uint>(info.usage) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    seed ^= static_cast<uint>(info.format) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    seed ^= static_cast<uint>(info.flags) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    seed ^= static_cast<uint>(info.samples) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= toNumber(info.type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= toNumber(info.usage) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= toNumber(info.format) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= toNumber(info.flags) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= toNumber(info.samples) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     seed ^= (info.width) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     seed ^= (info.height) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     seed ^= (info.depth) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
@@ -54,9 +54,9 @@ uint Texture::computeHash(const TextureInfo &info) {
 
 uint Texture::computeHash(const TextureViewInfo &info) {
     uint seed = 7;
-    seed ^= static_cast<uint>(info.texture->getHash()) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    seed ^= static_cast<uint>(info.type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    seed ^= static_cast<uint>(info.format) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= info.texture->getHash() + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= toNumber(info.type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= toNumber(info.format) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     seed ^= (info.baseLevel) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     seed ^= (info.levelCount) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     seed ^= (info.baseLayer) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
@@ -119,7 +119,7 @@ void Texture::destroy() {
     _size = _hash = 0;
 }
 
-///////////////////////////// Swapchian Specific /////////////////////////////
+///////////////////////////// Swapchain Specific /////////////////////////////
 
 void Texture::initialize(const SwapchainTextureInfo &info, Texture *out) {
     out->_info.type       = TextureType::TEX2D;

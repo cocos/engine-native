@@ -168,7 +168,7 @@ bool GLES2Device::doInit(const DeviceInfo & /*info*/) {
             _gpuConstantRegistry->mFBF = FBFSupportLevel::COHERENT;
             fbfLevelStr                = "COHERENT";
         }
-        _features[toNumber(Feature::GL_FRAMEBUFFER_FETCH)] = true;
+        _features[toNumber(Feature::INPUT_ATTACHMENT_BENEFIT)] = true;
     }
 #endif
 

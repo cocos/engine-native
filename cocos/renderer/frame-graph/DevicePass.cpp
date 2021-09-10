@@ -70,6 +70,8 @@ void DevicePass::execute() {
 
     for (size_t i = 0; i < _subpasses.size(); ++i) {
         Subpass &subpass = _subpasses[i];
+        _resourceTable._subpassIndex = i;
+
         for (LogicPass &pass : subpass.logicPasses) {
             gfx::Viewport &viewport = pass.customViewport ? pass.viewport : _viewport;
             gfx::Rect &    scissor  = pass.customViewport ? pass.scissor : _scissor;

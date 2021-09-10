@@ -238,6 +238,7 @@ bool CCVKDevice::doInit(const DeviceInfo & /*info*/) {
     _features[toNumber(Feature::MULTIPLE_RENDER_TARGETS)]   = true;
     _features[toNumber(Feature::BLEND_MINMAX)]              = true;
     _features[toNumber(Feature::COMPUTE_SHADER)]            = true;
+    _features[toNumber(Feature::INPUT_ATTACHMENT_BENEFIT)]  = true;
 
     _gpuDevice->useMultiDrawIndirect        = deviceFeatures.multiDrawIndirect;
     _gpuDevice->useDescriptorUpdateTemplate = _gpuDevice->minorVersion > 0 || checkExtension(VK_KHR_DESCRIPTOR_UPDATE_TEMPLATE_EXTENSION_NAME);

@@ -432,17 +432,15 @@ void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
             attachmentReferences.push_back({VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2, nullptr, resolve, layout, VK_IMAGE_ASPECT_COLOR_BIT});
         }
 
-        Format dsFormat{Format::UNKNOWN};
         if (subpassInfo.depthStencil != INVALID_BINDING) {
-            bool     isGeneralLayout{false};
-            uint32_t attachmentIdx = subpassInfo.depthStencil;
+            Format dsFormat{Format::UNKNOWN};
+            bool   isGeneralLayout{false};
             if (subpassInfo.depthStencil >= colorAttachmentCount) {
                 const DepthStencilAttachment &  desc       = gpuRenderPass->depthStencilAttachment;
                 const VkAttachmentDescription2 &attachment = attachmentDescriptions.back();
                 isGeneralLayout                            = desc.isGeneralLayout;
                 dsFormat                                   = desc.format;
                 sampleCount                                = std::max(sampleCount, attachment.samples);
-                attachmentIdx                              = utils::toUint(colorAttachmentCount);
             } else {
                 const ColorAttachment &         desc       = gpuRenderPass->colorAttachments[subpassInfo.depthStencil];
                 const VkAttachmentDescription2 &attachment = attachmentDescriptions[subpassInfo.depthStencil];
@@ -455,20 +453,34 @@ void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
                                             ? VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT
                                             : VK_IMAGE_ASPECT_DEPTH_BIT;
             VkImageLayout      layout = isGeneralLayout ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-            attachmentReferences.push_back({VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2, nullptr, attachmentIdx, layout, aspect});
+            attachmentReferences.push_back({VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2, nullptr, subpassInfo.depthStencil, layout, aspect});
+        }
+
+        if (subpassInfo.depthStencilResolve != INVALID_BINDING) {
+            Format dsFormat{Format::UNKNOWN};
+            bool   isGeneralLayout{false};
+            if (subpassInfo.depthStencil >= colorAttachmentCount) {
+                const DepthStencilAttachment &  desc       = gpuRenderPass->depthStencilAttachment;
+                const VkAttachmentDescription2 &attachment = attachmentDescriptions.back();
+                isGeneralLayout                            = desc.isGeneralLayout;
+                dsFormat                                   = desc.format;
+                sampleCount                                = std::max(sampleCount, attachment.samples);
+            } else {
+                const ColorAttachment &         desc       = gpuRenderPass->colorAttachments[subpassInfo.depthStencil];
+                const VkAttachmentDescription2 &attachment = attachmentDescriptions[subpassInfo.depthStencil];
+                isGeneralLayout                            = desc.isGeneralLayout;
+                dsFormat                                   = desc.format;
+                sampleCount                                = std::max(sampleCount, attachment.samples);
+            }
+
+            VkImageAspectFlags aspect = GFX_FORMAT_INFOS[toNumber(dsFormat)].hasStencil
+                                            ? VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT
+                                            : VK_IMAGE_ASPECT_DEPTH_BIT;
+            VkImageLayout      layout = isGeneralLayout ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+            attachmentReferences.push_back({VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2, nullptr, subpassInfo.depthStencilResolve, layout, aspect});
         }
 
         gpuRenderPass->sampleCounts.push_back(sampleCount);
-
-        if (subpassInfo.depthStencilResolve != INVALID_BINDING) {
-            const ColorAttachment &desc = gpuRenderPass->colorAttachments[subpassInfo.depthStencilResolve];
-
-            VkImageAspectFlags aspect = GFX_FORMAT_INFOS[toNumber(desc.format)].hasStencil
-                                            ? VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT
-                                            : VK_IMAGE_ASPECT_DEPTH_BIT;
-            VkImageLayout      layout = desc.isGeneralLayout ? VK_IMAGE_LAYOUT_GENERAL : VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-            attachmentReferences.push_back({VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2, nullptr, subpassInfo.depthStencilResolve, layout, aspect});
-        }
     }
 
     size_t offset{0U};

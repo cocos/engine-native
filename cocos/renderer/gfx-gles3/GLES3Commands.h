@@ -224,6 +224,8 @@ CC_GLES3_API void cmdFuncGLES3CreateSampler(GLES3Device *device, GLES3GPUSampler
 CC_GLES3_API void cmdFuncGLES3DestroySampler(GLES3Device *device, GLES3GPUSampler *gpuSampler);
 CC_GLES3_API void cmdFuncGLES3CreateShader(GLES3Device *device, GLES3GPUShader *gpuShader);
 CC_GLES3_API void cmdFuncGLES3DestroyShader(GLES3Device *device, GLES3GPUShader *gpuShader);
+CC_GLES3_API void cmdFuncGLES3CreateRenderPass(GLES3Device *device, GLES3GPURenderPass *gpuRenderPass);
+CC_GLES3_API void cmdFuncGLES3DestroyRenderPass(GLES3Device *device, GLES3GPURenderPass *gpuRenderPass);
 CC_GLES3_API void cmdFuncGLES3CreateInputAssembler(GLES3Device *device, GLES3GPUInputAssembler *gpuInputAssembler);
 CC_GLES3_API void cmdFuncGLES3DestroyInputAssembler(GLES3Device *device, GLES3GPUInputAssembler *gpuInputAssembler);
 CC_GLES3_API void cmdFuncGLES3CreateFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gpuFBO);

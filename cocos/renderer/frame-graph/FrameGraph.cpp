@@ -76,10 +76,10 @@ void FrameGraph::present(const TextureHandle &input, gfx::Texture *target) {
             gfx::Texture *input = table.getRead(data.input);
             if (input && input != target) {
                 gfx::TextureBlit region;
-                region.srcExtent.width  = input->getWidth();
-                region.srcExtent.height = input->getHeight();
-                region.dstExtent.width  = input->getWidth();
-                region.dstExtent.height = input->getHeight();
+                region.srcExtent.width  = target->getWidth();
+                region.srcExtent.height = target->getHeight();
+                region.dstExtent.width  = target->getWidth();
+                region.dstExtent.height = target->getHeight();
                 cmdBuff->blitTexture(input, target, &region, 1, gfx::Filter::POINT);
             }
         });
@@ -352,7 +352,7 @@ void FrameGraph::mergePassNodes() noexcept {
 
 void FrameGraph::computeStoreActionAndMemoryless() {
     ID   passId                = 0;
-    bool lastPassSubPassEnable = false;
+    bool lastPassSubpassEnable = false;
 
     for (const auto &passNode : _passNodes) {
         if (passNode->_refCount == 0) {
@@ -360,10 +360,10 @@ void FrameGraph::computeStoreActionAndMemoryless() {
         }
 
         ID const oldPassId = passId;
-        passId += !passNode->_subpass || lastPassSubPassEnable != passNode->_subpass;
-        passId += oldPassId == passId ? passNode->_hasClearedAttachment * !passNode->_clearActionIgnoreable : 0;
+        passId += !passNode->_subpass || lastPassSubpassEnable != passNode->_subpass;
+        passId += oldPassId == passId ? passNode->_hasClearedAttachment * !passNode->_clearActionIgnorable : 0;
         passNode->setDevicePassId(passId);
-        lastPassSubPassEnable = passNode->_subpass && !passNode->_subpassEnd;
+        lastPassSubpassEnable = passNode->_subpass && !passNode->_subpassEnd;
     }
 
     static std::set<VirtualResource *> renderTargets;

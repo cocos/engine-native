@@ -57,6 +57,17 @@ void CCVKRenderPass::doInit(const RenderPassInfo & /*info*/) {
         if (_depthStencilAttachment.format != Format::UNKNOWN) {
             subpass.depthStencil = utils::toUint(_colorAttachments.size());
         }
+    } else {
+        // unify depth stencil index
+        uint32_t colorCount = _gpuRenderPass->colorAttachments.size();
+        for (auto &subpass : _gpuRenderPass->subpasses) {
+            if (subpass.depthStencil != INVALID_BINDING && subpass.depthStencil > colorCount) {
+                subpass.depthStencil = colorCount;
+            }
+            if (subpass.depthStencilResolve != INVALID_BINDING && subpass.depthStencilResolve > colorCount) {
+                subpass.depthStencilResolve = colorCount;
+            }
+        }
     }
 
     cmdFuncCCVKCreateRenderPass(CCVKDevice::getInstance(), _gpuRenderPass);

@@ -47,13 +47,6 @@ enum class FBFSupportLevel {
     NON_COHERENT_QCOM,
 };
 
-// Pixel Local Storage
-enum class PLSSupportLevel {
-    NONE,
-    LEVEL1,
-    LEVEL2,
-};
-
 enum class GLESCmdType : uint8_t {
     BEGIN_RENDER_PASS,
     END_RENDER_PASS,

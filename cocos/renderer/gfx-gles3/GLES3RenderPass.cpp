@@ -26,8 +26,9 @@
 #include "GLES3Std.h"
 
 #include "GLES3Commands.h"
+#include "GLES3Device.h"
 #include "GLES3RenderPass.h"
-#include "base/Utils.h"
+#include "gfx-base/GFXDef-common.h"
 
 namespace cc {
 namespace gfx {
@@ -56,17 +57,25 @@ void GLES3RenderPass::doInit(const RenderPassInfo & /*info*/) {
         if (_depthStencilAttachment.format != Format::UNKNOWN) {
             subpass.depthStencil = _colorAttachments.size();
         }
+    } else {
+        // unify depth stencil index
+        uint32_t colorCount = _gpuRenderPass->colorAttachments.size();
+        for (auto &subpass : _gpuRenderPass->subpasses) {
+            if (subpass.depthStencil != INVALID_BINDING && subpass.depthStencil > colorCount) {
+                subpass.depthStencil = colorCount;
+            }
+            if (subpass.depthStencilResolve != INVALID_BINDING && subpass.depthStencilResolve > colorCount) {
+                subpass.depthStencilResolve = colorCount;
+            }
+        }
     }
 
-    _gpuRenderPass->barriers.resize(_subpasses.size() + 1);
-    for (auto &dependency : _dependencies) {
-        size_t idx = dependency.dstSubpass == SUBPASS_EXTERNAL ? _subpasses.size() : dependency.dstSubpass;
-        cmdFuncGLES3CreateGlobalBarrier(dependency.srcAccesses, dependency.dstAccesses, &_gpuRenderPass->barriers[idx]);
-    }
+    cmdFuncGLES3CreateRenderPass(GLES3Device::getInstance(), _gpuRenderPass);
 }
 
 void GLES3RenderPass::doDestroy() {
     if (_gpuRenderPass) {
+        cmdFuncGLES3DestroyRenderPass(GLES3Device::getInstance(), _gpuRenderPass);
         CC_DELETE(_gpuRenderPass);
         _gpuRenderPass = nullptr;
     }
