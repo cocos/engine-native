@@ -66,21 +66,25 @@ void PlanarShadowQueue::gatherShadowPasses(scene::Camera *camera, gfx::CommandBu
         return;
     }
 
-    const auto &models          = scene->getModels();
-    auto *      instancedBuffer = InstancedBuffer::get(shadowInfo->instancePass);
-
-    scene::AABB ab;
+    const auto &models = scene->getModels();
     for (const auto *model : models) {
         if (!model->getEnabled() || !model->getCastShadow() || !model->getNode()) {
             continue;
         }
 
-        // frustum culling
         if (model->getWorldBounds()) {
-            model->getWorldBounds()->transform(shadowInfo->matLight, &ab);
-            if (!ab.aabbFrustum(camera->frustum)) {
-                continue;
-            }
+            _castModels.emplace_back(model);
+        }
+    }
+
+    auto *instancedBuffer = InstancedBuffer::get(shadowInfo->instancePass);
+
+    scene::AABB ab;
+    for (const auto *model : _castModels) {
+        // frustum culling
+        model->getWorldBounds()->transform(shadowInfo->matLight, &ab);
+        if (!ab.aabbFrustum(camera->frustum)) {
+            continue;
         }
 
         if (!model->getInstanceAttributes().empty()) {
@@ -99,6 +103,7 @@ void PlanarShadowQueue::gatherShadowPasses(scene::Camera *camera, gfx::CommandBu
 }
 
 void PlanarShadowQueue::clear() {
+    _castModels.clear();
     _pendingModels.clear();
     if (_instancedQueue) _instancedQueue->clear();
 }
