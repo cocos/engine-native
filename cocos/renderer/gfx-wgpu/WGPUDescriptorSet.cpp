@@ -59,12 +59,13 @@ void CCWGPUDescriptorSet::doInit(const DescriptorSetInfo& info) {
             texEntry.sampler     = wgpuDefaultHandle;
             texEntry.buffer      = wgpuDefaultHandle;
             _textureIdxMap.insert(std::make_pair<uint8_t, uint8_t>(_gpuBindGroupObj->bindGroupEntries.size() - 1, i));
+            dsLayout->updateTextureLayout(texEntry.binding, texture);
 
             // 2. sampler
             CCWGPUSampler* sampler = deviceObj->defaultResources.sampler;
             _gpuBindGroupObj->bindGroupEntries.push_back(WGPUBindGroupEntry());
             auto&& smpEntry      = _gpuBindGroupObj->bindGroupEntries[i];
-            smpEntry.binding     = bindings[i].binding;
+            smpEntry.binding     = bindings[i].binding + CC_WGPU_MAX_ATTACHMENTS;
             smpEntry.sampler     = sampler->gpuSampler();
             smpEntry.textureView = wgpuDefaultHandle;
             smpEntry.buffer      = wgpuDefaultHandle;
@@ -81,6 +82,7 @@ void CCWGPUDescriptorSet::doInit(const DescriptorSetInfo& info) {
             entry.offset      = buffer->getOffset();
         }
     }
+    dsLayout->prepare();
 }
 
 void CCWGPUDescriptorSet::doDestroy() {
@@ -110,19 +112,16 @@ void CCWGPUDescriptorSet::update() {
                 auto&&  texture            = static_cast<CCWGPUTexture*>(_textures[textureIdx]);
                 bindGroupEntry.binding     = bindings[textureIdx].binding;
                 bindGroupEntry.textureView = texture->gpuTextureObject()->selfView;
-                dsLayout->updateTextureLayout(bindGroupEntry.binding, texture);
             }
         } else if (_gpuBindGroupObj->bindGroupEntries[i].sampler != wgpuDefaultHandle && _samplers[i]) {
             auto iter = _samplerIdxMap.find(i);
             if (iter != _samplerIdxMap.end()) {
                 uint8_t samplerIdx     = iter->second;
                 auto&&  sampler        = static_cast<CCWGPUSampler*>(_samplers[samplerIdx]);
-                bindGroupEntry.binding = bindings[samplerIdx].binding;
+                bindGroupEntry.binding = bindings[samplerIdx].binding + CC_WGPU_MAX_ATTACHMENTS;
                 bindGroupEntry.sampler = sampler->gpuSampler();
             }
         }
-
-        dsLayout->prepare();
 
         if (_gpuBindGroupObj->bindgroup) {
             wgpuBindGroupRelease(_gpuBindGroupObj->bindgroup);
