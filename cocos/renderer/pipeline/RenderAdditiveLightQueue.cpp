@@ -242,7 +242,7 @@ void RenderAdditiveLightQueue::updateUBOs(const scene::Camera *camera, gfx::Comm
         _firstLightBufferView->destroy();
 
         _lightBufferCount = nextPow2(static_cast<uint>(validLightCount));
-        _lightBuffer->resize(static_cast<size_t>(_lightBufferStride) * _lightBufferCount);
+        _lightBuffer->resize(static_cast<uint>(_lightBufferStride * _lightBufferCount));
         _lightBufferData.resize(static_cast<size_t>(_lightBufferElementCount) * _lightBufferCount);
         _firstLightBufferView->initialize({_lightBuffer, 0, UBOForwardLight::SIZE});
     }
