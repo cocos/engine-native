@@ -1097,6 +1097,7 @@ if(CC_USE_VULKAN)
                      cocos/renderer/gfx-vulkan/VKShader.cpp
                      cocos/renderer/gfx-vulkan/VKShader.h
                      cocos/renderer/gfx-vulkan/VKSPIRV.h
+                     cocos/renderer/gfx-vulkan/VKSPIRV.cpp
                      cocos/renderer/gfx-vulkan/VKStd.cpp
                      cocos/renderer/gfx-vulkan/VKStd.h
                      cocos/renderer/gfx-vulkan/VKTexture.cpp
