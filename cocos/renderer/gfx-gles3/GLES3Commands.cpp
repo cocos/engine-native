@@ -1588,7 +1588,7 @@ static GLuint doCreateFramebuffer(GLES3Device *                    device,
         if (depthStencilResolve) *resolveMask |= hasStencil ? GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT : GL_DEPTH_BUFFER_BIT;
     }
 
-    GL_CHECK(glDrawBuffers(drawBuffers.size(), drawBuffers.data()));
+    GL_CHECK(glDrawBuffers(static_cast<GLsizei>(drawBuffers.size()), drawBuffers.data()));
 
     GLenum status;
     GL_CHECK(status = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER));
@@ -1642,10 +1642,10 @@ static void doCreateFramebufferInstance(GLES3Device *device, GLES3GPUFramebuffer
     }
 
     if (offscreenCount || depthStencilTexture) {
-        outFBO->glFramebuffer = doCreateFramebuffer(device, gpuFBO->gpuColorTextures, colors.data(), colors.size(),
+        outFBO->glFramebuffer = doCreateFramebuffer(device, gpuFBO->gpuColorTextures, colors.data(), static_cast<uint>(colors.size()),
                                                     depthStencilTexture, resolves, depthStencilResolveTexture, &outFBO->resolveMask);
         if (outFBO->resolveMask) {
-            uint resolveCount            = outFBO->resolveMask & GL_COLOR_BUFFER_BIT ? colors.size() : 0U;
+            uint resolveCount            = outFBO->resolveMask & GL_COLOR_BUFFER_BIT ? static_cast<uint>(colors.size()) : 0U;
             outFBO->glResolveFramebuffer = doCreateFramebuffer(device, gpuFBO->gpuColorTextures, resolves, resolveCount, depthStencilResolveTexture);
         }
     } else {
@@ -1669,7 +1669,7 @@ void cmdFuncGLES3CreateFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gpu
             if (GFX_FORMAT_INFOS[toNumber(gpuTexture->format)].hasDepth) continue;
             gpuFBO->uberColorAttachmentIndices.push_back(i);
         }
-        doCreateFramebufferInstance(device, gpuFBO, gpuFBO->uberColorAttachmentIndices, gpuFBO->gpuColorTextures.size(), &gpuFBO->uberInstance);
+        doCreateFramebufferInstance(device, gpuFBO, gpuFBO->uberColorAttachmentIndices, static_cast<uint>(gpuFBO->gpuColorTextures.size()), &gpuFBO->uberInstance);
     } else {
         for (const auto &subpass : gpuFBO->gpuRenderPass->subpasses) {
             gpuFBO->instances.emplace_back(GLES3GPUFramebuffer::GLFramebuffer());
@@ -1845,7 +1845,7 @@ void cmdFuncGLES3BeginRenderPass(GLES3Device *device, uint subpassIdx, GLES3GPUR
             }
 
             if (!invalidAttachments.empty()) {
-                GL_CHECK(glInvalidateFramebuffer(GL_DRAW_FRAMEBUFFER, invalidAttachments.size(), invalidAttachments.data()));
+                GL_CHECK(glInvalidateFramebuffer(GL_DRAW_FRAMEBUFFER, static_cast<GLsizei>(invalidAttachments.size()), invalidAttachments.data()));
             }
 
             if (glClears) {
@@ -1949,7 +1949,7 @@ void cmdFuncGLES3EndRenderPass(GLES3Device *device) {
             }
         }
         if (!invalidAttachments.empty()) {
-            GL_CHECK(glInvalidateFramebuffer(invalidateTarget, invalidAttachments.size(), invalidAttachments.data()));
+            GL_CHECK(glInvalidateFramebuffer(invalidateTarget, static_cast<GLsizei>(invalidAttachments.size()), invalidAttachments.data()));
         }
     };
 

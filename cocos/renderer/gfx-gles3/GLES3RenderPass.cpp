@@ -53,7 +53,7 @@ void GLES3RenderPass::doInit(const RenderPassInfo & /*info*/) {
         for (uint i = 0U; i < _colorAttachments.size(); ++i) {
             subpass.colors[i] = i;
         }
-        subpass.depthStencil = _colorAttachments.size();
+        subpass.depthStencil = static_cast<uint>(_colorAttachments.size());
     } else {
         // the depth stencil attachment is the default fallback
         // when none are specified in subpass

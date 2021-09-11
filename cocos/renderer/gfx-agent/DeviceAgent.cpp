@@ -76,7 +76,9 @@ bool DeviceAgent::doInit(const DeviceInfo &info) {
     _caps                                               = _actor->_caps;
     memcpy(_features.data(), _actor->_features.data(), static_cast<uint>(Feature::COUNT) * sizeof(bool));
 
-    _mainMessageQueue = CC_NEW(MessageQueue);
+    // NOTE: C++17 is required when enable alignment
+    // TODO:(PatriceJiang) replace with: _mainMessageQueue = CC_NEW(MessageQueue);
+    _mainMessageQueue = _CC_NEW_T_ALIGN(MessageQueue, alignof(MessageQueue)); //NOLINT
 
     static_cast<CommandBufferAgent *>(_cmdBuff)->initMessageQueue();
 
@@ -106,7 +108,10 @@ void DeviceAgent::doDestroy() {
     }
 
     _mainMessageQueue->terminateConsumerThread();
-    CC_SAFE_DELETE(_mainMessageQueue);
+
+    // NOTE: C++17 required when enable alignment
+    // TODO:(PatriceJiang) replace with: CC_SAFE_DELETE(_mainMessageQueue);
+    _CC_DELETE_T_ALIGN(_mainMessageQueue, MessageQueue, alignof(MessageQueue)); // NOLINT
 }
 
 void DeviceAgent::resize(uint width, uint height) {

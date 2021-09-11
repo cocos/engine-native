@@ -64,7 +64,7 @@ protected:
 
     inline static float _getNumber(const rapidjson::Value& rawData, const char* key, float defaultValue) {
         if (rawData.HasMember(key) && rawData[key].IsNumber()) {
-            return rawData[key].GetDouble(); // cocos can not support GetFloat();
+            return rawData[key].GetFloat(); // cocos can not support GetFloat();
         }
 
         return defaultValue;
@@ -92,7 +92,7 @@ protected:
 
     inline static float _getParameter(const rapidjson::Value& rawData, std::size_t index, float defaultValue) {
         if (rawData.Size() > index) {
-            return rawData[(int)index].GetDouble();
+            return rawData[(int)index].GetFloat();
         }
 
         return defaultValue;
