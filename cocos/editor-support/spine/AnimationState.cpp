@@ -907,7 +907,7 @@ TrackEntry *AnimationState::newTrackEntry(size_t trackIndex, Animation *animatio
     TrackEntry *entryP = _trackEntryPool.obtain(); // Pooling
     TrackEntry &entry  = *entryP;
 
-    entry._trackIndex   = static_cast<int>(trackIndex);
+    entry._trackIndex   = trackIndex;
     entry._animation    = animation;
     entry._loop         = loop;
     entry._holdPrevious = 0;
@@ -1031,8 +1031,8 @@ void AnimationState::computeNotLast(TrackEntry *entry) {
     for (size_t i = 0; i < timelinesCount; i++) {
         if (timelines[i]->getRTTI().isExactly(AttachmentTimeline::rtti)) {
             AttachmentTimeline *timeline = static_cast<AttachmentTimeline *>(timelines[i]);
-            if (!_propertyIDs.containsKey(static_cast<const int>(timeline->getSlotIndex())))
-                _propertyIDs.put(static_cast<const int>(timeline->getSlotIndex()), true);
+            if (!_propertyIDs.containsKey(timeline->getSlotIndex()))
+                _propertyIDs.put(timeline->getSlotIndex(), true);
             else
                 timelineMode[i] |= NotLast;
         }
