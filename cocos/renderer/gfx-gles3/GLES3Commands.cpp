@@ -2029,6 +2029,7 @@ void cmdFuncGLES3EndRenderPass(GLES3Device *device) {
     }
 }
 
+// NOLINTNEXTLINE
 void cmdFuncGLES3BindState(GLES3Device *device, GLES3GPUPipelineState *gpuPipelineState, GLES3GPUInputAssembler *gpuInputAssembler,
                            const GLES3GPUDescriptorSet *const *gpuDescriptorSets, const uint *dynamicOffsets, const DynamicStates *dynamicStates) {
     GLES3ObjectCache &gfxStateCache = device->stateCache()->gfxStateCache;

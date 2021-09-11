@@ -1717,6 +1717,7 @@ void cmdFuncGLES2EndRenderPass(GLES2Device *device) {
     }
 }
 
+// NOLINTNEXTLINE
 void cmdFuncGLES2BindState(GLES2Device *device, GLES2GPUPipelineState *gpuPipelineState, GLES2GPUInputAssembler *gpuInputAssembler,
                            const GLES2GPUDescriptorSet *const *gpuDescriptorSets, const uint *dynamicOffsets,
                            const DynamicStates *dynamicStates) {
