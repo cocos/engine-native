@@ -29,15 +29,15 @@ void JSONDataParser::_samplingEasingCurve(const rapidjson::Value &curve, std::ve
             stepIndex += 6;
         }
 
-        const auto isInCurve = stepIndex >= 0 && stepIndex + 6 < curveCount;
-        const auto x1        = isInCurve ? curve[stepIndex].GetDouble() : 0.0f;
-        const auto y1        = isInCurve ? curve[stepIndex + 1].GetDouble() : 0.0f;
-        const auto x2        = curve[stepIndex + 2].GetDouble();
-        const auto y2        = curve[stepIndex + 3].GetDouble();
-        const auto x3        = curve[stepIndex + 4].GetDouble();
-        const auto y3        = curve[stepIndex + 5].GetDouble();
-        const auto x4        = isInCurve ? curve[stepIndex + 6].GetDouble() : 1.0f;
-        const auto y4        = isInCurve ? curve[stepIndex + 7].GetDouble() : 1.0f;
+        const bool  isInCurve = stepIndex >= 0 && stepIndex + 6 < curveCount;
+        const float x1        = isInCurve ? curve[stepIndex].GetFloat() : 0.0f;
+        const float y1        = isInCurve ? curve[stepIndex + 1].GetFloat() : 0.0f;
+        const float x2        = curve[stepIndex + 2].GetFloat();
+        const float y2        = curve[stepIndex + 3].GetFloat();
+        const float x3        = curve[stepIndex + 4].GetFloat();
+        const float y3        = curve[stepIndex + 5].GetFloat();
+        const float x4        = isInCurve ? curve[stepIndex + 6].GetFloat() : 1.0f;
+        const float y4        = isInCurve ? curve[stepIndex + 7].GetFloat() : 1.0f;
 
         float lower  = 0.0f;
         float higher = 1.0f;

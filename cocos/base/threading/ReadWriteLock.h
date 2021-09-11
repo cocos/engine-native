@@ -26,6 +26,7 @@
 #pragma once
 
 #include <uv.h>
+#include <functional>
 
 namespace cc {
 
