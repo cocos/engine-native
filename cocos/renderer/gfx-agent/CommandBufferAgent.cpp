@@ -92,6 +92,7 @@ void CommandBufferAgent::destroyMessageQueue() {
     DeviceAgent::getInstance()->getMessageQueue()->kickAndWait();
     // TODO(PatriceJiang): replace with:  CC_SAFE_DELETE(_messageQueue);
     _CC_DELETE_T_ALIGN(_messageQueue, MessageQueue, alignof(MessageQueue));
+    _messageQueue = nullptr;
 
     DeviceAgent::getInstance()->_cmdBuffRefs.erase(this);
 }
@@ -412,6 +413,7 @@ void CommandBufferAgent::copyBuffersToTexture(const uint8_t *const *buffers, Tex
             actor->copyBuffersToTexture(buffers, dst, regions, count);
             // TODO(PatriceJiang): C++17 replace with:  CC_DELETE(allocator);
             _CC_DELETE_T_ALIGN(allocator, ThreadSafeLinearAllocator, alignof(ThreadSafeLinearAllocator));
+            allocator = nullptr;
         });
 }
 

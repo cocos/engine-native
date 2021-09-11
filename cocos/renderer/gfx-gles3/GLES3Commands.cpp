@@ -1140,7 +1140,7 @@ void cmdFuncGLES3DestroySampler(GLES3Device *device, GLES3GPUSampler *gpuSampler
     }
 }
 
-void cmdFuncGLES3CreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
+void cmdFuncGLES3CreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) { // NOLINT(google-readability-function-size,readability-function-size)
     GLenum glShaderStage = 0;
     String shaderStageStr;
     GLint  status;

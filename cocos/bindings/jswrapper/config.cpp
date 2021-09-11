@@ -24,8 +24,8 @@
 ****************************************************************************/
 
 #include "config.h"
-#include <stdio.h>
 #include <algorithm>
+#include <cstdio>
 
 #if defined(_WIN32) && defined(_WINDOWS)
 
