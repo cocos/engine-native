@@ -50,7 +50,7 @@ jobs:
               - added|modified: '**/*.m'
               - added|modified: '**/*.mm'
               - added|modified: '**/*.c'
-              - exclude: 'cocos/editor-support/dragonbones/**'
+              - exclude: 'cocos/editor-support/**'
               - exclude: 'cocos/base/etc1.*'
               - exclude: 'cocos/base/etc2.*'
               - exclude: 'cocos/bindings/manual/jsb_global.cpp'
