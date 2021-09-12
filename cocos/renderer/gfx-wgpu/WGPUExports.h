@@ -600,10 +600,9 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("initialize", select_overload<void(const BufferInfo &)>(&Buffer::initialize), allow_raw_pointer<arg<0>>())
         .function("initialize", select_overload<void(const BufferViewInfo &)>(&Buffer::initialize), allow_raw_pointer<arg<0>>())
         .function("resize", &Buffer::resize)
-        .function("desctroy", &Buffer::destroy)
-        .function("update", select_overload<void(const void *, uint)>(&Buffer::update), allow_raw_pointer<arg<0>>())
-        .function("update", select_overload<void(const void *)>(&Buffer::update), allow_raw_pointer<arg<0>>());
+        .function("desctroy", &Buffer::destroy);
     class_<CCWGPUBuffer, base<Buffer>>("CCWGPUBuffer")
+        .function("update", select_overload<void(String, uint)>(&CCWGPUBuffer::update), allow_raw_pointer<arg<0>>())
         .constructor<>();
 
     class_<DescriptorSetLayout>("DescriptorSetLayout")

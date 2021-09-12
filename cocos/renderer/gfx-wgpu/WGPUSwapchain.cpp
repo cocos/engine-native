@@ -79,10 +79,9 @@ void CCWGPUSwapchain::doInit(const SwapchainInfo& info) {
 
     CCWGPUDeviceObject* gpuDeviceObj = device->gpuDeviceObject();
     WGPUSwapChain       swapChain    = wgpuDeviceCreateSwapChain(gpuDeviceObj->wgpuDevice, surface, &swapChainDesc);
-
-    _gpuSwapchainObj                = CC_NEW(CCWGPUSwapchainObject);
-    _gpuSwapchainObj->wgpuSwapChain = swapChain;
-    _gpuSwapchainObj->wgpuSurface   = surface;
+    _gpuSwapchainObj                 = CC_NEW(CCWGPUSwapchainObject);
+    _gpuSwapchainObj->wgpuSwapChain  = swapChain;
+    _gpuSwapchainObj->wgpuSurface    = surface;
 
     SwapchainTextureInfo textureInfo = {
         .swapchain = this,

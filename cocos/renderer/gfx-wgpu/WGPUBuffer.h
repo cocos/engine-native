@@ -46,11 +46,19 @@ public:
 
     inline uint getOffset() { return _offset; }
 
+    void update(String bufferContainer, uint size) {
+        printf("native: %d, %d", bufferContainer.length(), size);
+        update(reinterpret_cast<void*>(bufferContainer.data()), size);
+    }
+
 protected:
     void doInit(const BufferInfo& info) override;
     void doInit(const BufferViewInfo& info) override;
     void doDestroy() override;
     void doResize(uint size, uint count) override;
+
+    uint8_t* _buffer  = nullptr;
+    uint     _ssssize = 0;
 
     CCWGPUBufferObject* _gpuBufferObject = nullptr;
 };
