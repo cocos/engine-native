@@ -75,7 +75,7 @@ void TextureValidator::doDestroy() {
     _actor->destroy();
 }
 
-void TextureValidator::doResize(uint width, uint height, uint /*size*/) {
+void TextureValidator::doResize(uint32_t width, uint32_t height, uint32_t /*size*/) {
     CCASSERT(hasFlag(_info.flags, TextureFlagBit::RESIZABLE), "Cannot resize immutable textures");
     CCASSERT(!_isTextureView, "Cannot resize texture views");
 
@@ -83,7 +83,7 @@ void TextureValidator::doResize(uint width, uint height, uint /*size*/) {
 }
 
 void TextureValidator::sanityCheck() {
-    uint cur = DeviceValidator::getInstance()->currentFrame();
+    uint32_t cur = DeviceValidator::getInstance()->currentFrame();
 
     // FIXME: minggo: as current implementation need to update some textures more than once, so disable it.
     // Should enable it when it is fixed.

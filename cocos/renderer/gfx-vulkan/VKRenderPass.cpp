@@ -51,7 +51,7 @@ void CCVKRenderPass::doInit(const RenderPassInfo & /*info*/) {
     if (_gpuRenderPass->subpasses.empty()) {
         auto &subpass = _gpuRenderPass->subpasses.emplace_back();
         subpass.colors.resize(_colorAttachments.size());
-        for (uint i = 0U; i < _colorAttachments.size(); ++i) {
+        for (uint32_t i = 0U; i < _colorAttachments.size(); ++i) {
             subpass.colors[i] = i;
         }
         if (_depthStencilAttachment.format != Format::UNKNOWN) {

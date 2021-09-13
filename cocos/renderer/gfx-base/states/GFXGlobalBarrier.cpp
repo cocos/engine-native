@@ -35,14 +35,14 @@ GlobalBarrier::GlobalBarrier(const GlobalBarrierInfo &info)
     _info = info;
 }
 
-uint GlobalBarrier::computeHash(const GlobalBarrierInfo &info) {
-    uint seed = static_cast<uint>(info.prevAccesses.size() + info.nextAccesses.size());
+uint32_t GlobalBarrier::computeHash(const GlobalBarrierInfo &info) {
+    uint32_t seed = static_cast<uint32_t>(info.prevAccesses.size() + info.nextAccesses.size());
 
     for (const AccessType type : info.prevAccesses) {
-        seed ^= static_cast<uint>(type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        seed ^= static_cast<uint32_t>(type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     }
     for (const AccessType type : info.nextAccesses) {
-        seed ^= static_cast<uint>(type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        seed ^= static_cast<uint32_t>(type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     }
 
     return seed;

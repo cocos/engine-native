@@ -41,8 +41,8 @@ public:
     inline CCVKGPUDescriptorSetLayout *gpuDescriptorSetLayout() const { return _gpuDescriptorSetLayout; }
 
 protected:
-    static uint generateID() noexcept {
-        static uint _idGen = 10000;
+    static uint32_t generateID() noexcept {
+        static uint32_t _idGen = 10000;
         return _idGen++;
     }
 

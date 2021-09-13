@@ -32,8 +32,8 @@ namespace gfx {
 
 namespace {
 
-constexpr uint FORCE_MINOR_VERSION           = 0; // 0 for default version, otherwise minorVersion = (FORCE_MINOR_VERSION - 1)
-constexpr uint DISABLE_VALIDATION_ASSERTIONS = 1; // 0 for default behavior, otherwise assertions will be disabled
+constexpr uint32_t FORCE_MINOR_VERSION           = 0; // 0 for default version, otherwise minorVersion = (FORCE_MINOR_VERSION - 1)
+constexpr uint32_t DISABLE_VALIDATION_ASSERTIONS = 1; // 0 for default behavior, otherwise assertions will be disabled
 
 #define FORCE_ENABLE_VALIDATION  0
 #define FORCE_DISABLE_VALIDATION 0
@@ -103,7 +103,7 @@ bool CCVKGPUContext::initialize() {
         return false;
     }
 
-    uint apiVersion = VK_API_VERSION_1_0;
+    uint32_t apiVersion = VK_API_VERSION_1_0;
     if (vkEnumerateInstanceVersion) {
         vkEnumerateInstanceVersion(&apiVersion);
         if (FORCE_MINOR_VERSION) {
@@ -116,12 +116,12 @@ bool CCVKGPUContext::initialize() {
         requestedExtensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
     }
 
-    uint availableLayerCount;
+    uint32_t availableLayerCount;
     VK_CHECK(vkEnumerateInstanceLayerProperties(&availableLayerCount, nullptr));
     vector<VkLayerProperties> supportedLayers(availableLayerCount);
     VK_CHECK(vkEnumerateInstanceLayerProperties(&availableLayerCount, supportedLayers.data()));
 
-    uint availableExtensionCount;
+    uint32_t availableExtensionCount;
     VK_CHECK(vkEnumerateInstanceExtensionProperties(nullptr, &availableExtensionCount, nullptr));
     vector<VkExtensionProperties> supportedExtensions(availableExtensionCount);
     VK_CHECK(vkEnumerateInstanceExtensionProperties(nullptr, &availableExtensionCount, supportedExtensions.data()));
@@ -253,7 +253,7 @@ bool CCVKGPUContext::initialize() {
     ///////////////////// Physical Device Selection /////////////////////
 
     // Querying valid physical devices on the machine
-    uint physicalDeviceCount{0};
+    uint32_t physicalDeviceCount{0};
     res = vkEnumeratePhysicalDevices(vkInstance, &physicalDeviceCount, nullptr);
 
     if (res || physicalDeviceCount < 1) {
@@ -265,7 +265,7 @@ bool CCVKGPUContext::initialize() {
 
     vector<VkPhysicalDeviceProperties> physicalDevicePropertiesList(physicalDeviceCount);
 
-    uint deviceIndex;
+    uint32_t deviceIndex;
     for (deviceIndex = 0U; deviceIndex < physicalDeviceCount; ++deviceIndex) {
         VkPhysicalDeviceProperties &properties = physicalDevicePropertiesList[deviceIndex];
         vkGetPhysicalDeviceProperties(physicalDeviceHandles[deviceIndex], &properties);
@@ -303,7 +303,7 @@ bool CCVKGPUContext::initialize() {
     }
 
     vkGetPhysicalDeviceMemoryProperties(physicalDevice, &physicalDeviceMemoryProperties);
-    uint queueFamilyPropertiesCount = 0;
+    uint32_t queueFamilyPropertiesCount = 0;
     vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyPropertiesCount, nullptr);
     queueFamilyProperties.resize(queueFamilyPropertiesCount);
     vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &queueFamilyPropertiesCount, queueFamilyProperties.data());

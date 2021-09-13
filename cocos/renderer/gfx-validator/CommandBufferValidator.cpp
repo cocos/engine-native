@@ -73,7 +73,7 @@ void CommandBufferValidator::doDestroy() {
     _actor->destroy();
 }
 
-void CommandBufferValidator::begin(RenderPass *renderPass, uint subpass, Framebuffer *framebuffer) {
+void CommandBufferValidator::begin(RenderPass *renderPass, uint32_t subpass, Framebuffer *framebuffer) {
     CCASSERT(!_insideRenderPass, "Already inside a render pass?");
     CCASSERT(_type != CommandBufferType::PRIMARY || !renderPass, "Primary command buffer cannot inherit render passes");
 
@@ -101,7 +101,7 @@ void CommandBufferValidator::end() {
     _actor->end();
 }
 
-void CommandBufferValidator::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, uint stencil, CommandBuffer *const *secondaryCBs, uint secondaryCBCount) {
+void CommandBufferValidator::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, uint32_t stencil, CommandBuffer *const *secondaryCBs, uint32_t secondaryCBCount) {
     CCASSERT(renderPass, "invalid render pass");
     CCASSERT(fbo, "invalid framebuffer");
 
@@ -135,7 +135,7 @@ void CommandBufferValidator::beginRenderPass(RenderPass *renderPass, Framebuffer
     CommandBuffer **actorSecondaryCBs = nullptr;
     if (secondaryCBCount) {
         actorSecondaryCBs = secondaryCBActors.data();
-        for (uint i = 0; i < secondaryCBCount; ++i) {
+        for (uint32_t i = 0; i < secondaryCBCount; ++i) {
             actorSecondaryCBs[i] = static_cast<CommandBufferValidator *>(secondaryCBs[i])->getActor();
         }
     }
@@ -174,7 +174,7 @@ void CommandBufferValidator::execute(CommandBuffer *const *cmdBuffs, uint32_t co
     static vector<CommandBuffer *> cmdBuffActors;
     cmdBuffActors.resize(count);
 
-    for (uint i = 0U; i < count; ++i) {
+    for (uint32_t i = 0U; i < count; ++i) {
         cmdBuffActors[i] = static_cast<CommandBufferValidator *>(cmdBuffs[i])->getActor();
     }
 
@@ -189,7 +189,7 @@ void CommandBufferValidator::bindPipelineState(PipelineState *pso) {
     _actor->bindPipelineState(static_cast<PipelineStateValidator *>(pso)->getActor());
 }
 
-void CommandBufferValidator::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) {
+void CommandBufferValidator::bindDescriptorSet(uint32_t set, DescriptorSet *descriptorSet, uint32_t dynamicOffsetCount, const uint32_t *dynamicOffsets) {
     CCASSERT(set < DeviceValidator::getInstance()->bindingMappingInfo().bufferOffsets.size(), "invalid set index");
     CCASSERT(descriptorSet, "invalid descriptor set");
     //CCASSERT(descriptorSet->getLayout()->getDynamicBindings().size() == dynamicOffsetCount, "wrong number of dynamic offsets"); // be more lenient on this
@@ -261,7 +261,7 @@ void CommandBufferValidator::setDepthBound(float minBounds, float maxBounds) {
     _actor->setDepthBound(minBounds, maxBounds);
 }
 
-void CommandBufferValidator::setStencilWriteMask(StencilFace face, uint mask) {
+void CommandBufferValidator::setStencilWriteMask(StencilFace face, uint32_t mask) {
     if (hasFlag(face, StencilFace::FRONT)) {
         _curStates.stencilStatesFront.writeMask = mask;
     }
@@ -274,7 +274,7 @@ void CommandBufferValidator::setStencilWriteMask(StencilFace face, uint mask) {
     _actor->setStencilWriteMask(face, mask);
 }
 
-void CommandBufferValidator::setStencilCompareMask(StencilFace face, uint ref, uint mask) {
+void CommandBufferValidator::setStencilCompareMask(StencilFace face, uint32_t ref, uint32_t mask) {
     if (hasFlag(face, StencilFace::FRONT)) {
         _curStates.stencilStatesFront.reference   = ref;
         _curStates.stencilStatesFront.compareMask = mask;
@@ -309,7 +309,7 @@ void CommandBufferValidator::draw(const DrawInfo &info) {
     _actor->draw(info);
 }
 
-void CommandBufferValidator::updateBuffer(Buffer *buff, const void *data, uint size) {
+void CommandBufferValidator::updateBuffer(Buffer *buff, const void *data, uint32_t size) {
     CCASSERT(_type == CommandBufferType::PRIMARY, "Command 'updateBuffer' must be recorded in primary command buffers.");
     CCASSERT(!_insideRenderPass, "Command 'updateBuffer' must be recorded outside render passes.");
 
@@ -321,7 +321,7 @@ void CommandBufferValidator::updateBuffer(Buffer *buff, const void *data, uint s
     _actor->updateBuffer(bufferValidator->getActor(), data, size);
 }
 
-void CommandBufferValidator::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) {
+void CommandBufferValidator::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint32_t count) {
     CCASSERT(_type == CommandBufferType::PRIMARY, "Command 'copyBuffersToTexture' must be recorded in primary command buffers.");
     CCASSERT(!_insideRenderPass, "Command 'copyBuffersToTexture' must be recorded outside render passes.");
 
@@ -333,7 +333,7 @@ void CommandBufferValidator::copyBuffersToTexture(const uint8_t *const *buffers,
     _actor->copyBuffersToTexture(buffers, textureValidator->getActor(), regions, count);
 }
 
-void CommandBufferValidator::blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlit *regions, uint count, Filter filter) {
+void CommandBufferValidator::blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlit *regions, uint32_t count, Filter filter) {
     CCASSERT(!_insideRenderPass, "Command 'blitTexture' must be recorded outside render passes.");
 
     for (uint32_t i = 0; i < count; ++i) {
@@ -368,7 +368,7 @@ void CommandBufferValidator::dispatch(const DispatchInfo &info) {
     _actor->dispatch(info);
 }
 
-void CommandBufferValidator::pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrier *const *textureBarriers, const Texture *const *textures, uint textureBarrierCount) {
+void CommandBufferValidator::pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrier *const *textureBarriers, const Texture *const *textures, uint32_t textureBarrierCount) {
     /////////// execute ///////////
 
     static vector<Texture *> textureActors;
@@ -377,7 +377,7 @@ void CommandBufferValidator::pipelineBarrier(const GlobalBarrier *barrier, const
     Texture **actorTextures = nullptr;
     if (textureBarrierCount) {
         actorTextures = textureActors.data();
-        for (uint i = 0U; i < textureBarrierCount; ++i) {
+        for (uint32_t i = 0U; i < textureBarrierCount; ++i) {
             actorTextures[i] = textures[i] ? static_cast<const TextureValidator *>(textures[i])->getActor() : nullptr;
         }
     }

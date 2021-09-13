@@ -42,7 +42,7 @@ public:
     inline const BufferList &   getVertexBuffers() const { return _vertexBuffers; }
     inline Buffer *             getIndexBuffer() const { return _indexBuffer; }
     inline Buffer *             getIndirectBuffer() const { return _indirectBuffer; }
-    inline uint                 getAttributesHash() const { return _attributesHash; }
+    inline uint32_t             getAttributesHash() const { return _attributesHash; }
 
     inline const DrawInfo &getDrawInfo() const { return _drawInfo; }
 
@@ -58,7 +58,7 @@ protected:
     virtual void doInit(const InputAssemblerInfo &info) = 0;
     virtual void doDestroy()                            = 0;
 
-    uint computeAttributesHash() const;
+    uint32_t computeAttributesHash() const;
 
     AttributeList _attributes;
     uint32_t      _attributesHash = 0;

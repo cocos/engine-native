@@ -51,13 +51,13 @@ void QueueValidator::doDestroy() {
     _actor->destroy();
 }
 
-void QueueValidator::submit(CommandBuffer *const *cmdBuffs, uint count) {
+void QueueValidator::submit(CommandBuffer *const *cmdBuffs, uint32_t count) {
     if (!count) return;
 
     static vector<CommandBuffer *> cmdBuffActors;
     cmdBuffActors.resize(count);
 
-    for (uint i = 0U; i < count; ++i) {
+    for (uint32_t i = 0U; i < count; ++i) {
         auto *cmdBuff = static_cast<CommandBufferValidator *>(cmdBuffs[i]);
         CCASSERT(cmdBuff->_commandsFlushed, "command buffers must be flushed before submit");
         cmdBuffActors[i] = cmdBuff->getActor();

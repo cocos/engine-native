@@ -68,8 +68,8 @@ void DescriptorSetValidator::update() {
     _actor->update();
 }
 
-void DescriptorSetValidator::bindBuffer(uint binding, Buffer *buffer, uint index) {
-    const vector<uint> &                  bindingIndices = _layout->getBindingIndices();
+void DescriptorSetValidator::bindBuffer(uint32_t binding, Buffer *buffer, uint32_t index) {
+    const vector<uint32_t> &              bindingIndices = _layout->getBindingIndices();
     const DescriptorSetLayoutBindingList &bindings       = _layout->getBindings();
     CCASSERT(binding < bindingIndices.size() && bindingIndices[binding] < bindings.size(), "Illegal binding");
 
@@ -86,8 +86,8 @@ void DescriptorSetValidator::bindBuffer(uint binding, Buffer *buffer, uint index
     _actor->bindBuffer(binding, static_cast<BufferValidator *>(buffer)->getActor(), index);
 }
 
-void DescriptorSetValidator::bindTexture(uint binding, Texture *texture, uint index) {
-    const vector<uint> &                  bindingIndices = _layout->getBindingIndices();
+void DescriptorSetValidator::bindTexture(uint32_t binding, Texture *texture, uint32_t index) {
+    const vector<uint32_t> &              bindingIndices = _layout->getBindingIndices();
     const DescriptorSetLayoutBindingList &bindings       = _layout->getBindings();
     CCASSERT(binding < bindingIndices.size() && bindingIndices[binding] < bindings.size(), "Illegal binding");
 
@@ -101,8 +101,8 @@ void DescriptorSetValidator::bindTexture(uint binding, Texture *texture, uint in
     _actor->bindTexture(binding, static_cast<TextureValidator *>(texture)->getActor(), index);
 }
 
-void DescriptorSetValidator::bindSampler(uint binding, Sampler *sampler, uint index) {
-    const vector<uint> &                  bindingIndices = _layout->getBindingIndices();
+void DescriptorSetValidator::bindSampler(uint32_t binding, Sampler *sampler, uint32_t index) {
+    const vector<uint32_t> &              bindingIndices = _layout->getBindingIndices();
     const DescriptorSetLayoutBindingList &bindings       = _layout->getBindings();
     CCASSERT(binding < bindingIndices.size() && bindingIndices[binding] < bindings.size(), "Illegal binding");
 

@@ -143,9 +143,9 @@ void FrameGraph::move(const TextureHandle from, const TextureHandle to, uint8_t 
     CC_ASSERT(!toResourceNode.writer);
 
     const gfx::TextureInfo &toTextureDesc   = static_cast<ResourceEntry<Texture> *>(toResourceNode.virtualResource)->get().getDesc();
-    uint const              toTextureWidth  = toTextureDesc.width >> mipmapLevel;
-    uint const              toTextureHeight = toTextureDesc.height >> mipmapLevel;
-    uint const              toTextureDepth  = toTextureDesc.depth >> mipmapLevel;
+    uint32_t const          toTextureWidth  = toTextureDesc.width >> mipmapLevel;
+    uint32_t const          toTextureHeight = toTextureDesc.height >> mipmapLevel;
+    uint32_t const          toTextureDepth  = toTextureDesc.depth >> mipmapLevel;
 
     CC_ASSERT(toTextureWidth && toTextureHeight && toTextureDepth);
     CC_ASSERT(toTextureDesc.levelCount > mipmapLevel && toTextureDesc.layerCount > arrayPosition);

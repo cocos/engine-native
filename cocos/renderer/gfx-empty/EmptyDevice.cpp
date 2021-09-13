@@ -148,10 +148,10 @@ TextureBarrier *EmptyDevice::createTextureBarrier(const TextureBarrierInfo &info
     return CC_NEW(TextureBarrier(info));
 }
 
-void EmptyDevice::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) {
+void EmptyDevice::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint32_t count) {
 }
 
-void EmptyDevice::copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint count) {
+void EmptyDevice::copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint32_t count) {
 }
 
 } // namespace gfx

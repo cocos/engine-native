@@ -36,19 +36,19 @@ TextureBarrier::TextureBarrier(const TextureBarrierInfo &info)
     _info = info;
 }
 
-uint TextureBarrier::computeHash(const TextureBarrierInfo &info) {
-    uint seed = static_cast<uint>(info.prevAccesses.size() + info.nextAccesses.size() + 3);
+uint32_t TextureBarrier::computeHash(const TextureBarrierInfo &info) {
+    uint32_t seed = static_cast<uint32_t>(info.prevAccesses.size() + info.nextAccesses.size() + 3);
 
     for (const AccessType type : info.prevAccesses) {
-        seed ^= static_cast<uint>(type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        seed ^= static_cast<uint32_t>(type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     }
     for (const AccessType type : info.nextAccesses) {
-        seed ^= static_cast<uint>(type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        seed ^= static_cast<uint32_t>(type) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
     }
 
     seed ^= info.discardContents + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    seed ^= (info.srcQueue ? static_cast<uint>(info.srcQueue->getType()) : 0U) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-    seed ^= (info.dstQueue ? static_cast<uint>(info.dstQueue->getType()) : 0U) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= (info.srcQueue ? static_cast<uint32_t>(info.srcQueue->getType()) : 0U) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    seed ^= (info.dstQueue ? static_cast<uint32_t>(info.dstQueue->getType()) : 0U) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 
     return seed;
 }
