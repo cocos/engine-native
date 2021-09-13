@@ -118,6 +118,22 @@ void GLES2PrimaryCommandBuffer::draw(const DrawInfo &info) {
     }
 }
 
+void GLES2PrimaryCommandBuffer::setViewport(const Viewport &vp) {
+    auto *cache = GLES2Device::getInstance()->stateCache();
+    if (cache->viewport != vp) {
+        cache->viewport = vp;
+        GL_CHECK(glViewport(vp.left, vp.top, vp.width, vp.height));
+    }
+}
+
+void GLES2PrimaryCommandBuffer::setScissor(const Rect &rect) {
+    auto *cache = GLES2Device::getInstance()->stateCache();
+    if (cache->scissor != rect) {
+        cache->scissor = rect;
+        GL_CHECK(glScissor(rect.x, rect.y, rect.width, rect.height));
+    }
+}
+
 void GLES2PrimaryCommandBuffer::updateBuffer(Buffer *buff, const void *data, uint32_t size) {
     GLES2GPUBuffer *gpuBuffer = static_cast<GLES2Buffer *>(buff)->gpuBuffer();
     if (gpuBuffer) {

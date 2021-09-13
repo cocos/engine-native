@@ -698,14 +698,12 @@ CC_ENUM_CONVERSION_OPERATOR(CullMode);
 
 enum class DynamicStateFlagBit : uint32_t {
     NONE                 = 0x0,
-    VIEWPORT             = 0x1,
-    SCISSOR              = 0x2,
-    LINE_WIDTH           = 0x4,
-    DEPTH_BIAS           = 0x8,
-    BLEND_CONSTANTS      = 0x10,
-    DEPTH_BOUNDS         = 0x20,
-    STENCIL_WRITE_MASK   = 0x40,
-    STENCIL_COMPARE_MASK = 0x80,
+    LINE_WIDTH           = 0x1,
+    DEPTH_BIAS           = 0x2,
+    BLEND_CONSTANTS      = 0x4,
+    DEPTH_BOUNDS         = 0x8,
+    STENCIL_WRITE_MASK   = 0x10,
+    STENCIL_COMPARE_MASK = 0x20,
 };
 using DynamicStateFlags = DynamicStateFlagBit;
 CC_ENUM_BITWISE_OPERATORS(DynamicStateFlagBit);

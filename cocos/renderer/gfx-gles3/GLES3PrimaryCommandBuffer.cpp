@@ -109,6 +109,22 @@ void GLES3PrimaryCommandBuffer::draw(const DrawInfo &info) {
     }
 }
 
+void GLES3PrimaryCommandBuffer::setViewport(const Viewport &vp) {
+    auto *cache = GLES3Device::getInstance()->stateCache();
+    if (cache->viewport != vp) {
+        cache->viewport = vp;
+        GL_CHECK(glViewport(vp.left, vp.top, vp.width, vp.height));
+    }
+}
+
+void GLES3PrimaryCommandBuffer::setScissor(const Rect &rect) {
+    auto *cache = GLES3Device::getInstance()->stateCache();
+    if (cache->scissor != rect) {
+        cache->scissor = rect;
+        GL_CHECK(glScissor(rect.x, rect.y, rect.width, rect.height));
+    }
+}
+
 void GLES3PrimaryCommandBuffer::updateBuffer(Buffer *buff, const void *data, uint32_t size) {
     GLES3GPUBuffer *gpuBuffer = static_cast<GLES3Buffer *>(buff)->gpuBuffer();
     if (gpuBuffer) {

@@ -1894,26 +1894,28 @@ void cmdFuncGLES3BeginRenderPass(GLES3Device *device, uint32_t subpassIdx, GLES3
             cache->glDrawFramebuffer = glFramebuffer;
         }
 
-        if (cache->viewport.left != renderArea->x ||
-            cache->viewport.top != renderArea->y ||
-            cache->viewport.width != renderArea->width ||
-            cache->viewport.height != renderArea->height) {
-            GL_CHECK(glViewport(renderArea->x, renderArea->y, renderArea->width, renderArea->height));
-            cache->viewport.left   = renderArea->x;
-            cache->viewport.top    = renderArea->y;
-            cache->viewport.width  = renderArea->width;
-            cache->viewport.height = renderArea->height;
-        }
+        if (subpassIdx == 0) {
+            if (cache->viewport.left != renderArea->x ||
+                cache->viewport.top != renderArea->y ||
+                cache->viewport.width != renderArea->width ||
+                cache->viewport.height != renderArea->height) {
+                GL_CHECK(glViewport(renderArea->x, renderArea->y, renderArea->width, renderArea->height));
+                cache->viewport.left   = renderArea->x;
+                cache->viewport.top    = renderArea->y;
+                cache->viewport.width  = renderArea->width;
+                cache->viewport.height = renderArea->height;
+            }
 
-        if (cache->scissor.x != renderArea->x ||
-            cache->scissor.y != renderArea->y ||
-            cache->scissor.width != renderArea->width ||
-            cache->scissor.height != renderArea->height) {
-            GL_CHECK(glScissor(renderArea->x, renderArea->y, renderArea->width, renderArea->height));
-            cache->scissor.x      = renderArea->x;
-            cache->scissor.y      = renderArea->y;
-            cache->scissor.width  = renderArea->width;
-            cache->scissor.height = renderArea->height;
+            if (cache->scissor.x != renderArea->x ||
+                cache->scissor.y != renderArea->y ||
+                cache->scissor.width != renderArea->width ||
+                cache->scissor.height != renderArea->height) {
+                GL_CHECK(glScissor(renderArea->x, renderArea->y, renderArea->width, renderArea->height));
+                cache->scissor.x      = renderArea->x;
+                cache->scissor.y      = renderArea->y;
+                cache->scissor.width  = renderArea->width;
+                cache->scissor.height = renderArea->height;
+            }
         }
 
         GLbitfield glClears = 0;
@@ -2634,20 +2636,6 @@ void cmdFuncGLES3BindState(GLES3Device *device, GLES3GPUPipelineState *gpuPipeli
     if (gpuPipelineState && !gpuPipelineState->dynamicStates.empty()) {
         for (DynamicStateFlagBit dynamicState : gpuPipelineState->dynamicStates) {
             switch (dynamicState) {
-                case DynamicStateFlagBit::VIEWPORT:
-                    if (cache->viewport != dynamicStates->viewport) {
-                        cache->viewport = dynamicStates->viewport;
-                        GL_CHECK(glViewport(dynamicStates->viewport.left, dynamicStates->viewport.top,
-                                            dynamicStates->viewport.width, dynamicStates->viewport.height));
-                    }
-                    break;
-                case DynamicStateFlagBit::SCISSOR:
-                    if (cache->scissor != dynamicStates->scissor) {
-                        cache->scissor = dynamicStates->scissor;
-                        GL_CHECK(glScissor(dynamicStates->scissor.x, dynamicStates->scissor.y,
-                                           dynamicStates->scissor.width, dynamicStates->scissor.height));
-                    }
-                    break;
                 case DynamicStateFlagBit::LINE_WIDTH:
                     if (cache->rs.lineWidth != dynamicStates->lineWidth) {
                         cache->rs.lineWidth = dynamicStates->lineWidth;
