@@ -50,17 +50,11 @@
     if (!ptr) {                    \
         return ret;                \
     }
-#if (CC_PLATFORM == CC_PLATFORM_MAC_IOS) && (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_11_0)
-#define CC_NEW(T)              ::new T
-#define CC_NEW_ARRAY(T, count) ::new T[count]
-#define CC_DELETE(ptr)         ::delete ptr
-#define CC_DELETE_ARRAY(ptr)   ::delete[] ptr
-#else
+
 #define CC_NEW(T)              _CC_NEW T
 #define CC_NEW_ARRAY(T, count) _CC_NEW T[count]
 #define CC_DELETE(ptr)         _CC_DELETE(ptr)
 #define CC_DELETE_ARRAY(ptr)   _CC_DELETE[](ptr)
-#endif
 #define CC_SAFE_DELETE(ptr) \
     if (ptr) {              \
         CC_DELETE(ptr);     \
