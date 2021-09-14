@@ -281,6 +281,8 @@ void GLES3GPUContext::bindContext(bool bound) {
         resetStates();
     } else {
         makeCurrent(EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT, false);
+        _eglCurrentDrawSurface = EGL_NO_SURFACE;
+        _eglCurrentReadSurface = EGL_NO_SURFACE;
     }
 }
 
