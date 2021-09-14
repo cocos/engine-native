@@ -47,6 +47,7 @@ MTLClearColor toMTLClearColor(const Color &clearColor);
 MTLVertexFormat toMTLVertexFormat(Format, bool);
 MTLPixelFormat toMTLPixelFormat(Format);
 MTLMultisampleDepthResolveFilter toMTLDepthResolveMode(ResolveMode mode);
+API_AVAILABLE(ios(12.0))
 MTLMultisampleStencilResolveFilter toMTLStencilResolveMode(ResolveMode mode);
 // Because some pixel format is not supported on metal, so need to convert to supported pixel format.
 Format convertGFXPixelFormat(Format);
