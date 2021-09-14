@@ -25,6 +25,7 @@
 
 #include "GFXObject.h"
 #include "base/CoreStd.h"
+#include "base/Utils.h"
 
 #include "GFXDescriptorSetLayout.h"
 
@@ -38,9 +39,9 @@ DescriptorSetLayout::DescriptorSetLayout()
 DescriptorSetLayout::~DescriptorSetLayout() = default;
 
 void DescriptorSetLayout::initialize(const DescriptorSetLayoutInfo &info) {
-    _bindings             = info.bindings;
-    uint32_t bindingCount = static_cast<uint32_t>(_bindings.size());
-    _descriptorCount      = 0U;
+    _bindings         = info.bindings;
+    auto bindingCount = utils::toUint(_bindings.size());
+    _descriptorCount  = 0U;
 
     if (bindingCount) {
         uint32_t         maxBinding = 0U;

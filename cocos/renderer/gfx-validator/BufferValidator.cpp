@@ -56,6 +56,9 @@ BufferValidator::~BufferValidator() {
 }
 
 void BufferValidator::doInit(const BufferInfo &info) {
+    CCASSERT(!isInited(), "initializing twice?");
+    _inited = true;
+
     CCASSERT(info.usage != BufferUsageBit::NONE, "invalid buffer param");
     CCASSERT(info.memUsage != MemoryUsageBit::NONE, "invalid buffer param");
     // CCASSERT(info.size, "zero-sized buffer?"); // be more lenient on this for now
@@ -75,7 +78,11 @@ void BufferValidator::doInit(const BufferInfo &info) {
 }
 
 void BufferValidator::doInit(const BufferViewInfo &info) {
+    CCASSERT(!isInited(), "initializing twice?");
+    _inited = true;
+
     CCASSERT(info.buffer, "invalid source buffer");
+    CCASSERT(static_cast<BufferValidator *>(info.buffer)->isInited(), "already destroyed?");
     CCASSERT(info.offset + info.range <= info.buffer->getSize(), "invalid range");
 
     /////////// execute ///////////
@@ -87,6 +94,8 @@ void BufferValidator::doInit(const BufferViewInfo &info) {
 }
 
 void BufferValidator::doResize(uint32_t size, uint32_t /*count*/) {
+    CCASSERT(isInited(), "alread destroyed?");
+
     CCASSERT(!_isBufferView, "cannot resize through buffer views");
     CCASSERT(size, "invalid size");
 
@@ -96,10 +105,17 @@ void BufferValidator::doResize(uint32_t size, uint32_t /*count*/) {
 }
 
 void BufferValidator::doDestroy() {
+    CCASSERT(isInited(), "destroying twice?");
+    _inited = false;
+
+    /////////// execute ///////////
+
     _actor->destroy();
 }
 
 void BufferValidator::update(const void *buffer, uint32_t size) {
+    CCASSERT(isInited(), "alread destroyed?");
+
     CCASSERT(!_isBufferView, "cannot update through buffer views");
     CCASSERT(size && size <= _size, "invalid size");
     CCASSERT(buffer, "invalid buffer data");

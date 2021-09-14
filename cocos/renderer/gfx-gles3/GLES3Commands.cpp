@@ -1135,6 +1135,7 @@ void cmdFuncGLES3DestroySampler(GLES3Device *device, GLES3GPUSampler *gpuSampler
     }
 }
 
+// NOLINTNEXTLINE(google-readability-function-size, readability-function-size)
 void cmdFuncGLES3CreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
     GLenum glShaderStage = 0;
     String shaderStageStr;
@@ -2213,6 +2214,7 @@ void cmdFuncGLES3EndRenderPass(GLES3Device *device) {
     }
 }
 
+// NOLINTNEXTLINE(google-readability-function-size, readability-function-size)
 void cmdFuncGLES3BindState(GLES3Device *device, GLES3GPUPipelineState *gpuPipelineState, GLES3GPUInputAssembler *gpuInputAssembler,
                            const GLES3GPUDescriptorSet *const *gpuDescriptorSets, const uint32_t *dynamicOffsets, const DynamicStates *dynamicStates) {
     GLES3ObjectCache &gfxStateCache = device->stateCache()->gfxStateCache;

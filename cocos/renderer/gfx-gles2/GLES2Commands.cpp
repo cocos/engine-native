@@ -1810,6 +1810,7 @@ void cmdFuncGLES2EndRenderPass(GLES2Device *device) {
     }
 }
 
+// NOLINTNEXTLINE(google-readability-function-size, readability-function-size)
 void cmdFuncGLES2BindState(GLES2Device *device, GLES2GPUPipelineState *gpuPipelineState, GLES2GPUInputAssembler *gpuInputAssembler,
                            const GLES2GPUDescriptorSet *const *gpuDescriptorSets, const uint32_t *dynamicOffsets,
                            const DynamicStates *dynamicStates) {

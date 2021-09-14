@@ -331,8 +331,8 @@ bool GLES3GPUContext::makeCurrent(EGLSurface drawSurface, EGLSurface readSurface
     return succeeded;
 }
 
-void GLES3GPUContext::resetStates() const { // NOLINT
-
+// NOLINTNEXTLINE(google-readability-function-size, readability-function-size)
+void GLES3GPUContext::resetStates() const {
     GL_CHECK(glPixelStorei(GL_PACK_ALIGNMENT, 1));
     GL_CHECK(glPixelStorei(GL_UNPACK_ALIGNMENT, 1));
     GL_CHECK(glActiveTexture(GL_TEXTURE0));

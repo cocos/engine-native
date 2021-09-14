@@ -40,6 +40,8 @@ public:
 
     void sanityCheck(const void *buffer, uint32_t size);
 
+    inline bool isInited() const { return _inited; }
+
 protected:
     void doInit(const BufferInfo &info) override;
     void doInit(const BufferViewInfo &info) override;
@@ -51,6 +53,8 @@ protected:
     uint32_t _lastUpdateFrame{0U};
     uint32_t _totalUpdateTimes{0U};
     uint32_t _creationFrame{0U};
+
+    bool _inited{false};
 
     String _initStack;
 };

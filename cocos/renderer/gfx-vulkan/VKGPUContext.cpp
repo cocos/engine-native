@@ -39,21 +39,24 @@ constexpr uint32_t DISABLE_VALIDATION_ASSERTIONS = 1; // 0 for default behavior,
 #define FORCE_DISABLE_VALIDATION 0
 
 #if CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION || FORCE_ENABLE_VALIDATION
-VKAPI_ATTR VkBool32 VKAPI_CALL debugUtilsMessengerCallback(VkDebugUtilsMessageSeverityFlagBitsEXT      messageSeverity,
-                                                           VkDebugUtilsMessageTypeFlagsEXT             messageType,
+VKAPI_ATTR VkBool32 VKAPI_CALL debugUtilsMessengerCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+                                                           VkDebugUtilsMessageTypeFlagsEXT /*messageType*/,
                                                            const VkDebugUtilsMessengerCallbackDataEXT *callbackData,
-                                                           void *                                      userData) {
+                                                           void * /*userData*/) {
     if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) {
         CC_LOG_ERROR("%s: %s", callbackData->pMessageIdName, callbackData->pMessage);
         CCASSERT(DISABLE_VALIDATION_ASSERTIONS, "Validation Error");
         return VK_FALSE;
-    } else if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
+    }
+    if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT) {
         CC_LOG_WARNING("%s: %s", callbackData->pMessageIdName, callbackData->pMessage);
         return VK_FALSE;
-    } else if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT) {
+    }
+    if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT) {
         //CC_LOG_INFO("%s: %s", callbackData->pMessageIdName, callbackData->pMessage);
         return VK_FALSE;
-    } else if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) {
+    }
+    if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) {
         //CC_LOG_DEBUG("%s: %s", callbackData->pMessageIdName, callbackData->pMessage);
         return VK_FALSE;
     }
@@ -61,25 +64,28 @@ VKAPI_ATTR VkBool32 VKAPI_CALL debugUtilsMessengerCallback(VkDebugUtilsMessageSe
     return VK_FALSE;
 }
 
-VKAPI_ATTR VkBool32 VKAPI_CALL debugReportCallback(VkDebugReportFlagsEXT      flags,
-                                                   VkDebugReportObjectTypeEXT type,
-                                                   uint64_t                   object,
-                                                   size_t                     location,
-                                                   int32_t                    messageCode,
-                                                   const char *               layerPrefix,
-                                                   const char *               message,
-                                                   void *                     userData) {
+VKAPI_ATTR VkBool32 VKAPI_CALL debugReportCallback(VkDebugReportFlagsEXT flags,
+                                                   VkDebugReportObjectTypeEXT /*type*/,
+                                                   uint64_t /*object*/,
+                                                   size_t /*location*/,
+                                                   int32_t /*messageCode*/,
+                                                   const char *layerPrefix,
+                                                   const char *message,
+                                                   void * /*userData*/) {
     if (flags & VK_DEBUG_REPORT_ERROR_BIT_EXT) {
         CC_LOG_ERROR("%s: %s", layerPrefix, message);
         CCASSERT(DISABLE_VALIDATION_ASSERTIONS, "Validation Error");
         return VK_FALSE;
-    } else if (flags & (VK_DEBUG_REPORT_WARNING_BIT_EXT | VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT)) {
+    }
+    if (flags & (VK_DEBUG_REPORT_WARNING_BIT_EXT | VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT)) {
         CC_LOG_WARNING("%s: %s", layerPrefix, message);
         return VK_FALSE;
-    } else if (flags & VK_DEBUG_REPORT_INFORMATION_BIT_EXT) {
+    }
+    if (flags & VK_DEBUG_REPORT_INFORMATION_BIT_EXT) {
         //CC_LOG_INFO("%s: %s", layerPrefix, message);
         return VK_FALSE;
-    } else if (flags & VK_DEBUG_REPORT_DEBUG_BIT_EXT) {
+    }
+    if (flags & VK_DEBUG_REPORT_DEBUG_BIT_EXT) {
         //CC_LOG_DEBUG("%s: %s", layerPrefix, message);
         return VK_FALSE;
     }

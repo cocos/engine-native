@@ -53,6 +53,9 @@ CommandBufferValidator::~CommandBufferValidator() {
 }
 
 void CommandBufferValidator::initValidator() {
+    CCASSERT(!isInited(), "initializing twice?");
+    _inited = true;
+
     size_t descriptorSetCount = DeviceValidator::getInstance()->bindingMappingInfo().bufferOffsets.size();
     _curStates.descriptorSets.resize(descriptorSetCount);
     _curStates.dynamicOffsets.resize(descriptorSetCount);
@@ -60,6 +63,8 @@ void CommandBufferValidator::initValidator() {
 
 void CommandBufferValidator::doInit(const CommandBufferInfo &info) {
     initValidator();
+
+    CCASSERT(static_cast<QueueValidator *>(info.queue)->isInited(), "already destroyed?");
 
     /////////// execute ///////////
 
@@ -70,10 +75,19 @@ void CommandBufferValidator::doInit(const CommandBufferInfo &info) {
 }
 
 void CommandBufferValidator::doDestroy() {
+    CCASSERT(isInited(), "destroying twice?");
+    _inited = false;
+
+    /////////// execute ///////////
+
     _actor->destroy();
 }
 
 void CommandBufferValidator::begin(RenderPass *renderPass, uint32_t subpass, Framebuffer *framebuffer) {
+    CCASSERT(isInited(), "alread destroyed?");
+    CCASSERT(!renderPass || static_cast<RenderPassValidator *>(renderPass)->isInited(), "already destroyed?");
+    CCASSERT(!framebuffer || static_cast<FramebufferValidator *>(framebuffer)->isInited(), "already destroyed?");
+
     CCASSERT(!_insideRenderPass, "Already inside a render pass?");
     CCASSERT(_type != CommandBufferType::PRIMARY || !renderPass, "Primary command buffer cannot inherit render passes");
 
@@ -93,6 +107,8 @@ void CommandBufferValidator::begin(RenderPass *renderPass, uint32_t subpass, Fra
 }
 
 void CommandBufferValidator::end() {
+    CCASSERT(isInited(), "alread destroyed?");
+
     CCASSERT(_type != CommandBufferType::PRIMARY || !_insideRenderPass, "Still inside a render pass?");
     _insideRenderPass = false;
 
@@ -102,8 +118,9 @@ void CommandBufferValidator::end() {
 }
 
 void CommandBufferValidator::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, uint32_t stencil, CommandBuffer *const *secondaryCBs, uint32_t secondaryCBCount) {
-    CCASSERT(renderPass, "invalid render pass");
-    CCASSERT(fbo, "invalid framebuffer");
+    CCASSERT(isInited(), "alread destroyed?");
+    CCASSERT(static_cast<RenderPassValidator *>(renderPass)->isInited(), "already destroyed?");
+    CCASSERT(static_cast<FramebufferValidator *>(fbo)->isInited(), "already destroyed?");
 
     CCASSERT(_type == CommandBufferType::PRIMARY, "Command 'endRenderPass' must be recorded in primary command buffers.");
     CCASSERT(!_insideRenderPass, "Already inside a render pass?");
@@ -129,9 +146,6 @@ void CommandBufferValidator::beginRenderPass(RenderPass *renderPass, Framebuffer
     static vector<CommandBuffer *> secondaryCBActors;
     secondaryCBActors.resize(secondaryCBCount);
 
-    RenderPass * renderPassActor  = renderPass ? static_cast<RenderPassValidator *>(renderPass)->getActor() : nullptr;
-    Framebuffer *framebufferActor = fbo ? static_cast<FramebufferValidator *>(fbo)->getActor() : nullptr;
-
     CommandBuffer **actorSecondaryCBs = nullptr;
     if (secondaryCBCount) {
         actorSecondaryCBs = secondaryCBActors.data();
@@ -140,10 +154,15 @@ void CommandBufferValidator::beginRenderPass(RenderPass *renderPass, Framebuffer
         }
     }
 
+    RenderPass * renderPassActor  = static_cast<RenderPassValidator *>(renderPass)->getActor();
+    Framebuffer *framebufferActor = static_cast<FramebufferValidator *>(fbo)->getActor();
+
     _actor->beginRenderPass(renderPassActor, framebufferActor, renderArea, colors, depth, stencil, actorSecondaryCBs, secondaryCBCount);
 }
 
 void CommandBufferValidator::nextSubpass() {
+    CCASSERT(isInited(), "alread destroyed?");
+
     ++_curSubpass;
 
     /////////// execute ///////////
@@ -152,6 +171,8 @@ void CommandBufferValidator::nextSubpass() {
 }
 
 void CommandBufferValidator::endRenderPass() {
+    CCASSERT(isInited(), "alread destroyed?");
+
     CCASSERT(_type == CommandBufferType::PRIMARY, "Command 'endRenderPass' must be recorded in primary command buffers.");
     CCASSERT(_insideRenderPass, "No render pass to end?");
     _insideRenderPass = false;
@@ -166,8 +187,14 @@ void CommandBufferValidator::endRenderPass() {
 }
 
 void CommandBufferValidator::execute(CommandBuffer *const *cmdBuffs, uint32_t count) {
+    CCASSERT(isInited(), "alread destroyed?");
+
     if (!count) return; // be more lenient on this for now
     CCASSERT(_type == CommandBufferType::PRIMARY, "Command 'execute' must be recorded in primary command buffers.");
+
+    for (uint32_t i = 0U; i < count; ++i) {
+        CCASSERT(static_cast<CommandBufferValidator *>(cmdBuffs[i])->isInited(), "already destroyed?");
+    }
 
     /////////// execute ///////////
 
@@ -182,6 +209,9 @@ void CommandBufferValidator::execute(CommandBuffer *const *cmdBuffs, uint32_t co
 }
 
 void CommandBufferValidator::bindPipelineState(PipelineState *pso) {
+    CCASSERT(isInited(), "alread destroyed?");
+    CCASSERT(static_cast<PipelineStateValidator *>(pso)->isInited(), "already destroyed?");
+
     _curStates.pipelineState = pso;
 
     /////////// execute ///////////
@@ -190,8 +220,10 @@ void CommandBufferValidator::bindPipelineState(PipelineState *pso) {
 }
 
 void CommandBufferValidator::bindDescriptorSet(uint32_t set, DescriptorSet *descriptorSet, uint32_t dynamicOffsetCount, const uint32_t *dynamicOffsets) {
+    CCASSERT(isInited(), "alread destroyed?");
+    CCASSERT(static_cast<DescriptorSetValidator *>(descriptorSet)->isInited(), "already destroyed?");
+
     CCASSERT(set < DeviceValidator::getInstance()->bindingMappingInfo().bufferOffsets.size(), "invalid set index");
-    CCASSERT(descriptorSet, "invalid descriptor set");
     //CCASSERT(descriptorSet->getLayout()->getDynamicBindings().size() == dynamicOffsetCount, "wrong number of dynamic offsets"); // be more lenient on this
 
     _curStates.descriptorSets[set] = descriptorSet;
@@ -203,6 +235,9 @@ void CommandBufferValidator::bindDescriptorSet(uint32_t set, DescriptorSet *desc
 }
 
 void CommandBufferValidator::bindInputAssembler(InputAssembler *ia) {
+    CCASSERT(isInited(), "alread destroyed?");
+    CCASSERT(static_cast<InputAssemblerValidator *>(ia)->isInited(), "already destroyed?");
+
     _curStates.inputAssembler = ia;
 
     /////////// execute ///////////
@@ -211,6 +246,8 @@ void CommandBufferValidator::bindInputAssembler(InputAssembler *ia) {
 }
 
 void CommandBufferValidator::setViewport(const Viewport &vp) {
+    CCASSERT(isInited(), "alread destroyed?");
+
     _curStates.viewport = vp;
 
     /////////// execute ///////////
@@ -219,6 +256,8 @@ void CommandBufferValidator::setViewport(const Viewport &vp) {
 }
 
 void CommandBufferValidator::setScissor(const Rect &rect) {
+    CCASSERT(isInited(), "alread destroyed?");
+
     _curStates.scissor = rect;
 
     /////////// execute ///////////
@@ -227,6 +266,8 @@ void CommandBufferValidator::setScissor(const Rect &rect) {
 }
 
 void CommandBufferValidator::setLineWidth(float width) {
+    CCASSERT(isInited(), "alread destroyed?");
+
     _curStates.lineWidth = width;
 
     /////////// execute ///////////
@@ -235,6 +276,8 @@ void CommandBufferValidator::setLineWidth(float width) {
 }
 
 void CommandBufferValidator::setDepthBias(float constant, float clamp, float slope) {
+    CCASSERT(isInited(), "alread destroyed?");
+
     _curStates.depthBiasConstant = constant;
     _curStates.depthBiasClamp    = clamp;
     _curStates.depthBiasSlope    = slope;
@@ -245,6 +288,8 @@ void CommandBufferValidator::setDepthBias(float constant, float clamp, float slo
 }
 
 void CommandBufferValidator::setBlendConstants(const Color &constants) {
+    CCASSERT(isInited(), "alread destroyed?");
+
     _curStates.blendConstant = constants;
 
     /////////// execute ///////////
@@ -253,6 +298,8 @@ void CommandBufferValidator::setBlendConstants(const Color &constants) {
 }
 
 void CommandBufferValidator::setDepthBound(float minBounds, float maxBounds) {
+    CCASSERT(isInited(), "alread destroyed?");
+
     _curStates.depthMinBounds = minBounds;
     _curStates.depthMaxBounds = maxBounds;
 
@@ -262,6 +309,8 @@ void CommandBufferValidator::setDepthBound(float minBounds, float maxBounds) {
 }
 
 void CommandBufferValidator::setStencilWriteMask(StencilFace face, uint32_t mask) {
+    CCASSERT(isInited(), "alread destroyed?");
+
     if (hasFlag(face, StencilFace::FRONT)) {
         _curStates.stencilStatesFront.writeMask = mask;
     }
@@ -275,6 +324,8 @@ void CommandBufferValidator::setStencilWriteMask(StencilFace face, uint32_t mask
 }
 
 void CommandBufferValidator::setStencilCompareMask(StencilFace face, uint32_t ref, uint32_t mask) {
+    CCASSERT(isInited(), "alread destroyed?");
+
     if (hasFlag(face, StencilFace::FRONT)) {
         _curStates.stencilStatesFront.reference   = ref;
         _curStates.stencilStatesFront.compareMask = mask;
@@ -290,6 +341,8 @@ void CommandBufferValidator::setStencilCompareMask(StencilFace face, uint32_t re
 }
 
 void CommandBufferValidator::draw(const DrawInfo &info) {
+    CCASSERT(isInited(), "alread destroyed?");
+
     CCASSERT(_insideRenderPass, "Command 'draw' must be recorded inside render passes.");
 
     if (DeviceValidator::getInstance()->isRecording()) {
@@ -310,6 +363,9 @@ void CommandBufferValidator::draw(const DrawInfo &info) {
 }
 
 void CommandBufferValidator::updateBuffer(Buffer *buff, const void *data, uint32_t size) {
+    CCASSERT(isInited(), "alread destroyed?");
+    CCASSERT(static_cast<BufferValidator *>(buff)->isInited(), "already destroyed?");
+
     CCASSERT(_type == CommandBufferType::PRIMARY, "Command 'updateBuffer' must be recorded in primary command buffers.");
     CCASSERT(!_insideRenderPass, "Command 'updateBuffer' must be recorded outside render passes.");
 
@@ -322,6 +378,9 @@ void CommandBufferValidator::updateBuffer(Buffer *buff, const void *data, uint32
 }
 
 void CommandBufferValidator::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint32_t count) {
+    CCASSERT(isInited(), "alread destroyed?");
+    CCASSERT(static_cast<TextureValidator *>(texture)->isInited(), "already destroyed?");
+
     CCASSERT(_type == CommandBufferType::PRIMARY, "Command 'copyBuffersToTexture' must be recorded in primary command buffers.");
     CCASSERT(!_insideRenderPass, "Command 'copyBuffersToTexture' must be recorded outside render passes.");
 
@@ -334,6 +393,10 @@ void CommandBufferValidator::copyBuffersToTexture(const uint8_t *const *buffers,
 }
 
 void CommandBufferValidator::blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlit *regions, uint32_t count, Filter filter) {
+    CCASSERT(isInited(), "alread destroyed?");
+    CCASSERT(static_cast<TextureValidator *>(srcTexture)->isInited(), "already destroyed?");
+    CCASSERT(static_cast<TextureValidator *>(dstTexture)->isInited(), "already destroyed?");
+
     CCASSERT(!_insideRenderPass, "Command 'blitTexture' must be recorded outside render passes.");
 
     for (uint32_t i = 0; i < count; ++i) {
@@ -358,6 +421,8 @@ void CommandBufferValidator::blitTexture(Texture *srcTexture, Texture *dstTextur
 }
 
 void CommandBufferValidator::dispatch(const DispatchInfo &info) {
+    CCASSERT(isInited(), "alread destroyed?");
+
     CCASSERT(!_insideRenderPass, "Command 'dispatch' must be recorded outside render passes.");
 
     /////////// execute ///////////
@@ -369,6 +434,12 @@ void CommandBufferValidator::dispatch(const DispatchInfo &info) {
 }
 
 void CommandBufferValidator::pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrier *const *textureBarriers, const Texture *const *textures, uint32_t textureBarrierCount) {
+    CCASSERT(isInited(), "alread destroyed?");
+
+    for (uint32_t i = 0U; i < textureBarrierCount; ++i) {
+        CCASSERT(static_cast<const TextureValidator *>(textures[i])->isInited(), "already destroyed?");
+    }
+
     /////////// execute ///////////
 
     static vector<Texture *> textureActors;

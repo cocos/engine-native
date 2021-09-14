@@ -30,6 +30,7 @@
 #include "FrameGraph.h"
 #include "PassNode.h"
 #include "ResourceNode.h"
+#include "base/Utils.h"
 #include "gfx-base/GFXCommandBuffer.h"
 
 namespace cc {
@@ -68,7 +69,7 @@ void DevicePass::execute() {
 
     begin(cmdBuff);
 
-    for (size_t i = 0; i < _subpasses.size(); ++i) {
+    for (uint32_t i = 0; i < utils::toUint(_subpasses.size()); ++i) {
         Subpass &subpass             = _subpasses[i];
         _resourceTable._subpassIndex = i;
 

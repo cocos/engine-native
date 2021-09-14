@@ -74,6 +74,7 @@ bool DeviceValidator::doInit(const DeviceInfo &info) {
     _caps       = _actor->_caps;
     memcpy(_features.data(), _actor->_features.data(), static_cast<uint32_t>(Feature::COUNT) * sizeof(bool));
 
+    static_cast<QueueValidator *>(_queue)->_inited          = true;
     static_cast<CommandBufferValidator *>(_cmdBuff)->_queue = _queue;
     static_cast<CommandBufferValidator *>(_cmdBuff)->initValidator();
 
@@ -240,11 +241,16 @@ void DeviceValidator::copyBuffersToTexture(const uint8_t *const *buffers, Textur
     auto *textureValidator = static_cast<TextureValidator *>(dst);
     textureValidator->sanityCheck();
 
+    /////////// execute ///////////
+
     _actor->copyBuffersToTexture(buffers, textureValidator->getActor(), regions, count);
 }
 
 void DeviceValidator::copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *regions, uint32_t count) {
     auto *textureValidator = static_cast<TextureValidator *>(src);
+
+    /////////// execute ///////////
+
     _actor->copyTextureToBuffers(textureValidator->getActor(), buffers, regions, count);
 }
 

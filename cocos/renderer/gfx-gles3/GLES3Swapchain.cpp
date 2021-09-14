@@ -111,8 +111,6 @@ void GLES3Swapchain::doDestroy() {
 }
 
 void GLES3Swapchain::doResize(uint32_t width, uint32_t height, SurfaceTransform /*transform*/) {
-    doDestroySurface();
-
     _colorTexture->resize(width, height);
     _depthStencilTexture->resize(width, height);
 

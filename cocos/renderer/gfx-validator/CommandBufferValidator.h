@@ -66,9 +66,11 @@ public:
     uint32_t getNumInstances() const override { return _actor->getNumInstances(); }
     uint32_t getNumTris() const override { return _actor->getNumTris(); }
 
+    inline bool isInited() const { return _inited; }
+    inline bool isCommandsFlushed() const { return _commandsFlushed; }
+
 protected:
     friend class DeviceValidator;
-    friend class QueueValidator;
 
     void initValidator();
 
@@ -81,6 +83,8 @@ protected:
     bool     _insideRenderPass{false};
     bool     _commandsFlushed{false};
     uint32_t _curSubpass{0U};
+
+    bool _inited{false};
 };
 
 } // namespace gfx

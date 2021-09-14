@@ -42,9 +42,13 @@ public:
     void bindTexture(uint32_t binding, Texture *texture, uint32_t index) override;
     void bindSampler(uint32_t binding, Sampler *sampler, uint32_t index) override;
 
+    inline bool isInited() const { return _inited; }
+
 protected:
     void doInit(const DescriptorSetInfo &info) override;
     void doDestroy() override;
+
+    bool _inited{false};
 };
 
 } // namespace gfx

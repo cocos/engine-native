@@ -34,6 +34,7 @@
 #include "RenderPassAgent.h"
 #include "TextureAgent.h"
 #include "base/CoreStd.h"
+#include "base/Utils.h"
 #include "base/job-system/JobSystem.h"
 #include "base/threading/MessageQueue.h"
 #include "base/threading/ThreadSafeLinearAllocator.h"
@@ -143,8 +144,8 @@ void CommandBufferAgent::end() {
 }
 
 void CommandBufferAgent::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, uint32_t stencil, CommandBuffer *const *secondaryCBs, uint32_t secondaryCBCount) {
-    uint32_t attachmentCount = static_cast<uint32_t>(renderPass->getColorAttachments().size());
-    Color *  actorColors     = nullptr;
+    auto   attachmentCount = utils::toUint(renderPass->getColorAttachments().size());
+    Color *actorColors     = nullptr;
     if (attachmentCount) {
         actorColors = _messageQueue->allocate<Color>(attachmentCount);
         memcpy(actorColors, colors, sizeof(Color) * attachmentCount);
