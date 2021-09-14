@@ -299,16 +299,16 @@ PipelineState *CCMTLDevice::createPipelineState() {
     return CC_NEW(CCMTLPipelineState);
 }
 
-GlobalBarrier *CCMTLDevice::createGlobalBarrier(const GlobalBarrierInfo& info) {
-    return new GlobalBarrier(info);
+GlobalBarrier *CCMTLDevice::createGlobalBarrier(const GlobalBarrierInfo& info, uint32_t hash) {
+    return new GlobalBarrier(info, hash);
 }
 
-TextureBarrier *CCMTLDevice::createTextureBarrier(const TextureBarrierInfo& info) {
-    return new TextureBarrier(info);
+TextureBarrier *CCMTLDevice::createTextureBarrier(const TextureBarrierInfo& info, uint32_t hash) {
+    return new TextureBarrier(info, hash);
 }
 
-Sampler *CCMTLDevice::createSampler(const SamplerInfo &info) {
-    return new CCMTLSampler(info);
+Sampler *CCMTLDevice::createSampler(const SamplerInfo &info, uint32_t hash) {
+    return new CCMTLSampler(info, hash);
 }
 
 Swapchain *CCMTLDevice::createSwapchain() {

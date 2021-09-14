@@ -224,16 +224,16 @@ PipelineState *DeviceValidator::createPipelineState() {
     return result;
 }
 
-Sampler *DeviceValidator::createSampler(const SamplerInfo &info) {
-    return _actor->createSampler(info);
+Sampler *DeviceValidator::createSampler(const SamplerInfo &info, uint32_t hash) {
+    return _actor->createSampler(info, hash);
 }
 
-GlobalBarrier *DeviceValidator::createGlobalBarrier(const GlobalBarrierInfo &info) {
-    return _actor->createGlobalBarrier(info);
+GlobalBarrier *DeviceValidator::createGlobalBarrier(const GlobalBarrierInfo &info, uint32_t hash) {
+    return _actor->createGlobalBarrier(info, hash);
 }
 
-TextureBarrier *DeviceValidator::createTextureBarrier(const TextureBarrierInfo &info) {
-    return _actor->createTextureBarrier(info);
+TextureBarrier *DeviceValidator::createTextureBarrier(const TextureBarrierInfo &info, uint32_t hash) {
+    return _actor->createTextureBarrier(info, hash);
 }
 
 void DeviceValidator::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint32_t count) {

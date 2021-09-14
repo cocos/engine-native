@@ -327,16 +327,16 @@ PipelineState *GLES2Device::createPipelineState() {
     return CC_NEW(GLES2PipelineState);
 }
 
-Sampler *GLES2Device::createSampler(const SamplerInfo &info) {
-    return CC_NEW(GLES2Sampler(info));
+Sampler *GLES2Device::createSampler(const SamplerInfo &info, uint32_t hash) {
+    return CC_NEW(GLES2Sampler(info, hash));
 }
 
-GlobalBarrier *GLES2Device::createGlobalBarrier(const GlobalBarrierInfo &info) {
-    return CC_NEW(GlobalBarrier(info));
+GlobalBarrier *GLES2Device::createGlobalBarrier(const GlobalBarrierInfo &info, uint32_t hash) {
+    return CC_NEW(GlobalBarrier(info, hash));
 }
 
-TextureBarrier *GLES2Device::createTextureBarrier(const TextureBarrierInfo &info) {
-    return CC_NEW(TextureBarrier(info));
+TextureBarrier *GLES2Device::createTextureBarrier(const TextureBarrierInfo &info, uint32_t hash) {
+    return CC_NEW(TextureBarrier(info, hash));
 }
 
 void GLES2Device::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint32_t count) {

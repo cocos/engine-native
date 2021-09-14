@@ -76,8 +76,8 @@ void FrameGraph::present(const TextureHandle &input, gfx::Texture *target) {
             gfx::Texture *input = table.getRead(data.input);
             if (input && input != target) {
                 gfx::TextureBlit region;
-                region.srcExtent.width  = target->getWidth();
-                region.srcExtent.height = target->getHeight();
+                region.srcExtent.width  = input->getWidth();
+                region.srcExtent.height = input->getHeight();
                 region.dstExtent.width  = target->getWidth();
                 region.dstExtent.height = target->getHeight();
                 cmdBuff->blitTexture(input, target, &region, 1, gfx::Filter::POINT);

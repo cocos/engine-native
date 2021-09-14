@@ -320,16 +320,16 @@ PipelineState *GLES3Device::createPipelineState() {
     return CC_NEW(GLES3PipelineState);
 }
 
-Sampler *GLES3Device::createSampler(const SamplerInfo &info) {
-    return CC_NEW(GLES3Sampler(info));
+Sampler *GLES3Device::createSampler(const SamplerInfo &info, uint32_t hash) {
+    return CC_NEW(GLES3Sampler(info, hash));
 }
 
-GlobalBarrier *GLES3Device::createGlobalBarrier(const GlobalBarrierInfo &info) {
-    return CC_NEW(GLES3GlobalBarrier(info));
+GlobalBarrier *GLES3Device::createGlobalBarrier(const GlobalBarrierInfo &info, uint32_t hash) {
+    return CC_NEW(GLES3GlobalBarrier(info, hash));
 }
 
-TextureBarrier *GLES3Device::createTextureBarrier(const TextureBarrierInfo &info) {
-    return CC_NEW(TextureBarrier(info));
+TextureBarrier *GLES3Device::createTextureBarrier(const TextureBarrierInfo &info, uint32_t hash) {
+    return CC_NEW(TextureBarrier(info, hash));
 }
 
 void GLES3Device::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint32_t count) {

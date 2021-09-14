@@ -133,9 +133,9 @@ protected:
     virtual PipelineLayout *     createPipelineLayout()                                            = 0;
     virtual PipelineState *      createPipelineState()                                             = 0;
 
-    virtual Sampler *       createSampler(const SamplerInfo &info)               = 0;
-    virtual GlobalBarrier * createGlobalBarrier(const GlobalBarrierInfo &info)   = 0;
-    virtual TextureBarrier *createTextureBarrier(const TextureBarrierInfo &info) = 0;
+    virtual Sampler *       createSampler(const SamplerInfo &info, uint32_t hash)               = 0;
+    virtual GlobalBarrier * createGlobalBarrier(const GlobalBarrierInfo &info, uint32_t hash)   = 0;
+    virtual TextureBarrier *createTextureBarrier(const TextureBarrierInfo &info, uint32_t hash) = 0;
 
     // For context switching between threads
     virtual void bindContext(bool bound) {}
@@ -263,7 +263,7 @@ PipelineState *Device::createPipelineState(const PipelineStateInfo &info) {
 Sampler *Device::getSampler(const SamplerInfo &info) {
     uint32_t hash = gfx::Sampler::computeHash(info);
     if (!_samplers.count(hash)) {
-        _samplers[hash] = createSampler(info);
+        _samplers[hash] = createSampler(info, hash);
     }
     return _samplers[hash];
 }
@@ -271,7 +271,7 @@ Sampler *Device::getSampler(const SamplerInfo &info) {
 GlobalBarrier *Device::getGlobalBarrier(const GlobalBarrierInfo &info) {
     uint32_t hash = gfx::GlobalBarrier::computeHash(info);
     if (!_globalBarriers.count(hash)) {
-        _globalBarriers[hash] = createGlobalBarrier(info);
+        _globalBarriers[hash] = createGlobalBarrier(info, hash);
     }
     return _globalBarriers[hash];
 }
@@ -279,7 +279,7 @@ GlobalBarrier *Device::getGlobalBarrier(const GlobalBarrierInfo &info) {
 TextureBarrier *Device::getTextureBarrier(const TextureBarrierInfo &info) {
     uint32_t hash = gfx::TextureBarrier::computeHash(info);
     if (!_textureBarriers.count(hash)) {
-        _textureBarriers[hash] = createTextureBarrier(info);
+        _textureBarriers[hash] = createTextureBarrier(info, hash);
     }
     return _textureBarriers[hash];
 }
