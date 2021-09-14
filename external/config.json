@@ -1,9 +1,10 @@
 {
-    "version": "v3.4.0-1",
+    "version": "v3.4.0-2",
     "from": {
         "type": "github",
         "owner": "cocos-creator",
         "name": "engine-native-external",
-        "checkout": "v3.4.0-1"
+        "checkout": "v3.4.0-2"
     }
 }
+https://github.com/PatriceJiang/cocos2d-x-lite/blob/3.4.0-v8-warnnings-rebase/external/config.json
