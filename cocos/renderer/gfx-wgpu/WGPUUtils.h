@@ -296,6 +296,31 @@ static WGPUCompareFunction toWGPUCompareFunction(ComparisonFunc compareFunc) {
             return WGPUCompareFunction::WGPUCompareFunction_GreaterEqual;
         case ComparisonFunc::ALWAYS:
             return WGPUCompareFunction::WGPUCompareFunction_Always;
+        default:
+            return WGPUCompareFunction::WGPUCompareFunction_Force32;
+    }
+}
+
+static WGPUStencilOperation toWGPUStencilOperation(StencilOp stencilOp) {
+    switch (stencilOp) {
+        case StencilOp::ZERO:
+            return WGPUStencilOperation::WGPUStencilOperation_Zero;
+        case StencilOp::KEEP:
+            return WGPUStencilOperation::WGPUStencilOperation_Keep;
+        case StencilOp::REPLACE:
+            return WGPUStencilOperation::WGPUStencilOperation_Replace;
+        case StencilOp::INCR:
+            return WGPUStencilOperation::WGPUStencilOperation_IncrementClamp;
+        case StencilOp::DECR:
+            return WGPUStencilOperation::WGPUStencilOperation_DecrementClamp;
+        case StencilOp::INVERT:
+            return WGPUStencilOperation::WGPUStencilOperation_Invert;
+        case StencilOp::INCR_WRAP:
+            return WGPUStencilOperation::WGPUStencilOperation_IncrementWrap;
+        case StencilOp::DECR_WRAP:
+            return WGPUStencilOperation::WGPUStencilOperation_DecrementWrap;
+        default:
+            return WGPUStencilOperation::WGPUStencilOperation_Force32;
     }
 }
 
@@ -369,6 +394,154 @@ static WGPUBufferUsageFlags toWGPUBufferUsage(BufferUsageBit usage) {
         default:
             return WGPUBufferUsage_Force32;
     }
+}
+
+static WGPUColor toWGPUColor(Color color) {
+    return WGPUColor{color.x, color.y, color.z, color.w};
+}
+
+static WGPUVertexFormat toWGPUVertexFormat(Format format) {
+    switch (format) {
+        case Format::UNKNOWN:
+            return WGPUVertexFormat_Undefined;
+        case Format::RG8:
+            return WGPUVertexFormat_Unorm8x2;
+        case Format::RG8UI:
+            return WGPUVertexFormat_Uint8x2;
+        case Format::RG8I:
+            return WGPUVertexFormat_Sint8x2;
+        case Format::RG8SN:
+            return WGPUVertexFormat_Snorm8x2;
+        case Format::RGBA8:
+        case Format::BGRA8:
+            return WGPUVertexFormat_Unorm8x4;
+        case Format::RGBA8UI:
+            return WGPUVertexFormat_Uint8x4;
+        case Format::SRGB8_A8:
+        case Format::RGBA8I:
+            return WGPUVertexFormat_Sint8x4;
+        case Format::RGBA8SN:
+            return WGPUVertexFormat_Snorm8x4;
+        case Format::RG16UI:
+            return WGPUVertexFormat_Uint16x2;
+        case Format::RGBA16UI:
+            return WGPUVertexFormat_Uint16x4;
+        case Format::RG16I:
+            return WGPUVertexFormat_Sint16x2;
+        case Format::RGBA16I:
+            return WGPUVertexFormat_Sint16x4;
+        case Format::RG16F:
+            return WGPUVertexFormat_Float16x2;
+        case Format::RGBA16F:
+            return WGPUVertexFormat_Float16x4;
+        case Format::R32F:
+            return WGPUVertexFormat_Float32;
+        case Format::RG32F:
+            return WGPUVertexFormat_Float32x2;
+        case Format::RGB32F:
+            return WGPUVertexFormat_Float32x3;
+        case Format::RGBA32F:
+            return WGPUVertexFormat_Float32x4;
+        case Format::R32UI:
+            return WGPUVertexFormat_Uint32;
+        case Format::RG32UI:
+            return WGPUVertexFormat_Uint32x2;
+        case Format::RGB32UI:
+            return WGPUVertexFormat_Uint32x3;
+        case Format::RGBA32UI:
+            return WGPUVertexFormat_Uint32x4;
+        case Format::R32I:
+            return WGPUVertexFormat_Sint32;
+        case Format::RG32I:
+            return WGPUVertexFormat_Sint32x2;
+        case Format::RGB32I:
+            return WGPUVertexFormat_Sint32x3;
+        case Format::RGBA32I:
+            return WGPUVertexFormat_Sint32x4;
+        default:
+            CC_LOG_ERROR("unsupport vertex format.");
+    }
+}
+
+static WGPUPrimitiveTopology toWGPUPrimTopology(PrimitiveMode mode) {
+    switch (mode) {
+        case PrimitiveMode::POINT_LIST:
+            return WGPUPrimitiveTopology_PointList;
+        case PrimitiveMode::LINE_LIST:
+            return WGPUPrimitiveTopology_LineList;
+        case PrimitiveMode::LINE_STRIP:
+            return WGPUPrimitiveTopology_LineStrip;
+        case PrimitiveMode::TRIANGLE_LIST:
+            return WGPUPrimitiveTopology_TriangleList;
+        case PrimitiveMode::TRIANGLE_STRIP:
+            return WGPUPrimitiveTopology_TriangleStrip;
+        default:
+            CC_LOG_ERROR("unsupport primitive topology.");
+            return WGPUPrimitiveTopology_Force32;
+    }
+}
+
+static WGPUBlendOperation toWGPUBlendOperation(BlendOp blendOp) {
+    switch (blendOp) {
+        case BlendOp::ADD:
+            return WGPUBlendOperation::WGPUBlendOperation_Add;
+        case BlendOp::SUB:
+            return WGPUBlendOperation::WGPUBlendOperation_Subtract;
+        case BlendOp::REV_SUB:
+            return WGPUBlendOperation::WGPUBlendOperation_ReverseSubtract;
+        case BlendOp::MIN:
+            return WGPUBlendOperation::WGPUBlendOperation_Min;
+        case BlendOp::MAX:
+            return WGPUBlendOperation::WGPUBlendOperation_Max;
+    }
+}
+
+static WGPUBlendFactor toWGPUBlendFactor(BlendFactor blendFactor) {
+    switch (blendFactor) {
+        case BlendFactor::ZERO:
+            return WGPUBlendFactor::WGPUBlendFactor_Zero;
+        case BlendFactor::ONE:
+            return WGPUBlendFactor::WGPUBlendFactor_One;
+        case BlendFactor::SRC_ALPHA:
+            return WGPUBlendFactor::WGPUBlendFactor_SrcAlpha;
+        case BlendFactor::DST_ALPHA:
+            return WGPUBlendFactor::WGPUBlendFactor_DstAlpha;
+        case BlendFactor::ONE_MINUS_SRC_ALPHA:
+            return WGPUBlendFactor::WGPUBlendFactor_OneMinusSrcAlpha;
+        case BlendFactor::ONE_MINUS_DST_ALPHA:
+            return WGPUBlendFactor::WGPUBlendFactor_OneMinusDstAlpha;
+        case BlendFactor::SRC_COLOR:
+            return WGPUBlendFactor::WGPUBlendFactor_Src;
+        case BlendFactor::DST_COLOR:
+            return WGPUBlendFactor::WGPUBlendFactor_Dst;
+        case BlendFactor::ONE_MINUS_SRC_COLOR:
+            return WGPUBlendFactor::WGPUBlendFactor_OneMinusSrc;
+        case BlendFactor::ONE_MINUS_DST_COLOR:
+            return WGPUBlendFactor::WGPUBlendFactor_OneMinusDst;
+        case BlendFactor::SRC_ALPHA_SATURATE:
+            return WGPUBlendFactor::WGPUBlendFactor_SrcAlphaSaturated;
+        case BlendFactor::CONSTANT_COLOR:
+            return WGPUBlendFactor::WGPUBlendFactor_Constant;
+        case BlendFactor::ONE_MINUS_CONSTANT_COLOR:
+            return WGPUBlendFactor::WGPUBlendFactor_OneMinusConstant;
+        default:
+            CC_LOG_ERROR("unsupport blend factor config.");
+            return WGPUBlendFactor::WGPUBlendFactor_Force32;
+    }
+}
+
+static WGPUFlags toWGPUColorWriteMask(ColorMask mask) {
+    WGPUFlags result = WGPUColorWriteMask_None;
+    if (mask == ColorMask::NONE) {
+        return result;
+    }
+
+    if (mask & ColorMask::ALL || mask & ColorMask::R) result |= WGPUColorWriteMask::WGPUColorWriteMask_Red;
+    if (mask & ColorMask::ALL || mask & ColorMask::G) result |= WGPUColorWriteMask::WGPUColorWriteMask_Green;
+    if (mask & ColorMask::ALL || mask & ColorMask::B) result |= WGPUColorWriteMask::WGPUColorWriteMask_Blue;
+    if (mask & ColorMask::ALL || mask & ColorMask::A) result |= WGPUColorWriteMask::WGPUColorWriteMask_Alpha;
+
+    return result;
 }
 
 static constexpr WGPUColor defaultClearColor{0.2, 0.2, 0.2, 1.0};

@@ -37,7 +37,7 @@ public:
     CCWGPUPipelineLayout();
     ~CCWGPUPipelineLayout() = default;
 
-    inline CCWGPUPipelineLayoutObject* gpuPipelineLayoutObj() { return _gpuPipelineLayoutObj; }
+    inline CCWGPUPipelineLayoutObject* gpuPipelineLayoutObject() { return _gpuPipelineLayoutObj; }
 
 protected:
     void doInit(const PipelineLayoutInfo& info) override;

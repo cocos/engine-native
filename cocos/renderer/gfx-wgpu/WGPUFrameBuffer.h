@@ -30,14 +30,20 @@
 namespace cc {
 namespace gfx {
 
+class CCWGPUSwapchain;
+
 class CCWGPUFramebuffer final : public emscripten::wrapper<Framebuffer> {
 public:
     CCWGPUFramebuffer();
     ~CCWGPUFramebuffer() = default;
 
+    inline CCWGPUSwapchain* swapchain() { return _swapchain; }
+
 protected:
-    void doInit(const FramebufferInfo &info) override;
+    void doInit(const FramebufferInfo& info) override;
     void doDestroy() override;
+
+    CCWGPUSwapchain* _swapchain = nullptr;
 };
 
 } // namespace gfx

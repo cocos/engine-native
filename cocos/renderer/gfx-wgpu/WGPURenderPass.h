@@ -40,6 +40,8 @@ public:
     CCWGPURenderPass();
     ~CCWGPURenderPass() = default;
 
+    inline CCWGPURenderPassObject* gpuRenderPassObject() { return _renderPassObject; }
+
 protected:
     void doInit(const RenderPassInfo& info) override;
     void doDestroy() override;

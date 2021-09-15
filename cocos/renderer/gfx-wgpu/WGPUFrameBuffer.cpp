@@ -24,6 +24,7 @@
 ****************************************************************************/
 
 #include "WGPUFrameBuffer.h"
+#include "WGPUTexture.h"
 
 using namespace emscripten;
 namespace cc {
@@ -32,10 +33,22 @@ namespace gfx {
 CCWGPUFramebuffer::CCWGPUFramebuffer() : wrapper<Framebuffer>(val::object()) {
 }
 
-void CCWGPUFramebuffer::doInit(const FramebufferInfo &info) {
-    _renderPass          = info.renderPass;
-    _colorTextures       = info.colorTextures;
-    _depthStencilTexture = info.depthStencilTexture;
+void CCWGPUFramebuffer::doInit(const FramebufferInfo& info) {
+    for (auto* tex : info.colorTextures) {
+        auto*            ccTex     = static_cast<CCWGPUTexture*>(tex);
+        CCWGPUSwapchain* swapchain = ccTex->swapchain();
+        if (swapchain) {
+            _swapchain = swapchain;
+            break;
+        }
+    }
+
+    if (_depthStencilTexture) {
+        CCWGPUSwapchain* swapchain = static_cast<CCWGPUTexture*>(_depthStencilTexture)->swapchain();
+        if (swapchain) {
+            _swapchain = swapchain;
+        }
+    }
 }
 
 void CCWGPUFramebuffer::doDestroy() {
