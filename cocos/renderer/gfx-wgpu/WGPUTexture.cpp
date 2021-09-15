@@ -148,5 +148,9 @@ CCWGPUTexture *CCWGPUTexture::defaultTexture() {
     return anoymous::defaultTexture;
 }
 
+CCWGPUSwapchain *CCWGPUTexture::swapchain() {
+    return static_cast<CCWGPUSwapchain *>(_swapchain);
+}
+
 } // namespace gfx
 } // namespace cc

@@ -31,6 +31,7 @@ namespace cc {
 namespace gfx {
 
 struct CCWGPUTextureObject;
+class CCWGPUSwapchain;
 
 class CCWGPUTexture final : public emscripten::wrapper<Texture> {
 public:
@@ -41,6 +42,8 @@ public:
     inline CCWGPUTextureObject* gpuTextureObject() { return _gpuTextureObj; }
 
     static CCWGPUTexture* defaultTexture();
+
+    CCWGPUSwapchain* swapchain();
 
 protected:
     void doInit(const TextureInfo& info) override;

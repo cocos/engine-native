@@ -43,7 +43,7 @@ constexpr decltype(nullptr) wgpuDefaultHandle = nullptr;
 class CCWGPUTexture;
 class CCWGPUBuffer;
 class CCWGPUSampler;
-
+class CCWGPUQueue;
 struct CCWGPUResource {
     CCWGPUTexture* texture = nullptr;
     CCWGPUBuffer*  buffer  = nullptr;
@@ -67,9 +67,9 @@ struct CCWGPUSwapchainObject {
 };
 
 struct CCWGPURenderPassObject {
-    RenderPassInfo info;
-    String         label;
-
+    RenderPassInfo            info;
+    String                    label;
+    uint8_t                   sampleCount        = 1;
     WGPURenderPassDescriptor* wgpuRenderPassDesc = wgpuDefaultHandle;
 };
 
@@ -112,8 +112,34 @@ struct CCWGPUPipelineLayoutObject {
     WGPUPipelineLayout wgpuPipelineLayout = wgpuDefaultHandle;
 };
 
+struct CCWGPUPipelineStateObject {
+    WGPURenderPipeline  wgpuRenderPipeline  = wgpuDefaultHandle;
+    WGPUComputePipeline wgpuComputePipeline = wgpuDefaultHandle;
+};
+
 struct CCWGPUShaderObject {
-    WGPUShaderModule wgpuShaderModule = wgpuDefaultHandle;
+    WGPUShaderModule wgpuShaderVertexModule   = wgpuDefaultHandle;
+    WGPUShaderModule wgpuShaderFragmentModule = wgpuDefaultHandle;
+    WGPUShaderModule wgpuShaderComputeModule  = wgpuDefaultHandle;
+};
+
+struct CCWGPUInputAssemblerObject {
+    WGPUVertexState wgpuVertexState;
+};
+
+struct CCWGPUQueueObject {
+    WGPUQueue wgpuQueue = wgpuDefaultHandle;
+    QueueType type      = QueueType::GRAPHICS;
+};
+
+struct CCWGPUCommandBufferObject {
+    WGPURenderPassDescriptor renderPassDescriptor;
+    WGPUCommandBuffer        wgpuCommandBuffer     = wgpuDefaultHandle;
+    WGPUCommandEncoder       wgpuCommandEncoder    = wgpuDefaultHandle;
+    WGPURenderPassEncoder    wgpuRenderPassEncoder = wgpuDefaultHandle;
+    WGPUComputePassEncoder   wgpuComputeEncoder    = wgpuDefaultHandle;
+    CommandBufferType        type                  = CommandBufferType::PRIMARY;
+    CCWGPUQueue*             queue                 = nullptr;
 };
 
 } // namespace gfx

@@ -58,6 +58,8 @@ public:
         renderPassDesc->colorAttachmentCount   = info.colorAttachments.size();
         renderPassDesc->colorAttachments       = colors.data();
         renderPassDesc->depthStencilAttachment = depthStencils.data();
+
+        sampleCount = info.depthStencilAttachment.sampleCount == SampleCount::ONE ? 1 : 2 << static_cast<uint32_t>(info.depthStencilAttachment.sampleCount);
     }
 
     ~CCWGPURenderPassHelper() {
@@ -70,6 +72,7 @@ public:
     std::array<WGPURenderPassColorAttachment, CC_WGPU_MAX_ATTACHMENTS>        colors;
     std::array<WGPURenderPassDepthStencilAttachment, CC_WGPU_MAX_ATTACHMENTS> depthStencils;
     WGPURenderPassDescriptor*                                                 renderPassDesc = nullptr;
+    int                                                                       sampleCount    = 1;
 };
 
 CCWGPURenderPass::CCWGPURenderPass() : wrapper<RenderPass>(val::object()) {
@@ -79,6 +82,7 @@ void CCWGPURenderPass::doInit(const RenderPassInfo& info) {
     _renderPassObject                     = new CCWGPURenderPassObject();
     _rpHelper                             = new CCWGPURenderPassHelper(info);
     _renderPassObject->wgpuRenderPassDesc = _rpHelper->renderPassDesc;
+    _renderPassObject->sampleCount        = _rpHelper->sampleCount;
 }
 
 void CCWGPURenderPass::doDestroy() {

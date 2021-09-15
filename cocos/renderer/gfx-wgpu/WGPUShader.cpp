@@ -66,14 +66,29 @@ void CCWGPUShader::doInit(const ShaderInfo& info) {
         desc.nextInChain                    = reinterpret_cast<WGPUChainedStruct*>(&spv);
         desc.label                          = nullptr;
 
-        _gpuShaderObject->wgpuShaderModule = wgpuDeviceCreateShaderModule(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &desc);
+        if (stage.stage == ShaderStageFlagBit::VERTEX) {
+            _gpuShaderObject->wgpuShaderVertexModule = wgpuDeviceCreateShaderModule(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &desc);
+
+        } else if (stage.stage == ShaderStageFlagBit::FRAGMENT) {
+            _gpuShaderObject->wgpuShaderFragmentModule = wgpuDeviceCreateShaderModule(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &desc);
+        } else if (stage.stage == ShaderStageFlagBit::COMPUTE) {
+            _gpuShaderObject->wgpuShaderComputeModule = wgpuDeviceCreateShaderModule(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &desc);
+        } else {
+            CC_LOG_ERROR("unsupport shader stage.");
+        }
     }
 }
 
 void CCWGPUShader::doDestroy() {
     if (_gpuShaderObject) {
-        if (_gpuShaderObject->wgpuShaderModule) {
-            wgpuShaderModuleRelease(_gpuShaderObject->wgpuShaderModule);
+        if (_gpuShaderObject->wgpuShaderVertexModule) {
+            wgpuShaderModuleRelease(_gpuShaderObject->wgpuShaderVertexModule);
+        }
+        if (_gpuShaderObject->wgpuShaderFragmentModule) {
+            wgpuShaderModuleRelease(_gpuShaderObject->wgpuShaderFragmentModule);
+        }
+        if (_gpuShaderObject->wgpuShaderComputeModule) {
+            wgpuShaderModuleRelease(_gpuShaderObject->wgpuShaderComputeModule);
         }
         CC_DELETE(_gpuShaderObject);
     }
