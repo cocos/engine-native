@@ -44,6 +44,12 @@ CCWGPUBuffer::CCWGPUBuffer() : wrapper<Buffer>(val::object()) {
 void CCWGPUBuffer::doInit(const BufferInfo &info) {
     _gpuBufferObject = CC_NEW(CCWGPUBufferObject);
 
+    if (hasFlag(_usage, BufferUsageBit::INDIRECT)) {
+        size_t drawInfoCount = _size / sizeof(DrawInfo);
+        _gpuBufferObject->indexedIndirectObjs.resize(drawInfoCount);
+        _gpuBufferObject->indirectObjs.resize(drawInfoCount);
+    }
+
     WGPUBufferDescriptor descriptor = {
         .nextInChain      = nullptr,
         .label            = nullptr,
@@ -75,6 +81,12 @@ void CCWGPUBuffer::doResize(uint size, uint count) {
     }
     if (_gpuBufferObject->wgpuBuffer) {
         wgpuBufferDestroy(_gpuBufferObject->wgpuBuffer);
+    }
+
+    if (hasFlag(_usage, BufferUsageBit::INDIRECT)) {
+        const size_t drawInfoCount = _size / sizeof(DrawInfo);
+        _gpuBufferObject->indexedIndirectObjs.resize(drawInfoCount);
+        _gpuBufferObject->indirectObjs.resize(drawInfoCount);
     }
 
     WGPUBufferDescriptor descriptor = {
@@ -112,6 +124,35 @@ void CCWGPUBuffer::update(const void *buffer, uint size) {
     //     memcpy(mappedBuffer, buffer, size);
     //     wgpuBufferMapAsync(mappedBuffer, WGPUMapMode_Write, 0, size, bufferUpdateCallback, mappedBuffer);
     // }
+
+    if (hasFlag(_usage, BufferUsageBit::INDIRECT)) {
+        size_t          drawInfoCount = size / (sizeof(DrawInfo));
+        const DrawInfo *drawInfos     = static_cast<const DrawInfo *>(buffer);
+
+        if (drawInfoCount > 0) {
+            if (drawInfos[0].indexCount) {
+                auto &indexedIndirectObjs = _gpuBufferObject->indexedIndirectObjs;
+                for (size_t i = 0; i < drawInfoCount; i++) {
+                    indexedIndirectObjs[i].indexCount    = drawInfos[i].indexCount;
+                    indexedIndirectObjs[i].instanceCount = drawInfos[i].instanceCount /*  ? drawInfos[i]->instanceCoun : 1 */;
+                    indexedIndirectObjs[i].firstIndex    = drawInfos[i].firstIndex;
+                    indexedIndirectObjs[i].baseVertex    = drawInfos[i].vertexOffset;
+                    indexedIndirectObjs[i].firstInstance = 0; //check definition of indexedIndirectObj;
+                    drawInfos++;
+                }
+            } else {
+                auto &indirectObjs = _gpuBufferObject->indirectObjs;
+                for (size_t i = 0; i < drawInfoCount; i++) {
+                    indirectObjs[i].vertexCount   = drawInfos[i].vertexCount;
+                    indirectObjs[i].instanceCount = drawInfos[i].instanceCount;
+                    indirectObjs[i].firstIndex    = drawInfos[i].firstIndex;
+                    indirectObjs[i].firstInstance = 0; // check definition of indirectObj;
+                    drawInfos++;
+                }
+            }
+        }
+    }
+
     size_t offset = _isBufferView ? _offset : 0;
     wgpuQueueWriteBuffer(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuQueue, _gpuBufferObject->wgpuBuffer, offset, buffer, size);
 }
