@@ -51,8 +51,8 @@ namespace scene {
 /**
  * OctreeNode class
  */
-OctreeNode::OctreeNode(Octree* owner, OctreeNode* parent, const BBox& aabb, uint32_t depth, uint32_t index)
-: _owner(owner), _parent(parent), _aabb(aabb), _depth(depth), _index(index) {
+OctreeNode::OctreeNode(Octree* owner, OctreeNode* parent, BBox aabb, uint32_t depth, uint32_t index)
+: _owner(owner), _parent(parent), _aabb(std::move(aabb)), _depth(depth), _index(index) {
 }
 
 OctreeNode::~OctreeNode() {
@@ -153,11 +153,11 @@ void OctreeNode::remove(Model* model) {
 
 void OctreeNode::onRemoved() {
     // delete empty node
-    if (_models.size() > 0) {
+    if (!_models.empty()) {
         return;
     }
 
-    for (auto child : _children) {
+    for (auto *child : _children) {
         if (child) {
             return;
         }
@@ -172,11 +172,11 @@ void OctreeNode::onRemoved() {
 }
 
 void OctreeNode::gatherModels(std::vector<Model*>& results) const {
-    for (auto model : _models) {
+    for (auto *model : _models) {
         results.push_back(model);
     }
 
-    for (auto child : _children) {
+    for (auto *child : _children) {
         if (child) {
             child->gatherModels(results);
         }
@@ -185,7 +185,7 @@ void OctreeNode::gatherModels(std::vector<Model*>& results) const {
 
 void OctreeNode::doQueryVisibility(const Camera* camera, const Frustum& frustum, bool isShadow, std::vector<Model*>& results) const {
     const auto visibility = camera->visibility;
-    for (auto model : _models) {
+    for (auto *model : _models) {
         if (!model->getEnabled()) {
             continue;
         }
@@ -249,7 +249,7 @@ void OctreeNode::queryVisibilitySequentially(const Camera* camera, const Frustum
     doQueryVisibility(camera, frustum, isShadow, results);
 
     // query recursively.
-    for (auto child : _children) {
+    for (auto *child : _children) {
         if (child) {
             child->queryVisibilitySequentially(camera, frustum, isShadow, results);
         }
@@ -281,7 +281,7 @@ void Octree::resize(const Vec3& minPos, const Vec3& maxPos, uint32_t maxDepth) {
     _root     = new OctreeNode(this, nullptr, BBox(minPos, maxPos), 0, 0);
     _maxDepth = std::max(maxDepth, 1U);
 
-    for (auto model : models) {
+    for (auto *model : models) {
         model->setOctreeNode(nullptr);
         insert(model);
     }

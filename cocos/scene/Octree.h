@@ -40,8 +40,8 @@ class Octree;
 
 constexpr int OCTREE_CHILDREN_NUM   = 8;
 constexpr int DEFAULT_OCTREE_DEPTH  = 8;
-const Vec3    DEFAULT_WORLD_MIN_POS = {-1124.0f, -1124.0f, -1124.0f};
-const Vec3    DEFAULT_WORLD_MAX_POS = {1024.0f, 1024.0f, 1024.0f};
+const Vec3    DEFAULT_WORLD_MIN_POS = {-1124.0F, -1124.0F, -1124.0F};
+const Vec3    DEFAULT_WORLD_MAX_POS = {1024.0F, 1024.0F, 1024.0F};
 constexpr int USE_MULTI_THRESHOLD   = 1024; // use parallel culling if greater than this value
 
 // Axis aligned bounding box
@@ -58,7 +58,7 @@ struct CC_DLL BBox {
     }
 
     inline cc::Vec3 getCenter() const {
-        return (min + max) * 0.5f;
+        return (min + max) * 0.5F;
     }
 
     inline bool operator==(const BBox& box) const {
@@ -66,13 +66,9 @@ struct CC_DLL BBox {
     }
 
     inline bool contain(const cc::Vec3& point) const {
-        if (point.x > max.x || point.x < min.x ||
+        return !(point.x > max.x || point.x < min.x ||
             point.y > max.y || point.y < min.y ||
-            point.z > max.z || point.z < min.z) {
-            return false;
-        }
-
-        return true;
+            point.z > max.z || point.z < min.z);
     }
 
     inline bool contain(const BBox& box) const {
@@ -85,7 +81,7 @@ struct CC_DLL BBox {
  */
 class CC_DLL OctreeNode {
 private:
-    OctreeNode(Octree* owner, OctreeNode* parent, const BBox& aabb, uint32_t depth, uint32_t index);
+    OctreeNode(Octree* owner, OctreeNode* parent, BBox aabb, uint32_t depth, uint32_t index);
     ~OctreeNode();
 
     Octree*     getOwner() const { return _owner; }
@@ -118,7 +114,7 @@ private:
  */
 class CC_DLL Octree {
 public:
-    Octree(const Vec3& minPos = DEFAULT_WORLD_MIN_POS, const Vec3& maxPos = DEFAULT_WORLD_MAX_POS, uint32_t maxDepth = DEFAULT_OCTREE_DEPTH);
+    explicit Octree(const Vec3& minPos = DEFAULT_WORLD_MIN_POS, const Vec3& maxPos = DEFAULT_WORLD_MAX_POS, uint32_t maxDepth = DEFAULT_OCTREE_DEPTH);
     ~Octree();
 
     // reinsert all models in the tree when you change the aabb or max depth in editor

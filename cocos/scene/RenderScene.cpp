@@ -127,7 +127,7 @@ void RenderScene::removeModel(uint32_t idx) {
 }
 
 void RenderScene::removeModels() {
-    for (auto model : _models) {
+    for (auto *model : _models) {
         _octree->remove(model);
         model->setScene(nullptr);
     }

@@ -60,7 +60,7 @@ int64_t Timer::getMilliseconds() {
 
 float Timer::getSeconds() {
     int64_t msecs = getMilliseconds();
-    return static_cast<float>(msecs) / 1000.0f;
+    return static_cast<float>(msecs) / 1000.0F;
 }
 
 } // namespace utils

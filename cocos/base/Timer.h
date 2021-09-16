@@ -38,7 +38,7 @@ public:
     using Clock     = std::chrono::high_resolution_clock;
     using TimePoint = Clock::time_point;
 
-    Timer(bool doReset = true);
+    explicit Timer(bool doReset = true);
 
     void    reset();
     int64_t getMicroseconds();
