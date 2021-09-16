@@ -120,5 +120,25 @@ private:
     DescriptorSetLayoutBinding dsBinding;
 };
 
+class PipelineStateInfoInstance {
+public:
+    inline void setShader(Shader* shader) { info.shader = shader; }
+    inline void setPipelineLayout(PipelineLayout* pipelineLayout) { info.pipelineLayout = pipelineLayout; }
+    inline void setRenderPass(RenderPass* renderPass) { info.renderPass = renderPass; }
+    inline void setInputState(InputState* inputState) { info.inputState = inputState; }
+    inline void setRasterizerState(RasterizerState* rasterizerState) { info.rasterizerState = rasterizerState; }
+    inline void setDepthStencilState(DepthStencilState* depthStencilState) { info.depthStencilState = depthStencilState; }
+    inline void setBlendState(BlendState* blendState) { info.blendState = blendState; }
+    inline void setPrimitiveMode(PrimitiveMode* primitive) { info.primitive = primitive; }
+    inline void setDynamicStateFlags(DynamicStateFlags* dynamicStates) { info.dynamicStates = dynamicStates; }
+    inline void setPipelineBindPoint(PipelineBindPoint* bindPoint) { info.bindPoint = bindPoint; }
+    inline void setSubpass(uint32_t subpass) { info.subpass = subpass; }
+
+    explicit operator const PipelineStateInfo() const { return info; }
+
+private:
+    PipelineStateInfo info;
+}
+
 } // namespace gfx
 } // namespace cc

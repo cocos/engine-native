@@ -241,6 +241,41 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .value("SUBPASS_INPUT", Type::SUBPASS_INPUT)
         .value("COUNT", Type::COUNT);
 
+    enum_<PolygonMode>("PolygonMode")
+        .value("FILL", PolygonMode::FILL)
+        .value("POINT", PolygonMode::POINT)
+        .value("LINE", PolygonMode::LINE);
+
+    enum_<ShadeModel>("ShadeModel")
+        .value("GOURAND", ShadeModel::GOURAND)
+        .value("FLAT", ShadeModel::FLAT);
+
+    enum_<CullMode>("CullMode")
+        .value("NONE", CullMode::NONE)
+        .value("FRONT", CullMode::FRONT)
+        .value("BACK", CullMode::BACK);
+
+    // enum class StencilOp : uint32_t {
+    //     ZERO,
+    //     KEEP,
+    //     REPLACE,
+    //     INCR,
+    //     DECR,
+    //     INVERT,
+    //     INCR_WRAP,
+    //     DECR_WRAP,
+    // };
+    enum_<StencilOp>("StencilOp")
+        .value("NONE", CullMode::NONE)
+        .value("FRONT", CullMode::FRONT)
+        .value("BACK", CullMode::BACK)
+        .value("NONE", CullMode::NONE)
+        .value("FRONT", CullMode::FRONT)
+        .value("BACK", CullMode::BACK)
+        .value("NONE", CullMode::NONE)
+        .value("FRONT", CullMode::FRONT)
+        .value("BACK", CullMode::BACK);
+
     //-----------------------------------------------STRUCT-------------------------------------------------------------------
     value_object<ColorAttachment>("ColorAttachment")
         .field("format", &ColorAttachment::format)
@@ -448,20 +483,63 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .field("imsubpassInputsages", &ShaderInfo::subpassInputs);
     function("ShaderInfoInstance", &GenInstance<ShaderInfo>::instance);
 
-    // struct with pointers
-    class_<TextureInfoInstance>("TextureInfoInstance")
-        .constructor<>()
-        .function("setType", &TextureInfoInstance::setType)
-        .function("setUsage", &TextureInfoInstance::setUsage)
-        .function("setFormat", &TextureInfoInstance::setFormat)
-        .function("setWidth", &TextureInfoInstance::setWidth)
-        .function("setHeight", &TextureInfoInstance::setHeight)
-        .function("setFlags", &TextureInfoInstance::setFlags)
-        .function("setLevelCount", &TextureInfoInstance::setLevelCount)
-        .function("setLayerCount", &TextureInfoInstance::setLayerCount)
-        .function("setSamples", &TextureInfoInstance::setSamples)
-        .function("setDepth", &TextureInfoInstance::setDepth)
-        .function("setImageBuffer", &TextureInfoInstance::setImageBuffer, allow_raw_pointer<arg<0>>());
+    value_object<InputState>("InputState")
+        .field("attributes", &InputState::attributes);
+    function("InputStateInstance", &GenInstance<InputState>::instance);
+
+    value_object<RasterizerState>("RasterizerState")
+        .field("isDiscard", &RasterizerState::isDiscard)
+        .field("polygonMode", &RasterizerState::polygonMode)
+        .field("shadeModel", &RasterizerState::shadeModel)
+        .field("cullMode", &RasterizerState::cullMode)
+        .field("isFrontFaceCCW", &RasterizerState::isFrontFaceCCW)
+        .field("depthBiasEnabled", &RasterizerState::depthBiasEnabled)
+        .field("depthBias", &RasterizerState::depthBias)
+        .field("depthBiasClamp", &RasterizerState::depthBiasClamp)
+        .field("depthBiasSlop", &RasterizerState::depthBiasSlop)
+        .field("isDepthClip", &RasterizerState::isDepthClip)
+        .field("isMultisample", &RasterizerState::isMultisample)
+        .field("lineWidth", &RasterizerState::lineWidth);
+    function("RasterizerStateInstance", &GenInstance<RasterizerState>::instance);
+
+    // struct DepthStencilState {
+    //     uint32_t       depthTest{1U};
+    //     uint32_t       depthWrite{1U};
+    //     ComparisonFunc depthFunc{ComparisonFunc::LESS};
+    //     uint32_t       stencilTestFront{0U};
+    //     ComparisonFunc stencilFuncFront{ComparisonFunc::ALWAYS};
+    //     uint32_t       stencilReadMaskFront{0xffffffffU};
+    //     uint32_t       stencilWriteMaskFront{0xffffffffU};
+    //     StencilOp      stencilFailOpFront{StencilOp::KEEP};
+    //     StencilOp      stencilZFailOpFront{StencilOp::KEEP};
+    //     StencilOp      stencilPassOpFront{StencilOp::KEEP};
+    //     uint32_t       stencilRefFront{1U};
+    //     uint32_t       stencilTestBack{0U};
+    //     ComparisonFunc stencilFuncBack{ComparisonFunc::ALWAYS};
+    //     uint32_t       stencilReadMaskBack{0xffffffffU};
+    //     uint32_t       stencilWriteMaskBack{0xffffffffU};
+    //     StencilOp      stencilFailOpBack{StencilOp::KEEP};
+    //     StencilOp      stencilZFailOpBack{StencilOp::KEEP};
+    //     StencilOp      stencilPassOpBack{StencilOp::KEEP};
+    //     uint32_t       stencilRefBack{1U};
+    // };
+
+    value_object<DepthStencilState>("DepthStencilState")
+
+        // struct with pointers
+        class_<TextureInfoInstance>("TextureInfoInstance")
+            .constructor<>()
+            .function("setType", &TextureInfoInstance::setType)
+            .function("setUsage", &TextureInfoInstance::setUsage)
+            .function("setFormat", &TextureInfoInstance::setFormat)
+            .function("setWidth", &TextureInfoInstance::setWidth)
+            .function("setHeight", &TextureInfoInstance::setHeight)
+            .function("setFlags", &TextureInfoInstance::setFlags)
+            .function("setLevelCount", &TextureInfoInstance::setLevelCount)
+            .function("setLayerCount", &TextureInfoInstance::setLayerCount)
+            .function("setSamples", &TextureInfoInstance::setSamples)
+            .function("setDepth", &TextureInfoInstance::setDepth)
+            .function("setImageBuffer", &TextureInfoInstance::setImageBuffer, allow_raw_pointer<arg<0>>());
 
     class_<TextureViewInfoInstance>("TextureViewInfoInstance")
         .constructor<>()
