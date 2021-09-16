@@ -103,7 +103,7 @@ void OctreeNode::deleteChild(uint32_t index) {
     }
 }
 
-void OctreeNode::insert(Model* model) {
+void OctreeNode::insert(Model* model) { // NOLINT(misc-no-recursion)
     bool split = false;
     if (_depth < _owner->getMaxDepth() - 1) {
         BBox            modelBox    = BBox(*model->getWorldBounds());
@@ -151,7 +151,7 @@ void OctreeNode::remove(Model* model) {
     onRemoved();
 }
 
-void OctreeNode::onRemoved() {
+void OctreeNode::onRemoved() { // NOLINT(misc-no-recursion)
     // delete empty node
     if (!_models.empty()) {
         return;
@@ -171,7 +171,7 @@ void OctreeNode::onRemoved() {
     }
 }
 
-void OctreeNode::gatherModels(std::vector<Model*>& results) const {
+void OctreeNode::gatherModels(std::vector<Model*>& results) const { // NOLINT(misc-no-recursion)
     for (auto *model : _models) {
         results.push_back(model);
     }
@@ -239,7 +239,7 @@ void OctreeNode::queryVisibilityParallelly(const Camera* camera, const Frustum& 
     }
 }
 
-void OctreeNode::queryVisibilitySequentially(const Camera* camera, const Frustum& frustum, bool isShadow, std::vector<Model*>& results) const {
+void OctreeNode::queryVisibilitySequentially(const Camera* camera, const Frustum& frustum, bool isShadow, std::vector<Model*>& results) const { // NOLINT(misc-no-recursion)
     AABB box;
     AABB::fromPoints(_aabb.min, _aabb.max, &box);
     if (!box.aabbFrustum(frustum)) {
