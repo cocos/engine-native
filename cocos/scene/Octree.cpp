@@ -61,7 +61,7 @@ OctreeNode::~OctreeNode() {
     }
 }
 
-BBox OctreeNode::getChildBox(uint32_t index) {
+BBox OctreeNode::getChildBox(uint32_t index) const {
     cc::Vec3       min    = _aabb.min;
     cc::Vec3       max    = _aabb.max;
     const cc::Vec3 center = _aabb.getCenter();
@@ -157,7 +157,7 @@ void OctreeNode::onRemoved() { // NOLINT(misc-no-recursion)
         return;
     }
 
-    for (auto *child : _children) {
+    for (auto* child : _children) {
         if (child) {
             return;
         }
@@ -172,11 +172,11 @@ void OctreeNode::onRemoved() { // NOLINT(misc-no-recursion)
 }
 
 void OctreeNode::gatherModels(std::vector<Model*>& results) const { // NOLINT(misc-no-recursion)
-    for (auto *model : _models) {
+    for (auto* model : _models) {
         results.push_back(model);
     }
 
-    for (auto *child : _children) {
+    for (auto* child : _children) {
         if (child) {
             child->gatherModels(results);
         }
@@ -185,7 +185,7 @@ void OctreeNode::gatherModels(std::vector<Model*>& results) const { // NOLINT(mi
 
 void OctreeNode::doQueryVisibility(const Camera* camera, const Frustum& frustum, bool isShadow, std::vector<Model*>& results) const {
     const auto visibility = camera->visibility;
-    for (auto *model : _models) {
+    for (auto* model : _models) {
         if (!model->getEnabled()) {
             continue;
         }
@@ -249,7 +249,7 @@ void OctreeNode::queryVisibilitySequentially(const Camera* camera, const Frustum
     doQueryVisibility(camera, frustum, isShadow, results);
 
     // query recursively.
-    for (auto *child : _children) {
+    for (auto* child : _children) {
         if (child) {
             child->queryVisibilitySequentially(camera, frustum, isShadow, results);
         }
@@ -281,7 +281,7 @@ void Octree::resize(const Vec3& minPos, const Vec3& maxPos, uint32_t maxDepth) {
     _root     = new OctreeNode(this, nullptr, BBox(minPos, maxPos), 0, 0);
     _maxDepth = std::max(maxDepth, 1U);
 
-    for (auto *model : models) {
+    for (auto* model : models) {
         model->setOctreeNode(nullptr);
         insert(model);
     }

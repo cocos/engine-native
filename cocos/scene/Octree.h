@@ -67,8 +67,8 @@ struct CC_DLL BBox {
 
     inline bool contain(const cc::Vec3& point) const {
         return !(point.x > max.x || point.x < min.x ||
-            point.y > max.y || point.y < min.y ||
-            point.z > max.z || point.z < min.z);
+                 point.y > max.y || point.y < min.y ||
+                 point.z > max.z || point.z < min.z);
     }
 
     inline bool contain(const BBox& box) const {
@@ -84,19 +84,19 @@ private:
     OctreeNode(Octree* owner, OctreeNode* parent, BBox aabb, uint32_t depth, uint32_t index);
     ~OctreeNode();
 
-    Octree*     getOwner() const { return _owner; }
-    const BBox& getBox() const { return _aabb; }
-    BBox        getChildBox(uint32_t index);
-    OctreeNode* getOrCreateChild(uint32_t index);
-    void        deleteChild(uint32_t index);
-    void        insert(Model* model);
-    void        add(Model* model);
-    void        remove(Model* model);
-    void        onRemoved();
-    void        gatherModels(std::vector<Model*>& results) const;
-    void        doQueryVisibility(const Camera* camera, const Frustum& frustum, bool isShadow, std::vector<Model*>& results) const;
-    void        queryVisibilityParallelly(const Camera* camera, const Frustum& frustum, bool isShadow, std::vector<Model*>& results) const;
-    void        queryVisibilitySequentially(const Camera* camera, const Frustum& frustum, bool isShadow, std::vector<Model*>& results) const;
+    inline Octree*     getOwner() const { return _owner; }
+    inline const BBox& getBox() const { return _aabb; }
+    BBox               getChildBox(uint32_t index) const;
+    OctreeNode*        getOrCreateChild(uint32_t index);
+    void               deleteChild(uint32_t index);
+    void               insert(Model* model);
+    void               add(Model* model);
+    void               remove(Model* model);
+    void               onRemoved();
+    void               gatherModels(std::vector<Model*>& results) const;
+    void               doQueryVisibility(const Camera* camera, const Frustum& frustum, bool isShadow, std::vector<Model*>& results) const;
+    void               queryVisibilityParallelly(const Camera* camera, const Frustum& frustum, bool isShadow, std::vector<Model*>& results) const;
+    void               queryVisibilitySequentially(const Camera* camera, const Frustum& frustum, bool isShadow, std::vector<Model*>& results) const;
 
     Octree*                                      _owner{nullptr};
     OctreeNode*                                  _parent{nullptr};
@@ -130,7 +130,7 @@ public:
     void update(Model* model);
 
     // return octree depth
-    uint32_t getMaxDepth() const { return _maxDepth; }
+    inline uint32_t getMaxDepth() const { return _maxDepth; }
 
     // view frustum culling
     void queryVisibility(const Camera* camera, const Frustum& frustum, bool isShadow, std::vector<Model*>& results) const;
