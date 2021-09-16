@@ -28,6 +28,7 @@
 #include "WGPUDescriptorSetLayout.h"
 #include "WGPUDevice.h"
 #include "WGPUObject.h"
+#include "WGPUPipelineLayout.h"
 #include "WGPURenderPass.h"
 #include "WGPUShader.h"
 #include "WGPUUtils.h"
@@ -40,7 +41,8 @@ CCWGPUPipelineState::CCWGPUPipelineState() : wrapper<PipelineState>(val::object(
 }
 
 void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
-    const DepthStencilAttachment& dsAttachment = info.renderPass->getDepthStencilAttachment();
+    auto*                         pipelineLayout = static_cast<CCWGPUPipelineLayout*>(info.pipelineLayout);
+    const DepthStencilAttachment& dsAttachment   = info.renderPass->getDepthStencilAttachment();
     if (info.bindPoint == PipelineBindPoint::GRAPHICS) {
         const AttributeList&             attrs  = info.inputState.attributes;
         uint64_t                         offset = 0;
@@ -49,8 +51,8 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
         for (size_t i = 0; i < attrs.size(); i++) {
             wgpuAttrs[i].format         = toWGPUVertexFormat(attrs[i].format);
             wgpuAttrs[i].offset         = offset;
-            wgpuAttrs[i].shaderLocation = location;
-            offset += FormatInfo[attr.format].size;
+            wgpuAttrs[i].shaderLocation = attrs[i].location;
+            offset += GFX_FORMAT_INFOS[static_cast<uint>(attrs[i].format)].size;
         }
 
         WGPUVertexBufferLayout vertexBufferLayout = {
@@ -71,7 +73,7 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
         WGPUPrimitiveState primitiveState = {
             .nextInChain      = nullptr,
             .topology         = toWGPUPrimTopology(info.primitive),
-            .stripIndexFormat = WGPUIndexFormat_Uint16,
+            .stripIndexFormat = WGPUIndexFormat_Uint16, //TODO_Zeqiang: ???
             .frontFace        = info.rasterizerState.isFrontFaceCCW ? WGPUFrontFace::WGPUFrontFace_CCW : WGPUFrontFace::WGPUFrontFace_CW,
             .cullMode         = info.rasterizerState.cullMode == CullMode::FRONT  ? WGPUCullMode::WGPUCullMode_Front
                                 : info.rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
@@ -95,20 +97,20 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
         WGPUDepthStencilState dsState = {
             .nextInChain         = nullptr,
             .format              = toWGPUTextureFormat(dsAttachment.format),
-            .depthWriteEnabled   = info.depthStencilState.depthWrite,
+            .depthWriteEnabled   = info.depthStencilState.depthWrite != 0,
             .depthCompare        = toWGPUCompareFunction(info.depthStencilState.depthFunc),
             .stencilFront        = stencilFront,
             .stencilBack         = stencilBack,
             .stencilReadMask     = info.depthStencilState.stencilReadMaskFront,
             .stencilWriteMask    = info.depthStencilState.stencilWriteMaskFront,
-            .depthBias           = info.rasterizerState.depthBias,
+            .depthBias           = static_cast<int32_t>(info.rasterizerState.depthBias),
             .depthBiasSlopeScale = info.rasterizerState.depthBiasSlop,
             .depthBiasClamp      = info.rasterizerState.depthBiasClamp,
         };
 
         WGPUMultisampleState msState = {
-            .count                  = static_cast<CCWGPURenderPass*>(info.renderPass)->gpuRenderPassObject().sampleCount,
-            .alphaToCoverageEnabled = info.blendState.isA2C,
+            .count                  = static_cast<CCWGPURenderPass*>(info.renderPass)->gpuRenderPassObject()->sampleCount,
+            .alphaToCoverageEnabled = info.blendState.isA2C != 0,
         };
 
         const ColorAttachmentList&        colors = info.renderPass->getColorAttachments();
@@ -117,7 +119,7 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
         std::vector<WGPUBlendState> blendState(colors.size());
 
         for (size_t i = 0; i < colors.size(); i++) {
-            colorTargetStates[i].format = toWGPUTextureFormat(colors[i].getFormat());
+            colorTargetStates[i].format = toWGPUTextureFormat(colors[i].format);
             blendState[i].color         = {
                 .operation = toWGPUBlendOperation(info.blendState.targets[i].blendAlphaEq),
                 .srcFactor = toWGPUBlendFactor(info.blendState.targets[i].blendSrc),
@@ -174,7 +176,7 @@ void CCWGPUPipelineState::doDestroy() {
             wgpuRenderPipelineRelease(_gpuPipelineStateObj->wgpuRenderPipeline);
         }
         if (_gpuPipelineStateObj->wgpuComputePipeline) {
-            wgpuRenderPipelineRelease(_gpuPipelineStateObj->wgpuComputePipeline);
+            wgpuComputePipelineRelease(_gpuPipelineStateObj->wgpuComputePipeline);
         }
 
         CC_DELETE(_gpuPipelineStateObj);

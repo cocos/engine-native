@@ -4528,6 +4528,145 @@ var ASM_CONSTS = {
 
   function _wgpuBufferDestroy(bufferId) { WebGPU.mgrBuffer.get(bufferId)["destroy"](); }
 
+  function _wgpuCommandEncoderBeginComputePass(encoderId, descriptor) {
+      var desc;
+      if (descriptor) {
+        assert(descriptor);assert(HEAP32[((descriptor)>>2)] === 0);
+        desc = {};
+        var labelPtr = HEAP32[(((descriptor)+(4))>>2)];
+        if (labelPtr) desc["label"] = UTF8ToString(labelPtr);
+      }
+      var commandEncoder = WebGPU.mgrCommandEncoder.get(encoderId);
+      return WebGPU.mgrComputePassEncoder.create(commandEncoder["beginComputePass"](desc));
+    }
+
+  function _wgpuCommandEncoderBeginRenderPass(encoderId, descriptor) {
+      assert(descriptor);
+  
+      function makeColorAttachment(caPtr) {
+        var loadValue = WebGPU.LoadOp[
+            HEAPU32[(((caPtr)+(8))>>2)]];
+        if (loadValue === 'clear') {
+          loadValue = WebGPU.makeColor(caPtr + 16);
+        }
+  
+        return {
+          "view": WebGPU.mgrTextureView.get(
+            HEAPU32[((caPtr)>>2)]),
+          "resolveTarget": WebGPU.mgrTextureView.get(
+            HEAPU32[(((caPtr)+(4))>>2)]),
+          "storeOp": WebGPU.StoreOp[
+            HEAPU32[(((caPtr)+(12))>>2)]],
+          "loadValue": loadValue,
+        };
+      }
+  
+      function makeColorAttachments(count, caPtr) {
+        var attachments = [];
+        for (var i = 0; i < count; ++i) {
+          attachments.push(makeColorAttachment(caPtr + 48 * i));
+        }
+        return attachments;
+      }
+  
+      function makeDepthStencilAttachment(dsaPtr) {
+        if (dsaPtr === 0) return undefined;
+  
+        var depthLoadValue = WebGPU.LoadOp[
+            HEAPU32[(((dsaPtr)+(4))>>2)]];
+        if (depthLoadValue === 'clear') {
+          depthLoadValue = HEAPF32[(((dsaPtr)+(12))>>2)];
+        }
+  
+        var stencilLoadValue = WebGPU.LoadOp[
+            HEAPU32[(((dsaPtr)+(20))>>2)]];
+        if (stencilLoadValue === 'clear') {
+          stencilLoadValue = HEAPU32[(((dsaPtr)+(28))>>2)];
+        }
+  
+        return {
+          "view": WebGPU.mgrTextureView.get(
+            HEAPU32[((dsaPtr)>>2)]),
+          "depthStoreOp": WebGPU.StoreOp[
+            HEAPU32[(((dsaPtr)+(8))>>2)]],
+          "depthLoadValue": depthLoadValue,
+          "depthReadOnly": (HEAP8[(((dsaPtr)+(16))>>0)] !== 0),
+          "stencilStoreOp": WebGPU.StoreOp[
+            HEAPU32[(((dsaPtr)+(24))>>2)]],
+          "stencilLoadValue": stencilLoadValue,
+          "stencilReadOnly": (HEAP8[(((dsaPtr)+(32))>>0)] !== 0),
+        };
+      }
+  
+      function makeRenderPassDescriptor(descriptor) {
+        assert(descriptor);assert(HEAP32[((descriptor)>>2)] === 0);
+        var desc = {
+          "label": undefined,
+          "colorAttachments": makeColorAttachments(
+            HEAPU32[(((descriptor)+(8))>>2)],
+            HEAP32[(((descriptor)+(12))>>2)]),
+          "depthStencilAttachment": makeDepthStencilAttachment(
+            HEAP32[(((descriptor)+(16))>>2)]),
+          "occlusionQuerySet": WebGPU.mgrQuerySet.get(
+            HEAP32[(((descriptor)+(20))>>2)]),
+        };
+        var labelPtr = HEAP32[(((descriptor)+(4))>>2)];
+        if (labelPtr) desc["label"] = UTF8ToString(labelPtr);
+        return desc;
+      }
+  
+      var desc = makeRenderPassDescriptor(descriptor);
+  
+      var commandEncoder = WebGPU.mgrCommandEncoder.get(encoderId);
+      return WebGPU.mgrRenderPassEncoder.create(commandEncoder["beginRenderPass"](desc));
+    }
+
+  function _wgpuCommandEncoderCopyTextureToTexture(encoderId, srcPtr, dstPtr, copySizePtr) {
+      var commandEncoder = WebGPU.mgrCommandEncoder.get(encoderId);
+      var copySize = WebGPU.makeExtent3D(copySizePtr);
+      commandEncoder["copyTextureToTexture"](
+        WebGPU.makeImageCopyTexture(srcPtr), WebGPU.makeImageCopyTexture(dstPtr), copySize);
+    }
+
+  function _wgpuComputePassEncoderDispatch(passId, x, y, z) {
+      var pass = WebGPU.mgrComputePassEncoder.get(passId);
+      pass["dispatch"](x, y, z);
+    }
+
+  function _wgpuComputePassEncoderDispatchIndirect(passId, indirectBufferId, indirectOffset_low, indirectOffset_high) {
+      
+      var indirectBuffer = WebGPU.mgrBuffer.get(indirectBufferId);
+      var indirectOffset = (assert(indirectOffset_high < 0x200000), indirectOffset_high * 0x100000000 + indirectOffset_low)
+  ;
+      var pass = WebGPU.mgrComputePassEncoder.get(passId);
+      pass["dispatchIndirect"](indirectBuffer, indirectOffset);
+    }
+
+  function _wgpuComputePassEncoderEndPass(passId) {
+      var pass = WebGPU.mgrComputePassEncoder.get(passId);
+      pass["endPass"]();
+    }
+
+  function _wgpuComputePassEncoderSetBindGroup(passId, groupIndex, groupId, dynamicOffsetCount, dynamicOffsetsPtr) {
+      var pass = WebGPU.mgrComputePassEncoder.get(passId);
+      var group = WebGPU.mgrBindGroup.get(groupId);
+      if (dynamicOffsetCount == 0) {
+        pass["setBindGroup"](groupIndex, group);
+      } else {
+        var offsets = [];
+        for (var i = 0; i < dynamicOffsetCount; i++, dynamicOffsetsPtr += 4) {
+          offsets.push(HEAPU32[((dynamicOffsetsPtr)>>2)]);
+        }
+        pass["setBindGroup"](groupIndex, group, offsets);
+      }
+    }
+
+  function _wgpuComputePassEncoderSetPipeline(passId, pipelineId) {
+      var pass = WebGPU.mgrComputePassEncoder.get(passId);
+      var pipeline = WebGPU.mgrComputePipeline.get(pipelineId);
+      pass["setPipeline"](pipeline);
+    }
+
   function _wgpuDeviceCreateBindGroup(deviceId, descriptor) {
       assert(descriptor);assert(HEAP32[((descriptor)>>2)] === 0);
   
@@ -4910,6 +5049,100 @@ var ASM_CONSTS = {
       queue["writeBuffer"](buffer, bufferOffset, HEAPU8, data, size);
     }
 
+  function _wgpuQueueWriteTexture(queueId,
+        destinationPtr, data, _dataSize, dataLayoutPtr, writeSizePtr) {
+      var queue = WebGPU.mgrQueue.get(queueId);
+  
+      var destination = WebGPU.makeImageCopyTexture(destinationPtr);
+      var dataLayout = WebGPU.makeTextureDataLayout(dataLayoutPtr);
+      dataLayout["offset"] += data;
+      var writeSize = WebGPU.makeExtent3D(writeSizePtr);
+      queue["writeTexture"](destination, HEAPU8, dataLayout, writeSize);
+    }
+
+  function _wgpuRenderPassEncoderDraw(passId, vertexCount, instanceCount, firstVertex, firstInstance) {
+      var pass = WebGPU.mgrRenderPassEncoder.get(passId);
+      pass["draw"](vertexCount, instanceCount, firstVertex, firstInstance);
+    }
+
+  function _wgpuRenderPassEncoderDrawIndexed(passId, indexCount, instanceCount, firstIndex, baseVertex, firstInstance) {
+      var pass = WebGPU.mgrRenderPassEncoder.get(passId);
+      pass["drawIndexed"](indexCount, instanceCount, firstIndex, baseVertex, firstInstance);
+    }
+
+  function _wgpuRenderPassEncoderDrawIndexedIndirect(passId, indirectBufferId, indirectOffset_low, indirectOffset_high) {
+      
+      var indirectBuffer = WebGPU.mgrBuffer.get(indirectBufferId);
+      var indirectOffset = (assert(indirectOffset_high < 0x200000), indirectOffset_high * 0x100000000 + indirectOffset_low)
+  ;
+      var pass = WebGPU.mgrRenderPassEncoder.get(passId);
+      pass["drawIndexedIndirect"](indirectBuffer, indirectOffset);
+    }
+
+  function _wgpuRenderPassEncoderDrawIndirect(passId, indirectBufferId, indirectOffset_low, indirectOffset_high) {
+      
+      var indirectBuffer = WebGPU.mgrBuffer.get(indirectBufferId);
+      var indirectOffset = (assert(indirectOffset_high < 0x200000), indirectOffset_high * 0x100000000 + indirectOffset_low)
+  ;
+      var pass = WebGPU.mgrRenderPassEncoder.get(passId);
+      pass["drawIndirect"](indirectBuffer, indirectOffset);
+    }
+
+  function _wgpuRenderPassEncoderEndPass(passId) {
+      var pass = WebGPU.mgrRenderPassEncoder.get(passId);
+      pass["endPass"]();
+    }
+
+  function _wgpuRenderPassEncoderSetBindGroup(passId, groupIndex, groupId, dynamicOffsetCount, dynamicOffsetsPtr) {
+      var pass = WebGPU.mgrRenderPassEncoder.get(passId);
+      var group = WebGPU.mgrBindGroup.get(groupId);
+      if (dynamicOffsetCount == 0) {
+        pass["setBindGroup"](groupIndex, group);
+      } else {
+        var offsets = [];
+        for (var i = 0; i < dynamicOffsetCount; i++, dynamicOffsetsPtr += 4) {
+          offsets.push(HEAPU32[((dynamicOffsetsPtr)>>2)]);
+        }
+        pass["setBindGroup"](groupIndex, group, offsets);
+      }
+    }
+
+  function _wgpuRenderPassEncoderSetBlendConstant(passId, colorPtr) {
+      var pass = WebGPU.mgrRenderPassEncoder.get(passId);
+      var color = WebGPU.makeColor(colorPtr);
+      pass["setBlendConstant"](color);
+    }
+
+  function _wgpuRenderPassEncoderSetIndexBuffer(passId, bufferId, format, offset_low, offset_high, size) {
+      
+      var offset = (assert(offset_high < 0x200000), offset_high * 0x100000000 + offset_low)
+  ;
+      var pass = WebGPU.mgrRenderPassEncoder.get(passId);
+      var buffer = WebGPU.mgrBuffer.get(bufferId);
+      pass["setIndexBuffer"](buffer, WebGPU.IndexFormat[format], offset, size);
+    }
+
+  function _wgpuRenderPassEncoderSetPipeline(passId, pipelineId) {
+      var pass = WebGPU.mgrRenderPassEncoder.get(passId);
+      var pipeline = WebGPU.mgrRenderPipeline.get(pipelineId);
+      pass["setPipeline"](pipeline);
+    }
+
+  function _wgpuRenderPassEncoderSetScissorRect(passId, x, y, w, h) {
+      var pass = WebGPU.mgrRenderPassEncoder.get(passId);
+      pass["setScissorRect"](x, y, w, h);
+    }
+
+  function _wgpuRenderPassEncoderSetVertexBuffer(passId, slot, bufferId, offset, size) {
+      var pass = WebGPU.mgrRenderPassEncoder.get(passId);
+      pass["setVertexBuffer"](slot, WebGPU.mgrBuffer.get(bufferId), offset, size);
+    }
+
+  function _wgpuRenderPassEncoderSetViewport(passId, x, y, w, h, minDepth, maxDepth) {
+      var pass = WebGPU.mgrRenderPassEncoder.get(passId);
+      pass["setViewport"](x, y, w, h, minDepth, maxDepth);
+    }
+
   function _wgpuSamplerRelease(id) {
     WebGPU.mgrSampler.release(id);
   }
@@ -5030,6 +5263,14 @@ var asmLibraryArg = {
   "wgpuBindGroupLayoutRelease": _wgpuBindGroupLayoutRelease,
   "wgpuBindGroupRelease": _wgpuBindGroupRelease,
   "wgpuBufferDestroy": _wgpuBufferDestroy,
+  "wgpuCommandEncoderBeginComputePass": _wgpuCommandEncoderBeginComputePass,
+  "wgpuCommandEncoderBeginRenderPass": _wgpuCommandEncoderBeginRenderPass,
+  "wgpuCommandEncoderCopyTextureToTexture": _wgpuCommandEncoderCopyTextureToTexture,
+  "wgpuComputePassEncoderDispatch": _wgpuComputePassEncoderDispatch,
+  "wgpuComputePassEncoderDispatchIndirect": _wgpuComputePassEncoderDispatchIndirect,
+  "wgpuComputePassEncoderEndPass": _wgpuComputePassEncoderEndPass,
+  "wgpuComputePassEncoderSetBindGroup": _wgpuComputePassEncoderSetBindGroup,
+  "wgpuComputePassEncoderSetPipeline": _wgpuComputePassEncoderSetPipeline,
   "wgpuDeviceCreateBindGroup": _wgpuDeviceCreateBindGroup,
   "wgpuDeviceCreateBindGroupLayout": _wgpuDeviceCreateBindGroupLayout,
   "wgpuDeviceCreateBuffer": _wgpuDeviceCreateBuffer,
@@ -5042,6 +5283,19 @@ var asmLibraryArg = {
   "wgpuInstanceCreateSurface": _wgpuInstanceCreateSurface,
   "wgpuPipelineLayoutRelease": _wgpuPipelineLayoutRelease,
   "wgpuQueueWriteBuffer": _wgpuQueueWriteBuffer,
+  "wgpuQueueWriteTexture": _wgpuQueueWriteTexture,
+  "wgpuRenderPassEncoderDraw": _wgpuRenderPassEncoderDraw,
+  "wgpuRenderPassEncoderDrawIndexed": _wgpuRenderPassEncoderDrawIndexed,
+  "wgpuRenderPassEncoderDrawIndexedIndirect": _wgpuRenderPassEncoderDrawIndexedIndirect,
+  "wgpuRenderPassEncoderDrawIndirect": _wgpuRenderPassEncoderDrawIndirect,
+  "wgpuRenderPassEncoderEndPass": _wgpuRenderPassEncoderEndPass,
+  "wgpuRenderPassEncoderSetBindGroup": _wgpuRenderPassEncoderSetBindGroup,
+  "wgpuRenderPassEncoderSetBlendConstant": _wgpuRenderPassEncoderSetBlendConstant,
+  "wgpuRenderPassEncoderSetIndexBuffer": _wgpuRenderPassEncoderSetIndexBuffer,
+  "wgpuRenderPassEncoderSetPipeline": _wgpuRenderPassEncoderSetPipeline,
+  "wgpuRenderPassEncoderSetScissorRect": _wgpuRenderPassEncoderSetScissorRect,
+  "wgpuRenderPassEncoderSetVertexBuffer": _wgpuRenderPassEncoderSetVertexBuffer,
+  "wgpuRenderPassEncoderSetViewport": _wgpuRenderPassEncoderSetViewport,
   "wgpuSamplerRelease": _wgpuSamplerRelease,
   "wgpuShaderModuleRelease": _wgpuShaderModuleRelease,
   "wgpuSwapChainGetCurrentTextureView": _wgpuSwapChainGetCurrentTextureView,

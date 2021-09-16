@@ -44,6 +44,10 @@ class CCWGPUTexture;
 class CCWGPUBuffer;
 class CCWGPUSampler;
 class CCWGPUQueue;
+class CCWGPUPipelineState;
+class CCWGPUDescriptorSet;
+class CCWGPUInputAssembler;
+
 struct CCWGPUResource {
     CCWGPUTexture* texture = nullptr;
     CCWGPUBuffer*  buffer  = nullptr;
@@ -79,8 +83,43 @@ struct CCWGPUTextureObject {
     WGPUTextureView selfView        = wgpuDefaultHandle;
 };
 
+//The indirect drawIndexed parameters encoded in the buffer must be a tightly packed block
+//of five 32-bit unsigned integer values (20 bytes total), given in the same order as the arguments for drawIndexed().
+// let drawIndexedIndirectParameters = new Uint32Array(5);
+// drawIndexedIndirectParameters[0] = indexCount;
+// drawIndexedIndirectParameters[1] = instanceCount;
+// drawIndexedIndirectParameters[2] = firstIndex;
+// drawIndexedIndirectParameters[3] = baseVertex;
+// drawIndexedIndirectParameters[4] = 0; // firstInstance. Must be 0.
+struct CCWGPUDrawIndexedIndirectObject {
+    uint32_t indexCount    = 0;
+    uint32_t instanceCount = 0;
+    uint32_t firstIndex    = 0;
+    uint32_t baseVertex    = 0;
+    uint32_t firstInstance = 0;
+};
+static_assert(sizeof(CCWGPUDrawIndexedIndirectObject) == 20, "WGPU drawIndexedIndirect structure validation failed!");
+
+//The indirect draw parameters encoded in the buffer must be a tightly packed block
+//of four 32-bit unsigned integer values (16 bytes total), given in the same order as the arguments for draw().
+
+// let drawIndirectParameters = new Uint32Array(4);
+// drawIndirectParameters[0]  = vertexCount;
+// drawIndirectParameters[1]  = instanceCount;
+// drawIndirectParameters[2]  = firstVertex;
+// drawIndirectParameters[3]  = 0; // firstInstance. Must be 0.
+struct CCWGPUDrawIndirectObject {
+    uint32_t vertexCount   = 0;
+    uint32_t instanceCount = 0;
+    uint32_t firstIndex    = 0;
+    uint32_t firstInstance = 0;
+};
+static_assert(sizeof(CCWGPUDrawIndirectObject) == 16, "WGPU drawIndirect structure validation failed!");
+
 struct CCWGPUBufferObject {
-    WGPUBuffer wgpuBuffer = wgpuDefaultHandle;
+    WGPUBuffer                                   wgpuBuffer = wgpuDefaultHandle;
+    std::vector<CCWGPUDrawIndexedIndirectObject> indexedIndirectObjs;
+    std::vector<CCWGPUDrawIndirectObject>        indirectObjs;
 };
 
 struct CCWGPUSamplerObject {
@@ -132,14 +171,49 @@ struct CCWGPUQueueObject {
     QueueType type      = QueueType::GRAPHICS;
 };
 
+struct CCWGPUDescriptorSetObject {
+    uint32_t             index              = 0;
+    CCWGPUDescriptorSet* descriptorSet      = nullptr;
+    uint32_t             dynamicOffsetCount = 0;
+    const uint32_t*      dynamicOffsets     = nullptr;
+};
+
+struct CCWGPUStencilMasks {
+    uint writeMask   = 0;
+    uint compareRef  = 0;
+    uint compareMask = 0;
+};
+
+struct CCWGPUStateCache {
+    CCWGPUPipelineState*  pipelineState  = nullptr;
+    CCWGPUInputAssembler* inputAssembler = nullptr;
+
+    float depthBiasConstant = 0.0f;
+    float depthBiasClamp    = 0.0f;
+    float depthBiasSlope    = 0.0f;
+    float depthMinBound     = 0.0f;
+    float depthMaxBound     = 100.0f;
+
+    Color    blendConstants;
+    Viewport viewport;
+    Rect     rect;
+
+    std::vector<CCWGPUDescriptorSetObject>    descriptorSets;
+    std::map<StencilFace, CCWGPUStencilMasks> stencilMasks;
+};
+
 struct CCWGPUCommandBufferObject {
+    bool renderPassBegan = false;
+
+    WGPUCommandBuffer      wgpuCommandBuffer     = wgpuDefaultHandle;
+    WGPUCommandEncoder     wgpuCommandEncoder    = wgpuDefaultHandle;
+    WGPURenderPassEncoder  wgpuRenderPassEncoder = wgpuDefaultHandle;
+    WGPUComputePassEncoder wgpuComputeEncoder    = wgpuDefaultHandle;
+    CommandBufferType      type                  = CommandBufferType::PRIMARY;
+    CCWGPUQueue*           queue                 = nullptr;
+
     WGPURenderPassDescriptor renderPassDescriptor;
-    WGPUCommandBuffer        wgpuCommandBuffer     = wgpuDefaultHandle;
-    WGPUCommandEncoder       wgpuCommandEncoder    = wgpuDefaultHandle;
-    WGPURenderPassEncoder    wgpuRenderPassEncoder = wgpuDefaultHandle;
-    WGPUComputePassEncoder   wgpuComputeEncoder    = wgpuDefaultHandle;
-    CommandBufferType        type                  = CommandBufferType::PRIMARY;
-    CCWGPUQueue*             queue                 = nullptr;
+    CCWGPUStateCache         stateCache;
 };
 
 } // namespace gfx

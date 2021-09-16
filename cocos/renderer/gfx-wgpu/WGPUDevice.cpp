@@ -26,6 +26,7 @@
 #include "WGPUDevice.h"
 #include <emscripten/val.h>
 #include "WGPUBuffer.h"
+#include "WGPUCommandBuffer.h"
 #include "WGPUDescriptorSet.h"
 #include "WGPUDescriptorSetLayout.h"
 #include "WGPUDevice.h"
@@ -77,6 +78,7 @@ bool CCWGPUDevice::doInit(const DeviceInfo& info) {
     _gpuDeviceObj->defaultResources.buffer  = CCWGPUBuffer::defaultBuffer();
     _gpuDeviceObj->defaultResources.sampler = CCWGPUSampler::defaultSampler();
 
+    _cmdBuff = CC_NEW(CCWGPUCommandBuffer);
     return true;
 }
 

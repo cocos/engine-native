@@ -25,7 +25,7 @@
 
 #pragma once
 #include <emscripten/bind.h>
-#include <function>
+#include <functional>
 #include <queue>
 #include "gfx-base/GFXCommandBuffer.h"
 namespace cc {
@@ -33,7 +33,7 @@ namespace gfx {
 
 struct CCWGPUCommandBufferObject;
 
-typedef std::function<void(const CCWGPUCommandBufferObject *)> RenderPassFunc;
+typedef std::function<void(CCWGPUCommandBufferObject *)> EncodeFunc;
 
 class CCWGPUCommandBuffer final : public emscripten::wrapper<CommandBuffer> {
 public:
@@ -71,10 +71,14 @@ protected:
     virtual void doInit(const CommandBufferInfo &info);
     virtual void doDestroy();
 
+    // delay binding.
+    void bindStates();
+
     CCWGPUCommandBufferObject *_gpuCommandBufferObj = nullptr;
 
     // command buffer inner impl
-    std::queue<RenderPassFunc> _renderPassFuncQ;
+    std::queue<EncodeFunc> _renderPassFuncQ;
+    std::queue<EncodeFunc> _computeFuncQ;
 };
 
 } // namespace gfx

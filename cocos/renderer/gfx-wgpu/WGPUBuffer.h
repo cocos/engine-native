@@ -40,14 +40,13 @@ public:
 
     void update(const void* buffer, uint size) override;
 
-    inline CCWGPUBufferObject* gpuBufferObject() { return _gpuBufferObject; }
+    inline CCWGPUBufferObject* gpuBufferObject() const { return _gpuBufferObject; }
 
     static CCWGPUBuffer* defaultBuffer();
 
-    inline uint getOffset() { return _offset; }
+    inline uint getOffset() const { return _offset; }
 
     void update(String bufferContainer, uint size) {
-        printf("native: %d, %d", bufferContainer.length(), size);
         update(reinterpret_cast<void*>(bufferContainer.data()), size);
     }
 
@@ -56,9 +55,6 @@ protected:
     void doInit(const BufferViewInfo& info) override;
     void doDestroy() override;
     void doResize(uint size, uint count) override;
-
-    uint8_t* _buffer  = nullptr;
-    uint     _ssssize = 0;
 
     CCWGPUBufferObject* _gpuBufferObject = nullptr;
 };
