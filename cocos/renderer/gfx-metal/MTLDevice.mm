@@ -223,7 +223,6 @@ void CCMTLDevice::present() {
             if (swapchain->currentDrawable()) {
                 id<CAMetalDrawable> drawable = swapchain->currentDrawable();
                 [cmdBuffer presentDrawable:drawable];
-                swapchain->release();
             }
             [cmdBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
                 onPresentCompleted();
@@ -241,6 +240,10 @@ void CCMTLDevice::present() {
 }
 
 void CCMTLDevice::onPresentCompleted() {
+    for(auto* swapchain: _swapchains) {
+        swapchain->release();
+    }
+    
     if (_currentBufferPoolId >= 0 && _currentBufferPoolId < MAX_FRAMES_IN_FLIGHT) {
         CCMTLGPUStagingBufferPool *bufferPool = _gpuStagingBufferPools[_currentBufferPoolId];
         if (bufferPool) {
