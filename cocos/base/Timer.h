@@ -41,9 +41,9 @@ public:
     explicit Timer(bool doReset = true);
 
     void    reset();
-    int64_t getMicroseconds();
-    int64_t getMilliseconds();
-    float   getSeconds();
+    int64_t getMicroseconds() const;
+    int64_t getMilliseconds() const;
+    float   getSeconds() const;
 
 private:
     TimePoint _startTime;

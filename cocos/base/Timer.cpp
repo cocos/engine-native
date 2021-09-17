@@ -38,7 +38,7 @@ void Timer::reset() {
     _startTime = Clock::now();
 }
 
-int64_t Timer::getMicroseconds() {
+int64_t Timer::getMicroseconds() const {
     auto currentTime = Clock::now();
     auto duration    = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - _startTime).count();
     if (duration < 0) {
@@ -48,7 +48,7 @@ int64_t Timer::getMicroseconds() {
     return duration;
 }
 
-int64_t Timer::getMilliseconds() {
+int64_t Timer::getMilliseconds() const {
     auto currentTime = Clock::now();
     auto duration    = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - _startTime).count();
     if (duration < 0) {
@@ -58,7 +58,7 @@ int64_t Timer::getMilliseconds() {
     return duration;
 }
 
-float Timer::getSeconds() {
+float Timer::getSeconds() const {
     int64_t msecs = getMilliseconds();
     return static_cast<float>(msecs) / 1000.0F;
 }

@@ -106,7 +106,7 @@ void OctreeNode::deleteChild(uint32_t index) {
 void OctreeNode::insert(Model* model) { // NOLINT(misc-no-recursion)
     bool split = false;
     if (_depth < _owner->getMaxDepth() - 1) {
-        BBox            modelBox    = BBox(*model->getWorldBounds());
+        BBox            modelBox(*model->getWorldBounds());
         const cc::Vec3& modelCenter = modelBox.getCenter();
         const cc::Vec3& nodeCenter  = _aabb.getCenter();
 
