@@ -1745,7 +1745,7 @@ void cmdFuncGLES3CreateFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gpu
         doCreateFramebufferInstance(device, gpuFBO, gpuFBO->uberColorAttachmentIndices, gpuFBO->uberDepthStencil, &gpuFBO->uberInstance);
     } else {
         for (const auto &subpass : gpuFBO->gpuRenderPass->subpasses) {
-            gpuFBO->instances.emplace_back(GLES3GPUFramebuffer::GLFramebuffer());
+            gpuFBO->instances.emplace_back(GLES3GPUFramebuffer::Framebuffer());
             auto &fboInst = *gpuFBO->instances.rbegin();
             doCreateFramebufferInstance(device, gpuFBO, subpass.colors, subpass.depthStencil, &fboInst,
                                         subpass.resolves.empty() ? nullptr : subpass.resolves.data(), subpass.depthStencilResolve);
