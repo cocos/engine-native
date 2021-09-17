@@ -119,8 +119,6 @@ bool ForwardPipeline::activate(gfx::Swapchain *swapchain) {
 }
 
 gfx::Rect ForwardPipeline::getRenderArea(scene::Camera *camera, bool onScreen) {
-    gfx::Rect renderArea;
-
     float w;
     float h;
     if (onScreen) {
@@ -133,11 +131,12 @@ gfx::Rect ForwardPipeline::getRenderArea(scene::Camera *camera, bool onScreen) {
     }
 
     const auto &viewport = camera->viewPort;
-    renderArea.x         = static_cast<int>(viewport.x * w);
-    renderArea.y         = static_cast<int>(viewport.y * h);
-    renderArea.width     = static_cast<uint>(viewport.z * w * _pipelineSceneData->getSharedData()->shadingScale);
-    renderArea.height    = static_cast<uint>(viewport.w * h * _pipelineSceneData->getSharedData()->shadingScale);
-    return renderArea;
+    return gfx::Rect{
+        static_cast<int>(viewport.x * w),
+        static_cast<int>(viewport.y * h),
+        static_cast<uint>(viewport.z * w * _pipelineSceneData->getSharedData()->shadingScale),
+        static_cast<uint>(viewport.w * h * _pipelineSceneData->getSharedData()->shadingScale)
+    };
 }
 
 void ForwardPipeline::render(const vector<scene::Camera *> &cameras) {
