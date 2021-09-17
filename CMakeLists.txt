@@ -255,12 +255,12 @@ if(USE_AUDIO)
     elseif(APPLE)
         cocos_source_files(
                          cocos/audio/apple/AudioDecoder.h
-                         cocos/audio/apple/AudioPlayer.mm
-                         cocos/audio/apple/AudioDecoder.mm
+            NO_WERROR    cocos/audio/apple/AudioPlayer.mm
+            NO_WERROR    cocos/audio/apple/AudioDecoder.mm
                          cocos/audio/apple/AudioPlayer.h
             NO_WERROR    cocos/audio/apple/AudioEngine-inl.mm
                          cocos/audio/apple/AudioMacros.h
-                         cocos/audio/apple/AudioCache.mm
+            NO_WERROR    cocos/audio/apple/AudioCache.mm
                          cocos/audio/apple/AudioCache.h
                          cocos/audio/apple/AudioEngine-inl.h
         )
@@ -638,8 +638,8 @@ elseif(APPLE)
         cocos_source_files(
                          cocos/platform/ios/View.h
             NO_WERROR    cocos/platform/ios/View.mm     # CAMetalLayer bug for apple
-                         cocos/platform/ios/Application-ios.mm
-                         cocos/platform/ios/Device-ios.mm
+            NO_WERROR    cocos/platform/ios/Application-ios.mm
+            NO_WERROR    cocos/platform/ios/Device-ios.mm
         )
     endif()
 endif()
@@ -1764,7 +1764,7 @@ elseif(MACOSX)
 elseif(IOS)
     if(USE_EDIT_BOX)
         cocos_source_files(
-                         cocos/ui/edit-box/EditBox-ios.mm
+             NO_WERROR   cocos/ui/edit-box/EditBox-ios.mm
         )
     endif()
     if(USE_VIDEO)
