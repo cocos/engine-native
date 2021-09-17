@@ -194,7 +194,6 @@ void DevicePass::begin(gfx::CommandBuffer *cmdBuff) {
             rpInfo.colorAttachments.emplace_back(gfx::ColorAttachment());
             auto &attachmentInfo  = *rpInfo.colorAttachments.rbegin();
             attachmentInfo.format = attachment->getFormat();
-            rpInfo.colorAttachments.emplace_back();
             attachmentInfo.loadOp          = attachElem.attachment.desc.loadOp;
             attachmentInfo.storeOp         = attachElem.attachment.storeOp;
             attachmentInfo.beginAccesses   = attachElem.attachment.desc.beginAccesses;
