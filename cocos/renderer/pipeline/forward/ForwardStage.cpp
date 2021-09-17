@@ -165,7 +165,7 @@ void ForwardStage::render(scene::Camera *camera) {
     _renderArea = pipeline->getRenderArea(camera, false);
     // Command 'updateBuffer' must be recorded outside render passes, cannot put them in execute lambda
     dispenseRenderObject2Queues();
-    auto *cmdBuff = pipeline->getCommandBuffers()[0];
+    auto *cmdBuff{ pipeline->getCommandBuffers()[0] };
 
     _instancedQueue->uploadBuffers(cmdBuff);
     _batchedQueue->uploadBuffers(cmdBuff);
@@ -176,7 +176,7 @@ void ForwardStage::render(scene::Camera *camera) {
         if (hasFlag(static_cast<gfx::ClearFlags>(camera->clearFlag), gfx::ClearFlagBit::COLOR)) {
         if (sharedData->isHDR) {
             srgbToLinear(&_clearColors[0], camera->clearColor);
-            auto scale = sharedData->fpScale / camera->exposure;
+            auto scale{ sharedData->fpScale / camera->exposure };
             _clearColors[0].x *= scale;
             _clearColors[0].y *= scale;
             _clearColors[0].z *= scale;
@@ -188,7 +188,7 @@ void ForwardStage::render(scene::Camera *camera) {
         }
         _clearColors[0].w = camera->clearColor.w;
         // color
-        gfx::TextureInfo colorTexInfo = {
+        gfx::TextureInfo colorTexInfo {
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::TRANSFER_SRC,
             sharedData->isHDR ? gfx::Format::RGBA16F : gfx::Format::RGBA8,
@@ -205,7 +205,7 @@ void ForwardStage::render(scene::Camera *camera) {
         data.backBuffer                   = builder.write(data.backBuffer, colorAttachmentInfo);
         builder.writeToBlackboard(ForwardPipeline::fgStrHandleForwardColorTexture, data.backBuffer);
         // depth
-        gfx::TextureInfo depthTexInfo = {
+        gfx::TextureInfo depthTexInfo {
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT,
             gfx::Format::DEPTH_STENCIL,
