@@ -375,8 +375,8 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         vector<uint> dynamicOffsets = {0};
         cmdBuff->bindDescriptorSet(localSet, _descriptorSet, dynamicOffsets);
 
-        uint const globalOffsets[] = {pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
-        cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
+        const std::array<uint, 1> globalOffsets = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
+        cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), globalOffsets.size(), globalOffsets.data());
         // get PSO and draw quad
         auto rendeArea = pipeline->getRenderArea(camera, false);
 
@@ -677,7 +677,7 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
 
         auto *denoiseTex    = static_cast<gfx::Texture *>(table.getWrite(data.denoise));
         auto *reflectionTex = static_cast<gfx::Texture *>(table.getRead(data.reflection));
-        auto &elem       = _reflectionElems[_denoiseIndex];
+        auto &elem          = _reflectionElems[_denoiseIndex];
 
         // pipeline barrier
         auto *cmdBuff = pipeline->getCommandBuffers()[0];

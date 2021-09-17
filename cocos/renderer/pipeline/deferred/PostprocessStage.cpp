@@ -180,9 +180,9 @@ void PostprocessStage::render(scene::Camera *camera) {
         // bind descriptor
         auto *lightingOut = static_cast<gfx::Texture *>(table.getRead(data.lightingOut));
 
-        auto *     cmdBuff         = pipeline->getCommandBuffers()[0];
-        uint const globalOffsets[] = {pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
-        cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
+        auto *                    cmdBuff       = pipeline->getCommandBuffers()[0];
+        const std::array<uint, 1> globalOffsets = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
+        cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), globalOffsets.size(), globalOffsets.data());
 
         if (!pipeline->getPipelineSceneData()->getRenderObjects().empty()) {
             // post process

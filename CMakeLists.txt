@@ -89,10 +89,12 @@ if(USE_JOB_SYSTEM_TASKFLOW AND USE_JOB_SYSTEM_TBB)
     set(USE_JOB_SYSTEM_TBB      OFF)
 endif()
 
-# if(USE_JOB_SYSTEM_TASKFLOW)
-#     set(CMAKE_CXX_STANDARD 17)
-#     set(TARGET_IOS_VERSION "12.0"  CACHE STRING "Target iOS version" FORCE)
-# endif()
+if(USE_JOB_SYSTEM_TASKFLOW)
+    set(CMAKE_CXX_STANDARD 17)
+    if("${TARGET_IOS_VERSION}" VERSION_LESS "12.0")
+        message(FATAL_ERROR "Target iOS version requires 12.0+ when enable taskflow")
+    endif()
+endif()
 
 ################################# list all option values ##############################
 

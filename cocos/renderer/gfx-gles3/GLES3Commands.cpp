@@ -1327,7 +1327,8 @@ void cmdFuncGLES3CreateShader(GLES3Device *device, GLES3GPUShader *gpuShader) {
     // fallback subpassInputs into samplerTextures if not using FBF
     if (device->constantRegistry()->mFBF == FBFSupportLevel::NONE) {
         for (const auto &subpassInput : gpuShader->subpassInputs) {
-            auto &samplerTexture   = gpuShader->samplerTextures.emplace_back();
+            gpuShader->samplerTextures.emplace_back(UniformSamplerTexture());
+            auto &samplerTexture   = *gpuShader->samplerTextures.rbegin();
             samplerTexture.name    = subpassInput.name;
             samplerTexture.set     = subpassInput.set;
             samplerTexture.binding = subpassInput.binding;
@@ -1744,7 +1745,9 @@ void cmdFuncGLES3CreateFramebuffer(GLES3Device *device, GLES3GPUFramebuffer *gpu
         doCreateFramebufferInstance(device, gpuFBO, gpuFBO->uberColorAttachmentIndices, gpuFBO->uberDepthStencil, &gpuFBO->uberInstance);
     } else {
         for (const auto &subpass : gpuFBO->gpuRenderPass->subpasses) {
-            doCreateFramebufferInstance(device, gpuFBO, subpass.colors, subpass.depthStencil, &gpuFBO->instances.emplace_back(),
+            gpuFBO->instances.emplace_back(GLES3GPUFramebuffer::GLFramebuffer());
+            auto &fboInst = *gpuFBO->instances.rbegin();
+            doCreateFramebufferInstance(device, gpuFBO, subpass.colors, subpass.depthStencil, &fboInst,
                                         subpass.resolves.empty() ? nullptr : subpass.resolves.data(), subpass.depthStencilResolve);
         }
     }
