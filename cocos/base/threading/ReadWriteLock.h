@@ -25,7 +25,11 @@
 
 #pragma once
 
-#include <uv.h>
+// clang-format off
+#include "base/Macros.h"
+#include "uv.h"
+// clang-format on
+
 #include <functional>
 #include <shared_mutex>
 

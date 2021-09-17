@@ -24,20 +24,24 @@
 ****************************************************************************/
 
 // clang-format off
+#include "base/Macros.h"
 #include "uv.h"
 // clang-format on
 
 #include "jsb_global_init.h"
+#include <chrono>
+#include <regex>
+#include <sstream>
+#include <type_traits>
+#include <utility>
+
 #include "base/CoreStd.h"
 #include "base/Scheduler.h"
 #include "base/ZipUtils.h"
 #include "base/base64.h"
+#include "base/memory/Memory.h"
 #include "jsb_conversions.h"
 #include "xxtea/xxtea.h"
-
-#include <chrono>
-#include <regex>
-#include <sstream>
 
 using namespace cc; //NOLINT
 
