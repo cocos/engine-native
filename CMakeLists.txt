@@ -2001,12 +2001,10 @@ target_compile_definitions(cocos2d
     PRIVATE
         ${CC_EXTERNAL_PRIVATE_DEFINITIONS}
 )
-if(NOT OHOS)
-    target_include_directories(cocos2d PUBLIC
-        ${CWD}/external/sources/EGL
-        ${CWD}/external/sources/khronos
-    )
-endif()
+target_include_directories(cocos2d PUBLIC
+    ${CWD}/external/sources/EGL
+    ${CWD}/external/sources/khronos
+)
 
 
 if(WIN32)
