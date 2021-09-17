@@ -85,10 +85,6 @@ void CCMTLRenderPass::setColorAttachment(size_t slot, CCMTLTexture* cctex, int l
     } else {
         texture = cctex->getMTLTexture();
     }
-    
-    if(!texture) {
-        CC_LOG_ERROR("11111111111111");
-    }
 
     _mtlRenderPassDescriptor.colorAttachments[slot].texture = texture;
     _mtlRenderPassDescriptor.colorAttachments[slot].level = level;

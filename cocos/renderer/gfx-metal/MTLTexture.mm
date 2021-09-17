@@ -130,7 +130,8 @@ void CCMTLTexture::doInit(const SwapchainTextureInfo &info) {
 
 void CCMTLTexture::update() {
     if(_swapchain) {
-        _mtlTexture = [static_cast<CCMTLSwapchain*>(_swapchain)->gpuSwapChainObj()->currentDrawable texture];
+        id<CAMetalDrawable> drawable = static_cast<CCMTLSwapchain*>(_swapchain)->currentDrawable();
+        _mtlTexture = drawable ? [drawable texture] : nil;
     }
 }
 
