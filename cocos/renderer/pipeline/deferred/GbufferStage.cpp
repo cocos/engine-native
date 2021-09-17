@@ -132,7 +132,7 @@ void GbufferStage::recordCommands(DeferredPipeline *pipeline, gfx::RenderPass *r
 
     // DescriptorSet bindings
     const std::array<uint, 1> globalOffsets = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
-    cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), globalOffsets.size(), globalOffsets.data());
+    cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), utils::toUint(globalOffsets.size()), globalOffsets.data());
 
     // record commands
     _renderQueues[0]->recordCommandBuffer(_device, renderPass, cmdBuff);

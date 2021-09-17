@@ -67,7 +67,13 @@ static void _checkPath() {
         WCHAR *pUtf16DirEnd = wcsrchr(pUtf16ExePath, L'\\');
 
         char utf8ExeDir[CC_MAX_PATH] = {0};
-        int  nNum                    = WideCharToMultiByte(CP_UTF8, 0, pUtf16ExePath, pUtf16DirEnd - pUtf16ExePath + 1, utf8ExeDir, sizeof(utf8ExeDir), nullptr, nullptr);
+        int  nNum                    = WideCharToMultiByte(CP_UTF8,
+                                       0,
+                                       static_cast<LPCWCH>(pUtf16ExePath),
+                                       static_cast<int>(pUtf16DirEnd - pUtf16ExePath + 1),
+                                       static_cast<LPSTR>(utf8ExeDir),
+                                       static_cast<int>(sizeof(utf8ExeDir)),
+                                       nullptr, nullptr);
 
         s_resourcePath = convertPathFormatToUnixStyle(utf8ExeDir);
     }
