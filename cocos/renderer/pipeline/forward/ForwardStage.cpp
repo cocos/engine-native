@@ -141,13 +141,14 @@ void ForwardStage::recordCommands(scene::Camera *camera, gfx::RenderPass *render
     auto *     cmdBuff         = _pipeline->getCommandBuffers()[0];
     uint const globalOffsets[] = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
     cmdBuff->bindDescriptorSet(globalSet, _pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
-
-    _renderQueues[0]->recordCommandBuffer(_device, renderPass, cmdBuff);
-    _instancedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
-    _batchedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
-    _additiveLightQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
-    _planarShadowQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
-    _renderQueues[1]->recordCommandBuffer(_device, renderPass, cmdBuff);
+    if (!_pipeline->getPipelineSceneData()->getRenderObjects().empty()) {
+        _renderQueues[0]->recordCommandBuffer(_device, renderPass, cmdBuff);
+        _instancedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
+        _batchedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
+        _additiveLightQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
+        _planarShadowQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
+        _renderQueues[1]->recordCommandBuffer(_device, renderPass, cmdBuff);
+    }
     _uiPhase->render(camera, renderPass);
     renderProfiler(renderPass, cmdBuff, _pipeline->getProfiler(), camera->window->swapchain);
 }
@@ -199,6 +200,15 @@ void ForwardStage::render(scene::Camera *camera) {
         colorAttachmentInfo.usage      = framegraph::RenderTargetAttachment::Usage::COLOR;
         colorAttachmentInfo.clearColor = _clearColors[0];
         colorAttachmentInfo.loadOp     = gfx::LoadOp::CLEAR;
+
+        auto clearFlags = static_cast<gfx::ClearFlagBit>(camera->clearFlag);
+        if (!hasFlag(clearFlags, gfx::ClearFlagBit::COLOR)) {
+            if (hasFlag(clearFlags, static_cast<gfx::ClearFlagBit>(skyboxFlag))) {
+                colorAttachmentInfo.loadOp = gfx::LoadOp::DISCARD;
+            } else {
+                colorAttachmentInfo.loadOp = gfx::LoadOp::LOAD;
+            }
+        }
         colorAttachmentInfo.beginAccesses = {gfx::AccessType::TRANSFER_READ};
         colorAttachmentInfo.endAccesses   = {gfx::AccessType::TRANSFER_READ};
         data.backBuffer                   = builder.create<framegraph::Texture>(ForwardPipeline::fgStrHandleForwardColorTexture, colorTexInfo);
