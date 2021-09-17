@@ -69,7 +69,7 @@ void TextureValidator::doInit(const TextureInfo &info) {
 void TextureValidator::doInit(const TextureViewInfo &info) {
     CCASSERT(!isInited(), "initializing twice?");
     _inited = true;
-    CCASSERT(static_cast<TextureValidator*>(info.texture)->isInited(), "alread destroyed?");
+    CCASSERT(info.texture && static_cast<TextureValidator*>(info.texture)->isInited(), "alread destroyed?");
 
     /////////// execute ///////////
 
@@ -83,7 +83,7 @@ void TextureValidator::doInit(const SwapchainTextureInfo &info) {
     CCASSERT(!isInited(), "initializing twice?");
     _inited = true;
     CC_UNUSED_PARAM(info); // workaround tidy issue
-    CCASSERT(static_cast<SwapchainValidator*>(info.swapchain)->isInited(), "alread destroyed?");
+    CCASSERT(info.swapchain && static_cast<SwapchainValidator*>(info.swapchain)->isInited(), "alread destroyed?");
 
     // the actor is already initialized
 }
