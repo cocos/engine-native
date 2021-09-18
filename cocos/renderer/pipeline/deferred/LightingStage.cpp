@@ -398,7 +398,7 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         cmdBuff->draw(inputAssembler);
     };
 
-    pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(DeferredInsertPoint::LIGHTING), DeferredPipeline::fgStrHandleLightingPass, lightingSetup, lightingExec);
+    pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(DeferredInsertPoint::DIP_LIGHTING), DeferredPipeline::fgStrHandleLightingPass, lightingSetup, lightingExec);
 }
 
 void LightingStage::fgTransparent(scene::Camera *camera) {
@@ -492,7 +492,7 @@ void LightingStage::fgTransparent(scene::Camera *camera) {
     }
 
     if (!empty) {
-        pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(DeferredInsertPoint::TRANSPARENT),
+        pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(DeferredInsertPoint::DIP_TRANSPARENT),
                                                       DeferredPipeline::fgStrHandleTransparentPass, transparentSetup, transparentExec);
     }
 }
@@ -792,7 +792,7 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
         }
     }
 
-    uint insertPoint = static_cast<uint>(DeferredInsertPoint::SSPR);
+    uint insertPoint = static_cast<uint>(DeferredInsertPoint::DIP_SSPR);
     for (uint i = 0; i < _reflectionElems.size(); ++i) {
         // add clear and comp passes here
         pipeline->getFrameGraph().addPass<DataClear>(insertPoint++, ssprClearPass[i], clearSetup, clearExec);
