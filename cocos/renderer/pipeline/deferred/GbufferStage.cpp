@@ -227,7 +227,7 @@ void GbufferStage::render(scene::Camera *camera) {
     // if empty == true, gbuffer and lightig passes will be ignored
     bool empty = _renderQueues[0]->empty() && _instancedQueue->empty() && _batchedQueue->empty();
     if (!empty) {
-        pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(DeferredInsertPoint::DIP_GBUFFER), DeferredPipeline::fgStrHandleGbufferPass, gbufferSetup, gbufferExec);
+        pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(DeferredInsertPoint::GBUFFER), DeferredPipeline::fgStrHandleGbufferPass, gbufferSetup, gbufferExec);
     }
 }
 } // namespace pipeline
