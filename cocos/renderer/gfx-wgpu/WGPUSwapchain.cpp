@@ -92,7 +92,6 @@ void CCWGPUSwapchain::doInit(const SwapchainInfo& info) {
 
     _colorTexture = _gpuSwapchainObj->swapchainColor = CC_NEW(CCWGPUTexture);
     initTexture(textureInfo, _gpuSwapchainObj->swapchainColor);
-
     textureInfo.format   = Format::DEPTH_STENCIL;
     _depthStencilTexture = _gpuSwapchainObj->swapchainDepthStencil = CC_NEW(CCWGPUTexture);
     initTexture(textureInfo, _gpuSwapchainObj->swapchainDepthStencil);

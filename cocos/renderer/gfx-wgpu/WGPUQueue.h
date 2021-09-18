@@ -44,8 +44,8 @@ public:
     inline CCWGPUQueueObject* gpuQueueObject() { return _gpuQueueObject; }
 
 protected:
-    virtual void doInit(const QueueInfo& info);
-    virtual void doDestroy();
+    void doInit(const QueueInfo& info) override;
+    void doDestroy() override;
 
     CCWGPUQueueObject* _gpuQueueObject = nullptr;
 };

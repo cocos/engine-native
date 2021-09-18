@@ -35,6 +35,7 @@
 #include "WGPUObject.h"
 #include "WGPUPipelineLayout.h"
 #include "WGPUPipelineState.h"
+#include "WGPUQueue.h"
 #include "WGPURenderPass.h"
 #include "WGPUSampler.h"
 #include "WGPUShader.h"
@@ -91,7 +92,7 @@ Swapchain* CCWGPUDevice::createSwapchain() {
 }
 
 Queue* CCWGPUDevice::createQueue() {
-    return nullptr;
+    return CC_NEW(CCWGPUQueue);
 }
 
 Buffer* CCWGPUDevice::createBuffer() {
@@ -107,7 +108,7 @@ Shader* CCWGPUDevice::createShader() {
 }
 
 InputAssembler* CCWGPUDevice::createInputAssembler() {
-    return nullptr;
+    return CC_NEW(CCWGPUInputAssembler);
 }
 
 RenderPass* CCWGPUDevice::createRenderPass() {
@@ -135,7 +136,7 @@ PipelineState* CCWGPUDevice::createPipelineState() {
 }
 
 CommandBuffer* CCWGPUDevice::createCommandBuffer(const CommandBufferInfo& info, bool hasAgent) {
-    return nullptr;
+    return CC_NEW(CCWGPUCommandBuffer);
 }
 
 void CCWGPUDevice::copyBuffersToTexture(const uint8_t* const* buffers, Texture* dst, const BufferTextureCopy* regions, uint count) {

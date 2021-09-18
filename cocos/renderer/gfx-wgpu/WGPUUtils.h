@@ -50,6 +50,7 @@ static WGPUTextureUsage toWGPUTextureUsage(TextureUsage usage) {
         case cc::gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT:
             return WGPUTextureUsage::WGPUTextureUsage_RenderAttachment;
         default:
+            CC_LOG_ERROR("unsupport usage %d.", usage);
             return WGPUTextureUsage::WGPUTextureUsage_Force32;
     }
 }
@@ -66,6 +67,7 @@ static WGPUTextureDimension toWGPUTextureDimension(TextureType type) {
         case TextureType::CUBE:
             return WGPUTextureDimension::WGPUTextureDimension_3D;
         default:
+            CC_LOG_ERROR("unsupport type %d.", type);
             return WGPUTextureDimension::WGPUTextureDimension_Force32;
     }
 }
@@ -82,6 +84,7 @@ static WGPUTextureViewDimension toWGPUTextureViewDimension(TextureType type) {
         case TextureType::CUBE:
             return WGPUTextureViewDimension::WGPUTextureViewDimension_3D;
         default:
+            CC_LOG_ERROR("unsupport type %d.", type);
             return WGPUTextureViewDimension::WGPUTextureViewDimension_Undefined;
     }
 }
@@ -360,6 +363,7 @@ static uint32_t toWGPUSampleCount(SampleCount sampleCount) {
         case SampleCount::MULTIPLE_QUALITY:
             return 8;
         default:
+            CC_LOG_ERROR("unsupport sampleCount %d.", sampleCount);
             return 1;
     }
 }

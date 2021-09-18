@@ -71,6 +71,14 @@ public:
 
     void copyBuffersToTexture(const std::vector<String> &strList, Texture *texture, const BufferTextureCopy *regions, uint count);
 
+    void updateBuffer(Buffer *buff, String bufferContainer, uint size) {
+        updateBuffer(buff, reinterpret_cast<void *>(bufferContainer.data()), size);
+    }
+
+    void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, uint stencil) {
+        this->CommandBuffer::beginRenderPass(renderPass, fbo, renderArea, colors.data(), depth, stencil);
+    }
+
 protected:
     virtual void doInit(const CommandBufferInfo &info);
     virtual void doDestroy();
