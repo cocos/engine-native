@@ -1,10 +1,12 @@
 #pragma once
 #include "WGPUBuffer.h"
+#include "WGPUCommandBuffer.h"
 #include "WGPUDef.h"
 #include "WGPUDescriptorSet.h"
 #include "WGPUDescriptorSetLayout.h"
 #include "WGPUDevice.h"
 #include "WGPUFrameBuffer.h"
+#include "WGPUInputAssembler.h"
 #include "WGPUPipelineLayout.h"
 #include "WGPURenderPass.h"
 #include "WGPUSampler.h"
@@ -255,26 +257,84 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .value("FRONT", CullMode::FRONT)
         .value("BACK", CullMode::BACK);
 
-    // enum class StencilOp : uint32_t {
-    //     ZERO,
-    //     KEEP,
-    //     REPLACE,
-    //     INCR,
-    //     DECR,
-    //     INVERT,
-    //     INCR_WRAP,
-    //     DECR_WRAP,
-    // };
     enum_<StencilOp>("StencilOp")
-        .value("NONE", CullMode::NONE)
-        .value("FRONT", CullMode::FRONT)
-        .value("BACK", CullMode::BACK)
-        .value("NONE", CullMode::NONE)
-        .value("FRONT", CullMode::FRONT)
-        .value("BACK", CullMode::BACK)
-        .value("NONE", CullMode::NONE)
-        .value("FRONT", CullMode::FRONT)
-        .value("BACK", CullMode::BACK);
+        .value("ZERO", StencilOp::ZERO)
+        .value("KEEP", StencilOp::KEEP)
+        .value("REPLACE", StencilOp::REPLACE)
+        .value("INCR", StencilOp::INCR)
+        .value("DECR", StencilOp::DECR)
+        .value("INVERT", StencilOp::INVERT)
+        .value("INCR_WRAP", StencilOp::INCR_WRAP)
+        .value("DECR_WRAP", StencilOp::DECR_WRAP);
+
+    enum_<BlendFactor>("BlendFactor")
+        .value("ZERO", BlendFactor::ZERO)
+        .value("ONE", BlendFactor::ONE)
+        .value("SRC_ALPHA", BlendFactor::SRC_ALPHA)
+        .value("DST_ALPHA", BlendFactor::DST_ALPHA)
+        .value("ONE_MINUS_SRC_ALPHA", BlendFactor::ONE_MINUS_SRC_ALPHA)
+        .value("ONE_MINUS_DST_ALPHA", BlendFactor::ONE_MINUS_DST_ALPHA)
+        .value("SRC_COLOR", BlendFactor::SRC_COLOR)
+        .value("DST_COLOR", BlendFactor::DST_COLOR)
+        .value("ONE_MINUS_SRC_COLOR", BlendFactor::ONE_MINUS_SRC_COLOR)
+        .value("ONE_MINUS_DST_COLOR", BlendFactor::ONE_MINUS_DST_COLOR)
+        .value("SRC_ALPHA_SATURATE", BlendFactor::SRC_ALPHA_SATURATE)
+        .value("CONSTANT_COLOR", BlendFactor::CONSTANT_COLOR)
+        .value("ONE_MINUS_CONSTANT_COLOR", BlendFactor::ONE_MINUS_CONSTANT_COLOR)
+        .value("CONSTANT_ALPHA", BlendFactor::CONSTANT_ALPHA)
+        .value("ONE_MINUS_CONSTANT_ALPHA", BlendFactor::ONE_MINUS_CONSTANT_ALPHA);
+
+    enum_<BlendOp>("BlendOp")
+        .value("ADD", BlendOp::ADD)
+        .value("SUB", BlendOp::SUB)
+        .value("REV_SUB", BlendOp::REV_SUB)
+        .value("MIN", BlendOp::MIN)
+        .value("MAX", BlendOp::MAX);
+
+    enum_<ColorMask>("ColorMask")
+        .value("NONE", ColorMask::NONE)
+        .value("R", ColorMask::R)
+        .value("G", ColorMask::G)
+        .value("B", ColorMask::B)
+        .value("A", ColorMask::A)
+        .value("ALL", ColorMask::ALL);
+
+    enum_<PrimitiveMode>("PrimitiveMode")
+        .value("POINT_LIST", PrimitiveMode::POINT_LIST)
+        .value("LINE_LIST", PrimitiveMode::LINE_LIST)
+        .value("LINE_STRIP", PrimitiveMode::LINE_STRIP)
+        .value("LINE_LOOP", PrimitiveMode::LINE_LOOP)
+        .value("LINE_LIST_ADJACENCY", PrimitiveMode::LINE_LIST_ADJACENCY)
+        .value("LINE_STRIP_ADJACENCY", PrimitiveMode::LINE_STRIP_ADJACENCY)
+        .value("ISO_LINE_LIST", PrimitiveMode::ISO_LINE_LIST)
+        .value("TRIANGLE_LIST", PrimitiveMode::TRIANGLE_LIST)
+        .value("TRIANGLE_STRIP", PrimitiveMode::TRIANGLE_STRIP)
+        .value("TRIANGLE_FAN", PrimitiveMode::TRIANGLE_FAN)
+        .value("TRIANGLE_LIST_ADJACENCY", PrimitiveMode::TRIANGLE_LIST_ADJACENCY)
+        .value("TRIANGLE_STRIP_ADJACENCY", PrimitiveMode::TRIANGLE_STRIP_ADJACENCY)
+        .value("TRIANGLE_PATCH_ADJACENCY", PrimitiveMode::TRIANGLE_PATCH_ADJACENCY)
+        .value("QUAD_PATCH_LIST", PrimitiveMode::QUAD_PATCH_LIST);
+
+    enum_<DynamicStateFlagBit>("DynamicStateFlagBit")
+        .value("NONE", DynamicStateFlagBit::NONE)
+        .value("VIEWPORT", DynamicStateFlagBit::VIEWPORT)
+        .value("SCISSOR", DynamicStateFlagBit::SCISSOR)
+        .value("LINE_WIDTH", DynamicStateFlagBit::LINE_WIDTH)
+        .value("DEPTH_BIAS", DynamicStateFlagBit::DEPTH_BIAS)
+        .value("BLEND_CONSTANTS", DynamicStateFlagBit::BLEND_CONSTANTS)
+        .value("DEPTH_BOUNDS", DynamicStateFlagBit::DEPTH_BOUNDS)
+        .value("STENCIL_WRITE_MASK", DynamicStateFlagBit::STENCIL_WRITE_MASK)
+        .value("STENCIL_COMPARE_MASK", DynamicStateFlagBit::STENCIL_COMPARE_MASK);
+
+    enum_<PipelineBindPoint>("PipelineBindPoint")
+        .value("GRAPHICS", PipelineBindPoint::GRAPHICS)
+        .value("COMPUTE", PipelineBindPoint::COMPUTE)
+        .value("RAY_TRACING", PipelineBindPoint::RAY_TRACING);
+
+    enum_<QueueType>("QueueType")
+        .value("GRAPHICS", QueueType::GRAPHICS)
+        .value("COMPUTE", QueueType::COMPUTE)
+        .value("TRANSFER", QueueType::TRANSFER);
 
     //-----------------------------------------------STRUCT-------------------------------------------------------------------
     value_object<ColorAttachment>("ColorAttachment")
@@ -502,44 +562,105 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .field("lineWidth", &RasterizerState::lineWidth);
     function("RasterizerStateInstance", &GenInstance<RasterizerState>::instance);
 
-    // struct DepthStencilState {
-    //     uint32_t       depthTest{1U};
-    //     uint32_t       depthWrite{1U};
-    //     ComparisonFunc depthFunc{ComparisonFunc::LESS};
-    //     uint32_t       stencilTestFront{0U};
-    //     ComparisonFunc stencilFuncFront{ComparisonFunc::ALWAYS};
-    //     uint32_t       stencilReadMaskFront{0xffffffffU};
-    //     uint32_t       stencilWriteMaskFront{0xffffffffU};
-    //     StencilOp      stencilFailOpFront{StencilOp::KEEP};
-    //     StencilOp      stencilZFailOpFront{StencilOp::KEEP};
-    //     StencilOp      stencilPassOpFront{StencilOp::KEEP};
-    //     uint32_t       stencilRefFront{1U};
-    //     uint32_t       stencilTestBack{0U};
-    //     ComparisonFunc stencilFuncBack{ComparisonFunc::ALWAYS};
-    //     uint32_t       stencilReadMaskBack{0xffffffffU};
-    //     uint32_t       stencilWriteMaskBack{0xffffffffU};
-    //     StencilOp      stencilFailOpBack{StencilOp::KEEP};
-    //     StencilOp      stencilZFailOpBack{StencilOp::KEEP};
-    //     StencilOp      stencilPassOpBack{StencilOp::KEEP};
-    //     uint32_t       stencilRefBack{1U};
-    // };
-
     value_object<DepthStencilState>("DepthStencilState")
+        .field("depthTest", &DepthStencilState::depthTest)
+        .field("depthWrite", &DepthStencilState::depthWrite)
+        .field("depthFunc", &DepthStencilState::depthFunc)
+        .field("stencilTestFront", &DepthStencilState::stencilTestFront)
+        .field("stencilFuncFront", &DepthStencilState::stencilFuncFront)
+        .field("stencilReadMaskFront", &DepthStencilState::stencilReadMaskFront)
+        .field("stencilWriteMaskFront", &DepthStencilState::stencilWriteMaskFront)
+        .field("stencilFailOpFront", &DepthStencilState::stencilFailOpFront)
+        .field("stencilZFailOpFront", &DepthStencilState::stencilZFailOpFront)
+        .field("stencilPassOpFront", &DepthStencilState::stencilPassOpFront)
+        .field("stencilRefFront", &DepthStencilState::stencilRefFront)
+        .field("stencilFuncBack", &DepthStencilState::stencilFuncBack)
+        .field("stencilReadMaskBack", &DepthStencilState::stencilReadMaskBack)
+        .field("stencilWriteMaskBack", &DepthStencilState::stencilWriteMaskBack)
+        .field("stencilFailOpBack", &DepthStencilState::stencilFailOpBack)
+        .field("stencilZFailOpBack", &DepthStencilState::stencilZFailOpBack)
+        .field("stencilPassOpBack", &DepthStencilState::stencilPassOpBack)
+        .field("stencilRefBack", &DepthStencilState::stencilRefBack);
+    function("DepthStencilStateInstance", &GenInstance<DepthStencilState>::instance);
 
-        // struct with pointers
-        class_<TextureInfoInstance>("TextureInfoInstance")
-            .constructor<>()
-            .function("setType", &TextureInfoInstance::setType)
-            .function("setUsage", &TextureInfoInstance::setUsage)
-            .function("setFormat", &TextureInfoInstance::setFormat)
-            .function("setWidth", &TextureInfoInstance::setWidth)
-            .function("setHeight", &TextureInfoInstance::setHeight)
-            .function("setFlags", &TextureInfoInstance::setFlags)
-            .function("setLevelCount", &TextureInfoInstance::setLevelCount)
-            .function("setLayerCount", &TextureInfoInstance::setLayerCount)
-            .function("setSamples", &TextureInfoInstance::setSamples)
-            .function("setDepth", &TextureInfoInstance::setDepth)
-            .function("setImageBuffer", &TextureInfoInstance::setImageBuffer, allow_raw_pointer<arg<0>>());
+    value_object<BlendTarget>("BlendTarget")
+        .field("blend", &BlendTarget::blend)
+        .field("blendSrc", &BlendTarget::blendSrc)
+        .field("blendDst", &BlendTarget::blendDst)
+        .field("blendEq", &BlendTarget::blendEq)
+        .field("blendSrcAlpha", &BlendTarget::blendSrcAlpha)
+        .field("blendDstAlpha", &BlendTarget::blendDstAlpha)
+        .field("blendAlphaEq", &BlendTarget::blendAlphaEq)
+        .field("blendColorMask", &BlendTarget::blendColorMask);
+    function("BlendTargetInstance", &GenInstance<BlendTarget>::instance);
+
+    value_object<BlendState>("BlendState")
+        .field("isA2C", &BlendState::isA2C)
+        .field("isIndepend", &BlendState::isIndepend)
+        .field("blendColor", &BlendState::blendColor)
+        .field("targets", &BlendState::targets);
+    function("BlendStateInstance", &GenInstance<BlendState>::instance);
+
+    value_object<Color>("Color")
+        .field("x", &Color::x)
+        .field("y", &Color::y)
+        .field("z", &Color::z)
+        .field("w", &Color::w);
+    function("Color", &GenInstance<Color>::instance);
+
+    value_object<QueueInfo>("QueueInfo")
+        .field("type", &QueueInfo::type);
+    function("QueueInfo", &GenInstance<QueueInfo>::instance);
+
+    value_object<Rect>("Rect")
+        .field("x", &Rect::x)
+        .field("y", &Rect::y)
+        .field("width", &Rect::width)
+        .field("height", &Rect::height);
+    function("Rect", &GenInstance<Rect>::instance);
+
+    value_object<Viewport>("Viewport")
+        .field("left", &Viewport::left)
+        .field("top", &Viewport::top)
+        .field("width", &Viewport::width)
+        .field("height", &Viewport::height)
+        .field("minDepth", &Viewport::minDepth)
+        .field("maxDepth", &Viewport::maxDepth);
+    function("Viewport", &GenInstance<Viewport>::instance);
+
+    value_object<DrawInfo>("DrawInfo")
+        .field("vertexCount", &DrawInfo::vertexCount)
+        .field("firstVertex", &DrawInfo::firstVertex)
+        .field("indexCount", &DrawInfo::indexCount)
+        .field("firstIndex", &DrawInfo::firstIndex)
+        .field("vertexOffset", &DrawInfo::vertexOffset)
+        .field("instanceCount", &DrawInfo::instanceCount)
+        .field("firstInstance", &DrawInfo::firstInstance);
+    function("DrawInfo", &GenInstance<DrawInfo>::instance);
+
+    value_object<TextureBlit>("TextureBlit")
+        .field("srcSubres", &TextureBlit::srcSubres)
+        .field("srcOffset", &TextureBlit::srcOffset)
+        .field("srcExtent", &TextureBlit::srcExtent)
+        .field("srcSubres", &TextureBlit::dstSubres)
+        .field("srcOffset", &TextureBlit::dstOffset)
+        .field("srcExtent", &TextureBlit::dstExtent);
+    function("TextureBlit", &GenInstance<TextureBlit>::instance);
+
+    // struct with pointers
+    class_<TextureInfoInstance>("TextureInfoInstance")
+        .constructor<>()
+        .function("setType", &TextureInfoInstance::setType)
+        .function("setUsage", &TextureInfoInstance::setUsage)
+        .function("setFormat", &TextureInfoInstance::setFormat)
+        .function("setWidth", &TextureInfoInstance::setWidth)
+        .function("setHeight", &TextureInfoInstance::setHeight)
+        .function("setFlags", &TextureInfoInstance::setFlags)
+        .function("setLevelCount", &TextureInfoInstance::setLevelCount)
+        .function("setLayerCount", &TextureInfoInstance::setLayerCount)
+        .function("setSamples", &TextureInfoInstance::setSamples)
+        .function("setDepth", &TextureInfoInstance::setDepth)
+        .function("setImageBuffer", &TextureInfoInstance::setImageBuffer, allow_raw_pointer<arg<0>>());
 
     class_<TextureViewInfoInstance>("TextureViewInfoInstance")
         .constructor<>()
@@ -573,6 +694,32 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     class_<DescriptorSetInfoInstance>("DescriptorSetInfoInstance")
         .constructor<>()
         .function("setDescriptorSetLayout", &DescriptorSetInfoInstance::setDescriptorSetLayout, allow_raw_pointer<arg<0>>());
+
+    class_<PipelineStateInfoInstance>("PipelineStateInfoInstance")
+        .constructor<>()
+        .function("setShader", &PipelineStateInfoInstance::setShader, allow_raw_pointer<arg<0>>())
+        .function("setPipelineLayout", &PipelineStateInfoInstance::setPipelineLayout, allow_raw_pointer<arg<0>>())
+        .function("setRenderPass", &PipelineStateInfoInstance::setRenderPass, allow_raw_pointer<arg<0>>())
+        .function("setInputState", &PipelineStateInfoInstance::setInputState)
+        .function("setRasterizerState", &PipelineStateInfoInstance::setRasterizerState)
+        .function("setDepthStencilState", &PipelineStateInfoInstance::setDepthStencilState)
+        .function("setBlendState", &PipelineStateInfoInstance::setBlendState)
+        .function("setPrimitiveMode", &PipelineStateInfoInstance::setPrimitiveMode)
+        .function("setDynamicStateFlags", &PipelineStateInfoInstance::setDynamicStateFlags)
+        .function("setPipelineBindPoint", &PipelineStateInfoInstance::setPipelineBindPoint)
+        .function("setSubpass", &PipelineStateInfoInstance::setSubpass);
+
+    class_<InputAssemblerInfoInstance>("InputAssemblerInfoInstance")
+        .constructor<>()
+        .function("setAttributes", &InputAssemblerInfoInstance::setAttributes)
+        .function("setBuffers", &InputAssemblerInfoInstance::setBuffers)
+        .function("setIndexBuffer", &InputAssemblerInfoInstance::setIndexBuffer, allow_raw_pointer<arg<0>>())
+        .function("setIndirectBuffer", &InputAssemblerInfoInstance::setIndirectBuffer, allow_raw_pointer<arg<0>>());
+
+    class_<CommandBufferInfoInstance>("CommandBufferInfoInstance")
+        .constructor<>()
+        .function("setQueue", &CommandBufferInfoInstance::setQueue, allow_raw_pointer<arg<0>>())
+        .function("setType", &CommandBufferInfoInstance::setType, allow_raw_pointer<arg<0>>());
 
     //--------------------------------------------------CLASS---------------------------------------------------------------------------
     class_<cc::gfx::Swapchain>("Swapchain")
@@ -705,7 +852,50 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     class_<Shader>("Shader")
         .function("initialize", &Shader::initialize)
         .function("destroy", &Shader::destroy);
-    class_<CCWGPUShader>("CCWGPUShader")
+    class_<CCWGPUShader, base<Shader>>("CCWGPUShader")
+        .constructor<>();
+
+    class_<InputAssembler>("InputAssembler")
+        .function("initialize", &InputAssembler::initialize)
+        .function("destroy", &InputAssembler::destroy);
+    class_<CCWGPUInputAssembler, base<InputAssembler>>("CCWGPUInputAssembler")
+        .constructor<>();
+
+    class_<CommandBuffer>("CommandBuffer")
+        .function("initialize", &CommandBuffer::initialize)
+        .function("destroy", &CommandBuffer::destroy)
+        .function("begin", select_overload<void(RenderPass *, uint, Framebuffer *)>(&CommandBuffer::begin), allow_raw_pointers())
+        .function("end", &CommandBuffer::end)
+        .function("beginRenderPass", select_overload<void(RenderPass *, Framebuffer *, const Rect &, const Color *, float, uint, CommandBuffer *const *, uint)>(&CommandBuffer::beginRenderPass), allow_raw_pointers())
+        .function("endRenderPass", &CommandBuffer::endRenderPass)
+        .function("bindPipelineState", &CommandBuffer::bindPipelineState, allow_raw_pointer<arg<0>>())
+        .function("bindDescriptorSet", select_overload<void(uint, DescriptorSet *, uint, const uint *)>(&CommandBuffer::bindDescriptorSet), allow_raw_pointers())
+        .function("bindInputAssembler", &CommandBuffer::bindInputAssembler, allow_raw_pointer<arg<0>>())
+        .function("setViewport", &CommandBuffer::setViewport)
+        .function("setScissor", &CommandBuffer::setScissor)
+        .function("setDepthBias", &CommandBuffer::setDepthBias)
+        .function("setBlendConstants", &CommandBuffer::setBlendConstants)
+        .function("setDepthBound", &CommandBuffer::setDepthBound)
+        .function("setStencilWriteMask", &CommandBuffer::setStencilWriteMask)
+        .function("setStencilCompareMask", &CommandBuffer::setStencilCompareMask)
+        .function("nextSubpass", &CommandBuffer::nextSubpass)
+        .function("draw", select_overload<void(const DrawInfo &)>(&CommandBuffer::draw))
+        .function("updateBuffer", select_overload<void(Buffer *, const void *, uint)>(&CommandBuffer::updateBuffer), allow_raw_pointers())
+        .function("copyBuffersToTexture", select_overload<void(const uint8_t *const *, Texture *, const BufferTextureCopy *, uint)>(&CommandBuffer::copyBuffersToTexture), allow_raw_pointers())
+        .function("blitTexture", select_overload<void(Texture *, Texture *, const TextureBlit *, uint, Filter)>(&CommandBuffer::blitTexture), allow_raw_pointers())
+        .function("execute", select_overload<void(CommandBuffer *const *, uint32_t)>(&CommandBuffer::execute), allow_raw_pointer<arg<0>>())
+        .function("dispatch", &CommandBuffer::dispatch)
+        .function("begin4", select_overload<void(void)>(&CommandBuffer::begin))
+        .function("begin3", select_overload<void(RenderPass *)>(&CommandBuffer::begin), allow_raw_pointers())
+        .function("begin2", select_overload<void(RenderPass *, uint)>(&CommandBuffer::begin), allow_raw_pointers())
+        .function("execute", select_overload<void(const CommandBufferList &, uint32_t)>(&CommandBuffer::execute))
+        .function("bindDescriptorSet2", select_overload<void(uint, DescriptorSet *)>(&CommandBuffer::bindDescriptorSet), allow_raw_pointer<arg<0>>())
+        .function("drawIA", select_overload<void(InputAssembler *)>(&CommandBuffer::draw), allow_raw_pointer<arg<0>>())
+        .function("blitTexture2", select_overload<void(Texture *, Texture *, const TextureBlitList &, Filter)>(&CommandBuffer::blitTexture), allow_raw_pointers())
+        .function("getQueue", &CommandBuffer::getQueue, allow_raw_pointer<arg<0>>());
+    class_<CCWGPUCommandBuffer, base<CommandBuffer>>("CCWGPUCommandBuffer")
+        .function("copyBuffersToTexture", select_overload<void(const std::vector<String> &, Texture *, const BufferTextureCopy *, uint)>(&CCWGPUCommandBuffer::copyBuffersToTexture), allow_raw_pointer<arg<1>>())
+        .function("updateIndirectBuffer", select_overload<void(Buffer *, const DrawInfoList &)>(&CCWGPUCommandBuffer::updateIndirectBuffer), allow_raw_pointers())
         .constructor<>();
 
     //--------------------------------------------------CONTAINER-----------------------------------------------------------------------
@@ -731,6 +921,12 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     register_vector<UniformSampler>("UniformSamplerList");
     register_vector<UniformInputAttachment>("UniformInputAttachmentList");
     register_vector<Uniform>("UniformList");
+    register_vector<BlendTarget>("BlendTargetList");
+    register_vector<CommandBuffer *>("CommandBufferList");
+    register_vector<Color>("ColorList");
+    register_vector<TextureBlit>("TextureBlitList");
+    register_vector<DrawInfo>("DrawInfoList");
+    register_vector<String>("StringList");
 };
 
 } // namespace cc::gfx

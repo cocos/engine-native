@@ -67,6 +67,10 @@ public:
 
     inline CCWGPUCommandBufferObject *gpuCommandBufferObject() { return _gpuCommandBufferObj; }
 
+    void updateIndirectBuffer(Buffer *buffer, const DrawInfoList &list);
+
+    void copyBuffersToTexture(const std::vector<String> &strList, Texture *texture, const BufferTextureCopy *regions, uint count);
+
 protected:
     virtual void doInit(const CommandBufferInfo &info);
     virtual void doDestroy();

@@ -125,20 +125,58 @@ public:
     inline void setShader(Shader* shader) { info.shader = shader; }
     inline void setPipelineLayout(PipelineLayout* pipelineLayout) { info.pipelineLayout = pipelineLayout; }
     inline void setRenderPass(RenderPass* renderPass) { info.renderPass = renderPass; }
-    inline void setInputState(InputState* inputState) { info.inputState = inputState; }
-    inline void setRasterizerState(RasterizerState* rasterizerState) { info.rasterizerState = rasterizerState; }
-    inline void setDepthStencilState(DepthStencilState* depthStencilState) { info.depthStencilState = depthStencilState; }
-    inline void setBlendState(BlendState* blendState) { info.blendState = blendState; }
-    inline void setPrimitiveMode(PrimitiveMode* primitive) { info.primitive = primitive; }
-    inline void setDynamicStateFlags(DynamicStateFlags* dynamicStates) { info.dynamicStates = dynamicStates; }
-    inline void setPipelineBindPoint(PipelineBindPoint* bindPoint) { info.bindPoint = bindPoint; }
+    inline void setInputState(InputState inputState) { info.inputState = inputState; }
+    inline void setRasterizerState(RasterizerState rasterizerState) { info.rasterizerState = rasterizerState; }
+    inline void setDepthStencilState(DepthStencilState depthStencilState) { info.depthStencilState = depthStencilState; }
+    inline void setBlendState(BlendState blendState) { info.blendState = blendState; }
+    inline void setPrimitiveMode(PrimitiveMode primitive) { info.primitive = primitive; }
+    inline void setDynamicStateFlags(DynamicStateFlags dynamicStates) { info.dynamicStates = dynamicStates; }
+    inline void setPipelineBindPoint(PipelineBindPoint bindPoint) { info.bindPoint = bindPoint; }
     inline void setSubpass(uint32_t subpass) { info.subpass = subpass; }
 
     explicit operator const PipelineStateInfo() const { return info; }
 
 private:
     PipelineStateInfo info;
-}
+};
+
+class InputAssemblerInfoInstance {
+public:
+    inline void setAttributes(AttributeList attributes) { info.attributes = attributes; }
+    inline void setBuffers(BufferList buffers) { info.vertexBuffers = buffers; }
+    inline void setIndexBuffer(Buffer* buffer) { info.indexBuffer = buffer; }
+    inline void setIndirectBuffer(Buffer* buffer) { info.indirectBuffer = buffer; }
+
+    explicit operator const InputAssemblerInfo() const { return info; }
+
+private:
+    InputAssemblerInfo info;
+};
+
+class CommandBufferInfoInstance {
+public:
+    inline void setQueue(Queue* q) { info.queue = q; }
+    inline void setType(CommandBufferType type) { info.type = type; }
+
+    explicit operator const CommandBufferInfo() const { return info; }
+
+private:
+    CommandBufferInfo info;
+};
+
+class DispatchInfoInstance {
+public:
+    inline void setGroupCountX(uint32_t groupCountX) { info.groupCountX = groupCountX; }
+    inline void setGroupCountY(uint32_t groupCountY) { info.groupCountY = groupCountY; }
+    inline void setGroupCountZ(uint32_t groupCountZ) { info.groupCountZ = groupCountZ; }
+    inline void setIndirectBuffer(Buffer* indirectBuffer) { info.indirectBuffer = indirectBuffer; }
+    inline void setIndirectOffset(uint32_t offset) { info.indirectOffset = offset; }
+
+    explicit operator const DispatchInfo() const { return info; }
+
+private:
+    DispatchInfo info;
+};
 
 } // namespace gfx
 } // namespace cc

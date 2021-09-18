@@ -34,6 +34,7 @@
 #include "WGPUFrameBuffer.h"
 #include "WGPUObject.h"
 #include "WGPUPipelineLayout.h"
+#include "WGPUPipelineState.h"
 #include "WGPURenderPass.h"
 #include "WGPUSampler.h"
 #include "WGPUShader.h"
@@ -130,7 +131,7 @@ PipelineLayout* CCWGPUDevice::createPipelineLayout() {
 }
 
 PipelineState* CCWGPUDevice::createPipelineState() {
-    return nullptr;
+    return CC_NEW(CCWGPUPipelineState);
 }
 
 CommandBuffer* CCWGPUDevice::createCommandBuffer(const CommandBufferInfo& info, bool hasAgent) {
