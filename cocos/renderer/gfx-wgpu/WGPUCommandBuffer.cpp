@@ -430,14 +430,52 @@ void CCWGPUCommandBuffer::copyBuffersToTexture(const uint8_t *const *buffers, Te
     _renderPassFuncQ.push(copyBuffToTexFunc);
 }
 
+void CCWGPUCommandBuffer::copyBuffersToTexture(const std::vector<String> &strList, Texture *texture, const BufferTextureCopy *regions, uint count) {
+    auto copyBuffToTexFunc = [strList, texture, regions, count](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
+        //wgpuCommandEncoderCopyBufferToTexture
+
+        for (size_t i = 0; i < count; i++) {
+            WGPUOrigin3D origin = {
+                .x = static_cast<uint32_t>(regions[i].texOffset.x),
+                .y = static_cast<uint32_t>(regions[i].texOffset.y),
+                .z = static_cast<uint32_t>(regions[i].texOffset.z),
+            };
+
+            WGPUImageCopyTexture imageCopyTexture = {
+                .texture  = static_cast<CCWGPUTexture *>(texture)->gpuTextureObject()->wgpuTexture,
+                .mipLevel = 0,
+                .origin   = origin,
+                .aspect   = WGPUTextureAspect_All,
+            };
+
+            auto *   ccTex       = static_cast<CCWGPUTexture *>(texture);
+            uint32_t width       = regions[i].texExtent.width;
+            uint32_t height      = regions[i].texExtent.height;
+            uint32_t depth       = regions[i].texExtent.depth;
+            uint32_t bytesPerRow = GFX_FORMAT_INFOS[static_cast<uint>(ccTex->getFormat())].size * width;
+            uint32_t dataSize    = bytesPerRow * height * depth;
+
+            WGPUTextureDataLayout texLayout = {
+                .offset       = 0,
+                .bytesPerRow  = bytesPerRow,
+                .rowsPerImage = height,
+            };
+
+            WGPUExtent3D extent = {
+                .width              = width,
+                .height             = height,
+                .depthOrArrayLayers = depth,
+            };
+
+            wgpuQueueWriteTexture(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuQueue, &imageCopyTexture, strList[i].data(), dataSize, &texLayout, &extent);
+        }
+    };
+
+    _renderPassFuncQ.push(copyBuffToTexFunc);
+}
+
 void CCWGPUCommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlit *regions, uint count, Filter filter) {
     auto copyBuffToTexFunc = [srcTexture, dstTexture, regions, count](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
-        // truct const * nextInChain;
-        // WGPUTexture texture;
-        // uint32_t mipLevel;
-        // WGPUOrigin3D origin;
-        // WGPUTextureAspect aspect;
-
         for (size_t i = 0; i < count; i++) {
             auto *srcTex = static_cast<CCWGPUTexture *>(srcTexture);
             auto *dstTex = static_cast<CCWGPUTexture *>(dstTexture);
@@ -485,13 +523,6 @@ void CCWGPUCommandBuffer::execute(CommandBuffer *const *cmdBuffs, uint32_t count
 }
 
 void CCWGPUCommandBuffer::dispatch(const DispatchInfo &info) {
-    //     uint32_t groupCountX{0U};
-    // uint32_t groupCountY{0U};
-    // uint32_t groupCountZ{0U};
-
-    // Buffer * indirectBuffer{nullptr}; // @ts-nullable
-    // uint32_t indirectOffset{0U};
-
     std::function<void(CCWGPUCommandBufferObject * gpuCommandBufferObj)> dispatchFunc;
     if (info.indirectBuffer) {
         dispatchFunc = [info](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
@@ -512,6 +543,10 @@ void CCWGPUCommandBuffer::dispatch(const DispatchInfo &info) {
 }
 
 void CCWGPUCommandBuffer::pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrier *const *textureBarriers, const Texture *const *textures, uint textureBarrierCount) {
+}
+
+void CCWGPUCommandBuffer::updateIndirectBuffer(Buffer *buffer, const DrawInfoList &list) {
+    buffer->update(list.data(), 0); // indirectBuffer calc size inside.
 }
 
 } // namespace gfx

@@ -4667,6 +4667,10 @@ var ASM_CONSTS = {
       pass["setPipeline"](pipeline);
     }
 
+  function _wgpuComputePipelineRelease(id) {
+    WebGPU.mgrComputePipeline.release(id);
+  }
+
   function _wgpuDeviceCreateBindGroup(deviceId, descriptor) {
       assert(descriptor);assert(HEAP32[((descriptor)>>2)] === 0);
   
@@ -4860,6 +4864,23 @@ var ASM_CONSTS = {
       return id;
     }
 
+  function _wgpuDeviceCreateComputePipeline(deviceId, descriptor) {
+      assert(descriptor);assert(HEAP32[((descriptor)>>2)] === 0);
+  
+      var desc = {
+        "label": undefined,
+        "layout":  WebGPU.mgrPipelineLayout.get(
+          HEAP32[(((descriptor)+(8))>>2)]),
+        "computeStage": WebGPU.makeProgrammableStageDescriptor(
+          descriptor + 12),
+      };
+      var labelPtr = HEAP32[(((descriptor)+(4))>>2)];
+      if (labelPtr) desc["label"] = UTF8ToString(labelPtr);
+  
+      var device = WebGPU["mgrDevice"].get(deviceId);
+      return WebGPU.mgrComputePipeline.create(device["createComputePipeline"](desc));
+    }
+
   function _wgpuDeviceCreatePipelineLayout(deviceId, descriptor) {
       assert(descriptor);assert(HEAP32[((descriptor)>>2)] === 0);
       var bglCount = HEAPU32[(((descriptor)+(8))>>2)];
@@ -4878,6 +4899,198 @@ var ASM_CONSTS = {
   
       var device = WebGPU["mgrDevice"].get(deviceId);
       return WebGPU.mgrPipelineLayout.create(device["createPipelineLayout"](desc));
+    }
+
+  function _wgpuDeviceCreateRenderPipeline2(deviceId, descriptor) {
+      assert(descriptor);assert(HEAP32[((descriptor)>>2)] === 0);
+  
+      function makePrimitiveState(rsPtr) {
+        if (rsPtr === 0) return undefined;
+        assert(rsPtr);assert(HEAP32[((rsPtr)>>2)] === 0);
+        return {
+          "topology": WebGPU.PrimitiveTopology[
+            HEAPU32[(((rsPtr)+(4))>>2)]],
+          "stripIndexFormat": WebGPU.IndexFormat[
+            HEAPU32[(((rsPtr)+(8))>>2)]],
+          "frontFace": WebGPU.FrontFace[
+            HEAPU32[(((rsPtr)+(12))>>2)]],
+          "cullMode": WebGPU.CullMode[
+            HEAPU32[(((rsPtr)+(16))>>2)]],
+        };
+      }
+  
+      function makeBlendComponent(bdPtr) {
+        if (bdPtr === 0) return undefined;
+        return {
+          "operation": WebGPU.BlendOperation[
+            HEAPU32[((bdPtr)>>2)]],
+          "srcFactor": WebGPU.BlendFactor[
+            HEAPU32[(((bdPtr)+(4))>>2)]],
+          "dstFactor": WebGPU.BlendFactor[
+            HEAPU32[(((bdPtr)+(8))>>2)]],
+        };
+      }
+  
+      function makeBlendState(bsPtr) {
+        if (bsPtr === 0) return undefined;
+        assert(bsPtr);assert(HEAP32[((bsPtr)>>2)] === 0);
+        return {
+          "alpha": makeBlendComponent(bsPtr + 12),
+          "color": makeBlendComponent(bsPtr + 0),
+        };
+      }
+  
+      function makeColorState(csPtr) {
+        assert(csPtr);assert(HEAP32[((csPtr)>>2)] === 0);
+        return {
+          "format": WebGPU.TextureFormat[
+            HEAPU32[(((csPtr)+(4))>>2)]],
+          "blend": makeBlendState(HEAP32[(((csPtr)+(8))>>2)]),
+          "writeMask": HEAPU32[(((csPtr)+(12))>>2)],
+        };
+      }
+  
+      function makeColorStates(count, csArrayPtr) {
+        var states = [];
+        for (var i = 0; i < count; ++i) {
+          states.push(makeColorState(csArrayPtr + 16 * i));
+        }
+        return states;
+      }
+  
+      function makeStencilStateFace(ssfPtr) {
+        assert(ssfPtr);
+        return {
+          "compare": WebGPU.CompareFunction[
+            HEAPU32[((ssfPtr)>>2)]],
+          "failOp": WebGPU.StencilOperation[
+            HEAPU32[(((ssfPtr)+(4))>>2)]],
+          "depthFailOp": WebGPU.StencilOperation[
+            HEAPU32[(((ssfPtr)+(8))>>2)]],
+          "passOp": WebGPU.StencilOperation[
+            HEAPU32[(((ssfPtr)+(12))>>2)]],
+        };
+      }
+  
+      function makeDepthStencilState(dssPtr) {
+        if (dssPtr === 0) return undefined;
+  
+        assert(dssPtr);
+        return {
+          "format": WebGPU.TextureFormat[
+            HEAPU32[(((dssPtr)+(4))>>2)]],
+          "depthWriteEnabled": (HEAP8[(((dssPtr)+(8))>>0)] !== 0),
+          "depthCompare": WebGPU.CompareFunction[
+            HEAPU32[(((dssPtr)+(12))>>2)]],
+          "stencilFront": makeStencilStateFace(dssPtr + 16),
+          "stencilBack": makeStencilStateFace(dssPtr + 32),
+          "stencilReadMask": HEAPU32[(((dssPtr)+(48))>>2)],
+          "stencilWriteMask": HEAPU32[(((dssPtr)+(52))>>2)],
+          "depthBias": HEAP32[(((dssPtr)+(56))>>2)],
+          "depthBiasSlopeScale": HEAPF32[(((dssPtr)+(60))>>2)],
+          "depthBiasClamp": HEAPF32[(((dssPtr)+(64))>>2)],
+        };
+      }
+  
+      function makeVertexAttribute(vaPtr) {
+        assert(vaPtr);
+        return {
+          "format": WebGPU.VertexFormat[
+            HEAPU32[((vaPtr)>>2)]],
+          "offset": HEAPU32[((((vaPtr + 4))+(8))>>2)] * 0x100000000 + HEAPU32[(((vaPtr)+(8))>>2)],
+          "shaderLocation": HEAPU32[(((vaPtr)+(16))>>2)],
+        };
+      }
+  
+      function makeVertexAttributes(count, vaArrayPtr) {
+        var vas = [];
+        for (var i = 0; i < count; ++i) {
+          vas.push(makeVertexAttribute(vaArrayPtr + i * 24));
+        }
+        return vas;
+      }
+  
+      function makeVertexBuffer(vbPtr) {
+        if (vbPtr === 0) return undefined;
+  
+        return {
+          "arrayStride": HEAPU32[(((vbPtr + 4))>>2)] * 0x100000000 + HEAPU32[((vbPtr)>>2)],
+          "stepMode": WebGPU.InputStepMode[
+            HEAPU32[(((vbPtr)+(8))>>2)]],
+          "attributes": makeVertexAttributes(
+            HEAPU32[(((vbPtr)+(12))>>2)],
+            HEAP32[(((vbPtr)+(16))>>2)]),
+        };
+      }
+  
+      function makeVertexBuffers(count, vbArrayPtr) {
+        if (count === 0) return undefined;
+  
+        var vbs = [];
+        for (var i = 0; i < count; ++i) {
+          vbs.push(makeVertexBuffer(vbArrayPtr + i * 24));
+        }
+        return vbs;
+      }
+  
+      function makeVertexState(viPtr) {
+        if (viPtr === 0) return undefined;
+        assert(viPtr);assert(HEAP32[((viPtr)>>2)] === 0);
+        return {
+          "module": WebGPU.mgrShaderModule.get(
+            HEAP32[(((viPtr)+(4))>>2)]),
+          "entryPoint": UTF8ToString(
+            HEAP32[(((viPtr)+(8))>>2)]),
+          "buffers": makeVertexBuffers(
+            HEAPU32[(((viPtr)+(12))>>2)],
+            HEAP32[(((viPtr)+(16))>>2)]),
+        };
+      }
+  
+      function makeMultisampleState(msPtr) {
+        if (msPtr === 0) return undefined;
+        assert(msPtr);assert(HEAP32[((msPtr)>>2)] === 0);
+        return {
+          "count": HEAPU32[(((msPtr)+(4))>>2)],
+          "mask": HEAPU32[(((msPtr)+(8))>>2)],
+          "alphaToCoverageEnabled": (HEAP8[(((msPtr)+(12))>>0)] !== 0),
+        };
+      }
+  
+      function makeFragmentState(fsPtr) {
+        if (fsPtr === 0) return undefined;
+        assert(fsPtr);assert(HEAP32[((fsPtr)>>2)] === 0);
+        return {
+          "module": WebGPU.mgrShaderModule.get(
+            HEAP32[(((fsPtr)+(4))>>2)]),
+          "entryPoint": UTF8ToString(
+            HEAP32[(((fsPtr)+(8))>>2)]),
+          "targets": makeColorStates(
+            HEAPU32[(((fsPtr)+(12))>>2)],
+            HEAP32[(((fsPtr)+(16))>>2)]),
+        };
+      }
+  
+      var desc = {
+        "label": undefined,
+        "layout": WebGPU.mgrPipelineLayout.get(
+          HEAP32[(((descriptor)+(8))>>2)]),
+        "vertex": makeVertexState(
+          descriptor + 12),
+        "primitive": makePrimitiveState(
+          descriptor + 32),
+        "depthStencil": makeDepthStencilState(
+          HEAP32[(((descriptor)+(52))>>2)]),
+        "multisample": makeMultisampleState(
+          descriptor + 56),
+        "fragment": makeFragmentState(
+          HEAP32[(((descriptor)+(72))>>2)]),
+      };
+      var labelPtr = HEAP32[(((descriptor)+(4))>>2)];
+      if (labelPtr) desc["label"] = UTF8ToString(labelPtr);
+  
+      var device = WebGPU["mgrDevice"].get(deviceId);
+      return WebGPU.mgrRenderPipeline.create(device["createRenderPipeline"](desc));
     }
 
   function _wgpuDeviceCreateSampler(deviceId, descriptor) {
@@ -5143,6 +5356,10 @@ var ASM_CONSTS = {
       pass["setViewport"](x, y, w, h, minDepth, maxDepth);
     }
 
+  function _wgpuRenderPipelineRelease(id) {
+    WebGPU.mgrRenderPipeline.release(id);
+  }
+
   function _wgpuSamplerRelease(id) {
     WebGPU.mgrSampler.release(id);
   }
@@ -5271,10 +5488,13 @@ var asmLibraryArg = {
   "wgpuComputePassEncoderEndPass": _wgpuComputePassEncoderEndPass,
   "wgpuComputePassEncoderSetBindGroup": _wgpuComputePassEncoderSetBindGroup,
   "wgpuComputePassEncoderSetPipeline": _wgpuComputePassEncoderSetPipeline,
+  "wgpuComputePipelineRelease": _wgpuComputePipelineRelease,
   "wgpuDeviceCreateBindGroup": _wgpuDeviceCreateBindGroup,
   "wgpuDeviceCreateBindGroupLayout": _wgpuDeviceCreateBindGroupLayout,
   "wgpuDeviceCreateBuffer": _wgpuDeviceCreateBuffer,
+  "wgpuDeviceCreateComputePipeline": _wgpuDeviceCreateComputePipeline,
   "wgpuDeviceCreatePipelineLayout": _wgpuDeviceCreatePipelineLayout,
+  "wgpuDeviceCreateRenderPipeline2": _wgpuDeviceCreateRenderPipeline2,
   "wgpuDeviceCreateSampler": _wgpuDeviceCreateSampler,
   "wgpuDeviceCreateShaderModule": _wgpuDeviceCreateShaderModule,
   "wgpuDeviceCreateSwapChain": _wgpuDeviceCreateSwapChain,
@@ -5296,6 +5516,7 @@ var asmLibraryArg = {
   "wgpuRenderPassEncoderSetScissorRect": _wgpuRenderPassEncoderSetScissorRect,
   "wgpuRenderPassEncoderSetVertexBuffer": _wgpuRenderPassEncoderSetVertexBuffer,
   "wgpuRenderPassEncoderSetViewport": _wgpuRenderPassEncoderSetViewport,
+  "wgpuRenderPipelineRelease": _wgpuRenderPipelineRelease,
   "wgpuSamplerRelease": _wgpuSamplerRelease,
   "wgpuShaderModuleRelease": _wgpuShaderModuleRelease,
   "wgpuSwapChainGetCurrentTextureView": _wgpuSwapChainGetCurrentTextureView,

@@ -124,10 +124,12 @@ void CCWGPUBuffer::update(const void *buffer, uint size) {
     //     memcpy(mappedBuffer, buffer, size);
     //     wgpuBufferMapAsync(mappedBuffer, WGPUMapMode_Write, 0, size, bufferUpdateCallback, mappedBuffer);
     // }
-
+    size_t      offset   = _isBufferView ? _offset : 0;
+    void const *data     = buffer;
+    size_t      buffSize = size;
     if (hasFlag(_usage, BufferUsageBit::INDIRECT)) {
-        size_t          drawInfoCount = size / (sizeof(DrawInfo));
-        const DrawInfo *drawInfos     = static_cast<const DrawInfo *>(buffer);
+        size_t drawInfoCount = size / (sizeof(DrawInfo));
+        auto * drawInfos     = static_cast<const DrawInfo *>(buffer);
 
         if (drawInfoCount > 0) {
             if (drawInfos[0].indexCount) {
@@ -140,6 +142,8 @@ void CCWGPUBuffer::update(const void *buffer, uint size) {
                     indexedIndirectObjs[i].firstInstance = 0; //check definition of indexedIndirectObj;
                     drawInfos++;
                 }
+                data     = indexedIndirectObjs.data();
+                buffSize = indexedIndirectObjs.size() * sizeof(CCWGPUDrawIndexedIndirectObject);
             } else {
                 auto &indirectObjs = _gpuBufferObject->indirectObjs;
                 for (size_t i = 0; i < drawInfoCount; i++) {
@@ -149,12 +153,12 @@ void CCWGPUBuffer::update(const void *buffer, uint size) {
                     indirectObjs[i].firstInstance = 0; // check definition of indirectObj;
                     drawInfos++;
                 }
+                data     = indirectObjs.data();
+                buffSize = indirectObjs.size() * sizeof(CCWGPUDrawIndirectObject);
             }
         }
     }
-
-    size_t offset = _isBufferView ? _offset : 0;
-    wgpuQueueWriteBuffer(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuQueue, _gpuBufferObject->wgpuBuffer, offset, buffer, size);
+    wgpuQueueWriteBuffer(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuQueue, _gpuBufferObject->wgpuBuffer, offset, data, size);
 }
 
 CCWGPUBuffer *CCWGPUBuffer::defaultBuffer() {
