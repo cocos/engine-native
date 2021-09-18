@@ -109,7 +109,6 @@ void CCWGPUDescriptorSetLayout::prepare() {
     if (_gpuLayoutEntryObj->bindGroupLayout) {
         wgpuBindGroupLayoutRelease(_gpuLayoutEntryObj->bindGroupLayout);
     }
-    printf("prepared\n");
     _gpuLayoutEntryObj->bindGroupLayout = wgpuDeviceCreateBindGroupLayout(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
 }
 

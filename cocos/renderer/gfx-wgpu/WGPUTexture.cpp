@@ -115,14 +115,18 @@ void CCWGPUTexture::doResize(uint32_t width, uint32_t height, uint32_t size) {
         wgpuTextureDestroy(_gpuTextureObj->wgpuTexture);
     }
 
-    WGPUTextureDescriptor descriptor;
-    descriptor.usage         = toWGPUTextureUsage(_info.usage);
-    descriptor.dimension     = toWGPUTextureDimension(_info.type);
-    descriptor.size          = {_info.width, _info.height, _info.depth};
-    descriptor.format        = toWGPUTextureFormat(_info.format);
-    descriptor.mipLevelCount = _info.levelCount;
-    descriptor.sampleCount   = toWGPUSampleCount(_info.samples);
+    WGPUTextureDescriptor descriptor = {
+        .nextInChain   = nullptr,
+        .label         = nullptr,
+        .usage         = toWGPUTextureUsage(_info.usage),
+        .dimension     = toWGPUTextureDimension(_info.type),
+        .size          = {_info.width, _info.height, _info.depth},
+        .format        = toWGPUTextureFormat(_info.format),
+        .mipLevelCount = _info.levelCount,
+        .sampleCount   = toWGPUSampleCount(_info.samples),
+    };
 
+    printf("%p, %p\n", CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
     _gpuTextureObj->wgpuTexture = wgpuDeviceCreateTexture(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
 }
 
