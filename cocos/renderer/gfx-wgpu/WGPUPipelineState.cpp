@@ -41,8 +41,10 @@ CCWGPUPipelineState::CCWGPUPipelineState() : wrapper<PipelineState>(val::object(
 }
 
 void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
-    auto*                         pipelineLayout = static_cast<CCWGPUPipelineLayout*>(info.pipelineLayout);
-    const DepthStencilAttachment& dsAttachment   = info.renderPass->getDepthStencilAttachment();
+    _gpuPipelineStateObj = CC_NEW(CCWGPUPipelineStateObject);
+    auto* pipelineLayout = static_cast<CCWGPUPipelineLayout*>(info.pipelineLayout);
+
+    const DepthStencilAttachment& dsAttachment = info.renderPass->getDepthStencilAttachment();
     if (info.bindPoint == PipelineBindPoint::GRAPHICS) {
         const AttributeList&             attrs  = info.inputState.attributes;
         uint64_t                         offset = 0;

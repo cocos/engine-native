@@ -80,7 +80,16 @@ bool CCWGPUDevice::doInit(const DeviceInfo& info) {
     _gpuDeviceObj->defaultResources.buffer  = CCWGPUBuffer::defaultBuffer();
     _gpuDeviceObj->defaultResources.sampler = CCWGPUSampler::defaultSampler();
 
-    _cmdBuff = CC_NEW(CCWGPUCommandBuffer);
+    QueueInfo queueInfo = {
+        .type = QueueType::GRAPHICS,
+    };
+    _queue = this->Device::createQueue(queueInfo);
+
+    CommandBufferInfo cmdInfo = {
+        .queue = _queue,
+        .type  = CommandBufferType::PRIMARY,
+    };
+    _cmdBuff = this->Device::createCommandBuffer(cmdInfo);
     return true;
 }
 

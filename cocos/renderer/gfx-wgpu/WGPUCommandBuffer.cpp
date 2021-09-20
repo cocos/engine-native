@@ -87,7 +87,6 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
     CCWGPUSwapchain *             swapchain          = ccFrameBuffer->swapchain();
 
     WGPURenderPassDescriptor &renderPassDesc = _gpuCommandBufferObj->renderPassDescriptor;
-
     if (colorConfigs.empty()) {
         renderPassDesc.nextInChain          = nullptr;
         renderPassDesc.label                = "swapchain";
@@ -153,7 +152,6 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
         gpuCommandBufferObj->wgpuCommandEncoder    = wgpuDeviceCreateCommandEncoder(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, nullptr);
         gpuCommandBufferObj->wgpuRenderPassEncoder = wgpuCommandEncoderBeginRenderPass(gpuCommandBufferObj->wgpuCommandEncoder, &gpuCommandBufferObj->renderPassDescriptor);
     };
-
     _renderPassFuncQ.push(rpBeginFunc);
 }
 

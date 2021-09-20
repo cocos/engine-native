@@ -59,12 +59,11 @@ void CCWGPUBuffer::doInit(const BufferInfo &info) {
     };
 
     _gpuBufferObject->wgpuBuffer = wgpuDeviceCreateBuffer(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
-    printf("binit: %p %p\n", this, _gpuBufferObject->wgpuBuffer);
 } // namespace gfx
 
 void CCWGPUBuffer::doInit(const BufferViewInfo &info) {
+    _gpuBufferObject             = CC_NEW(CCWGPUBufferObject);
     _gpuBufferObject->wgpuBuffer = static_cast<CCWGPUBuffer *>(info.buffer)->gpuBufferObject()->wgpuBuffer;
-    printf("bvinit: %p %p\n", this, _gpuBufferObject->wgpuBuffer);
 }
 
 void CCWGPUBuffer::doDestroy() {
@@ -99,7 +98,6 @@ void CCWGPUBuffer::doResize(uint size, uint count) {
         .mappedAtCreation = hasFlag(_memUsage, MemoryUsageBit::DEVICE),
     };
     _gpuBufferObject->wgpuBuffer = wgpuDeviceCreateBuffer(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
-    printf("brsz: %p %p\n", this, _gpuBufferObject->wgpuBuffer);
 }
 
 void bufferUpdateCallback(WGPUBufferMapAsyncStatus status, void *userdata) {
