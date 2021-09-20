@@ -8,6 +8,7 @@
 #include "WGPUFrameBuffer.h"
 #include "WGPUInputAssembler.h"
 #include "WGPUPipelineLayout.h"
+#include "WGPUPipelineState.h"
 #include "WGPUQueue.h"
 #include "WGPURenderPass.h"
 #include "WGPUSampler.h"
@@ -739,8 +740,6 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("initialize", &Device::initialize, allow_raw_pointer<arg<0>>())
         .function("destroy", &Device::destroy, pure_virtual())
         .function("present", &Device::present, pure_virtual())
-        .function("createCommandBuffer", select_overload<CommandBuffer *(const CommandBufferInfo &)>(&Device::createCommandBuffer),
-                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createQueue", select_overload<Queue *(const QueueInfo &)>(&Device::createQueue),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createBuffer", select_overload<Buffer *(const BufferInfo &)>(&Device::createBuffer),
@@ -748,27 +747,21 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("getSampler", &Device::getSampler, allow_raw_pointer<arg<0>>())
         .function("createShader", select_overload<Shader *(const ShaderInfo &)>(&Device::createShader),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createInputAssembler", select_overload<InputAssembler *(const InputAssemblerInfo &)>(&Device::createInputAssembler),
-                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createRenderPass", select_overload<RenderPass *(const RenderPassInfo &)>(&Device::createRenderPass),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createDescriptorSetLayout", select_overload<DescriptorSetLayout *(const DescriptorSetLayoutInfo &)>(&Device::createDescriptorSetLayout),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createPipelineLayout", select_overload<PipelineLayout *(const PipelineLayoutInfo &)>(&Device::createPipelineLayout),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createPipelineState", select_overload<PipelineState *(const PipelineStateInfo &)>(&Device::createPipelineState),
-                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         // .function("createGlobalBarrier", select_overload<GlobalBarrier*(const GlobalBarrierInfo&)>(&Device::createGlobalBarrier),
         //           /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         // .function("createTextureBarrier", select_overload<TextureBarrier*(const TextureBarrierInfo&)>(&Device::createTextureBarrier),
         //           /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("getCommandBuffer", &Device::getCommandBuffer, allow_raw_pointers())
-        .function("getQueue", &Device::getQueue, allow_raw_pointers())
         .function("copyBuffersToTexture", select_overload<void(const BufferDataList &, Texture *, const BufferTextureCopyList &)>(&Device::copyBuffersToTexture),
                   /* pure_virtual(), */ allow_raw_pointers())
-        .function("copyTextureToBuffers", select_overload<void(Texture *, BufferSrcList &, const BufferTextureCopyList &)>(&Device::copyTextureToBuffers),
-                  /* pure_virtual(), */ allow_raw_pointers())
-        .function("acquire", select_overload<void(Swapchain *const *, uint32_t)>(&Device::acquire),
+        .function("getCommandBuffer", &Device::getCommandBuffer, allow_raw_pointers())
+        .function("getQueue", &Device::getQueue, allow_raw_pointers())
+        .function("acquire", select_overload<void(const vector<Swapchain *> &)>(&Device::acquire),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("present", select_overload<void(void)>(&Device::present),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>());
@@ -776,6 +769,8 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .class_function("getInstance", &CCWGPUDevice::getInstance, allow_raw_pointer<arg<0>>())
         .function("createSwapchain", select_overload<Swapchain *(const SwapchainInfoInstance &)>(&CCWGPUDevice::createSwapchain),
                   /* pure_virtual(), */ allow_raw_pointers())
+        .function("createCommandBuffer", select_overload<CommandBuffer *(const CommandBufferInfoInstance &)>(&CCWGPUDevice::createCommandBuffer),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createFramebuffer", select_overload<Framebuffer *(const FramebufferInfoInstance &)>(&CCWGPUDevice::createFramebuffer),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createTexture", select_overload<Texture *(const TextureInfoInstance &)>(&CCWGPUDevice::createTexture),
@@ -784,8 +779,14 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createBufferView", select_overload<Buffer *(const BufferViewInfoInstance &)>(&CCWGPUDevice::createBuffer),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createInputAssembler", select_overload<InputAssembler *(const InputAssemblerInfoInstance &)>(&CCWGPUDevice::createInputAssembler),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createPipelineState", select_overload<PipelineState *(const PipelineStateInfoInstance &)>(&CCWGPUDevice::createPipelineState),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createDescriptorSet", select_overload<DescriptorSet *(const DescriptorSetInfoInstance &)>(&CCWGPUDevice::createDescriptorSet),
-                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>());
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("copyTextureToBuffers", select_overload<void(Texture *, const std::vector<String> &, const BufferTextureCopyList &)>(&CCWGPUDevice::copyTextureToBuffers),
+                  /* pure_virtual(), */ allow_raw_pointers());
 
     class_<cc::gfx::RenderPass>("RenderPass")
         .class_function("computeHash", select_overload<uint(const RenderPassInfo &)>(&RenderPass::computeHash), allow_raw_pointer<arg<0>>())
@@ -839,10 +840,36 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     class_<CCWGPUDescriptorSetLayout, base<DescriptorSetLayout>>("CCWGPUDescriptorSetLayout")
         .constructor<>();
 
+    // void DescriptorSet::bindBuffer(uint binding, Buffer * buffer, uint index) {
+    //     const uint descriptorIndex = _layout->getDescriptorIndices()[binding];
+    //     if (_buffers[descriptorIndex + index] != buffer) {
+    //         _buffers[descriptorIndex + index] = buffer;
+    //         _isDirty                          = true;
+    //     }
+    // }
+
+    // void DescriptorSet::bindTexture(uint binding, Texture * texture, uint index) {
+    //     const uint descriptorIndex = _layout->getDescriptorIndices()[binding];
+    //     if (_textures[descriptorIndex + index] != texture) {
+    //         _textures[descriptorIndex + index] = texture;
+    //         _isDirty                           = true;
+    //     }
+    // }
+
+    // void DescriptorSet::bindSampler(uint binding, Sampler * sampler, uint index) {
+    //     const uint descriptorIndex = _layout->getDescriptorIndices()[binding];
+    //     if (_samplers[descriptorIndex + index] != sampler) {
+    //         _samplers[descriptorIndex + index] = sampler;
+    //         _isDirty                           = true;
+    //     }
+    // }
     class_<DescriptorSet>("DescriptorSet")
         .function("initialize", &DescriptorSet::initialize)
         .function("destroy", &DescriptorSet::destroy)
-        .function("update", &DescriptorSet::update);
+        .function("update", &DescriptorSet::update)
+        .function("bindBuffer", select_overload<void(uint, Buffer *)>(&DescriptorSet::bindBuffer), allow_raw_pointer<arg<1>>())
+        .function("bindTexture", select_overload<void(uint, Texture *)>(&DescriptorSet::bindTexture), allow_raw_pointer<arg<1>>())
+        .function("bindSampler", select_overload<void(uint, Sampler *)>(&DescriptorSet::bindSampler), allow_raw_pointer<arg<1>>());
     class_<CCWGPUDescriptorSet, base<DescriptorSet>>("CCWGPUDescriptorSet")
         .constructor<>();
 
@@ -908,6 +935,12 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     class_<CCWGPUQueue>("CCWGPUQueue")
         .constructor<>();
 
+    class_<PipelineState>("PipelineState")
+        .function("initialize", &Queue::initialize)
+        .function("destroy", &Queue::destroy);
+    class_<CCWGPUPipelineState>("CCWGPUPipelineState")
+        .constructor<>();
+
     //--------------------------------------------------CONTAINER-----------------------------------------------------------------------
     register_vector<int>("vector_int");
     register_vector<uint>("vector_uint");
@@ -937,6 +970,8 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     register_vector<TextureBlit>("TextureBlitList");
     register_vector<DrawInfo>("DrawInfoList");
     register_vector<String>("StringList");
+    register_vector<Buffer *>("BufferList");
+    register_vector<Swapchain *>("SwapchainList");
 };
 
 } // namespace cc::gfx

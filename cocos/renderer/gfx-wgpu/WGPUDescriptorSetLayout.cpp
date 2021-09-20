@@ -67,7 +67,9 @@ void CCWGPUDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo& info) {
                 layoutEntry.sampler = {nullptr, WGPUSamplerBindingType::WGPUSamplerBindingType_Filtering};
                 break;
             case DescriptorType::STORAGE_IMAGE:
+                break; // not enough information, reserved.
             case DescriptorType::TEXTURE:
+                break; // not enough information, reserved.
             case DescriptorType::INPUT_ATTACHMENT:
                 break; // not enough information, reserved.
             default:
