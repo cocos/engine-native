@@ -300,6 +300,7 @@ static WGPUCompareFunction toWGPUCompareFunction(ComparisonFunc compareFunc) {
         case ComparisonFunc::ALWAYS:
             return WGPUCompareFunction::WGPUCompareFunction_Always;
         default:
+            CC_LOG_ERROR("unsupport compareFunc: %d", compareFunc);
             return WGPUCompareFunction::WGPUCompareFunction_Force32;
     }
 }

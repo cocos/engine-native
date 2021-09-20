@@ -62,7 +62,7 @@ CCWGPUSampler::~CCWGPUSampler() {
 }
 
 CCWGPUSampler* CCWGPUSampler::defaultSampler() {
-    if (anoymous::defaultSampler) {
+    if (!anoymous::defaultSampler) {
         SamplerInfo info = {
             .minFilter     = Filter::LINEAR,
             .magFilter     = Filter::LINEAR,

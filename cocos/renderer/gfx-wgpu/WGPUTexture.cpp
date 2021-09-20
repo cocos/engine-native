@@ -69,6 +69,7 @@ void CCWGPUTexture::doInit(const TextureInfo &info) {
         .aspect          = WGPUTextureAspect_All,
     };
     _gpuTextureObj->selfView = wgpuTextureCreateView(_gpuTextureObj->wgpuTexture, &texViewDesc);
+    printf("tex ctor: %p\n", this);
 } // namespace gfx
 
 void CCWGPUTexture::doInit(const TextureViewInfo &info) {
@@ -86,14 +87,43 @@ void CCWGPUTexture::doInit(const TextureViewInfo &info) {
 
     auto *      ccTexture           = static_cast<CCWGPUTexture *>(info.texture);
     WGPUTexture wgpuTexture         = ccTexture->gpuTextureObject()->wgpuTexture;
-    _gpuTextureObj->wgpuTextureView = wgpuTextureCreateView(wgpuTexture, &descriptor);
+    _gpuTextureObj->wgpuTextureView = ccTexture->gpuTextureObject()->selfView;
     _gpuTextureObj->selfView        = ccTexture->gpuTextureObject()->selfView;
+    printf("texv ctor: %p\n", this);
 }
 
 void CCWGPUTexture::doInit(const SwapchainTextureInfo &info) {
     if (_swapchain) {
-        auto *swapchain                 = static_cast<CCWGPUSwapchain *>(_swapchain);
-        _gpuTextureObj->wgpuTextureView = wgpuSwapChainGetCurrentTextureView(swapchain->gpuSwapchainObject()->wgpuSwapChain);
+        auto *swapchain = static_cast<CCWGPUSwapchain *>(_swapchain);
+        if (info.format == Format::DEPTH || info.format == Format::DEPTH_STENCIL) {
+            WGPUTextureDescriptor descriptor = {
+                .nextInChain   = nullptr,
+                .label         = nullptr,
+                .usage         = WGPUTextureUsage_RenderAttachment,
+                .dimension     = WGPUTextureDimension_2D,
+                .size          = {info.width, info.height, 1},
+                .format        = toWGPUTextureFormat(info.format),
+                .mipLevelCount = 0,
+                .sampleCount   = 1,
+            };
+            _gpuTextureObj->wgpuTexture = wgpuDeviceCreateTexture(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
+
+            WGPUTextureViewDescriptor texViewDesc = {
+                .nextInChain     = nullptr,
+                .label           = nullptr,
+                .format          = descriptor.format,
+                .dimension       = WGPUTextureViewDimension_2D,
+                .baseMipLevel    = 0,
+                .mipLevelCount   = 0,
+                .baseArrayLayer  = 0,
+                .arrayLayerCount = 0,
+                .aspect          = WGPUTextureAspect_All,
+            };
+            _gpuTextureObj->selfView = wgpuTextureCreateView(_gpuTextureObj->wgpuTexture, &texViewDesc);
+        } else {
+            _gpuTextureObj->selfView = wgpuSwapChainGetCurrentTextureView(swapchain->gpuSwapchainObject()->wgpuSwapChain);
+        }
+        printf("texsc ctor: %p\n", this);
     }
 }
 
@@ -125,8 +155,6 @@ void CCWGPUTexture::doResize(uint32_t width, uint32_t height, uint32_t size) {
         .mipLevelCount = _info.levelCount,
         .sampleCount   = toWGPUSampleCount(_info.samples),
     };
-
-    printf("%p, %p\n", CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
     _gpuTextureObj->wgpuTexture = wgpuDeviceCreateTexture(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
 }
 

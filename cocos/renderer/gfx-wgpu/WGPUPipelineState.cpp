@@ -75,9 +75,9 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
             .topology         = toWGPUPrimTopology(info.primitive),
             .stripIndexFormat = WGPUIndexFormat_Uint16, //TODO_Zeqiang: ???
             .frontFace        = info.rasterizerState.isFrontFaceCCW ? WGPUFrontFace::WGPUFrontFace_CCW : WGPUFrontFace::WGPUFrontFace_CW,
-            .cullMode         = info.rasterizerState.cullMode == CullMode::FRONT  ? WGPUCullMode::WGPUCullMode_Front
-                                : info.rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
-                                                                                  : WGPUCullMode::WGPUCullMode_None,
+            .cullMode         = info.rasterizerState.cullMode == CullMode::FRONT ? WGPUCullMode::WGPUCullMode_Front
+                                                                         : info.rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
+                                                                                                                           : WGPUCullMode::WGPUCullMode_None,
         };
 
         WGPUStencilFaceState stencilFront = {
@@ -120,7 +120,8 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
 
         for (size_t i = 0; i < colors.size(); i++) {
             colorTargetStates[i].format = toWGPUTextureFormat(colors[i].format);
-            blendState[i].color         = {
+            blendState[i]
+                .color = {
                 .operation = toWGPUBlendOperation(info.blendState.targets[i].blendAlphaEq),
                 .srcFactor = toWGPUBlendFactor(info.blendState.targets[i].blendSrc),
                 .dstFactor = toWGPUBlendFactor(info.blendState.targets[i].blendDst),
@@ -147,7 +148,7 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
             .layout       = pipelineLayout->gpuPipelineLayoutObject()->wgpuPipelineLayout,
             .vertex       = vertexState,
             .primitive    = primitiveState,
-            .depthStencil = &dsState,
+            .depthStencil = dsState.format == WGPUTextureFormat_Undefined ? nullptr : &dsState,
             .multisample  = msState,
             .fragment     = &fragmentState,
         };

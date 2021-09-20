@@ -130,7 +130,7 @@ public:
     inline void setDepthStencilState(DepthStencilState depthStencilState) { info.depthStencilState = depthStencilState; }
     inline void setBlendState(BlendState blendState) { info.blendState = blendState; }
     inline void setPrimitiveMode(PrimitiveMode primitive) { info.primitive = primitive; }
-    inline void setDynamicStateFlags(DynamicStateFlags dynamicStates) { info.dynamicStates = dynamicStates; }
+    inline void setDynamicStateFlags(DynamicStateFlagBit dynamicStates) { info.dynamicStates = dynamicStates; }
     inline void setPipelineBindPoint(PipelineBindPoint bindPoint) { info.bindPoint = bindPoint; }
     inline void setSubpass(uint32_t subpass) { info.subpass = subpass; }
 

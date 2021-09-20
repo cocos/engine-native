@@ -89,6 +89,26 @@ public:
         return this->Device::createDescriptorSet(static_cast<const DescriptorSetInfo &>(info));
     }
 
+    InputAssembler *createInputAssembler(const InputAssemblerInfoInstance &info) {
+        return this->Device::createInputAssembler(static_cast<const InputAssemblerInfo &>(info));
+    }
+
+    PipelineState *createPipelineState(const PipelineStateInfoInstance &info) {
+        return this->Device::createPipelineState(static_cast<const PipelineStateInfo &>(info));
+    }
+
+    CommandBuffer *createCommandBuffer(const CommandBufferInfoInstance &info) {
+        return this->Device::createCommandBuffer(static_cast<const CommandBufferInfo &>(info));
+    }
+
+    void copyTextureToBuffers(Texture *src, const std::vector<String> &buffersContainer, const BufferTextureCopyList &regions) {
+        std::vector<uint8_t *> buffers;
+        for (size_t i = 0; i < buffersContainer.size(); i++) {
+            buffers.push_back(reinterpret_cast<uint8_t *>(const_cast<char *>(buffersContainer[i].data())));
+        }
+        this->Device::copyTextureToBuffers(src, buffers, regions);
+    }
+
 protected:
     static CCWGPUDevice *instance;
 

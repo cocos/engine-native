@@ -60,13 +60,20 @@ void CCWGPUCommandBuffer::begin(RenderPass *renderPass, uint subpass, Framebuffe
 
 void CCWGPUCommandBuffer::end() {
     if (!_computeFuncQ.empty()) {
-        WGPUComputePassDescriptor descriptor     = {};
-        _gpuCommandBufferObj->wgpuComputeEncoder = wgpuCommandEncoderBeginComputePass(_gpuCommandBufferObj->wgpuCommandEncoder, &descriptor);
+        WGPUComputePassDescriptor cmoputeDesc = {};
+        if (!_gpuCommandBufferObj->wgpuCommandEncoder) {
+            _gpuCommandBufferObj->wgpuCommandEncoder = wgpuDeviceCreateCommandEncoder(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, nullptr);
+        }
+        _gpuCommandBufferObj->wgpuComputeEncoder = wgpuCommandEncoderBeginComputePass(_gpuCommandBufferObj->wgpuCommandEncoder, &cmoputeDesc);
         while (!_computeFuncQ.empty()) {
             _computeFuncQ.front()(_gpuCommandBufferObj);
             _computeFuncQ.pop();
         };
         wgpuComputePassEncoderEndPass(_gpuCommandBufferObj->wgpuComputeEncoder);
+        wgpuComputePassEncoderRelease(_gpuCommandBufferObj->wgpuComputeEncoder);
+        wgpuCommandEncoderRelease(_gpuCommandBufferObj->wgpuCommandEncoder);
+        _gpuCommandBufferObj->wgpuComputeEncoder = wgpuDefaultHandle;
+        _gpuCommandBufferObj->wgpuCommandEncoder = wgpuDefaultHandle;
     }
 }
 
@@ -143,6 +150,7 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
     _gpuCommandBufferObj->renderPassBegan = true;
 
     auto rpBeginFunc = [](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
+        gpuCommandBufferObj->wgpuCommandEncoder    = wgpuDeviceCreateCommandEncoder(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, nullptr);
         gpuCommandBufferObj->wgpuRenderPassEncoder = wgpuCommandEncoderBeginRenderPass(gpuCommandBufferObj->wgpuCommandEncoder, &gpuCommandBufferObj->renderPassDescriptor);
     };
 
@@ -152,9 +160,15 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
 void CCWGPUCommandBuffer::endRenderPass() {
     auto rpEndFunc = [](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
         wgpuRenderPassEncoderEndPass(gpuCommandBufferObj->wgpuRenderPassEncoder);
+        wgpuRenderPassEncoderRelease(gpuCommandBufferObj->wgpuRenderPassEncoder);
+        wgpuCommandEncoderRelease(gpuCommandBufferObj->wgpuCommandEncoder);
+        gpuCommandBufferObj->wgpuRenderPassEncoder = wgpuDefaultHandle;
+        gpuCommandBufferObj->wgpuCommandEncoder    = wgpuDefaultHandle;
     };
 
     _renderPassFuncQ.push(rpEndFunc);
+
+    //WGPUCommandEncoder wgpuDeviceCreateCommandEncoder(WGPUDevice device, WGPUCommandEncoderDescriptor const * descriptor)
 
     while (!_renderPassFuncQ.empty()) {
         _renderPassFuncQ.front()(_gpuCommandBufferObj);
