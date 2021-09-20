@@ -69,7 +69,6 @@ void CCWGPUTexture::doInit(const TextureInfo &info) {
         .aspect          = WGPUTextureAspect_All,
     };
     _gpuTextureObj->selfView = wgpuTextureCreateView(_gpuTextureObj->wgpuTexture, &texViewDesc);
-    printf("tex ctor: %p\n", this);
 } // namespace gfx
 
 void CCWGPUTexture::doInit(const TextureViewInfo &info) {
@@ -89,7 +88,6 @@ void CCWGPUTexture::doInit(const TextureViewInfo &info) {
     WGPUTexture wgpuTexture         = ccTexture->gpuTextureObject()->wgpuTexture;
     _gpuTextureObj->wgpuTextureView = ccTexture->gpuTextureObject()->selfView;
     _gpuTextureObj->selfView        = ccTexture->gpuTextureObject()->selfView;
-    printf("texv ctor: %p\n", this);
 }
 
 void CCWGPUTexture::doInit(const SwapchainTextureInfo &info) {
@@ -123,7 +121,6 @@ void CCWGPUTexture::doInit(const SwapchainTextureInfo &info) {
         } else {
             _gpuTextureObj->selfView = wgpuSwapChainGetCurrentTextureView(swapchain->gpuSwapchainObject()->wgpuSwapChain);
         }
-        printf("texsc ctor: %p\n", this);
     }
 }
 

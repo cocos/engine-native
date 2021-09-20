@@ -84,17 +84,9 @@ void CCWGPUDescriptorSet::doInit(const DescriptorSetInfo& info) {
             };
             _gpuBindGroupObj->bindGroupEntries.push_back(texEntry);
             dsLayout->updateTextureLayout(texEntry.binding, texture);
-            printf("storage:%d %p\n", i, texture);
-        } else {
-            printf("**********************unsupport desc type: %d\n", bindings[i].descriptorType);
         }
     }
-    for (auto pair : _textureIdxMap) {
-        printf("texmap: %d, %d\n", pair.first, pair.second);
-    }
-    for (auto pair : _samplerIdxMap) {
-        printf("smpmap: %d, %d\n", pair.first, pair.second);
-    }
+
     dsLayout->prepare();
 } // namespace gfx
 
@@ -111,7 +103,6 @@ void CCWGPUDescriptorSet::update() {
 
     for (size_t i = 0; i < bindings.size(); i++) {
         const auto& binding = bindings[i];
-        printf("desc type: %d\n", bindings[i].descriptorType);
         if (hasFlag(DESCRIPTOR_BUFFER_TYPE, bindings[i].descriptorType)) {
             if (_buffers[i]) {
                 auto* buffer           = static_cast<CCWGPUBuffer*>(_buffers[i]);
@@ -120,7 +111,6 @@ void CCWGPUDescriptorSet::update() {
                 bindGroupEntry.buffer  = buffer->gpuBufferObject()->wgpuBuffer;
                 bindGroupEntry.offset  = buffer->getOffset();
                 bindGroupEntry.size    = buffer->getSize();
-                printf("buffer %p %p %d\n", buffer, buffer->gpuBufferObject()->wgpuBuffer, i);
             }
 
         } else if (binding.descriptorType == DescriptorType::SAMPLER_TEXTURE) {
@@ -134,12 +124,10 @@ void CCWGPUDescriptorSet::update() {
                 auto* texture              = static_cast<CCWGPUTexture*>(_textures[textureIdx]);
                 bindGroupEntry.binding     = binding.binding;
                 bindGroupEntry.textureView = texture->gpuTextureObject()->selfView;
-                printf("texture %p %d %d\n", texture, textureIdx, i);
             } else if (samplerIdx != 255 && _samplers[samplerIdx]) {
                 auto* sampler          = static_cast<CCWGPUSampler*>(_samplers[samplerIdx]);
                 bindGroupEntry.binding = binding.binding + CC_WGPU_MAX_ATTACHMENTS;
                 bindGroupEntry.sampler = sampler->gpuSampler();
-                printf("sampler %p %d %d\n", sampler, samplerIdx, i);
             }
         } else if (binding.descriptorType == DescriptorType::STORAGE_IMAGE || binding.descriptorType == DescriptorType::TEXTURE) {
             if (_textures[i]) {
@@ -147,15 +135,12 @@ void CCWGPUDescriptorSet::update() {
                 auto* texture              = static_cast<CCWGPUTexture*>(_textures[i]);
                 bindGroupEntry.binding     = binding.binding;
                 bindGroupEntry.textureView = texture->gpuTextureObject()->selfView;
-                printf("stimg %p %d %d\n", texture, binding.binding, i);
             }
         }
 
-        printf("update3\n");
         if (_gpuBindGroupObj->bindgroup) {
             wgpuBindGroupRelease(_gpuBindGroupObj->bindgroup);
         }
-        printf("_gpuBindGroupObj->bindGroupEntries %d\n", _gpuBindGroupObj->bindGroupEntries.size());
         WGPUBindGroupDescriptor bindGroupDesc = {
             .nextInChain = nullptr,
             .label       = nullptr,
@@ -163,19 +148,9 @@ void CCWGPUDescriptorSet::update() {
             .entryCount  = _gpuBindGroupObj->bindGroupEntries.size(),
             .entries     = _gpuBindGroupObj->bindGroupEntries.data(),
         };
-        printf("bindGroupDesc %p\n", bindGroupDesc.layout);
-        printf("entries %p\n", bindGroupDesc.entries);
-        for (size_t i = 0; i < _gpuBindGroupObj->bindGroupEntries.size(); i++) {
-            printf("buffer, tex, samp:%d %p %p %p\n",
-                   _gpuBindGroupObj->bindGroupEntries[i].binding,
-                   _gpuBindGroupObj->bindGroupEntries[i].buffer,
-                   _gpuBindGroupObj->bindGroupEntries[i].textureView,
-                   _gpuBindGroupObj->bindGroupEntries[i].sampler);
-        }
+
         _gpuBindGroupObj->bindgroup = wgpuDeviceCreateBindGroup(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &bindGroupDesc);
-        printf("update4\n");
     }
-    printf("update5\n");
 }
 
 } // namespace gfx
