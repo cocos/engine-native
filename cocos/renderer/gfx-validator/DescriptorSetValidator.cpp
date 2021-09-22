@@ -30,7 +30,6 @@
 #include "DescriptorSetLayoutValidator.h"
 #include "DescriptorSetValidator.h"
 #include "DeviceValidator.h"
-#include "SamplerValidator.h"
 #include "TextureValidator.h"
 #include "ValidationUtils.h"
 
@@ -39,7 +38,7 @@ namespace gfx {
 
 DescriptorSetValidator::DescriptorSetValidator(DescriptorSet *actor)
 : Agent<DescriptorSet>(actor) {
-    _typedID = generateObjectID<decltype(this)>();
+    _typedID = actor->getTypedID();
 }
 
 DescriptorSetValidator::~DescriptorSetValidator() {
@@ -48,7 +47,9 @@ DescriptorSetValidator::~DescriptorSetValidator() {
 }
 
 void DescriptorSetValidator::doInit(const DescriptorSetInfo &info) {
-    CCASSERT(info.layout, "Invalid set layout");
+    CCASSERT(!isInited(), "initializing twice?");
+    _inited = true;
+    CCASSERT(static_cast<DescriptorSetLayoutValidator *>(info.layout)->isInited(), "already destroyed?");
 
     /////////// execute ///////////
 
@@ -59,18 +60,28 @@ void DescriptorSetValidator::doInit(const DescriptorSetInfo &info) {
 }
 
 void DescriptorSetValidator::doDestroy() {
+    CCASSERT(isInited(), "destroying twice?");
+    _inited = false;
+
+    /////////// execute ///////////
+
     _actor->destroy();
 }
 
 void DescriptorSetValidator::update() {
+    CCASSERT(isInited(), "alread destroyed?");
+
     if (!_isDirty) return;
 
     _isDirty = false;
     _actor->update();
 }
 
-void DescriptorSetValidator::bindBuffer(uint binding, Buffer *buffer, uint index) {
-    const vector<uint> &                  bindingIndices = _layout->getBindingIndices();
+void DescriptorSetValidator::bindBuffer(uint32_t binding, Buffer *buffer, uint32_t index) {
+    CCASSERT(isInited(), "alread destroyed?");
+    CCASSERT(static_cast<BufferValidator *>(buffer)->isInited(), "already destroyed?");
+
+    const vector<uint32_t> &              bindingIndices = _layout->getBindingIndices();
     const DescriptorSetLayoutBindingList &bindings       = _layout->getBindings();
     CCASSERT(binding < bindingIndices.size() && bindingIndices[binding] < bindings.size(), "Illegal binding");
 
@@ -87,8 +98,11 @@ void DescriptorSetValidator::bindBuffer(uint binding, Buffer *buffer, uint index
     _actor->bindBuffer(binding, static_cast<BufferValidator *>(buffer)->getActor(), index);
 }
 
-void DescriptorSetValidator::bindTexture(uint binding, Texture *texture, uint index) {
-    const vector<uint> &                  bindingIndices = _layout->getBindingIndices();
+void DescriptorSetValidator::bindTexture(uint32_t binding, Texture *texture, uint32_t index) {
+    CCASSERT(isInited(), "alread destroyed?");
+    CCASSERT(static_cast<TextureValidator *>(texture)->isInited(), "already destroyed?");
+
+    const vector<uint32_t> &              bindingIndices = _layout->getBindingIndices();
     const DescriptorSetLayoutBindingList &bindings       = _layout->getBindings();
     CCASSERT(binding < bindingIndices.size() && bindingIndices[binding] < bindings.size(), "Illegal binding");
 
@@ -102,8 +116,10 @@ void DescriptorSetValidator::bindTexture(uint binding, Texture *texture, uint in
     _actor->bindTexture(binding, static_cast<TextureValidator *>(texture)->getActor(), index);
 }
 
-void DescriptorSetValidator::bindSampler(uint binding, Sampler *sampler, uint index) {
-    const vector<uint> &                  bindingIndices = _layout->getBindingIndices();
+void DescriptorSetValidator::bindSampler(uint32_t binding, Sampler *sampler, uint32_t index) {
+    CCASSERT(isInited(), "alread destroyed?");
+
+    const vector<uint32_t> &              bindingIndices = _layout->getBindingIndices();
     const DescriptorSetLayoutBindingList &bindings       = _layout->getBindings();
     CCASSERT(binding < bindingIndices.size() && bindingIndices[binding] < bindings.size(), "Illegal binding");
 
@@ -114,7 +130,7 @@ void DescriptorSetValidator::bindSampler(uint binding, Sampler *sampler, uint in
 
     DescriptorSet::bindSampler(binding, sampler, index);
 
-    _actor->bindSampler(binding, static_cast<SamplerValidator *>(sampler)->getActor(), index);
+    _actor->bindSampler(binding, sampler, index);
 }
 
 } // namespace gfx

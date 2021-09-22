@@ -37,6 +37,8 @@ class RenderInstancedQueue;
 class RenderAdditiveLightQueue;
 class PlanarShadowQueue;
 struct DeferredRenderData;
+class DeferredPipeline;
+struct RenderPass;
 
 class CC_DLL GbufferStage : public RenderStage {
 public:
@@ -51,6 +53,9 @@ public:
     void render(scene::Camera *camera) override;
 
 private:
+    void dispenseRenderObject2Queues();
+    void recordCommands(DeferredPipeline *pipeline, gfx::RenderPass *renderPass);
+
     static RenderStageInfo initInfo;
     PlanarShadowQueue *    _planarShadowQueue = nullptr;
     RenderBatchedQueue *   _batchedQueue      = nullptr;

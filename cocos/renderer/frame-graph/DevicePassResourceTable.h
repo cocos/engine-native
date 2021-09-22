@@ -25,16 +25,17 @@
 
 #pragma once
 
+#include <unordered_map>
 #include "Handle.h"
 #include "RenderTargetAttachment.h"
 #include "Resource.h"
-#include <unordered_map>
 
 namespace cc {
 namespace framegraph {
 
 class PassNode;
 class FrameGraph;
+class DevicePass;
 
 class DevicePassResourceTable final {
 public:
@@ -47,35 +48,41 @@ public:
 
     template <typename Type>
     std::enable_if_t<std::is_base_of<gfx::GFXObject, typename Type::DeviceResource>::value, typename Type::DeviceResource *>
-    getRead(TypedHandle<Type> const handle) const noexcept;
+    getRead(TypedHandle<Type> handle) const noexcept;
 
     template <typename Type>
     std::enable_if_t<std::is_base_of<gfx::GFXObject, typename Type::DeviceResource>::value, typename Type::DeviceResource *>
-    getWrite(TypedHandle<Type> const handle) const noexcept;
+    getWrite(TypedHandle<Type> handle) const noexcept;
+
+    gfx::RenderPass *getRenderPass() const { return _renderPass; }
+    uint32_t getSubpassIndex() const { return _subpassIndex; }
 
 private:
     using ResourceDictionary = std::unordered_map<Handle, gfx::GFXObject *, Handle::Hasher>;
 
-    static gfx::GFXObject *get(const ResourceDictionary &from, const Handle handle) noexcept;
-    void                   extract(const FrameGraph &graph, const PassNode *const passNode, bool multiSubPass, std::vector<const gfx::Texture *> const &renderTargets) noexcept;
-    void                   extract(const FrameGraph &graph, std::vector<Handle> const &from, ResourceDictionary &to, bool ignoreRenderTarget, std::vector<const gfx::Texture *> const &renderTargets) noexcept;
+    static gfx::GFXObject *get(const ResourceDictionary &from, Handle handle) noexcept;
+    void                   extract(const FrameGraph &graph, const PassNode *passNode, std::vector<const gfx::Texture *> const &renderTargets) noexcept;
+    static void            extract(const FrameGraph &graph, std::vector<Handle> const &from, ResourceDictionary &to, bool ignoreRenderTarget, std::vector<const gfx::Texture *> const &renderTargets) noexcept;
 
-    ResourceDictionary reads{};
-    ResourceDictionary writes{};
+    ResourceDictionary _reads{};
+    ResourceDictionary _writes{};
+
+    gfx::RenderPass *_renderPass{nullptr};
+    uint32_t _subpassIndex{0U};
 
     friend class DevicePass;
 };
 
 template <typename Type>
 std::enable_if_t<std::is_base_of<gfx::GFXObject, typename Type::DeviceResource>::value, typename Type::DeviceResource *>
-DevicePassResourceTable::getRead(TypedHandle<Type> const handle) const noexcept {
-    return static_cast<typename Type::DeviceResource *>(get(reads, handle));
+DevicePassResourceTable::getRead(TypedHandle<Type> handle) const noexcept {
+    return static_cast<typename Type::DeviceResource *>(get(_reads, handle));
 }
 
 template <typename Type>
 std::enable_if_t<std::is_base_of<gfx::GFXObject, typename Type::DeviceResource>::value, typename Type::DeviceResource *>
-DevicePassResourceTable::getWrite(TypedHandle<Type> const handle) const noexcept {
-    return static_cast<typename Type::DeviceResource *>(get(writes, handle));
+DevicePassResourceTable::getWrite(TypedHandle<Type> handle) const noexcept {
+    return static_cast<typename Type::DeviceResource *>(get(_writes, handle));
 }
 
 } // namespace framegraph

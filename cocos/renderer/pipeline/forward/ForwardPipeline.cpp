@@ -27,14 +27,7 @@
 #include "../SceneCulling.h"
 #include "../shadow/ShadowFlow.h"
 #include "ForwardFlow.h"
-#include "gfx-base/GFXBuffer.h"
-#include "gfx-base/GFXCommandBuffer.h"
-#include "gfx-base/GFXDescriptorSet.h"
 #include "gfx-base/GFXDevice.h"
-#include "gfx-base/GFXQueue.h"
-#include "gfx-base/GFXRenderPass.h"
-#include "gfx-base/GFXSampler.h"
-#include "gfx-base/GFXTexture.h"
 #include "platform/Application.h"
 #include "scene/RenderScene.h"
 
@@ -52,7 +45,11 @@ namespace {
     (dst)[(offset) + 3] = (src).w;
 } // namespace
 
-gfx::RenderPass *ForwardPipeline::getOrCreateRenderPass(gfx::ClearFlags clearFlags) {
+framegraph::StringHandle ForwardPipeline::fgStrHandleForwardColorTexture = framegraph::FrameGraph::stringToHandle("forwardColorTexture");
+framegraph::StringHandle ForwardPipeline::fgStrHandleForwardDepthTexture = framegraph::FrameGraph::stringToHandle("forwardDepthTexture");
+framegraph::StringHandle ForwardPipeline::fgStrHandleForwardPass         = framegraph::FrameGraph::stringToHandle("forwardPass");
+
+gfx::RenderPass *ForwardPipeline::getOrCreateRenderPass(gfx::ClearFlags clearFlags, gfx::Swapchain *swapchain) {
     if (_renderPasses.count(clearFlags)) {
         return _renderPasses[clearFlags];
     }
@@ -60,8 +57,8 @@ gfx::RenderPass *ForwardPipeline::getOrCreateRenderPass(gfx::ClearFlags clearFla
     auto *                      device = gfx::Device::getInstance();
     gfx::ColorAttachment        colorAttachment;
     gfx::DepthStencilAttachment depthStencilAttachment;
-    colorAttachment.format                = device->getColorFormat();
-    depthStencilAttachment.format         = device->getDepthStencilFormat();
+    colorAttachment.format                = swapchain->getColorTexture()->getFormat();
+    depthStencilAttachment.format         = swapchain->getDepthStencilTexture()->getFormat();
     depthStencilAttachment.stencilStoreOp = gfx::StoreOp::STORE;
     depthStencilAttachment.depthStoreOp   = gfx::StoreOp::STORE;
 
@@ -107,8 +104,8 @@ bool ForwardPipeline::initialize(const RenderPipelineInfo &info) {
     return true;
 }
 
-bool ForwardPipeline::activate() {
-    if (!RenderPipeline::activate()) {
+bool ForwardPipeline::activate(gfx::Swapchain *swapchain) {
+    if (!RenderPipeline::activate(swapchain)) {
         CC_LOG_ERROR("RenderPipeline active failed.");
         return false;
     }
@@ -121,20 +118,43 @@ bool ForwardPipeline::activate() {
     return true;
 }
 
+gfx::Rect ForwardPipeline::getRenderArea(scene::Camera *camera, bool onScreen) {
+    float w;
+    float h;
+    if (onScreen) {
+        gfx::Swapchain *swapchain = camera->window->swapchain;
+        w                         = static_cast<float>(swapchain && toNumber(swapchain->getSurfaceTransform()) % 2 ? camera->height : camera->width);
+        h                         = static_cast<float>(swapchain && toNumber(swapchain->getSurfaceTransform()) % 2 ? camera->width : camera->height);
+    } else {
+        w = static_cast<float>(camera->width);
+        h = static_cast<float>(camera->height);
+    }
+
+    const auto &viewport = camera->viewPort;
+    return gfx::Rect{
+        static_cast<int>(viewport.x * w),
+        static_cast<int>(viewport.y * h),
+        static_cast<uint>(viewport.z * w * _pipelineSceneData->getSharedData()->shadingScale),
+        static_cast<uint>(viewport.w * h * _pipelineSceneData->getSharedData()->shadingScale)
+    };
+}
+
 void ForwardPipeline::render(const vector<scene::Camera *> &cameras) {
-    static gfx::TextureBarrier *present{_device->createTextureBarrier({{gfx::AccessType::COLOR_ATTACHMENT_WRITE}, {gfx::AccessType::PRESENT}})};
-    static gfx::Texture *       backBuffer{nullptr};
     _commandBuffers[0]->begin();
-    _pipelineUBO->updateGlobalUBO();
+    _pipelineUBO->updateGlobalUBO(cameras[0]);
     _pipelineUBO->updateMultiCameraUBO(cameras);
+
     for (auto *camera : cameras) {
         sceneCulling(this, camera);
+        _fg.reset();
         for (auto *const flow : _flows) {
             flow->render(camera);
         }
+        _fg.compile();
+        _fg.execute();
         _pipelineUBO->incCameraUBOOffset();
     }
-    _commandBuffers[0]->pipelineBarrier(nullptr, &present, &backBuffer, 1);
+
     _commandBuffers[0]->end();
     _device->flushCommands(_commandBuffers);
     _device->getQueue()->submit(_commandBuffers);
@@ -144,28 +164,22 @@ bool ForwardPipeline::activeRenderer() {
     _commandBuffers.push_back(_device->getCommandBuffer());
     auto *const sharedData = _pipelineSceneData->getSharedData();
 
-    gfx::SamplerInfo info{
+    gfx::Sampler *const shadowMapSampler = _device->getSampler({
         gfx::Filter::POINT,
         gfx::Filter::POINT,
         gfx::Filter::NONE,
         gfx::Address::CLAMP,
         gfx::Address::CLAMP,
         gfx::Address::CLAMP,
-        {},
-        {},
-        {},
-        {},
-    };
-    const uint          shadowMapSamplerHash = SamplerLib::genSamplerHash(info);
-    gfx::Sampler *const shadowMapSampler     = SamplerLib::getSampler(shadowMapSamplerHash);
+    });
 
     // Main light sampler binding
-    this->_descriptorSet->bindSampler(SHADOWMAP::BINDING, shadowMapSampler);
-    this->_descriptorSet->bindTexture(SHADOWMAP::BINDING, getDefaultTexture());
+    _descriptorSet->bindSampler(SHADOWMAP::BINDING, shadowMapSampler);
+    _descriptorSet->bindTexture(SHADOWMAP::BINDING, getDefaultTexture());
 
     // Spot light sampler binding
-    this->_descriptorSet->bindSampler(SPOTLIGHTINGMAP::BINDING, shadowMapSampler);
-    this->_descriptorSet->bindTexture(SPOTLIGHTINGMAP::BINDING, getDefaultTexture());
+    _descriptorSet->bindSampler(SPOTLIGHTINGMAP::BINDING, shadowMapSampler);
+    _descriptorSet->bindTexture(SPOTLIGHTINGMAP::BINDING, getDefaultTexture());
 
     _descriptorSet->update();
     // update global defines when all states initialized.
@@ -176,16 +190,6 @@ bool ForwardPipeline::activeRenderer() {
 }
 
 void ForwardPipeline::destroy() {
-    if (_descriptorSet) {
-        _descriptorSet->getBuffer(UBOGlobal::BINDING)->destroy();
-        _descriptorSet->getBuffer(UBOCamera::BINDING)->destroy();
-        _descriptorSet->getBuffer(UBOShadow::BINDING)->destroy();
-        _descriptorSet->getSampler(SHADOWMAP::BINDING)->destroy();
-        _descriptorSet->getTexture(SHADOWMAP::BINDING)->destroy();
-        _descriptorSet->getSampler(SPOTLIGHTINGMAP::BINDING)->destroy();
-        _descriptorSet->getTexture(SPOTLIGHTINGMAP::BINDING)->destroy();
-    }
-
     for (auto &it : _renderPasses) {
         CC_SAFE_DESTROY(it.second);
     }

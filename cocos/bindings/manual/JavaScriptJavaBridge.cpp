@@ -274,7 +274,7 @@ bool JavaScriptJavaBridge::CallInfo::executeWithArgs(jvalue *args) {
             break;
 
         case JavaScriptJavaBridge::ValueType::LONG:
-            _mRet.longValue = _mEnv->CallStaticIntMethodA(_mClassID, _mMethodID, args);
+            _mRet.longValue = _mEnv->CallStaticLongMethodA(_mClassID, _mMethodID, args);
             break;
 
         case JavaScriptJavaBridge::ValueType::FLOAT:

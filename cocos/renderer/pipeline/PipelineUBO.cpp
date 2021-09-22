@@ -46,21 +46,21 @@ namespace pipeline {
 
 Mat4 matShadowViewProj;
 
-void PipelineUBO::updateGlobalUBOView(const RenderPipeline * /*pipeline*/, std::array<float, UBOGlobal::COUNT> *bufferView) {
+void PipelineUBO::updateGlobalUBOView(const scene::Camera *camera, std::array<float, UBOGlobal::COUNT> *bufferView) {
     const scene::Root *                  root          = scene::Root::instance;
     const gfx::Device *                  device        = gfx::Device::getInstance();
     std::array<float, UBOGlobal::COUNT> &uboGlobalView = *bufferView;
 
-    const auto shadingWidth  = std::floor(device->getWidth());
-    const auto shadingHeight = std::floor(device->getHeight());
+    const auto shadingWidth  = std::floor(camera->window->getWidth());
+    const auto shadingHeight = std::floor(camera->window->getHeight());
 
     // update UBOGlobal
     uboGlobalView[UBOGlobal::TIME_OFFSET + 0] = root->cumulativeTime;
     uboGlobalView[UBOGlobal::TIME_OFFSET + 1] = root->frameTime;
     uboGlobalView[UBOGlobal::TIME_OFFSET + 2] = static_cast<float>(Application::getInstance()->getTotalFrames());
 
-    uboGlobalView[UBOGlobal::SCREEN_SIZE_OFFSET + 0] = static_cast<float>(device->getWidth());
-    uboGlobalView[UBOGlobal::SCREEN_SIZE_OFFSET + 1] = static_cast<float>(device->getHeight());
+    uboGlobalView[UBOGlobal::SCREEN_SIZE_OFFSET + 0] = static_cast<float>(shadingWidth);
+    uboGlobalView[UBOGlobal::SCREEN_SIZE_OFFSET + 1] = static_cast<float>(shadingHeight);
     uboGlobalView[UBOGlobal::SCREEN_SIZE_OFFSET + 2] = 1.0F / uboGlobalView[UBOGlobal::SCREEN_SIZE_OFFSET];
     uboGlobalView[UBOGlobal::SCREEN_SIZE_OFFSET + 3] = 1.0F / uboGlobalView[UBOGlobal::SCREEN_SIZE_OFFSET + 1];
 
@@ -71,23 +71,24 @@ void PipelineUBO::updateGlobalUBOView(const RenderPipeline * /*pipeline*/, std::
 }
 
 void PipelineUBO::updateCameraUBOView(const RenderPipeline *pipeline, float *output, const scene::Camera *camera) {
-    const scene::RenderScene *            scene         = camera->scene;
-    const scene::DirectionalLight *       mainLight     = scene->getMainLight();
-    const PipelineSceneData *             sceneData     = pipeline->getPipelineSceneData();
-    const scene::PipelineSharedSceneData *sharedData    = sceneData->getSharedData();
-    const float                           fpScale       = sharedData->fpScale;
-    const gfx::DescriptorSet *            descriptorSet = pipeline->getDescriptorSet();
-    const scene::Ambient *                ambient       = sharedData->ambient;
-    const scene::Fog *                    fog           = sharedData->fog;
-    const bool                            isHDR         = sharedData->isHDR;
-    const float                           shadingScale  = sharedData->shadingScale;
-    const gfx::Device *                   device        = gfx::Device::getInstance();
+    const auto *const              scene         = camera->scene;
+    const scene::DirectionalLight *mainLight     = scene->getMainLight();
+    auto *                         sceneData     = pipeline->getPipelineSceneData();
+    auto *const                    sharedData    = sceneData->getSharedData();
+    const auto                     fpScale       = sharedData->fpScale;
+    auto *const                    descriptorSet = pipeline->getDescriptorSet();
+    auto *                         ambient       = sharedData->ambient;
+    auto *                         fog           = sharedData->fog;
+    const auto                     isHDR         = sharedData->isHDR;
+    const auto                     shadingScale  = sharedData->shadingScale;
 
-    const auto shadingWidth  = static_cast<float>(std::floor(device->getWidth()));
-    const auto shadingHeight = static_cast<float>(std::floor(device->getHeight()));
+    auto *device = gfx::Device::getInstance();
 
-    output[UBOCamera::SCREEN_SCALE_OFFSET + 0] = static_cast<float>(camera->width) / shadingWidth * shadingScale;
-    output[UBOCamera::SCREEN_SCALE_OFFSET + 1] = static_cast<float>(camera->height) / shadingHeight * shadingScale;
+    const auto shadingWidth  = static_cast<float>(std::floor(camera->window->getWidth()));
+    const auto shadingHeight = static_cast<float>(std::floor(camera->window->getHeight()));
+
+    output[UBOCamera::SCREEN_SCALE_OFFSET + 0] = static_cast<float>(camera->width / shadingWidth * shadingScale);
+    output[UBOCamera::SCREEN_SCALE_OFFSET + 1] = static_cast<float>(camera->height / shadingHeight * shadingScale);
     output[UBOCamera::SCREEN_SCALE_OFFSET + 2] = 1.0F / output[UBOCamera::SCREEN_SCALE_OFFSET];
     output[UBOCamera::SCREEN_SCALE_OFFSET + 3] = 1.0F / output[UBOCamera::SCREEN_SCALE_OFFSET + 1];
 
@@ -130,7 +131,7 @@ void PipelineUBO::updateCameraUBOView(const RenderPipeline *pipeline, float *out
     output[UBOCamera::AMBIENT_GROUND_OFFSET + 2] = ambient->groundAlbedo.z;
     auto *const envmap                           = descriptorSet->getTexture(static_cast<uint>(PipelineGlobalBindings::SAMPLER_ENVIRONMENT));
     if (envmap) {
-        output[UBOCamera::AMBIENT_GROUND_OFFSET + 3] = static_cast<float>(envmap->getLevelCount());
+        output[UBOCamera::AMBIENT_GROUND_OFFSET + 3] = static_cast<float>(envmap->getViewInfo().levelCount);
     }
 
     memcpy(output + UBOCamera::MAT_VIEW_OFFSET, camera->matView.m, sizeof(cc::Mat4));
@@ -351,7 +352,7 @@ void PipelineUBO::activate(gfx::Device *device, RenderPipeline *pipeline) {
 
     auto *shadowUBO = _device->createBuffer({
         gfx::BufferUsageBit::UNIFORM | gfx::BufferUsageBit::TRANSFER_DST,
-        gfx::MemoryUsageBit::HOST | gfx::MemoryUsageBit::DEVICE,
+        gfx::MemoryUsageBit::DEVICE,
         UBOShadow::SIZE,
         UBOShadow::SIZE,
         gfx::BufferFlagBit::NONE,
@@ -367,11 +368,11 @@ void PipelineUBO::destroy() {
     _ubos.clear();
 }
 
-void PipelineUBO::updateGlobalUBO() {
+void PipelineUBO::updateGlobalUBO(const scene::Camera *camera) {
     auto *const globalDSManager = _pipeline->getGlobalDSManager();
     auto *const ds              = _pipeline->getDescriptorSet();
     ds->update();
-    PipelineUBO::updateGlobalUBOView(_pipeline, &_globalUBO);
+    PipelineUBO::updateGlobalUBOView(camera, &_globalUBO);
     ds->getBuffer(UBOGlobal::BINDING)->update(_globalUBO.data(), UBOGlobal::SIZE);
 
     globalDSManager->bindBuffer(UBOGlobal::BINDING, ds->getBuffer(UBOGlobal::BINDING));

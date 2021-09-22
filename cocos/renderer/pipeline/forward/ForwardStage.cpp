@@ -31,6 +31,7 @@
 #include "../RenderBatchedQueue.h"
 #include "../RenderInstancedQueue.h"
 #include "../RenderQueue.h"
+#include "../helper/Utils.h"
 #include "ForwardPipeline.h"
 #include "UIPhase.h"
 #include "gfx-base/GFXCommandBuffer.h"
@@ -40,19 +41,6 @@
 
 namespace cc {
 namespace pipeline {
-namespace {
-void srgbToLinear(gfx::Color *out, const gfx::Color &gamma) {
-    out->x = gamma.x * gamma.x;
-    out->y = gamma.y * gamma.y;
-    out->z = gamma.z * gamma.z;
-}
-
-void linearToSrgb(gfx::Color *out, const gfx::Color &linear) {
-    out->x = std::sqrt(linear.x);
-    out->y = std::sqrt(linear.y);
-    out->z = std::sqrt(linear.z);
-}
-} // namespace
 
 RenderStageInfo ForwardStage::initInfo = {
     "ForwardStage",
@@ -101,7 +89,7 @@ void ForwardStage::destroy() {
     RenderStage::destroy();
 }
 
-void ForwardStage::render(scene::Camera *camera) {
+void ForwardStage::dispenseRenderObject2Queues() {
     _instancedQueue->clear();
     _batchedQueue->clear();
     auto *      pipeline      = static_cast<ForwardPipeline *>(_pipeline);
@@ -117,15 +105,15 @@ void ForwardStage::render(scene::Camera *camera) {
     uint   passIdx     = 0;
     size_t k           = 0;
     for (auto ro : renderObjects) {
-        const auto *const model = ro.model;
-        const auto& subModels = model->getSubModels();
-        auto subModelCount = subModels.size();
+        const auto *const model         = ro.model;
+        const auto &      subModels     = model->getSubModels();
+        auto              subModelCount = subModels.size();
         for (subModelIdx = 0; subModelIdx < subModelCount; ++subModelIdx) {
-            const auto& subModel = subModels[subModelIdx];
-            const auto& passes = subModel->getPasses();
-            auto passCount = passes.size();
+            const auto &subModel  = subModels[subModelIdx];
+            const auto &passes    = subModel->getPasses();
+            auto        passCount = passes.size();
             for (passIdx = 0; passIdx < passCount; ++passIdx) {
-                const auto& pass          = passes[passIdx];
+                const auto &pass = passes[passIdx];
                 if (pass->getPhase() != _phaseID) continue;
                 if (pass->getBatchingScheme() == scene::BatchingSchemes::INSTANCING) {
                     auto *instancedBuffer = InstancedBuffer::get(pass);
@@ -143,61 +131,120 @@ void ForwardStage::render(scene::Camera *camera) {
             }
         }
     }
-        
+
     for (auto *queue : _renderQueues) {
         queue->sort();
     }
+}
 
-    auto *cmdBuff = pipeline->getCommandBuffers()[0];
+void ForwardStage::recordCommands(scene::Camera *camera, gfx::RenderPass *renderPass) {
+    auto *                    cmdBuff       = _pipeline->getCommandBuffers()[0];
+    const std::array<uint, 1> globalOffsets = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
+    cmdBuff->bindDescriptorSet(globalSet, _pipeline->getDescriptorSet(), static_cast<uint>(globalOffsets.size()), globalOffsets.data());
+    if (!_pipeline->getPipelineSceneData()->getRenderObjects().empty()) {
+        _renderQueues[0]->recordCommandBuffer(_device, renderPass, cmdBuff);
+        _instancedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
+        _batchedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
+        _additiveLightQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
+        _planarShadowQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
+        _renderQueues[1]->recordCommandBuffer(_device, renderPass, cmdBuff);
+    }
+    _uiPhase->render(camera, renderPass);
+    renderProfiler(renderPass, cmdBuff, _pipeline->getProfiler(), camera->window->swapchain);
+}
+
+void ForwardStage::render(scene::Camera *camera) {
+    struct RenderData {
+        framegraph::TextureHandle backBuffer;
+        framegraph::TextureHandle depth;
+    };
+    auto *      pipeline   = static_cast<ForwardPipeline *>(_pipeline);
+    auto *const sceneData  = _pipeline->getPipelineSceneData();
+    auto *const sharedData = sceneData->getSharedData();
+
+    // render area is not oriented
+    _renderArea = pipeline->getRenderArea(camera, false);
+    // Command 'updateBuffer' must be recorded outside render passes, cannot put them in execute lambda
+    dispenseRenderObject2Queues();
+    auto *cmdBuff{pipeline->getCommandBuffers()[0]};
 
     _instancedQueue->uploadBuffers(cmdBuff);
     _batchedQueue->uploadBuffers(cmdBuff);
     _additiveLightQueue->gatherLightPasses(camera, cmdBuff);
     _planarShadowQueue->gatherShadowPasses(camera, cmdBuff);
 
-    // render area is not oriented
-    uint w             = camera->window->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->height : camera->width;
-    uint h             = camera->window->hasOnScreenAttachments && static_cast<uint>(_device->getSurfaceTransform()) % 2 ? camera->width : camera->height;
-    _renderArea.x      = static_cast<int>(camera->viewPort.x * w);
-    _renderArea.y      = static_cast<int>(camera->viewPort.y * h);
-    _renderArea.width  = static_cast<uint>(camera->viewPort.z * w * sharedData->shadingScale);
-    _renderArea.height = static_cast<uint>(camera->viewPort.w * h * sharedData->shadingScale);
-
-    if (hasFlag(static_cast<gfx::ClearFlags>(camera->clearFlag), gfx::ClearFlagBit::COLOR)) {
-        if (sharedData->isHDR) {
-            srgbToLinear(&_clearColors[0], camera->clearColor);
-            auto scale = sharedData->fpScale / camera->exposure;
-            _clearColors[0].x *= scale;
-            _clearColors[0].y *= scale;
-            _clearColors[0].z *= scale;
-        } else {
-            _clearColors[0].x = camera->clearColor.x;
-            _clearColors[0].y = camera->clearColor.y;
-            _clearColors[0].z = camera->clearColor.z;
+    auto forwardSetup = [&](framegraph::PassNodeBuilder &builder, RenderData &data) {
+        if (hasFlag(static_cast<gfx::ClearFlags>(camera->clearFlag), gfx::ClearFlagBit::COLOR)) {
+            if (sharedData->isHDR) {
+                srgbToLinear(&_clearColors[0], camera->clearColor);
+                auto scale{sharedData->fpScale / camera->exposure};
+                _clearColors[0].x *= scale;
+                _clearColors[0].y *= scale;
+                _clearColors[0].z *= scale;
+            } else {
+                _clearColors[0].x = camera->clearColor.x;
+                _clearColors[0].y = camera->clearColor.y;
+                _clearColors[0].z = camera->clearColor.z;
+            }
         }
-    }
+        _clearColors[0].w = camera->clearColor.w;
+        // color
+        gfx::TextureInfo colorTexInfo{
+            gfx::TextureType::TEX2D,
+            gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::TRANSFER_SRC,
+            sharedData->isHDR ? gfx::Format::RGBA16F : gfx::Format::RGBA8,
+            camera->window->getWidth(),
+            camera->window->getHeight(),
+        };
+        framegraph::RenderTargetAttachment::Descriptor colorAttachmentInfo;
+        colorAttachmentInfo.usage      = framegraph::RenderTargetAttachment::Usage::COLOR;
+        colorAttachmentInfo.clearColor = _clearColors[0];
+        colorAttachmentInfo.loadOp     = gfx::LoadOp::CLEAR;
 
-    _clearColors[0].w = camera->clearColor.w;
+        auto clearFlags = static_cast<gfx::ClearFlagBit>(camera->clearFlag);
+        if (!hasFlag(clearFlags, gfx::ClearFlagBit::COLOR)) {
+            if (hasFlag(clearFlags, static_cast<gfx::ClearFlagBit>(skyboxFlag))) {
+                colorAttachmentInfo.loadOp = gfx::LoadOp::DISCARD;
+            } else {
+                colorAttachmentInfo.loadOp = gfx::LoadOp::LOAD;
+            }
+        }
+        colorAttachmentInfo.beginAccesses = {gfx::AccessType::TRANSFER_READ};
+        colorAttachmentInfo.endAccesses   = {gfx::AccessType::TRANSFER_READ};
+        data.backBuffer                   = builder.create<framegraph::Texture>(ForwardPipeline::fgStrHandleForwardColorTexture, colorTexInfo);
+        data.backBuffer                   = builder.write(data.backBuffer, colorAttachmentInfo);
+        builder.writeToBlackboard(ForwardPipeline::fgStrHandleForwardColorTexture, data.backBuffer);
+        // depth
+        gfx::TextureInfo depthTexInfo{
+            gfx::TextureType::TEX2D,
+            gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT,
+            gfx::Format::DEPTH_STENCIL,
+            camera->window->getWidth(),
+            camera->window->getHeight(),
+        };
 
-    auto *      framebuffer   = camera->window->frameBuffer;
-    const auto &colorTextures = framebuffer->getColorTextures();
+        framegraph::RenderTargetAttachment::Descriptor depthAttachmentInfo;
+        depthAttachmentInfo.usage        = framegraph::RenderTargetAttachment::Usage::DEPTH_STENCIL;
+        depthAttachmentInfo.loadOp       = gfx::LoadOp::CLEAR;
+        depthAttachmentInfo.clearDepth   = camera->clearDepth;
+        depthAttachmentInfo.clearStencil = camera->clearStencil;
+        depthAttachmentInfo.endAccesses  = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
 
-    auto *renderPass = !colorTextures.empty() && colorTextures[0] ? framebuffer->getRenderPass() : pipeline->getOrCreateRenderPass(static_cast<gfx::ClearFlagBit>(camera->clearFlag));
+        data.depth = builder.create<framegraph::Texture>(ForwardPipeline::fgStrHandleForwardDepthTexture, depthTexInfo);
+        data.depth = builder.write(data.depth, depthAttachmentInfo);
+        builder.writeToBlackboard(ForwardPipeline::fgStrHandleForwardDepthTexture, data.depth);
+        // viewport setup
+        gfx::Viewport viewport{_renderArea.x, _renderArea.y, _renderArea.width, _renderArea.height, 0.F, 1.F};
+        builder.setViewport(viewport, _renderArea);
+    };
 
-    cmdBuff->beginRenderPass(renderPass, framebuffer, _renderArea, _clearColors, camera->clearDepth, camera->clearStencil);
+    auto forwardExec = [this, camera](const RenderData & /*data*/, const framegraph::DevicePassResourceTable &table) {
+        recordCommands(camera, table.getRenderPass());
+    };
 
-    uint const globalOffsets[] = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
-    cmdBuff->bindDescriptorSet(globalSet, _pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
-
-    _renderQueues[0]->recordCommandBuffer(_device, renderPass, cmdBuff);
-    _instancedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
-    _batchedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
-    _additiveLightQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
-    _planarShadowQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
-    _renderQueues[1]->recordCommandBuffer(_device, renderPass, cmdBuff);
-    _uiPhase->render(camera, renderPass);
-
-    cmdBuff->endRenderPass();
+    // add pass
+    pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(ForwardInsertPoint::IP_FORWARD), ForwardPipeline::fgStrHandleForwardPass, forwardSetup, forwardExec);
+    pipeline->getFrameGraph().presentFromBlackboard(ForwardPipeline::fgStrHandleForwardColorTexture, camera->window->frameBuffer->getColorTextures()[0]);
 }
 
 } // namespace pipeline

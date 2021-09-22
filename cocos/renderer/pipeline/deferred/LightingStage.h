@@ -38,6 +38,14 @@ class RenderInstancedQueue;
 class RenderAdditiveLightQueue;
 class PlanarShadowQueue;
 struct DeferredRenderData;
+class DeferredPipeline;
+
+struct RenderElem {
+    RenderObject        renderObject;
+    gfx::DescriptorSet *set;
+    uint                modelIndex;
+    uint                passIndex;
+};
 
 class CC_DLL LightingStage : public RenderStage {
 public:
@@ -51,16 +59,19 @@ public:
     void destroy() override;
     void render(scene::Camera *camera) override;
 
-    void initLightingBuffer();
-
 private:
     void gatherLights(scene::Camera *camera);
+    void initLightingBuffer();
+    void fgLightingPass(scene::Camera *camera);
+    void fgTransparent(scene::Camera *camera);
+    void fgSsprPass(scene::Camera *camera);
+
+    void putTransparentObj2Queue();
 
     static RenderStageInfo initInfo;
     PlanarShadowQueue *    _planarShadowQueue{nullptr};
     gfx::Rect              _renderArea;
     uint                   _phaseID{0};
-    uint                   _defPhaseID{0};
 
     gfx::Buffer *             _deferredLitsBufs{nullptr};
     gfx::Buffer *             _deferredLitsBufView{nullptr};
@@ -72,10 +83,19 @@ private:
     gfx::DescriptorSetLayout *_descLayout{nullptr};
     uint                      _maxDeferredLights{UBODeferredLight::LIGHTS_PER_PASS};
 
-    ReflectionComp * _reflectionComp{nullptr};
-    RenderQueue *    _reflectionRenderQueue{nullptr};
-    uint             _reflectionPhaseID{0};
-    gfx::RenderPass *_reflectionPass{nullptr};
+    ReflectionComp *_reflectionComp{nullptr};
+    RenderQueue *   _reflectionRenderQueue{nullptr};
+    uint            _reflectionPhaseID{0};
+
+    std::vector<RenderElem> _reflectionElems;
+    uint                    _denoiseIndex = 0; // use to get corrrect texture string handle
+
+    gfx::Sampler *_defaultSampler{nullptr};
+
+    // SSPR texture size
+    uint _ssprTexWidth  = 0;
+    uint _ssprTexHeight = 0;
+    Mat4 _matViewProj;
 };
 
 } // namespace pipeline

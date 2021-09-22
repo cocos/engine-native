@@ -31,10 +31,8 @@
 #include "renderer/gfx-base/GFXBuffer.h"
 #include "renderer/gfx-base/GFXDevice.h"
 #include "renderer/gfx-base/GFXFramebuffer.h"
-#include "renderer/gfx-base/GFXGlobalBarrier.h"
 #include "renderer/gfx-base/GFXRenderPass.h"
 #include "renderer/gfx-base/GFXTexture.h"
-#include "renderer/gfx-base/GFXTextureBarrier.h"
 
 namespace cc {
 namespace framegraph {
@@ -72,8 +70,9 @@ public:
     Resource &operator=(const Resource &) = default;
     Resource &operator=(Resource &&) noexcept = default;
 
-    void                       createTransient() noexcept;
-    void                       createPersistent() noexcept;
+    void createTransient() noexcept;
+    void createPersistent() noexcept;
+
     void                       destroyTransient() noexcept;
     void                       destroyPersistent() noexcept;
     inline DeviceResourceType *get() const noexcept;
@@ -145,30 +144,27 @@ void Resource<DeviceResourceType, DescriptorType, DeviceResourceCreatorType, Des
 
 //////////////////////////////////////////////////////////////////////////
 
-#define DEFINE_GFX_RESOURCE(Type)                                                                           \
-    template <>                                                                                             \
-    struct ResourceDescriptorHasher<gfx::Type##Info> final {                                                \
-        inline uint32_t operator()(const gfx::Type##Info &desc) const {                                     \
-            return gfx::Type::computeHash(desc);                                                            \
-        }                                                                                                   \
-    };                                                                                                      \
-                                                                                                            \
-    template <>                                                                                             \
-    struct DeviceResourceCreator<gfx::Type, gfx::Type##Info> final {                                        \
-        inline gfx::Type *operator()(const gfx::Type##Info &desc) const {                                   \
-            return gfx::Device::getInstance()->create##Type(desc);                                          \
-        }                                                                                                   \
-    };                                                                                                      \
-                                                                                                            \
-    using Type         = Resource<gfx::Type, gfx::Type##Info>; /* NOLINT(bugprone-macro-parentheses) N/A */ \
+#define DEFINE_GFX_RESOURCE(Type)                                         \
+    template <>                                                           \
+    struct ResourceDescriptorHasher<gfx::Type##Info> final {              \
+        inline uint32_t operator()(const gfx::Type##Info &desc) const {   \
+            return gfx::Type::computeHash(desc);                          \
+        }                                                                 \
+    };                                                                    \
+                                                                          \
+    template <>                                                           \
+    struct DeviceResourceCreator<gfx::Type, gfx::Type##Info> final {      \
+        inline gfx::Type *operator()(const gfx::Type##Info &desc) const { \
+            return gfx::Device::getInstance()->create##Type(desc);        \
+        }                                                                 \
+    };                                                                    \
+    using Type         = Resource<gfx::Type, gfx::Type##Info>;            \
     using Type##Handle = TypedHandle<Type>;
 
 DEFINE_GFX_RESOURCE(Buffer)
 DEFINE_GFX_RESOURCE(Framebuffer)
-DEFINE_GFX_RESOURCE(GlobalBarrier)
 DEFINE_GFX_RESOURCE(RenderPass)
 DEFINE_GFX_RESOURCE(Texture)
-DEFINE_GFX_RESOURCE(TextureBarrier)
 
 } // namespace framegraph
 } // namespace cc

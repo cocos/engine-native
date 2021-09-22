@@ -28,7 +28,6 @@
 #include <string>
 #include <vector>
 #include "CallbackPass.h"
-#include "DevicePassResourceTable.h"
 #include "RenderTargetAttachment.h"
 #include "gfx-base/GFXDef.h"
 
@@ -38,7 +37,7 @@ namespace framegraph {
 class DevicePass final {
 public:
     DevicePass() = delete;
-    DevicePass(const FrameGraph &graph, std::vector<PassNode *> const &subPassNodes);
+    DevicePass(const FrameGraph &graph, std::vector<PassNode *> const &subpassNodes);
     DevicePass(const DevicePass &) = delete;
     DevicePass(DevicePass &&)      = delete;
     ~DevicePass()                  = default;
@@ -57,6 +56,7 @@ private:
 
     struct Subpass final {
         std::vector<LogicPass> logicPasses{};
+        gfx::SubpassInfo       desc;
     };
 
     struct Attachment final {
@@ -65,7 +65,8 @@ private:
     };
 
     void append(const FrameGraph &graph, const PassNode *passNode, std::vector<RenderTargetAttachment> *attachments);
-    void append(const FrameGraph &graph, const RenderTargetAttachment &attachment, std::vector<RenderTargetAttachment> *attachments);
+    void append(const FrameGraph &graph, const RenderTargetAttachment &attachment,
+                std::vector<RenderTargetAttachment> *attachments, gfx::SubpassInfo *subpass, const std::vector<Handle> &reads);
     void begin(gfx::CommandBuffer *cmdBuff);
     void next(gfx::CommandBuffer *cmdBuff) noexcept;
     void end(gfx::CommandBuffer *cmdBuff);

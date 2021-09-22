@@ -256,6 +256,7 @@ SE_DECLARE_FUNC(js_scene_SubModel_getPlanarInstanceShader);
 SE_DECLARE_FUNC(js_scene_SubModel_getPlanarShader);
 SE_DECLARE_FUNC(js_scene_SubModel_getPriority);
 SE_DECLARE_FUNC(js_scene_SubModel_getShader);
+SE_DECLARE_FUNC(js_scene_SubModel_getShaders);
 SE_DECLARE_FUNC(js_scene_SubModel_setDescriptorSet);
 SE_DECLARE_FUNC(js_scene_SubModel_setInputAssembler);
 SE_DECLARE_FUNC(js_scene_SubModel_setPasses);
@@ -417,6 +418,8 @@ bool register_all_scene(se::Object* obj);
 template<>
 bool sevalue_to_native(const se::Value &, cc::scene::RenderWindow *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cc::scene::RenderWindow);
+SE_DECLARE_FUNC(js_scene_RenderWindow_getHeight);
+SE_DECLARE_FUNC(js_scene_RenderWindow_getWidth);
 
 extern se::Object* __jsb_cc_scene_Camera_proto;
 extern se::Class* __jsb_cc_scene_Camera_class;

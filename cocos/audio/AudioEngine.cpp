@@ -322,6 +322,7 @@ void AudioEngine::onEnterBackground(const CustomEvent & /*event*/) {
     for (auto it = sAudioIDInfoMap.begin(); it != itEnd; ++it) {
         if (it->second.state == AudioState::PLAYING) {
             sAudioEngineImpl->pause(it->first);
+            it->second.state = AudioState::PAUSED;
             sBreakAudioID.push_back(it->first);
         }
     }
@@ -336,7 +337,11 @@ void AudioEngine::onEnterBackground(const CustomEvent & /*event*/) {
 void AudioEngine::onEnterForeground(const CustomEvent & /*event*/) {
     auto itEnd = sBreakAudioID.end();
     for (auto it = sBreakAudioID.begin(); it != itEnd; ++it) {
-        sAudioEngineImpl->resume(*it);
+        auto iter = sAudioIDInfoMap.find(*it);
+        if (iter != sAudioIDInfoMap.end() && iter->second.state == AudioState::PAUSED) {
+            sAudioEngineImpl->resume(*it);
+            iter->second.state = AudioState::PLAYING;
+        }
     }
     sBreakAudioID.clear();
 

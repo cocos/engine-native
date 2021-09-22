@@ -26,6 +26,7 @@
 #pragma once
 
 #include "../RenderStage.h"
+#include "frame-graph/Handle.h"
 
 namespace cc {
 namespace pipeline {
@@ -37,6 +38,7 @@ public:
     PostprocessStage();
     ~PostprocessStage() override = default;
 
+    static const RenderStageInfo &getInitializeInfo();
     bool initialize(const RenderStageInfo &info) override;
     void activate(RenderPipeline *pipeline, RenderFlow *flow) override;
     void destroy() override;

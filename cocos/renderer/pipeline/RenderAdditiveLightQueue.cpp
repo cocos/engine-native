@@ -31,20 +31,15 @@
 #include "RenderAdditiveLightQueue.h"
 
 #include "Define.h"
+#include "GlobalDescriptorSetManager.h"
 #include "RenderBatchedQueue.h"
 #include "RenderInstancedQueue.h"
 #include "SceneCulling.h"
+#include "base/Utils.h"
 #include "forward/ForwardPipeline.h"
-#include "gfx-base/GFXBuffer.h"
-#include "gfx-base/GFXCommandBuffer.h"
-#include "gfx-base/GFXDescriptorSet.h"
 #include "gfx-base/GFXDevice.h"
-#include "gfx-base/GFXFramebuffer.h"
-#include "gfx-base/GFXSampler.h"
-#include "gfx-base/GFXTexture.h"
 #include "scene/RenderScene.h"
 #include "scene/Sphere.h"
-#include "GlobalDescriptorSetManager.h"
 
 namespace cc {
 namespace pipeline {
@@ -63,7 +58,7 @@ RenderAdditiveLightQueue::RenderAdditiveLightQueue(RenderPipeline *pipeline) : _
         _lightBufferStride,
     });
     _firstLightBufferView    = device->createBuffer({_lightBuffer, 0, UBOForwardLight::SIZE});
-    _lightBufferData.resize(_lightBufferElementCount * _lightBufferCount);
+    _lightBufferData.resize(static_cast<size_t>(_lightBufferElementCount) * _lightBufferCount);
     _dynamicOffsets.resize(1, 0);
     _phaseID = getPhaseID("forward-add");
     _shadowUBO.fill(0.F);
@@ -241,8 +236,8 @@ void RenderAdditiveLightQueue::updateUBOs(const scene::Camera *camera, gfx::Comm
         _firstLightBufferView->destroy();
 
         _lightBufferCount = nextPow2(static_cast<uint>(validLightCount));
-        _lightBuffer->resize(_lightBufferStride * _lightBufferCount);
-        _lightBufferData.resize(_lightBufferElementCount * _lightBufferCount);
+        _lightBuffer->resize(utils::toUint(_lightBufferStride * _lightBufferCount));
+        _lightBufferData.resize(static_cast<size_t>(_lightBufferElementCount) * _lightBufferCount);
         _firstLightBufferView->initialize({_lightBuffer, 0, UBOForwardLight::SIZE});
     }
 
@@ -306,14 +301,14 @@ void RenderAdditiveLightQueue::updateUBOs(const scene::Camera *camera, gfx::Comm
 }
 
 void RenderAdditiveLightQueue::updateLightDescriptorSet(const scene::Camera *camera, gfx::CommandBuffer *cmdBuffer) {
-    auto *const         sceneData          = _pipeline->getPipelineSceneData();
-    auto *              shadowInfo         = sceneData->getSharedData()->shadow;
-    const auto *const   scene              = camera->scene;
-    auto *              device             = gfx::Device::getInstance();
-    const bool          hFTexture          = supportsHalfFloatTexture(device);
-    const float         linear             = 0.0F;
-    const float         packing            = hFTexture ? 0.0F : 1.0F;
-    const scene::Light *mainLight          = scene->getMainLight();
+    auto *const         sceneData  = _pipeline->getPipelineSceneData();
+    auto *              shadowInfo = sceneData->getSharedData()->shadow;
+    const auto *const   scene      = camera->scene;
+    auto *              device     = gfx::Device::getInstance();
+    const bool          hFTexture  = supportsHalfFloatTexture(device);
+    const float         linear     = 0.0F;
+    const float         packing    = hFTexture ? 0.0F : 1.0F;
+    const scene::Light *mainLight  = scene->getMainLight();
 
     for (uint i = 0; i < _validLights.size(); ++i) {
         const auto *light         = _validLights[i];
@@ -351,7 +346,7 @@ void RenderAdditiveLightQueue::updateLightDescriptorSet(const scene::Camera *cam
                 cc::Mat4 matShadowProj;
                 cc::Mat4::createPerspective(spotLight->getSpotAngle(), spotLight->getAspect(), 0.001F, spotLight->getRange(), &matShadowProj);
                 cc::Mat4 matShadowViewProj = matShadowProj;
-                cc::Mat4 matShadowInvProj = matShadowProj;
+                cc::Mat4 matShadowInvProj  = matShadowProj;
                 matShadowInvProj.inverse();
 
                 matShadowViewProj.multiply(matShadowView);
@@ -435,7 +430,7 @@ void RenderAdditiveLightQueue::lightCulling(const scene::Model *model) {
                 break;
         }
         if (!isCulled) {
-            _lightIndices.emplace_back(i);
+            _lightIndices.emplace_back(utils::toUint(i));
         }
     }
 }
