@@ -33,6 +33,8 @@ namespace gfx {
 
 struct CCWGPUBindGroupLayoutObject;
 class CCWGPUTexture;
+class CCWGPUBuffer;
+class CCWGPUSampler;
 
 class CCWGPUDescriptorSetLayout final : public emscripten::wrapper<DescriptorSetLayout> {
 public:
@@ -40,17 +42,17 @@ public:
     CCWGPUDescriptorSetLayout();
     ~CCWGPUDescriptorSetLayout() = default;
 
-    inline CCWGPUBindGroupLayoutObject *gpuLayoutEntryObject() { return _gpuLayoutEntryObj; }
+    inline CCWGPUBindGroupLayoutObject* gpuLayoutEntryObject() { return _gpuLayoutEntryObj; }
 
-    void updateTextureLayout(uint8_t binding, const CCWGPUTexture *tex);
+    void updateLayout(uint8_t binding, const CCWGPUBuffer* buffer = nullptr, const CCWGPUTexture* tex = nullptr, const CCWGPUSampler* sampler = nullptr);
 
     void prepare();
 
 protected:
-    void doInit(const DescriptorSetLayoutInfo &info) override;
+    void doInit(const DescriptorSetLayoutInfo& info) override;
     void doDestroy() override;
 
-    CCWGPUBindGroupLayoutObject *_gpuLayoutEntryObj = nullptr;
+    CCWGPUBindGroupLayoutObject* _gpuLayoutEntryObj = nullptr;
 };
 
 } // namespace gfx

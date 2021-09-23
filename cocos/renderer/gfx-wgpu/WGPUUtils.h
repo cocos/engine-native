@@ -31,28 +31,34 @@ static WGPUStoreOp toWGPUStoreOp(StoreOp op) {
     }
 }
 
-static WGPUTextureUsage toWGPUTextureUsage(TextureUsage usage) {
-    switch (usage) {
-        case cc::gfx::TextureUsageBit::NONE:
-            return WGPUTextureUsage::WGPUTextureUsage_None;
-        case cc::gfx::TextureUsageBit::TRANSFER_SRC:
-            return WGPUTextureUsage::WGPUTextureUsage_CopySrc;
-        case cc::gfx::TextureUsageBit::TRANSFER_DST:
-            return WGPUTextureUsage::WGPUTextureUsage_CopyDst;
-        case cc::gfx::TextureUsageBit::SAMPLED:
-            return WGPUTextureUsage::WGPUTextureUsage_Sampled;
-        case cc::gfx::TextureUsageBit::STORAGE:
-            return WGPUTextureUsage::WGPUTextureUsage_Storage;
-        case cc::gfx::TextureUsageBit::INPUT_ATTACHMENT:
-            return WGPUTextureUsage::WGPUTextureUsage_Sampled;
-        case cc::gfx::TextureUsageBit::COLOR_ATTACHMENT:
-            return WGPUTextureUsage::WGPUTextureUsage_OutputAttachment;
-        case cc::gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT:
-            return WGPUTextureUsage::WGPUTextureUsage_RenderAttachment;
-        default:
-            CC_LOG_ERROR("unsupport usage %d.", usage);
-            return WGPUTextureUsage::WGPUTextureUsage_Force32;
+static WGPUTextureUsageFlags toWGPUTextureUsage(TextureUsage usage) {
+    if (usage == TextureUsageBit::NONE)
+        return WGPUTextureUsage::WGPUTextureUsage_Sampled;
+
+    WGPUTextureUsageFlags res = WGPUTextureUsage::WGPUTextureUsage_None;
+    if (hasFlag(usage, TextureUsageBit::TRANSFER_SRC)) {
+        res |= WGPUTextureUsage::WGPUTextureUsage_CopySrc;
     }
+    if (hasFlag(usage, TextureUsageBit::TRANSFER_DST)) {
+        res |= WGPUTextureUsage::WGPUTextureUsage_CopyDst;
+    }
+    if (hasFlag(usage, TextureUsageBit::SAMPLED)) {
+        res |= WGPUTextureUsage::WGPUTextureUsage_Sampled;
+    }
+    if (hasFlag(usage, TextureUsageBit::STORAGE)) {
+        res |= WGPUTextureUsage::WGPUTextureUsage_Storage;
+    }
+    if (hasFlag(usage, TextureUsageBit::INPUT_ATTACHMENT)) {
+        res |= WGPUTextureUsage::WGPUTextureUsage_Sampled;
+    }
+    if (hasFlag(usage, TextureUsageBit::COLOR_ATTACHMENT)) {
+        res |= WGPUTextureUsage::WGPUTextureUsage_OutputAttachment;
+    }
+    if (hasFlag(usage, TextureUsageBit::DEPTH_STENCIL_ATTACHMENT)) {
+        res |= WGPUTextureUsage::WGPUTextureUsage_RenderAttachment;
+    }
+
+    return res;
 }
 
 static WGPUTextureDimension toWGPUTextureDimension(TextureType type) {
@@ -92,28 +98,29 @@ static WGPUTextureViewDimension toWGPUTextureViewDimension(TextureType type) {
 static WGPUTextureSampleType textureSampleTypeTrait(Format format) {
     switch (format) {
         case Format::R8:
-        case Format::R8UI:
-        case Format::R16UI:
-        case Format::RG8SN:
-        case Format::RG8UI:
+        case Format::R8SN:
         case Format::RG8:
-        case Format::R32UI:
-        case Format::RG16UI:
         case Format::RGBA8:
         case Format::BGRA8:
+        case Format::RG8SN:
+        case Format::SRGB8_A8:
+        case Format::RGB10A2:
+            return WGPUTextureSampleType::WGPUTextureSampleType_Float;
+        case Format::R8UI:
+        case Format::R16UI:
+        case Format::RG8UI:
+        case Format::R32UI:
+        case Format::RG16UI:
         case Format::RGBA8UI:
         case Format::RG32UI:
-        case Format::SRGB8_A8:
         case Format::RGBA32UI:
         case Format::RGBA16UI:
-        case Format::RGB10A2:
+        case Format::DEPTH_STENCIL:
             return WGPUTextureSampleType::WGPUTextureSampleType_Uint;
-        case Format::R8SN:
         case Format::R8I:
         case Format::R16I:
         case Format::RG8I:
         case Format::RG16I:
-        case Format::RGBA8SN:
         case Format::RGBA8I:
         case Format::RG32I:
         case Format::RGBA16I:
@@ -124,11 +131,10 @@ static WGPUTextureSampleType textureSampleTypeTrait(Format format) {
         case Format::R32F:
         case Format::RG16F:
         case Format::R11G11B10F:
-        case Format::RGB9E5:
         case Format::RG32F:
         case Format::RGBA16F:
         case Format::RGBA32F:
-            return WGPUTextureSampleType::WGPUTextureSampleType_Float;
+            return WGPUTextureSampleType::WGPUTextureSampleType_UnfilterableFloat;
         case Format::DEPTH:
             return WGPUTextureSampleType::WGPUTextureSampleType_Depth;
         default:
@@ -141,6 +147,8 @@ static WGPUTextureAspect textureAspectTrait(Format format) {
         case Format::DEPTH:
             return WGPUTextureAspect_DepthOnly;
         case Format::DEPTH_STENCIL:
+            return WGPUTextureAspect_All;
+        default:
             return WGPUTextureAspect_All;
     }
 }
@@ -379,26 +387,44 @@ static uint32_t toWGPUSampleCount(SampleCount sampleCount) {
 // INDIRECT     = 0x40,
 
 static WGPUBufferUsageFlags toWGPUBufferUsage(BufferUsageBit usage) {
-    switch (usage) {
-        case BufferUsageBit::NONE:
-            return WGPUBufferUsage_None;
-        case BufferUsageBit::TRANSFER_SRC:
-            return WGPUBufferUsage_CopySrc;
-        case BufferUsageBit::TRANSFER_DST:
-            return WGPUBufferUsage_CopyDst;
-        case BufferUsageBit::INDEX:
-            return WGPUBufferUsage_Index;
-        case BufferUsageBit::VERTEX:
-            return WGPUBufferUsage_Vertex;
-        case BufferUsageBit::UNIFORM:
-            return WGPUBufferUsage_Uniform;
-        case BufferUsageBit::STORAGE:
-            return WGPUBufferUsage_Storage;
-        case BufferUsageBit::INDIRECT:
-            return WGPUBufferUsage_Indirect;
-        default:
-            return WGPUBufferUsage_Force32;
+    if (usage == BufferUsageBit::NONE) {
+        return WGPUBufferUsage::WGPUBufferUsage_Uniform | WGPUBufferUsage_CopyDst;
     }
+
+    WGPUBufferUsageFlags res = WGPUBufferUsage::WGPUBufferUsage_None;
+
+    if (hasFlag(usage, BufferUsageBit::TRANSFER_SRC)) {
+        res |= WGPUBufferUsage::WGPUBufferUsage_CopySrc;
+    }
+
+    if (hasFlag(usage, BufferUsageBit::TRANSFER_DST)) {
+        res |= WGPUBufferUsage::WGPUBufferUsage_CopyDst;
+    }
+
+    if (hasFlag(usage, BufferUsageBit::INDEX)) {
+        res |= WGPUBufferUsage::WGPUBufferUsage_Index;
+    }
+
+    if (hasFlag(usage, BufferUsageBit::VERTEX)) {
+        res |= WGPUBufferUsage::WGPUBufferUsage_Vertex;
+    }
+
+    if (hasFlag(usage, BufferUsageBit::UNIFORM)) {
+        res |= WGPUBufferUsage::WGPUBufferUsage_Uniform;
+    }
+
+    if (hasFlag(usage, BufferUsageBit::STORAGE)) {
+        res |= WGPUBufferUsage::WGPUBufferUsage_Storage;
+    }
+
+    if (hasFlag(usage, BufferUsageBit::INDIRECT)) {
+        res |= WGPUBufferUsage::WGPUBufferUsage_Indirect;
+    }
+
+    // FIXME: depend on inputs but vertexbuffer was updated without COPY_DST.
+    res |= WGPUBufferUsage::WGPUBufferUsage_CopyDst;
+
+    return res;
 }
 
 static WGPUColor toWGPUColor(const Color& color) {

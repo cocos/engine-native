@@ -48,7 +48,7 @@ class SwapchainInfoInstance {
 public:
     SwapchainInfoInstance() = default;
 
-    inline void setWindowHandle(void* hwnd) { info.windowHandle = hwnd; }
+    inline void setWindowHandle(uintptr_t hwnd) { info.windowHandle = reinterpret_cast<void*>(hwnd); }
     inline void setVsyncMode(VsyncMode mode) { info.vsyncMode = mode; }
     inline void setWidth(uint32_t width) { info.width = width; }
     inline void setHeight(uint32_t height) { info.height = height; }

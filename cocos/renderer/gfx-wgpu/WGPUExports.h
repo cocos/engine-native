@@ -682,10 +682,10 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
 
     class_<SwapchainInfoInstance>("SwapchainInfoInstance")
         .constructor<>()
-        .function("setTexture", &SwapchainInfoInstance::setWindowHandle, allow_raw_pointer<arg<0>>())
-        .function("setType", &SwapchainInfoInstance::setVsyncMode)
-        .function("setFormat", &SwapchainInfoInstance::setWidth)
-        .function("setBaseLevel", &SwapchainInfoInstance::setHeight);
+        .function("setWindowHandle", &SwapchainInfoInstance::setWindowHandle)
+        .function("setVsyncMode", &SwapchainInfoInstance::setVsyncMode)
+        .function("setWidth", &SwapchainInfoInstance::setWidth)
+        .function("setHeight", &SwapchainInfoInstance::setHeight);
 
     class_<BufferViewInfoInstance>("BufferViewInfoInstance")
         .constructor<>()
@@ -767,6 +767,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>());
     class_<CCWGPUDevice, base<Device>>("CCWGPUDevice")
         .class_function("getInstance", &CCWGPUDevice::getInstance, allow_raw_pointer<arg<0>>())
+        .function("debug", &CCWGPUDevice::debug)
         .function("createSwapchain", select_overload<Swapchain *(const SwapchainInfoInstance &)>(&CCWGPUDevice::createSwapchain),
                   /* pure_virtual(), */ allow_raw_pointers())
         .function("createCommandBuffer", select_overload<CommandBuffer *(const CommandBufferInfoInstance &)>(&CCWGPUDevice::createCommandBuffer),
@@ -840,29 +841,6 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     class_<CCWGPUDescriptorSetLayout, base<DescriptorSetLayout>>("CCWGPUDescriptorSetLayout")
         .constructor<>();
 
-    // void DescriptorSet::bindBuffer(uint binding, Buffer * buffer, uint index) {
-    //     const uint descriptorIndex = _layout->getDescriptorIndices()[binding];
-    //     if (_buffers[descriptorIndex + index] != buffer) {
-    //         _buffers[descriptorIndex + index] = buffer;
-    //         _isDirty                          = true;
-    //     }
-    // }
-
-    // void DescriptorSet::bindTexture(uint binding, Texture * texture, uint index) {
-    //     const uint descriptorIndex = _layout->getDescriptorIndices()[binding];
-    //     if (_textures[descriptorIndex + index] != texture) {
-    //         _textures[descriptorIndex + index] = texture;
-    //         _isDirty                           = true;
-    //     }
-    // }
-
-    // void DescriptorSet::bindSampler(uint binding, Sampler * sampler, uint index) {
-    //     const uint descriptorIndex = _layout->getDescriptorIndices()[binding];
-    //     if (_samplers[descriptorIndex + index] != sampler) {
-    //         _samplers[descriptorIndex + index] = sampler;
-    //         _isDirty                           = true;
-    //     }
-    // }
     class_<DescriptorSet>("DescriptorSet")
         .function("initialize", &DescriptorSet::initialize)
         .function("destroy", &DescriptorSet::destroy)

@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include "WGPUDef.h"
 #include "gfx-base/GFXSwapchain.h"
 
 namespace cc {

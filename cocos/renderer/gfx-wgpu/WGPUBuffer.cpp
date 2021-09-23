@@ -58,6 +58,14 @@ void CCWGPUBuffer::doInit(const BufferInfo &info) {
         .mappedAtCreation = hasFlag(info.memUsage, MemoryUsageBit::DEVICE),
     };
 
+    if (info.memUsage == MemoryUsage::DEVICE) {
+        descriptor.usage |= WGPUBufferUsage_CopyDst;
+    } else if (info.memUsage == MemoryUsage::HOST) {
+        descriptor.usage |= WGPUBufferUsage_CopySrc;
+    } else if (info.memUsage == (MemoryUsage::HOST | MemoryUsage::DEVICE)) {
+        descriptor.usage |= WGPUBufferUsage_CopySrc | WGPUBufferUsage_CopyDst;
+    }
+
     _gpuBufferObject->wgpuBuffer = wgpuDeviceCreateBuffer(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
 } // namespace gfx
 

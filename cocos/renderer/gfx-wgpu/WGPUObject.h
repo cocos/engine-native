@@ -29,6 +29,7 @@
 #include "WGPUDef.h"
 #include "base/Utils.h"
 #include "gfx-base/GFXDef.h"
+
 class WGPURenderPassDescriptor;
 class WGPUComputePassDescriptor;
 
