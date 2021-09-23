@@ -100,7 +100,6 @@ void TextureValidator::doDestroy() {
 void TextureValidator::doResize(uint32_t width, uint32_t height, uint32_t /*size*/) {
     CCASSERT(isInited(), "alread destroyed?");
 
-    CCASSERT(hasFlag(_info.flags, TextureFlagBit::RESIZABLE), "Cannot resize immutable textures");
     CCASSERT(!_isTextureView, "Cannot resize texture views");
 
     /////////// execute ///////////
