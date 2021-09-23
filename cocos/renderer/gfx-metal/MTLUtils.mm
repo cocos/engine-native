@@ -610,6 +610,7 @@ MTLPixelFormat mu::toMTLPixelFormat(Format format) {
         case Format::R11G11B10F: return MTLPixelFormatRG11B10Float;
         case Format::DEPTH: return MTLPixelFormatDepth32Float;
 #if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
+        // FIXME: works fine on imac, but invalid pixel format on intel macbook.
         //case Format::DEPTH_STENCIL: return MTLPixelFormatDepth24Unorm_Stencil8;
         case Format::DEPTH_STENCIL: return MTLPixelFormatDepth32Float_Stencil8;
         case Format::BC1:
