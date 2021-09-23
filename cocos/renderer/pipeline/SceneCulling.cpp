@@ -214,7 +214,7 @@ void quantizeDirLightShadowCamera(RenderPipeline *pipeline, const scene::Camera 
     Mat4 matShadowTrans;
     Mat4::fromRT(rotation, Vec3::ZERO, &matShadowTrans);
     Mat4 matShadowView    = matShadowTrans.getInversed();
-    Mat4 matShadowViewInv = matShadowView.getInversed();
+    Mat4 matShadowViewInv = matShadowTrans.clone();
 
     const Mat4 shadowViewArbitraryPos = matShadowView.clone();
     lightViewFrustum.transform(matShadowView);
@@ -230,7 +230,7 @@ void quantizeDirLightShadowCamera(RenderPipeline *pipeline, const scene::Camera 
 
     Mat4::fromRT(rotation, shadowPos, &matShadowTrans);
     matShadowView    = matShadowTrans.getInversed();
-    matShadowViewInv = matShadowView.getInversed();
+    matShadowViewInv = matShadowTrans.clone();
 
     // calculate projection matrix params.
     // min value may lead to some shadow leaks.
@@ -268,7 +268,7 @@ void quantizeDirLightShadowCamera(RenderPipeline *pipeline, const scene::Camera 
         snap.transformMat4(projSnap, matShadowViewProjArbitaryPosInv);
         Mat4::fromRT(rotation, snap, &matShadowTrans);
         matShadowView    = matShadowTrans.getInversed();
-        matShadowViewInv = matShadowView.getInversed();
+        matShadowViewInv = matShadowTrans.clone();
         out->createOrtho(orthoSize, orthoSize, 0.1F, sceneData->getShadowCameraFar(), matShadowViewInv);
     } else {
         for (uint i = 0; i < 8; i++) {
