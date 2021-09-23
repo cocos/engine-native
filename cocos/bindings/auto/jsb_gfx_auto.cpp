@@ -17188,6 +17188,7 @@ static bool js_gfx_DescriptorSet_bindBufferJSB(se::State& s) // NOLINT(readabili
         ok &= sevalue_to_native(args[1], &arg1, s.thisObject());
         ok &= sevalue_to_native(args[2], &arg2, s.thisObject());
         SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSet_bindBufferJSB : Error processing arguments");
+        CC_LOG_DEBUG(se::ScriptEngine::getInstance()->getCurrentStackTrace().c_str());
         bool result = cobj->bindBufferJSB(arg0.value(), arg1.value(), arg2.value());
         ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
         SE_PRECONDITION2(ok, false, "js_gfx_DescriptorSet_bindBufferJSB : Error processing arguments");
