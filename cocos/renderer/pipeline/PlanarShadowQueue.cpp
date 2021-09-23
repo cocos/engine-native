@@ -139,7 +139,7 @@ void PlanarShadowQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass
 }
 
 void PlanarShadowQueue::destroy() {
-    CC_SAFE_DELETE(_instancedQueue)
+    CC_SAFE_DELETE(_instancedQueue);
 }
 
 } // namespace pipeline
