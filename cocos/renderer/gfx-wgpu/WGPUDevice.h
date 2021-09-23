@@ -109,6 +109,8 @@ public:
         this->Device::copyTextureToBuffers(src, buffers, regions);
     }
 
+    void debug();
+
 protected:
     static CCWGPUDevice *instance;
 

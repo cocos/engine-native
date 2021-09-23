@@ -65,13 +65,15 @@ void CCWGPUSwapchain::doInit(const SwapchainInfo& info) {
         case VsyncMode::HALF:
             presentMode = WGPUPresentMode_Force32;
             break;
+        default:
+            presentMode = WGPUPresentMode_Fifo;
     }
 
     auto*                   device = CCWGPUDevice::getInstance();
     WGPUSwapChainDescriptor swapChainDesc;
     swapChainDesc.nextInChain = nullptr;
     swapChainDesc.label       = "defaultSwapChain";
-    swapChainDesc.usage       = WGPUTextureUsage_RenderAttachment;
+    swapChainDesc.usage       = WGPUTextureUsage_OutputAttachment;
     swapChainDesc.format      = WGPUTextureFormat_BGRA8Unorm;
     swapChainDesc.width       = info.width;
     swapChainDesc.height      = info.height;

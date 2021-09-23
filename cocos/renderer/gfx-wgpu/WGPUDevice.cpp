@@ -170,6 +170,12 @@ Sampler* CCWGPUDevice::createSampler(const SamplerInfo& info) {
     return new CCWGPUSampler(info);
 }
 
+void CCWGPUDevice::debug() {
+    auto wgpuCommandEncoder = wgpuDeviceCreateCommandEncoder(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, nullptr);
+    auto wgpuCommandBuffer  = wgpuCommandEncoderFinish(wgpuCommandEncoder, nullptr);
+    wgpuQueueSubmit(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuQueue, 1, &wgpuCommandBuffer);
+}
+
 } // namespace gfx
 
 } // namespace cc

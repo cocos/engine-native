@@ -49,11 +49,16 @@ void CCWGPUShader::doInit(const ShaderInfo& info) {
         spirv = SPIRVUtils::getInstance();
         spirv->initialize(2); // vulkan >= 1.2  spirv >= 1.5
     }
-
+    //printf("sn : %s\n", info.name.c_str());
     for (size_t i = 0; i < info.stages.size(); i++) {
         const auto& stage = info.stages[i];
         spirv->compileGLSL(stage.stage, "#version 450\n" + stage.source);
-        if (stage.stage == ShaderStageFlagBit::VERTEX) spirv->compressInputLocations(_attributes);
+        if (stage.stage == ShaderStageFlagBit::VERTEX) {
+            spirv->compressInputLocations(_attributes);
+            //printf("vertex\n");
+        } else {
+            //printf("frag\n");
+        }
 
         auto*  spvData  = spirv->getOutputData();
         size_t unitSize = sizeof(std::remove_pointer<decltype(spvData)>::type);
@@ -77,6 +82,7 @@ void CCWGPUShader::doInit(const ShaderInfo& info) {
             CC_LOG_ERROR("unsupport shader stage.");
         }
     }
+    / printf("done\n");
 }
 
 void CCWGPUShader::doDestroy() {
