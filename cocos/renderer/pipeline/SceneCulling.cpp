@@ -291,7 +291,7 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
     const scene::DirectionalLight *       mainLight  = scene->getMainLight();
     scene::Frustum                        dirLightFrustum;
 
-    RenderObjectList shadowObjects;
+    RenderObjectList dirShadowObjects;
     bool             isShadowMap = false;
     if (shadowInfo->enabled && shadowInfo->shadowType == scene::ShadowType::SHADOWMAP) {
         isShadowMap = true;
@@ -308,6 +308,7 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
     }
 
     RenderObjectList renderObjects;
+    RenderObjectList castShadowObject;
 
     if (skyBox->enabled && skyBox->model && (camera->clearFlag & skyboxFlag)) {
         renderObjects.emplace_back(genRenderObject(skyBox->model, camera));
@@ -315,13 +316,22 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
 
 #define USE_OCTREE_VISIBILITY_QUERY
 #ifdef USE_OCTREE_VISIBILITY_QUERY
-    scene::Octree *octree = scene->getOctree();
+    for (const auto *model : scene->getModels()) {
+        // filter model by view visibility
+        if (model->getEnabled()) {
+            if (model->getCastShadow()) {
+                castShadowObject.emplace_back(genRenderObject(model, camera));
+            }
+        }
+    }
+
+    const scene::Octree *octree = scene->getOctree();
     if (isShadowMap) {
         std::vector<scene::Model *> casters;
         casters.reserve(scene->getModels().size() / 4);
         octree->queryVisibility(camera, dirLightFrustum, true, casters);
         for (const auto *model : casters) {
-            shadowObjects.emplace_back(genRenderObject(model, camera));
+            dirShadowObjects.emplace_back(genRenderObject(model, camera));
         }
     }
 
@@ -337,17 +347,24 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
         if (model->getEnabled()) {
             const auto        visibility = camera->visibility;
             const auto *const node       = model->getNode();
+
+            // cast shadow render Object
+            if (model->getCastShadow()) {
+                castShadowObject.emplace_back(genRenderObject(model, camera));
+            }
+
             if ((model->getNode() && ((visibility & node->getLayer()) == node->getLayer())) ||
                 (visibility & model->getVisFlags())) {
-                // shadow render Object
+                
                 const auto *modelWorldBounds = model->getWorldBounds();
                 if (!modelWorldBounds) {
                     continue;
                 }
 
+                // dir shadow render Object
                 if (isShadowMap && model->getCastShadow()) {
                     if (modelWorldBounds->aabbFrustum(dirLightFrustum)) {
-                        shadowObjects.emplace_back(genRenderObject(model, camera));
+                        dirShadowObjects.emplace_back(genRenderObject(model, camera));
                     }
                 }
 
@@ -361,7 +378,8 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
 #endif
 
     if (isShadowMap) {
-        sceneData->setShadowObjects(std::move(shadowObjects));
+        sceneData->setDirShadowObjects(std::move(dirShadowObjects));
+        sceneData->setCastShadowObjects(std::move(castShadowObject));
     }
 
     sceneData->setRenderObjects(std::move(renderObjects));
