@@ -614,3 +614,14 @@ bool register_javascript_java_bridge(se::Object *obj) { //NOLINT(readability-ide
 
     return true;
 }
+
+bool callPlatformStringMethod(const std::string &eventName, const std::string &inputArg) {
+    try{
+        JniHelper::callStaticVoidMethod(
+                "com/cocos/lib/CocosMethodManager", "applyMethod", eventName, inputArg);
+        return true;
+    }
+    catch (std::exception e) {
+        return false;
+    }
+}

@@ -40,7 +40,6 @@
 #if CC_PLATFORM == CC_PLATFORM_ANDROID
     #include "platform/java/jni/JniImp.h"
 #endif
-#include "jsb_dispatch_platform_event.h"
 #include <chrono>
 #include <regex>
 #include <sstream>
@@ -855,28 +854,6 @@ static bool JSB_hideInputBox(se::State &s) { //NOLINT
 SE_BIND_FUNC(JSB_hideInputBox)
 
 #endif
-
-static bool JSB_informApp(se::State &s) { //NOLINT
-    const auto &args = s.args();
-    size_t      argc = args.size();
-    if (argc >= 1) {
-        bool        ok = false;
-        std::string methodName;
-        ok = seval_to_std_string(args[0], &methodName);
-        SE_PRECONDITION2(ok, false, "Converting event name failed!");
-        std::string inputArg;
-        if (argc >= 2) {
-            ok = seval_to_std_string(args[1], &inputArg);
-            SE_PRECONDITION2(ok, false, "Converting input argument failed!");
-        }
-        ok = callPlatformStringMethod(methodName, inputArg);
-        SE_PRECONDITION2(ok, false, "dispatch platform event failed!");
-        return ok;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting at least %d", (int)argc, 1);
-    return false;
-}
-SE_BIND_FUNC(JSB_informApp)
 
 bool jsb_register_global_variables(se::Object *global) { //NOLINT
     gThreadPool = LegacyThreadPool::newFixedThreadPool(3);

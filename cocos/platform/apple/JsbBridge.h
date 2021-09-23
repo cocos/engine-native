@@ -8,16 +8,14 @@
 //#if (CC_PLATFORM == CC_PLATFORM_MAC_OSX) || (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
 #import <Foundation/Foundation.h>
 
-typedef void (^strFunc)(NSString* );
+typedef void (^ICallback)(NSString*, NSString*);
 //typedef int64_t strFunc;
 
-@interface MethodManager : NSObject
-
+@interface JsbBridge : NSObject
 +(instancetype)sharedInstance;
--(bool)addFunc:(NSString*)key function:(strFunc)f;
--(bool)applyFunc:(NSString*)key function:(NSString*)arg;
--(strFunc)removeFunc:(NSString*)key;
--(void)invokeScript:(NSString*)key arg:(NSString*)arg;
+-(bool)setCallback:(ICallback)cb;
+-(bool)callByScript:(NSString*)arg0 arg1:(NSString*)arg1;
+-(void)sendToScript:(NSString*)arg0 arg1:(NSString*)arg1;
 @end
 
 //#endif // CC_PLATFORM == CC_PLATFORM_MAC

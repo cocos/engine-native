@@ -24,27 +24,27 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "jsb_dispatch_platform_event.h"
-#include "TmpMethodManager.h"
 #import <Foundation/Foundation.h>
 #include <string>
 #include <Application.h>
+#include "JsbBridge.h"
 #include "cocos/bindings/jswrapper/v8/ScriptEngine.h"
-namespace cc {
+#include "cocos/bindings/manual/JavaScriptObjCBridge.h"
+
 //Native method with jni
 bool callPlatformStringMethod(const std::string &eventName, const std::string &inputArg){
     NSString *key = [NSString stringWithCString:eventName.c_str() encoding:NSUTF8StringEncoding];
     NSString *arg = [NSString stringWithCString:inputArg.c_str() encoding:NSUTF8StringEncoding];
-    MethodManager * m = [MethodManager sharedInstance];
+    JsbBridge * m = [JsbBridge sharedInstance];
     [m applyFunc:key function:arg];
     return true;
 }
-}
 
-@implementation MethodManager {
-    NSMutableDictionary* funcDic;
+
+@implementation JsbBridge {
+    ICallback callback;
 }
-static MethodManager* instance = nil;
+static JsbBridge* instance = nil;
 +(instancetype)sharedInstance{
     static dispatch_once_t pred = 0;
     dispatch_once(&pred, ^{
@@ -53,49 +53,29 @@ static MethodManager* instance = nil;
     return instance;
 }
 +(id)allocWithZone:(struct _NSZone *)zone{
-    return [MethodManager sharedInstance];
+    return [JsbBridge sharedInstance];
 }
 
 -(id)copyWithZone:(struct _NSZone *)zone{
-    return [MethodManager sharedInstance];
+    return [JsbBridge sharedInstance];
 }
 -(id)init{
-    if(self = [super init]){
-        funcDic = [NSMutableDictionary new];
-    }
+    self = [super init];
     return self;
 }
--(bool)addFunc:(NSString*)key function:(strFunc)f{
-    if(![funcDic objectForKey:key]){
-        NSLog(@"Great, this is a new key here");
-        [funcDic setObject:f forKey:key];
-        return true;
-    }
-    NSLog(@"Oh no, func already exist");
-    return false;
+-(bool)setCallback:(ICallback)cb{
+    callback = cb;
 }
--(bool)applyFunc:(NSString*)key function:(NSString *)arg{
-    strFunc f = [funcDic objectForKey:key];
-    if(f){
-        NSLog(@"Wow, function exist!");
-        f(arg);
-        return true;
-    }
-    NSLog(@"Oh no, failed to find  function for key");
-    return false;
+-(bool)callByScript:(NSString*)arg0 arg1:(NSString *)arg1{
+    callback(arg0, arg1);
 }
--(strFunc)removeFunc:(NSString*)key{
-    strFunc f = [funcDic objectForKey:key];
-    if(!f){
-        NSLog(@"Wow, function not exist!");
-    }
-    return f;
-}
--(void)invokeScript:(NSString *)key arg:(NSString *)arg{
-    std::string functionKey {[key UTF8String]};
-    std::string farg = {[arg UTF8String]};
+
+-(void)sendToScript:(NSString *)arg0 arg1:(NSString *)arg1{
+    const std::string c_arg0{[arg0 UTF8String]};
+    const std::string c_arg1{[arg1 UTF8String]};
     cc::Application::getInstance()->getScheduler()->performFunctionInCocosThread([=](){
-        se::ScriptEngine::getInstance()->evalString(("cc.MethodManager.applyMethod(\""+ functionKey +"\",\""+ farg +"\")").c_str());
+        bridgeCxxInstance->callByNative(c_arg0, c_arg1);
+        //se::ScriptEngine::getInstance()->evalString(("cc.JsbBridge.applyMethod(\""+ functionKey +"\",\""+ farg +"\")").c_str());
     });
 }
 @end

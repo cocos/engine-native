@@ -1551,7 +1551,6 @@ cocos_source_files(
                  cocos/bindings/manual/jsb_xmlhttprequest.h
                  cocos/bindings/manual/jsb_pipeline_manual.h
     NO_WERROR    cocos/bindings/manual/jsb_pipeline_manual.cpp
-                 cocos/bindings/manual/jsb_dispatch_platform_event.h
 )
 
 if(USE_SOCKET)
@@ -1575,7 +1574,6 @@ if(ANDROID)
                      cocos/bindings/manual/jsb_platform_android.cpp
                      cocos/bindings/manual/JavaScriptJavaBridge.cpp
                      cocos/bindings/manual/JavaScriptJavaBridge.h
-                     cocos/bindings/manual/jsb_dispatch_platform_event.cpp
     )
 elseif(OHOS)
     cocos_source_files(
@@ -1588,8 +1586,8 @@ elseif(APPLE)
                     cocos/bindings/manual/jsb_platfrom_apple.mm
                     cocos/bindings/manual/JavaScriptObjCBridge.h
                     cocos/bindings/manual/JavaScriptObjCBridge.mm
-                    cocos/bindings/manual/TmpMethodManager.h
-                    cocos/bindings/manual/TmpMethodManager.mm
+                    cocos/platform/apple/JsbBridge.h
+                    cocos/platform/apple/JsbBridge.mm
     )
 elseif(WIN32)
     cocos_source_files(
