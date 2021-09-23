@@ -66,7 +66,7 @@ void ShadowStage::render(scene::Camera *camera) {
 
     auto *cmdBuffer = _pipeline->getCommandBuffers()[0];
 
-    _additiveShadowQueue->gatherLightPasses(_light, cmdBuffer);
+    _additiveShadowQueue->gatherLightPasses(_lightIdx, _light, cmdBuffer);
 
     const auto  shadowMapSize = shadowInfo->size;
     const auto &viewport      = camera->viewPort;
@@ -82,7 +82,13 @@ void ShadowStage::render(scene::Camera *camera) {
                                _clearColors, camera->clearDepth, camera->clearStencil);
 
     const std::array<uint, 1> globalOffsets = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
-    cmdBuffer->bindDescriptorSet(globalSet, _pipeline->getDescriptorSet(), utils::toUint(globalOffsets.size()), globalOffsets.data());
+    gfx::DescriptorSet *      ds;
+    if (_light->getType() == scene::LightType::DIRECTIONAL) {
+        ds = _pipeline->getDescriptorSet();
+    } else {
+        ds = _pipeline->getGlobalDSManager()->getOrCreateDescriptorSet(_lightIdx);
+    }
+    cmdBuffer->bindDescriptorSet(globalSet, ds, utils::toUint(globalOffsets.size()), globalOffsets.data());
     _additiveShadowQueue->recordCommandBuffer(_device, renderPass, cmdBuffer);
 
     cmdBuffer->endRenderPass();

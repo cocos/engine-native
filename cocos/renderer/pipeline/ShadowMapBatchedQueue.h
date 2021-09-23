@@ -47,7 +47,7 @@ public:
     void destroy();
 
     void clear();
-    void gatherLightPasses(const scene::Light *, gfx::CommandBuffer *);
+    void gatherLightPasses(uint, const scene::Light *, gfx::CommandBuffer *);
     void add(const scene::Model *, gfx::CommandBuffer *);
     void recordCommandBuffer(gfx::Device *, gfx::RenderPass *, gfx::CommandBuffer *) const;
 
