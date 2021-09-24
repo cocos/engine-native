@@ -26,6 +26,7 @@
 #pragma once
 
 #include <emscripten/bind.h>
+#include "WGPUDef.h"
 #include "gfx-base/GFXShader.h"
 
 namespace cc {
@@ -40,6 +41,8 @@ public:
     ~CCWGPUShader() = default;
 
     inline CCWGPUShaderObject* gpuShaderObject() { return _gpuShaderObject; }
+
+    void initialize(const SPVShaderInfoInstance& info);
 
 protected:
     void doInit(const ShaderInfo& info) override;

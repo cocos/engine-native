@@ -155,6 +155,15 @@ void CCWGPUDevice::copyTextureToBuffers(Texture* src, uint8_t* const* buffers, c
 }
 
 void CCWGPUDevice::acquire(Swapchain* const* swapchains, uint32_t count) {
+    for (auto* swapchain : _swapchains) {
+        swapchain->update();
+    }
+}
+
+Shader* CCWGPUDevice::createShader(const SPVShaderInfoInstance& info) {
+    CCWGPUShader* shader = CC_NEW(CCWGPUShader);
+    shader->initialize(info);
+    return shader;
 }
 
 void CCWGPUDevice::present() {

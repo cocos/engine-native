@@ -46,6 +46,8 @@ public:
 
     CCWGPUTexture* getDepthStencilTexture();
 
+    void update();
+
 protected:
     CCWGPUSwapchain() = delete;
 

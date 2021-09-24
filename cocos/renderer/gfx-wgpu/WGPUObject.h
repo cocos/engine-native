@@ -158,6 +158,7 @@ struct CCWGPUPipelineStateObject {
 };
 
 struct CCWGPUShaderObject {
+    String           name;
     WGPUShaderModule wgpuShaderVertexModule   = wgpuDefaultHandle;
     WGPUShaderModule wgpuShaderFragmentModule = wgpuDefaultHandle;
     WGPUShaderModule wgpuShaderComputeModule  = wgpuDefaultHandle;

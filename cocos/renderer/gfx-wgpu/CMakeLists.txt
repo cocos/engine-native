@@ -27,7 +27,7 @@ AUX_SOURCE_DIRECTORY(
     ../../../cocos/renderer/gfx-base
     GFX_BASE
 )
-#list(FILTER GFX_BASE EXCLUDE REGEX "[\\w+]*SPIRVUtils.cpp")
+list(FILTER GFX_BASE EXCLUDE REGEX "[\\w+]*SPIRVUtils.cpp")
 
 AUX_SOURCE_DIRECTORY(
     ../../../cocos/renderer/gfx-base/states
