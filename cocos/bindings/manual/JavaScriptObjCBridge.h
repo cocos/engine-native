@@ -41,6 +41,8 @@ class Object;
 
 class JavaScriptObjCBridge {
 public:
+    static se::Object* bridgeInstance;
+    static JavaScriptObjCBridge* bridgeCxxInstance;
     class CallInfo {
     public:
         CallInfo(const char *className, const char *methodName)
@@ -61,13 +63,18 @@ public:
     };
 
     bool callByNative(std::string arg0, std::string arg1);
-    inline void setCallback(se::Object *cb){ callback = cb;}
+    inline bool setCallback(const std::function<void(std::string&, std::string&)>& cb){
+        if(!callback){
+            callback = cb;
+            return true;
+        }
+        return false;
+    }
 
 private:
-
-    se::Object *callback;
+    
+    std::function<void(std::string&, std::string&)> callback;
 };
-static se::Object* bridgeInstance;
-static JavaScriptObjCBridge* bridgeCxxInstance;
+
 bool register_javascript_objc_bridge(se::Object *obj);
 bool callPlatformStringMethod(const std::string &eventName, const std::string &inputArg);

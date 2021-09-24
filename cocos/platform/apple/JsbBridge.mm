@@ -36,7 +36,7 @@ bool callPlatformStringMethod(const std::string &eventName, const std::string &i
     NSString *key = [NSString stringWithCString:eventName.c_str() encoding:NSUTF8StringEncoding];
     NSString *arg = [NSString stringWithCString:inputArg.c_str() encoding:NSUTF8StringEncoding];
     JsbBridge * m = [JsbBridge sharedInstance];
-    [m applyFunc:key function:arg];
+    [m callByScript:key arg1:arg];
     return true;
 }
 
@@ -61,20 +61,30 @@ static JsbBridge* instance = nil;
 }
 -(id)init{
     self = [super init];
+    [callback new];
     return self;
 }
 -(bool)setCallback:(ICallback)cb{
-    callback = cb;
+    if(!callback){
+        callback = cb;
+        return true;
+    }
+    return false;
 }
 -(bool)callByScript:(NSString*)arg0 arg1:(NSString *)arg1{
-    callback(arg0, arg1);
+    if(callback != nil){
+        NSLog(@"Here is a callback");
+        callback(arg0, arg1);
+        return true;
+    }
+    return false;
 }
 
 -(void)sendToScript:(NSString *)arg0 arg1:(NSString *)arg1{
     const std::string c_arg0{[arg0 UTF8String]};
     const std::string c_arg1{[arg1 UTF8String]};
     cc::Application::getInstance()->getScheduler()->performFunctionInCocosThread([=](){
-        bridgeCxxInstance->callByNative(c_arg0, c_arg1);
+        JavaScriptObjCBridge::bridgeCxxInstance->callByNative(c_arg0, c_arg1);
         //se::ScriptEngine::getInstance()->evalString(("cc.JsbBridge.applyMethod(\""+ functionKey +"\",\""+ farg +"\")").c_str());
     });
 }

@@ -62,7 +62,8 @@ se::Value static objc_to_seval(id objcVal) {
 
     return ret;
 }
-
+se::Object* JavaScriptObjCBridge::bridgeInstance = nullptr;
+JavaScriptObjCBridge* JavaScriptObjCBridge::bridgeCxxInstance{nullptr};
 bool JavaScriptObjCBridge::CallInfo::execute(const se::ValueArray &argv, se::Value &rval) {
     NSString *className = [NSString stringWithCString:_className.c_str() encoding:NSUTF8StringEncoding];
     NSString *methodName = [NSString stringWithCString:_methodName.c_str() encoding:NSUTF8StringEncoding];
@@ -247,14 +248,10 @@ bool JavaScriptObjCBridge::CallInfo::execute(const se::ValueArray &argv, se::Val
 
 
 bool JavaScriptObjCBridge::callByNative(std::string arg0, std::string arg1){
-    se::ValueArray argInput;
-    argInput.emplace_back(arg0);
-    argInput.emplace_back(arg1);
-    //TODO: what is jsThis here?
-    std::cout<<"Here shows the address of self address"<<this<<std::endl;
-    std::cout<<"Here shows the address of bridgeInstance address"<<bridgeInstance<<std::endl;
-    se::Value rVal;
-    callback->call(argInput, bridgeInstance, &rVal);
+    callback(arg0, arg1);
+    
+    NSLog(@"Not a function");
+    //callback->call(argInput, JavaScriptObjCBridge::bridgeInstance, &rVal);
 }
 
 se::Class *__jsb_JavaScriptObjCBridge_class = nullptr;
@@ -271,8 +268,8 @@ static bool JavaScriptObjCBridge_constructor(se::State &s) {
     s.thisObject()->setPrivateData(cobj);
 
     //Save to this obj
-    bridgeInstance = s.thisObject();
-    bridgeCxxInstance = cobj;
+    JavaScriptObjCBridge::bridgeInstance = s.thisObject();
+    JavaScriptObjCBridge::bridgeCxxInstance = cobj;
     return true;
 }
 SE_BIND_CTOR(JavaScriptObjCBridge_constructor, __jsb_JavaScriptObjCBridge_class, JavaScriptObjCBridge_finalize)
@@ -307,14 +304,38 @@ SE_BIND_FUNC(JavaScriptObjCBridge_callStaticMethod)
 
 static bool JavaScriptObjCBridge_setCallback(se::State &s){
     JavaScriptObjCBridge *cobj = (JavaScriptObjCBridge *)s.nativeThisObject();
-    
+    assert(cobj == JavaScriptObjCBridge::bridgeCxxInstance);
     const auto &args = s.args();
     size_t argc = args.size();
     if (argc >= 1) {
-        bool ok = false;
-        se::Object* cb(args[0].toObject());
-        cobj->setCallback(cb);
+        se::Value jsFunc = args[0];
+        se::Value jsTarget = argc > 1 ? args[1] : se::Value::Undefined;
+        if(jsFunc.isNullOrUndefined())
+        {
+            cobj->setCallback(nullptr);
+        }
+        else{
+            assert(jsFunc.isObject() && jsFunc.toObject()->isFunction());
+            
+            jsFunc.toObject()->root();
+            jsTarget.toObject()->root();
+        
+            cobj->setCallback([jsFunc, jsTarget](std::string& arg0, std::string& arg1){
+                se::ScriptEngine::getInstance()->clearException();
+                se::AutoHandleScope hs;
+
+                se::ValueArray args;
+                args.push_back(se::Value(arg0));
+                args.push_back(se::Value(arg1));
+
+                se::Object* target = jsTarget.isObject() ? jsTarget.toObject() : nullptr;
+                jsFunc.toObject()->call(args, target);
+            });
+        }
+        return true;
     }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting >=1", argc);
+    return false;
 
 }SE_BIND_FUNC(JavaScriptObjCBridge_setCallback)
 
