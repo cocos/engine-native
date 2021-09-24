@@ -1,5 +1,7 @@
 #pragma once
+#include <emscripten/val.h>
 #include "../gfx-base/GFXDef-common.h"
+
 namespace cc {
 namespace gfx {
 
@@ -176,6 +178,32 @@ public:
 
 private:
     DispatchInfo info;
+};
+
+class SPVShaderStageInstance {
+public:
+    ShaderStageFlagBit    stage{ShaderStageFlagBit::NONE};
+    std::vector<uint32_t> spv;
+
+    inline void setStage(ShaderStageFlagBit stageIn) { stage = stageIn; }
+    inline void setSPVData(const emscripten::val& v) { spv = emscripten::convertJSArrayToNumberVector<uint32_t>(v); }
+};
+
+class SPVShaderInfoInstance {
+public:
+    inline void setName(String name) { info.name = name; }
+    inline void setAttributes(AttributeList attrs) { info.attributes = attrs; }
+    inline void setStages(std::vector<SPVShaderStageInstance> spvStages) { stages = spvStages; }
+    inline void setBlocks(UniformBlockList blocks) { info.blocks = blocks; }
+    inline void setBuffers(UniformStorageBufferList buffers) { info.buffers = buffers; }
+    inline void setSamplerTextures(UniformSamplerTextureList list) { info.samplerTextures = list; }
+    inline void setTextures(UniformTextureList textures) { info.textures = textures; }
+    inline void setSamplers(UniformSamplerList samplers) { info.samplers = samplers; }
+    inline void setImages(UniformStorageImageList images) { info.images = images; }
+    inline void setSubpasses(UniformInputAttachmentList subpassInputs) { info.subpassInputs = subpassInputs; }
+
+    ShaderInfo                          info;
+    std::vector<SPVShaderStageInstance> stages;
 };
 
 } // namespace gfx

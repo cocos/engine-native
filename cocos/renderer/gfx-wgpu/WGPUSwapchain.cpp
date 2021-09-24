@@ -127,6 +127,10 @@ CCWGPUTexture* CCWGPUSwapchain::getDepthStencilTexture() {
     return static_cast<CCWGPUTexture*>(_depthStencilTexture);
 }
 
+void CCWGPUSwapchain::update() {
+    static_cast<CCWGPUTexture*>(_colorTexture)->gpuTextureObject()->selfView = wgpuSwapChainGetCurrentTextureView(_gpuSwapchainObj->wgpuSwapChain);
+}
+
 void CCWGPUSwapchain::doDestroySurface() {
 }
 

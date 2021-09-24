@@ -542,7 +542,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .field("samplers", &ShaderInfo::samplers)
         .field("textures", &ShaderInfo::textures)
         .field("images", &ShaderInfo::images)
-        .field("imsubpassInputsages", &ShaderInfo::subpassInputs);
+        .field("subpassInputs", &ShaderInfo::subpassInputs);
     function("ShaderInfoInstance", &GenInstance<ShaderInfo>::instance);
 
     value_object<InputState>("InputState")
@@ -723,6 +723,24 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("setQueue", &CommandBufferInfoInstance::setQueue, allow_raw_pointer<arg<0>>())
         .function("setType", &CommandBufferInfoInstance::setType, allow_raw_pointer<arg<0>>());
 
+    class_<SPVShaderInfoInstance>("SPVShaderInfoInstance")
+        .constructor<>()
+        .function("setName", &SPVShaderInfoInstance::setName)
+        .function("setStages", &SPVShaderInfoInstance::setStages)
+        .function("setAttributes", &SPVShaderInfoInstance::setAttributes)
+        .function("setBlocks", &SPVShaderInfoInstance::setBlocks)
+        .function("setBuffers", &SPVShaderInfoInstance::setBuffers)
+        .function("setSamplerTextures", &SPVShaderInfoInstance::setSamplerTextures)
+        .function("setTextures", &SPVShaderInfoInstance::setTextures)
+        .function("setSamplers", &SPVShaderInfoInstance::setSamplers)
+        .function("setImages", &SPVShaderInfoInstance::setImages)
+        .function("setSubpasses", &SPVShaderInfoInstance::setSubpasses);
+
+    class_<SPVShaderStageInstance>("SPVShaderStageInstance")
+        .function("setStage", &SPVShaderStageInstance::setStage)
+        .function("setSPVData", &SPVShaderStageInstance::setSPVData);
+    function("SPVShaderStageInstance", &GenInstance<SPVShaderStageInstance>::instance);
+
     //--------------------------------------------------CLASS---------------------------------------------------------------------------
     class_<cc::gfx::Swapchain>("Swapchain")
         .function("initialize", &cc::gfx::Swapchain::initialize, allow_raw_pointer<arg<0>>())
@@ -745,8 +763,6 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("createBuffer", select_overload<Buffer *(const BufferInfo &)>(&Device::createBuffer),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("getSampler", &Device::getSampler, allow_raw_pointer<arg<0>>())
-        .function("createShader", select_overload<Shader *(const ShaderInfo &)>(&Device::createShader),
-                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createRenderPass", select_overload<RenderPass *(const RenderPassInfo &)>(&Device::createRenderPass),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createDescriptorSetLayout", select_overload<DescriptorSetLayout *(const DescriptorSetLayoutInfo &)>(&Device::createDescriptorSetLayout),
@@ -773,6 +789,8 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("createCommandBuffer", select_overload<CommandBuffer *(const CommandBufferInfoInstance &)>(&CCWGPUDevice::createCommandBuffer),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createFramebuffer", select_overload<Framebuffer *(const FramebufferInfoInstance &)>(&CCWGPUDevice::createFramebuffer),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createShader", select_overload<Shader *(const SPVShaderInfoInstance &)>(&CCWGPUDevice::createShader),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createTexture", select_overload<Texture *(const TextureInfoInstance &)>(&CCWGPUDevice::createTexture),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
@@ -921,7 +939,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
 
     //--------------------------------------------------CONTAINER-----------------------------------------------------------------------
     register_vector<int>("vector_int");
-    register_vector<uint>("vector_uint");
+    register_vector<uint32_t>("vector_uint32");
     register_vector<AccessType>("AccessTypeList");
     register_vector<SubpassInfo>("SubpassInfoList");
     register_vector<ColorAttachment>("ColorAttachmentList");
@@ -950,6 +968,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     register_vector<String>("StringList");
     register_vector<Buffer *>("BufferList");
     register_vector<Swapchain *>("SwapchainList");
+    register_vector<SPVShaderStageInstance>("SPVShaderStageList");
 };
 
 } // namespace cc::gfx

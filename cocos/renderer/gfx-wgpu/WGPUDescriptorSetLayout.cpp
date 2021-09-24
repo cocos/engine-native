@@ -60,7 +60,7 @@ void CCWGPUDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo& info) {
                 .nextInChain  = nullptr,
                 .binding      = _bindings[i].binding + CC_WGPU_MAX_ATTACHMENTS,
                 .visibility   = toWGPUShaderStageFlag(_bindings[i].stageFlags),
-                .sampler.type = WGPUSamplerBindingType_Filtering,
+                .sampler.type = WGPUSamplerBindingType_Comparison,
             };
             _gpuLayoutEntryObj->bindGroupLayoutEntries.push_back(samplerLayout);
         } else if (hasFlag(DESCRIPTOR_BUFFER_TYPE, _bindings[i].descriptorType)) {
@@ -88,7 +88,7 @@ void CCWGPUDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo& info) {
                 .nextInChain = nullptr,
                 .binding     = _bindings[i].binding,
                 .visibility  = toWGPUShaderStageFlag(_bindings[i].stageFlags),
-                .sampler     = {nullptr, WGPUSamplerBindingType::WGPUSamplerBindingType_Filtering},
+                .sampler     = {nullptr, WGPUSamplerBindingType::WGPUSamplerBindingType_Comparison},
             };
             _gpuLayoutEntryObj->bindGroupLayoutEntries.push_back(layout);
         } else {
@@ -112,7 +112,7 @@ void CCWGPUDescriptorSetLayout::updateLayout(uint8_t binding, const CCWGPUBuffer
             //
         }
         if (sampler) {
-            (*iter).sampler.type = WGPUSamplerBindingType::WGPUSamplerBindingType_Filtering;
+            (*iter).sampler.type = WGPUSamplerBindingType::WGPUSamplerBindingType_Comparison;
         }
         if (tex) {
             if (tex->getInfo().usage == TextureUsageBit::STORAGE) {

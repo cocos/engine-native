@@ -109,6 +109,8 @@ public:
         this->Device::copyTextureToBuffers(src, buffers, regions);
     }
 
+    Shader *createShader(const SPVShaderInfoInstance &spvInfo);
+
     void debug();
 
 protected:

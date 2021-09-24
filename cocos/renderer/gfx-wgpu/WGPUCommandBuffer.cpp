@@ -69,9 +69,9 @@ void CCWGPUCommandBuffer::end() {
             _computeFuncQ.front()(_gpuCommandBufferObj);
             _computeFuncQ.pop();
         };
-        _gpuCommandBufferObj->wgpuCommandBuffer = wgpuCommandEncoderFinish(_gpuCommandBufferObj->wgpuCommandEncoder, nullptr);
         wgpuComputePassEncoderEndPass(_gpuCommandBufferObj->wgpuComputeEncoder);
         wgpuComputePassEncoderRelease(_gpuCommandBufferObj->wgpuComputeEncoder);
+        _gpuCommandBufferObj->wgpuCommandBuffer = wgpuCommandEncoderFinish(_gpuCommandBufferObj->wgpuCommandEncoder, nullptr);
         wgpuCommandEncoderRelease(_gpuCommandBufferObj->wgpuCommandEncoder);
         _gpuCommandBufferObj->wgpuComputeEncoder = wgpuDefaultHandle;
         _gpuCommandBufferObj->wgpuCommandEncoder = wgpuDefaultHandle;
@@ -158,9 +158,9 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
 
 void CCWGPUCommandBuffer::endRenderPass() {
     auto rpEndFunc = [](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
-        gpuCommandBufferObj->wgpuCommandBuffer = wgpuCommandEncoderFinish(gpuCommandBufferObj->wgpuCommandEncoder, nullptr);
         wgpuRenderPassEncoderEndPass(gpuCommandBufferObj->wgpuRenderPassEncoder);
         wgpuRenderPassEncoderRelease(gpuCommandBufferObj->wgpuRenderPassEncoder);
+        gpuCommandBufferObj->wgpuCommandBuffer = wgpuCommandEncoderFinish(gpuCommandBufferObj->wgpuCommandEncoder, nullptr);
         wgpuCommandEncoderRelease(gpuCommandBufferObj->wgpuCommandEncoder);
         gpuCommandBufferObj->wgpuRenderPassEncoder = wgpuDefaultHandle;
         gpuCommandBufferObj->wgpuCommandEncoder    = wgpuDefaultHandle;

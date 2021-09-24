@@ -138,12 +138,13 @@ void CCWGPUTexture::doDestroy() {
 }
 
 void CCWGPUTexture::doResize(uint32_t width, uint32_t height, uint32_t size) {
+    printf("tex rsz\n");
     if (_isTextureView) {
         CC_LOG_ERROR("Resize is not support on texture view!");
         return;
     }
     if (_gpuTextureObj->wgpuTexture) {
-        wgpuTextureDestroy(_gpuTextureObj->wgpuTexture);
+        //wgpuTextureDestroy(_gpuTextureObj->wgpuTexture);
     }
 
     WGPUTextureDescriptor descriptor = {
