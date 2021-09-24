@@ -250,6 +250,8 @@ bool GLES3GPUContext::initialize(GLES3GPUStateCache *stateCache, GLES3GPUConstan
 void GLES3GPUContext::destroy() {
     if (eglDisplay) {
         makeCurrent(EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+        _eglCurrentDrawSurface = EGL_NO_SURFACE;
+        _eglCurrentReadSurface = EGL_NO_SURFACE;
     }
 
     if (eglDefaultSurface) {
@@ -281,8 +283,6 @@ void GLES3GPUContext::bindContext(bool bound) {
         resetStates();
     } else {
         makeCurrent(EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT, false);
-        _eglCurrentDrawSurface = EGL_NO_SURFACE;
-        _eglCurrentReadSurface = EGL_NO_SURFACE;
     }
 }
 
