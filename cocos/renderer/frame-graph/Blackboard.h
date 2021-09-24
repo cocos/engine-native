@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include <unordered_map>
 #include "Handle.h"
 #include "base/Macros.h"
 
@@ -42,14 +43,14 @@ public:
     Blackboard &operator=(Blackboard &&) = delete;
 
     inline ValueType &operator[](const KeyType &name) noexcept;
-    inline void       put(const KeyType &name, ValueType  handle) noexcept;
+    inline void       put(const KeyType &name, ValueType handle) noexcept;
     inline ValueType  get(const KeyType &name) const noexcept;
     inline void       clear() noexcept;
     inline bool       has(const KeyType &name) const noexcept;
 
 private:
-    using Container = std::map<KeyType, ValueType>;
-    Container _container{};
+    using Container = std::unordered_map<KeyType, ValueType, typename KeyType::Hasher>;
+    Container _container;
 };
 
 //////////////////////////////////////////////////////////////////////////
