@@ -318,7 +318,8 @@ static bool JavaScriptObjCBridge_setCallback(se::State &s){
             assert(jsFunc.isObject() && jsFunc.toObject()->isFunction());
             
             jsFunc.toObject()->root();
-            jsTarget.toObject()->root();
+            if(jsTarget.isObject())
+                jsTarget.toObject()->root();
         
             cobj->setCallback([jsFunc, jsTarget](std::string& arg0, std::string& arg1){
                 se::ScriptEngine::getInstance()->clearException();
