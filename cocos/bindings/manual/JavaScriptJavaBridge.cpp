@@ -67,14 +67,12 @@ JNIEXPORT jint JNICALL JNI_JSJAVABRIDGE(evalString)(JNIEnv *env, jclass /*cls*/,
     return 1;
 }
 JNIEXPORT void JNICALL
-otlJava_com_cocos_lib_JsbBridge_sendToScript(JNIEnv *env, jclass clazz,
-                                                                    jstring arg0, jstring arg1) {
-    // TODO: implement sendToScript()
-    std::string c_arg0{cc::JniHelper::jstring2string(arg0)};
-    std::string c_arg1{cc::JniHelper::jstring2string(arg1)};
+otlJava_com_cocos_lib_JsbBridge_sendToScript(JNIEnv *env, jclass clazz, jstring arg0, jstring arg1) {
+    std::string cArg0{cc::JniHelper::jstring2string(arg0)};
+    std::string cArg1{cc::JniHelper::jstring2string(arg1)};
 
     cc::Application::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
-        JavaScriptJavaBridge::bridgeCxxInstance->callByNative(c_arg0, c_arg1);
+        JavaScriptJavaBridge::bridgeCxxInstance->callByNative(cArg0, cArg1);
     });
 }
 } // extern "C"
@@ -477,7 +475,7 @@ static bool JavaScriptJavaBridge_callStaticMethod(se::State &s) { //NOLINT(reada
 }
 SE_BIND_FUNC(JavaScriptJavaBridge_callStaticMethod)
 
-static bool JavaScriptJavaBridge_setCallback(se::State &s){
+static bool JavaScriptJavaBridge_setCallback(se::State &s){ //NOLINT(readability-identifier-naming)
     auto *cobj = static_cast<JavaScriptJavaBridge *>(s.nativeThisObject());
     assert(cobj == JavaScriptJavaBridge::bridgeCxxInstance);
     const auto &args = s.args();
@@ -514,7 +512,7 @@ static bool JavaScriptJavaBridge_setCallback(se::State &s){
 
 }SE_BIND_FUNC(JavaScriptJavaBridge_setCallback)
 
-static bool JavaScriptJavaBridge_sendToNative(se::State &s) {
+static bool JavaScriptJavaBridge_sendToNative(se::State &s) { //NOLINT(readability-identifier-naming)
     const auto &args = s.args();
     size_t      argc = args.size();
     if (argc >= 1) {
@@ -558,7 +556,7 @@ bool callPlatformStringMethod(const std::string &arg0, const std::string &arg1) 
                 "com/cocos/lib/JsbBridge", "callByScript", arg0, arg1);
         return ok;
     }
-    catch (std::exception e) {
+    catch (const std::exception& e) {
         return false;
     }
 }

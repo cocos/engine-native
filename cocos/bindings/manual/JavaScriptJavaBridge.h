@@ -175,7 +175,7 @@ public:
         callback = cb;
     }
 private:
-    JsCallback callback;
+    JsCallback callback; // NOLINT(readability-identifier-naming)
 };
 
 bool register_javascript_java_bridge(se::Object *obj);

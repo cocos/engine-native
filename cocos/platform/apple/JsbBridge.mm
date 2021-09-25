@@ -85,7 +85,6 @@ static JsbBridge* instance = nil;
     const std::string c_arg1{[arg1 UTF8String]};
     cc::Application::getInstance()->getScheduler()->performFunctionInCocosThread([=](){
         JavaScriptObjCBridge::bridgeCxxInstance->callByNative(c_arg0, c_arg1);
-        //se::ScriptEngine::getInstance()->evalString(("cc.JsbBridge.applyMethod(\""+ functionKey +"\",\""+ farg +"\")").c_str());
     });
 }
 @end
