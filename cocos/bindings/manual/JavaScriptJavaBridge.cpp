@@ -26,17 +26,16 @@
 
 #include "cocos/bindings/manual/JavaScriptJavaBridge.h"
 #include "cocos/base/UTF8.h"
-#include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_conversions.h"
-#include "platform/java/jni/JniHelper.h"
+#include <cocos/platform/Application.h>
+
 
 #if CC_PLATFORM == CC_PLATFORM_ANDROID
     #include <android/log.h>
+
 #elif CC_PLATFORM == CC_PLATFORM_OHOS
     #include <hilog/log.h>
 #endif
-#include <string>
-#include <vector>
 
 #ifdef LOG_TAG
     #undef LOG_TAG
@@ -67,145 +66,20 @@ JNIEXPORT jint JNICALL JNI_JSJAVABRIDGE(evalString)(JNIEnv *env, jclass /*cls*/,
     se::ScriptEngine::getInstance()->evalString(strValue.c_str());
     return 1;
 }
+JNIEXPORT void JNICALL
+otlJava_com_cocos_lib_JsbBridge_sendToScript(JNIEnv *env, jclass clazz,
+                                                                    jstring arg0, jstring arg1) {
+    // TODO: implement sendToScript()
+    std::string c_arg0{cc::JniHelper::jstring2string(arg0)};
+    std::string c_arg1{cc::JniHelper::jstring2string(arg1)};
 
+    cc::Application::getInstance()->getScheduler()->performFunctionInCocosThread([=]() {
+        JavaScriptJavaBridge::bridgeCxxInstance->callByNative(c_arg0, c_arg1);
+    });
+}
 } // extern "C"
 
-#define JSJ_ERR_OK                 (0)
-#define JSJ_ERR_TYPE_NOT_SUPPORT   (-1)
-#define JSJ_ERR_INVALID_SIGNATURES (-2)
-#define JSJ_ERR_METHOD_NOT_FOUND   (-3)
-#define JSJ_ERR_EXCEPTION_OCCURRED (-4)
-#define JSJ_ERR_VM_THREAD_DETACHED (-5)
-#define JSJ_ERR_VM_FAILURE         (-6)
-#define JSJ_ERR_CLASS_NOT_FOUND    (-7)
-
-class JavaScriptJavaBridge {
-public:
-    enum class ValueType : char {
-        INVALID,
-        VOID,
-        INTEGER,
-        LONG,
-        FLOAT,
-        BOOLEAN,
-        STRING,
-        VECTOR,
-        FUNCTION
-    };
-
-    using ValueTypes = std::vector<ValueType>;
-
-    using ReturnValue = union {
-        int          intValue;
-        int64_t      longValue;
-        float        floatValue;
-        int          boolValue;
-        std::string *stringValue;
-    };
-
-    class CallInfo {
-    public:
-        CallInfo(const char *className, const char *methodName, const char *methodSig)
-        : _mValid(false),
-          _mError(JSJ_ERR_OK),
-          _mClassName(className),
-          _mMethodName(methodName),
-          _mMethodSig(methodSig),
-          _mReturnType(ValueType::VOID),
-          _mArgumentsCount(0),
-          _mRetjstring(nullptr),
-          _mEnv(nullptr),
-          _mClassID(nullptr),
-          _mMethodID(nullptr) {
-            memset(&_mRet, 0, sizeof(_mRet));
-            _mValid = validateMethodSig() && getMethodInfo();
-        }
-        ~CallInfo();
-
-        bool isValid() const {
-            return _mValid;
-        }
-
-        int getErrorCode() const {
-            return _mError;
-        }
-
-        void tryThrowJSException() const {
-            if (_mError != JSJ_ERR_OK) {
-                se::ScriptEngine::getInstance()->throwException(getErrorMessage());
-            }
-        }
-
-        const char *getErrorMessage() const {
-            switch (_mError) {
-                case JSJ_ERR_TYPE_NOT_SUPPORT:
-                    return "argument type is not supported";
-                case JSJ_ERR_INVALID_SIGNATURES:
-                    return "invalid signature";
-                case JSJ_ERR_METHOD_NOT_FOUND:
-                    return "method not found";
-                case JSJ_ERR_EXCEPTION_OCCURRED:
-                    return "excpected occurred";
-                case JSJ_ERR_VM_THREAD_DETACHED:
-                    return "vm thread detached";
-                case JSJ_ERR_VM_FAILURE:
-                    return "vm failure";
-                case JSJ_ERR_CLASS_NOT_FOUND:
-                    return "class not found";
-                case JSJ_ERR_OK:
-                default:
-                    return "NOERROR";
-            }
-        }
-
-        JNIEnv *getEnv() {
-            return _mEnv;
-        }
-
-        ValueType argumentTypeAtIndex(size_t index) {
-            return _mArgumentsType.at(index);
-        }
-
-        int getArgumentsCount() const {
-            return _mArgumentsCount;
-        }
-
-        ValueType getReturnValueType() {
-            return _mReturnType;
-        }
-
-        ReturnValue getReturnValue() {
-            return _mRet;
-        }
-
-        bool execute();
-        bool executeWithArgs(jvalue *args);
-
-    private:
-        bool _mValid;
-        int  _mError;
-
-        std::string _mClassName;
-        std::string _mMethodName;
-        std::string _mMethodSig;
-        int         _mArgumentsCount;
-        ValueTypes  _mArgumentsType;
-        ValueType   _mReturnType;
-
-        ReturnValue _mRet;
-        jstring     _mRetjstring;
-
-        JNIEnv *  _mEnv;
-        jclass    _mClassID;
-        jmethodID _mMethodID;
-
-        bool      validateMethodSig();
-        bool      getMethodInfo();
-        ValueType checkType(const std::string &sig, size_t *pos);
-    };
-
-    static bool convertReturnValue(ReturnValue retValue, ValueType type, se::Value *ret);
-};
+JavaScriptJavaBridge* JavaScriptJavaBridge::bridgeCxxInstance{nullptr};
 
 JavaScriptJavaBridge::CallInfo::~CallInfo() {
     if (_mReturnType == ValueType::STRING && _mRet.stringValue) {
@@ -469,6 +343,7 @@ se::Class *__jsb_JavaScriptJavaBridge_class = nullptr; // NOLINT
 static bool JavaScriptJavaBridge_finalize(se::State &s) { //NOLINT(readability-identifier-naming)
     auto *cobj = static_cast<JavaScriptJavaBridge *>(s.nativeThisObject());
     delete cobj;
+    delete JavaScriptJavaBridge::bridgeCxxInstance;
     return true;
 }
 SE_BIND_FINALIZE_FUNC(JavaScriptJavaBridge_finalize)
@@ -476,6 +351,7 @@ SE_BIND_FINALIZE_FUNC(JavaScriptJavaBridge_finalize)
 static bool JavaScriptJavaBridge_constructor(se::State &s) { //NOLINT(readability-identifier-naming)
     auto *cobj = new (std::nothrow) JavaScriptJavaBridge();
     s.thisObject()->setPrivateData(cobj);
+    JavaScriptJavaBridge::bridgeCxxInstance = cobj;
     return true;
 }
 SE_BIND_CTOR(JavaScriptJavaBridge_constructor, __jsb_JavaScriptJavaBridge_class, JavaScriptJavaBridge_finalize)
@@ -601,11 +477,72 @@ static bool JavaScriptJavaBridge_callStaticMethod(se::State &s) { //NOLINT(reada
 }
 SE_BIND_FUNC(JavaScriptJavaBridge_callStaticMethod)
 
+static bool JavaScriptJavaBridge_setCallback(se::State &s){
+    auto *cobj = static_cast<JavaScriptJavaBridge *>(s.nativeThisObject());
+    assert(cobj == JavaScriptJavaBridge::bridgeCxxInstance);
+    const auto &args = s.args();
+    size_t argc = args.size();
+    if (argc >= 1) {
+        se::Value jsFunc = args[0];
+        se::Value jsTarget = argc > 1 ? args[1] : se::Value::Undefined;
+        if(jsFunc.isNullOrUndefined())
+        {
+            cobj->setCallback(nullptr);
+        }
+        else{
+            assert(jsFunc.isObject() && jsFunc.toObject()->isFunction());
+            jsFunc.toObject()->root();
+            if(jsTarget.isObject()) {
+                jsTarget.toObject()->root();
+            }
+            cobj->setCallback([jsFunc, jsTarget](const std::string& arg0, const std::string& arg1){
+                se::ScriptEngine::getInstance()->clearException();
+                se::AutoHandleScope hs;
+
+                se::ValueArray args;
+                args.push_back(se::Value(arg0));
+                args.push_back(se::Value(arg1));
+
+                se::Object* target = jsTarget.isObject() ? jsTarget.toObject() : nullptr;
+                jsFunc.toObject()->call(args, target);
+            });
+        }
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting >=1", argc);
+    return false;
+
+}SE_BIND_FUNC(JavaScriptJavaBridge_setCallback)
+
+static bool JavaScriptJavaBridge_sendToNative(se::State &s) {
+    const auto &args = s.args();
+    size_t      argc = args.size();
+    if (argc >= 1) {
+        bool        ok = false;
+        std::string arg0;
+        ok = seval_to_std_string(args[0], &arg0);
+        SE_PRECONDITION2(ok, false, "Converting arg0 failed!");
+        std::string arg1;
+        if (argc >= 2) {
+            ok = seval_to_std_string(args[1], &arg1);
+            SE_PRECONDITION2(ok, false, "Converting arg1 failed!");
+        }
+        ok = callPlatformStringMethod(arg0, arg1);
+        SE_PRECONDITION2(ok, false, "call java method failed!");
+        return ok;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting at least %d", (uint32_t)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(JavaScriptJavaBridge_sendToNative)
 bool register_javascript_java_bridge(se::Object *obj) { //NOLINT(readability-identifier-naming)
     se::Class *cls = se::Class::create("JavascriptJavaBridge", obj, nullptr, _SE(JavaScriptJavaBridge_constructor));
     cls->defineFinalizeFunction(_SE(JavaScriptJavaBridge_finalize));
 
     cls->defineFunction("callStaticMethod", _SE(JavaScriptJavaBridge_callStaticMethod));
+    cls->defineFunction("sendToNative", _SE(JavaScriptJavaBridge_sendToNative));
+    cls->defineFunction("setCallback", _SE(JavaScriptJavaBridge_setCallback));
+    
 
     cls->install();
     __jsb_JavaScriptJavaBridge_class = cls;
@@ -615,13 +552,19 @@ bool register_javascript_java_bridge(se::Object *obj) { //NOLINT(readability-ide
     return true;
 }
 
-bool callPlatformStringMethod(const std::string &eventName, const std::string &inputArg) {
+bool callPlatformStringMethod(const std::string &arg0, const std::string &arg1) {
     try{
-        JniHelper::callStaticVoidMethod(
-                "com/cocos/lib/CocosMethodManager", "applyMethod", eventName, inputArg);
-        return true;
+        auto ok = cc::JniHelper::callStaticBooleanMethod(
+                "com/cocos/lib/JsbBridge", "callByScript", arg0, arg1);
+        return ok;
     }
     catch (std::exception e) {
         return false;
     }
 }
+
+void JavaScriptJavaBridge::callByNative(const std::string& arg0, const std::string& arg1){
+    callback(arg0, arg1);
+}
+
+

@@ -32,11 +32,11 @@
 #include "cocos/bindings/manual/JavaScriptObjCBridge.h"
 
 //Native method with jni
-bool callPlatformStringMethod(const std::string &eventName, const std::string &inputArg){
-    NSString *key = [NSString stringWithCString:eventName.c_str() encoding:NSUTF8StringEncoding];
-    NSString *arg = [NSString stringWithCString:inputArg.c_str() encoding:NSUTF8StringEncoding];
+bool callPlatformStringMethod(const std::string &arg0, const std::string &arg1){
+    NSString *oc_arg0 = [NSString stringWithCString:arg0.c_str() encoding:NSUTF8StringEncoding];
+    NSString *oc_arg1 = [NSString stringWithCString:arg1.c_str() encoding:NSUTF8StringEncoding];
     JsbBridge * m = [JsbBridge sharedInstance];
-    [m callByScript:key arg1:arg];
+    [m callByScript:oc_arg0 arg1:oc_arg1];
     return true;
 }
 

@@ -22,49 +22,37 @@
  */
 package com.cocos.lib;
 
-import org.json.JSONObject;
-
-import java.util.HashMap;
-
-//Java JavaScript Bridge Simplified
-public class CocosMethodManager {
-    private static final HashMap<String, IMethod> methodMap = new HashMap<>();
-    public static void applyMethod(String methodName, String arg){
-        if(methodMap.get(methodName)==null){
-          return;
-        }
-        methodMap.get(methodName).apply(arg);
+public class JsbBridge {
+    public interface ICallback{
+        /**
+         * Applies this callback to the given argument.
+         *
+         * @param arg0 as input
+         * @param arg1 as input
+         */
+        void onScript(String arg0, String arg1);
     }
+    private static ICallback callback;
 
-    /**Add a method which you would like to expose to script writers
-     * @param methodName the name for this method/function
-     * @param f IMethod, the method which will be actually applied.
-     * @return if success
-     * */
-    public static Boolean addMethod(String methodName, IMethod f){
-        if(methodMap.get(methodName)!=null){
+    private static boolean callByScript(String arg0, String arg1){
+        if(JsbBridge.callback == null)
             return false;
-        }
-        methodMap.put(methodName,f);
+        callback.onScript(arg0, arg1);
         return true;
     }
-    /**
-     * Remove method with name, return IMethod to user
-     * @param methodName the name key
-     * */
-    public static IMethod removeMethod(String methodName){
-        if(methodMap.get(methodName)!=null)
-            return methodMap.remove(methodName);
-        return null;
-    }
 
+    /**Add a callback which you would like to apply
+     * @param f ICallback, the method which will be actually applied. multiple calls will override
+     * */
+    public static void setCallback(ICallback f){
+        JsbBridge.callback = f;
+    }
     /**
      * Java dispatch Js event, use native c++ code
-     * @param methodName in js function map
-     * @return Boolean if dispatch custom js event success.
+     * @param arg0 input values
      */
-    public static native void informScript(String methodName, String arg);
-    public static void informScript(String methodName){
-        informScript(methodName, null);
+    public static native void sendToScript(String arg0, String arg1);
+    public static void sendToScript(String arg0){
+        sendToScript(arg0, null);
     }
 }

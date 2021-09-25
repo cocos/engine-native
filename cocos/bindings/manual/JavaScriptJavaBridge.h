@@ -25,9 +25,158 @@
 ****************************************************************************/
 
 #pragma once
-
+#include <string>
+#include <vector>
+#include "platform/java/jni/JniHelper.h"
+#include "cocos/bindings/jswrapper/SeApi.h"
 namespace se {
 class Object;
 }
+#define JSJ_ERR_OK                 (0)
+#define JSJ_ERR_TYPE_NOT_SUPPORT   (-1)
+#define JSJ_ERR_INVALID_SIGNATURES (-2)
+#define JSJ_ERR_METHOD_NOT_FOUND   (-3)
+#define JSJ_ERR_EXCEPTION_OCCURRED (-4)
+#define JSJ_ERR_VM_THREAD_DETACHED (-5)
+#define JSJ_ERR_VM_FAILURE         (-6)
+#define JSJ_ERR_CLASS_NOT_FOUND    (-7)
+using JsCallback = std::function<void(const std::string&, const std::string&)>;
+class JavaScriptJavaBridge {
+public:
+    enum class ValueType : char {
+        INVALID,
+        VOID,
+        INTEGER,
+        LONG,
+        FLOAT,
+        BOOLEAN,
+        STRING,
+        VECTOR,
+        FUNCTION
+    };
+
+    using ValueTypes = std::vector<ValueType>;
+
+    using ReturnValue = union {
+        int          intValue;
+        int64_t      longValue;
+        float        floatValue;
+        int          boolValue;
+        std::string *stringValue;
+    };
+
+    class CallInfo {
+    public:
+        CallInfo(const char *className, const char *methodName, const char *methodSig)
+        : _mValid(false),
+          _mError(JSJ_ERR_OK),
+          _mClassName(className),
+          _mMethodName(methodName),
+          _mMethodSig(methodSig),
+          _mReturnType(ValueType::VOID),
+          _mArgumentsCount(0),
+          _mRetjstring(nullptr),
+          _mEnv(nullptr),
+          _mClassID(nullptr),
+          _mMethodID(nullptr) {
+            memset(&_mRet, 0, sizeof(_mRet));
+            _mValid = validateMethodSig() && getMethodInfo();
+        }
+        ~CallInfo();
+
+        bool isValid() const {
+            return _mValid;
+        }
+
+        int getErrorCode() const {
+            return _mError;
+        }
+
+        void tryThrowJSException() const {
+            if (_mError != JSJ_ERR_OK) {
+                se::ScriptEngine::getInstance()->throwException(getErrorMessage());
+            }
+        }
+
+        const char *getErrorMessage() const {
+            switch (_mError) {
+                case JSJ_ERR_TYPE_NOT_SUPPORT:
+                    return "argument type is not supported";
+                case JSJ_ERR_INVALID_SIGNATURES:
+                    return "invalid signature";
+                case JSJ_ERR_METHOD_NOT_FOUND:
+                    return "method not found";
+                case JSJ_ERR_EXCEPTION_OCCURRED:
+                    return "excpected occurred";
+                case JSJ_ERR_VM_THREAD_DETACHED:
+                    return "vm thread detached";
+                case JSJ_ERR_VM_FAILURE:
+                    return "vm failure";
+                case JSJ_ERR_CLASS_NOT_FOUND:
+                    return "class not found";
+                case JSJ_ERR_OK:
+                default:
+                    return "NOERROR";
+            }
+        }
+
+        JNIEnv *getEnv() {
+            return _mEnv;
+        }
+
+        ValueType argumentTypeAtIndex(size_t index) {
+            return _mArgumentsType.at(index);
+        }
+
+        int getArgumentsCount() const {
+            return _mArgumentsCount;
+        }
+
+        ValueType getReturnValueType() {
+            return _mReturnType;
+        }
+
+        ReturnValue getReturnValue() {
+            return _mRet;
+        }
+
+        bool execute();
+        bool executeWithArgs(jvalue *args);
+
+    private:
+        bool _mValid;
+        int  _mError;
+
+        std::string _mClassName;
+        std::string _mMethodName;
+        std::string _mMethodSig;
+        int         _mArgumentsCount;
+        ValueTypes  _mArgumentsType;
+        ValueType   _mReturnType;
+
+        ReturnValue _mRet;
+        jstring     _mRetjstring;
+
+        JNIEnv *  _mEnv;
+        jclass    _mClassID;
+        jmethodID _mMethodID;
+
+        bool      validateMethodSig();
+        bool      getMethodInfo();
+        ValueType checkType(const std::string &sig, size_t *pos);
+    };
+
+    static bool convertReturnValue(ReturnValue retValue, ValueType type, se::Value *ret);
+    //Store js object as CXX pointer
+    static JavaScriptJavaBridge* bridgeCxxInstance;
+
+    void callByNative(const std::string& arg0, const std::string& arg1);
+    inline void setCallback(const JsCallback& cb){
+        callback = cb;
+    }
+private:
+    JsCallback callback;
+};
 
 bool register_javascript_java_bridge(se::Object *obj);
+bool callPlatformStringMethod(const std::string &arg0, const std::string &arg1);

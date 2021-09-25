@@ -62,7 +62,6 @@ se::Value static objc_to_seval(id objcVal) {
 
     return ret;
 }
-se::Object* JavaScriptObjCBridge::bridgeInstance = nullptr;
 JavaScriptObjCBridge* JavaScriptObjCBridge::bridgeCxxInstance{nullptr};
 bool JavaScriptObjCBridge::CallInfo::execute(const se::ValueArray &argv, se::Value &rval) {
     NSString *className = [NSString stringWithCString:_className.c_str() encoding:NSUTF8StringEncoding];
@@ -247,11 +246,8 @@ bool JavaScriptObjCBridge::CallInfo::execute(const se::ValueArray &argv, se::Val
 }
 
 
-bool JavaScriptObjCBridge::callByNative(std::string arg0, std::string arg1){
+void JavaScriptObjCBridge::callByNative(const std::string& arg0, const std::string& arg1){
     callback(arg0, arg1);
-    
-    NSLog(@"Not a function");
-    //callback->call(argInput, JavaScriptObjCBridge::bridgeInstance, &rVal);
 }
 
 se::Class *__jsb_JavaScriptObjCBridge_class = nullptr;
@@ -259,6 +255,7 @@ se::Class *__jsb_JavaScriptObjCBridge_class = nullptr;
 static bool JavaScriptObjCBridge_finalize(se::State &s) {
     JavaScriptObjCBridge *cobj = (JavaScriptObjCBridge *)s.nativeThisObject();
     delete cobj;
+    delete JavaScriptObjCBridge::bridgeCxxInstance;
     return true;
 }
 SE_BIND_FINALIZE_FUNC(JavaScriptObjCBridge_finalize)
@@ -266,9 +263,6 @@ SE_BIND_FINALIZE_FUNC(JavaScriptObjCBridge_finalize)
 static bool JavaScriptObjCBridge_constructor(se::State &s) {
     JavaScriptObjCBridge *cobj = new (std::nothrow) JavaScriptObjCBridge();
     s.thisObject()->setPrivateData(cobj);
-
-    //Save to this obj
-    JavaScriptObjCBridge::bridgeInstance = s.thisObject();
     JavaScriptObjCBridge::bridgeCxxInstance = cobj;
     return true;
 }
@@ -316,12 +310,11 @@ static bool JavaScriptObjCBridge_setCallback(se::State &s){
         }
         else{
             assert(jsFunc.isObject() && jsFunc.toObject()->isFunction());
-            
             jsFunc.toObject()->root();
-            if(jsTarget.isObject())
+            if(jsTarget.isObject()) {
                 jsTarget.toObject()->root();
-        
-            cobj->setCallback([jsFunc, jsTarget](std::string& arg0, std::string& arg1){
+            }
+            cobj->setCallback([jsFunc, jsTarget](const std::string& arg0, const std::string& arg1){
                 se::ScriptEngine::getInstance()->clearException();
                 se::AutoHandleScope hs;
 
@@ -345,19 +338,19 @@ static bool JavaScriptObjCBridge_sendToNative(se::State &s) { //NOLINT
     size_t      argc = args.size();
     if (argc >= 1) {
         bool        ok = false;
-        std::string methodName;
-        ok = seval_to_std_string(args[0], &methodName);
-        SE_PRECONDITION2(ok, false, "Converting event name failed!");
-        std::string inputArg;
+        std::string arg0;
+        ok = seval_to_std_string(args[0], &arg0);
+        SE_PRECONDITION2(ok, false, "Converting first argument failed!");
+        std::string arg1;
         if (argc >= 2) {
-            ok = seval_to_std_string(args[1], &inputArg);
-            SE_PRECONDITION2(ok, false, "Converting input argument failed!");
+            ok = seval_to_std_string(args[1], &arg1);
+            SE_PRECONDITION2(ok, false, "Converting second argument failed!");
         }
-        ok = callPlatformStringMethod(methodName, inputArg);
-        SE_PRECONDITION2(ok, false, "dispatch platform event failed!");
+        ok = callPlatformStringMethod(arg0, arg1);
+        SE_PRECONDITION2(ok, false, "call platform event failed!");
         return ok;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting at least %d", (int)argc, 1);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting at least %d", (uint_32t)argc, 1);
     return false;
 }
 SE_BIND_FUNC(JavaScriptObjCBridge_sendToNative)
