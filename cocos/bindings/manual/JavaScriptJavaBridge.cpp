@@ -67,7 +67,7 @@ JNIEXPORT jint JNICALL JNI_JSJAVABRIDGE(evalString)(JNIEnv *env, jclass /*cls*/,
     return 1;
 }
 JNIEXPORT void JNICALL
-otlJava_com_cocos_lib_JsbBridge_sendToScript(JNIEnv *env, jclass clazz, jstring arg0, jstring arg1) {
+Java_com_cocos_lib_JsbBridge_sendToScript(JNIEnv *env, jclass clazz, jstring arg0, jstring arg1) { // NOLINT
     std::string cArg0{cc::JniHelper::jstring2string(arg0)};
     std::string cArg1{cc::JniHelper::jstring2string(arg1)};
 
@@ -533,6 +533,7 @@ static bool JavaScriptJavaBridge_sendToNative(se::State &s) { //NOLINT(readabili
     return false;
 }
 SE_BIND_FUNC(JavaScriptJavaBridge_sendToNative)
+
 bool register_javascript_java_bridge(se::Object *obj) { //NOLINT(readability-identifier-naming)
     se::Class *cls = se::Class::create("JavascriptJavaBridge", obj, nullptr, _SE(JavaScriptJavaBridge_constructor));
     cls->defineFinalizeFunction(_SE(JavaScriptJavaBridge_finalize));

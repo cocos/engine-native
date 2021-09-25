@@ -178,5 +178,5 @@ private:
     JsCallback callback; // NOLINT(readability-identifier-naming)
 };
 
-bool register_javascript_java_bridge(se::Object *obj);
-bool callPlatformStringMethod(const std::string &arg0, const std::string &arg1);
+bool register_javascript_java_bridge(se::Object *obj); // NOLINT(readability-identifier-naming)
+bool callPlatformStringMethod(const std::string &arg0, const std::string &arg1); // NOLINT(readability-identifier-naming)
