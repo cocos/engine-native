@@ -31,4 +31,6 @@ class Object;
 }
 
 bool register_javascript_objc_bridge(se::Object *obj);
+bool register_script_native_bridge(se::Object *obj); // NOLINT(readability-identifier-naming)
 bool callPlatformStringMethod(const std::string &arg0, const std::string &arg1);
+void callScript(const std::string &arg0, const std::string& arg1);

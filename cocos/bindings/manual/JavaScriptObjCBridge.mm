@@ -90,7 +90,9 @@ public:
         std::string _methodName;
     };
 };
+
 using JsCallback = std::function<void(const std::string&, const std::string&)>;
+
 class ScriptNativeBridge{
 public:
     void callByNative(const std::string& arg0, const std::string& arg1);
@@ -294,7 +296,6 @@ se::Class *__jsb_JavaScriptObjCBridge_class = nullptr;
 static bool JavaScriptObjCBridge_finalize(se::State &s) {
     JavaScriptObjCBridge *cobj = (JavaScriptObjCBridge *)s.nativeThisObject();
     delete cobj;
-    delete JavaScriptObjCBridge::bridgeCxxInstance;
     return true;
 }
 SE_BIND_FINALIZE_FUNC(JavaScriptObjCBridge_finalize)
@@ -302,7 +303,6 @@ SE_BIND_FINALIZE_FUNC(JavaScriptObjCBridge_finalize)
 static bool JavaScriptObjCBridge_constructor(se::State &s) {
     JavaScriptObjCBridge *cobj = new (std::nothrow) JavaScriptObjCBridge();
     s.thisObject()->setPrivateData(cobj);
-    JavaScriptObjCBridge::bridgeCxxInstance = cobj;
     return true;
 }
 SE_BIND_CTOR(JavaScriptObjCBridge_constructor, __jsb_JavaScriptObjCBridge_class, JavaScriptObjCBridge_finalize)
@@ -400,8 +400,6 @@ bool register_javascript_objc_bridge(se::Object *obj) {
     cls->defineFinalizeFunction(_SE(JavaScriptObjCBridge_finalize));
 
     cls->defineFunction("callStaticMethod", _SE(JavaScriptObjCBridge_callStaticMethod));
-    cls->defineFunction("setCallback", _SE(JavaScriptObjCBridge_setCallback));
-    cls->defineFunction("sendToNative", _SE(JavaScriptObjCBridge_sendToNative));
     cls->install();
     __jsb_JavaScriptObjCBridge_class = cls;
 
@@ -434,7 +432,7 @@ bool register_script_native_bridge(se::Object *obj) { //NOLINT(readability-ident
     se::Class *cls = se::Class::create("ScriptNativeBridge", obj, nullptr, _SE(ScriptNativeBridge_constructor));
     cls->defineFinalizeFunction(_SE(ScriptNativeBridge_finalize));
     cls->defineFunction("sendToNative", _SE(ScriptNativeBridge_sendToNative));
-    cls->defineFunction("setCallback", _SE(ScriptNativeBridge_setCallback));
+    cls->defineFunction("onNative", _SE(ScriptNativeBridge_setCallback));
 
     cls->install();
     __jsb_ScriptNativeBridge_class = cls;
@@ -442,4 +440,7 @@ bool register_script_native_bridge(se::Object *obj) { //NOLINT(readability-ident
     se::ScriptEngine::getInstance()->clearException();
 
     return true;
+}
+void callScript(const std::string& arg0, const std::string& arg1){
+    ScriptNativeBridge::bridgeCxxInstance->callByNative(arg0, arg1);
 }

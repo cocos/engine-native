@@ -85,7 +85,7 @@ static JsbBridge* instance = nil;
 -(void)sendToScript:(NSString *)arg0 arg1:(NSString *)arg1{
     const std::string c_arg0{[arg0 UTF8String]};
     const std::string c_arg1{[arg1 UTF8String]};
-    JavaScriptObjCBridge::bridgeCxxInstance->callByNative(c_arg0, c_arg1);
+    callScript(c_arg0, c_arg1);
 }
 @end
 
