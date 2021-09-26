@@ -1,6 +1,5 @@
 /****************************************************************************
- Copyright (c) 2013-2016 Chukong Technologies Inc.
- Copyright (c) 2017-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2018-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -68,17 +67,10 @@ public:
     class CallInfo {
     public:
         CallInfo(const char *className, const char *methodName, const char *methodSig)
-        : _mValid(false),
-          _mError(JSJ_ERR_OK),
-          _mClassName(className),
+        : _mClassName(className),
           _mMethodName(methodName),
-          _mMethodSig(methodSig),
-          _mReturnType(ValueType::VOID),
-          _mArgumentsCount(0),
-          _mRetjstring(nullptr),
-          _mEnv(nullptr),
-          _mClassID(nullptr),
-          _mMethodID(nullptr) {
+          _mMethodSig(methodSig)
+        {
             memset(&_mRet, 0, sizeof(_mRet));
             _mValid = validateMethodSig() && getMethodInfo();
         }
@@ -120,7 +112,7 @@ public:
             }
         }
 
-        JNIEnv *getEnv() {
+        JNIEnv *getEnv() const{
             return _mEnv;
         }
 
@@ -144,22 +136,22 @@ public:
         bool executeWithArgs(jvalue *args);
 
     private:
-        bool _mValid;
-        int  _mError;
+        bool _mValid{false};
+        int  _mError{JSJ_ERR_OK};
 
         std::string _mClassName;
         std::string _mMethodName;
         std::string _mMethodSig;
-        int         _mArgumentsCount;
+        int         _mArgumentsCount{0};
         ValueTypes  _mArgumentsType;
-        ValueType   _mReturnType;
+        ValueType   _mReturnType{ValueType::VOID};
 
         ReturnValue _mRet;
-        jstring     _mRetjstring;
+        jstring     _mRetjstring{nullptr};
 
-        JNIEnv *  _mEnv;
-        jclass    _mClassID;
-        jmethodID _mMethodID;
+        JNIEnv *  _mEnv{nullptr};
+        jclass    _mClassID{nullptr};
+        jmethodID _mMethodID{nullptr};
 
         bool      validateMethodSig();
         bool      getMethodInfo();
@@ -175,8 +167,8 @@ public:
         callback = cb;
     }
 private:
-    JsCallback callback; // NOLINT(readability-identifier-naming)
+    JsCallback callback{nullptr}; // NOLINT(readability-identifier-naming)
 };
 
 bool register_javascript_java_bridge(se::Object *obj); // NOLINT(readability-identifier-naming)
-bool callPlatformStringMethod(const std::string &arg0, const std::string &arg1); // NOLINT(readability-identifier-naming)
+void callPlatformStringMethod(const std::string &arg0, const std::string &arg1); // NOLINT(readability-identifier-naming)

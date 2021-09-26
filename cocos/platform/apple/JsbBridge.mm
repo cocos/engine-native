@@ -1,6 +1,5 @@
 /****************************************************************************
- Copyright (c) 2013-2016 Chukong Technologies Inc.
- Copyright (c) 2017-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2018-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -28,10 +27,8 @@
 #include <string>
 #include <Application.h>
 #include "JsbBridge.h"
-#include "cocos/bindings/jswrapper/v8/ScriptEngine.h"
 #include "cocos/bindings/manual/JavaScriptObjCBridge.h"
 
-//Native method with jni
 bool callPlatformStringMethod(const std::string &arg0, const std::string &arg1){
     NSString *oc_arg0 = [NSString stringWithCString:arg0.c_str() encoding:NSUTF8StringEncoding];
     NSString *oc_arg1 = [NSString stringWithCString:arg1.c_str() encoding:NSUTF8StringEncoding];
@@ -40,11 +37,12 @@ bool callPlatformStringMethod(const std::string &arg0, const std::string &arg1){
     return true;
 }
 
-
 @implementation JsbBridge {
     ICallback callback;
 }
+
 static JsbBridge* instance = nil;
+
 +(instancetype)sharedInstance{
     static dispatch_once_t pred = 0;
     dispatch_once(&pred, ^{
@@ -52,6 +50,7 @@ static JsbBridge* instance = nil;
     });
     return instance;
 }
+
 +(id)allocWithZone:(struct _NSZone *)zone{
     return [JsbBridge sharedInstance];
 }
@@ -59,11 +58,13 @@ static JsbBridge* instance = nil;
 -(id)copyWithZone:(struct _NSZone *)zone{
     return [JsbBridge sharedInstance];
 }
+
 -(id)init{
     self = [super init];
     [callback new];
     return self;
 }
+
 -(bool)setCallback:(ICallback)cb{
     if(!callback){
         callback = cb;
@@ -71,6 +72,7 @@ static JsbBridge* instance = nil;
     }
     return false;
 }
+
 -(bool)callByScript:(NSString*)arg0 arg1:(NSString *)arg1{
     if(callback != nil){
         NSLog(@"Here is a callback");
@@ -83,9 +85,7 @@ static JsbBridge* instance = nil;
 -(void)sendToScript:(NSString *)arg0 arg1:(NSString *)arg1{
     const std::string c_arg0{[arg0 UTF8String]};
     const std::string c_arg1{[arg1 UTF8String]};
-    cc::Application::getInstance()->getScheduler()->performFunctionInCocosThread([=](){
-        JavaScriptObjCBridge::bridgeCxxInstance->callByNative(c_arg0, c_arg1);
-    });
+    JavaScriptObjCBridge::bridgeCxxInstance->callByNative(c_arg0, c_arg1);
 }
 @end
 

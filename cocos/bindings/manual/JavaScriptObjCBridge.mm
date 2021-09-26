@@ -1,6 +1,5 @@
 /****************************************************************************
- Copyright (c) 2013-2016 Chukong Technologies Inc.
- Copyright (c) 2017-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2018-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -300,7 +299,7 @@ static bool JavaScriptObjCBridge_setCallback(se::State &s){
     JavaScriptObjCBridge *cobj = (JavaScriptObjCBridge *)s.nativeThisObject();
     assert(cobj == JavaScriptObjCBridge::bridgeCxxInstance);
     const auto &args = s.args();
-    size_t argc = args.size();
+    int argc = (int)args.size();
     if (argc >= 1) {
         se::Value jsFunc = args[0];
         se::Value jsTarget = argc > 1 ? args[1] : se::Value::Undefined;
@@ -335,7 +334,7 @@ static bool JavaScriptObjCBridge_setCallback(se::State &s){
 
 static bool JavaScriptObjCBridge_sendToNative(se::State &s) { //NOLINT
     const auto &args = s.args();
-    size_t      argc = args.size();
+    int argc = (int)args.size();
     if (argc >= 1) {
         bool        ok = false;
         std::string arg0;

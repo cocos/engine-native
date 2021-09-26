@@ -1,6 +1,5 @@
 /****************************************************************************
- Copyright (c) 2013-2016 Chukong Technologies Inc.
- Copyright (c) 2017-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2018-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -67,7 +66,7 @@ JNIEXPORT jint JNICALL JNI_JSJAVABRIDGE(evalString)(JNIEnv *env, jclass /*cls*/,
     return 1;
 }
 JNIEXPORT void JNICALL
-Java_com_cocos_lib_JsbBridge_sendToScript(JNIEnv *env, jclass clazz, jstring arg0, jstring arg1) { // NOLINT
+Java_com_cocos_lib_JsbBridge_sendToScriptNative(JNIEnv *env, jclass clazz, jstring arg0, jstring arg1) { // NOLINT
     std::string cArg0{cc::JniHelper::jstring2string(arg0)};
     std::string cArg1{cc::JniHelper::jstring2string(arg1)};
 
@@ -341,7 +340,7 @@ se::Class *__jsb_JavaScriptJavaBridge_class = nullptr; // NOLINT
 static bool JavaScriptJavaBridge_finalize(se::State &s) { //NOLINT(readability-identifier-naming)
     auto *cobj = static_cast<JavaScriptJavaBridge *>(s.nativeThisObject());
     delete cobj;
-    delete JavaScriptJavaBridge::bridgeCxxInstance;
+    JavaScriptJavaBridge::bridgeCxxInstance = nullptr;
     return true;
 }
 SE_BIND_FINALIZE_FUNC(JavaScriptJavaBridge_finalize)
@@ -525,7 +524,7 @@ static bool JavaScriptJavaBridge_sendToNative(se::State &s) { //NOLINT(readabili
             ok = seval_to_std_string(args[1], &arg1);
             SE_PRECONDITION2(ok, false, "Converting arg1 failed!");
         }
-        ok = callPlatformStringMethod(arg0, arg1);
+        callPlatformStringMethod(arg0, arg1);
         SE_PRECONDITION2(ok, false, "call java method failed!");
         return ok;
     }
@@ -551,15 +550,9 @@ bool register_javascript_java_bridge(se::Object *obj) { //NOLINT(readability-ide
     return true;
 }
 
-bool callPlatformStringMethod(const std::string &arg0, const std::string &arg1) {
-    try{
-        auto ok = cc::JniHelper::callStaticBooleanMethod(
+void callPlatformStringMethod(const std::string &arg0, const std::string &arg1) {
+        cc::JniHelper::callStaticVoidMethod(
                 "com/cocos/lib/JsbBridge", "callByScript", arg0, arg1);
-        return ok;
-    }
-    catch (const std::exception& e) {
-        return false;
-    }
 }
 
 void JavaScriptJavaBridge::callByNative(const std::string& arg0, const std::string& arg1){
