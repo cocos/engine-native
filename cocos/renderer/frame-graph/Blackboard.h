@@ -35,12 +35,12 @@ namespace framegraph {
 template <typename KeyType, typename ValueType, ValueType InvalidValue>
 class Blackboard final {
 public:
-    Blackboard() noexcept          = default;
-    ~Blackboard()                  = default;
-    Blackboard(const Blackboard &) = delete;
-    Blackboard(Blackboard &&)      = delete;
+    Blackboard()                       = default;
+    ~Blackboard()                      = default;
+    Blackboard(const Blackboard &)     = delete;
+    Blackboard(Blackboard &&) noexcept = delete;
     Blackboard &operator=(const Blackboard &) = delete;
-    Blackboard &operator=(Blackboard &&) = delete;
+    Blackboard &operator=(Blackboard &&) noexcept = delete;
 
     inline ValueType &operator[](const KeyType &name) noexcept;
     inline void       put(const KeyType &name, ValueType handle) noexcept;
