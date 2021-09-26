@@ -29,45 +29,6 @@
 namespace se {
 class Object;
 }
-#define JSO_ERR_OK                 (0)
-#define JSO_ERR_TYPE_NOT_SUPPORT   (-1)
-#define JSO_ERR_INVALID_ARGUMENTS  (-2)
-#define JSO_ERR_METHOD_NOT_FOUND   (-3)
-#define JSO_ERR_EXCEPTION_OCCURRED (-4)
-#define JSO_ERR_CLASS_NOT_FOUND    (-5)
-#define JSO_ERR_VM_FAILURE         (-6)
-
-using JsCallback = std::function<void(const std::string&, const std::string&)>;
-class JavaScriptObjCBridge {
-public:
-    static JavaScriptObjCBridge* bridgeCxxInstance;
-    class CallInfo {
-    public:
-        CallInfo(const char *className, const char *methodName)
-        : _className(className),
-          _methodName(methodName) {}
-
-        ~CallInfo() {}
-
-        int getErrorCode() const {
-            return _error;
-        }
-
-        bool execute(const se::ValueArray &argv, se::Value &rval);
-    private:
-        int _error{JSO_ERR_OK};
-        std::string _className;
-        std::string _methodName;
-    };
-
-    void callByNative(const std::string& arg0, const std::string& arg1);
-    inline void setCallback(const JsCallback& cb){
-        callback = cb;
-    }
-
-private:
-    JsCallback callback;
-};
 
 bool register_javascript_objc_bridge(se::Object *obj);
 bool callPlatformStringMethod(const std::string &arg0, const std::string &arg1);
