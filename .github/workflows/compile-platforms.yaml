@@ -7,7 +7,8 @@ jobs:
     # windows 2019, Visual Studio Enterprise 2019
     # windows 2016, Visual Studio Enterprise 2017
     #runs-on: windows-latest
-    runs-on: windows-2019
+    # runs-on: windows-2019
+    runs-on: windows-2016
     name: "Windows"
 
     steps:
