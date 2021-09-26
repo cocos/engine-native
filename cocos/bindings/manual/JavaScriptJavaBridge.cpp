@@ -507,7 +507,7 @@ static bool JavaScriptJavaBridge_setCallback(se::State &s){ //NOLINT(readability
         }
         return true;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting >=1", argc);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting >=1", static_cast<uint32_t>(argc));
     return false;
 
 }SE_BIND_FUNC(JavaScriptJavaBridge_setCallback)
@@ -529,7 +529,7 @@ static bool JavaScriptJavaBridge_sendToNative(se::State &s) { //NOLINT(readabili
         SE_PRECONDITION2(ok, false, "call java method failed!");
         return ok;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting at least %d", (uint32_t)argc, 1);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting at least %d", static_cast<uint32_t>(argc), 1);
     return false;
 }
 SE_BIND_FUNC(JavaScriptJavaBridge_sendToNative)

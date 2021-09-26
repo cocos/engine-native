@@ -350,7 +350,7 @@ static bool JavaScriptObjCBridge_sendToNative(se::State &s) { //NOLINT
         SE_PRECONDITION2(ok, false, "call platform event failed!");
         return ok;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting at least %d", (uint_32t)argc, 1);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting at least %d", argc, 1);
     return false;
 }
 SE_BIND_FUNC(JavaScriptObjCBridge_sendToNative)
