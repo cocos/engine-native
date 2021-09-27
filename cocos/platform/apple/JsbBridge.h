@@ -35,5 +35,6 @@ typedef void (^ICallback)(NSString*, NSString*);
 -(bool)setCallback:(ICallback)cb;
 -(bool)callByScript:(NSString*)arg0 arg1:(NSString*)arg1;
 -(void)sendToScript:(NSString*)arg0 arg1:(NSString*)arg1;
+-(void)sendToScript:(NSString*)arg0;
 @end
 

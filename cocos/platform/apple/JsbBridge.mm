@@ -87,5 +87,11 @@ static JsbBridge* instance = nil;
     const std::string c_arg1{[arg1 UTF8String]};
     callScript(c_arg0, c_arg1);
 }
+
+-(void)sendToScript:(NSString *)arg0{
+    const std::string c_arg0{[arg0 UTF8String]};
+    callScript(c_arg0, "");
+}
+
 @end
 

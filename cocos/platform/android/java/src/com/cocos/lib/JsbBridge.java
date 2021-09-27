@@ -55,4 +55,7 @@ public class JsbBridge {
     public static void sendToScript(String arg0, String arg1){
         sendToScriptNative(arg0, arg1);
     }
+    public static void sendToScript(String arg0){
+        sendToScriptNative(arg0, null);
+    }
 }
