@@ -111,11 +111,13 @@ void CCWGPUDescriptorSet::bindBuffer(uint binding, Buffer* buffer, uint index) {
 void CCWGPUDescriptorSet::bindTexture(uint binding, Texture* texture, uint index) {
     DescriptorSet::bindTexture(binding, texture, index);
     _gpuBindGroupObj->bindingSet.insert(binding);
+    _gpuBindGroupObj->bindingSet.insert(binding + CC_WGPU_MAX_ATTACHMENTS);
 }
 
 void CCWGPUDescriptorSet::bindSampler(uint binding, Sampler* sampler, uint index) {
     DescriptorSet::bindSampler(binding, sampler, index);
     _gpuBindGroupObj->bindingSet.insert(binding);
+    _gpuBindGroupObj->bindingSet.insert(binding + CC_WGPU_MAX_ATTACHMENTS);
 }
 
 void CCWGPUDescriptorSet::update() {

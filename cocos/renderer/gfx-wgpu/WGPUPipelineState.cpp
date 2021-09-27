@@ -113,6 +113,7 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
 
         WGPUMultisampleState msState = {
             .count                  = static_cast<CCWGPURenderPass*>(info.renderPass)->gpuRenderPassObject()->sampleCount,
+            .mask                   = 0xFFFFFFFF,
             .alphaToCoverageEnabled = info.blendState.isA2C != 0,
         };
 
