@@ -91,7 +91,7 @@ private:
 
     void updateLights();
 
-    bool isProjMatChange(Mat4& curProj, Mat4& oldProj) const {
+    static bool isProjMatChange(const Mat4& curProj, const Mat4& oldProj) {
         for (uint i = 0; i < sizeof(curProj.m) / sizeof(float); i++) {
             if (math::IsNotEqualF(curProj.m[i], oldProj.m[i])) {
                 return true;
