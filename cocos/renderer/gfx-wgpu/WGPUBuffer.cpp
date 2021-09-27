@@ -105,10 +105,10 @@ void CCWGPUBuffer::doResize(uint size, uint count) {
         .label            = nullptr,
         .usage            = toWGPUBufferUsage(_usage),
         .size             = size,
-        .mappedAtCreation = hasFlag(_memUsage, MemoryUsageBit::DEVICE),
+        .mappedAtCreation = false, //hasFlag(_memUsage, MemoryUsageBit::DEVICE),
     };
     _gpuBufferObject->wgpuBuffer = wgpuDeviceCreateBuffer(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
-}
+} // namespace gfx
 
 void bufferUpdateCallback(WGPUBufferMapAsyncStatus status, void *userdata) {
     if (status == WGPUBufferMapAsyncStatus_Success) {
@@ -135,6 +135,7 @@ void CCWGPUBuffer::update(const void *buffer, uint size) {
     //     memcpy(mappedBuffer, buffer, size);
     //     wgpuBufferMapAsync(mappedBuffer, WGPUMapMode_Write, 0, size, bufferUpdateCallback, mappedBuffer);
     // }
+
     size_t      offset   = _isBufferView ? _offset : 0;
     void const *data     = buffer;
     size_t      buffSize = size;

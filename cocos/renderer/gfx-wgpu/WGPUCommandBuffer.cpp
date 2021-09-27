@@ -87,63 +87,66 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
     Texture *                     dsTexture          = ccFrameBuffer->getDepthStencilTexture();
     CCWGPUSwapchain *             swapchain          = ccFrameBuffer->swapchain();
 
-    WGPURenderPassDescriptor &renderPassDesc = _gpuCommandBufferObj->renderPassDescriptor;
+    WGPURenderPassDescriptor &                 renderPassDesc = _gpuCommandBufferObj->renderPassDescriptor;
+    std::vector<WGPURenderPassColorAttachment> colorAttachments;
     if (colorConfigs.empty()) {
         renderPassDesc.nextInChain          = nullptr;
         renderPassDesc.label                = "swapchain";
-        renderPassDesc.colorAttachmentCount = 1;
-
-        WGPURenderPassColorAttachment *color = new WGPURenderPassColorAttachment{
-            swapchain->gpuSwapchainObject()->swapchainColor->gpuTextureObject()->selfView,
-            nullptr, //TODO_Zeqiang: wgpu offscr msaa
-            toWGPULoadOp(colorConfigs[0].loadOp),
-            toWGPUStoreOp(colorConfigs[0].storeOp),
-            toWGPUColor(colors[0])};
-        renderPassDesc.colorAttachments = color;
+        WGPURenderPassColorAttachment color = {
+            .view          = swapchain->gpuSwapchainObject()->swapchainColor->gpuTextureObject()->selfView,
+            .resolveTarget = nullptr,           //TODO_Zeqiang: wgpu offscr msaa
+            .loadOp        = WGPULoadOp_Clear,  //toWGPULoadOp(colorConfigs[0].loadOp),
+            .storeOp       = WGPUStoreOp_Clear, //toWGPUStoreOp(colorConfigs[0].storeOp),
+            .clearColor    = WGPUColor{0.2, 0.2, 0.2, 1.0},
+        };
+        colorAttachments.emplace_back(color);
     } else {
-        renderPassDesc.nextInChain                     = nullptr;
-        renderPassDesc.label                           = "attachments";
-        WGPURenderPassColorAttachment *colorAttchments = new WGPURenderPassColorAttachment[colorConfigs.size()];
+        renderPassDesc.nextInChain = nullptr;
+        renderPassDesc.label       = "attachments";
+
         for (size_t i = 0; i < colorConfigs.size(); i++) {
-            renderPassDesc.colorAttachmentCount = colorConfigs.size();
-            colorAttchments[i].view             = static_cast<CCWGPUTexture *>(textures[i])->gpuTextureObject()->selfView;
-            colorAttchments[i].resolveTarget    = nullptr; //TODO_Zeqiang: wgpu offscr msaa
-            colorAttchments[i].loadOp           = toWGPULoadOp(colorConfigs[i].loadOp);
-            colorAttchments[i].storeOp          = toWGPUStoreOp(colorConfigs[i].storeOp);
-            colorAttchments[i].clearColor       = toWGPUColor(colors[i]);
+            WGPURenderPassColorAttachment *colorAttchments = new WGPURenderPassColorAttachment[colorConfigs.size()];
+            WGPURenderPassColorAttachment  color           = {
+                .view          = static_cast<CCWGPUTexture *>(textures[i])->gpuTextureObject()->selfView,
+                .resolveTarget = nullptr, //TODO_Zeqiang: wgpu offscr msaa
+                .loadOp        = toWGPULoadOp(colorConfigs[i].loadOp),
+                .storeOp       = toWGPUStoreOp(colorConfigs[i].storeOp),
+                .clearColor    = toWGPUColor(colors[i]),
+            };
+            colorAttachments.emplace_back(color);
         }
-        renderPassDesc.colorAttachments = colorAttchments;
     }
 
+    std::vector<WGPURenderPassDepthStencilAttachment> depthStencils;
     if (dsTexture) {
-        WGPURenderPassDepthStencilAttachment *depthStencil = new WGPURenderPassDepthStencilAttachment{
-            static_cast<CCWGPUTexture *>(dsTexture)->gpuTextureObject()->selfView,
-            toWGPULoadOp(depthStencilConfig.depthLoadOp),
-            toWGPUStoreOp(depthStencilConfig.depthStoreOp),
-            depth,
-            false,
-            toWGPULoadOp(depthStencilConfig.stencilLoadOp),
-            toWGPUStoreOp(depthStencilConfig.stencilStoreOp),
-            stencil,
-            false,
+        WGPURenderPassDepthStencilAttachment depthStencil = {
+            .view            = static_cast<CCWGPUTexture *>(dsTexture)->gpuTextureObject()->selfView,
+            .depthLoadOp     = toWGPULoadOp(depthStencilConfig.depthLoadOp),
+            .depthStoreOp    = toWGPUStoreOp(depthStencilConfig.depthStoreOp),
+            .clearDepth      = depth,
+            .depthReadOnly   = false,
+            .stencilLoadOp   = toWGPULoadOp(depthStencilConfig.stencilLoadOp),
+            .stencilStoreOp  = toWGPUStoreOp(depthStencilConfig.stencilStoreOp),
+            .clearStencil    = stencil,
+            .stencilReadOnly = false,
         };
-        renderPassDesc.depthStencilAttachment = depthStencil;
+        depthStencils.emplace_back(depthStencil);
     } else {
         if (depthStencilConfig.format == Format::UNKNOWN) {
             renderPassDesc.depthStencilAttachment = nullptr;
         } else {
-            WGPURenderPassDepthStencilAttachment *depthStencil = new WGPURenderPassDepthStencilAttachment{
-                swapchain->gpuSwapchainObject()->swapchainDepthStencil->gpuTextureObject()->selfView,
-                toWGPULoadOp(depthStencilConfig.depthLoadOp),
-                toWGPUStoreOp(depthStencilConfig.depthStoreOp),
-                depth,
-                false,
-                toWGPULoadOp(depthStencilConfig.stencilLoadOp),
-                toWGPUStoreOp(depthStencilConfig.stencilStoreOp),
-                stencil,
-                false,
+            WGPURenderPassDepthStencilAttachment depthStencil = {
+                .view            = swapchain->gpuSwapchainObject()->swapchainDepthStencil->gpuTextureObject()->selfView,
+                .depthLoadOp     = toWGPULoadOp(depthStencilConfig.depthLoadOp),
+                .depthStoreOp    = toWGPUStoreOp(depthStencilConfig.depthStoreOp),
+                .clearDepth      = depth,
+                .depthReadOnly   = false,
+                .stencilLoadOp   = toWGPULoadOp(depthStencilConfig.stencilLoadOp),
+                .stencilStoreOp  = toWGPUStoreOp(depthStencilConfig.stencilStoreOp),
+                .clearStencil    = stencil,
+                .stencilReadOnly = false,
             };
-            renderPassDesc.depthStencilAttachment = depthStencil;
+            depthStencils.emplace_back(depthStencil);
         }
     }
 
@@ -157,7 +160,11 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
     _gpuCommandBufferObj->stateCache.viewport.maxDepth = 1.0f;
     _gpuCommandBufferObj->stateCache.rect              = renderArea;
 
-    auto rpBeginFunc = [](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
+    auto rpBeginFunc = [colorAttachments, depthStencils](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
+        gpuCommandBufferObj->renderPassDescriptor.colorAttachments       = colorAttachments.data();
+        gpuCommandBufferObj->renderPassDescriptor.colorAttachmentCount   = colorAttachments.size();
+        gpuCommandBufferObj->renderPassDescriptor.depthStencilAttachment = depthStencils.empty() ? nullptr : depthStencils.data();
+
         gpuCommandBufferObj->wgpuCommandEncoder    = wgpuDeviceCreateCommandEncoder(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, nullptr);
         gpuCommandBufferObj->wgpuRenderPassEncoder = wgpuCommandEncoderBeginRenderPass(gpuCommandBufferObj->wgpuCommandEncoder, &gpuCommandBufferObj->renderPassDescriptor);
     };
