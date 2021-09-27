@@ -100,6 +100,7 @@ public:
         callback = cb;
     }
     static ScriptNativeBridge* bridgeCxxInstance;
+    se::Value jsCb;
 private:
     JsCallback callback{nullptr}; // NOLINT(readability-identifier-naming)
 };
@@ -335,6 +336,15 @@ static bool JavaScriptObjCBridge_callStaticMethod(se::State &s) {
 }
 SE_BIND_FUNC(JavaScriptObjCBridge_callStaticMethod)
 
+static bool ScriptNativeBridge_getCallback(se::State &s){
+    ScriptNativeBridge *cobj = (ScriptNativeBridge *)s.nativeThisObject();
+    assert(cobj == ScriptNativeBridge::bridgeCxxInstance);
+    s.rval() = cobj->jsCb;
+    SE_HOLD_RETURN_VALUE(cobj->jsCb, s.thisObject(), s.rval());
+    return true;
+}
+SE_BIND_PROP_GET(ScriptNativeBridge_getCallback)
+
 static bool ScriptNativeBridge_setCallback(se::State &s){
     ScriptNativeBridge *cobj = (ScriptNativeBridge *)s.nativeThisObject();
     assert(cobj == ScriptNativeBridge::bridgeCxxInstance);
@@ -342,6 +352,7 @@ static bool ScriptNativeBridge_setCallback(se::State &s){
     int argc = (int)args.size();
     if (argc >= 1) {
         se::Value jsFunc = args[0];
+        cobj->jsCb = se::Value(jsFunc);
         se::Value jsTarget = argc > 1 ? args[1] : se::Value::Undefined;
         if(jsFunc.isNullOrUndefined())
         {
@@ -370,7 +381,7 @@ static bool ScriptNativeBridge_setCallback(se::State &s){
     SE_REPORT_ERROR("wrong number of arguments: %d, was expecting >=1", argc);
     return false;
 
-}SE_BIND_FUNC(ScriptNativeBridge_setCallback)
+}SE_BIND_PROP_SET(ScriptNativeBridge_setCallback)
 
 static bool ScriptNativeBridge_sendToNative(se::State &s) { //NOLINT
     const auto &args = s.args();
@@ -432,7 +443,7 @@ bool register_script_native_bridge(se::Object *obj) { //NOLINT(readability-ident
     se::Class *cls = se::Class::create("ScriptNativeBridge", obj, nullptr, _SE(ScriptNativeBridge_constructor));
     cls->defineFinalizeFunction(_SE(ScriptNativeBridge_finalize));
     cls->defineFunction("sendToNative", _SE(ScriptNativeBridge_sendToNative));
-    cls->defineFunction("onNative", _SE(ScriptNativeBridge_setCallback));
+    cls->defineProperty("onNative", _SE(ScriptNativeBridge_getCallback), _SE(ScriptNativeBridge_setCallback));
 
     cls->install();
     __jsb_ScriptNativeBridge_class = cls;
