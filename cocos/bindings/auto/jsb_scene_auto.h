@@ -345,6 +345,7 @@ bool register_all_scene(se::Object* obj);
 template<>
 bool sevalue_to_native(const se::Value &, cc::scene::DrawCall *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cc::scene::DrawCall);
+SE_DECLARE_FUNC(js_scene_DrawCall_setDynamicOffsets);
 
 extern se::Object* __jsb_cc_scene_DrawBatch2D_proto;
 extern se::Class* __jsb_cc_scene_DrawBatch2D_class;

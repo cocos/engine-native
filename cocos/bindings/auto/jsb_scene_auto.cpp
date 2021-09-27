@@ -5665,6 +5665,25 @@ bool js_register_scene_BakedSkinningModel(se::Object* obj) // NOLINT(readability
 se::Object* __jsb_cc_scene_DrawCall_proto = nullptr;
 se::Class* __jsb_cc_scene_DrawCall_class = nullptr;
 
+static bool js_scene_DrawCall_setDynamicOffsets(se::State& s) // NOLINT(readability-identifier-naming)
+{
+    auto* cobj = SE_THIS_OBJECT<cc::scene::DrawCall>(s);
+    SE_PRECONDITION2(cobj, false, "js_scene_DrawCall_setDynamicOffsets : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    CC_UNUSED bool ok = true;
+    if (argc == 1) {
+        HolderType<unsigned int, false> arg0 = {};
+        ok &= sevalue_to_native(args[0], &arg0, s.thisObject());
+        SE_PRECONDITION2(ok, false, "js_scene_DrawCall_setDynamicOffsets : Error processing arguments");
+        cobj->setDynamicOffsets(arg0.value());
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+    return false;
+}
+SE_BIND_FUNC(js_scene_DrawCall_setDynamicOffsets)
+
 static bool js_scene_DrawCall_get_bufferView(se::State& s) // NOLINT(readability-identifier-naming)
 {
     auto* cobj = SE_THIS_OBJECT<cc::scene::DrawCall>(s);
@@ -5888,6 +5907,7 @@ bool js_register_scene_DrawCall(se::Object* obj) // NOLINT(readability-identifie
     cls->defineProperty("descriptorSet", _SE(js_scene_DrawCall_get_descriptorSet), _SE(js_scene_DrawCall_set_descriptorSet));
     cls->defineProperty("dynamicOffsets", _SE(js_scene_DrawCall_get_dynamicOffsets), _SE(js_scene_DrawCall_set_dynamicOffsets));
     cls->defineProperty("drawInfo", _SE(js_scene_DrawCall_get_drawInfo), _SE(js_scene_DrawCall_set_drawInfo));
+    cls->defineFunction("setDynamicOffsets", _SE(js_scene_DrawCall_setDynamicOffsets));
     cls->defineFinalizeFunction(_SE(js_cc_scene_DrawCall_finalize));
     cls->install();
     JSBClassType::registerClass<cc::scene::DrawCall>(cls);

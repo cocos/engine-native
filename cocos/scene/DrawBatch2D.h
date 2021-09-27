@@ -39,6 +39,11 @@ struct DrawCall final {
     gfx::DescriptorSet *  descriptorSet{nullptr};
     std::vector<uint32_t> dynamicOffsets;
     gfx::DrawInfo *       drawInfo;
+
+    void setDynamicOffsets(uint32_t value) {
+        dynamicOffsets.push_back(0);
+        dynamicOffsets.push_back(value);
+    }
 };
 
 struct DrawBatch2D final {
@@ -53,9 +58,9 @@ struct DrawBatch2D final {
         drawCalls.push_back(dc);
     }
 
-	void clearDrawCalls(){
-		drawCalls.clear();
-	}
+    void clearDrawCalls(){
+        drawCalls.clear();
+    }
 };
 
 } // namespace scene

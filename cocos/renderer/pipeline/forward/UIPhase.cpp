@@ -54,12 +54,11 @@ void UIPhase::render(scene::Camera *camera, gfx::RenderPass *renderPass) {
             cmdBuff->bindPipelineState(pso);
             cmdBuff->bindDescriptorSet(materialSet, pass->getDescriptorSet());
             cmdBuff->bindInputAssembler(inputAssembler);
-			for (size_t j = 0; j < batch->drawCalls.size(); ++j) {
-				auto *drawCall = batch->drawCalls[j];
-				auto *ds = drawCall->descriptorSet;
-				cmdBuff->bindDescriptorSet(localSet, ds);
-				cmdBuff->draw(*drawCall->drawInfo);
-			}
+            for (auto *drawCall : batch->drawCalls) {
+                auto *ds = drawCall->descriptorSet;
+                cmdBuff->bindDescriptorSet(localSet, ds, drawCall->dynamicOffsets);
+                cmdBuff->draw(*drawCall->drawInfo);
+            }
         }
     }
 }
