@@ -32,6 +32,7 @@
 #include "frame-graph/Handle.h"
 #include "gfx-base/GFXBuffer.h"
 #include "gfx-base/GFXInputAssembler.h"
+#include "pipeline/ClusterLightCulling.h"
 #include "pipeline/RenderPipeline.h"
 #include "scene/RenderWindow.h"
 
@@ -50,6 +51,7 @@ struct CC_DLL DeferredRenderData {
 };
 
 enum class DeferredInsertPoint {
+    DIP_CLUSTER     = 80,
     DIP_GBUFFER     = 100,
     DIP_LIGHTING    = 200,
     DIP_TRANSPARENT = 220,
@@ -105,6 +107,8 @@ private:
     uint _height = 0;
 
     framegraph::FrameGraph _fg;
+
+    ClusterLightCulling *_clusterComp{nullptr};
 
 public:
     static constexpr uint GBUFFER_COUNT = 4;

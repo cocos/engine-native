@@ -25,8 +25,8 @@
 
 #include "DeferredPipeline.h"
 #include "../SceneCulling.h"
-#include "../shadow/ShadowFlow.h"
 #include "../helper/Utils.h"
+#include "../shadow/ShadowFlow.h"
 #include "MainFlow.h"
 #include "gfx-base/GFXBuffer.h"
 #include "gfx-base/GFXCommandBuffer.h"
@@ -75,7 +75,10 @@ bool DeferredPipeline::initialize(const RenderPipelineInfo &info) {
         mainFlow->initialize(MainFlow::getInitializeInfo());
         _flows.emplace_back(mainFlow);
     }
-
+    // Here can take editor config into account in the future
+    if (_device->hasFeature(gfx::Feature::COMPUTE_SHADER)) {
+        clusterCulling = true;
+    }
     return true;
 }
 
@@ -105,6 +108,11 @@ void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
         sceneCulling(this, camera);
 
         _fg.reset();
+
+        if (useCluster()) {
+            _clusterComp->clusterLightCulling(camera);
+        }
+
         for (auto *const flow : _flows) {
             flow->render(camera);
         }
@@ -276,6 +284,12 @@ bool DeferredPipeline::activeRenderer(gfx::Swapchain *swapchain) {
     _width  = swapchain->getWidth();
     _height = swapchain->getHeight();
 
+    if (useCluster()) {
+        // cluster component resource
+        _clusterComp = new ClusterLightCulling(this);
+        _clusterComp->initialize(this->getDevice());
+    }
+
     return true;
 }
 
@@ -295,6 +309,8 @@ void DeferredPipeline::destroy() {
     _renderPasses.clear();
 
     _commandBuffers.clear();
+
+    CC_SAFE_DELETE(_clusterComp);
 
     RenderPipeline::destroy();
 }

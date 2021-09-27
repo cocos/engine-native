@@ -79,9 +79,9 @@ public:
     inline const String &                          getConstantMacros() { return _constantMacros; }
     inline gfx::Device *                           getDevice() { return _device; }
     RenderStage *                                  getRenderstageByName(const String &name) const;
-
-    inline scene::Model *getProfiler() const { return _profiler; }
-    inline void          setProfiler(scene::Model *value) { _profiler = value; }
+    inline const bool                              useCluster() const { return clusterCulling; }
+    inline scene::Model *                          getProfiler() const { return _profiler; }
+    inline void                                    setProfiler(scene::Model *value) { _profiler = value; }
 
 protected:
     static RenderPipeline *instance;
@@ -104,6 +104,9 @@ protected:
     // has not initBuiltinRes,
     // create temporary default Texture to binding sampler2d
     gfx::Texture *_defaultTexture = nullptr;
+
+    // use cluster culling or not
+    bool clusterCulling{false};
 };
 
 } // namespace pipeline
