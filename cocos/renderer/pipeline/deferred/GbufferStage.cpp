@@ -154,17 +154,27 @@ void GbufferStage::render(scene::Camera *camera) {
     (void)pipeline->getIAByRenderArea(_renderArea);
 
     auto gbufferSetup = [&](framegraph::PassNodeBuilder &builder, RenderData &data) {
+        auto usages = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
+        auto accessType = gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE;
+        auto subpassEnabled = _device->hasFeature(gfx::Feature::INPUT_ATTACHMENT_BENEFIT);
+
+        if (subpassEnabled) {
+            builder.subpass();
+            usages = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::INPUT_ATTACHMENT;
+            accessType = gfx::AccessType::FRAGMENT_SHADER_READ_COLOR_INPUT_ATTACHMENT;
+        }
+
         // gbuffer setup
         gfx::TextureInfo gbufferInfo = {
             gfx::TextureType::TEX2D,
-            gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
+            usages,
             gfx::Format::RGBA8,
             pipeline->getWidth(),
             pipeline->getHeight(),
         };
         gfx::TextureInfo gbufferInfoFloat = {
             gfx::TextureType::TEX2D,
-            gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
+            usages,
             gfx::Format::RGBA16F,
             pipeline->getWidth(),
             pipeline->getHeight(),
@@ -183,8 +193,8 @@ void GbufferStage::render(scene::Camera *camera) {
         colorInfo.usage         = framegraph::RenderTargetAttachment::Usage::COLOR;
         colorInfo.loadOp        = gfx::LoadOp::CLEAR;
         colorInfo.clearColor    = clearColor;
-        colorInfo.beginAccesses = {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE};
-        colorInfo.endAccesses   = {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE};
+        colorInfo.beginAccesses = {accessType};
+        colorInfo.endAccesses   = {accessType};
         for (int i = 0; i < DeferredPipeline::GBUFFER_COUNT; ++i) {
             data.gbuffer[i] = builder.write(data.gbuffer[i], colorInfo);
             builder.writeToBlackboard(DeferredPipeline::fgStrHandleGbufferTexture[i], data.gbuffer[i]);
