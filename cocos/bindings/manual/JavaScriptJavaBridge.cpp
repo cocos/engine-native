@@ -614,8 +614,8 @@ static bool JavaScriptJavaBridge_callStaticMethod(se::State &s) { //NOLINT(reada
 SE_BIND_FUNC(JavaScriptJavaBridge_callStaticMethod)
 
 
-static bool ScriptNativeBridge_getCallback(se::State &s){
-    ScriptNativeBridge *cobj = (ScriptNativeBridge *)s.nativeThisObject();
+static bool ScriptNativeBridge_getCallback(se::State &s){ //NOLINT(readability-identifier-naming)
+    auto *cobj = static_cast<ScriptNativeBridge *>s.nativeThisObject();
     assert(cobj == ScriptNativeBridge::bridgeCxxInstance);
     s.rval() = cobj->jsCb;
     SE_HOLD_RETURN_VALUE(cobj->jsCb, s.thisObject(), s.rval());
