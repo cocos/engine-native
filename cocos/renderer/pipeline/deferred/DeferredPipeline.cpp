@@ -77,7 +77,7 @@ bool DeferredPipeline::initialize(const RenderPipelineInfo &info) {
     }
     // Here can take editor config into account in the future
     if (_device->hasFeature(gfx::Feature::COMPUTE_SHADER)) {
-        clusterCulling = true;
+        _clusterCulling = true;
     }
     return true;
 }
