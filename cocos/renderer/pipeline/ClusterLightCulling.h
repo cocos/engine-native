@@ -76,7 +76,7 @@ public:
     inline const gfx::DispatchInfo& getResetCounterDispatchInfo() const { return _resetDispatchInfo; }
     inline const gfx::DispatchInfo& getCullingDispatchInfo() const { return _cullingDispatchInfo; }
 
-    inline const bool isInitialized() const { return _initialized; }
+    inline bool isInitialized() const { return _initialized; }
 
 private:
     String& getShaderSource(ShaderStrings& sources);
@@ -91,7 +91,7 @@ private:
 
     void updateLights();
 
-    static bool isProjMatChange(Mat4& curProj, Mat4& oldProj) {
+    bool isProjMatChange(Mat4& curProj, Mat4& oldProj) const {
         for (uint i = 0; i < sizeof(curProj.m) / sizeof(float); i++) {
             if (math::IsNotEqualF(curProj.m[i], oldProj.m[i])) {
                 return true;

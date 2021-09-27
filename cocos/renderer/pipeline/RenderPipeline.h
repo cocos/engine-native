@@ -79,7 +79,7 @@ public:
     inline const String &                          getConstantMacros() { return _constantMacros; }
     inline gfx::Device *                           getDevice() { return _device; }
     RenderStage *                                  getRenderstageByName(const String &name) const;
-    inline const bool                              useCluster() const { return clusterCulling; }
+    inline bool                                    useCluster() const { return _clusterCulling; }
     inline scene::Model *                          getProfiler() const { return _profiler; }
     inline void                                    setProfiler(scene::Model *value) { _profiler = value; }
 
@@ -106,7 +106,7 @@ protected:
     gfx::Texture *_defaultTexture = nullptr;
 
     // use cluster culling or not
-    bool clusterCulling{false};
+    bool _clusterCulling{false};
 };
 
 } // namespace pipeline
