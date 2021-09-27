@@ -41,12 +41,11 @@ CCWGPUPipelineState::CCWGPUPipelineState() : wrapper<PipelineState>(val::object(
 }
 
 void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
-    _gpuPipelineStateObj = CC_NEW(CCWGPUPipelineStateObject);
-    auto* pipelineLayout = static_cast<CCWGPUPipelineLayout*>(info.pipelineLayout);
-
-    const DepthStencilAttachment& dsAttachment = info.renderPass->getDepthStencilAttachment();
+    _gpuPipelineStateObj                         = CC_NEW(CCWGPUPipelineStateObject);
+    auto*                         pipelineLayout = static_cast<CCWGPUPipelineLayout*>(info.pipelineLayout);
+    const DepthStencilAttachment& dsAttachment   = info.renderPass->getDepthStencilAttachment();
     if (info.bindPoint == PipelineBindPoint::GRAPHICS) {
-        const AttributeList&             attrs  = info.inputState.attributes;
+        const AttributeList&             attrs  = info.shader->getAttributes();
         uint64_t                         offset = 0;
         std::vector<WGPUVertexAttribute> wgpuAttrs(attrs.size());
         bool                             isInstance = attrs[0].isInstanced;
@@ -72,10 +71,12 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
             .buffers     = &vertexBufferLayout,
         };
 
+        bool stripTopology = (info.primitive == PrimitiveMode::LINE_STRIP || info.primitive == PrimitiveMode::TRIANGLE_STRIP);
+
         WGPUPrimitiveState primitiveState = {
             .nextInChain      = nullptr,
             .topology         = toWGPUPrimTopology(info.primitive),
-            .stripIndexFormat = WGPUIndexFormat_Uint16, //TODO_Zeqiang: ???
+            .stripIndexFormat = stripTopology ? WGPUIndexFormat_Uint16 : WGPUIndexFormat_Undefined, //TODO_Zeqiang: ???
             .frontFace        = info.rasterizerState.isFrontFaceCCW ? WGPUFrontFace::WGPUFrontFace_CCW : WGPUFrontFace::WGPUFrontFace_CW,
             .cullMode         = info.rasterizerState.cullMode == CullMode::FRONT ? WGPUCullMode::WGPUCullMode_Front
                                                                          : info.rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
@@ -144,6 +145,7 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
             .targets     = colorTargetStates.data(),
         };
 
+        pipelineLayout->prepare();
         WGPURenderPipelineDescriptor2 piplineDesc = {
             .nextInChain  = nullptr,
             .label        = nullptr,
@@ -158,10 +160,10 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
         _gpuPipelineStateObj->wgpuRenderPipeline = wgpuDeviceCreateRenderPipeline2(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &piplineDesc);
     } else if (info.bindPoint == PipelineBindPoint::COMPUTE) {
         WGPUProgrammableStageDescriptor psDesc = {
-            .module     = static_cast<CCWGPUShader*>(info.shader)->gpuShaderObject()->wgpuShaderVertexModule,
+            .module     = static_cast<CCWGPUShader*>(info.shader)->gpuShaderObject()->wgpuShaderComputeModule,
             .entryPoint = "main",
         };
-
+        pipelineLayout->prepare();
         WGPUComputePipelineDescriptor piplineDesc = {
             .layout       = pipelineLayout->gpuPipelineLayoutObject()->wgpuPipelineLayout,
             .computeStage = psDesc,

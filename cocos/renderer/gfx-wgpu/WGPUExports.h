@@ -433,25 +433,25 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .field("cmpFunc", &SamplerInfo::cmpFunc);
     function("SamplerInfoInstance", &GenInstance<SamplerInfo>::instance);
 
-    value_object<BufferInfo>("BufferInfo")
-        .field("usage", &BufferInfo::usage)
-        .field("memUsage", &BufferInfo::memUsage)
-        .field("size", &BufferInfo::size)
-        .field("stride", &BufferInfo::stride)
-        .field("flags", &BufferInfo::flags);
-    function("BufferInfoInstance", &GenInstance<BufferInfo>::instance);
+    // value_object<BufferInfo>("BufferInfo")
+    //     .field("usage", &BufferInfo::usage)
+    //     .field("memUsage", &BufferInfo::memUsage)
+    //     .field("size", &BufferInfo::size)
+    //     .field("stride", &BufferInfo::stride)
+    //     .field("flags", &BufferInfo::flags);
+    // function("BufferInfoInstance", &GenInstance<BufferInfo>::instance);
 
-    value_object<DescriptorSetLayoutInfo>("DescriptorSetLayoutInfo")
-        .field("bindings", &DescriptorSetLayoutInfo::bindings);
-    function("DescriptorSetLayoutInfoInstance", &GenInstance<DescriptorSetLayoutInfo>::instance);
+    // value_object<DescriptorSetLayoutInfo>("DescriptorSetLayoutInfo")
+    //     .field("bindings", &DescriptorSetLayoutInfo::bindings);
+    // function("DescriptorSetLayoutInfoInstance", &GenInstance<DescriptorSetLayoutInfo>::instance);
 
-    value_object<DescriptorSetLayoutBinding>("DescriptorSetLayoutBinding")
-        .field("binding", &DescriptorSetLayoutBinding::binding)
-        .field("descriptorType", &DescriptorSetLayoutBinding::descriptorType)
-        .field("count", &DescriptorSetLayoutBinding::count)
-        .field("stageFlags", &DescriptorSetLayoutBinding::stageFlags)
-        .field("immutableSamplers", &DescriptorSetLayoutBinding::immutableSamplers);
-    function("DescriptorSetLayoutBindingInstance", &GenInstance<DescriptorSetLayoutBinding>::instance);
+    // value_object<DescriptorSetLayoutBinding>("DescriptorSetLayoutBinding")
+    //     .field("binding", &DescriptorSetLayoutBinding::binding)
+    //     .field("descriptorType", &DescriptorSetLayoutBinding::descriptorType)
+    //     .field("count", &DescriptorSetLayoutBinding::count)
+    //     .field("stageFlags", &DescriptorSetLayoutBinding::stageFlags)
+    //     .field("immutableSamplers", &DescriptorSetLayoutBinding::immutableSamplers);
+    // function("DescriptorSetLayoutBindingInstance", &GenInstance<DescriptorSetLayoutBinding>::instance);
 
     value_object<PipelineLayoutInfo>("PipelineLayoutInfo")
         .field("setLayouts", &PipelineLayoutInfo::setLayouts);
@@ -737,9 +737,29 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("setSubpasses", &SPVShaderInfoInstance::setSubpasses);
 
     class_<SPVShaderStageInstance>("SPVShaderStageInstance")
+        .constructor<>()
         .function("setStage", &SPVShaderStageInstance::setStage)
         .function("setSPVData", &SPVShaderStageInstance::setSPVData);
-    function("SPVShaderStageInstance", &GenInstance<SPVShaderStageInstance>::instance);
+
+    class_<DescriptorSetLayoutBindingInstance>("DescriptorSetLayoutBindingInstance")
+        .constructor<>()
+        .function("setBinding", &DescriptorSetLayoutBindingInstance::setBinding)
+        .function("setDescriptorType", &DescriptorSetLayoutBindingInstance::setDescriptorType)
+        .function("setCount", &DescriptorSetLayoutBindingInstance::setCount)
+        .function("setStageFlags", &DescriptorSetLayoutBindingInstance::setStageFlags)
+        .function("setImmutableSamplers", &DescriptorSetLayoutBindingInstance::setImmutableSamplers);
+
+    class_<BufferInfoInstance>("BufferInfoInstance")
+        .constructor<>()
+        .function("setUsage", &BufferInfoInstance::setUsage)
+        .function("setMemUsage", &BufferInfoInstance::setMemUsage)
+        .function("setSize", &BufferInfoInstance::setSize)
+        .function("setStride", &BufferInfoInstance::setStride)
+        .function("setFlags", &BufferInfoInstance::setFlags);
+
+    class_<DescriptorSetLayoutInfoInstance>("DescriptorSetLayoutInfoInstance")
+        .constructor<>()
+        .function("setBindings", &DescriptorSetLayoutInfoInstance::setBindings);
 
     //--------------------------------------------------CLASS---------------------------------------------------------------------------
     class_<cc::gfx::Swapchain>("Swapchain")
@@ -760,12 +780,8 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("present", &Device::present, pure_virtual())
         .function("createQueue", select_overload<Queue *(const QueueInfo &)>(&Device::createQueue),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createBuffer", select_overload<Buffer *(const BufferInfo &)>(&Device::createBuffer),
-                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("getSampler", &Device::getSampler, allow_raw_pointer<arg<0>>())
         .function("createRenderPass", select_overload<RenderPass *(const RenderPassInfo &)>(&Device::createRenderPass),
-                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createDescriptorSetLayout", select_overload<DescriptorSetLayout *(const DescriptorSetLayoutInfo &)>(&Device::createDescriptorSetLayout),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createPipelineLayout", select_overload<PipelineLayout *(const PipelineLayoutInfo &)>(&Device::createPipelineLayout),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
@@ -790,13 +806,17 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createFramebuffer", select_overload<Framebuffer *(const FramebufferInfoInstance &)>(&CCWGPUDevice::createFramebuffer),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createShader", select_overload<Shader *(const SPVShaderInfoInstance &)>(&CCWGPUDevice::createShader),
+        .function("createBuffer", select_overload<Buffer *(const BufferInfoInstance &)>(&CCWGPUDevice::createBuffer),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createBufferView", select_overload<Buffer *(const BufferViewInfoInstance &)>(&CCWGPUDevice::createBuffer),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createTexture", select_overload<Texture *(const TextureInfoInstance &)>(&CCWGPUDevice::createTexture),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createTextureView", select_overload<Texture *(const TextureViewInfoInstance &)>(&CCWGPUDevice::createTexture),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("createBufferView", select_overload<Buffer *(const BufferViewInfoInstance &)>(&CCWGPUDevice::createBuffer),
+        .function("createShader", select_overload<Shader *(const SPVShaderInfoInstance &)>(&CCWGPUDevice::createShader),
+                  /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
+        .function("createDescriptorSetLayout", select_overload<DescriptorSetLayout *(const DescriptorSetLayoutInfoInstance &)>(&CCWGPUDevice::createDescriptorSetLayout),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createInputAssembler", select_overload<InputAssembler *(const InputAssemblerInfoInstance &)>(&CCWGPUDevice::createInputAssembler),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
@@ -850,7 +870,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("resize", &Buffer::resize)
         .function("desctroy", &Buffer::destroy);
     class_<CCWGPUBuffer, base<Buffer>>("CCWGPUBuffer")
-        .function("update", select_overload<void(String, uint)>(&CCWGPUBuffer::update), allow_raw_pointer<arg<0>>())
+        .function("update", select_overload<void(const emscripten::val &v, uint)>(&CCWGPUBuffer::update), allow_raw_pointer<arg<0>>())
         .constructor<>();
 
     class_<DescriptorSetLayout>("DescriptorSetLayout")
@@ -922,7 +942,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("beginRenderPass", select_overload<void(RenderPass *, Framebuffer *, const Rect &, const ColorList &, float, uint)>(&CCWGPUCommandBuffer::beginRenderPass), allow_raw_pointers())
         .function("copyBuffersToTexture", select_overload<void(const std::vector<String> &, Texture *, const BufferTextureCopy *, uint)>(&CCWGPUCommandBuffer::copyBuffersToTexture), allow_raw_pointer<arg<1>>())
         .function("updateIndirectBuffer", select_overload<void(Buffer *, const DrawInfoList &)>(&CCWGPUCommandBuffer::updateIndirectBuffer), allow_raw_pointers())
-        .function("updateBuffer", select_overload<void(Buffer *, String, uint)>(&CCWGPUCommandBuffer::updateBuffer), allow_raw_pointers());
+        .function("updateBuffer", select_overload<void(Buffer *, const emscripten::val &v, uint)>(&CCWGPUCommandBuffer::updateBuffer), allow_raw_pointers());
 
     class_<Queue>("Queue")
         .function("initialize", &Queue::initialize)
@@ -948,7 +968,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     register_vector<const uint8_t *>("BufferDataList");
     register_vector<BufferTextureCopy>("BufferTextureCopyList");
     register_vector<Sampler *>("SamplerList");
-    register_vector<DescriptorSetLayoutBinding>("DescriptorSetLayoutBindingList");
+    register_vector<DescriptorSetLayoutBindingInstance>("DescriptorSetLayoutBindingList");
     register_vector<DescriptorSetLayout *>("DescriptorSetLayoutList");
     register_vector<UniformStorageImage>("UniformStorageImageList");
     register_vector<ShaderStage>("ShaderStageList");

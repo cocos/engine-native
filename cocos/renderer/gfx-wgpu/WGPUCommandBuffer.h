@@ -25,6 +25,7 @@
 
 #pragma once
 #include <emscripten/bind.h>
+#include <emscripten/val.h>
 #include <functional>
 #include <queue>
 #include "gfx-base/GFXCommandBuffer.h"
@@ -71,8 +72,9 @@ public:
 
     void copyBuffersToTexture(const std::vector<String> &strList, Texture *texture, const BufferTextureCopy *regions, uint count);
 
-    void updateBuffer(Buffer *buff, String bufferContainer, uint size) {
-        updateBuffer(buff, reinterpret_cast<void *>(bufferContainer.data()), size);
+    void updateBuffer(Buffer *buff, const emscripten::val &v, uint size) {
+        std::vector<uint8_t> buffer = emscripten::convertJSArrayToNumberVector<uint8_t>(v);
+        updateBuffer(buff, reinterpret_cast<const void *>(buffer.data()), size);
     }
 
     void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, uint stencil) {

@@ -121,6 +121,7 @@ struct CCWGPUBufferObject {
     WGPUBuffer                                   wgpuBuffer = wgpuDefaultHandle;
     std::vector<CCWGPUDrawIndexedIndirectObject> indexedIndirectObjs;
     std::vector<CCWGPUDrawIndirectObject>        indirectObjs;
+    bool                                         mapped = false;
 };
 
 struct CCWGPUSamplerObject {
@@ -146,6 +147,7 @@ struct CCWGPUBindGroupLayoutObject {
 struct CCWGPUBindGroupObject {
     WGPUBindGroup                   bindgroup = wgpuDefaultHandle;
     std::vector<WGPUBindGroupEntry> bindGroupEntries;
+    std::set<uint8_t>               bindingSet;
 };
 
 struct CCWGPUPipelineLayoutObject {

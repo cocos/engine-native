@@ -81,12 +81,20 @@ public:
         return this->Device::createTexture(static_cast<const TextureViewInfo &>(info));
     }
 
+    Buffer *createBuffer(const BufferInfoInstance &info) {
+        return this->Device::createBuffer(static_cast<const BufferInfo &>(info));
+    }
+
     Buffer *createBuffer(const BufferViewInfoInstance &info) {
         return this->Device::createBuffer(static_cast<const BufferViewInfo &>(info));
     }
 
     DescriptorSet *createDescriptorSet(const DescriptorSetInfoInstance &info) {
         return this->Device::createDescriptorSet(static_cast<const DescriptorSetInfo &>(info));
+    }
+
+    DescriptorSetLayout *createDescriptorSetLayout(const DescriptorSetLayoutInfoInstance &info) {
+        return this->Device::createDescriptorSetLayout(static_cast<const DescriptorSetLayoutInfo &>(info));
     }
 
     InputAssembler *createInputAssembler(const InputAssemblerInfoInstance &info) {

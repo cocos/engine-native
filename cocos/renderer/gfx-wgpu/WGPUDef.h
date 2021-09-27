@@ -100,28 +100,6 @@ private:
     DescriptorSetInfo info;
 };
 
-// struct PipelineLayoutInfo {
-//     DescriptorSetLayoutList setLayouts;
-// };
-
-// struct DescriptorSetLayoutInfo {
-//     DescriptorSetLayoutBindingList bindings;
-// };
-
-class DescriptorSetLayoutBindingInstance {
-public:
-    inline void setBinding(uint32_t binding) { dsBinding.binding = binding; }
-    inline void setDescriptorType(DescriptorType type) { dsBinding.descriptorType = type; }
-    inline void setCount(uint32_t count) { dsBinding.count = count; }
-    inline void setStageFlags(ShaderStageFlags flag) { dsBinding.stageFlags = flag; }
-    inline void setSamplerList(SamplerList samplers) { dsBinding.immutableSamplers = samplers; }
-
-    explicit operator const DescriptorSetLayoutBinding() const { return dsBinding; }
-
-private:
-    DescriptorSetLayoutBinding dsBinding;
-};
-
 class PipelineStateInfoInstance {
 public:
     inline void setShader(Shader* shader) { info.shader = shader; }
@@ -204,6 +182,103 @@ public:
 
     ShaderInfo                          info;
     std::vector<SPVShaderStageInstance> stages;
+};
+
+class DescriptorSetLayoutBindingInstance {
+public:
+    inline void setBinding(uint32_t binding) { info.binding = binding; }
+    inline void setDescriptorType(DescriptorType descriptorType) { info.descriptorType = descriptorType; }
+    inline void setCount(uint32_t count) { info.count = count; }
+    inline void setStageFlags(uint32_t stageFlags) {
+        ShaderStageFlags flag = ShaderStageFlagBit::NONE;
+        if (hasFlag(static_cast<ShaderStageFlags>(stageFlags), ShaderStageFlagBit::VERTEX)) {
+            flag |= ShaderStageFlagBit::VERTEX;
+        }
+        if (hasFlag(static_cast<ShaderStageFlags>(stageFlags), ShaderStageFlagBit::CONTROL)) {
+            flag |= ShaderStageFlagBit::CONTROL;
+        }
+        if (hasFlag(static_cast<ShaderStageFlags>(stageFlags), ShaderStageFlagBit::EVALUATION)) {
+            flag |= ShaderStageFlagBit::EVALUATION;
+        }
+        if (hasFlag(static_cast<ShaderStageFlags>(stageFlags), ShaderStageFlagBit::GEOMETRY)) {
+            flag |= ShaderStageFlagBit::GEOMETRY;
+        }
+        if (hasFlag(static_cast<ShaderStageFlags>(stageFlags), ShaderStageFlagBit::FRAGMENT)) {
+            flag |= ShaderStageFlagBit::FRAGMENT;
+        }
+        if (hasFlag(static_cast<ShaderStageFlags>(stageFlags), ShaderStageFlagBit::COMPUTE)) {
+            flag |= ShaderStageFlagBit::COMPUTE;
+        }
+        info.stageFlags = flag;
+    }
+    inline void setImmutableSamplers(SamplerList immutableSamplers) { info.immutableSamplers = immutableSamplers; }
+
+    explicit operator const DescriptorSetLayoutBinding() const { return info; }
+
+private:
+    DescriptorSetLayoutBinding info;
+};
+
+class DescriptorSetLayoutInfoInstance {
+public:
+    inline void setBindings(std::vector<DescriptorSetLayoutBindingInstance> bindings) { info.bindings = std::vector<DescriptorSetLayoutBinding>(bindings.begin(), bindings.end()); }
+
+    explicit operator const DescriptorSetLayoutInfo() const { return info; }
+
+private:
+    DescriptorSetLayoutInfo info;
+};
+
+class BufferInfoInstance {
+public:
+    inline void setUsage(uint32_t usageIn) {
+        BufferUsage usage = BufferUsageBit::NONE;
+        if (hasFlag(static_cast<BufferUsageBit>(usageIn), BufferUsageBit::TRANSFER_SRC)) {
+            usage |= BufferUsageBit::TRANSFER_SRC;
+        }
+        if (hasFlag(static_cast<BufferUsageBit>(usageIn), BufferUsageBit::TRANSFER_DST)) {
+            usage |= BufferUsageBit::TRANSFER_DST;
+        }
+        if (hasFlag(static_cast<BufferUsageBit>(usageIn), BufferUsageBit::INDEX)) {
+            usage |= BufferUsageBit::INDEX;
+        }
+        if (hasFlag(static_cast<BufferUsageBit>(usageIn), BufferUsageBit::VERTEX)) {
+            usage |= BufferUsageBit::VERTEX;
+        }
+        if (hasFlag(static_cast<BufferUsageBit>(usageIn), BufferUsageBit::UNIFORM)) {
+            usage |= BufferUsageBit::UNIFORM;
+        }
+        if (hasFlag(static_cast<BufferUsageBit>(usageIn), BufferUsageBit::STORAGE)) {
+            usage |= BufferUsageBit::STORAGE;
+        }
+        if (hasFlag(static_cast<BufferUsageBit>(usageIn), BufferUsageBit::INDIRECT)) {
+            usage |= BufferUsageBit::INDIRECT;
+        }
+
+        info.usage = usage;
+    }
+    inline void setMemUsage(uint32_t memUsageIn) {
+        MemoryUsage memUsage = MemoryUsageBit::NONE;
+        if (hasFlag(static_cast<MemoryUsageBit>(memUsageIn), MemoryUsageBit::DEVICE)) {
+            memUsage |= MemoryUsageBit::DEVICE;
+        }
+        if (hasFlag(static_cast<MemoryUsageBit>(memUsageIn), MemoryUsageBit::HOST)) {
+            memUsage |= MemoryUsageBit::HOST;
+        }
+        info.memUsage = memUsage;
+    }
+    inline void setSize(uint32_t size) { info.size = size; }
+    inline void setStride(uint32_t stride) { info.stride = stride; }
+    inline void setFlags(uint32_t flagsIn) {
+        BufferFlags flags = BufferFlagBit::NONE;
+
+        info.flags = static_cast<BufferFlagBit>(flagsIn);
+    }
+
+    explicit operator const BufferInfo() const { return info; }
+
+private:
+    BufferInfo info;
 };
 
 } // namespace gfx

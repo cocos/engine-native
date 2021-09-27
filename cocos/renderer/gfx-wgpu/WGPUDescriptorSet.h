@@ -41,6 +41,10 @@ public:
 
     inline CCWGPUBindGroupObject* gpuBindGroupObject() { return _gpuBindGroupObj; }
 
+    void bindBuffer(uint binding, Buffer* buffer, uint index) override;
+    void bindTexture(uint binding, Texture* texture, uint index) override;
+    void bindSampler(uint binding, Sampler* sampler, uint index) override;
+
     void update() override;
 
 protected:

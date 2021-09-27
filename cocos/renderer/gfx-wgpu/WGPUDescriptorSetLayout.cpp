@@ -25,12 +25,14 @@
 
 #include "WGPUDescriptorSetLayout.h"
 #include <emscripten/html5_webgpu.h>
+#include <algorithm>
 #include "WGPUBuffer.h"
 #include "WGPUDevice.h"
 #include "WGPUObject.h"
 #include "WGPUSampler.h"
 #include "WGPUTexture.h"
 #include "WGPUUtils.h"
+
 namespace cc {
 namespace gfx {
 
@@ -109,7 +111,6 @@ void CCWGPUDescriptorSetLayout::updateLayout(uint8_t binding, const CCWGPUBuffer
 
     if (iter != _gpuLayoutEntryObj->bindGroupLayoutEntries.end()) {
         if (buffer) {
-            //
         }
         if (sampler) {
             (*iter).sampler.type = WGPUSamplerBindingType::WGPUSamplerBindingType_Comparison;
@@ -133,27 +134,28 @@ void CCWGPUDescriptorSetLayout::updateLayout(uint8_t binding, const CCWGPUBuffer
     }
 }
 
-void CCWGPUDescriptorSetLayout::prepare() {
+void CCWGPUDescriptorSetLayout::prepare(const std::set<uint8_t>& bindingInUse) {
+    std::vector<WGPUBindGroupLayoutEntry> bindGroupLayoutEntries;
+
+    bindGroupLayoutEntries.assign(_gpuLayoutEntryObj->bindGroupLayoutEntries.begin(), _gpuLayoutEntryObj->bindGroupLayoutEntries.end());
+    bindGroupLayoutEntries.erase(std::remove_if(
+                                     bindGroupLayoutEntries.begin(), bindGroupLayoutEntries.end(), [&bindingInUse, &bindGroupLayoutEntries](const WGPUBindGroupLayoutEntry& entry) {
+                                         // size > 1 incase of bind group missing
+                                         return bindingInUse.find(entry.binding) == bindingInUse.end() && bindGroupLayoutEntries.size() > 1;
+                                     }),
+                                 bindGroupLayoutEntries.end());
+    // printf("aftersz: %d\n", _gpuLayoutEntryObj->bindGroupLayoutEntries.size());
     WGPUBindGroupLayoutDescriptor descriptor = {
         .nextInChain = nullptr,
         .label       = nullptr,
-        .entryCount  = _gpuLayoutEntryObj->bindGroupLayoutEntries.size(),
-        .entries     = _gpuLayoutEntryObj->bindGroupLayoutEntries.data(),
+        .entryCount  = bindGroupLayoutEntries.size(),
+        .entries     = bindGroupLayoutEntries.data(),
     };
 
     if (_gpuLayoutEntryObj->bindGroupLayout) {
         wgpuBindGroupLayoutRelease(_gpuLayoutEntryObj->bindGroupLayout);
     }
-    // for (size_t i = 0; i < _gpuLayoutEntryObj->bindGroupLayoutEntries.size(); i++) {
-    //     const auto& entry = _gpuLayoutEntryObj->bindGroupLayoutEntries[i];
-    //     if ((entry.buffer.type != WGPUBufferBindingType_Undefined) +
-    //             (entry.sampler.type != WGPUSamplerBindingType_Undefined) +
-    //             (entry.texture.sampleType != WGPUTextureSampleType_Undefined) +
-    //             (entry.storageTexture.access != WGPUStorageTextureAccess_Undefined) !=
-    //         1) {
-    //         printf("******missing %d, %d, %d, %d, %d, %d\n", i, entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
-    //     }
-    // }
+
     _gpuLayoutEntryObj->bindGroupLayout = wgpuDeviceCreateBindGroupLayout(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
 }
 

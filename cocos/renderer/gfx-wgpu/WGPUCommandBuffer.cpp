@@ -149,6 +149,14 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
 
     _gpuCommandBufferObj->renderPassBegan = true;
 
+    _gpuCommandBufferObj->stateCache.viewport.left     = renderArea.x;
+    _gpuCommandBufferObj->stateCache.viewport.top      = renderArea.y;
+    _gpuCommandBufferObj->stateCache.viewport.width    = renderArea.width;
+    _gpuCommandBufferObj->stateCache.viewport.height   = renderArea.height;
+    _gpuCommandBufferObj->stateCache.viewport.minDepth = 0.0f;
+    _gpuCommandBufferObj->stateCache.viewport.maxDepth = 1.0f;
+    _gpuCommandBufferObj->stateCache.rect              = renderArea;
+
     auto rpBeginFunc = [](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
         gpuCommandBufferObj->wgpuCommandEncoder    = wgpuDeviceCreateCommandEncoder(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, nullptr);
         gpuCommandBufferObj->wgpuRenderPassEncoder = wgpuCommandEncoderBeginRenderPass(gpuCommandBufferObj->wgpuCommandEncoder, &gpuCommandBufferObj->renderPassDescriptor);
@@ -183,9 +191,6 @@ void CCWGPUCommandBuffer::bindPipelineState(PipelineState *pso) {
 }
 
 void CCWGPUCommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) {
-    if (!_gpuCommandBufferObj->stateCache.pipelineState)
-        return;
-
     auto &descriptorSets = _gpuCommandBufferObj->stateCache.descriptorSets;
     auto  iter           = std::find_if(descriptorSets.begin(), descriptorSets.end(), [set](const CCWGPUDescriptorSetObject &descriptorSet) {
         return descriptorSet.index == set;
@@ -370,12 +375,11 @@ void CCWGPUCommandBuffer::draw(const DrawInfo &info) {
     } else {
         auto *indexBuffer = static_cast<CCWGPUBuffer *>(ia->getIndexBuffer());
         bool  drawIndexed = indexBuffer && info.indexCount;
-
         if (drawIndexed) {
             drawFunc = [info](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
                 wgpuRenderPassEncoderDrawIndexed(gpuCommandBufferObj->wgpuRenderPassEncoder,
                                                  info.indexCount,
-                                                 info.instanceCount,
+                                                 info.instanceCount > 1 ? info.instanceCount : 1,
                                                  info.firstIndex,
                                                  info.vertexOffset,
                                                  info.firstInstance);
@@ -385,7 +389,7 @@ void CCWGPUCommandBuffer::draw(const DrawInfo &info) {
             drawFunc = [info](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
                 wgpuRenderPassEncoderDraw(gpuCommandBufferObj->wgpuRenderPassEncoder,
                                           info.vertexCount,
-                                          info.instanceCount,
+                                          info.instanceCount > 1 ? info.instanceCount : 1,
                                           info.firstVertex,
                                           info.firstInstance);
             };

@@ -26,6 +26,7 @@
 #pragma once
 
 #include <emscripten/bind.h>
+#include <set>
 #include "gfx-base/GFXDescriptorSetLayout.h"
 
 namespace cc {
@@ -46,7 +47,7 @@ public:
 
     void updateLayout(uint8_t binding, const CCWGPUBuffer* buffer = nullptr, const CCWGPUTexture* tex = nullptr, const CCWGPUSampler* sampler = nullptr);
 
-    void prepare();
+    void prepare(const std::set<uint8_t>& bindingInUse);
 
 protected:
     void doInit(const DescriptorSetLayoutInfo& info) override;

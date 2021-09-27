@@ -39,6 +39,9 @@ public:
 
     inline CCWGPUPipelineLayoutObject* gpuPipelineLayoutObject() { return _gpuPipelineLayoutObj; }
 
+    //bindgroup not ready yet so delay creation
+    void prepare();
+
 protected:
     void doInit(const PipelineLayoutInfo& info) override;
     void doDestroy() override;
