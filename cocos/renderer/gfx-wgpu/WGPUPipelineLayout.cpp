@@ -39,9 +39,12 @@ CCWGPUPipelineLayout::CCWGPUPipelineLayout() : wrapper<PipelineLayout>(val::obje
 
 void CCWGPUPipelineLayout::doInit(const PipelineLayoutInfo& info) {
     _gpuPipelineLayoutObj = CC_NEW(CCWGPUPipelineLayoutObject);
+}
+
+void CCWGPUPipelineLayout::prepare() {
     std::vector<WGPUBindGroupLayout> layouts;
-    for (size_t i = 0; i < info.setLayouts.size(); i++) {
-        auto* descriptorSetLayout = static_cast<CCWGPUDescriptorSetLayout*>(info.setLayouts[i]);
+    for (size_t i = 0; i < _setLayouts.size(); i++) {
+        auto* descriptorSetLayout = static_cast<CCWGPUDescriptorSetLayout*>(_setLayouts[i]);
         if (descriptorSetLayout->gpuLayoutEntryObject()->bindGroupLayout) {
             layouts.push_back(descriptorSetLayout->gpuLayoutEntryObject()->bindGroupLayout);
         }
@@ -53,6 +56,14 @@ void CCWGPUPipelineLayout::doInit(const PipelineLayoutInfo& info) {
         .bindGroupLayoutCount = layouts.size(),
         .bindGroupLayouts     = layouts.data(),
     };
+
+    // for (size_t i = 0; i < descriptor.bindGroupLayoutCount; i++) {
+    //     auto* descriptorSetLayout = static_cast<CCWGPUDescriptorSetLayout*>(info.setLayouts[i]);
+    //     for (size_t j = 0; j < descriptorSetLayout->gpuLayoutEntryObject()->bindGroupLayoutEntries.size(); j++) {
+    //         printf("set, idx, bd, buf, tex, spl, tv %d, %d, %d\n", i, j,
+    //                descriptorSetLayout->gpuLayoutEntryObject()->bindGroupLayoutEntries[j].binding);
+    //     }
+    // }
 
     _gpuPipelineLayoutObj->wgpuPipelineLayout = wgpuDeviceCreatePipelineLayout(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
 }

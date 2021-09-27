@@ -55,8 +55,10 @@ void CCWGPUBuffer::doInit(const BufferInfo &info) {
         .label            = nullptr,
         .usage            = toWGPUBufferUsage(info.usage),
         .size             = info.size,
-        .mappedAtCreation = hasFlag(info.memUsage, MemoryUsageBit::DEVICE),
+        .mappedAtCreation = false, //hasFlag(info.memUsage, MemoryUsageBit::DEVICE),
     };
+
+    _gpuBufferObject->mapped = descriptor.mappedAtCreation;
 
     if (info.memUsage == MemoryUsage::DEVICE) {
         descriptor.usage |= WGPUBufferUsage_CopyDst;
@@ -168,6 +170,14 @@ void CCWGPUBuffer::update(const void *buffer, uint size) {
         }
     }
     wgpuQueueWriteBuffer(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuQueue, _gpuBufferObject->wgpuBuffer, offset, data, size);
+    wgpuBufferUnmap(_gpuBufferObject->wgpuBuffer);
+}
+
+void CCWGPUBuffer::check() {
+    if (_gpuBufferObject->mapped) {
+        wgpuBufferUnmap(_gpuBufferObject->wgpuBuffer);
+        _gpuBufferObject->mapped = false;
+    }
 }
 
 CCWGPUBuffer *CCWGPUBuffer::defaultBuffer() {

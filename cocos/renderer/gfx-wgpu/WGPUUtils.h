@@ -68,9 +68,9 @@ static WGPUTextureDimension toWGPUTextureDimension(TextureType type) {
             return WGPUTextureDimension::WGPUTextureDimension_1D;
         case TextureType::TEX2D:
         case TextureType::TEX2D_ARRAY:
+        case TextureType::CUBE:
             return WGPUTextureDimension::WGPUTextureDimension_2D;
         case TextureType::TEX3D:
-        case TextureType::CUBE:
             return WGPUTextureDimension::WGPUTextureDimension_3D;
         default:
             CC_LOG_ERROR("unsupport type %d.", type);
@@ -85,9 +85,9 @@ static WGPUTextureViewDimension toWGPUTextureViewDimension(TextureType type) {
             return WGPUTextureViewDimension::WGPUTextureViewDimension_1D;
         case TextureType::TEX2D:
         case TextureType::TEX2D_ARRAY:
+        case TextureType::CUBE:
             return WGPUTextureViewDimension::WGPUTextureViewDimension_2D;
         case TextureType::TEX3D:
-        case TextureType::CUBE:
             return WGPUTextureViewDimension::WGPUTextureViewDimension_3D;
         default:
             CC_LOG_ERROR("unsupport type %d.", type);
