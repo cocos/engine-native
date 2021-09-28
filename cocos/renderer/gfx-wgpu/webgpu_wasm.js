@@ -4499,7 +4499,7 @@ function _wgpuRenderPassEncoderSetBlendConstant(passId, colorPtr) {
  pass["setBlendConstant"](color);
 }
 
-function _wgpuRenderPassEncoderSetIndexBuffer(passId, bufferId, format, offset_low, offset_high, size) {
+function _wgpuRenderPassEncoderSetIndexBufferWithFormat(passId, bufferId, format, offset_low, offset_high, size) {
  var offset = (assert(offset_high < 2097152), offset_high * 4294967296 + offset_low);
  var pass = WebGPU.mgrRenderPassEncoder.get(passId);
  var buffer = WebGPU.mgrBuffer.get(bufferId);
@@ -4695,7 +4695,7 @@ var asmLibraryArg = {
  "wgpuRenderPassEncoderRelease": _wgpuRenderPassEncoderRelease,
  "wgpuRenderPassEncoderSetBindGroup": _wgpuRenderPassEncoderSetBindGroup,
  "wgpuRenderPassEncoderSetBlendConstant": _wgpuRenderPassEncoderSetBlendConstant,
- "wgpuRenderPassEncoderSetIndexBuffer": _wgpuRenderPassEncoderSetIndexBuffer,
+ "wgpuRenderPassEncoderSetIndexBufferWithFormat": _wgpuRenderPassEncoderSetIndexBufferWithFormat,
  "wgpuRenderPassEncoderSetPipeline": _wgpuRenderPassEncoderSetPipeline,
  "wgpuRenderPassEncoderSetScissorRect": _wgpuRenderPassEncoderSetScissorRect,
  "wgpuRenderPassEncoderSetVertexBuffer": _wgpuRenderPassEncoderSetVertexBuffer,

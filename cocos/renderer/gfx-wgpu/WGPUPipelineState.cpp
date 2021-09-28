@@ -76,7 +76,7 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
         WGPUPrimitiveState primitiveState = {
             .nextInChain      = nullptr,
             .topology         = toWGPUPrimTopology(info.primitive),
-            .stripIndexFormat = stripTopology ? WGPUIndexFormat_Uint16 : WGPUIndexFormat_Undefined, //TODO_Zeqiang: ???
+            .stripIndexFormat = WGPUIndexFormat_Undefined, //TODO_Zeqiang: ???
             .frontFace        = info.rasterizerState.isFrontFaceCCW ? WGPUFrontFace::WGPUFrontFace_CCW : WGPUFrontFace::WGPUFrontFace_CW,
             .cullMode         = info.rasterizerState.cullMode == CullMode::FRONT ? WGPUCullMode::WGPUCullMode_Front
                                                                          : info.rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
