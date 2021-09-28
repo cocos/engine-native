@@ -83,6 +83,9 @@ void ShadowFlow::render(scene::Camera *camera) {
     for (uint l = 0; l < _validLights.size(); ++l) {
         const scene::Light *light       = _validLights[l];
         const bool          isMainLight = light->getType() == scene::LightType::DIRECTIONAL;
+        gfx::DescriptorSet *ds          = isMainLight ? _pipeline->getDescriptorSet()
+                                                      : _pipeline->getGlobalDSManager()->getOrCreateDescriptorSet(l - 1);
+
         if (!shadowFramebufferMap.count(light)) {
             initShadowFrameBuffer(_pipeline, light);
         }
@@ -91,7 +94,7 @@ void ShadowFlow::render(scene::Camera *camera) {
 
         for (auto *stage : _stages) {
             auto *shadowStage = dynamic_cast<ShadowStage *>(stage);
-            shadowStage->setUseData(isMainLight, l, light, shadowFrameBuffer);
+            shadowStage->setUsage(ds, light, shadowFrameBuffer);
             shadowStage->render(camera);
         }
     }
@@ -103,6 +106,9 @@ void ShadowFlow::clearShadowMap(scene::Camera *camera) {
     for (uint l = 0; l < _validLights.size(); ++l) {
         const scene::Light *light       = _validLights[l];
         const bool          isMainLight = light->getType() == scene::LightType::DIRECTIONAL;
+        gfx::DescriptorSet *ds          = isMainLight ? _pipeline->getDescriptorSet()
+                                                      : _pipeline->getGlobalDSManager()->getOrCreateDescriptorSet(l - 1);
+
         if (!shadowFramebufferMap.count(light)) {
             continue;
         }
@@ -110,7 +116,7 @@ void ShadowFlow::clearShadowMap(scene::Camera *camera) {
         auto *shadowFrameBuffer = shadowFramebufferMap.at(light);
         for (auto *stage : _stages) {
             auto *shadowStage = dynamic_cast<ShadowStage *>(stage);
-            shadowStage->setUseData(isMainLight, l, light, shadowFrameBuffer);
+            shadowStage->setUsage(ds, light, shadowFrameBuffer);
             shadowStage->clearFramebuffer(camera);
         }
     }

@@ -45,9 +45,8 @@ public:
     void activate(RenderPipeline *pipeline, RenderFlow *flow) override;
 
     inline void setFramebuffer(gfx::Framebuffer *framebuffer) { _framebuffer = framebuffer; }
-    inline void setUseData(bool isMainLight, uint32_t idx, const scene::Light *light, gfx::Framebuffer *framebuffer) {
-        _isMainLight = isMainLight;
-        _lightIdx    = idx;
+    inline void setUsage(gfx::DescriptorSet *ds, const scene::Light *light, gfx::Framebuffer *framebuffer) {
+        _descriptorSet = ds;
         _light       = light;
         _framebuffer = framebuffer;
     }
@@ -58,10 +57,9 @@ private:
     static RenderStageInfo initInfo;
 
     gfx::Rect           _renderArea;
-    bool                _isMainLight;
-    uint                _lightIdx    = 0;
-    const scene::Light *_light       = nullptr;
-    gfx::Framebuffer   *_framebuffer = nullptr;
+    gfx::DescriptorSet *_descriptorSet = nullptr;
+    const scene::Light *_light         = nullptr;
+    gfx::Framebuffer *  _framebuffer   = nullptr;
 
     ShadowMapBatchedQueue *_additiveShadowQueue = nullptr;
 };
