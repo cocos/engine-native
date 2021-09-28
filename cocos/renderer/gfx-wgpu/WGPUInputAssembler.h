@@ -39,6 +39,9 @@ public:
 
     inline CCWGPUInputAssemblerObject* gpuInputAssemblerObject() { return _gpuInputAssemblerObj; }
 
+    // ems export
+    void update(const DrawInfo& info);
+
 protected:
     void doInit(const InputAssemblerInfo& info) override;
     void doDestroy() override;

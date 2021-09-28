@@ -149,7 +149,39 @@ CommandBuffer* CCWGPUDevice::createCommandBuffer(const CommandBufferInfo& info, 
 }
 
 void CCWGPUDevice::copyBuffersToTexture(const uint8_t* const* buffers, Texture* dst, const BufferTextureCopy* regions, uint count) {
-}
+    Format   dstFormat = dst->getFormat();
+    uint32_t pxSize    = GFX_FORMAT_INFOS[static_cast<uint>(dstFormat)].size;
+    auto*    texture   = static_cast<CCWGPUTexture*>(dst);
+
+    for (size_t i = 0; i < count; i++) {
+        uint32_t bufferSize = pxSize * regions[i].texExtent.width * regions[i].texExtent.depth;
+
+        uint32_t              bytesPerRow   = ceil(pxSize * dst->getWidth() / 256.0) * 256;
+        WGPUTextureDataLayout texDataLayout = {
+            .offset       = 0,
+            .bytesPerRow  = pxSize * dst->getWidth(),
+            .rowsPerImage = dst->getHeight(),
+        };
+
+        WGPUExtent3D extent = {
+            .width              = regions[i].texExtent.width,
+            .height             = regions[i].texExtent.height,
+            .depthOrArrayLayers = regions[i].texExtent.depth,
+        };
+
+        WGPUImageCopyTexture imageCopyTexture = {
+            .texture  = texture->gpuTextureObject()->wgpuTexture,
+            .mipLevel = regions[i].texSubres.mipLevel,
+            .origin   = WGPUOrigin3D{
+                static_cast<uint32_t>(regions[i].texOffset.x),
+                static_cast<uint32_t>(regions[i].texOffset.y),
+                static_cast<uint32_t>(regions[i].texOffset.z)},
+            .aspect = WGPUTextureAspect_All,
+        };
+        wgpuQueueWriteTexture(_gpuDeviceObj->wgpuQueue, &imageCopyTexture, buffers[i], bufferSize, &texDataLayout, &extent);
+    }
+
+} // namespace gfx
 
 void CCWGPUDevice::copyTextureToBuffers(Texture* src, uint8_t* const* buffers, const BufferTextureCopy* region, uint count) {
 }

@@ -789,8 +789,6 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         //           /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         // .function("createTextureBarrier", select_overload<TextureBarrier*(const TextureBarrierInfo&)>(&Device::createTextureBarrier),
         //           /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("copyBuffersToTexture", select_overload<void(const BufferDataList &, Texture *, const BufferTextureCopyList &)>(&Device::copyBuffersToTexture),
-                  /* pure_virtual(), */ allow_raw_pointers())
         .function("getCommandBuffer", &Device::getCommandBuffer, allow_raw_pointers())
         .function("getQueue", &Device::getQueue, allow_raw_pointers())
         .function("acquire", select_overload<void(const vector<Swapchain *> &)>(&Device::acquire),
@@ -825,6 +823,8 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("createDescriptorSet", select_overload<DescriptorSet *(const DescriptorSetInfoInstance &)>(&CCWGPUDevice::createDescriptorSet),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("copyTextureToBuffers", select_overload<void(Texture *, const std::vector<String> &, const BufferTextureCopyList &)>(&CCWGPUDevice::copyTextureToBuffers),
+                  /* pure_virtual(), */ allow_raw_pointers())
+        .function("copyBuffersToTexture", select_overload<void(const emscripten::val &, Texture *, const BufferTextureCopyList &)>(&CCWGPUDevice::copyBuffersToTexture),
                   /* pure_virtual(), */ allow_raw_pointers());
 
     class_<cc::gfx::RenderPass>("RenderPass")
@@ -905,6 +905,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("initialize", &InputAssembler::initialize)
         .function("destroy", &InputAssembler::destroy);
     class_<CCWGPUInputAssembler, base<InputAssembler>>("CCWGPUInputAssembler")
+        .function("update", &CCWGPUInputAssembler::update)
         .constructor<>();
 
     class_<CommandBuffer>("CommandBuffer")

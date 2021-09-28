@@ -50,5 +50,9 @@ void CCWGPUInputAssembler::doInit(const InputAssemblerInfo& info) {
 void CCWGPUInputAssembler::doDestroy() {
 }
 
+void CCWGPUInputAssembler::update(const DrawInfo& info) {
+    _drawInfo = info;
+}
+
 } // namespace gfx
 } // namespace cc

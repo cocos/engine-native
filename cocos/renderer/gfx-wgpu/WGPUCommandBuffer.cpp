@@ -263,6 +263,13 @@ void CCWGPUCommandBuffer::bindStates() {
         return;
     }
 
+    // for (size_t i = 0; i < _gpuCommandBufferObj->stateCache.descriptorSets.size(); i++) {
+    //     for (size_t j = 0; j < _gpuCommandBufferObj->stateCache.descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindGroupEntries.size(); j++) {
+    //         const auto &entry = _gpuCommandBufferObj->stateCache.descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindGroupEntries[j];
+    //         printf("set, binding, b, t, s %d, %d, %p, %p, %p\n", i, entry.binding, entry.buffer, entry.textureView, entry.sampler);
+    //     }
+    // }
+
     if (pipelineState->getBindPoint() == PipelineBindPoint::GRAPHICS) {
         auto stateFunc = [](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
             auto *pipelineState = gpuCommandBufferObj->stateCache.pipelineState;

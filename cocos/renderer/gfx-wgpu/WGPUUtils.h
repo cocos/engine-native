@@ -33,7 +33,7 @@ static WGPUStoreOp toWGPUStoreOp(StoreOp op) {
 
 static WGPUTextureUsageFlags toWGPUTextureUsage(TextureUsage usage) {
     if (usage == TextureUsageBit::NONE)
-        return WGPUTextureUsage::WGPUTextureUsage_Sampled;
+        return WGPUTextureUsage::WGPUTextureUsage_Sampled | WGPUTextureUsage::WGPUTextureUsage_CopyDst;
 
     WGPUTextureUsageFlags res = WGPUTextureUsage::WGPUTextureUsage_None;
     if (hasFlag(usage, TextureUsageBit::TRANSFER_SRC)) {
@@ -57,6 +57,8 @@ static WGPUTextureUsageFlags toWGPUTextureUsage(TextureUsage usage) {
     if (hasFlag(usage, TextureUsageBit::DEPTH_STENCIL_ATTACHMENT)) {
         res |= WGPUTextureUsage::WGPUTextureUsage_RenderAttachment;
     }
+    // TODO_Zeqiang: unexpected texture copy in pipeline.
+    res |= WGPUTextureUsage::WGPUTextureUsage_CopyDst;
 
     return res;
 }

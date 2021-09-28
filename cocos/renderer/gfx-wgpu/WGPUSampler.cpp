@@ -49,7 +49,7 @@ CCWGPUSampler::CCWGPUSampler(const SamplerInfo& info) : wrapper<Sampler>(val::ob
         .mipmapFilter  = toWGPUFilterMode(info.mipFilter),
         .lodMinClamp   = 0.1f,
         .lodMaxClamp   = 1000.0f,
-        .compare       = toWGPUCompareFunction(info.cmpFunc),
+        .compare       = WGPUCompareFunction_Undefined, //toWGPUCompareFunction(info.cmpFunc),
         .maxAnisotropy = static_cast<uint16_t>(info.maxAnisotropy),
     };
 

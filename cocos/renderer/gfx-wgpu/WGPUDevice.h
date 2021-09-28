@@ -30,9 +30,11 @@
 #endif
 
 #include <emscripten/bind.h>
+#include <emscripten/val.h>
 #include "WGPUDef.h"
 #include "gfx-base/GFXDevice.h"
 
+#define EMSArraysToU8Vec(v, i) (emscripten::convertJSArrayToNumberVector<uint8_t>(v[i]))
 namespace cc {
 namespace gfx {
 
@@ -118,6 +120,17 @@ public:
     }
 
     Shader *createShader(const SPVShaderInfoInstance &spvInfo);
+
+    void copyBuffersToTexture(const emscripten::val &v, Texture *dst, const BufferTextureCopyList &regions) {
+        uint32_t                     len = v["length"].as<unsigned>();
+        std::vector<const uint8_t *> buffers;
+        for (size_t i = 0; i < len; i++) {
+            std::vector<uint8_t> buffer = EMSArraysToU8Vec(v, i);
+            buffers.push_back(buffer.data());
+        }
+
+        return copyBuffersToTexture(buffers.data(), dst, regions.data(), regions.size());
+    }
 
     void debug();
 

@@ -69,7 +69,6 @@ void CCWGPUTexture::doInit(const TextureInfo &info) {
         .aspect          = WGPUTextureAspect_All,
     };
     _gpuTextureObj->selfView = wgpuTextureCreateView(_gpuTextureObj->wgpuTexture, &texViewDesc);
-    flag                     = texViewDesc.aspect;
 } // namespace gfx
 
 void CCWGPUTexture::doInit(const TextureViewInfo &info) {
@@ -84,7 +83,6 @@ void CCWGPUTexture::doInit(const TextureViewInfo &info) {
         .arrayLayerCount = info.layerCount,
         .aspect          = textureAspectTrait(info.format),
     };
-    flag = descriptor.aspect;
 
     auto *      ccTexture           = static_cast<CCWGPUTexture *>(info.texture);
     WGPUTexture wgpuTexture         = ccTexture->gpuTextureObject()->wgpuTexture;
@@ -120,7 +118,6 @@ void CCWGPUTexture::doInit(const SwapchainTextureInfo &info) {
                 .arrayLayerCount = 1,
                 .aspect          = aspect,
             };
-            flag                     = texViewDesc.aspect;
             _gpuTextureObj->selfView = wgpuTextureCreateView(_gpuTextureObj->wgpuTexture, &texViewDesc);
         } else {
             _gpuTextureObj->selfView = wgpuSwapChainGetCurrentTextureView(swapchain->gpuSwapchainObject()->wgpuSwapChain);
@@ -171,10 +168,30 @@ void CCWGPUTexture::doResize(uint32_t width, uint32_t height, uint32_t size) {
         .aspect          = WGPUTextureAspect_All,
     };
     _gpuTextureObj->selfView = wgpuTextureCreateView(_gpuTextureObj->wgpuTexture, &texViewDesc);
-    flag                     = texViewDesc.aspect;
 }
 
-CCWGPUTexture *CCWGPUTexture::defaultTexture() {
+void CCWGPUTexture::update() {
+    WGPUTextureViewDescriptor texViewDesc = {
+        .nextInChain     = nullptr,
+        .label           = nullptr,
+        .format          = toWGPUTextureFormat(_info.format),
+        .dimension       = toWGPUTextureViewDimension(_info.type),
+        .baseMipLevel    = 0,
+        .mipLevelCount   = 1,
+        .baseArrayLayer  = 0,
+        .arrayLayerCount = 1,
+        .aspect          = WGPUTextureAspect_All,
+    };
+    if (_gpuTextureObj->selfView)
+        wgpuTextureViewRelease(_gpuTextureObj->selfView);
+    if (_gpuTextureObj->wgpuTextureView)
+        wgpuTextureViewRelease(_gpuTextureObj->wgpuTextureView);
+
+    _gpuTextureObj->selfView = _gpuTextureObj->wgpuTextureView = wgpuTextureCreateView(_gpuTextureObj->wgpuTexture, &texViewDesc);
+}
+
+CCWGPUTexture *
+CCWGPUTexture::defaultTexture() {
     if (!anoymous::defaultTexture) {
         TextureInfo info = {
             .type        = TextureType::TEX2D,

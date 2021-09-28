@@ -137,6 +137,7 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
             };
             colorTargetStates[i].blend     = &blendState[i];
             colorTargetStates[i].writeMask = toWGPUColorWriteMask(info.blendState.targets[i].blendColorMask);
+            printf("bs sec, dst: %d, %dn", info.blendState.targets[i].blendSrc, info.blendState.targets[i].blendDst);
         }
 
         WGPUFragmentState fragmentState = {
