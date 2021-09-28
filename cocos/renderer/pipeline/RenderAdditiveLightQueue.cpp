@@ -232,6 +232,7 @@ void RenderAdditiveLightQueue::updateUBOs(const scene::Camera *camera, gfx::Comm
     const auto  validLightCount = _validLights.size();
     auto *const sceneData       = _pipeline->getPipelineSceneData();
     auto *const sharedData      = sceneData->getSharedData();
+    const auto *shadowInfo      = sharedData->shadow;
     size_t      offset          = 0;
     if (validLightCount > _lightBufferCount) {
         _firstLightBufferView->destroy();
@@ -256,7 +257,7 @@ void RenderAdditiveLightQueue::updateUBOs(const scene::Camera *camera, gfx::Comm
 
         index                     = offset + UBOForwardLight::LIGHT_SIZE_RANGE_ANGLE_OFFSET;
         _lightBufferData[index++] = isSpotLight ? spotLight->getSize() : sphereLight->getSize();
-        _lightBufferData[index]   = isSpotLight ? spotLight->getRange() : sphereLight->getRange();
+        _lightBufferData[index] = isSpotLight ? spotLight->getRange() : sphereLight->getRange();
 
         index             = offset + UBOForwardLight::LIGHT_COLOR_OFFSET;
         const auto &color = light->getColor();
@@ -282,10 +283,12 @@ void RenderAdditiveLightQueue::updateUBOs(const scene::Camera *camera, gfx::Comm
             case scene::LightType::SPHERE:
                 _lightBufferData[offset + UBOForwardLight::LIGHT_POS_OFFSET + 3]              = 0;
                 _lightBufferData[offset + UBOForwardLight::LIGHT_SIZE_RANGE_ANGLE_OFFSET + 2] = 0;
+                _lightBufferData[offset + UBOForwardLight::LIGHT_SIZE_RANGE_ANGLE_OFFSET + 3] = (shadowInfo->enabled && shadowInfo->shadowType == scene::ShadowType::SHADOWMAP) ? 1.0 : 0.0;
                 break;
             case scene::LightType::SPOT: {
                 _lightBufferData[offset + UBOForwardLight::LIGHT_POS_OFFSET + 3]              = 1.0F;
                 _lightBufferData[offset + UBOForwardLight::LIGHT_SIZE_RANGE_ANGLE_OFFSET + 2] = spotLight->getSpotAngle();
+                _lightBufferData[offset + UBOForwardLight::LIGHT_SIZE_RANGE_ANGLE_OFFSET + 3] = (shadowInfo->enabled && shadowInfo->shadowType == scene::ShadowType::SHADOWMAP) ? 1.0 : 0.0;
 
                 index                     = offset + UBOForwardLight::LIGHT_DIR_OFFSET;
                 const auto &direction     = spotLight->getDirection();
