@@ -45,8 +45,8 @@ public:
     void activate(RenderPipeline *pipeline, RenderFlow *flow) override;
 
     inline void setFramebuffer(gfx::Framebuffer *framebuffer) { _framebuffer = framebuffer; }
-    inline void setUsage(gfx::DescriptorSet *ds, const scene::Light *light, gfx::Framebuffer *framebuffer) {
-        _descriptorSet = ds;
+    inline void setUsage(gfx::DescriptorSet *globalDS, const scene::Light *light, gfx::Framebuffer *framebuffer) {
+        _globalDS    = globalDS;
         _light       = light;
         _framebuffer = framebuffer;
     }
@@ -57,7 +57,7 @@ private:
     static RenderStageInfo initInfo;
 
     gfx::Rect           _renderArea;
-    gfx::DescriptorSet *_descriptorSet = nullptr;
+    gfx::DescriptorSet *_globalDS      = nullptr;
     const scene::Light *_light         = nullptr;
     gfx::Framebuffer *  _framebuffer   = nullptr;
 
