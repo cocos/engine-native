@@ -113,7 +113,11 @@ void CCWGPUDescriptorSetLayout::updateLayout(uint8_t binding, const CCWGPUBuffer
         if (buffer) {
         }
         if (sampler) {
-            (*iter).sampler.type = WGPUSamplerBindingType::WGPUSamplerBindingType_Comparison;
+            const SamplerInfo& info = sampler->getInfo();
+            if (info.minFilter != Filter::LINEAR && info.magFilter != Filter::LINEAR && info.mipFilter != Filter::LINEAR)
+                (*iter).sampler.type = WGPUSamplerBindingType::WGPUSamplerBindingType_NonFiltering;
+            else
+                (*iter).sampler.type = WGPUSamplerBindingType::WGPUSamplerBindingType_Filtering;
         }
         if (tex) {
             if (tex->getInfo().usage == TextureUsageBit::STORAGE) {

@@ -45,7 +45,7 @@ public:
 
     CCWGPUSwapchain* swapchain();
 
-    uint flag = 0;
+    void update();
 
 protected:
     void doInit(const TextureInfo& info) override;

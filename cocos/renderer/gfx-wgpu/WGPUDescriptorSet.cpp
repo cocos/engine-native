@@ -139,6 +139,7 @@ void CCWGPUDescriptorSet::update() {
                 bindGroupEntry.offset  = buffer->getOffset();
                 bindGroupEntry.size    = buffer->getSize();
                 dsLayout->updateLayout(bindGroupEntry.binding, buffer);
+                printf("offset %d\n", bindGroupEntry.offset);
             }
 
         } else if (binding.descriptorType == DescriptorType::SAMPLER_TEXTURE) {
