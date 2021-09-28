@@ -301,11 +301,11 @@ void CCWGPUCommandBuffer::bindStates() {
             }
 
             const auto *indexBuffer = static_cast<CCWGPUBuffer *>(ia->getIndexBuffer());
-            wgpuRenderPassEncoderSetIndexBuffer(gpuCommandBufferObj->wgpuRenderPassEncoder,
-                                                indexBuffer->gpuBufferObject()->wgpuBuffer,
-                                                indexBuffer->getStride() == 2 ? WGPUIndexFormat::WGPUIndexFormat_Uint16 : WGPUIndexFormat_Uint32,
-                                                indexBuffer->getOffset(),
-                                                indexBuffer->getSize());
+            wgpuRenderPassEncoderSetIndexBufferWithFormat(gpuCommandBufferObj->wgpuRenderPassEncoder,
+                                                          indexBuffer->gpuBufferObject()->wgpuBuffer,
+                                                          indexBuffer->getStride() == 2 ? WGPUIndexFormat::WGPUIndexFormat_Uint16 : WGPUIndexFormat_Uint32,
+                                                          indexBuffer->getOffset(),
+                                                          indexBuffer->getSize());
 
             WGPUColor blendColor = toWGPUColor(gpuCommandBufferObj->stateCache.blendConstants);
             wgpuRenderPassEncoderSetBlendConstant(gpuCommandBufferObj->wgpuRenderPassEncoder, &blendColor);
