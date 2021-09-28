@@ -65,12 +65,8 @@ static JsbBridge* instance = nil;
     return self;
 }
 
--(bool)setCallback:(ICallback)cb{
-    if(!callback){
-        callback = cb;
-        return true;
-    }
-    return false;
+-(void)setCallback:(ICallback)cb{
+    callback = cb;
 }
 
 -(bool)callByScript:(NSString*)arg0 arg1:(NSString *)arg1{

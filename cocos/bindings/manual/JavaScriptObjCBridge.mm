@@ -97,12 +97,12 @@ class ScriptNativeBridge{
 public:
     void callByNative(const std::string& arg0, const std::string& arg1);
     inline void setCallback(const JsCallback& cb){
-        callback = cb;
+        _callback = cb;
     }
     static ScriptNativeBridge* bridgeCxxInstance;
     se::Value jsCb;
 private:
-    JsCallback callback{nullptr}; // NOLINT(readability-identifier-naming)
+    JsCallback _callback{nullptr}; // NOLINT(readability-identifier-naming)
 };
 ScriptNativeBridge* ScriptNativeBridge::bridgeCxxInstance{nullptr};
 bool JavaScriptObjCBridge::CallInfo::execute(const se::ValueArray &argv, se::Value &rval) {
@@ -289,7 +289,7 @@ bool JavaScriptObjCBridge::CallInfo::execute(const se::ValueArray &argv, se::Val
 
 
 void ScriptNativeBridge::callByNative(const std::string& arg0, const std::string& arg1){
-    callback(arg0, arg1);
+    _callback(arg0, arg1);
 }
 
 se::Class *__jsb_JavaScriptObjCBridge_class = nullptr;
@@ -380,7 +380,7 @@ static bool ScriptNativeBridge_sendToNative(se::State &s) { //NOLINT
         ok = seval_to_std_string(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "Converting first argument failed!");
         std::string arg1;
-        if (argc >= 2) {
+        if (argc == 2) {
             ok = seval_to_std_string(args[1], &arg1);
             SE_PRECONDITION2(ok, false, "Converting second argument failed!");
         }

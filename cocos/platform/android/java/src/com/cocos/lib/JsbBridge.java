@@ -51,7 +51,7 @@ public class JsbBridge {
      * Java dispatch Js event, use native c++ code
      * @param arg0 input values
      */
-    private static native void sendToScriptNative(String arg0, String arg1);
+    private static native void nativeSendToScript(String arg0, String arg1);
     public static void sendToScript(String arg0, String arg1){
         sendToScriptNative(arg0, arg1);
     }

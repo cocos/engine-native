@@ -181,12 +181,12 @@ class ScriptNativeBridge{
 public:
     void callByNative(const std::string& arg0, const std::string& arg1);
     inline void setCallback(const JsCallback& cb){
-        callback = cb;
+        _callback = cb;
     }
     static ScriptNativeBridge* bridgeCxxInstance;
     se::Value jsCb;
 private:
-    JsCallback callback{nullptr}; // NOLINT(readability-identifier-naming)
+    JsCallback _callback{nullptr}; // NOLINT(readability-identifier-naming)
 };
 extern "C" {
 
@@ -207,7 +207,7 @@ JNIEXPORT jint JNICALL JNI_JSJAVABRIDGE(evalString)(JNIEnv *env, jclass /*cls*/,
     return 1;
 }
 JNIEXPORT void JNICALL
-Java_com_cocos_lib_JsbBridge_sendToScriptNative(JNIEnv *env, jclass clazz, jstring arg0, jstring arg1) { // NOLINT
+Java_com_cocos_lib_JsbBridge_nativeSendToScript(JNIEnv *env, jclass clazz, jstring arg0, jstring arg1) { // NOLINT
     std::string cArg0{cc::JniHelper::jstring2string(arg0)};
     std::string cArg1{cc::JniHelper::jstring2string(arg1)};
 
@@ -658,7 +658,7 @@ static bool ScriptNativeBridge_sendToNative(se::State &s) { //NOLINT(readability
         ok = seval_to_std_string(args[0], &arg0);
         SE_PRECONDITION2(ok, false, "Converting arg0 failed!");
         std::string arg1;
-        if (argc >= 2) {
+        if (argc == 2) {
             ok = seval_to_std_string(args[1], &arg1);
             SE_PRECONDITION2(ok, false, "Converting arg1 failed!");
         }
@@ -722,7 +722,7 @@ void callPlatformStringMethod(const std::string &arg0, const std::string &arg1) 
 }
 
 void ScriptNativeBridge::callByNative(const std::string& arg0, const std::string& arg1){
-    callback(arg0, arg1);
+    _callback(arg0, arg1);
 }
 
 
