@@ -61,7 +61,6 @@ static JsbBridge* instance = nil;
 
 -(id)init{
     self = [super init];
-    [callback new];
     return self;
 }
 
