@@ -30,6 +30,8 @@
 #include "PipelineSceneData.h"
 #include "PipelineUBO.h"
 #include "base/CoreStd.h"
+#include "frame-graph/FrameGraph.h"
+#include "frame-graph/Handle.h"
 #include "helper/DefineMap.h"
 #include "scene/Camera.h"
 #include "scene/Model.h"
@@ -52,7 +54,10 @@ struct CC_DLL RenderPipelineInfo {
 
 class CC_DLL RenderPipeline : public Object {
 public:
-    static RenderPipeline *getInstance();
+    static RenderPipeline *         getInstance();
+    static framegraph::StringHandle fgStrHandleOutDepthTexture;
+    static framegraph::StringHandle fgStrHandleOutColorTexture;
+    static framegraph::StringHandle fgStrHandlePostprocessPass;
 
     RenderPipeline();
     ~RenderPipeline() override;
@@ -76,19 +81,33 @@ public:
     inline PipelineSceneData *                     getPipelineSceneData() const { return _pipelineSceneData; }
     inline const gfx::CommandBufferList &          getCommandBuffers() const { return _commandBuffers; }
     inline PipelineUBO *                           getPipelineUBO() const { return _pipelineUBO; }
-    inline const String &                          getConstantMacros() { return _constantMacros; }
-    inline gfx::Device *                           getDevice() { return _device; }
+    inline const String &                          getConstantMacros() const { return _constantMacros; }
+    inline gfx::Device *                           getDevice() const { return _device; }
     RenderStage *                                  getRenderstageByName(const String &name) const;
-    inline bool                                    useCluster() const { return _clusterCulling; }
-    inline void                                    enableCluster() { _clusterCulling = true; }
-    inline void                                    disableCluster() { _clusterCulling = false; }
-    inline scene::Model *                          getProfiler() const { return _profiler; }
-    inline void                                    setProfiler(scene::Model *value) { _profiler = value; }
+
+    gfx::Rect               getRenderArea(scene::Camera *camera, bool onScreen);
+    void                    genQuadVertexData(const gfx::Rect &renderArea, float *data);
+    uint                    getWidth() const { return _width; }
+    uint                    getHeight() const { return _height; }
+    framegraph::FrameGraph &getFrameGraph() { return _fg; }
+    gfx::Color              getClearcolor(scene::Camera *camera) const;
+    gfx::InputAssembler *   getIAByRenderArea(const gfx::Rect &rect);
+    void                    updateQuadVertexData(const gfx::Rect &renderArea, gfx::Buffer *buffer);
+    void                    ensureEnoughSize(const vector<scene::Camera *> &cameras);
+    bool                    createQuadInputAssembler(gfx::Buffer *quadIB, gfx::Buffer **quadVB, gfx::InputAssembler **quadIA);
+
+    inline scene::Model *getProfiler() const { return _profiler; }
+    inline void          setProfiler(scene::Model *value) { _profiler = value; }
+
+    inline bool useCluster() const { return _clusterCulling; }
+    inline void enableCluster() { _clusterCulling = true; }
+    inline void disableCluster() { _clusterCulling = false; }
 
 protected:
     static RenderPipeline *instance;
 
     void generateConstantMacros();
+    void destroyQuadInputAssembler();
 
     gfx::CommandBufferList           _commandBuffers;
     RenderFlowList                   _flows;
@@ -106,6 +125,16 @@ protected:
     // has not initBuiltinRes,
     // create temporary default Texture to binding sampler2d
     gfx::Texture *_defaultTexture = nullptr;
+
+    uint                                            _width  = 0;
+    uint                                            _height = 0;
+    gfx::Buffer *                                   _quadIB = nullptr;
+    std::vector<gfx::Buffer *>                      _quadVB;
+    std::unordered_map<uint, gfx::InputAssembler *> _quadIA;
+
+    framegraph::FrameGraph                  _fg;
+    map<gfx::ClearFlags, gfx::RenderPass *> _renderPasses;
+    gfx::Rect                               _lastUsedRenderArea;
 
     // use cluster culling or not
     bool _clusterCulling{false};
