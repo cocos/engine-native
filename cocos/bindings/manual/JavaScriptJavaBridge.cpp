@@ -627,38 +627,26 @@ static bool ScriptNativeBridge_setCallback(se::State &s){ //NOLINT(readability-i
     auto *cobj = static_cast<ScriptNativeBridge *>(s.nativeThisObject());
     assert(cobj == ScriptNativeBridge::bridgeCxxInstance);
     const auto &args = s.args();
-    size_t argc = args.size();
-    if (argc >= 1) {
-        se::Value jsFunc = args[0];
-        cobj->jsCb = jsFunc;
-        se::Value jsTarget = argc > 1 ? args[1] : se::Value::Undefined;
-        if(jsFunc.isNullOrUndefined())
-        {
-            cobj->setCallback(nullptr);
-        }
-        else{
-            assert(jsFunc.isObject() && jsFunc.toObject()->isFunction());
-            jsFunc.toObject()->root();
-            if(jsTarget.isObject()) {
-                jsTarget.toObject()->root();
-            }
-            cobj->setCallback([jsFunc, jsTarget](const std::string& arg0, const std::string& arg1){
-                se::ScriptEngine::getInstance()->clearException();
-                se::AutoHandleScope hs;
-
-                se::ValueArray args;
-                args.push_back(se::Value(arg0));
-                args.push_back(se::Value(arg1));
-
-                se::Object* target = jsTarget.isObject() ? jsTarget.toObject() : nullptr;
-                jsFunc.toObject()->call(args, target);
-            });
-        }
-        return true;
+    se::Value jsFunc = args[0];
+    cobj->jsCb = jsFunc;
+    if(jsFunc.isNullOrUndefined())
+    {
+        cobj->setCallback(nullptr);
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting >=1", static_cast<uint32_t>(argc));
-    return false;
-
+    else{
+        assert(jsFunc.isObject() && jsFunc.toObject()->isFunction());
+        s.thisObject()->attachObject(jsFunc.toObject());
+        cobj->setCallback([jsFunc](const std::string& arg0, const std::string& arg1){
+            se::AutoHandleScope hs;
+            se::ValueArray args;
+            args.push_back(se::Value(arg0));
+            if(!arg1.empty()) {
+                args.push_back(se::Value(arg1));
+            }
+            jsFunc.toObject()->call(args, nullptr);
+        });
+    }
+    return true;
 }SE_BIND_PROP_SET(ScriptNativeBridge_setCallback)
 
 static bool ScriptNativeBridge_sendToNative(se::State &s) { //NOLINT(readability-identifier-naming)

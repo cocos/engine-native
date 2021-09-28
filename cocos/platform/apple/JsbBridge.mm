@@ -75,7 +75,6 @@ static JsbBridge* instance = nil;
 
 -(bool)callByScript:(NSString*)arg0 arg1:(NSString *)arg1{
     if(callback != nil){
-        NSLog(@"Here is a callback");
         callback(arg0, arg1);
         return true;
     }
