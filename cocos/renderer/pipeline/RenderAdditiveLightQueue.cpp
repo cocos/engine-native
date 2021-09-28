@@ -257,7 +257,7 @@ void RenderAdditiveLightQueue::updateUBOs(const scene::Camera *camera, gfx::Comm
 
         index                     = offset + UBOForwardLight::LIGHT_SIZE_RANGE_ANGLE_OFFSET;
         _lightBufferData[index++] = isSpotLight ? spotLight->getSize() : sphereLight->getSize();
-        _lightBufferData[index] = isSpotLight ? spotLight->getRange() : sphereLight->getRange();
+        _lightBufferData[index]   = isSpotLight ? spotLight->getRange() : sphereLight->getRange();
 
         index             = offset + UBOForwardLight::LIGHT_COLOR_OFFSET;
         const auto &color = light->getColor();
