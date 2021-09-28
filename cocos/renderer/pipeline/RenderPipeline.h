@@ -80,6 +80,8 @@ public:
     inline gfx::Device *                           getDevice() { return _device; }
     RenderStage *                                  getRenderstageByName(const String &name) const;
     inline bool                                    useCluster() const { return _clusterCulling; }
+    inline void                                    enableCluster() { _clusterCulling = true; }
+    inline void                                    disableCluster() { _clusterCulling = false; }
     inline scene::Model *                          getProfiler() const { return _profiler; }
     inline void                                    setProfiler(scene::Model *value) { _profiler = value; }
 

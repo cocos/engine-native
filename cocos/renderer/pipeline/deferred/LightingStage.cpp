@@ -320,7 +320,8 @@ void LightingStage::destroy() {
 }
 
 void LightingStage::fgLightingPass(scene::Camera *camera) {
-    // cluster update lights and ubo otherwhere
+    // lights info and ubo are updated in ClusterLightCulling::update()
+    // if using cluster lighting.
     if (!_pipeline->useCluster()) {
         // lighting info, ubo
         gatherLights(camera);

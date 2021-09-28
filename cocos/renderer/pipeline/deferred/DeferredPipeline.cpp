@@ -75,9 +75,9 @@ bool DeferredPipeline::initialize(const RenderPipelineInfo &info) {
         mainFlow->initialize(MainFlow::getInitializeInfo());
         _flows.emplace_back(mainFlow);
     }
-    // Here can take editor config into account in the future
-    if (_device->hasFeature(gfx::Feature::COMPUTE_SHADER)) {
-        _clusterCulling = true;
+    // if don't support compute, disable cluster
+    if (!_device->hasFeature(gfx::Feature::COMPUTE_SHADER)) {
+        _clusterCulling = false;
     }
     return true;
 }
