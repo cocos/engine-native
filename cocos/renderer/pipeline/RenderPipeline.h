@@ -81,8 +81,8 @@ public:
     inline PipelineSceneData *                     getPipelineSceneData() const { return _pipelineSceneData; }
     inline const gfx::CommandBufferList &          getCommandBuffers() const { return _commandBuffers; }
     inline PipelineUBO *                           getPipelineUBO() const { return _pipelineUBO; }
-    inline const String &                          getConstantMacros() { return _constantMacros; }
-    inline gfx::Device *                           getDevice() { return _device; }
+    inline const String &                          getConstantMacros() const { return _constantMacros; }
+    inline gfx::Device *                           getDevice() const { return _device; }
     RenderStage *                                  getRenderstageByName(const String &name) const;
 
     gfx::Rect                                      getRenderArea(scene::Camera *camera, bool onScreen);
@@ -90,7 +90,7 @@ public:
     uint                                           getWidth() const { return _width; }
     uint                                           getHeight() const { return _height; }
     framegraph::FrameGraph &                       getFrameGraph() { return _fg; }
-    gfx::Color                                     getClearcolor(scene::Camera *camera);
+    gfx::Color                                     getClearcolor(scene::Camera *camera) const;
     gfx::InputAssembler *                          getIAByRenderArea(const gfx::Rect &rect);
     void                                           updateQuadVertexData(const gfx::Rect &renderArea, gfx::Buffer *buffer);
     void                                           ensureEnoughSize(const vector<scene::Camera *> &cameras);

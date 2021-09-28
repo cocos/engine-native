@@ -139,7 +139,7 @@ void RenderPipeline::destroy() {
     InstancedBuffer::destroyInstancedBuffer();
 }
 
-gfx::Color RenderPipeline::getClearcolor(scene::Camera *camera) {
+gfx::Color RenderPipeline::getClearcolor(scene::Camera *camera) const {
     auto *const sceneData  = getPipelineSceneData();
     auto *const sharedData = sceneData->getSharedData();
     gfx::Color  clearColor{0.0, 0.0, 0.0, 1.0F};
@@ -168,8 +168,10 @@ void RenderPipeline::updateQuadVertexData(const gfx::Rect &renderArea, gfx::Buff
 
 gfx::InputAssembler *RenderPipeline::getIAByRenderArea(const gfx::Rect &rect) {
     uint value = rect.x + rect.y + rect.height + rect.width + rect.width * rect.height;
-    if (_quadIA.find(value) != _quadIA.end()) {
-        return _quadIA[value];
+
+    const auto iter = _quadIA.find(value);
+    if (iter != _quadIA.end()) {
+        return iter->second;
     }
 
     gfx::Buffer *        vb = nullptr;

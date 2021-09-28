@@ -66,7 +66,7 @@ bool ForwardPipeline::initialize(const RenderPipelineInfo &info) {
 }
 
 bool ForwardPipeline::activate(gfx::Swapchain *swapchain) {
-    _macros.setValue("CC_PIPELINE_TYPE", static_cast<float>(0.0));
+    _macros.setValue("CC_PIPELINE_TYPE", 0.F);
 
     if (!RenderPipeline::activate(swapchain)) {
         CC_LOG_ERROR("RenderPipeline active failed.");
@@ -141,7 +141,7 @@ bool ForwardPipeline::activeRenderer(gfx::Swapchain *swapchain) {
         return false;
     }
 
-    unsigned int ibData[] = {0, 1, 2, 1, 3, 2};
+    uint ibData[] = {0, 1, 2, 1, 3, 2};
     _quadIB->update(ibData, sizeof(ibData));
 
     _width  = swapchain->getWidth();
