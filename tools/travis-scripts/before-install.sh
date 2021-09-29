@@ -2,13 +2,8 @@
 
 set -e
 
-if [[ "$DEBUG_MODE" == "true" ]]; then
-  echo "skip before install"
-  exit 0
-fi
-
 # If not a pull request, setup for Linux only
-if [[ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
   echo "Should run when TRAVIS_PULL_REQUEST == false"
   echo "Commit msg: $TRAVIS_COMMIT_MESSAGE"
   echo "Stop process for TRAVIS_OS_NAME:$TRAVIS_OS_NAME && TRAVIS_PULL_REQUEST:$TRAVIS_PULL_REQUEST"
