@@ -374,7 +374,7 @@ static bool ScriptNativeBridge_setCallback(se::State &s){ //NOLINT(readability-i
 static bool ScriptNativeBridge_sendToNative(se::State &s) { //NOLINT
     const auto &args = s.args();
     int argc = (int)args.size();
-    if (argc >= 1) {
+    if (argc >= 1 && argc < 3) {
         bool        ok = false;
         std::string arg0;
         ok = seval_to_std_string(args[0], &arg0);
@@ -388,7 +388,7 @@ static bool ScriptNativeBridge_sendToNative(se::State &s) { //NOLINT
         SE_PRECONDITION2(ok, false, "call platform event failed!");
         return ok;
     }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting at least %d", argc, 1);
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting at least %d and less than %d", argc, 1, 3);
     return false;
 }
 SE_BIND_FUNC(ScriptNativeBridge_sendToNative)
