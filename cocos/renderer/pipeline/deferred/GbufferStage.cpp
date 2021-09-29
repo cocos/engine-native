@@ -179,12 +179,19 @@ void GbufferStage::render(scene::Camera *camera) {
             pipeline->getWidth(),
             pipeline->getHeight(),
         };
-        for (int i = 0; i < DeferredPipeline::GBUFFER_COUNT; ++i) {
-            if (i % 3) { // positions & normals need more precision
+        for (int i = 0; i < DeferredPipeline::GBUFFER_COUNT - 1; ++i) {
+            if (i != 0) { // positions & normals need more precision
                 data.gbuffer[i] = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleGbufferTexture[i], gbufferInfoFloat);
             } else {
                 data.gbuffer[i] = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleGbufferTexture[i], gbufferInfo);
             }
+        }
+
+        if (subpassEnabled) {
+            // when subpass enabled, the color result (gles2/gles3) will write to gbuffer[3] and the blit to color texture, so the format should be RGBA16F
+            data.gbuffer[3] = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleGbufferTexture[i], gbufferInfoFloat);
+        } else {
+            data.gbuffer[3] = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleGbufferTexture[i], gbufferInfo);
         }
 
         gfx::Color clearColor{0.0, 0.0, 0.0, 0.0};
