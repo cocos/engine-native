@@ -361,14 +361,11 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         if (_pipeline->getClusterEnabled()) {
             // read cluster and light info
             data.lightBuffer = framegraph::BufferHandle(builder.readFromBlackboard(fgStrHandleClusterLightBuffer));
-            data.lightBuffer = builder.read(data.lightBuffer);
-            builder.writeToBlackboard(fgStrHandleClusterLightBuffer, data.lightBuffer);
+            builder.read(data.lightBuffer);
             data.lightIndexBuffer = framegraph::BufferHandle(builder.readFromBlackboard(fgStrHandleClusterLightIndexBuffer));
-            data.lightIndexBuffer = builder.read(data.lightIndexBuffer);
-            builder.writeToBlackboard(fgStrHandleClusterLightIndexBuffer, data.lightIndexBuffer);
+            builder.read(data.lightIndexBuffer);
             data.lightGridBuffer = framegraph::BufferHandle(builder.readFromBlackboard(fgStrHandleClusterLightGridBuffer));
-            data.lightGridBuffer = builder.read(data.lightGridBuffer);
-            builder.writeToBlackboard(fgStrHandleClusterLightGridBuffer, data.lightGridBuffer);
+            builder.read(data.lightGridBuffer);
         }
 
         // write to lighting output
