@@ -27,12 +27,12 @@
 #include "InstancedBuffer.h"
 #include "PipelineStateManager.h"
 #include "RenderFlow.h"
-#include "helper/Utils.h"
 #include "gfx-base/GFXCommandBuffer.h"
 #include "gfx-base/GFXDescriptorSet.h"
 #include "gfx-base/GFXDescriptorSetLayout.h"
 #include "gfx-base/GFXDevice.h"
 #include "gfx-base/GFXTexture.h"
+#include "helper/Utils.h"
 
 namespace cc {
 namespace pipeline {
@@ -50,8 +50,6 @@ RenderPipeline *RenderPipeline::getInstance() {
 RenderPipeline::RenderPipeline()
 : _device(gfx::Device::getInstance()) {
     RenderPipeline::instance = this;
-
-    generateConstantMacros();
 
     _globalDSManager   = new GlobalDSManager();
     _pipelineUBO       = new PipelineUBO();
@@ -73,6 +71,11 @@ bool RenderPipeline::activate(gfx::Swapchain * /*swapchain*/) {
     _descriptorSet = _globalDSManager->getGlobalDescriptorSet();
     _pipelineUBO->activate(_device, this);
     _pipelineSceneData->activate(_device, this);
+
+    // generate macros here rather than construct func because _clusterEnabled
+    // switch may be changed in root.ts setRenderPipeline() function which is after
+    // pipeline construct.
+    generateConstantMacros();
 
     for (auto *const flow : _flows) {
         flow->activate(this);
@@ -273,17 +276,17 @@ void RenderPipeline::generateConstantMacros() {
     _constantMacros = StringUtil::format(
         R"(
 #define CC_DEVICE_SUPPORT_FLOAT_TEXTURE %d
-#define CC_DEVICE_SUPPORT_COMPUTE_SHADER %d
+#define CC_ENABLE_CLUSTERED_LIGHT_CULLING %d
 #define CC_DEVICE_MAX_VERTEX_UNIFORM_VECTORS %d
 #define CC_DEVICE_MAX_FRAGMENT_UNIFORM_VECTORS %d
         )",
         _device->hasFeature(gfx::Feature::TEXTURE_FLOAT) ? 1 : 0,
-        _device->hasFeature(gfx::Feature::COMPUTE_SHADER) ? 1 : 0,
+        _clusterEnabled ? 1 : 0,
         _device->getCapabilities().maxVertexUniformVectors,
         _device->getCapabilities().maxFragmentUniformVectors);
 }
 
-RenderStage * RenderPipeline::getRenderstageByName(const String &name) const {
+RenderStage *RenderPipeline::getRenderstageByName(const String &name) const {
     for (auto *flow : _flows) {
         auto *val = flow->getRenderstageByName(name);
         if (val) {

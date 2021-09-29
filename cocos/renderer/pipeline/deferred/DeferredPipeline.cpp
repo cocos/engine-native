@@ -71,10 +71,6 @@ bool DeferredPipeline::initialize(const RenderPipelineInfo &info) {
         mainFlow->initialize(MainFlow::getInitializeInfo());
         _flows.emplace_back(mainFlow);
     }
-    // if don't support compute, disable cluster
-    if (!_device->hasFeature(gfx::Feature::COMPUTE_SHADER)) {
-        _clusterCulling = false;
-    }
     return true;
 }
 
@@ -105,7 +101,7 @@ void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
 
         _fg.reset();
 
-        if (useCluster()) {
+        if (_clusterEnabled) {
             _clusterComp->clusterLightCulling(camera);
         }
 
@@ -169,7 +165,7 @@ bool DeferredPipeline::activeRenderer(gfx::Swapchain *swapchain) {
     _width  = swapchain->getWidth();
     _height = swapchain->getHeight();
 
-    if (useCluster()) {
+    if (_clusterEnabled) {
         // cluster component resource
         _clusterComp = new ClusterLightCulling(this);
         _clusterComp->initialize(this->getDevice());

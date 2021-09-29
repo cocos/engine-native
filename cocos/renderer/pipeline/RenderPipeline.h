@@ -99,9 +99,8 @@ public:
     inline scene::Model *getProfiler() const { return _profiler; }
     inline void          setProfiler(scene::Model *value) { _profiler = value; }
 
-    inline bool useCluster() const { return _clusterCulling; }
-    inline void enableCluster() { _clusterCulling = true; }
-    inline void disableCluster() { _clusterCulling = false; }
+    inline bool getClusterEnabled() const { return _clusterEnabled; }
+    inline void setClusterEnabled(bool enable) { _clusterEnabled = enable; }
 
 protected:
     static RenderPipeline *instance;
@@ -137,7 +136,7 @@ protected:
     gfx::Rect                               _lastUsedRenderArea;
 
     // use cluster culling or not
-    bool _clusterCulling{false};
+    bool _clusterEnabled{false};
 };
 
 } // namespace pipeline

@@ -279,7 +279,7 @@ void LightingStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
     }
 
     // not use cluster shading, go normal deferred render path
-    if (!pipeline->useCluster()) {
+    if (!pipeline->getClusterEnabled()) {
         // create descriptor set/layout
         gfx::DescriptorSetLayoutInfo layoutInfo = {localDescriptorSetLayout.bindings};
         _descLayout                             = device->createDescriptorSetLayout(layoutInfo);
@@ -322,15 +322,15 @@ void LightingStage::destroy() {
 void LightingStage::fgLightingPass(scene::Camera *camera) {
     // lights info and ubo are updated in ClusterLightCulling::update()
     // if using cluster lighting.
-    if (!_pipeline->useCluster()) {
+    if (!_pipeline->getClusterEnabled()) {
         // lighting info, ubo
         gatherLights(camera);
         _descriptorSet->update();
     }
 
     struct RenderData {
-        framegraph::TextureHandle gbuffer[4];  // read from gbuffer stage
-        framegraph::TextureHandle outputTex; // output texture
+        framegraph::TextureHandle gbuffer[4]; // read from gbuffer stage
+        framegraph::TextureHandle outputTex;  // output texture
         framegraph::TextureHandle depth;
         framegraph::BufferHandle  lightBuffer;      // light storage buffer
         framegraph::BufferHandle  lightIndexBuffer; // light index storage buffer
@@ -358,7 +358,7 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         data.depth = builder.write(data.depth, depthAttachmentInfo);
         builder.writeToBlackboard(RenderPipeline::fgStrHandleOutDepthTexture, data.depth);
 
-        if (_pipeline->useCluster()) {
+        if (_pipeline->getClusterEnabled()) {
             // read cluster and light info
             data.lightBuffer = framegraph::BufferHandle(builder.readFromBlackboard(fgStrHandleClusterLightBuffer));
             data.lightBuffer = builder.read(data.lightBuffer);
@@ -385,7 +385,7 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         colorAttachmentInfo.clearColor    = clearColor;
         colorAttachmentInfo.beginAccesses = {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE};
         colorAttachmentInfo.endAccesses   = {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE};
-        data.outputTex                  = builder.write(data.outputTex, colorAttachmentInfo);
+        data.outputTex                    = builder.write(data.outputTex, colorAttachmentInfo);
         builder.writeToBlackboard(RenderPipeline::fgStrHandleOutColorTexture, data.outputTex);
 
         // set render area
@@ -401,7 +401,7 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         auto *cmdBuff = pipeline->getCommandBuffers()[0];
 
         // no need to bind localSet in cluster
-        if (!_pipeline->useCluster()) {
+        if (!_pipeline->getClusterEnabled()) {
             vector<uint> dynamicOffsets = {0};
             cmdBuff->bindDescriptorSet(localSet, _descriptorSet, dynamicOffsets);
         }
@@ -422,7 +422,7 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
             pass->getDescriptorSet()->bindSampler(i, _defaultSampler);
         }
 
-        if (_pipeline->useCluster()) {
+        if (_pipeline->getClusterEnabled()) {
             // cluster buffer bind
             pass->getDescriptorSet()->bindBuffer(CLUSTER_LIGHT_BINDING, table.getRead(data.lightBuffer));
             pass->getDescriptorSet()->bindBuffer(CLUSTER_LIGHT_INDEX_BINDING, table.getRead(data.lightIndexBuffer));
@@ -457,7 +457,7 @@ void LightingStage::fgTransparent(scene::Camera *camera) {
         colorAttachmentInfo.beginAccesses = {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE};
         colorAttachmentInfo.endAccesses   = {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE};
 
-        data.outputTex       = framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::fgStrHandleOutColorTexture));
+        data.outputTex         = framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::fgStrHandleOutColorTexture));
         bool lightingPassValid = data.outputTex.isValid();
         if (!lightingPassValid) {
             framegraph::Texture::Descriptor colorTexInfo;
