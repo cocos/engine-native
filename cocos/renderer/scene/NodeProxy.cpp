@@ -257,6 +257,7 @@ void NodeProxy::updateLevel()
         levelInfo.parentWorldMat = _parent->_worldMat;
         levelInfo.parentDirty = _parent->_dirty;
         levelInfo.parentRealOpacity = &_parent->_realOpacity;
+        renderFlow->insertNodeLevel(_level, levelInfo);
     }
     else
     {
@@ -265,7 +266,6 @@ void NodeProxy::updateLevel()
         levelInfo.parentDirty = nullptr;
         levelInfo.parentRealOpacity = nullptr;
     }
-    renderFlow->insertNodeLevel(_level, levelInfo);
     
     for (auto it = _children.begin(); it != _children.end(); it++)
     {
