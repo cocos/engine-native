@@ -50,9 +50,9 @@ public:
     void                          destroy() override;
     void                          render(scene::Camera *camera) override;
 
-    gfx::Buffer **getDownsampelUBO() { return _downsampleUBO; }
-    gfx::Buffer **getUpsampleUBO() { return _upsampleUBO; }
-    gfx::Sampler *getSampler() { return _sampler; }
+    auto &        getDownsampelUBO() { return _downsampleUBO; }
+    auto &        getUpsampleUBO() { return _upsampleUBO; }
+    gfx::Sampler *getSampler() const { return _sampler; }
 
 private:
     gfx::Rect _renderArea;
@@ -60,11 +60,10 @@ private:
 
     static RenderStageInfo initInfo;
 
-    gfx::Sampler *_sampler                                = nullptr;
-    gfx::Buffer * _downsampleUBO[MAX_SCALING_SAMPLE_PASS_NUM] = {nullptr};
-    gfx::Buffer * _upsampleUBO[MAX_SCALING_SAMPLE_PASS_NUM]   = {nullptr};
-
-    framegraph::StringHandle _fgStrHandleBloomOut;
+    gfx::Sampler *                                         _sampler = nullptr;
+    std::array<gfx::Buffer *, MAX_SCALING_SAMPLE_PASS_NUM> _downsampleUBO;
+    std::array<gfx::Buffer *, MAX_SCALING_SAMPLE_PASS_NUM> _upsampleUBO;
+    framegraph::StringHandle                               _fgStrHandleBloomOut;
 };
 } // namespace pipeline
 } // namespace cc

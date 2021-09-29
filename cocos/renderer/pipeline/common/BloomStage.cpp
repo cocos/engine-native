@@ -95,7 +95,7 @@ bool BloomStage::initialize(const RenderStageInfo &info) {
 
 void BloomStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
     RenderStage::activate(pipeline, flow);
-    if (_pipeline->getBloomEnable() == false) return;
+    if (!_pipeline->getBloomEnable()) return;
 
     _phaseID = getPhaseID("default");
 
@@ -133,11 +133,11 @@ int calcScalingFilterPassNum() {
 }
 
 void BloomStage::render(scene::Camera *camera) {
-    auto *pipeline         = _pipeline;
-    if (pipeline->getBloomEnable() == false) return;
+    auto *pipeline = _pipeline;
+    if (!pipeline->getBloomEnable()) return;
 
-    int   scalingSampleNum = calcScalingFilterPassNum();
-    assert(pipeline != nullptr);
+    int scalingSampleNum = calcScalingFilterPassNum();
+    CC_ASSERT(pipeline != nullptr);
 
     if (hasFlag(static_cast<gfx::ClearFlags>(camera->clearFlag), gfx::ClearFlagBit::COLOR)) {
         _clearColors[0].x = camera->clearColor.x;
@@ -207,8 +207,8 @@ void BloomStage::render(scene::Camera *camera) {
         auto *           pipeline   = _pipeline;
         gfx::RenderPass *renderPass = table.getRenderPass();
 
-        auto *     cmdBf           = pipeline->getCommandBuffers()[0];
-        const std::array<uint, 1> globalOffsets   = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
+        auto *                    cmdBf         = pipeline->getCommandBuffers()[0];
+        const std::array<uint, 1> globalOffsets = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
         cmdBf->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), utils::toUint(globalOffsets.size()), globalOffsets.data());
 
         auto *const          sharedData     = pipeline->getPipelineSceneData()->getSharedData();
@@ -218,7 +218,7 @@ void BloomStage::render(scene::Camera *camera) {
         gfx::InputAssembler *inputAssembler = pipeline->getIAByRenderArea(rendeArea);
         gfx::PipelineState * pso            = PipelineStateManager::getOrCreatePipelineState(
             pass, shader, inputAssembler, renderPass);
-        assert(pso != nullptr);
+        CC_ASSERT(pso != nullptr);
 
         pass->getDescriptorSet()->bindTexture(0, table.getRead(data.inputTexHandle));
         pass->getDescriptorSet()->bindSampler(0, data.sampler);
@@ -279,7 +279,7 @@ void BloomStage::render(scene::Camera *camera) {
 
             // Update cc_textureSize
             auto *stage = static_cast<BloomStage *>(pipeline->getRenderstageByName(STAGE_NAME));
-            assert(stage != nullptr);
+            CC_ASSERT(stage != nullptr);
             data.bloomUBO       = stage->getDownsampelUBO()[data.index];
             data.textureSize[0] = static_cast<float>(renderArea.width << 1);
             data.textureSize[1] = static_cast<float>(renderArea.height << 1);
@@ -289,7 +289,7 @@ void BloomStage::render(scene::Camera *camera) {
             auto *           pipeline   = _pipeline;
             gfx::RenderPass *renderPass = table.getRenderPass();
 
-            auto *     cmdBf           = pipeline->getCommandBuffers()[0];
+            auto *                    cmdBf         = pipeline->getCommandBuffers()[0];
             const std::array<uint, 1> globalOffsets = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
             cmdBf->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), utils::toUint(globalOffsets.size()), globalOffsets.data());
 
@@ -300,7 +300,7 @@ void BloomStage::render(scene::Camera *camera) {
             gfx::InputAssembler *inputAssembler = pipeline->getIAByRenderArea(rendeArea);
             gfx::PipelineState * pso            = PipelineStateManager::getOrCreatePipelineState(
                 pass, shader, inputAssembler, renderPass);
-            assert(pso != nullptr);
+            CC_ASSERT(pso != nullptr);
 
             data.bloomUBO->update(data.textureSize, sizeof(data.textureSize));
 
@@ -358,7 +358,7 @@ void BloomStage::render(scene::Camera *camera) {
 
             // Update cc_textureSize
             auto *stage = static_cast<BloomStage *>(pipeline->getRenderstageByName(STAGE_NAME));
-            assert(stage != nullptr);
+            CC_ASSERT(stage != nullptr);
             data.bloomUBO       = stage->getUpsampleUBO()[data.index];
             data.textureSize[0] = static_cast<float>(renderArea.width >> 1);
             data.textureSize[1] = static_cast<float>(renderArea.height >> 1);
@@ -368,7 +368,7 @@ void BloomStage::render(scene::Camera *camera) {
             auto *           pipeline   = _pipeline;
             gfx::RenderPass *renderPass = table.getRenderPass();
 
-            auto *     cmdBf           = pipeline->getCommandBuffers()[0];
+            auto *                    cmdBf         = pipeline->getCommandBuffers()[0];
             const std::array<uint, 1> globalOffsets = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
             cmdBf->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), utils::toUint(globalOffsets.size()), globalOffsets.data());
 
@@ -379,7 +379,7 @@ void BloomStage::render(scene::Camera *camera) {
             gfx::InputAssembler *inputAssembler = pipeline->getIAByRenderArea(rendeArea);
             gfx::PipelineState * pso            = PipelineStateManager::getOrCreatePipelineState(
                 pass, shader, inputAssembler, renderPass);
-            assert(pso != nullptr);
+            CC_ASSERT(pso != nullptr);
 
             data.bloomUBO->update(data.textureSize, sizeof(data.textureSize));
 
@@ -444,7 +444,7 @@ void BloomStage::render(scene::Camera *camera) {
         auto *           pipeline   = _pipeline;
         gfx::RenderPass *renderPass = table.getRenderPass();
 
-        auto *     cmdBf           = pipeline->getCommandBuffers()[0];
+        auto *                    cmdBf         = pipeline->getCommandBuffers()[0];
         const std::array<uint, 1> globalOffsets = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
         cmdBf->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), utils::toUint(globalOffsets.size()), globalOffsets.data());
 
@@ -455,7 +455,7 @@ void BloomStage::render(scene::Camera *camera) {
         gfx::InputAssembler *inputAssembler = pipeline->getIAByRenderArea(rendeArea);
         gfx::PipelineState * pso            = PipelineStateManager::getOrCreatePipelineState(
             pass, shader, inputAssembler, renderPass);
-        assert(pso != nullptr);
+        CC_ASSERT(pso != nullptr);
 
         pass->getDescriptorSet()->bindTexture(0, table.getRead(data.lightingOutTexHandle));
         pass->getDescriptorSet()->bindTexture(1, table.getRead(data.upsampleTexHandle));
