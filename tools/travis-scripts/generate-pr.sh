@@ -152,7 +152,7 @@ EOF
 POST_DATA=$(python -c "$PY_SCRIPT")
 
 echo "Sending Pull Request to base repo ..."
-curl -u $GH_USER:$GH_PASSWORD --request POST --data '$POST_DATA' "${PULL_REQUEST_REPO}" # 2> /dev/null > /dev/null
+curl -u $GH_USER:$GH_PASSWORD --request POST --data "$POST_DATA" "${PULL_REQUEST_REPO}" # 2> /dev/null > /dev/null
 
 echo "  finish sending PR ..."
 
