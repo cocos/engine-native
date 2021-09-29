@@ -14,7 +14,7 @@ static WGPULoadOp toWGPULoadOp(LoadOp op) {
         case LoadOp::LOAD:
             return WGPULoadOp::WGPULoadOp_Load;
         case LoadOp::DISCARD:
-            return WGPULoadOp::WGPULoadOp_Force32;
+            return WGPULoadOp::WGPULoadOp_Clear;
         default:
             return WGPULoadOp::WGPULoadOp_Force32;
     }
@@ -27,7 +27,7 @@ static WGPUStoreOp toWGPUStoreOp(StoreOp op) {
         case StoreOp::DISCARD:
             return WGPUStoreOp::WGPUStoreOp_Clear;
         default:
-            return WGPUStoreOp::WGPUStoreOp_Force32;
+            return WGPUStoreOp::WGPUStoreOp_Clear;
     }
 }
 
@@ -230,7 +230,7 @@ static WGPUTextureFormat toWGPUTextureFormat(Format format) {
         case Format::RGBA32I:
             return WGPUTextureFormat::WGPUTextureFormat_RGBA32Sint;
         case Format::DEPTH:
-            return WGPUTextureFormat::WGPUTextureFormat_Depth32Float;
+            return WGPUTextureFormat::WGPUTextureFormat_Depth24Plus;
         case Format::DEPTH_STENCIL:
             return WGPUTextureFormat::WGPUTextureFormat_Depth24PlusStencil8;
         case Format::BC1:

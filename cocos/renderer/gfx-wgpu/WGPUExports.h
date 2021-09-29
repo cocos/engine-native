@@ -941,7 +941,6 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     class_<CCWGPUCommandBuffer, base<CommandBuffer>>("CCWGPUCommandBuffer")
         .constructor<>()
         .function("beginRenderPass", select_overload<void(RenderPass *, Framebuffer *, const Rect &, const ColorList &, float, uint)>(&CCWGPUCommandBuffer::beginRenderPass), allow_raw_pointers())
-        .function("copyBuffersToTexture", select_overload<void(const std::vector<String> &, Texture *, const BufferTextureCopy *, uint)>(&CCWGPUCommandBuffer::copyBuffersToTexture), allow_raw_pointer<arg<1>>())
         .function("updateIndirectBuffer", select_overload<void(Buffer *, const DrawInfoList &)>(&CCWGPUCommandBuffer::updateIndirectBuffer), allow_raw_pointers())
         .function("updateBuffer", select_overload<void(Buffer *, const emscripten::val &v, uint)>(&CCWGPUCommandBuffer::updateBuffer), allow_raw_pointers());
 

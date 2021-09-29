@@ -56,22 +56,22 @@ void CCWGPUCommandBuffer::doDestroy() {
 
 void CCWGPUCommandBuffer::begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) {
     //TODO_Zeqiang: subpass support
+    _gpuCommandBufferObj->wgpuCommandEncoder = wgpuDeviceCreateCommandEncoder(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, nullptr);
 }
 
 void CCWGPUCommandBuffer::end() {
-    if (!_computeFuncQ.empty()) {
-        WGPUComputePassDescriptor cmoputeDesc = {};
-        if (!_gpuCommandBufferObj->wgpuCommandEncoder) {
-            _gpuCommandBufferObj->wgpuCommandEncoder = wgpuDeviceCreateCommandEncoder(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, nullptr);
-        }
-        _gpuCommandBufferObj->wgpuComputeEncoder = wgpuCommandEncoderBeginComputePass(_gpuCommandBufferObj->wgpuCommandEncoder, &cmoputeDesc);
-        while (!_computeFuncQ.empty()) {
-            _computeFuncQ.front()(_gpuCommandBufferObj);
-            _computeFuncQ.pop();
-        };
+    auto *pipelineState = _gpuCommandBufferObj->stateCache.pipelineState;
+    if (pipelineState->getBindPoint() == PipelineBindPoint::GRAPHICS) {
+        auto *queue                             = _gpuCommandBufferObj->queue;
+        _gpuCommandBufferObj->wgpuCommandBuffer = wgpuCommandEncoderFinish(_gpuCommandBufferObj->wgpuCommandEncoder, nullptr);
+        wgpuQueueSubmit(queue->gpuQueueObject()->wgpuQueue, 1, &_gpuCommandBufferObj->wgpuCommandBuffer);
+        wgpuCommandEncoderRelease(_gpuCommandBufferObj->wgpuCommandEncoder);
+        _gpuCommandBufferObj->wgpuCommandEncoder = wgpuDefaultHandle;
+    } else {
         wgpuComputePassEncoderEndPass(_gpuCommandBufferObj->wgpuComputeEncoder);
         wgpuComputePassEncoderRelease(_gpuCommandBufferObj->wgpuComputeEncoder);
         _gpuCommandBufferObj->wgpuCommandBuffer = wgpuCommandEncoderFinish(_gpuCommandBufferObj->wgpuCommandEncoder, nullptr);
+        wgpuQueueSubmit(static_cast<CCWGPUQueue *>(_queue)->gpuQueueObject()->wgpuQueue, 1, &_gpuCommandBufferObj->wgpuCommandBuffer);
         wgpuCommandEncoderRelease(_gpuCommandBufferObj->wgpuCommandEncoder);
         _gpuCommandBufferObj->wgpuComputeEncoder = wgpuDefaultHandle;
         _gpuCommandBufferObj->wgpuCommandEncoder = wgpuDefaultHandle;
@@ -94,9 +94,9 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
         renderPassDesc.label                = "swapchain";
         WGPURenderPassColorAttachment color = {
             .view          = swapchain->gpuSwapchainObject()->swapchainColor->gpuTextureObject()->selfView,
-            .resolveTarget = nullptr,           //TODO_Zeqiang: wgpu offscr msaa
-            .loadOp        = WGPULoadOp_Clear,  //toWGPULoadOp(colorConfigs[0].loadOp),
-            .storeOp       = WGPUStoreOp_Clear, //toWGPUStoreOp(colorConfigs[0].storeOp),
+            .resolveTarget = nullptr, //TODO_Zeqiang: wgpu offscr msaa
+            .loadOp        = toWGPULoadOp(colorConfigs[0].loadOp),
+            .storeOp       = toWGPUStoreOp(colorConfigs[0].storeOp),
             .clearColor    = WGPUColor{0.2, 0.2, 0.2, 1.0},
         };
         colorAttachments.emplace_back(color);
@@ -160,35 +160,16 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
     _gpuCommandBufferObj->stateCache.viewport.maxDepth = 1.0f;
     _gpuCommandBufferObj->stateCache.rect              = renderArea;
 
-    auto rpBeginFunc = [colorAttachments, depthStencils](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
-        gpuCommandBufferObj->renderPassDescriptor.colorAttachments       = colorAttachments.data();
-        gpuCommandBufferObj->renderPassDescriptor.colorAttachmentCount   = colorAttachments.size();
-        gpuCommandBufferObj->renderPassDescriptor.depthStencilAttachment = depthStencils.empty() ? nullptr : depthStencils.data();
-
-        gpuCommandBufferObj->wgpuCommandEncoder    = wgpuDeviceCreateCommandEncoder(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, nullptr);
-        gpuCommandBufferObj->wgpuRenderPassEncoder = wgpuCommandEncoderBeginRenderPass(gpuCommandBufferObj->wgpuCommandEncoder, &gpuCommandBufferObj->renderPassDescriptor);
-    };
-    _renderPassFuncQ.push(rpBeginFunc);
+    renderPassDesc.colorAttachments             = colorAttachments.data();
+    renderPassDesc.colorAttachmentCount         = colorAttachments.size();
+    renderPassDesc.depthStencilAttachment       = depthStencils.empty() ? nullptr : depthStencils.data();
+    _gpuCommandBufferObj->wgpuRenderPassEncoder = wgpuCommandEncoderBeginRenderPass(_gpuCommandBufferObj->wgpuCommandEncoder, &renderPassDesc);
 }
 
 void CCWGPUCommandBuffer::endRenderPass() {
-    auto rpEndFunc = [](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
-        wgpuRenderPassEncoderEndPass(gpuCommandBufferObj->wgpuRenderPassEncoder);
-        wgpuRenderPassEncoderRelease(gpuCommandBufferObj->wgpuRenderPassEncoder);
-        gpuCommandBufferObj->wgpuCommandBuffer = wgpuCommandEncoderFinish(gpuCommandBufferObj->wgpuCommandEncoder, nullptr);
-        wgpuCommandEncoderRelease(gpuCommandBufferObj->wgpuCommandEncoder);
-        gpuCommandBufferObj->wgpuRenderPassEncoder = wgpuDefaultHandle;
-        gpuCommandBufferObj->wgpuCommandEncoder    = wgpuDefaultHandle;
-    };
-
-    _renderPassFuncQ.push(rpEndFunc);
-
-    //WGPUCommandEncoder wgpuDeviceCreateCommandEncoder(WGPUDevice device, WGPUCommandEncoderDescriptor const * descriptor)
-
-    while (!_renderPassFuncQ.empty()) {
-        _renderPassFuncQ.front()(_gpuCommandBufferObj);
-        _renderPassFuncQ.pop();
-    }
+    wgpuRenderPassEncoderEndPass(_gpuCommandBufferObj->wgpuRenderPassEncoder);
+    wgpuRenderPassEncoderRelease(_gpuCommandBufferObj->wgpuRenderPassEncoder);
+    _gpuCommandBufferObj->wgpuRenderPassEncoder = wgpuDefaultHandle;
 
     _gpuCommandBufferObj->renderPassBegan = false;
 }
@@ -263,82 +244,67 @@ void CCWGPUCommandBuffer::bindStates() {
         return;
     }
 
-    // for (size_t i = 0; i < _gpuCommandBufferObj->stateCache.descriptorSets.size(); i++) {
-    //     for (size_t j = 0; j < _gpuCommandBufferObj->stateCache.descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindGroupEntries.size(); j++) {
-    //         const auto &entry = _gpuCommandBufferObj->stateCache.descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindGroupEntries[j];
-    //         printf("set, binding, b, t, s %d, %d, %p, %p, %p\n", i, entry.binding, entry.buffer, entry.textureView, entry.sampler);
-    //     }
-    // }
-
     if (pipelineState->getBindPoint() == PipelineBindPoint::GRAPHICS) {
-        auto stateFunc = [](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
-            auto *pipelineState = gpuCommandBufferObj->stateCache.pipelineState;
-            //pipeline state
-            wgpuRenderPassEncoderSetPipeline(gpuCommandBufferObj->wgpuRenderPassEncoder,
-                                             pipelineState->gpuPipelineStateObject()->wgpuRenderPipeline);
-            //bindgroup & descriptorset
-            const auto &descriptorSets = gpuCommandBufferObj->stateCache.descriptorSets;
-            for (size_t i = 0; i < descriptorSets.size(); i++) {
-                if (descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup) {
-                    wgpuRenderPassEncoderSetBindGroup(gpuCommandBufferObj->wgpuRenderPassEncoder,
-                                                      descriptorSets[i].index,
-                                                      descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
-                                                      descriptorSets[i].dynamicOffsetCount,
-                                                      descriptorSets[i].dynamicOffsets);
-                }
+        auto *pipelineState = _gpuCommandBufferObj->stateCache.pipelineState;
+        //pipeline state
+        wgpuRenderPassEncoderSetPipeline(_gpuCommandBufferObj->wgpuRenderPassEncoder,
+                                         pipelineState->gpuPipelineStateObject()->wgpuRenderPipeline);
+        //bindgroup & descriptorset
+        const auto &descriptorSets = _gpuCommandBufferObj->stateCache.descriptorSets;
+        for (size_t i = 0; i < descriptorSets.size(); i++) {
+            if (descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup) {
+                wgpuRenderPassEncoderSetBindGroup(_gpuCommandBufferObj->wgpuRenderPassEncoder,
+                                                  descriptorSets[i].index,
+                                                  descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
+                                                  descriptorSets[i].dynamicOffsetCount,
+                                                  descriptorSets[i].dynamicOffsets);
             }
+        }
 
-            //input assembler
-            const auto *ia               = gpuCommandBufferObj->stateCache.inputAssembler;
-            const auto &vertexBufferList = ia->getVertexBuffers();
-            for (size_t i = 0; i < vertexBufferList.size(); i++) {
-                const auto *vertexBuffer = static_cast<CCWGPUBuffer *>(vertexBufferList[i]);
-                wgpuRenderPassEncoderSetVertexBuffer(gpuCommandBufferObj->wgpuRenderPassEncoder,
-                                                     i,
-                                                     vertexBuffer->gpuBufferObject()->wgpuBuffer,
-                                                     vertexBuffer->getOffset(),
-                                                     vertexBuffer->getSize());
-            }
+        //input assembler
+        const auto *ia               = _gpuCommandBufferObj->stateCache.inputAssembler;
+        const auto &vertexBufferList = ia->getVertexBuffers();
+        for (size_t i = 0; i < vertexBufferList.size(); i++) {
+            const auto *vertexBuffer = static_cast<CCWGPUBuffer *>(vertexBufferList[i]);
+            wgpuRenderPassEncoderSetVertexBuffer(_gpuCommandBufferObj->wgpuRenderPassEncoder,
+                                                 i,
+                                                 vertexBuffer->gpuBufferObject()->wgpuBuffer,
+                                                 vertexBuffer->getOffset(),
+                                                 vertexBuffer->getSize());
+        }
 
-            const auto *indexBuffer = static_cast<CCWGPUBuffer *>(ia->getIndexBuffer());
-            wgpuRenderPassEncoderSetIndexBufferWithFormat(gpuCommandBufferObj->wgpuRenderPassEncoder,
-                                                          indexBuffer->gpuBufferObject()->wgpuBuffer,
-                                                          indexBuffer->getStride() == 2 ? WGPUIndexFormat::WGPUIndexFormat_Uint16 : WGPUIndexFormat_Uint32,
-                                                          indexBuffer->getOffset(),
-                                                          indexBuffer->getSize());
+        const auto *indexBuffer = static_cast<CCWGPUBuffer *>(ia->getIndexBuffer());
+        wgpuRenderPassEncoderSetIndexBufferWithFormat(_gpuCommandBufferObj->wgpuRenderPassEncoder,
+                                                      indexBuffer->gpuBufferObject()->wgpuBuffer,
+                                                      indexBuffer->getStride() == 2 ? WGPUIndexFormat::WGPUIndexFormat_Uint16 : WGPUIndexFormat_Uint32,
+                                                      indexBuffer->getOffset(),
+                                                      indexBuffer->getSize());
 
-            WGPUColor blendColor = toWGPUColor(gpuCommandBufferObj->stateCache.blendConstants);
-            wgpuRenderPassEncoderSetBlendConstant(gpuCommandBufferObj->wgpuRenderPassEncoder, &blendColor);
+        WGPUColor blendColor = toWGPUColor(_gpuCommandBufferObj->stateCache.blendConstants);
+        wgpuRenderPassEncoderSetBlendConstant(_gpuCommandBufferObj->wgpuRenderPassEncoder, &blendColor);
 
-            const Viewport &vp = gpuCommandBufferObj->stateCache.viewport;
-            wgpuRenderPassEncoderSetViewport(gpuCommandBufferObj->wgpuRenderPassEncoder, vp.left, vp.top, vp.width, vp.height, vp.minDepth, vp.maxDepth);
+        const Viewport &vp = _gpuCommandBufferObj->stateCache.viewport;
+        wgpuRenderPassEncoderSetViewport(_gpuCommandBufferObj->wgpuRenderPassEncoder, vp.left, vp.top, vp.width, vp.height, vp.minDepth, vp.maxDepth);
 
-            const Rect &rect = gpuCommandBufferObj->stateCache.rect;
-            wgpuRenderPassEncoderSetScissorRect(gpuCommandBufferObj->wgpuRenderPassEncoder, rect.x, rect.y, rect.width, rect.height);
-        };
-
-        _renderPassFuncQ.push(stateFunc);
+        const Rect &rect = _gpuCommandBufferObj->stateCache.rect;
+        wgpuRenderPassEncoderSetScissorRect(_gpuCommandBufferObj->wgpuRenderPassEncoder, rect.x, rect.y, rect.width, rect.height);
 
     } else if (pipelineState->getBindPoint() == PipelineBindPoint::COMPUTE) {
-        auto stateFunc = [](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
-            auto *pipelineState = gpuCommandBufferObj->stateCache.pipelineState;
-            wgpuComputePassEncoderSetPipeline(gpuCommandBufferObj->wgpuComputeEncoder,
-                                              pipelineState->gpuPipelineStateObject()->wgpuComputePipeline);
+        auto *pipelineState = _gpuCommandBufferObj->stateCache.pipelineState;
+        wgpuComputePassEncoderSetPipeline(_gpuCommandBufferObj->wgpuComputeEncoder,
+                                          pipelineState->gpuPipelineStateObject()->wgpuComputePipeline);
 
-            //bindgroup & descriptorset
-            const auto &descriptorSets = gpuCommandBufferObj->stateCache.descriptorSets;
-            for (size_t i = 0; i < descriptorSets.size(); i++) {
-                if (descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup) {
-                    wgpuComputePassEncoderSetBindGroup(gpuCommandBufferObj->wgpuComputeEncoder,
-                                                       descriptorSets[i].index,
-                                                       descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
-                                                       descriptorSets[i].dynamicOffsetCount,
-                                                       descriptorSets[i].dynamicOffsets);
-                }
+        //bindgroup & descriptorset
+        const auto &descriptorSets = _gpuCommandBufferObj->stateCache.descriptorSets;
+        for (size_t i = 0; i < descriptorSets.size(); i++) {
+            if (descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup) {
+                wgpuComputePassEncoderSetBindGroup(_gpuCommandBufferObj->wgpuComputeEncoder,
+                                                   descriptorSets[i].index,
+                                                   descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
+                                                   descriptorSets[i].dynamicOffsetCount,
+                                                   descriptorSets[i].dynamicOffsets);
             }
-        };
-
-        _computeFuncQ.push(stateFunc);
+        }
 
     } else {
         CC_LOG_ERROR("wrong pipeline state bind point.");
@@ -352,8 +318,6 @@ void CCWGPUCommandBuffer::nextSubpass() {
 void CCWGPUCommandBuffer::draw(const DrawInfo &info) {
     bindStates();
 
-    std::function<void(CCWGPUCommandBufferObject * gpuCommandBufferObj)> drawFunc;
-
     auto *ia = static_cast<CCWGPUInputAssembler *>(_gpuCommandBufferObj->stateCache.inputAssembler);
     if (ia->getIndirectBuffer()) {
         auto *indirectBuffer           = static_cast<CCWGPUBuffer *>(ia->getIndirectBuffer());
@@ -365,49 +329,37 @@ void CCWGPUCommandBuffer::draw(const DrawInfo &info) {
             // todo
         } else {
             if (info.indexCount) {
-                drawFunc = [indirectBuffer](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
-                    uint32_t drawInfoCount = indirectBuffer->getCount();
-                    for (size_t i = 0; i < drawInfoCount; i++) {
-                        wgpuRenderPassEncoderDrawIndexedIndirect(gpuCommandBufferObj->wgpuRenderPassEncoder,
-                                                                 indirectBuffer->gpuBufferObject()->wgpuBuffer,
-                                                                 indirectBuffer->getOffset() + i * sizeof(CCWGPUDrawIndexedIndirectObject));
-                    }
-                };
-                _renderPassFuncQ.push(drawFunc);
+                uint32_t drawInfoCount = indirectBuffer->getCount();
+                for (size_t i = 0; i < drawInfoCount; i++) {
+                    wgpuRenderPassEncoderDrawIndexedIndirect(_gpuCommandBufferObj->wgpuRenderPassEncoder,
+                                                             indirectBuffer->gpuBufferObject()->wgpuBuffer,
+                                                             indirectBuffer->getOffset() + i * sizeof(CCWGPUDrawIndexedIndirectObject));
+                }
             } else {
-                drawFunc = [indirectBuffer](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
-                    uint32_t drawInfoCount = indirectBuffer->getCount();
-                    for (size_t i = 0; i < drawInfoCount; i++) {
-                        wgpuRenderPassEncoderDrawIndirect(gpuCommandBufferObj->wgpuRenderPassEncoder,
-                                                          indirectBuffer->gpuBufferObject()->wgpuBuffer,
-                                                          indirectBuffer->getOffset() + i * sizeof(CCWGPUDrawIndirectObject));
-                    }
-                };
-                _renderPassFuncQ.push(drawFunc);
+                uint32_t drawInfoCount = indirectBuffer->getCount();
+                for (size_t i = 0; i < drawInfoCount; i++) {
+                    wgpuRenderPassEncoderDrawIndirect(_gpuCommandBufferObj->wgpuRenderPassEncoder,
+                                                      indirectBuffer->gpuBufferObject()->wgpuBuffer,
+                                                      indirectBuffer->getOffset() + i * sizeof(CCWGPUDrawIndirectObject));
+                }
             }
         }
     } else {
         auto *indexBuffer = static_cast<CCWGPUBuffer *>(ia->getIndexBuffer());
         bool  drawIndexed = indexBuffer && info.indexCount;
         if (drawIndexed) {
-            drawFunc = [info](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
-                wgpuRenderPassEncoderDrawIndexed(gpuCommandBufferObj->wgpuRenderPassEncoder,
-                                                 info.indexCount,
-                                                 info.instanceCount > 1 ? info.instanceCount : 1,
-                                                 info.firstIndex,
-                                                 info.vertexOffset,
-                                                 info.firstInstance);
-            };
-            _renderPassFuncQ.push(drawFunc);
+            wgpuRenderPassEncoderDrawIndexed(_gpuCommandBufferObj->wgpuRenderPassEncoder,
+                                             info.indexCount,
+                                             info.instanceCount > 1 ? info.instanceCount : 1,
+                                             info.firstIndex,
+                                             info.vertexOffset,
+                                             info.firstInstance);
         } else {
-            drawFunc = [info](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
-                wgpuRenderPassEncoderDraw(gpuCommandBufferObj->wgpuRenderPassEncoder,
-                                          info.vertexCount,
-                                          info.instanceCount > 1 ? info.instanceCount : 1,
-                                          info.firstVertex,
-                                          info.firstInstance);
-            };
-            _renderPassFuncQ.push(drawFunc);
+            wgpuRenderPassEncoderDraw(_gpuCommandBufferObj->wgpuRenderPassEncoder,
+                                      info.vertexCount,
+                                      info.instanceCount > 1 ? info.instanceCount : 1,
+                                      info.firstVertex,
+                                      info.firstInstance);
         }
     }
 }
@@ -419,135 +371,82 @@ void CCWGPUCommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size
 }
 
 void CCWGPUCommandBuffer::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) {
-    auto copyBuffToTexFunc = [buffers, texture, regions, count](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
-        //wgpuCommandEncoderCopyBufferToTexture
+    for (size_t i = 0; i < count; i++) {
+        WGPUOrigin3D origin = {
+            .x = static_cast<uint32_t>(regions[i].texOffset.x),
+            .y = static_cast<uint32_t>(regions[i].texOffset.y),
+            .z = static_cast<uint32_t>(regions[i].texOffset.z),
+        };
 
-        for (size_t i = 0; i < count; i++) {
-            WGPUOrigin3D origin = {
-                .x = static_cast<uint32_t>(regions[i].texOffset.x),
-                .y = static_cast<uint32_t>(regions[i].texOffset.y),
-                .z = static_cast<uint32_t>(regions[i].texOffset.z),
-            };
+        WGPUImageCopyTexture imageCopyTexture = {
+            .texture  = static_cast<CCWGPUTexture *>(texture)->gpuTextureObject()->wgpuTexture,
+            .mipLevel = 0,
+            .origin   = origin,
+            .aspect   = WGPUTextureAspect_All,
+        };
 
-            WGPUImageCopyTexture imageCopyTexture = {
-                .texture  = static_cast<CCWGPUTexture *>(texture)->gpuTextureObject()->wgpuTexture,
-                .mipLevel = 0,
-                .origin   = origin,
-                .aspect   = WGPUTextureAspect_All,
-            };
+        auto *   ccTex       = static_cast<CCWGPUTexture *>(texture);
+        uint32_t width       = regions[i].texExtent.width;
+        uint32_t height      = regions[i].texExtent.height;
+        uint32_t depth       = regions[i].texExtent.depth;
+        uint32_t bytesPerRow = GFX_FORMAT_INFOS[static_cast<uint>(ccTex->getFormat())].size * width;
+        uint32_t dataSize    = bytesPerRow * height * depth;
 
-            auto *   ccTex       = static_cast<CCWGPUTexture *>(texture);
-            uint32_t width       = regions[i].texExtent.width;
-            uint32_t height      = regions[i].texExtent.height;
-            uint32_t depth       = regions[i].texExtent.depth;
-            uint32_t bytesPerRow = GFX_FORMAT_INFOS[static_cast<uint>(ccTex->getFormat())].size * width;
-            uint32_t dataSize    = bytesPerRow * height * depth;
+        WGPUTextureDataLayout texLayout = {
+            .offset       = 0,
+            .bytesPerRow  = bytesPerRow,
+            .rowsPerImage = height,
+        };
 
-            WGPUTextureDataLayout texLayout = {
-                .offset       = 0,
-                .bytesPerRow  = bytesPerRow,
-                .rowsPerImage = height,
-            };
+        WGPUExtent3D extent = {
+            .width              = width,
+            .height             = height,
+            .depthOrArrayLayers = depth,
+        };
 
-            WGPUExtent3D extent = {
-                .width              = width,
-                .height             = height,
-                .depthOrArrayLayers = depth,
-            };
-
-            wgpuQueueWriteTexture(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuQueue, &imageCopyTexture, buffers[i], dataSize, &texLayout, &extent);
-        }
-    };
-
-    _renderPassFuncQ.push(copyBuffToTexFunc);
-}
-
-void CCWGPUCommandBuffer::copyBuffersToTexture(const std::vector<String> &strList, Texture *texture, const BufferTextureCopy *regions, uint count) {
-    auto copyBuffToTexFunc = [strList, texture, regions, count](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
-        //wgpuCommandEncoderCopyBufferToTexture
-
-        for (size_t i = 0; i < count; i++) {
-            WGPUOrigin3D origin = {
-                .x = static_cast<uint32_t>(regions[i].texOffset.x),
-                .y = static_cast<uint32_t>(regions[i].texOffset.y),
-                .z = static_cast<uint32_t>(regions[i].texOffset.z),
-            };
-
-            WGPUImageCopyTexture imageCopyTexture = {
-                .texture  = static_cast<CCWGPUTexture *>(texture)->gpuTextureObject()->wgpuTexture,
-                .mipLevel = 0,
-                .origin   = origin,
-                .aspect   = WGPUTextureAspect_All,
-            };
-
-            auto *   ccTex       = static_cast<CCWGPUTexture *>(texture);
-            uint32_t width       = regions[i].texExtent.width;
-            uint32_t height      = regions[i].texExtent.height;
-            uint32_t depth       = regions[i].texExtent.depth;
-            uint32_t bytesPerRow = GFX_FORMAT_INFOS[static_cast<uint>(ccTex->getFormat())].size * width;
-            uint32_t dataSize    = bytesPerRow * height * depth;
-
-            WGPUTextureDataLayout texLayout = {
-                .offset       = 0,
-                .bytesPerRow  = bytesPerRow,
-                .rowsPerImage = height,
-            };
-
-            WGPUExtent3D extent = {
-                .width              = width,
-                .height             = height,
-                .depthOrArrayLayers = depth,
-            };
-
-            wgpuQueueWriteTexture(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuQueue, &imageCopyTexture, strList[i].data(), dataSize, &texLayout, &extent);
-        }
-    };
-
-    _renderPassFuncQ.push(copyBuffToTexFunc);
+        wgpuQueueWriteTexture(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuQueue, &imageCopyTexture, buffers[i], dataSize, &texLayout, &extent);
+    }
 }
 
 void CCWGPUCommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlit *regions, uint count, Filter filter) {
-    auto copyBuffToTexFunc = [srcTexture, dstTexture, regions, count](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
-        for (size_t i = 0; i < count; i++) {
-            auto *srcTex = static_cast<CCWGPUTexture *>(srcTexture);
-            auto *dstTex = static_cast<CCWGPUTexture *>(dstTexture);
+    for (size_t i = 0; i < count; i++) {
+        auto *srcTex = static_cast<CCWGPUTexture *>(srcTexture);
+        auto *dstTex = static_cast<CCWGPUTexture *>(dstTexture);
 
-            WGPUOrigin3D srcOrigin = {
-                .x = static_cast<uint32_t>(regions[i].srcOffset.x),
-                .y = static_cast<uint32_t>(regions[i].srcOffset.y),
-                .z = static_cast<uint32_t>(regions[i].srcOffset.z),
-            };
+        WGPUOrigin3D srcOrigin = {
+            .x = static_cast<uint32_t>(regions[i].srcOffset.x),
+            .y = static_cast<uint32_t>(regions[i].srcOffset.y),
+            .z = static_cast<uint32_t>(regions[i].srcOffset.z),
+        };
 
-            WGPUImageCopyTexture imageCopyTextureSrc = {
-                .texture  = srcTex->gpuTextureObject()->wgpuTexture,
-                .mipLevel = 0,
-                .origin   = srcOrigin,
-                .aspect   = WGPUTextureAspect_All,
-            };
+        WGPUImageCopyTexture imageCopyTextureSrc = {
+            .texture  = srcTex->gpuTextureObject()->wgpuTexture,
+            .mipLevel = 0,
+            .origin   = srcOrigin,
+            .aspect   = WGPUTextureAspect_All,
+        };
 
-            WGPUOrigin3D dstOrigin = {
-                .x = static_cast<uint32_t>(regions[i].dstOffset.x),
-                .y = static_cast<uint32_t>(regions[i].dstOffset.y),
-                .z = static_cast<uint32_t>(regions[i].dstOffset.z),
-            };
+        WGPUOrigin3D dstOrigin = {
+            .x = static_cast<uint32_t>(regions[i].dstOffset.x),
+            .y = static_cast<uint32_t>(regions[i].dstOffset.y),
+            .z = static_cast<uint32_t>(regions[i].dstOffset.z),
+        };
 
-            WGPUImageCopyTexture imageCopyTextureDst = {
-                .texture  = dstTex->gpuTextureObject()->wgpuTexture,
-                .mipLevel = 0,
-                .origin   = dstOrigin,
-                .aspect   = WGPUTextureAspect_All,
-            };
+        WGPUImageCopyTexture imageCopyTextureDst = {
+            .texture  = dstTex->gpuTextureObject()->wgpuTexture,
+            .mipLevel = 0,
+            .origin   = dstOrigin,
+            .aspect   = WGPUTextureAspect_All,
+        };
 
-            WGPUExtent3D extent = {
-                .width              = regions[i].srcExtent.width,
-                .height             = regions[i].srcExtent.height,
-                .depthOrArrayLayers = regions[i].srcExtent.depth,
-            };
+        WGPUExtent3D extent = {
+            .width              = regions[i].srcExtent.width,
+            .height             = regions[i].srcExtent.height,
+            .depthOrArrayLayers = regions[i].srcExtent.depth,
+        };
 
-            wgpuCommandEncoderCopyTextureToTexture(gpuCommandBufferObj->wgpuCommandEncoder, &imageCopyTextureSrc, &imageCopyTextureDst, &extent);
-        }
-    };
-    _renderPassFuncQ.push(copyBuffToTexFunc);
+        wgpuCommandEncoderCopyTextureToTexture(_gpuCommandBufferObj->wgpuCommandEncoder, &imageCopyTextureSrc, &imageCopyTextureDst, &extent);
+    }
 }
 
 void CCWGPUCommandBuffer::execute(CommandBuffer *const *cmdBuffs, uint32_t count) {
@@ -555,23 +454,23 @@ void CCWGPUCommandBuffer::execute(CommandBuffer *const *cmdBuffs, uint32_t count
 }
 
 void CCWGPUCommandBuffer::dispatch(const DispatchInfo &info) {
-    std::function<void(CCWGPUCommandBufferObject * gpuCommandBufferObj)> dispatchFunc;
-    if (info.indirectBuffer) {
-        dispatchFunc = [info](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
-            auto *indirectBuffer = static_cast<CCWGPUBuffer *>(info.indirectBuffer);
-            wgpuComputePassEncoderDispatchIndirect(gpuCommandBufferObj->wgpuComputeEncoder,
-                                                   indirectBuffer->gpuBufferObject()->wgpuBuffer,
-                                                   info.indirectOffset);
-        };
-    } else {
-        dispatchFunc = [info](CCWGPUCommandBufferObject *gpuCommandBufferObj) {
-            wgpuComputePassEncoderDispatch(gpuCommandBufferObj->wgpuComputeEncoder,
-                                           info.groupCountX,
-                                           info.groupCountY,
-                                           info.groupCountZ);
-        };
+    WGPUComputePassDescriptor cmoputeDesc = {};
+    if (!_gpuCommandBufferObj->wgpuComputeEncoder) {
+        _gpuCommandBufferObj->wgpuComputeEncoder = wgpuCommandEncoderBeginComputePass(_gpuCommandBufferObj->wgpuCommandEncoder, &cmoputeDesc);
     }
-    _computeFuncQ.push(dispatchFunc);
+
+    if (info.indirectBuffer) {
+        auto *indirectBuffer = static_cast<CCWGPUBuffer *>(info.indirectBuffer);
+        wgpuComputePassEncoderDispatchIndirect(_gpuCommandBufferObj->wgpuComputeEncoder,
+                                               indirectBuffer->gpuBufferObject()->wgpuBuffer,
+                                               info.indirectOffset);
+
+    } else {
+        wgpuComputePassEncoderDispatch(_gpuCommandBufferObj->wgpuComputeEncoder,
+                                       info.groupCountX,
+                                       info.groupCountY,
+                                       info.groupCountZ);
+    }
 }
 
 void CCWGPUCommandBuffer::pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrier *const *textureBarriers, const Texture *const *textures, uint textureBarrierCount) {
