@@ -837,6 +837,8 @@ cocos_source_files(
                  cocos/renderer/pipeline/shadow/ShadowStage.cpp
                  cocos/renderer/pipeline/shadow/ShadowStage.h
                  cocos/renderer/pipeline/common/Enum.h
+                 cocos/renderer/pipeline/common/BloomStage.cpp
+                 cocos/renderer/pipeline/common/BloomStage.h
                  cocos/renderer/pipeline/common/PostProcessStage.cpp
                  cocos/renderer/pipeline/common/PostProcessStage.h
                  cocos/renderer/pipeline/common/UIPhase.cpp
@@ -1588,8 +1590,10 @@ elseif(OHOS)
 elseif(APPLE)
     cocos_source_files(
                     cocos/bindings/manual/jsb_platfrom_apple.mm
-                     cocos/bindings/manual/JavaScriptObjCBridge.h
-                     cocos/bindings/manual/JavaScriptObjCBridge.mm
+                    cocos/bindings/manual/JavaScriptObjCBridge.h
+                    cocos/bindings/manual/JavaScriptObjCBridge.mm
+                    cocos/platform/apple/JsbBridge.h
+                    cocos/platform/apple/JsbBridge.mm
     )
 elseif(WIN32)
     cocos_source_files(
