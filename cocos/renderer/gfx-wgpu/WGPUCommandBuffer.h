@@ -26,9 +26,10 @@
 #pragma once
 #include <emscripten/bind.h>
 #include <emscripten/val.h>
+#include <deque>
 #include <functional>
-#include <queue>
 #include "gfx-base/GFXCommandBuffer.h"
+
 namespace cc {
 namespace gfx {
 
@@ -70,8 +71,6 @@ public:
 
     void updateIndirectBuffer(Buffer *buffer, const DrawInfoList &list);
 
-    void copyBuffersToTexture(const std::vector<String> &strList, Texture *texture, const BufferTextureCopy *regions, uint count);
-
     void updateBuffer(Buffer *buff, const emscripten::val &v, uint size) {
         std::vector<uint8_t> buffer = emscripten::convertJSArrayToNumberVector<uint8_t>(v);
         updateBuffer(buff, reinterpret_cast<const void *>(buffer.data()), size);
@@ -91,8 +90,8 @@ protected:
     CCWGPUCommandBufferObject *_gpuCommandBufferObj = nullptr;
 
     // command buffer inner impl
-    std::queue<EncodeFunc> _renderPassFuncQ;
-    std::queue<EncodeFunc> _computeFuncQ;
+    //std::queue<EncodeFunc> _renderPassFuncQ;
+    //std::queue<EncodeFunc> _computeFuncQ;
 };
 
 } // namespace gfx

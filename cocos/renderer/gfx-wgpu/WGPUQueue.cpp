@@ -55,16 +55,16 @@ void CCWGPUQueue::doDestroy() {
 }
 
 void CCWGPUQueue::submit(CommandBuffer* const* cmdBuffs, uint count) {
-    std::vector<WGPUCommandBuffer> commandBuffs(count);
-    for (size_t i = 0; i < count; i++) {
-        auto* commandBuff = static_cast<CCWGPUCommandBuffer*>(cmdBuffs[i]);
-        commandBuffs[i]   = commandBuff->gpuCommandBufferObject()->wgpuCommandBuffer;
-    }
-    wgpuQueueSubmit(_gpuQueueObject->wgpuQueue, count, commandBuffs.data());
-    for (size_t i = 0; i < count; i++) {
-        auto* commandBuff = static_cast<CCWGPUCommandBuffer*>(cmdBuffs[i]);
-        wgpuCommandBufferRelease(commandBuff->gpuCommandBufferObject()->wgpuCommandBuffer);
-    }
+    // std::vector<WGPUCommandBuffer> commandBuffs(count);
+    // for (size_t i = 0; i < count; i++) {
+    //     auto* commandBuff = static_cast<CCWGPUCommandBuffer*>(cmdBuffs[i]);
+    //     commandBuffs[i]   = commandBuff->gpuCommandBufferObject()->wgpuCommandBuffer;
+    // }
+    // wgpuQueueSubmit(_gpuQueueObject->wgpuQueue, count, commandBuffs.data());
+    // for (size_t i = 0; i < count; i++) {
+    //     auto* commandBuff = static_cast<CCWGPUCommandBuffer*>(cmdBuffs[i]);
+    //     wgpuCommandBufferRelease(commandBuff->gpuCommandBufferObject()->wgpuCommandBuffer);
+    // }
 }
 
 } // namespace gfx

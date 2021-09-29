@@ -25,6 +25,7 @@
 
 #include "WGPUSampler.h"
 #include <webgpu/webgpu.h>
+#include <limits>
 #include "WGPUDevice.h"
 #include "WGPUUtils.h"
 
@@ -47,8 +48,8 @@ CCWGPUSampler::CCWGPUSampler(const SamplerInfo& info) : wrapper<Sampler>(val::ob
         .magFilter     = toWGPUFilterMode(info.magFilter),
         .minFilter     = toWGPUFilterMode(info.minFilter),
         .mipmapFilter  = toWGPUFilterMode(info.mipFilter),
-        .lodMinClamp   = 0.1f,
-        .lodMaxClamp   = 1000.0f,
+        .lodMinClamp   = 0.0f,
+        .lodMaxClamp   = std::numeric_limits<float>::max(),
         .compare       = WGPUCompareFunction_Undefined, //toWGPUCompareFunction(info.cmpFunc),
         .maxAnisotropy = static_cast<uint16_t>(info.maxAnisotropy),
     };
