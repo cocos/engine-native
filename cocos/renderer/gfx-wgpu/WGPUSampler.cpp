@@ -25,6 +25,7 @@
 
 #include "WGPUSampler.h"
 #include <webgpu/webgpu.h>
+#include <functional>
 #include <limits>
 #include "WGPUDevice.h"
 #include "WGPUUtils.h"
@@ -38,7 +39,7 @@ CCWGPUSampler* defaultSampler = nullptr;
 
 using namespace emscripten;
 
-CCWGPUSampler::CCWGPUSampler(const SamplerInfo& info) : wrapper<Sampler>(val::object(), info) {
+CCWGPUSampler::CCWGPUSampler(const SamplerInfo& info, uint32_t hash) : wrapper<Sampler>(val::object(), info, hash) {
     WGPUSamplerDescriptor descriptor = {
         .nextInChain   = nullptr,
         .label         = nullptr,
@@ -74,8 +75,8 @@ CCWGPUSampler* CCWGPUSampler::defaultSampler() {
             .maxAnisotropy = 0,
             .cmpFunc       = ComparisonFunc::ALWAYS,
         };
-
-        anoymous::defaultSampler = new CCWGPUSampler(info);
+        uint32_t hash            = std::hash<String>{}("default sampler");
+        anoymous::defaultSampler = new CCWGPUSampler(info, hash);
     }
     return anoymous::defaultSampler;
 }

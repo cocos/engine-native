@@ -35,7 +35,7 @@ namespace gfx {
 class CCWGPUSampler final : public emscripten::wrapper<Sampler> {
 public:
     EMSCRIPTEN_WRAPPER(CCWGPUSampler);
-    explicit CCWGPUSampler(const SamplerInfo& info);
+    explicit CCWGPUSampler(const SamplerInfo& info, uint32_t hash);
     ~CCWGPUSampler();
 
     inline WGPUSampler gpuSampler() { return _wgpuSampler; }

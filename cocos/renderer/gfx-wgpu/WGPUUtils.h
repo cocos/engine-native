@@ -52,7 +52,7 @@ static WGPUTextureUsageFlags toWGPUTextureUsage(TextureUsage usage) {
         res |= WGPUTextureUsage::WGPUTextureUsage_Sampled;
     }
     if (hasFlag(usage, TextureUsageBit::COLOR_ATTACHMENT)) {
-        res |= WGPUTextureUsage::WGPUTextureUsage_OutputAttachment;
+        res |= WGPUTextureUsage::WGPUTextureUsage_RenderAttachment;
     }
     if (hasFlag(usage, TextureUsageBit::DEPTH_STENCIL_ATTACHMENT)) {
         res |= WGPUTextureUsage::WGPUTextureUsage_RenderAttachment;

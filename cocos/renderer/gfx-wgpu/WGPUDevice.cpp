@@ -201,14 +201,14 @@ Shader* CCWGPUDevice::createShader(const SPVShaderInfoInstance& info) {
 void CCWGPUDevice::present() {
 }
 
-GlobalBarrier* CCWGPUDevice::createGlobalBarrier(const GlobalBarrierInfo& info) {
+GlobalBarrier* CCWGPUDevice::createGlobalBarrier(const GlobalBarrierInfo& info, uint32_t hash) {
 }
 
-TextureBarrier* CCWGPUDevice::createTextureBarrier(const TextureBarrierInfo& info) {
+TextureBarrier* CCWGPUDevice::createTextureBarrier(const TextureBarrierInfo& info, uint32_t hash) {
 }
 
-Sampler* CCWGPUDevice::createSampler(const SamplerInfo& info) {
-    return new CCWGPUSampler(info);
+Sampler* CCWGPUDevice::createSampler(const SamplerInfo& info, uint32_t hash) {
+    return new CCWGPUSampler(info, hash);
 }
 
 void CCWGPUDevice::debug() {
