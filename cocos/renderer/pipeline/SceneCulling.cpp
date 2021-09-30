@@ -315,6 +315,21 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
         renderObjects.emplace_back(genRenderObject(skyBox->model, camera));
     }
 
+    for (const auto *model : scene->getModels()) {
+        if (model->getEnabled()) {
+            const auto        visibility       = camera->visibility;
+            const auto *const node             = model->getNode();
+
+            if ((model->getNode() && ((visibility & node->getLayer()) == node->getLayer())) ||
+                (visibility & model->getVisFlags())) {
+                const auto *modelWorldBounds = model->getWorldBounds();
+                if (!modelWorldBounds && skyBox->model != model) {
+                    renderObjects.emplace_back(genRenderObject(model, camera));
+                }
+            }
+        }
+    }
+
 #define USE_OCTREE_VISIBILITY_QUERY
 #ifdef USE_OCTREE_VISIBILITY_QUERY
     for (const auto *model : scene->getModels()) {
