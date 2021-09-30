@@ -339,12 +339,9 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
 
     auto *     pipeline   = static_cast<DeferredPipeline *>(_pipeline);
     gfx::Color clearColor = pipeline->getClearcolor(camera);
-    auto subpassEnabled = _device->hasFeature(gfx::Feature::INPUT_ATTACHMENT_BENEFIT);
 
     auto lightingSetup = [&](framegraph::PassNodeBuilder &builder, RenderData &data) {
-        if (subpassEnabled) {
-            builder.subpass(true);
-        }
+        builder.subpass(true);
 
         // read gbuffer
         for (int i = 0; i < 4; i++) {
@@ -394,7 +391,7 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         builder.setViewport(pipeline->getRenderArea(camera));
     };
 
-    auto lightingExec = [this, camera, subpassEnabled](RenderData const &data, const framegraph::DevicePassResourceTable &table) {
+    auto lightingExec = [this, camera](RenderData const &data, const framegraph::DevicePassResourceTable &table) {
         auto *      pipeline  = static_cast<DeferredPipeline *>(_pipeline);
         auto *const sceneData = pipeline->getPipelineSceneData();
 
@@ -415,6 +412,8 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         gfx::Shader *        shader         = sceneData->getSharedData()->deferredLightPassShader;
         gfx::InputAssembler *inputAssembler = pipeline->getIAByRenderArea(rendeArea);
         gfx::PipelineState *pState = nullptr;
+
+        auto subpassEnabled = _device->hasFeature(gfx::Feature::INPUT_ATTACHMENT_BENEFIT);
         if (subpassEnabled) {
             pState = PipelineStateManager::getOrCreatePipelineState(pass, shader, inputAssembler, table.getRenderPass(), 1);
         } else {
