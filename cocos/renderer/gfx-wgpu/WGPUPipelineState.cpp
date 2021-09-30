@@ -158,7 +158,6 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
             .multisample  = msState,
             .fragment     = &fragmentState,
         };
-        printf("ppshn: %s\n", static_cast<CCWGPUShader*>(info.shader)->gpuShaderObject()->name.c_str());
         _gpuPipelineStateObj->wgpuRenderPipeline = wgpuDeviceCreateRenderPipeline2(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &piplineDesc);
     } else if (info.bindPoint == PipelineBindPoint::COMPUTE) {
         WGPUProgrammableStageDescriptor psDesc = {

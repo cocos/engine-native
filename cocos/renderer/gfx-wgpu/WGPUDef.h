@@ -11,7 +11,31 @@ public:
     TextureInfoInstance() = default;
 
     inline void setType(TextureType type) { info.type = type; }
-    inline void setUsage(TextureUsage usage) { info.usage = usage; }
+    inline void setUsage(uint32_t usageIn) {
+        TextureUsage usage = TextureUsageBit::NONE;
+        if (hasFlag(static_cast<TextureUsage>(usageIn), TextureUsageBit::TRANSFER_SRC)) {
+            usage |= TextureUsageBit::TRANSFER_SRC;
+        }
+        if (hasFlag(static_cast<TextureUsage>(usageIn), TextureUsageBit::TRANSFER_DST)) {
+            usage |= TextureUsageBit::TRANSFER_DST;
+        }
+        if (hasFlag(static_cast<TextureUsage>(usageIn), TextureUsageBit::SAMPLED)) {
+            usage |= TextureUsageBit::SAMPLED;
+        }
+        if (hasFlag(static_cast<TextureUsage>(usageIn), TextureUsageBit::STORAGE)) {
+            usage |= TextureUsageBit::STORAGE;
+        }
+        if (hasFlag(static_cast<TextureUsage>(usageIn), TextureUsageBit::COLOR_ATTACHMENT)) {
+            usage |= TextureUsageBit::COLOR_ATTACHMENT;
+        }
+        if (hasFlag(static_cast<TextureUsage>(usageIn), TextureUsageBit::DEPTH_STENCIL_ATTACHMENT)) {
+            usage |= TextureUsageBit::DEPTH_STENCIL_ATTACHMENT;
+        }
+        if (hasFlag(static_cast<TextureUsage>(usageIn), TextureUsageBit::INPUT_ATTACHMENT)) {
+            usage |= TextureUsageBit::INPUT_ATTACHMENT;
+        }
+        info.usage = usage;
+    }
     inline void setFormat(Format format) { info.format = format; }
     inline void setWidth(uint32_t width) { info.width = width; }
     inline void setHeight(uint32_t height) { info.height = height; }
