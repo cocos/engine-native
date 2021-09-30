@@ -97,8 +97,8 @@ void DevicePass::execute() {
 }
 
 void DevicePass::append(const FrameGraph &graph, const PassNode *passNode, std::vector<RenderTargetAttachment> *attachments) {
-    _subpasses.emplace_back(Subpass());
-    Subpass &subpass = *_subpasses.rbegin();
+    _subpasses.emplace_back();
+    Subpass &subpass = _subpasses.back();
 
     do {
         subpass.logicPasses.emplace_back();
@@ -138,7 +138,7 @@ void DevicePass::append(const FrameGraph &graph, const RenderTargetAttachment &a
 
     if (it == attachments->end()) {
         attachments->emplace_back(attachment);
-        output = &(*attachments->rbegin());
+        output = &(attachments->back());
         _usedRenderTargetSlotMask |= 1 << attachment.desc.slot;
     } else {
         const ResourceNode &resourceNodeA = graph.getResourceNode(it->textureHandle);
@@ -156,7 +156,7 @@ void DevicePass::append(const FrameGraph &graph, const RenderTargetAttachment &a
         } else {
             CC_ASSERT(attachment.desc.usage == RenderTargetAttachment::Usage::COLOR);
             attachments->emplace_back(attachment);
-            output = &(*attachments->rbegin());
+            output = &(attachments->back());
 
             for (uint8_t i = 0; i < RenderTargetAttachment::DEPTH_STENCIL_SLOT_START; ++i) {
                 if ((_usedRenderTargetSlotMask & (1 << i)) == 0) {
@@ -185,14 +185,14 @@ void DevicePass::begin(gfx::CommandBuffer *cmdBuff) {
     uint32_t                       clearStencil = 0;
     static std::vector<gfx::Color> clearColors;
     clearColors.clear();
-    _viewport = gfx::Viewport();
-    _scissor  = gfx::Rect();
+    _viewport = {};
+    _scissor  = {0, 0, UINT_MAX, UINT_MAX};
 
     for (const auto &attachElem : _attachments) {
         gfx::Texture *attachment = attachElem.renderTarget;
         if (attachElem.attachment.desc.usage == RenderTargetAttachment::Usage::COLOR) {
-            rpInfo.colorAttachments.emplace_back(gfx::ColorAttachment());
-            auto &attachmentInfo  = *rpInfo.colorAttachments.rbegin();
+            rpInfo.colorAttachments.emplace_back();
+            auto &attachmentInfo  = rpInfo.colorAttachments.back();
             attachmentInfo.format = attachment->getFormat();
             attachmentInfo.loadOp          = attachElem.attachment.desc.loadOp;
             attachmentInfo.storeOp         = attachElem.attachment.storeOp;
@@ -200,8 +200,6 @@ void DevicePass::begin(gfx::CommandBuffer *cmdBuff) {
             attachmentInfo.endAccesses     = attachElem.attachment.desc.endAccesses;
             attachmentInfo.isGeneralLayout = attachElem.attachment.isGeneralLayout;
             fboInfo.colorTextures.push_back(attachElem.renderTarget);
-            _viewport.width = _scissor.width = attachment->getWidth();
-            _viewport.height = _scissor.height = attachment->getHeight();
             clearColors.emplace_back(attachElem.attachment.desc.clearColor);
         } else {
             auto &attachmentInfo           = rpInfo.depthStencilAttachment;
@@ -214,11 +212,11 @@ void DevicePass::begin(gfx::CommandBuffer *cmdBuff) {
             attachmentInfo.endAccesses     = attachElem.attachment.desc.endAccesses;
             attachmentInfo.isGeneralLayout = attachElem.attachment.isGeneralLayout;
             fboInfo.depthStencilTexture    = attachElem.renderTarget;
-            _viewport.width = _scissor.width = attachment->getWidth();
-            _viewport.height = _scissor.height = attachment->getHeight();
-            clearDepth                         = attachElem.attachment.desc.clearDepth;
-            clearStencil                       = attachElem.attachment.desc.clearStencil;
+            clearDepth                     = attachElem.attachment.desc.clearDepth;
+            clearStencil                   = attachElem.attachment.desc.clearStencil;
         }
+        _viewport.width = _scissor.width = std::min(_scissor.width, attachment->getWidth());
+        _viewport.height = _scissor.height = std::min(_scissor.height, attachment->getHeight());
     }
 
     for (auto &subpass : _subpasses) {
