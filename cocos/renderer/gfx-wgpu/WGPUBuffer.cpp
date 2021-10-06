@@ -50,11 +50,13 @@ void CCWGPUBuffer::doInit(const BufferInfo &info) {
         _gpuBufferObject->indirectObjs.resize(drawInfoCount);
     }
 
+    _size = ceil(info.size / 4.0) * 4;
+
     WGPUBufferDescriptor descriptor = {
         .nextInChain      = nullptr,
         .label            = nullptr,
         .usage            = toWGPUBufferUsage(info.usage),
-        .size             = info.size,
+        .size             = _size,
         .mappedAtCreation = false, //hasFlag(info.memUsage, MemoryUsageBit::DEVICE),
     };
 
@@ -100,11 +102,13 @@ void CCWGPUBuffer::doResize(uint size, uint count) {
         _gpuBufferObject->indirectObjs.resize(drawInfoCount);
     }
 
+    _size = ceil(size / 4.0) * 4;
+
     WGPUBufferDescriptor descriptor = {
         .nextInChain      = nullptr,
         .label            = nullptr,
         .usage            = toWGPUBufferUsage(_usage),
-        .size             = size,
+        .size             = _size,
         .mappedAtCreation = false, //hasFlag(_memUsage, MemoryUsageBit::DEVICE),
     };
     _gpuBufferObject->wgpuBuffer = wgpuDeviceCreateBuffer(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
@@ -136,9 +140,10 @@ void CCWGPUBuffer::update(const void *buffer, uint size) {
     //     wgpuBufferMapAsync(mappedBuffer, WGPUMapMode_Write, 0, size, bufferUpdateCallback, mappedBuffer);
     // }
 
-    size_t      offset   = _isBufferView ? _offset : 0;
-    void const *data     = buffer;
-    size_t      buffSize = size;
+    size_t      offset      = _isBufferView ? _offset : 0;
+    void const *data        = buffer;
+    uint32_t    alignedSize = ceil(size / 4.0) * 4;
+    size_t      buffSize    = alignedSize;
     if (hasFlag(_usage, BufferUsageBit::INDIRECT)) {
         size_t drawInfoCount = size / (sizeof(DrawInfo));
         auto * drawInfos     = static_cast<const DrawInfo *>(buffer);
@@ -170,7 +175,7 @@ void CCWGPUBuffer::update(const void *buffer, uint size) {
             }
         }
     }
-    wgpuQueueWriteBuffer(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuQueue, _gpuBufferObject->wgpuBuffer, offset, data, size);
+    wgpuQueueWriteBuffer(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuQueue, _gpuBufferObject->wgpuBuffer, offset, data, buffSize);
     wgpuBufferUnmap(_gpuBufferObject->wgpuBuffer);
 }
 
