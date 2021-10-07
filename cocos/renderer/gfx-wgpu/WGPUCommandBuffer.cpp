@@ -244,6 +244,39 @@ void CCWGPUCommandBuffer::bindStates() {
         return;
     }
 
+    // for (size_t i = 0; i < _gpuCommandBufferObj->stateCache.descriptorSets.size(); i++) {
+    //     auto *layout = static_cast<CCWGPUDescriptorSetLayout *>(_gpuCommandBufferObj->stateCache.descriptorSets[i].descriptorSet->getLayout());
+    //     // for (size_t i = 0; i < _gpuLayoutEntryObj->bindGroupLayoutEntries.size(); i++) {
+    //     //     const auto& entry = _gpuLayoutEntryObj->bindGroupLayoutEntries[i];
+    //     //     if ((entry.buffer.type != WGPUBufferBindingType_Undefined) +
+    //     //             (entry.sampler.type != WGPUSamplerBindingType_Undefined) +
+    //     //             (entry.texture.sampleType != WGPUTextureSampleType_Undefined) +
+    //     //             (entry.storageTexture.access != WGPUStorageTextureAccess_Undefined) !=
+    //     //         1) {
+    //     //         printf("******missing %d, %d, %d, %d, %d, %d\n", i, entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
+    //     //     }
+    //     // }+
+
+    //     // for (size_t j = 0; j < layout->gpuLayoutEntryObject()->bindGroupLayoutEntries.size(); j++) {
+    //     //     // const auto &entryLayout = layout->gpuLayoutEntryObject()->bindGroupLayoutEntries[j];
+    //     //     // printf("set, binding, b, t, s %d, %d, %p, %p, %p\n", i, entry.binding, entry.buffer, entry.textureView, entry.sampler);
+    //     //     const auto &entry = layout->gpuLayoutEntryObject()->bindGroupLayoutEntries[j];
+    //     //     if ((entry.buffer.type != WGPUBufferBindingType_Undefined) +
+    //     //             (entry.sampler.type != WGPUSamplerBindingType_Undefined) +
+    //     //             (entry.texture.sampleType != WGPUTextureSampleType_Undefined) +
+    //     //             (entry.storageTexture.access != WGPUStorageTextureAccess_Undefined) !=
+    //     //         1) {
+    //     //         printf("******missing %d, %d, %d, %d, %d, %d\n", i, entry.binding, entry.buffer.type, entry.texture.sampleType, entry.sampler.type, entry.storageTexture.access);
+    //     //     }
+    //     //     printf("set, binding, b, t, s %d, %d, %p, %p, %p\n", i, entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
+    //     // }
+    //     for (size_t j = 0; j < _gpuCommandBufferObj->stateCache.descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindGroupEntries.size(); j++) {
+    //         const auto &entry = _gpuCommandBufferObj->stateCache.descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindGroupEntries[j];
+    //         printf("set, binding, b, t, s %d, %d, %p, %p, %p\n", i, entry.binding, entry.buffer, entry.textureView, entry.sampler);
+    //     }
+    // }
+    //bindingSet
+
     if (pipelineState->getBindPoint() == PipelineBindPoint::GRAPHICS) {
         auto *pipelineState = _gpuCommandBufferObj->stateCache.pipelineState;
         //pipeline state
@@ -252,13 +285,14 @@ void CCWGPUCommandBuffer::bindStates() {
         //bindgroup & descriptorset
         const auto &descriptorSets = _gpuCommandBufferObj->stateCache.descriptorSets;
         for (size_t i = 0; i < descriptorSets.size(); i++) {
-            if (descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup) {
-                wgpuRenderPassEncoderSetBindGroup(_gpuCommandBufferObj->wgpuRenderPassEncoder,
-                                                  descriptorSets[i].index,
-                                                  descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
-                                                  descriptorSets[i].dynamicOffsetCount,
-                                                  descriptorSets[i].dynamicOffsets);
+            if (!descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup) {
+                descriptorSets[i].descriptorSet->prepare();
             }
+            wgpuRenderPassEncoderSetBindGroup(_gpuCommandBufferObj->wgpuRenderPassEncoder,
+                                              descriptorSets[i].index,
+                                              descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
+                                              descriptorSets[i].dynamicOffsetCount,
+                                              descriptorSets[i].dynamicOffsets);
         }
 
         //input assembler
@@ -368,6 +402,8 @@ void CCWGPUCommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size
     auto *ccBuffer = static_cast<CCWGPUBuffer *>(buff);
     // queue specific only
     ccBuffer->update(data, size);
+    //auto *fbuf = static_cast<const float *>(data);
+    //printf("updbf sz b: %f, %d, %p\n", fbuf[0], size, static_cast<CCWGPUBuffer *>(buff)->gpuBufferObject()->wgpuBuffer);
 }
 
 void CCWGPUCommandBuffer::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) {

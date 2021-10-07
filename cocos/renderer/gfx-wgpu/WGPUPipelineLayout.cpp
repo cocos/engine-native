@@ -45,9 +45,25 @@ void CCWGPUPipelineLayout::prepare() {
     std::vector<WGPUBindGroupLayout> layouts;
     for (size_t i = 0; i < _setLayouts.size(); i++) {
         auto* descriptorSetLayout = static_cast<CCWGPUDescriptorSetLayout*>(_setLayouts[i]);
-        if (descriptorSetLayout->gpuLayoutEntryObject()->bindGroupLayout) {
-            layouts.push_back(descriptorSetLayout->gpuLayoutEntryObject()->bindGroupLayout);
+        // const auto& bindGroupLayoutEntries = descriptorSetLayout->gpuLayoutEntryObject()->bindGroupLayoutEntries;
+        // for (size_t j = 0; j < bindGroupLayoutEntries.size(); j++) {
+        //     // const auto &entryLayout = layout->gpuLayoutEntryObject()->bindGroupLayoutEntries[j];
+        //     // printf("set, binding, b, t, s %d, %d, %p, %p, %p\n", i, entry.binding, entry.buffer, entry.textureView, entry.sampler);
+        //     const auto& entry = bindGroupLayoutEntries[j];
+        //     if ((entry.buffer.type != WGPUBufferBindingType_Undefined) +
+        //             (entry.sampler.type != WGPUSamplerBindingType_Undefined) +
+        //             (entry.texture.sampleType != WGPUTextureSampleType_Undefined) +
+        //             (entry.storageTexture.access != WGPUStorageTextureAccess_Undefined) !=
+        //         1) {
+        //         printf("******missing %d, %d, %d, %d, %d\n", entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
+        //     }
+        //     printf("l binding, b, t, s  %d, %d, %d, %d, %d\n", entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
+        // }
+
+        if (!descriptorSetLayout->gpuLayoutEntryObject()->bindGroupLayout) {
+            descriptorSetLayout->prepare({});
         }
+        layouts.push_back(descriptorSetLayout->gpuLayoutEntryObject()->bindGroupLayout);
     }
 
     WGPUPipelineLayoutDescriptor descriptor = {

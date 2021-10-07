@@ -121,24 +121,35 @@ void bufferUpdateCallback(WGPUBufferMapAsyncStatus status, void *userdata) {
 }
 
 void CCWGPUBuffer::update(const void *buffer, uint size) {
-    // if (_memUsage & MemoryUsageBit::DEVICE) {
-    //     auto *mappedBuffer = wgpuBufferGetMappedRange(_gpuBufferObject->wgpuBuffer, 0, size);
-    //     memcpy(mappedBuffer, buffer, size);
-    //     size_t offset = _isBufferView ? _offset : 0;
-    //     wgpuBufferMapAsync(_gpuBufferObject->wgpuBuffer, WGPUMapMode_Write, offset, size, bufferUpdateCallback, _gpuBufferObject->wgpuBuffer);
-    // } else {
-    //     WGPUBufferDescriptor descriptor = {
-    //         .nextInChain      = nullptr,
-    //         .label            = nullptr,
-    //         .usage            = toWGPUBufferUsage(_info.usage),
-    //         .size             = size,
-    //         .mappedAtCreation = true,
-    //     };
-    //     WGPUBuffer stagingBuffer = wgpuDeviceCreateBuffer(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
-    //     auto *     mappedBuffer  = wgpuBufferGetMappedRange(stagingBuffer, 0, size);
-    //     memcpy(mappedBuffer, buffer, size);
-    //     wgpuBufferMapAsync(mappedBuffer, WGPUMapMode_Write, 0, size, bufferUpdateCallback, mappedBuffer);
-    // }
+    // uint32_t alignedSize = ceil(size / 4.0) * 4;
+    // size_t   buffSize    = alignedSize;
+    // // if (hasFlag(_memUsage, MemoryUsageBit::DEVICE)) {
+    // //     auto *mappedBuffer = wgpuBufferGetMappedRange(_gpuBufferObject->wgpuBuffer, 0, alignedSize);
+    // //     memcpy(mappedBuffer, buffer, alignedSize);
+    // //     size_t offset = _isBufferView ? _offset : 0;
+    // //     wgpuBufferMapAsync(_gpuBufferObject->wgpuBuffer, WGPUMapMode_Write, offset, alignedSize, bufferUpdateCallback, _gpuBufferObject->wgpuBuffer);
+    // // } else {
+    // WGPUBufferDescriptor descriptor = {
+    //     .nextInChain      = nullptr,
+    //     .label            = nullptr,
+    //     .usage            = WGPUBufferUsage_MapWrite | WGPUBufferUsage_CopySrc,
+    //     .size             = alignedSize,
+    //     .mappedAtCreation = true,
+    // };
+    // WGPUBuffer stagingBuffer = wgpuDeviceCreateBuffer(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
+    // auto *     mappedBuffer  = wgpuBufferGetMappedRange(stagingBuffer, 0, alignedSize);
+    // memcpy(mappedBuffer, buffer, size);
+    // size_t offset = _isBufferView ? _offset : 0;
+    // //}
+    // wgpuBufferUnmap(static_cast<WGPUBuffer>(stagingBuffer));
+    // //wgpuCommandEncoderCopyBufferToBuffer(WGPUCommandEncoder commandEncoder, WGPUBuffer source, uint64_t sourceOffset, WGPUBuffer destination, uint64_t destinationOffset, uint64_t size);
+    // auto cmdEncoder = wgpuDeviceCreateCommandEncoder(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, nullptr);
+    // wgpuCommandEncoderCopyBufferToBuffer(cmdEncoder, stagingBuffer, 0, _gpuBufferObject->wgpuBuffer, offset, alignedSize);
+    // WGPUCommandBuffer commandBuffer = wgpuCommandEncoderFinish(cmdEncoder, nullptr);
+    // wgpuQueueSubmit(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuQueue, 1, &commandBuffer);
+    // wgpuBufferRelease(stagingBuffer);
+    // wgpuCommandEncoderRelease(cmdEncoder);
+    // wgpuCommandBufferRelease(commandBuffer);
 
     size_t      offset      = _isBufferView ? _offset : 0;
     void const *data        = buffer;
@@ -176,7 +187,7 @@ void CCWGPUBuffer::update(const void *buffer, uint size) {
         }
     }
     wgpuQueueWriteBuffer(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuQueue, _gpuBufferObject->wgpuBuffer, offset, data, buffSize);
-    wgpuBufferUnmap(_gpuBufferObject->wgpuBuffer);
+    //wgpuBufferUnmap(_gpuBufferObject->wgpuBuffer);
 }
 
 void CCWGPUBuffer::check() {

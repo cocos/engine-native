@@ -102,6 +102,17 @@ void CCWGPUDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo& info) {
             _gpuLayoutEntryObj->bindGroupLayoutEntries.push_back(layout);
         }
     }
+
+    // 1 default buffer avoid missing bindgroup when create pipeline layout
+    if (_gpuLayoutEntryObj->bindGroupLayoutEntries.empty()) {
+        WGPUBindGroupLayoutEntry layout = {
+            .nextInChain = nullptr,
+            .binding     = 0,
+            .visibility  = WGPUShaderStage_None,
+            .buffer      = {nullptr, WGPUBufferBindingType::WGPUBufferBindingType_Uniform, false, 0},
+        };
+        _gpuLayoutEntryObj->bindGroupLayoutEntries.push_back(layout);
+    }
 }
 
 void CCWGPUDescriptorSetLayout::updateLayout(uint8_t binding, const CCWGPUBuffer* buffer, const CCWGPUTexture* tex, const CCWGPUSampler* sampler) {
@@ -142,13 +153,34 @@ void CCWGPUDescriptorSetLayout::prepare(const std::set<uint8_t>& bindingInUse) {
     std::vector<WGPUBindGroupLayoutEntry> bindGroupLayoutEntries;
 
     bindGroupLayoutEntries.assign(_gpuLayoutEntryObj->bindGroupLayoutEntries.begin(), _gpuLayoutEntryObj->bindGroupLayoutEntries.end());
-    bindGroupLayoutEntries.erase(std::remove_if(
-                                     bindGroupLayoutEntries.begin(), bindGroupLayoutEntries.end(), [&bindingInUse, &bindGroupLayoutEntries](const WGPUBindGroupLayoutEntry& entry) {
-                                         // size > 1 incase of bind group missing
-                                         return bindingInUse.find(entry.binding) == bindingInUse.end() && bindGroupLayoutEntries.size() > 1;
-                                     }),
-                                 bindGroupLayoutEntries.end());
-    // printf("aftersz: %d\n", _gpuLayoutEntryObj->bindGroupLayoutEntries.size());
+    for (auto iter = bindGroupLayoutEntries.begin(); iter != bindGroupLayoutEntries.end();) {
+        if (bindingInUse.find((*iter).binding) == bindingInUse.end() && bindGroupLayoutEntries.size() > 1) {
+            iter = bindGroupLayoutEntries.erase(iter);
+        } else {
+            ++iter;
+        }
+    }
+
+    // bindGroupLayoutEntries.erase(std::remove_if(
+    //                                  bindGroupLayoutEntries.begin(), bindGroupLayoutEntries.end(), [&bindingInUse, &bindGroupLayoutEntries](const WGPUBindGroupLayoutEntry& entry) {
+    //                                      // size > 1 incase of bind group missing
+    //                                      return bindingInUse.find(entry.binding) == bindingInUse.end() && bindGroupLayoutEntries.size() > 1;
+    //                                  }),
+    //                              bindGroupLayoutEntries.end());
+
+    // for (size_t j = 0; j < bindGroupLayoutEntries.size(); j++) {
+    //     // const auto &entryLayout = layout->gpuLayoutEntryObject()->bindGroupLayoutEntries[j];
+    //     // printf("set, binding, b, t, s %d, %d, %p, %p, %p\n", i, entry.binding, entry.buffer, entry.textureView, entry.sampler);
+    //     const auto& entry = bindGroupLayoutEntries[j];
+    //     if ((entry.buffer.type != WGPUBufferBindingType_Undefined) +
+    //             (entry.sampler.type != WGPUSamplerBindingType_Undefined) +
+    //             (entry.texture.sampleType != WGPUTextureSampleType_Undefined) +
+    //             (entry.storageTexture.access != WGPUStorageTextureAccess_Undefined) !=
+    //         1) {
+    //         printf("******missing %d, %d, %d, %d, %d\n", entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
+    //     }
+    //     printf("l binding, b, t, s  %d, %d, %d, %d, %d\n", entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
+    // }
     WGPUBindGroupLayoutDescriptor descriptor = {
         .nextInChain = nullptr,
         .label       = nullptr,
