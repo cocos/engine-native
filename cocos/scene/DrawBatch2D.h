@@ -41,6 +41,7 @@ struct DrawCall final {
     gfx::DrawInfo *       drawInfo;
 
     void setDynamicOffsets(uint32_t value) {
+        dynamicOffsets.clear();
         dynamicOffsets.push_back(0);
         dynamicOffsets.push_back(value);
     }
