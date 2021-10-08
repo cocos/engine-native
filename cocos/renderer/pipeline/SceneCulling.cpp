@@ -315,8 +315,15 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
         renderObjects.emplace_back(genRenderObject(skyBox->model, camera));
     }
 
+#define USE_OCTREE_VISIBILITY_QUERY
+#ifdef USE_OCTREE_VISIBILITY_QUERY
     for (const auto *model : scene->getModels()) {
+        // filter model by view visibility
         if (model->getEnabled()) {
+            if (model->getCastShadow()) {
+                castShadowObject.emplace_back(genRenderObject(model, camera));
+            }
+
             const auto        visibility       = camera->visibility;
             const auto *const node             = model->getNode();
 
@@ -326,17 +333,6 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
                 if (!modelWorldBounds && skyBox->model != model) {
                     renderObjects.emplace_back(genRenderObject(model, camera));
                 }
-            }
-        }
-    }
-
-#define USE_OCTREE_VISIBILITY_QUERY
-#ifdef USE_OCTREE_VISIBILITY_QUERY
-    for (const auto *model : scene->getModels()) {
-        // filter model by view visibility
-        if (model->getEnabled()) {
-            if (model->getCastShadow()) {
-                castShadowObject.emplace_back(genRenderObject(model, camera));
             }
         }
     }
@@ -378,6 +374,7 @@ void sceneCulling(RenderPipeline *pipeline, scene::Camera *camera) {
                 
                 const auto *modelWorldBounds = model->getWorldBounds();
                 if (!modelWorldBounds) {
+                    renderObjects.emplace_back(genRenderObject(model, camera));
                     continue;
                 }
 
