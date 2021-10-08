@@ -29,6 +29,7 @@
 #include "GFXInputAssembler.h"
 #include "GFXObject.h"
 #include "base/Utils.h"
+#include <array>
 
 namespace cc {
 namespace gfx {
@@ -75,6 +76,8 @@ public:
 
     inline void bindDescriptorSet(uint32_t set, DescriptorSet *descriptorSet);
     inline void bindDescriptorSet(uint32_t set, DescriptorSet *descriptorSet, const vector<uint32_t> &dynamicOffsets);
+    template<size_t N>
+    inline void bindDescriptorSet(uint32_t set, DescriptorSet *descriptorSet, const std::array<uint32_t, N> &dynamicOffsets);
 
     inline void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, uint32_t stencil, const CommandBufferList &secondaryCBs);
     inline void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const ColorList &colors, float depth, uint32_t stencil);
@@ -134,6 +137,11 @@ void CommandBuffer::bindDescriptorSet(uint32_t set, DescriptorSet *descriptorSet
 }
 
 void CommandBuffer::bindDescriptorSet(uint32_t set, DescriptorSet *descriptorSet, const vector<uint32_t> &dynamicOffsets) {
+    bindDescriptorSet(set, descriptorSet, utils::toUint(dynamicOffsets.size()), dynamicOffsets.data());
+}
+
+template <size_t N>
+void CommandBuffer::bindDescriptorSet(uint32_t set, DescriptorSet *descriptorSet, const std::array<uint32_t, N> &dynamicOffsets) {
     bindDescriptorSet(set, descriptorSet, utils::toUint(dynamicOffsets.size()), dynamicOffsets.data());
 }
 

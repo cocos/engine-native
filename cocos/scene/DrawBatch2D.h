@@ -37,7 +37,7 @@ class Pass;
 struct DrawCall final {
     gfx::Buffer *         bufferView{nullptr};
     gfx::DescriptorSet *  descriptorSet{nullptr};
-    std::vector<uint32_t> dynamicOffsets{0, 0};
+    std::array<uint32_t, 2> dynamicOffsets{0, 0};
     gfx::DrawInfo *       drawInfo;
 
     void setDynamicOffsets(const uint32_t& value) {
