@@ -121,7 +121,7 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
     if (dsTexture) {
         WGPURenderPassDepthStencilAttachment depthStencil = {
             .view            = static_cast<CCWGPUTexture *>(dsTexture)->gpuTextureObject()->selfView,
-            .depthLoadOp     = toWGPULoadOp(depthStencilConfig.depthLoadOp),
+            .depthLoadOp     = WGPULoadOp_Clear, //toWGPULoadOp(depthStencilConfig.depthLoadOp),
             .depthStoreOp    = toWGPUStoreOp(depthStencilConfig.depthStoreOp),
             .clearDepth      = depth,
             .depthReadOnly   = false,
@@ -137,7 +137,7 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
         } else {
             WGPURenderPassDepthStencilAttachment depthStencil = {
                 .view            = swapchain->gpuSwapchainObject()->swapchainDepthStencil->gpuTextureObject()->selfView,
-                .depthLoadOp     = toWGPULoadOp(depthStencilConfig.depthLoadOp),
+                .depthLoadOp     = WGPULoadOp_Clear, //toWGPULoadOp(depthStencilConfig.depthLoadOp),
                 .depthStoreOp    = toWGPUStoreOp(depthStencilConfig.depthStoreOp),
                 .clearDepth      = depth,
                 .depthReadOnly   = false,
@@ -243,39 +243,6 @@ void CCWGPUCommandBuffer::bindStates() {
     if (!pipelineState) {
         return;
     }
-
-    // for (size_t i = 0; i < _gpuCommandBufferObj->stateCache.descriptorSets.size(); i++) {
-    //     auto *layout = static_cast<CCWGPUDescriptorSetLayout *>(_gpuCommandBufferObj->stateCache.descriptorSets[i].descriptorSet->getLayout());
-    //     // for (size_t i = 0; i < _gpuLayoutEntryObj->bindGroupLayoutEntries.size(); i++) {
-    //     //     const auto& entry = _gpuLayoutEntryObj->bindGroupLayoutEntries[i];
-    //     //     if ((entry.buffer.type != WGPUBufferBindingType_Undefined) +
-    //     //             (entry.sampler.type != WGPUSamplerBindingType_Undefined) +
-    //     //             (entry.texture.sampleType != WGPUTextureSampleType_Undefined) +
-    //     //             (entry.storageTexture.access != WGPUStorageTextureAccess_Undefined) !=
-    //     //         1) {
-    //     //         printf("******missing %d, %d, %d, %d, %d, %d\n", i, entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
-    //     //     }
-    //     // }+
-
-    //     // for (size_t j = 0; j < layout->gpuLayoutEntryObject()->bindGroupLayoutEntries.size(); j++) {
-    //     //     // const auto &entryLayout = layout->gpuLayoutEntryObject()->bindGroupLayoutEntries[j];
-    //     //     // printf("set, binding, b, t, s %d, %d, %p, %p, %p\n", i, entry.binding, entry.buffer, entry.textureView, entry.sampler);
-    //     //     const auto &entry = layout->gpuLayoutEntryObject()->bindGroupLayoutEntries[j];
-    //     //     if ((entry.buffer.type != WGPUBufferBindingType_Undefined) +
-    //     //             (entry.sampler.type != WGPUSamplerBindingType_Undefined) +
-    //     //             (entry.texture.sampleType != WGPUTextureSampleType_Undefined) +
-    //     //             (entry.storageTexture.access != WGPUStorageTextureAccess_Undefined) !=
-    //     //         1) {
-    //     //         printf("******missing %d, %d, %d, %d, %d, %d\n", i, entry.binding, entry.buffer.type, entry.texture.sampleType, entry.sampler.type, entry.storageTexture.access);
-    //     //     }
-    //     //     printf("set, binding, b, t, s %d, %d, %p, %p, %p\n", i, entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
-    //     // }
-    //     for (size_t j = 0; j < _gpuCommandBufferObj->stateCache.descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindGroupEntries.size(); j++) {
-    //         const auto &entry = _gpuCommandBufferObj->stateCache.descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindGroupEntries[j];
-    //         printf("set, binding, b, t, s %d, %d, %p, %p, %p\n", i, entry.binding, entry.buffer, entry.textureView, entry.sampler);
-    //     }
-    // }
-    //bindingSet
 
     if (pipelineState->getBindPoint() == PipelineBindPoint::GRAPHICS) {
         auto *pipelineState = _gpuCommandBufferObj->stateCache.pipelineState;
@@ -399,9 +366,42 @@ void CCWGPUCommandBuffer::draw(const DrawInfo &info) {
 }
 
 void CCWGPUCommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size) {
-    auto *ccBuffer = static_cast<CCWGPUBuffer *>(buff);
-    // queue specific only
-    ccBuffer->update(data, size);
+    uint32_t alignedSize = ceil(size / 4.0) * 4;
+    size_t   buffSize    = alignedSize;
+
+    WGPUBufferDescriptor descriptor = {
+        .nextInChain      = nullptr,
+        .label            = nullptr,
+        .usage            = WGPUBufferUsage_MapWrite | WGPUBufferUsage_CopySrc,
+        .size             = alignedSize,
+        .mappedAtCreation = true,
+    };
+    WGPUBuffer stagingBuffer = wgpuDeviceCreateBuffer(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
+    auto *     mappedBuffer  = wgpuBufferGetMappedRange(stagingBuffer, 0, alignedSize);
+    memcpy(mappedBuffer, data, size);
+
+    wgpuBufferUnmap(static_cast<WGPUBuffer>(stagingBuffer));
+
+    auto * ccBuffer = static_cast<CCWGPUBuffer *>(buff);
+    size_t offset   = ccBuffer->getOffset();
+
+    CCWGPUBufferObject *bufferObj = ccBuffer->gpuBufferObject();
+
+    if (_gpuCommandBufferObj->wgpuCommandEncoder) {
+        wgpuCommandEncoderCopyBufferToBuffer(_gpuCommandBufferObj->wgpuCommandEncoder, stagingBuffer, 0, bufferObj->wgpuBuffer, offset, alignedSize);
+    } else {
+        WGPUCommandEncoder cmdEncoder = wgpuDeviceCreateCommandEncoder(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, nullptr);
+        wgpuCommandEncoderCopyBufferToBuffer(cmdEncoder, stagingBuffer, 0, bufferObj->wgpuBuffer, offset, alignedSize);
+        WGPUCommandBuffer commandBuffer = wgpuCommandEncoderFinish(cmdEncoder, nullptr);
+        wgpuQueueSubmit(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuQueue, 1, &commandBuffer);
+        wgpuBufferRelease(stagingBuffer);
+        wgpuCommandEncoderRelease(cmdEncoder);
+        wgpuCommandBufferRelease(commandBuffer);
+    }
+
+    // auto *ccBuffer = static_cast<CCWGPUBuffer *>(buff);
+    // // queue specific only
+    // ccBuffer->update(data, size);
     //auto *fbuf = static_cast<const float *>(data);
     //printf("updbf sz b: %f, %d, %p\n", fbuf[0], size, static_cast<CCWGPUBuffer *>(buff)->gpuBufferObject()->wgpuBuffer);
 }
