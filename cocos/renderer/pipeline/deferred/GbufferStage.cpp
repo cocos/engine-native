@@ -42,24 +42,8 @@
 
 namespace cc {
 namespace pipeline {
-namespace {
-const String STAGE_NAME = "GbufferStage";
-
-void srgbToLinear(gfx::Color *out, const gfx::Color &gamma) {
-    out->x = gamma.x * gamma.x;
-    out->y = gamma.y * gamma.y;
-    out->z = gamma.z * gamma.z;
-}
-
-void linearToSrgb(gfx::Color *out, const gfx::Color &linear) {
-    out->x = std::sqrt(linear.x);
-    out->y = std::sqrt(linear.y);
-    out->z = std::sqrt(linear.z);
-}
-} // namespace
-
 RenderStageInfo GbufferStage::initInfo = {
-    STAGE_NAME,
+    "GbufferStage",
     static_cast<uint>(DeferredStagePriority::GBUFFER),
     static_cast<uint>(RenderFlowTag::SCENE),
     {{false, RenderQueueSortMode::FRONT_TO_BACK, {"default"}},
@@ -147,8 +131,8 @@ void GbufferStage::recordCommands(DeferredPipeline *pipeline, gfx::RenderPass *r
     auto *cmdBuff = pipeline->getCommandBuffers()[0];
 
     // DescriptorSet bindings
-    uint const globalOffsets[] = {pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
-    cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), static_cast<uint>(std::size(globalOffsets)), globalOffsets);
+    const std::array<uint, 1> globalOffsets = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
+    cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), utils::toUint(globalOffsets.size()), globalOffsets.data());
 
     // record commands
     _renderQueues[0]->recordCommandBuffer(_device, renderPass, cmdBuff);
@@ -163,34 +147,44 @@ void GbufferStage::render(scene::Camera *camera) {
     };
 
     auto *pipeline = static_cast<DeferredPipeline *>(_pipeline);
-    _renderArea    = pipeline->getRenderArea(camera, false);
+    _renderArea    = pipeline->getRenderArea(camera);
 
     // render area is not oriented, copy buffer must be called outsize of RenderPass, it should not be called in execute lambda expression
     // If there are only transparent object, lighting pass is ignored, we should call getIAByRenderArea here
-    (void)pipeline->getIAByRenderArea(_renderArea);
+    pipeline->getIAByRenderArea(_renderArea);
 
     auto gbufferSetup = [&](framegraph::PassNodeBuilder &builder, RenderData &data) {
+        builder.subpass();
+
         // gbuffer setup
         gfx::TextureInfo gbufferInfo = {
             gfx::TextureType::TEX2D,
-            gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
+            gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::INPUT_ATTACHMENT,
             gfx::Format::RGBA8,
             pipeline->getWidth(),
             pipeline->getHeight(),
         };
         gfx::TextureInfo gbufferInfoFloat = {
             gfx::TextureType::TEX2D,
-            gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
+            gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::INPUT_ATTACHMENT,
             gfx::Format::RGBA16F,
             pipeline->getWidth(),
             pipeline->getHeight(),
         };
-        for (int i = 0; i < DeferredPipeline::GBUFFER_COUNT; ++i) {
-            if (i % 3) { // positions & normals need more precision
+        for (int i = 0; i < DeferredPipeline::GBUFFER_COUNT - 1; ++i) {
+            if (i != 0) { // positions & normals need more precision
                 data.gbuffer[i] = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleGbufferTexture[i], gbufferInfoFloat);
             } else {
                 data.gbuffer[i] = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleGbufferTexture[i], gbufferInfo);
             }
+        }
+
+        auto subpassEnabled = _device->hasFeature(gfx::Feature::INPUT_ATTACHMENT_BENEFIT);
+        if (subpassEnabled) {
+            // when subpass enabled, the color result (gles2/gles3) will write to gbuffer[3] and the blit to color texture, so the format should be RGBA16F
+            data.gbuffer[3] = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleGbufferTexture[3], gbufferInfoFloat);
+        } else {
+            data.gbuffer[3] = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleGbufferTexture[3], gbufferInfo);
         }
 
         gfx::Color clearColor{0.0, 0.0, 0.0, 0.0};
@@ -199,8 +193,8 @@ void GbufferStage::render(scene::Camera *camera) {
         colorInfo.usage         = framegraph::RenderTargetAttachment::Usage::COLOR;
         colorInfo.loadOp        = gfx::LoadOp::CLEAR;
         colorInfo.clearColor    = clearColor;
-        colorInfo.beginAccesses = {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE};
-        colorInfo.endAccesses   = {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE};
+        colorInfo.beginAccesses = {gfx::AccessType::FRAGMENT_SHADER_READ_COLOR_INPUT_ATTACHMENT};
+        colorInfo.endAccesses   = {gfx::AccessType::FRAGMENT_SHADER_READ_COLOR_INPUT_ATTACHMENT};
         for (int i = 0; i < DeferredPipeline::GBUFFER_COUNT; ++i) {
             data.gbuffer[i] = builder.write(data.gbuffer[i], colorInfo);
             builder.writeToBlackboard(DeferredPipeline::fgStrHandleGbufferTexture[i], data.gbuffer[i]);
@@ -214,7 +208,7 @@ void GbufferStage::render(scene::Camera *camera) {
             pipeline->getWidth(),
             pipeline->getHeight(),
         };
-        data.depth = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleDepthTexture, depthTexInfo);
+        data.depth = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleOutDepthTexture, depthTexInfo);
 
         framegraph::RenderTargetAttachment::Descriptor depthInfo;
         depthInfo.usage        = framegraph::RenderTargetAttachment::Usage::DEPTH_STENCIL;
@@ -223,11 +217,10 @@ void GbufferStage::render(scene::Camera *camera) {
         depthInfo.clearStencil = camera->clearStencil;
         depthInfo.endAccesses  = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
         data.depth             = builder.write(data.depth, depthInfo);
-        builder.writeToBlackboard(DeferredPipeline::fgStrHandleDepthTexture, data.depth);
+        builder.writeToBlackboard(DeferredPipeline::fgStrHandleOutDepthTexture, data.depth);
 
         // viewport setup
-        gfx::Viewport viewport{_renderArea.x, _renderArea.y, _renderArea.width, _renderArea.height, 0.F, 1.F};
-        builder.setViewport(viewport, _renderArea);
+        builder.setViewport(_renderArea);
     };
 
     auto gbufferExec = [this](const RenderData & /*data*/, const framegraph::DevicePassResourceTable &table) {
@@ -243,7 +236,7 @@ void GbufferStage::render(scene::Camera *camera) {
     // if empty == true, gbuffer and lightig passes will be ignored
     bool empty = _renderQueues[0]->empty() && _instancedQueue->empty() && _batchedQueue->empty();
     if (!empty) {
-        pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(DeferredInsertPoint::IP_GBUFFER), DeferredPipeline::fgStrHandleGbufferPass, gbufferSetup, gbufferExec);
+        pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(DeferredInsertPoint::DIP_GBUFFER), DeferredPipeline::fgStrHandleGbufferPass, gbufferSetup, gbufferExec);
     }
 }
 } // namespace pipeline

@@ -5,11 +5,9 @@ namespace cc {
 
 ReflectionComp::~ReflectionComp() {
 
-    CC_DELETE(_compDescriptorSet->getLayout());
-    CC_DELETE(_compPipelineState->getPipelineLayout());
-
     CC_SAFE_DESTROY(_compShader);
     CC_SAFE_DESTROY(_compDescriptorSetLayout);
+    CC_SAFE_DESTROY(_compPipelineLayout);
     CC_SAFE_DESTROY(_compPipelineState);
     CC_SAFE_DESTROY(_compDescriptorSet);
 
@@ -51,6 +49,8 @@ void ReflectionComp::applyTexSize(uint width, uint height, const Mat4& matViewPr
 }
 
 void ReflectionComp::init(gfx::Device *dev, uint groupSizeX, uint groupSizeY) {
+    if (!dev->hasFeature(gfx::Feature::COMPUTE_SHADER)) return;
+
     _device           = dev;
     _groupSizeX       = groupSizeX;
     _groupSizeY       = groupSizeY;
@@ -216,14 +216,14 @@ void ReflectionComp::initReflectionRes() {
     dslInfo.bindings.push_back({3, gfx::DescriptorType::STORAGE_IMAGE, 1, gfx::ShaderStageFlagBit::COMPUTE});
     dslInfo.bindings.push_back({4, gfx::DescriptorType::UNIFORM_BUFFER, 1, gfx::ShaderStageFlagBit::COMPUTE});
 
-    gfx::DescriptorSetLayout *compDescriptorSetLayout = _device->createDescriptorSetLayout(dslInfo);
-    _compDescriptorSet                                = _device->createDescriptorSet({compDescriptorSetLayout});
+    _compDescriptorSetLayout = _device->createDescriptorSetLayout(dslInfo);
+    _compDescriptorSet       = _device->createDescriptorSet({_compDescriptorSetLayout});
 
-    gfx::PipelineLayout *compPipelineLayout = _device->createPipelineLayout({{compDescriptorSetLayout, _localDescriptorSetLayout}});
+    _compPipelineLayout = _device->createPipelineLayout({{_compDescriptorSetLayout, _localDescriptorSetLayout}});
 
     gfx::PipelineStateInfo pipelineInfo;
     pipelineInfo.shader         = _compShader;
-    pipelineInfo.pipelineLayout = compPipelineLayout;
+    pipelineInfo.pipelineLayout = _compPipelineLayout;
     pipelineInfo.bindPoint      = gfx::PipelineBindPoint::COMPUTE;
 
     _compPipelineState = _device->createPipelineState(pipelineInfo);
@@ -233,9 +233,9 @@ void ReflectionComp::initDenoiseRes() {
     ShaderSources<ComputeShaderSource> sources;
     sources.glsl4 = StringUtil::format(
         R"(
-        layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
+        layout(local_size_x = %d, local_size_y = %d, local_size_z = 1) in;
         layout(set = 0, binding = 0) uniform sampler2D reflectionTex;
-        layout(set = 1, binding = 12, rgba8) writeonly uniform lowp image2D denoiseTex;
+        layout(set = 1, binding = %d, rgba8) writeonly uniform lowp image2D denoiseTex;
 
         void main() {
             ivec2 id = ivec2(gl_GlobalInvocationID.xy) * 2;
@@ -256,10 +256,10 @@ void ReflectionComp::initDenoiseRes() {
             imageStore(denoiseTex, id + ivec2(1, 1), best.a > bottomRight.a + 0.1 ? best : bottomRight);
 
         })",
-        _groupSizeX, _groupSizeY);
+        _groupSizeX, _groupSizeY, pipeline::REFLECTIONSTORAGE::BINDING);
     sources.glsl3 = StringUtil::format(
         R"(
-        layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
+        layout(local_size_x = %d, local_size_y = %d, local_size_z = 1) in;
         uniform sampler2D reflectionTex;
         layout(rgba8) writeonly uniform lowp image2D denoiseTex;
 

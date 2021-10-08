@@ -115,6 +115,8 @@ const gfx::UniformBlock UBOCamera::LAYOUT = {
         {"cc_fogColor", gfx::Type::FLOAT4, 1},
         {"cc_fogBase", gfx::Type::FLOAT4, 1},
         {"cc_fogAdd", gfx::Type::FLOAT4, 1},
+        {"cc_nearFar", gfx::Type::FLOAT4, 1},
+        {"cc_viewPort", gfx::Type::FLOAT4, 1},
     },
     1,
 };
@@ -258,6 +260,23 @@ const gfx::UniformBlock UBOMorph::LAYOUT = {
     {
         {"cc_displacementWeights", gfx::Type::FLOAT4, static_cast<uint>(UBOMorph::MAX_MORPH_TARGET_COUNT / 4)},
         {"cc_displacementWeights", gfx::Type::FLOAT4, 1},
+    },
+    1,
+};
+
+const String                          UBOUILocal::NAME       = "CCMorph";
+const gfx::DescriptorSetLayoutBinding UBOUILocal::DESCRIPTOR = {
+    UBOUILocal::BINDING,
+    gfx::DescriptorType::DYNAMIC_UNIFORM_BUFFER,
+    1,
+    gfx::ShaderStageFlagBit::VERTEX,
+};
+const gfx::UniformBlock UBOUILocal::LAYOUT = {
+    localSet,
+    UBOUILocal::BINDING,
+    UBOUILocal::NAME,
+    {
+        {"cc_local_data", gfx::Type::FLOAT4, 1},
     },
     1,
 };

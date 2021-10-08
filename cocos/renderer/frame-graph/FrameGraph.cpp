@@ -30,9 +30,13 @@
 #include <set>
 #include "PassNodeBuilder.h"
 #include "Resource.h"
+#include "base/StringUtil.h"
+#include "frame-graph/ResourceEntry.h"
 
 namespace cc {
 namespace framegraph {
+
+#define PRESENT_USING_MOVE_SEMANTIC 1
 
 namespace {
 // use function scoped static member
@@ -56,8 +60,21 @@ const char *FrameGraph::handleToString(const StringHandle &handle) noexcept {
 }
 
 void FrameGraph::present(const TextureHandle &input, gfx::Texture *target) {
-    static const StringHandle PRESENT_PASS = FrameGraph::stringToHandle("Present");
-    const ResourceNode &      resourceNode = getResourceNode(input);
+    static const StringHandle PRESENT_PASS{FrameGraph::stringToHandle("Present")};
+    // using a global map here so that the user don't need to worry about importing the targets every frame
+    static std::unordered_map<uint32_t, std::pair<StringHandle, Texture>> presentTargets;
+    if (!presentTargets.count(target->getTypedID())) {
+        auto name = FrameGraph::stringToHandle(StringUtil::format("Present Target %d", target->getTypedID()).c_str());
+        presentTargets.emplace(std::piecewise_construct, std::forward_as_tuple(target->getTypedID()), std::forward_as_tuple(name, Texture{target}));
+    }
+    auto &        resourceInfo{presentTargets[target->getTypedID()]};
+    TextureHandle output{getBlackboard().get(resourceInfo.first)};
+    if (!output.isValid()) {
+        output = importExternal(resourceInfo.first, resourceInfo.second);
+        getBlackboard().put(resourceInfo.first, output);
+    }
+
+    const ResourceNode &resourceNode{getResourceNode(input)};
     CC_ASSERT(resourceNode.writer);
 
     struct PassDataPresent {
@@ -68,6 +85,10 @@ void FrameGraph::present(const TextureHandle &input, gfx::Texture *target) {
         resourceNode.writer->_insertPoint, PRESENT_PASS,
         [&](PassNodeBuilder &builder, PassDataPresent &data) {
             data.input = builder.read(input);
+#if PRESENT_USING_MOVE_SEMANTIC
+            move(data.input, output, 0, 0, 0);
+            data.input = output;
+#endif
             builder.sideEffect();
         },
         [target](const PassDataPresent &data, const DevicePassResourceTable &table) {
@@ -78,8 +99,8 @@ void FrameGraph::present(const TextureHandle &input, gfx::Texture *target) {
                 gfx::TextureBlit region;
                 region.srcExtent.width  = input->getWidth();
                 region.srcExtent.height = input->getHeight();
-                region.dstExtent.width  = input->getWidth();
-                region.dstExtent.height = input->getHeight();
+                region.dstExtent.width  = target->getWidth();
+                region.dstExtent.height = target->getHeight();
                 cmdBuff->blitTexture(input, target, &region, 1, gfx::Filter::POINT);
             }
         });
@@ -143,9 +164,9 @@ void FrameGraph::move(const TextureHandle from, const TextureHandle to, uint8_t 
     CC_ASSERT(!toResourceNode.writer);
 
     const gfx::TextureInfo &toTextureDesc   = static_cast<ResourceEntry<Texture> *>(toResourceNode.virtualResource)->get().getDesc();
-    uint const              toTextureWidth  = toTextureDesc.width >> mipmapLevel;
-    uint const              toTextureHeight = toTextureDesc.height >> mipmapLevel;
-    uint const              toTextureDepth  = toTextureDesc.depth >> mipmapLevel;
+    uint32_t const          toTextureWidth  = toTextureDesc.width >> mipmapLevel;
+    uint32_t const          toTextureHeight = toTextureDesc.height >> mipmapLevel;
+    uint32_t const          toTextureDepth  = toTextureDesc.depth >> mipmapLevel;
 
     CC_ASSERT(toTextureWidth && toTextureHeight && toTextureDepth);
     CC_ASSERT(toTextureDesc.levelCount > mipmapLevel && toTextureDesc.layerCount > arrayPosition);
@@ -352,7 +373,7 @@ void FrameGraph::mergePassNodes() noexcept {
 
 void FrameGraph::computeStoreActionAndMemoryless() {
     ID   passId                = 0;
-    bool lastPassSubPassEnable = false;
+    bool lastPassSubpassEnable = false;
 
     for (const auto &passNode : _passNodes) {
         if (passNode->_refCount == 0) {
@@ -360,10 +381,10 @@ void FrameGraph::computeStoreActionAndMemoryless() {
         }
 
         ID const oldPassId = passId;
-        passId += !passNode->_subpass || lastPassSubPassEnable != passNode->_subpass;
-        passId += oldPassId == passId ? passNode->_hasClearedAttachment * !passNode->_clearActionIgnoreable : 0;
+        passId += !passNode->_subpass || lastPassSubpassEnable != passNode->_subpass;
+        passId += oldPassId == passId ? passNode->_hasClearedAttachment * !passNode->_clearActionIgnorable : 0;
         passNode->setDevicePassId(passId);
-        lastPassSubPassEnable = passNode->_subpass && !passNode->_subpassEnd;
+        lastPassSubpassEnable = passNode->_subpass && !passNode->_subpassEnd;
     }
 
     static std::set<VirtualResource *> renderTargets;

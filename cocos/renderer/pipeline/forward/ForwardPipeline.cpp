@@ -45,44 +45,9 @@ namespace {
     (dst)[(offset) + 3] = (src).w;
 } // namespace
 
-gfx::RenderPass *ForwardPipeline::getOrCreateRenderPass(gfx::ClearFlags clearFlags, gfx::Swapchain *swapchain) {
-    if (_renderPasses.count(clearFlags)) {
-        return _renderPasses[clearFlags];
-    }
-
-    auto *                      device = gfx::Device::getInstance();
-    gfx::ColorAttachment        colorAttachment;
-    gfx::DepthStencilAttachment depthStencilAttachment;
-    colorAttachment.format                = swapchain->getColorTexture()->getFormat();
-    depthStencilAttachment.format         = swapchain->getDepthStencilTexture()->getFormat();
-    depthStencilAttachment.stencilStoreOp = gfx::StoreOp::STORE;
-    depthStencilAttachment.depthStoreOp   = gfx::StoreOp::STORE;
-
-    if (!hasFlag(clearFlags, gfx::ClearFlagBit::COLOR)) {
-        if (hasFlag(clearFlags, static_cast<gfx::ClearFlagBit>(skyboxFlag))) {
-            colorAttachment.loadOp = gfx::LoadOp::DISCARD;
-        } else {
-            colorAttachment.loadOp        = gfx::LoadOp::LOAD;
-            colorAttachment.beginAccesses = {gfx::AccessType::COLOR_ATTACHMENT_WRITE};
-        }
-    }
-
-    if (static_cast<gfx::ClearFlagBit>(clearFlags & gfx::ClearFlagBit::DEPTH_STENCIL) != gfx::ClearFlagBit::DEPTH_STENCIL) {
-        if (!hasFlag(clearFlags, gfx::ClearFlagBit::DEPTH)) depthStencilAttachment.depthLoadOp = gfx::LoadOp::LOAD;
-        if (!hasFlag(clearFlags, gfx::ClearFlagBit::STENCIL)) depthStencilAttachment.stencilLoadOp = gfx::LoadOp::LOAD;
-        depthStencilAttachment.beginAccesses = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
-    }
-
-    auto *renderPass          = device->createRenderPass({
-        {colorAttachment},
-        depthStencilAttachment,
-        {},
-
-    });
-    _renderPasses[clearFlags] = renderPass;
-
-    return renderPass;
-}
+framegraph::StringHandle ForwardPipeline::fgStrHandleForwardColorTexture = framegraph::FrameGraph::stringToHandle("forwardColorTexture");
+framegraph::StringHandle ForwardPipeline::fgStrHandleForwardDepthTexture = framegraph::FrameGraph::stringToHandle("forwardDepthTexture");
+framegraph::StringHandle ForwardPipeline::fgStrHandleForwardPass         = framegraph::FrameGraph::stringToHandle("forwardPass");
 
 bool ForwardPipeline::initialize(const RenderPipelineInfo &info) {
     RenderPipeline::initialize(info);
@@ -101,12 +66,14 @@ bool ForwardPipeline::initialize(const RenderPipelineInfo &info) {
 }
 
 bool ForwardPipeline::activate(gfx::Swapchain *swapchain) {
+    _macros.setValue("CC_PIPELINE_TYPE", 0.F);
+
     if (!RenderPipeline::activate(swapchain)) {
         CC_LOG_ERROR("RenderPipeline active failed.");
         return false;
     }
 
-    if (!activeRenderer()) {
+    if (!activeRenderer(swapchain)) {
         CC_LOG_ERROR("ForwardPipeline startup failed!");
         return false;
     }
@@ -118,12 +85,16 @@ void ForwardPipeline::render(const vector<scene::Camera *> &cameras) {
     _commandBuffers[0]->begin();
     _pipelineUBO->updateGlobalUBO(cameras[0]);
     _pipelineUBO->updateMultiCameraUBO(cameras);
+    ensureEnoughSize(cameras);
 
     for (auto *camera : cameras) {
         sceneCulling(this, camera);
+        _fg.reset();
         for (auto *const flow : _flows) {
             flow->render(camera);
         }
+        _fg.compile();
+        _fg.execute();
         _pipelineUBO->incCameraUBOOffset();
     }
 
@@ -132,7 +103,7 @@ void ForwardPipeline::render(const vector<scene::Camera *> &cameras) {
     _device->getQueue()->submit(_commandBuffers);
 }
 
-bool ForwardPipeline::activeRenderer() {
+bool ForwardPipeline::activeRenderer(gfx::Swapchain *swapchain) {
     _commandBuffers.push_back(_device->getCommandBuffer());
     auto *const sharedData = _pipelineSceneData->getSharedData();
 
@@ -158,10 +129,28 @@ bool ForwardPipeline::activeRenderer() {
     _macros.setValue("CC_USE_HDR", static_cast<bool>(sharedData->isHDR));
     _macros.setValue("CC_SUPPORT_FLOAT_TEXTURE", _device->hasFeature(gfx::Feature::TEXTURE_FLOAT));
 
+    // step 2 create index buffer
+    uint ibStride = 4;
+    uint ibSize   = ibStride * 6;
+    if (_quadIB == nullptr) {
+        _quadIB = _device->createBuffer({gfx::BufferUsageBit::INDEX | gfx::BufferUsageBit::TRANSFER_DST,
+                                         gfx::MemoryUsageBit::DEVICE, ibSize, ibStride});
+    }
+
+    if (_quadIB == nullptr) {
+        return false;
+    }
+
+    uint ibData[] = {0, 1, 2, 1, 3, 2};
+    _quadIB->update(ibData, sizeof(ibData));
+
+    _width  = swapchain->getWidth();
+    _height = swapchain->getHeight();
     return true;
 }
 
 void ForwardPipeline::destroy() {
+    destroyQuadInputAssembler();
     for (auto &it : _renderPasses) {
         CC_SAFE_DESTROY(it.second);
     }

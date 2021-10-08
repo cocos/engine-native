@@ -31,7 +31,7 @@ namespace cc {
 namespace gfx {
 
 #if CC_DEBUG > 0 && !FORCE_DISABLE_VALIDATION
-constexpr uint DISABLE_VALIDATION_ASSERTIONS = 1; // 0 for default behavior, otherwise assertions will be disabled
+constexpr uint32_t DISABLE_VALIDATION_ASSERTIONS = 1; // 0 for default behavior, otherwise assertions will be disabled
 
 void GL_APIENTRY GLES2EGLDebugProc(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
     String sourceDesc;
@@ -274,6 +274,8 @@ void GLES2GPUContext::bindContext(bool bound) {
         resetStates();
     } else {
         makeCurrent(EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT, false);
+        _eglCurrentDrawSurface = EGL_NO_SURFACE;
+        _eglCurrentReadSurface = EGL_NO_SURFACE;
     }
 }
 

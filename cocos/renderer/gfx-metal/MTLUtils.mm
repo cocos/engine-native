@@ -477,6 +477,7 @@ MTLMultisampleDepthResolveFilter mu::toMTLDepthResolveMode(ResolveMode mode) {
     }
 }
 
+API_AVAILABLE(ios(12.0))
 MTLMultisampleStencilResolveFilter mu::toMTLStencilResolveMode(ResolveMode mode) {
     switch (mode) {
         case ResolveMode::SAMPLE_ZERO:
@@ -608,19 +609,11 @@ MTLPixelFormat mu::toMTLPixelFormat(Format format) {
         case Format::RGB9E5: return MTLPixelFormatRGB9E5Float;
         case Format::RGB10A2UI: return MTLPixelFormatRGB10A2Uint;
         case Format::R11G11B10F: return MTLPixelFormatRG11B10Float;
-//        case Format::D16: {
-//#if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-//            return MTLPixelFormatDepth16Unorm;
-//#else
-//            if (@available(iOS 13.0, *))
-//                return MTLPixelFormatDepth16Unorm;
-//            else
-//                break;
-//#endif
-//        }
         case Format::DEPTH: return MTLPixelFormatDepth32Float;
 #if (CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-        case Format::DEPTH_STENCIL: return MTLPixelFormatDepth24Unorm_Stencil8;
+        // FIXME: works fine on imac, but invalid pixel format on intel macbook.
+        //case Format::DEPTH_STENCIL: return MTLPixelFormatDepth24Unorm_Stencil8;
+        case Format::DEPTH_STENCIL: return MTLPixelFormatDepth32Float_Stencil8;
         case Format::BC1:
         case Format::BC1_ALPHA: return MTLPixelFormatBC1_RGBA;
         case Format::BC1_SRGB_ALPHA: return MTLPixelFormatBC1_RGBA_sRGB;
@@ -791,6 +784,7 @@ MTLCompareFunction mu::toMTLCompareFunction(ComparisonFunc func) {
         case ComparisonFunc::NOT_EQUAL: return MTLCompareFunctionNotEqual;
         case ComparisonFunc::GREATER_EQUAL: return MTLCompareFunctionGreaterEqual;
         case ComparisonFunc::ALWAYS: return MTLCompareFunctionAlways;
+        default: return MTLCompareFunctionNever;
     }
 }
 
@@ -1090,7 +1084,7 @@ String mu::spirv2MSL(const uint32_t *ir, size_t word_count,
         int32_t maxIndex = static_cast<int32_t>(resources.stage_outputs.size() - 1);
         for(int i = maxIndex; i >=0; --i) {
             String indexStr = std::to_string(i);
-            output.insert(customCodingPos, "\nconstant int indexOffset" + indexStr + " [[ function_constant(" + indexStr + ") ]];\n");
+            output.insert(customCodingPos, "\nconstant int indexOffset" + indexStr + " [[function_constant(" + indexStr + ")]];\n");
             output.replace(output.find("color(" + indexStr + ")"), 8, "color(indexOffset" + indexStr + ")");
         }
     }

@@ -89,10 +89,12 @@ if(USE_JOB_SYSTEM_TASKFLOW AND USE_JOB_SYSTEM_TBB)
     set(USE_JOB_SYSTEM_TBB      OFF)
 endif()
 
-# if(USE_JOB_SYSTEM_TASKFLOW)
-#     set(CMAKE_CXX_STANDARD 17)
-#     set(TARGET_IOS_VERSION "12.0"  CACHE STRING "Target iOS version" FORCE)
-# endif()
+if(USE_JOB_SYSTEM_TASKFLOW)
+    set(CMAKE_CXX_STANDARD 17)
+    if(IOS AND "${TARGET_IOS_VERSION}" VERSION_LESS "12.0")
+        message(FATAL_ERROR "Target iOS version requires 12.0+ when enable taskflow")
+    endif()
+endif()
 
 ################################# list all option values ##############################
 
@@ -525,6 +527,8 @@ cocos_source_files(MODULE ccutils
     cocos/platform/SAXParser.h
     cocos/base/Utils.cpp
     cocos/base/Utils.h
+    cocos/base/Timer.cpp
+    cocos/base/Timer.h
 )
 
 ########## module ccfilesystem
@@ -634,8 +638,8 @@ elseif(APPLE)
         cocos_source_files(
                          cocos/platform/ios/View.h
             NO_WERROR    cocos/platform/ios/View.mm     # CAMetalLayer bug for apple
-                         cocos/platform/ios/Application-ios.mm
-                         cocos/platform/ios/Device-ios.mm
+            NO_WERROR    cocos/platform/ios/Application-ios.mm
+            NO_WERROR    cocos/platform/ios/Device-ios.mm
         )
     endif()
 endif()
@@ -778,6 +782,8 @@ cocos_source_files(
 
                  cocos/renderer/pipeline/BatchedBuffer.cpp
                  cocos/renderer/pipeline/BatchedBuffer.h
+                 cocos/renderer/pipeline/ClusterLightCulling.cpp
+                 cocos/renderer/pipeline/ClusterLightCulling.h
                  cocos/renderer/pipeline/Define.h
                  cocos/renderer/pipeline/Define.cpp
                  cocos/renderer/pipeline/GlobalDescriptorSetManager.h
@@ -816,8 +822,6 @@ cocos_source_files(
                  cocos/renderer/pipeline/forward/ForwardStage.h
                  cocos/renderer/pipeline/SceneCulling.cpp
                  cocos/renderer/pipeline/SceneCulling.h
-                 cocos/renderer/pipeline/forward/UIPhase.cpp
-                 cocos/renderer/pipeline/forward/UIPhase.h
                  cocos/renderer/pipeline/deferred/DeferredPipeline.cpp
                  cocos/renderer/pipeline/deferred/DeferredPipeline.h
                  cocos/renderer/pipeline/deferred/MainFlow.cpp
@@ -826,16 +830,23 @@ cocos_source_files(
                  cocos/renderer/pipeline/deferred/GbufferStage.h
                  cocos/renderer/pipeline/deferred/LightingStage.cpp
                  cocos/renderer/pipeline/deferred/LightingStage.h
-                 cocos/renderer/pipeline/deferred/PostprocessStage.cpp
-                 cocos/renderer/pipeline/deferred/PostprocessStage.h
                  cocos/renderer/pipeline/deferred/ReflectionComp.cpp
                  cocos/renderer/pipeline/deferred/ReflectionComp.h
                  cocos/renderer/pipeline/shadow/ShadowFlow.cpp
                  cocos/renderer/pipeline/shadow/ShadowFlow.h
                  cocos/renderer/pipeline/shadow/ShadowStage.cpp
                  cocos/renderer/pipeline/shadow/ShadowStage.h
+                 cocos/renderer/pipeline/common/Enum.h
+                 cocos/renderer/pipeline/common/BloomStage.cpp
+                 cocos/renderer/pipeline/common/BloomStage.h
+                 cocos/renderer/pipeline/common/PostProcessStage.cpp
+                 cocos/renderer/pipeline/common/PostProcessStage.h
+                 cocos/renderer/pipeline/common/UIPhase.cpp
+                 cocos/renderer/pipeline/common/UIPhase.h
+
                  cocos/renderer/pipeline/helper/DefineMap.h
                  cocos/renderer/pipeline/helper/DefineMap.cpp
+                 cocos/renderer/pipeline/helper/Utils.h
 )
 
 ##### scene
@@ -878,6 +889,8 @@ cocos_source_files(
                  cocos/scene/SpotLight.cpp
                  cocos/scene/SubModel.h
                  cocos/scene/SubModel.cpp
+                 cocos/scene/Octree.h
+                 cocos/scene/Octree.cpp
 )
 
 if(CC_USE_GLES2 OR CC_USE_GLES3)
@@ -1577,8 +1590,10 @@ elseif(OHOS)
 elseif(APPLE)
     cocos_source_files(
                     cocos/bindings/manual/jsb_platfrom_apple.mm
-                     cocos/bindings/manual/JavaScriptObjCBridge.h
-                     cocos/bindings/manual/JavaScriptObjCBridge.mm
+                    cocos/bindings/manual/JavaScriptObjCBridge.h
+                    cocos/bindings/manual/JavaScriptObjCBridge.mm
+                    cocos/platform/apple/JsbBridge.h
+                    cocos/platform/apple/JsbBridge.mm
     )
 elseif(WIN32)
     cocos_source_files(
@@ -1757,7 +1772,7 @@ elseif(MACOSX)
 elseif(IOS)
     if(USE_EDIT_BOX)
         cocos_source_files(
-                         cocos/ui/edit-box/EditBox-ios.mm
+             NO_WERROR   cocos/ui/edit-box/EditBox-ios.mm
         )
     endif()
     if(USE_VIDEO)
@@ -1994,12 +2009,10 @@ target_compile_definitions(cocos2d
     PRIVATE
         ${CC_EXTERNAL_PRIVATE_DEFINITIONS}
 )
-if(NOT OHOS)
-    target_include_directories(cocos2d PUBLIC
-        ${CWD}/external/sources/EGL
-        ${CWD}/external/sources/khronos
-    )
-endif()
+target_include_directories(cocos2d PUBLIC
+    ${CWD}/external/sources/EGL
+    ${CWD}/external/sources/khronos
+)
 
 
 if(WIN32)
@@ -2136,5 +2149,5 @@ if(MSVC)
             ${CWD}/external/win64/libs/glslang/*.dll
         )
     endif()
-    target_compile_options(cocos2d PUBLIC /MP)
+    target_compile_options(cocos2d PUBLIC /MP /wd4309)
 endif()
