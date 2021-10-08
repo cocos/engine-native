@@ -273,13 +273,14 @@ void CCWGPUCommandBuffer::bindStates() {
                                                  vertexBuffer->getOffset(),
                                                  vertexBuffer->getSize());
         }
-
         const auto *indexBuffer = static_cast<CCWGPUBuffer *>(ia->getIndexBuffer());
-        wgpuRenderPassEncoderSetIndexBufferWithFormat(_gpuCommandBufferObj->wgpuRenderPassEncoder,
-                                                      indexBuffer->gpuBufferObject()->wgpuBuffer,
-                                                      indexBuffer->getStride() == 2 ? WGPUIndexFormat::WGPUIndexFormat_Uint16 : WGPUIndexFormat_Uint32,
-                                                      indexBuffer->getOffset(),
-                                                      indexBuffer->getSize());
+        if (indexBuffer) {
+            wgpuRenderPassEncoderSetIndexBufferWithFormat(_gpuCommandBufferObj->wgpuRenderPassEncoder,
+                                                          indexBuffer->gpuBufferObject()->wgpuBuffer,
+                                                          indexBuffer->getStride() == 2 ? WGPUIndexFormat::WGPUIndexFormat_Uint16 : WGPUIndexFormat_Uint32,
+                                                          indexBuffer->getOffset(),
+                                                          indexBuffer->getSize());
+        }
 
         WGPUColor blendColor = toWGPUColor(_gpuCommandBufferObj->stateCache.blendConstants);
         wgpuRenderPassEncoderSetBlendConstant(_gpuCommandBufferObj->wgpuRenderPassEncoder, &blendColor);
@@ -289,7 +290,6 @@ void CCWGPUCommandBuffer::bindStates() {
 
         const Rect &rect = _gpuCommandBufferObj->stateCache.rect;
         wgpuRenderPassEncoderSetScissorRect(_gpuCommandBufferObj->wgpuRenderPassEncoder, rect.x, rect.y, rect.width, rect.height);
-
     } else if (pipelineState->getBindPoint() == PipelineBindPoint::COMPUTE) {
         auto *pipelineState = _gpuCommandBufferObj->stateCache.pipelineState;
         wgpuComputePassEncoderSetPipeline(_gpuCommandBufferObj->wgpuComputeEncoder,

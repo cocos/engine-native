@@ -179,10 +179,6 @@ void CCWGPUDevice::copyBuffersToTexture(const uint8_t* const* buffers, Texture* 
                 static_cast<uint32_t>(regions[i].texOffset.z)},
             .aspect = WGPUTextureAspect_All,
         };
-        printf("texoffset: %d, %d, %d  texextent: %d, %d, %d\n", regions[i].texOffset.x, regions[i].texOffset.y, regions[i].texOffset.z,
-               regions[i].texExtent.width,
-               regions[i].texExtent.height,
-               regions[i].texExtent.depth);
         wgpuQueueWriteTexture(_gpuDeviceObj->wgpuQueue, &imageCopyTexture, buffers[i], bufferSize, &texDataLayout, &extent);
     }
 }
