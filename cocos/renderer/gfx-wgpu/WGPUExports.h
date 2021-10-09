@@ -924,7 +924,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createDescriptorSet", select_overload<DescriptorSet *(const DescriptorSetInfoInstance &)>(&CCWGPUDevice::createDescriptorSet),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("copyTextureToBuffers", select_overload<void(Texture *, const std::vector<String> &, const BufferTextureCopyList &)>(&CCWGPUDevice::copyTextureToBuffers),
+        .function("copyTextureToBuffers", select_overload<void(Texture *, const emscripten::val &, const BufferTextureCopyList &)>(&CCWGPUDevice::copyTextureToBuffers),
                   /* pure_virtual(), */ allow_raw_pointers())
         .function("copyBuffersToTexture", select_overload<void(const emscripten::val &, Texture *, const BufferTextureCopyList &)>(&CCWGPUDevice::copyBuffersToTexture),
                   /* pure_virtual(), */ allow_raw_pointers());
@@ -970,7 +970,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("initialize", select_overload<void(const BufferInfo &)>(&Buffer::initialize), allow_raw_pointer<arg<0>>())
         .function("initialize", select_overload<void(const BufferViewInfo &)>(&Buffer::initialize), allow_raw_pointer<arg<0>>())
         .function("resize", &Buffer::resize)
-        .function("desctroy", &Buffer::destroy);
+        .function("destroy", &Buffer::destroy);
     class_<CCWGPUBuffer, base<Buffer>>("CCWGPUBuffer")
         .function("update", select_overload<void(const emscripten::val &v, uint)>(&CCWGPUBuffer::update), allow_raw_pointer<arg<0>>())
         .constructor<>();
@@ -1067,7 +1067,6 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     register_vector<ColorAttachment>("ColorAttachmentList");
     register_vector<SubpassDependency>("SubpassDependencyList");
     register_vector<Texture *>("TextureList");
-    register_vector<const uint8_t *>("BufferDataList");
     register_vector<BufferTextureCopy>("BufferTextureCopyList");
     register_vector<Sampler *>("SamplerList");
     register_vector<DescriptorSetLayoutBindingInstance>("DescriptorSetLayoutBindingList");

@@ -111,12 +111,14 @@ public:
         return this->Device::createCommandBuffer(static_cast<const CommandBufferInfo &>(info));
     }
 
-    void copyTextureToBuffers(Texture *src, const std::vector<String> &buffersContainer, const BufferTextureCopyList &regions) {
-        std::vector<uint8_t *> buffers;
-        for (size_t i = 0; i < buffersContainer.size(); i++) {
-            buffers.push_back(reinterpret_cast<uint8_t *>(const_cast<char *>(buffersContainer[i].data())));
-        }
-        this->Device::copyTextureToBuffers(src, buffers, regions);
+    void copyTextureToBuffers(Texture *src, const emscripten::val &v, const BufferTextureCopyList &regions) {
+        // uint32_t               len = v["length"].as<unsigned>();
+        // std::vector<uint8_t *> buffers;
+        // for (size_t i = 0; i < len; i++) {
+        //     std::vector<uint8_t> buffer = EMSArraysToU8Vec(v, i);
+        //     buffers.push_back(buffer.data());
+        // }
+        // return copyTextureToBuffers(src, buffers.data(), regions);
     }
 
     Shader *createShader(const SPVShaderInfoInstance &spvInfo);
