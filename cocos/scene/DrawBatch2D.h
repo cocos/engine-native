@@ -40,7 +40,7 @@ struct DrawCall final {
     std::array<uint32_t, 2> dynamicOffsets{0, 0};
     gfx::DrawInfo *       drawInfo;
 
-    void setDynamicOffsets(const uint32_t& value) {
+    void setDynamicOffsets(uint32_t value) {
         dynamicOffsets[1] = value;
     }
 };
