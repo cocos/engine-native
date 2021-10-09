@@ -34,6 +34,7 @@
 #include "InputAssemblerValidator.h"
 #include "PipelineLayoutValidator.h"
 #include "PipelineStateValidator.h"
+#include "QueryValidator.h"
 #include "QueueValidator.h"
 #include "RenderPassValidator.h"
 #include "ShaderValidator.h"
@@ -41,6 +42,7 @@
 #include "TextureValidator.h"
 #include "ValidationUtils.h"
 #include "gfx-base/GFXSwapchain.h"
+
 
 namespace cc {
 namespace gfx {
@@ -88,6 +90,7 @@ bool DeviceValidator::doInit(const DeviceInfo &info) {
 
 void DeviceValidator::doDestroy() {
     if (_cmdBuff) {
+        static_cast<CommandBufferValidator *>(_cmdBuff)->destroyValidator();
         static_cast<CommandBufferValidator *>(_cmdBuff)->_actor = nullptr;
         CC_DELETE(_cmdBuff);
         _cmdBuff = nullptr;
@@ -145,6 +148,12 @@ Queue *DeviceValidator::createQueue() {
     Queue *actor  = _actor->createQueue();
     Queue *result = CC_NEW(QueueValidator(actor));
     DeviceResourceTracker<Queue>::push(result);
+    return result;
+}
+
+Query *DeviceValidator::createQuery() {
+    Query *actor  = _actor->createQuery();
+    Query *result = CC_NEW(QueryValidator(actor));
     return result;
 }
 

@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include <unordered_map>
 #include "Define.h"
 #include "GlobalDescriptorSetManager.h"
 #include "PipelineSceneData.h"
@@ -36,12 +37,16 @@
 #include "scene/Camera.h"
 #include "scene/Model.h"
 
+
 namespace cc {
 namespace gfx {
 class CommandBuffer;
 class DescriptorSet;
 class DescriptorSetLayout;
 } // namespace gfx
+namespace scene {
+class SubModel;
+} // namespace scene
 namespace pipeline {
 class DefineMap;
 class GlobalDSManager;
@@ -86,6 +91,7 @@ public:
     inline gfx::Device *                           getDevice() const { return _device; }
     inline bool                                    getBloomEnable() const { return _bloomEnable; }
     RenderStage *                                  getRenderstageByName(const String &name) const;
+    bool                                           isOccluded(const scene::Camera *camera, const scene::SubModel *subModel);
 
     gfx::Rect               getRenderArea(scene::Camera *camera);
     void                    genQuadVertexData(const Vec4 &viewport, float *data);
@@ -138,6 +144,8 @@ protected:
     // use cluster culling or not
     bool _clusterEnabled{false};
     bool _bloomEnable{false};
+
+    std::unordered_map<uint32_t, uint64_t> _occlusionQueryResults;
 };
 
 } // namespace pipeline

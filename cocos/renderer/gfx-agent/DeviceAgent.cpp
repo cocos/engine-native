@@ -36,6 +36,7 @@
 #include "InputAssemblerAgent.h"
 #include "PipelineLayoutAgent.h"
 #include "PipelineStateAgent.h"
+#include "QueryAgent.h"
 #include "QueueAgent.h"
 #include "RenderPassAgent.h"
 #include "ShaderAgent.h"
@@ -44,6 +45,7 @@
 #include "base/threading/ThreadSafeLinearAllocator.h"
 #include "gfx-base/GFXDef-common.h"
 #include "gfx-base/GFXSwapchain.h"
+
 
 namespace cc {
 namespace gfx {
@@ -82,7 +84,7 @@ bool DeviceAgent::doInit(const DeviceInfo &info) {
     _mainMessageQueue = _CC_NEW_T_ALIGN(MessageQueue, alignof(MessageQueue)); //NOLINT
 
     static_cast<CommandBufferAgent *>(_cmdBuff)->_queue = _queue;
-    static_cast<CommandBufferAgent *>(_cmdBuff)->initMessageQueue();
+    static_cast<CommandBufferAgent *>(_cmdBuff)->initAgent();
 
     setMultithreaded(true);
 
@@ -98,7 +100,7 @@ void DeviceAgent::doDestroy() {
         });
 
     if (_cmdBuff) {
-        static_cast<CommandBufferAgent *>(_cmdBuff)->destroyMessageQueue();
+        static_cast<CommandBufferAgent *>(_cmdBuff)->destroyAgent();
         static_cast<CommandBufferAgent *>(_cmdBuff)->_actor = nullptr;
         CC_DELETE(_cmdBuff);
         _cmdBuff = nullptr;
@@ -192,6 +194,11 @@ CommandBuffer *DeviceAgent::createCommandBuffer(const CommandBufferInfo &info, b
 Queue *DeviceAgent::createQueue() {
     Queue *actor = _actor->createQueue();
     return CC_NEW(QueueAgent(actor));
+}
+
+Query *DeviceAgent::createQuery() {
+    Query *actor = _actor->createQuery();
+    return CC_NEW(QueryAgent(actor));
 }
 
 Swapchain *DeviceAgent::createSwapchain() {

@@ -35,6 +35,7 @@
 #include "GFXObject.h"
 #include "GFXPipelineLayout.h"
 #include "GFXPipelineState.h"
+#include "GFXQuery.h"
 #include "GFXQueue.h"
 #include "GFXRenderPass.h"
 #include "GFXShader.h"
@@ -43,6 +44,7 @@
 #include "states/GFXGlobalBarrier.h"
 #include "states/GFXSampler.h"
 #include "states/GFXTextureBarrier.h"
+
 
 namespace cc {
 namespace gfx {
@@ -68,6 +70,7 @@ public:
 
     inline CommandBuffer *      createCommandBuffer(const CommandBufferInfo &info);
     inline Queue *              createQueue(const QueueInfo &info);
+    inline Query *              createQuery(const QueryInfo &info);
     inline Swapchain *          createSwapchain(const SwapchainInfo &info);
     inline Buffer *             createBuffer(const BufferInfo &info);
     inline Buffer *             createBuffer(const BufferViewInfo &info);
@@ -121,6 +124,7 @@ protected:
 
     virtual CommandBuffer *      createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) = 0;
     virtual Queue *              createQueue()                                                     = 0;
+    virtual Query *              createQuery()                                                     = 0;
     virtual Swapchain *          createSwapchain()                                                 = 0;
     virtual Buffer *             createBuffer()                                                    = 0;
     virtual Texture *            createTexture()                                                   = 0;
@@ -177,6 +181,12 @@ CommandBuffer *Device::createCommandBuffer(const CommandBufferInfo &info) {
 
 Queue *Device::createQueue(const QueueInfo &info) {
     Queue *res = createQueue();
+    res->initialize(info);
+    return res;
+}
+
+Query *Device::createQuery(const QueryInfo &info) {
+    Query *res = createQuery();
     res->initialize(info);
     return res;
 }

@@ -62,9 +62,13 @@ CCMTLCommandBuffer::~CCMTLCommandBuffer() {
 
 void CCMTLCommandBuffer::doInit(const CommandBufferInfo &info) {
     _gpuCommandBufferObj = CC_NEW(CCMTLGPUCommandBufferObject);
+
+    QueryInfo queryInfo{QueryType::OCCLUSION};
+    _query = CCMTLDevice::getInstance()->createQuery(queryInfo);
 }
 
 void CCMTLCommandBuffer::doDestroy() {
+    CC_SAFE_DESTROY(_query);
     _GPUDescriptorSets.clear();
     _dynamicOffsets.clear();
     _firstDirtyDescriptorSet = UINT_MAX;

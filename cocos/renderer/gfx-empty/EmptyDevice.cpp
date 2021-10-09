@@ -34,11 +34,13 @@
 #include "EmptyInputAssembler.h"
 #include "EmptyPipelineLayout.h"
 #include "EmptyPipelineState.h"
+#include "EmptyQuery.h"
 #include "EmptyQueue.h"
 #include "EmptyRenderPass.h"
 #include "EmptyShader.h"
 #include "EmptySwapchain.h"
 #include "EmptyTexture.h"
+
 
 namespace cc {
 namespace gfx {
@@ -90,6 +92,10 @@ CommandBuffer *EmptyDevice::createCommandBuffer(const CommandBufferInfo & /*info
 
 Queue *EmptyDevice::createQueue() {
     return CC_NEW(EmptyQueue());
+}
+
+Query *EmptyDevice::createQuery() {
+    return CC_NEW(EmptyQuery());
 }
 
 Swapchain *EmptyDevice::createSwapchain() {

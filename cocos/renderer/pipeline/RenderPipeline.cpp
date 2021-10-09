@@ -164,7 +164,7 @@ gfx::Color RenderPipeline::getClearcolor(scene::Camera *camera) const {
 }
 
 void RenderPipeline::updateQuadVertexData(const Vec4 &viewport, gfx::Buffer *buffer) {
-    float vbData[16]    = {0};
+    float vbData[16] = {0};
     genQuadVertexData(viewport, vbData);
     buffer->update(vbData, sizeof(vbData));
 }
@@ -173,17 +173,17 @@ gfx::InputAssembler *RenderPipeline::getIAByRenderArea(const gfx::Rect &renderAr
     auto bufferWidth{static_cast<float>(_width)};
     auto bufferHeight{static_cast<float>(_height)};
     Vec4 viewport{
-            static_cast<float>(renderArea.x) / bufferWidth,
-            static_cast<float>(renderArea.y) / bufferHeight,
-            static_cast<float>(renderArea.width) / bufferWidth,
-            static_cast<float>(renderArea.height) / bufferHeight,
+        static_cast<float>(renderArea.x) / bufferWidth,
+        static_cast<float>(renderArea.y) / bufferHeight,
+        static_cast<float>(renderArea.width) / bufferWidth,
+        static_cast<float>(renderArea.height) / bufferHeight,
     };
 
     uint32_t hash = 4;
-    hash ^= *reinterpret_cast<uint32_t*>(&viewport.x) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-    hash ^= *reinterpret_cast<uint32_t*>(&viewport.y) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-    hash ^= *reinterpret_cast<uint32_t*>(&viewport.z) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-    hash ^= *reinterpret_cast<uint32_t*>(&viewport.w) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+    hash ^= *reinterpret_cast<uint32_t *>(&viewport.x) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+    hash ^= *reinterpret_cast<uint32_t *>(&viewport.y) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+    hash ^= *reinterpret_cast<uint32_t *>(&viewport.z) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+    hash ^= *reinterpret_cast<uint32_t *>(&viewport.w) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
 
     const auto iter = _quadIA.find(hash);
     if (iter != _quadIA.end()) {
@@ -300,6 +300,30 @@ RenderStage *RenderPipeline::getRenderstageByName(const String &name) const {
         }
     }
     return nullptr;
+}
+
+bool RenderPipeline::isOccluded(const scene::Camera *camera, const scene::SubModel *subModel) {
+    auto *model      = subModel->getOwner();
+    auto *worldBound = model->getWorldBounds();
+
+    // assume visible if there is no worldBound.
+    if (!worldBound) {
+        return false;
+    }
+
+    // assume visible if camera is inside of worldBound.
+    if (worldBound->contain(camera->position)) {
+        return false;
+    }
+
+    // assume visible if no query in the last frame.
+    uint32_t id = subModel->getId();
+    if (_occlusionQueryResults.count(id) == 0) {
+        return false;
+    }
+
+    // check query results.
+    return _occlusionQueryResults[id] == 0;
 }
 
 } // namespace pipeline

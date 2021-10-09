@@ -67,6 +67,7 @@ class PipelineState;
 class DescriptorSet;
 class CommandBuffer;
 class Queue;
+class Query;
 class Window;
 class Context;
 
@@ -99,6 +100,7 @@ enum class ObjectType : uint32_t {
     INPUT_ASSEMBLER,
     COMMAND_BUFFER,
     QUEUE,
+    QUERY,
     GLOBAL_BARRIER,
     TEXTURE_BARRIER,
     BUFFER_BARRIER,
@@ -168,6 +170,7 @@ enum class Feature : uint32_t {
     // the max number of attachment limit(4) situation for many devices, and shader
     // sources inside this kind of subpass must match this behavior.
     INPUT_ATTACHMENT_BENEFIT,
+    OCCLUSION_QUERY,
     COUNT,
 };
 CC_ENUM_CONVERSION_OPERATOR(Feature);
@@ -737,6 +740,13 @@ enum class QueueType : uint32_t {
 };
 CC_ENUM_CONVERSION_OPERATOR(QueueType);
 
+enum class QueryType : uint32_t {
+    OCCLUSION,
+    PIPELINE_STATISTICS,
+    TIMESTAMP,
+};
+CC_ENUM_CONVERSION_OPERATOR(QueryType);
+
 enum class CommandBufferType : uint32_t {
     PRIMARY,
     SECONDARY,
@@ -1297,6 +1307,10 @@ struct CommandBufferInfo {
 
 struct QueueInfo {
     QueueType type{QueueType::GRAPHICS};
+};
+
+struct QueryInfo {
+    QueryType type{QueryType::OCCLUSION};
 };
 
 struct FormatInfo {
