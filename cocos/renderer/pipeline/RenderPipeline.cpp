@@ -232,8 +232,8 @@ void RenderPipeline::ensureEnoughSize(const vector<scene::Camera *> &cameras) {
     }
 }
 
-gfx::Rect RenderPipeline::getRenderArea(scene::Camera *camera) {
-    auto scale{_pipelineSceneData->getSharedData()->shadingScale};
+gfx::Rect RenderPipeline::getRenderArea(scene::Camera *camera, bool isScale) {
+    auto scale{isScale ? _pipelineSceneData->getSharedData()->shadingScale : 1};
     auto w{static_cast<float>(camera->window->getWidth()) * scale};
     auto h{static_cast<float>(camera->window->getHeight()) * scale};
 

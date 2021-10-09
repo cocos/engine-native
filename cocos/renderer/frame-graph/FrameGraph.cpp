@@ -36,7 +36,7 @@
 namespace cc {
 namespace framegraph {
 
-#define PRESENT_USING_MOVE_SEMANTIC 1
+#define PRESENT_USING_MOVE_SEMANTIC 0
 
 namespace {
 // use function scoped static member

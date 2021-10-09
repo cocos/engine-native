@@ -111,6 +111,7 @@ void PostProcessStage::render(scene::Camera *camera) {
     _clearColors[0].w = camera->clearColor.w;
 
     auto *pipeline  = _pipeline;
+    auto  scale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
     auto  postSetup = [&](framegraph::PassNodeBuilder &builder, RenderData &data) {
         if (pipeline->getBloomEnable()) {
             data.outColorTex = framegraph::TextureHandle(builder.readFromBlackboard(RenderPipeline::fgStrHandleBloomOutTexture));
@@ -152,8 +153,8 @@ void PostProcessStage::render(scene::Camera *camera) {
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::COLOR_ATTACHMENT,
             gfx::Format::RGBA8,
-            camera->window->getWidth(),
-            camera->window->getHeight(),
+            camera->window->getWidth() * scale,
+            camera->window->getHeight() * scale,
         };
         data.backBuffer = builder.create<framegraph::Texture>(fgStrHandlePostProcessOutTexture, textureInfo);
         data.backBuffer = builder.write(data.backBuffer, colorAttachmentInfo);

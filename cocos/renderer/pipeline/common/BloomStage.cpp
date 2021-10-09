@@ -161,7 +161,7 @@ void BloomStage::render(scene::Camera *camera) {
         gfx::Sampler *            sampler;
     };
 
-    auto renderArea = pipeline->getRenderArea(camera);
+    auto renderArea = pipeline->getRenderArea(camera, false);
     renderArea.width >>= 1;
     renderArea.height >>= 1;
 
@@ -214,7 +214,7 @@ void BloomStage::render(scene::Camera *camera) {
         auto *const          sharedData     = pipeline->getPipelineSceneData()->getSharedData();
         scene::Pass *        pass           = sharedData->bloomPrefilterPass;
         gfx::Shader *        shader         = sharedData->bloomPrefilterPassShader;
-        auto                 rendeArea      = pipeline->getRenderArea(camera);
+        auto                 rendeArea      = pipeline->getRenderArea(camera, false);
         gfx::InputAssembler *inputAssembler = pipeline->getIAByRenderArea(rendeArea);
         gfx::PipelineState * pso            = PipelineStateManager::getOrCreatePipelineState(
             pass, shader, inputAssembler, renderPass);
@@ -296,7 +296,7 @@ void BloomStage::render(scene::Camera *camera) {
             auto *const          sharedData     = pipeline->getPipelineSceneData()->getSharedData();
             scene::Pass *        pass           = sharedData->bloomDownsamplePass;
             gfx::Shader *        shader         = sharedData->bloomDownsamplePassShader;
-            auto                 rendeArea      = pipeline->getRenderArea(camera);
+            auto                 rendeArea      = pipeline->getRenderArea(camera, false);
             gfx::InputAssembler *inputAssembler = pipeline->getIAByRenderArea(rendeArea);
             gfx::PipelineState * pso            = PipelineStateManager::getOrCreatePipelineState(
                 pass, shader, inputAssembler, renderPass);
