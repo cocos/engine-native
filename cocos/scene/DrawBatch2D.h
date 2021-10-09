@@ -26,7 +26,6 @@
 #pragma once
 
 #include <vector>
-#include <array>
 #include "renderer/gfx-base/GFXDescriptorSet.h"
 #include "renderer/gfx-base/GFXInputAssembler.h"
 
@@ -38,7 +37,7 @@ class Pass;
 struct DrawCall final {
     gfx::Buffer *         bufferView{nullptr};
     gfx::DescriptorSet *  descriptorSet{nullptr};
-    std::array<uint32_t, 2> dynamicOffsets{0, 0};
+    std::vector<uint32_t> dynamicOffsets{0, 0};
     gfx::DrawInfo *       drawInfo;
 
     void setDynamicOffsets(uint32_t value) {
