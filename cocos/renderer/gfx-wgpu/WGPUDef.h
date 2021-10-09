@@ -39,7 +39,21 @@ public:
     inline void setFormat(Format format) { info.format = format; }
     inline void setWidth(uint32_t width) { info.width = width; }
     inline void setHeight(uint32_t height) { info.height = height; }
-    inline void setFlags(TextureFlagBit flags) { info.flags = flags; }
+    inline void setFlags(uint32_t flagsIn) {
+        TextureFlags flags = TextureFlagBit::NONE;
+
+        if (hasFlag(static_cast<TextureFlagBit>(flagsIn), TextureFlagBit::GEN_MIPMAP)) {
+            flags |= TextureFlagBit::GEN_MIPMAP;
+        }
+        if (hasFlag(static_cast<TextureFlagBit>(flagsIn), TextureFlagBit::RESIZABLE)) {
+            flags |= TextureFlagBit::RESIZABLE;
+        }
+        if (hasFlag(static_cast<TextureFlagBit>(flagsIn), TextureFlagBit::RESIZABLE)) {
+            flags |= TextureFlagBit::RESIZABLE;
+        }
+
+        info.flags = flags;
+    }
     inline void setLevelCount(uint levelCount) { info.levelCount = levelCount; }
     inline void setLayerCount(uint layerCount) { info.layerCount = layerCount; }
     inline void setSamples(SampleCount sample) { info.samples = sample; }
