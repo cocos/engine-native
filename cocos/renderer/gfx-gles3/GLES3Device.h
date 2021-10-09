@@ -53,6 +53,7 @@ public:
     using Device::createInputAssembler;
     using Device::createPipelineLayout;
     using Device::createPipelineState;
+    using Device::createQuery;
     using Device::createQueue;
     using Device::createRenderPass;
     using Device::createSampler;
@@ -86,6 +87,7 @@ protected:
     void                 doDestroy() override;
     CommandBuffer *      createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) override;
     Queue *              createQueue() override;
+    Query *              createQuery() override;
     Swapchain *          createSwapchain() override;
     Buffer *             createBuffer() override;
     Texture *            createTexture() override;

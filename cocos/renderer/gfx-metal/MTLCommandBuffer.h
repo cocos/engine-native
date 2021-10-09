@@ -76,6 +76,9 @@ public:
     void dispatch(const DispatchInfo &info) override;
     void pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrier *const *textureBarriers, const Texture *const *textures, uint textureBarrierCount) override;
     void copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *regions, uint count);
+    void beginQuery(uint32_t id) override {}
+    void endQuery(uint32_t id) override {}
+    void resetQuery() override {}
     inline bool isCommandBufferBegan() const { return _commandBufferBegan; }
     inline CCMTLGPUCommandBufferObject* gpuCommandBufferObj() const { return _gpuCommandBufferObj; }
     

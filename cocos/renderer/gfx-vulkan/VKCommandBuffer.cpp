@@ -33,6 +33,7 @@
 #include "VKFramebuffer.h"
 #include "VKInputAssembler.h"
 #include "VKPipelineState.h"
+#include "VKQuery.h"
 #include "VKQueue.h"
 #include "VKRenderPass.h"
 #include "VKTexture.h"
@@ -61,9 +62,14 @@ void CCVKCommandBuffer::doInit(const CommandBufferInfo & /*info*/) {
     _curGPUDescriptorSets.resize(setCount);
     _curVkDescriptorSets.resize(setCount);
     _curDynamicOffsetsArray.resize(setCount);
+
+    QueryInfo queryInfo{QueryType::OCCLUSION};
+    _query = CCVKDevice::getInstance()->createQuery(queryInfo);
 }
 
 void CCVKCommandBuffer::doDestroy() {
+    CC_SAFE_DESTROY(_query);
+
     if (_gpuCommandBuffer) {
         CC_DELETE(_gpuCommandBuffer);
         _gpuCommandBuffer = nullptr;
@@ -636,6 +642,35 @@ void CCVKCommandBuffer::pipelineBarrier(const GlobalBarrier *barrier, const Text
 
     vkCmdPipelineBarrier(_gpuCommandBuffer->vkCommandBuffer, srcStageMask, dstStageMask, 0, memoryBarrierCount, pMemoryBarrier,
                          0, nullptr, textureBarrierCount, pImageMemoryBarriers);
+}
+
+void CCVKCommandBuffer::beginQuery(uint32_t /*id*/) {
+    auto *        vkQuery  = static_cast<CCVKQuery *>(_query);
+    CCVKGPUQuery *gpuQuery = vkQuery->gpuQuery();
+    auto          queryId  = static_cast<uint32_t>(vkQuery->_ids.size());
+
+    if (queryId < MAX_QUERY_OBJECTS) {
+        vkCmdBeginQuery(_gpuCommandBuffer->vkCommandBuffer, gpuQuery->pool, queryId, 0);
+    }
+}
+
+void CCVKCommandBuffer::endQuery(uint32_t id) {
+    auto *        vkQuery  = static_cast<CCVKQuery *>(_query);
+    CCVKGPUQuery *gpuQuery = vkQuery->gpuQuery();
+    auto          queryId  = static_cast<uint32_t>(vkQuery->_ids.size());
+
+    if (queryId < MAX_QUERY_OBJECTS) {
+        vkCmdEndQuery(_gpuCommandBuffer->vkCommandBuffer, gpuQuery->pool, queryId);
+        vkQuery->_ids.push_back(id);
+    }
+}
+
+void CCVKCommandBuffer::resetQuery() {
+    auto *        vkQuery  = static_cast<CCVKQuery *>(_query);
+    CCVKGPUQuery *gpuQuery = vkQuery->gpuQuery();
+
+    vkCmdResetQueryPool(_gpuCommandBuffer->vkCommandBuffer, gpuQuery->pool, 0, MAX_QUERY_OBJECTS);
+    vkQuery->_ids.clear();
 }
 
 } // namespace gfx

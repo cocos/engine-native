@@ -37,6 +37,7 @@
 #include "GLES3PipelineLayout.h"
 #include "GLES3PipelineState.h"
 #include "GLES3PrimaryCommandBuffer.h"
+#include "GLES3Query.h"
 #include "GLES3Queue.h"
 #include "GLES3RenderPass.h"
 #include "GLES3Shader.h"
@@ -44,6 +45,7 @@
 #include "GLES3Texture.h"
 #include "states/GLES3GlobalBarrier.h"
 #include "states/GLES3Sampler.h"
+
 
 // when capturing GLES commands (RENDERDOC_HOOK_EGL=1, default value)
 // renderdoc doesn't support this extension during replay
@@ -79,15 +81,6 @@ bool GLES3Device::doInit(const DeviceInfo & /*info*/) {
         destroy();
         return false;
     };
-
-    QueueInfo queueInfo;
-    queueInfo.type = QueueType::GRAPHICS;
-    _queue         = createQueue(queueInfo);
-
-    CommandBufferInfo cmdBuffInfo;
-    cmdBuffInfo.type  = CommandBufferType::PRIMARY;
-    cmdBuffInfo.queue = _queue;
-    _cmdBuff          = createCommandBuffer(cmdBuffInfo);
 
     String extStr = reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS));
     _extensions   = StringUtil::split(extStr, " ");
@@ -183,7 +176,8 @@ bool GLES3Device::doInit(const DeviceInfo & /*info*/) {
         _features[toNumber(Feature::FORMAT_ASTC)] = true;
         compressedFmts += "astc ";
     }
-    _features[toNumber(Feature::FORMAT_RGB8)] = true;
+    _features[toNumber(Feature::FORMAT_RGB8)]     = true;
+    _features[toNumber(Feature::OCCLUSION_QUERY)] = true;
 
     _renderer = reinterpret_cast<const char *>(glGetString(GL_RENDERER));
     _vendor   = reinterpret_cast<const char *>(glGetString(GL_VENDOR));
@@ -214,6 +208,15 @@ bool GLES3Device::doInit(const DeviceInfo & /*info*/) {
         glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, reinterpret_cast<GLint *>(&_caps.maxComputeWorkGroupCount.y));
         glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, reinterpret_cast<GLint *>(&_caps.maxComputeWorkGroupCount.z));
     }
+
+    QueueInfo queueInfo;
+    queueInfo.type = QueueType::GRAPHICS;
+    _queue         = createQueue(queueInfo);
+
+    CommandBufferInfo cmdBuffInfo;
+    cmdBuffInfo.type  = CommandBufferType::PRIMARY;
+    cmdBuffInfo.queue = _queue;
+    _cmdBuff          = createCommandBuffer(cmdBuffInfo);
 
     _gpuStateCache->initialize(_caps.maxTextureUnits, _caps.maxImageUnits, _caps.maxUniformBufferBindings, _caps.maxShaderStorageBufferBindings, _caps.maxVertexAttributes);
 
@@ -274,6 +277,10 @@ CommandBuffer *GLES3Device::createCommandBuffer(const CommandBufferInfo &info, b
 
 Queue *GLES3Device::createQueue() {
     return CC_NEW(GLES3Queue);
+}
+
+Query *GLES3Device::createQuery() {
+    return CC_NEW(GLES3Query);
 }
 
 Swapchain *GLES3Device::createSwapchain() {

@@ -65,9 +65,15 @@ public:
     void execute(CommandBuffer *const *cmdBuffs, uint32_t count) override;
     void dispatch(const DispatchInfo &info) override;
     void pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrier *const *textureBarriers, const Texture *const *textures, uint32_t textureBarrierCount) override;
+    void beginQuery(uint32_t id) override;
+    void endQuery(uint32_t id) override;
+    void resetQuery() override;
 
 protected:
     friend class GLES3Queue;
+    friend class GLES3Query;
+
+    virtual void getQueryResults(Query *query);
 
     void doInit(const CommandBufferInfo &info) override;
     void doDestroy() override;

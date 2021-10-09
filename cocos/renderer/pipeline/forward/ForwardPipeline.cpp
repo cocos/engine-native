@@ -82,7 +82,19 @@ bool ForwardPipeline::activate(gfx::Swapchain *swapchain) {
 }
 
 void ForwardPipeline::render(const vector<scene::Camera *> &cameras) {
+    auto *device = gfx::Device::getInstance();
+    if (device->hasFeature(gfx::Feature::OCCLUSION_QUERY)) {
+        auto *query = _commandBuffers[0]->getQuery();
+        query->copyResults(_occlusionQueryResults);
+        query->getResults();
+    }
+
     _commandBuffers[0]->begin();
+
+    if (device->hasFeature(gfx::Feature::OCCLUSION_QUERY)) {
+        _commandBuffers[0]->resetQuery();
+    }
+
     _pipelineUBO->updateGlobalUBO(cameras[0]);
     _pipelineUBO->updateMultiCameraUBO(cameras);
     ensureEnoughSize(cameras);

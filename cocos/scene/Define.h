@@ -29,8 +29,10 @@
 #include "math/Vec2.h"
 #include "math/Vec3.h"
 #include "math/Vec4.h"
+#include "renderer/gfx-base/GFXInputAssembler.h"
 #include "renderer/gfx-base/GFXShader.h"
 #include "scene/Model.h"
+
 
 namespace cc {
 namespace scene {
@@ -113,6 +115,9 @@ struct PipelineSharedSceneData {
     Shadow *     shadow{nullptr};
     Skybox *     skybox{nullptr};
     Fog *        fog{nullptr};
+    gfx::InputAssembler *occlusionQueryInputAssembler{nullptr};
+    Pass *               occlusionQueryPass{nullptr};
+    gfx::Shader *        occlusionQueryShader{nullptr};
     Pass *       deferredLightPass{nullptr};
     gfx::Shader *deferredLightPassShader{nullptr};
     Pass *       bloomPrefilterPass{nullptr};

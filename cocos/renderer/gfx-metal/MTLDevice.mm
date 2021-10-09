@@ -35,6 +35,7 @@
 #import "MTLInputAssembler.h"
 #import "MTLPipelineLayout.h"
 #import "MTLPipelineState.h"
+#import "MTLQuery.h"
 #import "MTLQueue.h"
 #import "MTLRenderPass.h"
 #import "MTLSampler.h"
@@ -94,15 +95,6 @@ bool CCMTLDevice::doInit(const DeviceInfo &info) {
     _icbSuppored = mu::isIndirectCommandBufferSupported(MTLFeatureSet(_mtlFeatureSet));
     _isSamplerDescriptorCompareFunctionSupported = mu::isSamplerDescriptorCompareFunctionSupported(gpuFamily);
 
-    QueueInfo queueInfo;
-    queueInfo.type = QueueType::GRAPHICS;
-    _queue         = createQueue(queueInfo);
-
-    CommandBufferInfo cmdBuffInfo;
-    cmdBuffInfo.type  = CommandBufferType::PRIMARY;
-    cmdBuffInfo.queue = _queue;
-    _cmdBuff          = createCommandBuffer(cmdBuffInfo);
-
     for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
         _gpuStagingBufferPools[i] = CC_NEW(CCMTLGPUStagingBufferPool(mtlDevice));
     }
@@ -142,6 +134,16 @@ bool CCMTLDevice::doInit(const DeviceInfo &info) {
     _features[toNumber(Feature::INPUT_ATTACHMENT_BENEFIT)] = true;
 
     _features[toNumber(Feature::FORMAT_RGB8)] = false;
+    _features[toNumber(Feature::OCCLUSION_QUERY)] = false;
+
+    QueueInfo queueInfo;
+    queueInfo.type = QueueType::GRAPHICS;
+    _queue         = createQueue(queueInfo);
+
+    CommandBufferInfo cmdBuffInfo;
+    cmdBuffInfo.type  = CommandBufferType::PRIMARY;
+    cmdBuffInfo.queue = _queue;
+    _cmdBuff          = createCommandBuffer(cmdBuffInfo);
 
 //    _memoryAlarmListenerId = EventDispatcher::addCustomEventListener(EVENT_MEMORY_WARNING, std::bind(&CCMTLDevice::onMemoryWarning, this));
 
@@ -317,6 +319,10 @@ TextureBarrier *CCMTLDevice::createTextureBarrier(const TextureBarrierInfo& info
 
 Sampler *CCMTLDevice::createSampler(const SamplerInfo &info, uint32_t hash) {
     return new CCMTLSampler(info, hash);
+}
+
+Query *CCMTLDevice::createQuery() {
+    return CC_NEW(CCMTLQuery);
 }
 
 Swapchain *CCMTLDevice::createSwapchain() {

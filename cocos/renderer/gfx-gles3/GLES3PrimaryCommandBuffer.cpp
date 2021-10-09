@@ -33,6 +33,7 @@
 #include "GLES3InputAssembler.h"
 #include "GLES3PipelineState.h"
 #include "GLES3PrimaryCommandBuffer.h"
+#include "GLES3Query.h"
 #include "GLES3RenderPass.h"
 #include "GLES3Texture.h"
 #include "states/GLES3GlobalBarrier.h"
@@ -146,6 +147,30 @@ void GLES3PrimaryCommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTex
     if (dstTexture) gpuTextureDst = static_cast<GLES3Texture *>(dstTexture)->gpuTexture();
 
     cmdFuncGLES3BlitTexture(GLES3Device::getInstance(), gpuTextureSrc, gpuTextureDst, regions, count, filter);
+}
+
+void GLES3PrimaryCommandBuffer::beginQuery(uint32_t id) {
+    auto *gles3Query = static_cast<GLES3Query *>(_query);
+
+    cmdFuncGLES3Query(GLES3Device::getInstance(), gles3Query, GLES3QueryType::BEGIN, id);
+}
+
+void GLES3PrimaryCommandBuffer::endQuery(uint32_t id) {
+    auto *gles3Query = static_cast<GLES3Query *>(_query);
+
+    cmdFuncGLES3Query(GLES3Device::getInstance(), gles3Query, GLES3QueryType::END, id);
+}
+
+void GLES3PrimaryCommandBuffer::resetQuery() {
+    auto *gles3Query = static_cast<GLES3Query *>(_query);
+
+    cmdFuncGLES3Query(GLES3Device::getInstance(), gles3Query, GLES3QueryType::RESET, 0);
+}
+
+void GLES3PrimaryCommandBuffer::getQueryResults(Query *query) {
+    auto *gles3Query = static_cast<GLES3Query *>(query);
+
+    cmdFuncGLES3Query(GLES3Device::getInstance(), gles3Query, GLES3QueryType::GET_RESULTS, 0);
 }
 
 void GLES3PrimaryCommandBuffer::execute(CommandBuffer *const *cmdBuffs, uint32_t count) {

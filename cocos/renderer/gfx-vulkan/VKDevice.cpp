@@ -34,6 +34,7 @@
 #include "VKInputAssembler.h"
 #include "VKPipelineLayout.h"
 #include "VKPipelineState.h"
+#include "VKQuery.h"
 #include "VKQueue.h"
 #include "VKRenderPass.h"
 #include "VKShader.h"
@@ -44,6 +45,7 @@
 #include "states/VKGlobalBarrier.h"
 #include "states/VKSampler.h"
 #include "states/VKTextureBarrier.h"
+
 
 CC_DISABLE_WARNINGS()
 #define VMA_IMPLEMENTATION
@@ -267,6 +269,8 @@ bool CCVKDevice::doInit(const DeviceInfo & /*info*/) {
         _features[toNumber(Feature::FORMAT_ASTC)] = true;
         compressedFmts += "astc ";
     }
+
+    _features[toNumber(Feature::OCCLUSION_QUERY)] = true;
 
     const VkPhysicalDeviceLimits &limits = _gpuContext->physicalDeviceProperties.limits;
     _caps.maxVertexAttributes            = limits.maxVertexInputAttributes;
@@ -680,6 +684,10 @@ CommandBuffer *CCVKDevice::createCommandBuffer(const CommandBufferInfo & /*info*
 
 Queue *CCVKDevice::createQueue() {
     return CC_NEW(CCVKQueue);
+}
+
+Query *CCVKDevice::createQuery() {
+    return CC_NEW(CCVKQuery);
 }
 
 Swapchain *CCVKDevice::createSwapchain() {
