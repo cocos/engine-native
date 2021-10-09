@@ -93,6 +93,14 @@ void cmdFuncCCVKGetDeviceQueue(CCVKDevice *device, CCVKGPUQueue *gpuQueue) {
     gpuQueue->queueFamilyIndex = gpuQueue->possibleQueueFamilyIndices[0];
 }
 
+void cmdFuncCCVKCreateQuery(CCVKDevice *device, CCVKGPUQuery *gpuQuery) {
+    VkQueryPoolCreateInfo queryPoolInfo = {};
+    queryPoolInfo.sType                 = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
+    queryPoolInfo.queryType             = mapVkQueryType(gpuQuery->type);
+    queryPoolInfo.queryCount            = MAX_QUERY_OBJECTS;
+    VK_CHECK(vkCreateQueryPool(device->gpuDevice()->vkDevice, &queryPoolInfo, nullptr, &gpuQuery->pool));
+}
+
 void cmdFuncCCVKCreateTexture(CCVKDevice *device, CCVKGPUTexture *gpuTexture) {
     if (!gpuTexture->size) return;
 
@@ -1375,6 +1383,10 @@ CC_VULKAN_API void cmdFuncCCVKCopyTextureToBuffers(CCVKDevice *device, CCVKGPUTe
     device->gpuBarrierManager()->checkIn(srcTexture);
 }
 
+void cmdFuncCCVKDestroyQuery(CCVKGPUDevice *gpuDevice, CCVKGPUQuery *gpuQuery) {
+    vkDestroyQueryPool(gpuDevice->vkDevice, gpuQuery->pool, nullptr);
+}
+
 void cmdFuncCCVKDestroyRenderPass(CCVKGPUDevice *gpuDevice, CCVKGPURenderPass *gpuRenderPass) {
     gpuRenderPass->beginAccesses.clear();
     gpuRenderPass->endAccesses.clear();
@@ -1487,6 +1499,13 @@ void CCVKGPURecycleBin::clear() {
                 if (res.vkImageView) {
                     vkDestroyImageView(_device->vkDevice, res.vkImageView, nullptr);
                     res.vkImageView = VK_NULL_HANDLE;
+                }
+                break;
+            case RecycledType::QUERY:
+                if (res.gpuQuery) {
+                    cmdFuncCCVKDestroyQuery(_device, res.gpuQuery);
+                    CC_DELETE(res.gpuQuery);
+                    res.gpuQuery = nullptr;
                 }
                 break;
             case RecycledType::RENDER_PASS:

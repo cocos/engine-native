@@ -37,6 +37,7 @@
 #include "GLES2PipelineLayout.h"
 #include "GLES2PipelineState.h"
 #include "GLES2PrimaryCommandBuffer.h"
+#include "GLES2Query.h"
 #include "GLES2Queue.h"
 #include "GLES2RenderPass.h"
 #include "GLES2Shader.h"
@@ -79,15 +80,6 @@ bool GLES2Device::doInit(const DeviceInfo & /*info*/) {
         destroy();
         return false;
     };
-
-    QueueInfo queueInfo;
-    queueInfo.type = QueueType::GRAPHICS;
-    _queue         = createQueue(queueInfo);
-
-    CommandBufferInfo cmdBuffInfo;
-    cmdBuffInfo.type  = CommandBufferType::PRIMARY;
-    cmdBuffInfo.queue = _queue;
-    _cmdBuff          = createCommandBuffer(cmdBuffInfo);
 
     String extStr = reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS));
     _extensions   = StringUtil::split(extStr, " ");
@@ -203,7 +195,8 @@ bool GLES2Device::doInit(const DeviceInfo & /*info*/) {
         _features[toNumber(Feature::FORMAT_ASTC)] = true;
         compressedFmts += "astc ";
     }
-    _features[toNumber(Feature::FORMAT_RGB8)] = true;
+    _features[toNumber(Feature::FORMAT_RGB8)]     = true;
+    _features[toNumber(Feature::OCCLUSION_QUERY)] = false;
 
     _renderer = reinterpret_cast<const char *>(glGetString(GL_RENDERER));
     _vendor   = reinterpret_cast<const char *>(glGetString(GL_VENDOR));
@@ -216,6 +209,15 @@ bool GLES2Device::doInit(const DeviceInfo & /*info*/) {
     glGetIntegerv(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS, reinterpret_cast<GLint *>(&_caps.maxVertexTextureUnits));
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, reinterpret_cast<GLint *>(&_caps.maxTextureSize));
     glGetIntegerv(GL_MAX_CUBE_MAP_TEXTURE_SIZE, reinterpret_cast<GLint *>(&_caps.maxCubeMapTextureSize));
+
+    QueueInfo queueInfo;
+    queueInfo.type = QueueType::GRAPHICS;
+    _queue         = createQueue(queueInfo);
+
+    CommandBufferInfo cmdBuffInfo;
+    cmdBuffInfo.type  = CommandBufferType::PRIMARY;
+    cmdBuffInfo.queue = _queue;
+    _cmdBuff          = createCommandBuffer(cmdBuffInfo);
 
     _gpuStateCache->initialize(_caps.maxTextureUnits, _caps.maxVertexAttributes);
     _gpuBlitManager->initialize();
@@ -281,6 +283,10 @@ CommandBuffer *GLES2Device::createCommandBuffer(const CommandBufferInfo &info, b
 
 Queue *GLES2Device::createQueue() {
     return CC_NEW(GLES2Queue);
+}
+
+Query *GLES2Device::createQuery() {
+    return CC_NEW(GLES2Query);
 }
 
 Swapchain *GLES2Device::createSwapchain() {

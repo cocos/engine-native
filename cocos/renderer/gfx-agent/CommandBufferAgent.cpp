@@ -30,6 +30,7 @@
 #include "FramebufferAgent.h"
 #include "InputAssemblerAgent.h"
 #include "PipelineStateAgent.h"
+#include "QueryAgent.h"
 #include "QueueAgent.h"
 #include "RenderPassAgent.h"
 #include "TextureAgent.h"
@@ -38,6 +39,7 @@
 #include "base/job-system/JobSystem.h"
 #include "base/threading/MessageQueue.h"
 #include "base/threading/ThreadSafeLinearAllocator.h"
+
 
 namespace cc {
 namespace gfx {
@@ -98,6 +100,21 @@ void CommandBufferAgent::destroyMessageQueue() {
     DeviceAgent::getInstance()->_cmdBuffRefs.erase(this);
 }
 
+void CommandBufferAgent::initAgent() {
+    initMessageQueue();
+    _query = CC_NEW(QueryAgent(_actor->getQuery()));
+}
+
+void CommandBufferAgent::destroyAgent() {
+    if (_query) {
+        static_cast<QueryAgent *>(_query)->_actor = nullptr;
+        CC_DELETE(_query);
+        _query = nullptr;
+    }
+
+    destroyMessageQueue();
+}
+
 void CommandBufferAgent::doInit(const CommandBufferInfo &info) {
     initMessageQueue();
 
@@ -122,6 +139,12 @@ void CommandBufferAgent::doDestroy() {
         {
             actor->destroy();
         });
+
+    if (_query) {
+        static_cast<QueryAgent *>(_query)->_actor = nullptr;
+        CC_DELETE(_query);
+        _query = nullptr;
+    }
 }
 
 void CommandBufferAgent::begin(RenderPass *renderPass, uint32_t subpass, Framebuffer *frameBuffer) {
@@ -476,6 +499,35 @@ void CommandBufferAgent::pipelineBarrier(const GlobalBarrier *barrier, const Tex
         textureBarrierCount, textureBarrierCount,
         {
             actor->pipelineBarrier(barrier, textureBarriers, textures, textureBarrierCount);
+        });
+}
+
+void CommandBufferAgent::beginQuery(uint32_t id) {
+    ENQUEUE_MESSAGE_2(
+        _messageQueue, CommandBufferBeginQuery,
+        actor, getActor(),
+        id, id,
+        {
+            actor->beginQuery(id);
+        });
+}
+
+void CommandBufferAgent::endQuery(uint32_t id) {
+    ENQUEUE_MESSAGE_2(
+        _messageQueue, CommandBufferEndQuery,
+        actor, getActor(),
+        id, id,
+        {
+            actor->endQuery(id);
+        });
+}
+
+void CommandBufferAgent::resetQuery() {
+    ENQUEUE_MESSAGE_1(
+        _messageQueue, CommandBufferResetQuery,
+        actor, getActor(),
+        {
+            actor->resetQuery();
         });
 }
 
