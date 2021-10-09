@@ -30,9 +30,6 @@
 namespace cc {
 namespace gfx {
 
-namespace cc {
-namespace gfx {
-
 class CCMTLQuery final : public Query {
 public:
     CCMTLQuery();
