@@ -26,6 +26,7 @@
 #pragma once
 
 #include <vector>
+#include <array>
 #include "renderer/gfx-base/GFXDescriptorSet.h"
 #include "renderer/gfx-base/GFXInputAssembler.h"
 
