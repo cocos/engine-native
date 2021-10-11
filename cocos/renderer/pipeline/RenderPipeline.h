@@ -134,7 +134,7 @@ protected:
     std::unordered_map<uint, gfx::InputAssembler *> _quadIA;
 
     framegraph::FrameGraph                  _fg;
-    map<gfx::ClearFlags, gfx::RenderPass *> _renderPasses;
+    unordered_map<gfx::ClearFlags, gfx::RenderPass *> _renderPasses;
 
     // use cluster culling or not
     bool _clusterEnabled{false};
