@@ -161,10 +161,10 @@ void BloomStage::render(scene::Camera *camera) {
         gfx::Sampler *            sampler;
     };
 
-    auto renderArea = pipeline->getRenderArea(camera, false);
+    auto renderArea = pipeline->getRenderArea(camera);
     renderArea.width >>= 1;
     renderArea.height >>= 1;
-
+    auto scale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
     auto prefilterSetup = [&](framegraph::PassNodeBuilder &builder, PrefilterRenderData &data) {
         data.sampler = _sampler;
         // read lightingout as input
@@ -174,8 +174,8 @@ void BloomStage::render(scene::Camera *camera) {
             framegraph::Texture::Descriptor colorTexInfo;
             colorTexInfo.format = gfx::Format::RGBA16F;
             colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
-            colorTexInfo.width  = pipeline->getWidth();
-            colorTexInfo.height = pipeline->getHeight();
+            colorTexInfo.width  = pipeline->getWidth() * scale;
+            colorTexInfo.height = pipeline->getHeight() * scale;
 
             data.inputTexHandle = builder.create<framegraph::Texture>(
                 RenderPipeline::fgStrHandleOutColorTexture, colorTexInfo);
@@ -190,16 +190,15 @@ void BloomStage::render(scene::Camera *camera) {
             framegraph::Texture::Descriptor colorTexInfo;
             colorTexInfo.format = gfx::Format::RGBA16F;
             colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
-            colorTexInfo.width  = renderArea.width;
-            colorTexInfo.height = renderArea.height;
+            colorTexInfo.width  = renderArea.width * scale;
+            colorTexInfo.height = renderArea.height * scale;
 
             data.outputTexHandle = builder.create<framegraph::Texture>(prefilterTexHandle, colorTexInfo);
         }
         data.outputTexHandle = builder.write(data.outputTexHandle, colorAttachmentInfo);
         builder.writeToBlackboard(prefilterTexHandle, data.outputTexHandle);
 
-        gfx::Viewport viewport{renderArea.x, renderArea.y, renderArea.width, renderArea.height, 0.F, 1.F};
-        builder.setViewport(viewport, renderArea);
+        builder.setViewport(pipeline->getViewport(camera), renderArea);
     };
 
     auto prefilterExec = [this, camera](PrefilterRenderData const &data, const framegraph::DevicePassResourceTable &table) {
@@ -214,7 +213,7 @@ void BloomStage::render(scene::Camera *camera) {
         auto *const          sharedData     = pipeline->getPipelineSceneData()->getSharedData();
         scene::Pass *        pass           = sharedData->bloomPrefilterPass;
         gfx::Shader *        shader         = sharedData->bloomPrefilterPassShader;
-        auto                 rendeArea      = pipeline->getRenderArea(camera, false);
+        auto                 rendeArea      = pipeline->getRenderArea(camera);
         gfx::InputAssembler *inputAssembler = pipeline->getIAByRenderArea(rendeArea);
         gfx::PipelineState * pso            = PipelineStateManager::getOrCreatePipelineState(
             pass, shader, inputAssembler, renderPass);
@@ -266,23 +265,22 @@ void BloomStage::render(scene::Camera *camera) {
                 framegraph::Texture::Descriptor colorTexInfo;
                 colorTexInfo.format = gfx::Format::RGBA16F;
                 colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
-                colorTexInfo.width  = renderArea.width;
-                colorTexInfo.height = renderArea.height;
+                colorTexInfo.width  = renderArea.width * scale;
+                colorTexInfo.height = renderArea.height * scale;
 
                 data.outputTexHandle = builder.create<framegraph::Texture>(downsampleTexHandles[data.index], colorTexInfo);
             }
             data.outputTexHandle = builder.write(data.outputTexHandle, colorAttachmentInfo);
             builder.writeToBlackboard(downsampleTexHandles[data.index], data.outputTexHandle);
 
-            gfx::Viewport viewport{renderArea.x, renderArea.y, renderArea.width, renderArea.height, 0.F, 1.F};
-            builder.setViewport(viewport, renderArea);
+            builder.setViewport(pipeline->getViewport(camera), renderArea);
 
             // Update cc_textureSize
             auto *stage = static_cast<BloomStage *>(pipeline->getRenderstageByName(STAGE_NAME));
             CC_ASSERT(stage != nullptr);
             data.bloomUBO       = stage->getDownsampelUBO()[data.index];
-            data.textureSize[0] = static_cast<float>(renderArea.width << 1);
-            data.textureSize[1] = static_cast<float>(renderArea.height << 1);
+            data.textureSize[0] = static_cast<float>(static_cast<uint>(renderArea.width * scale) << 1);
+            data.textureSize[1] = static_cast<float>(static_cast<uint>(renderArea.height * scale) << 1);
         };
 
         auto downsampleExec = [this, camera](ScalingSampleRenderData const &data, const framegraph::DevicePassResourceTable &table) {
@@ -296,7 +294,7 @@ void BloomStage::render(scene::Camera *camera) {
             auto *const          sharedData     = pipeline->getPipelineSceneData()->getSharedData();
             scene::Pass *        pass           = sharedData->bloomDownsamplePass;
             gfx::Shader *        shader         = sharedData->bloomDownsamplePassShader;
-            auto                 rendeArea      = pipeline->getRenderArea(camera, false);
+            auto                 rendeArea      = pipeline->getRenderArea(camera);
             gfx::InputAssembler *inputAssembler = pipeline->getIAByRenderArea(rendeArea);
             gfx::PipelineState * pso            = PipelineStateManager::getOrCreatePipelineState(
                 pass, shader, inputAssembler, renderPass);
@@ -344,8 +342,8 @@ void BloomStage::render(scene::Camera *camera) {
                 framegraph::Texture::Descriptor colorTexInfo;
                 colorTexInfo.format = gfx::Format::RGBA16F;
                 colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
-                colorTexInfo.width  = renderArea.width;
-                colorTexInfo.height = renderArea.height;
+                colorTexInfo.width  = renderArea.width * scale;
+                colorTexInfo.height = renderArea.height * scale;
 
                 data.outputTexHandle = builder.create<framegraph::Texture>(
                     upsampleTexHandles[data.index], colorTexInfo);
@@ -353,15 +351,14 @@ void BloomStage::render(scene::Camera *camera) {
             data.outputTexHandle = builder.write(data.outputTexHandle, colorAttachmentInfo);
             builder.writeToBlackboard(upsampleTexHandles[data.index], data.outputTexHandle);
 
-            gfx::Viewport viewport{renderArea.x, renderArea.y, renderArea.width, renderArea.height, 0.F, 1.F};
-            builder.setViewport(viewport, renderArea);
+            builder.setViewport(pipeline->getViewport(camera), renderArea);
 
             // Update cc_textureSize
             auto *stage = static_cast<BloomStage *>(pipeline->getRenderstageByName(STAGE_NAME));
             CC_ASSERT(stage != nullptr);
             data.bloomUBO       = stage->getUpsampleUBO()[data.index];
-            data.textureSize[0] = static_cast<float>(renderArea.width >> 1);
-            data.textureSize[1] = static_cast<float>(renderArea.height >> 1);
+            data.textureSize[0] = static_cast<float>(static_cast<uint>(renderArea.width * scale) >> 1);
+            data.textureSize[1] = static_cast<float>(static_cast<uint>(renderArea.height * scale) >> 1);
         };
 
         auto upsampleExec = [this, camera](ScalingSampleRenderData const &data, const framegraph::DevicePassResourceTable &table) {
@@ -427,8 +424,8 @@ void BloomStage::render(scene::Camera *camera) {
             framegraph::Texture::Descriptor colorTexInfo;
             colorTexInfo.format = gfx::Format::RGBA16F;
             colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
-            colorTexInfo.width  = renderArea.width;
-            colorTexInfo.height = renderArea.height;
+            colorTexInfo.width  = renderArea.width * scale;
+            colorTexInfo.height = renderArea.height * scale;
 
             data.bloomOutTexHandle = builder.create<framegraph::Texture>(
                 RenderPipeline::fgStrHandleBloomOutTexture, colorTexInfo);
@@ -436,8 +433,7 @@ void BloomStage::render(scene::Camera *camera) {
         data.bloomOutTexHandle = builder.write(data.bloomOutTexHandle, colorAttachmentInfo);
         builder.writeToBlackboard(RenderPipeline::fgStrHandleBloomOutTexture, data.bloomOutTexHandle);
 
-        gfx::Viewport viewport{renderArea.x, renderArea.y, renderArea.width, renderArea.height, 0.F, 1.F};
-        builder.setViewport(viewport, renderArea);
+        builder.setViewport(pipeline->getViewport(camera), renderArea);
     };
 
     auto combineExec = [this, camera](CombineRenderData const &data, const framegraph::DevicePassResourceTable &table) {

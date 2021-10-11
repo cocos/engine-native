@@ -142,7 +142,6 @@ void ForwardStage::render(scene::Camera *camera) {
 
     auto scale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
     _renderArea = pipeline->getRenderArea(camera);
-    gfx::Viewport viewport{_renderArea.x, _renderArea.y, _renderArea.width * scale, _renderArea.height * scale};
     // Command 'updateBuffer' must be recorded outside render passes, cannot put them in execute lambda
     dispenseRenderObject2Queues();
     pipeline->getPipelineUBO()->updateShadowUBO(camera);
@@ -196,8 +195,8 @@ void ForwardStage::render(scene::Camera *camera) {
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT,
             gfx::Format::DEPTH_STENCIL,
-            camera->window->getWidth() * scale,
-            camera->window->getHeight() * scale,
+            static_cast<uint32_t>(camera->window->getWidth() * scale),
+            static_cast<uint32_t>(camera->window->getHeight() * scale),
         };
 
         framegraph::RenderTargetAttachment::Descriptor depthAttachmentInfo;
@@ -210,7 +209,7 @@ void ForwardStage::render(scene::Camera *camera) {
         data.depth = builder.create<framegraph::Texture>(RenderPipeline::fgStrHandleOutDepthTexture, depthTexInfo);
         data.depth = builder.write(data.depth, depthAttachmentInfo);
         builder.writeToBlackboard(RenderPipeline::fgStrHandleOutDepthTexture, data.depth);
-        builder.setViewport(viewport, _renderArea);
+        builder.setViewport(pipeline->getViewport(camera), _renderArea);
     };
 
     auto offset      = _pipeline->getPipelineUBO()->getCurrentCameraUBOOffset();

@@ -123,8 +123,8 @@ void PostProcessStage::render(scene::Camera *camera) {
             framegraph::Texture::Descriptor colorTexInfo;
             colorTexInfo.format = gfx::Format::RGBA16F;
             colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
-            colorTexInfo.width  = pipeline->getWidth();
-            colorTexInfo.height = pipeline->getHeight();
+            colorTexInfo.width  = pipeline->getWidth() * scale;
+            colorTexInfo.height = pipeline->getHeight() * scale;
 
             data.outColorTex = builder.create<framegraph::Texture>(RenderPipeline::fgStrHandleOutColorTexture, colorTexInfo);
         }
@@ -153,8 +153,8 @@ void PostProcessStage::render(scene::Camera *camera) {
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::COLOR_ATTACHMENT,
             gfx::Format::RGBA8,
-            camera->window->getWidth() * scale,
-            camera->window->getHeight() * scale,
+            static_cast<uint32_t>(camera->window->getWidth() * scale),
+            static_cast<uint32_t>(camera->window->getHeight() * scale),
         };
         data.backBuffer = builder.create<framegraph::Texture>(fgStrHandlePostProcessOutTexture, textureInfo);
         data.backBuffer = builder.write(data.backBuffer, colorAttachmentInfo);
