@@ -31,8 +31,10 @@ android {
                     }
                     
                     arguments '-j' + Runtime.runtime.availableProcessors()
-                    abiFilters.addAll(PROP_APP_ABI.split(':').collect{it as String})
                 }
+            }
+            ndk {
+                abiFilters PROP_APP_ABI.split(':')
             }
         }
     }
