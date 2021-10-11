@@ -111,7 +111,7 @@ void PostProcessStage::render(scene::Camera *camera) {
     _clearColors[0].w = camera->clearColor.w;
 
     auto *pipeline  = _pipeline;
-    auto  scale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
+    float shadingScale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
     auto  postSetup = [&](framegraph::PassNodeBuilder &builder, RenderData &data) {
         if (pipeline->getBloomEnable()) {
             data.outColorTex = framegraph::TextureHandle(builder.readFromBlackboard(RenderPipeline::fgStrHandleBloomOutTexture));
@@ -123,8 +123,8 @@ void PostProcessStage::render(scene::Camera *camera) {
             framegraph::Texture::Descriptor colorTexInfo;
             colorTexInfo.format = gfx::Format::RGBA16F;
             colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
-            colorTexInfo.width  = pipeline->getWidth() * scale;
-            colorTexInfo.height = pipeline->getHeight() * scale;
+            colorTexInfo.width  = static_cast<uint>(pipeline->getWidth() * shadingScale);
+            colorTexInfo.height = static_cast<uint>(pipeline->getHeight() * shadingScale);
 
             data.outColorTex = builder.create<framegraph::Texture>(RenderPipeline::fgStrHandleOutColorTexture, colorTexInfo);
         }
@@ -153,8 +153,8 @@ void PostProcessStage::render(scene::Camera *camera) {
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::COLOR_ATTACHMENT,
             gfx::Format::RGBA8,
-            static_cast<uint32_t>(camera->window->getWidth() * scale),
-            static_cast<uint32_t>(camera->window->getHeight() * scale),
+            static_cast<uint>(camera->window->getWidth() * shadingScale),
+            static_cast<uint>(camera->window->getHeight() * shadingScale),
         };
         data.backBuffer = builder.create<framegraph::Texture>(fgStrHandlePostProcessOutTexture, textureInfo);
         data.backBuffer = builder.write(data.backBuffer, colorAttachmentInfo);
@@ -217,7 +217,7 @@ void PostProcessStage::render(scene::Camera *camera) {
 
     // add pass
     pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(CommonInsertPoint::DIP_POSTPROCESS), RenderPipeline::fgStrHandlePostprocessPass, postSetup, postExec);
-    pipeline->getFrameGraph().presentFromBlackboard(fgStrHandlePostProcessOutTexture, camera->window->frameBuffer->getColorTextures()[0]);
+    pipeline->getFrameGraph().presentFromBlackboard(fgStrHandlePostProcessOutTexture, camera->window->frameBuffer->getColorTextures()[0], !static_cast<bool>(shadingScale - 1.F));
 }
 
 } // namespace pipeline

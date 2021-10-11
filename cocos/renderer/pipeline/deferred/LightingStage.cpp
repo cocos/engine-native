@@ -339,7 +339,7 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
 
     auto *     pipeline   = static_cast<DeferredPipeline *>(_pipeline);
     gfx::Color clearColor = pipeline->getClearcolor(camera);
-    auto       scale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
+    float      shadingScale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
     auto lightingSetup = [&](framegraph::PassNodeBuilder &builder, RenderData &data) {
         builder.subpass(true);
 
@@ -374,8 +374,8 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         framegraph::Texture::Descriptor colorTexInfo;
         colorTexInfo.format = gfx::Format::RGBA16F;
         colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
-        colorTexInfo.width  = pipeline->getWidth() * scale;
-        colorTexInfo.height = pipeline->getHeight() * scale;
+        colorTexInfo.width  = static_cast<uint>(pipeline->getWidth() * shadingScale);
+        colorTexInfo.height = static_cast<uint>(pipeline->getHeight() * shadingScale);
         data.outputTex      = builder.create<framegraph::Texture>(RenderPipeline::fgStrHandleOutColorTexture, colorTexInfo);
 
         framegraph::RenderTargetAttachment::Descriptor colorAttachmentInfo;
@@ -443,7 +443,7 @@ void LightingStage::fgTransparent(scene::Camera *camera) {
 
     auto *     pipeline   = static_cast<DeferredPipeline *>(_pipeline);
     gfx::Color clearColor = pipeline->getClearcolor(camera);
-    auto       scale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
+    float      shadingScale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
     auto transparentSetup = [&](framegraph::PassNodeBuilder &builder, RenderData &data) {
         // write to lighting output
         framegraph::RenderTargetAttachment::Descriptor colorAttachmentInfo;
@@ -458,8 +458,8 @@ void LightingStage::fgTransparent(scene::Camera *camera) {
             framegraph::Texture::Descriptor colorTexInfo;
             colorTexInfo.format = gfx::Format::RGBA16F;
             colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
-            colorTexInfo.width  = pipeline->getWidth() * scale;
-            colorTexInfo.height = pipeline->getHeight() * scale;
+            colorTexInfo.width  = static_cast<uint>(pipeline->getWidth() * shadingScale);
+            colorTexInfo.height = static_cast<uint>(pipeline->getHeight() * shadingScale);
 
             colorAttachmentInfo.loadOp     = gfx::LoadOp::CLEAR;
             colorAttachmentInfo.clearColor = clearColor;
@@ -482,8 +482,8 @@ void LightingStage::fgTransparent(scene::Camera *camera) {
                 gfx::TextureType::TEX2D,
                 gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT,
                 gfx::Format::DEPTH_STENCIL,
-                static_cast<uint>(pipeline->getWidth() * scale),
-                static_cast<uint>(pipeline->getHeight() * scale),
+                static_cast<uint>(pipeline->getWidth() * shadingScale),
+                static_cast<uint>(pipeline->getHeight() * shadingScale),
             };
             data.depth = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleOutDepthTexture, depthTexInfo);
         }

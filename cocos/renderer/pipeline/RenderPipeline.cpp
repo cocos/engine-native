@@ -245,9 +245,9 @@ gfx::Viewport RenderPipeline::getViewport(scene::Camera *camera) {
 }
 
 gfx::Rect RenderPipeline::getRenderArea(scene::Camera *camera) {
-    auto scale{_pipelineSceneData->getSharedData()->shadingScale};
-    auto w{static_cast<float>(camera->window->getWidth()) * scale};
-    auto h{static_cast<float>(camera->window->getHeight()) * scale};
+    float shadingScale{_pipelineSceneData->getSharedData()->shadingScale};
+    float w{static_cast<float>(camera->window->getWidth()) * shadingScale};
+    float h{static_cast<float>(camera->window->getHeight()) * shadingScale};
 
     return {
         static_cast<int>(camera->viewPort.x * w),

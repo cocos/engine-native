@@ -146,9 +146,9 @@ void GbufferStage::render(scene::Camera *camera) {
         framegraph::TextureHandle depth;
     };
 
-    auto *pipeline = static_cast<DeferredPipeline *>(_pipeline);
-    auto  scale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
-    _renderArea    = pipeline->getRenderArea(camera);
+    auto  *pipeline = static_cast<DeferredPipeline *>(_pipeline);
+    float  shadingScale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
+    _renderArea     = pipeline->getRenderArea(camera);
 
     // render area is not oriented, copy buffer must be called outsize of RenderPass, it should not be called in execute lambda expression
     // If there are only transparent object, lighting pass is ignored, we should call getIAByRenderArea here
@@ -162,15 +162,15 @@ void GbufferStage::render(scene::Camera *camera) {
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::INPUT_ATTACHMENT,
             gfx::Format::RGBA8,
-            static_cast<uint>(pipeline->getWidth() * scale),
-            static_cast<uint>(pipeline->getHeight() * scale),
+            static_cast<uint>(pipeline->getWidth() * shadingScale),
+            static_cast<uint>(pipeline->getHeight() * shadingScale),
         };
         gfx::TextureInfo gbufferInfoFloat = {
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::INPUT_ATTACHMENT,
             gfx::Format::RGBA16F,
-            static_cast<uint>(pipeline->getWidth() * scale),
-            static_cast<uint>(pipeline->getHeight() * scale),
+            static_cast<uint>(pipeline->getWidth() * shadingScale),
+            static_cast<uint>(pipeline->getHeight() * shadingScale),
         };
         for (int i = 0; i < DeferredPipeline::GBUFFER_COUNT - 1; ++i) {
             if (i != 0) { // positions & normals need more precision
@@ -206,8 +206,8 @@ void GbufferStage::render(scene::Camera *camera) {
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT,
             gfx::Format::DEPTH_STENCIL,
-            static_cast<uint>(pipeline->getWidth() * scale),
-            static_cast<uint>(pipeline->getHeight() * scale),
+            static_cast<uint>(pipeline->getWidth() * shadingScale),
+            static_cast<uint>(pipeline->getHeight() * shadingScale),
         };
         data.depth = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleOutDepthTexture, depthTexInfo);
 
