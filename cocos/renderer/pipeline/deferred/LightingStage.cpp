@@ -482,8 +482,8 @@ void LightingStage::fgTransparent(scene::Camera *camera) {
                 gfx::TextureType::TEX2D,
                 gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT,
                 gfx::Format::DEPTH_STENCIL,
-                pipeline->getWidth() * scale,
-                pipeline->getHeight() * scale,
+                static_cast<uint>(pipeline->getWidth() * scale),
+                static_cast<uint>(pipeline->getHeight() * scale),
             };
             data.depth = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleOutDepthTexture, depthTexInfo);
         }

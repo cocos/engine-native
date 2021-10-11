@@ -162,15 +162,15 @@ void GbufferStage::render(scene::Camera *camera) {
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::INPUT_ATTACHMENT,
             gfx::Format::RGBA8,
-            pipeline->getWidth() * scale,
-            pipeline->getHeight() * scale,
+            static_cast<uint>(pipeline->getWidth() * scale),
+            static_cast<uint>(pipeline->getHeight() * scale),
         };
         gfx::TextureInfo gbufferInfoFloat = {
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::INPUT_ATTACHMENT,
             gfx::Format::RGBA16F,
-            pipeline->getWidth() * scale,
-            pipeline->getHeight() * scale,
+            static_cast<uint>(pipeline->getWidth() * scale),
+            static_cast<uint>(pipeline->getHeight() * scale),
         };
         for (int i = 0; i < DeferredPipeline::GBUFFER_COUNT - 1; ++i) {
             if (i != 0) { // positions & normals need more precision
@@ -206,8 +206,8 @@ void GbufferStage::render(scene::Camera *camera) {
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT,
             gfx::Format::DEPTH_STENCIL,
-            pipeline->getWidth() * scale,
-            pipeline->getHeight() * scale,
+            static_cast<uint>(pipeline->getWidth() * scale),
+            static_cast<uint>(pipeline->getHeight() * scale),
         };
         data.depth = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleOutDepthTexture, depthTexInfo);
 
