@@ -45,11 +45,8 @@ public:
         if (hasFlag(static_cast<TextureFlagBit>(flagsIn), TextureFlagBit::GEN_MIPMAP)) {
             flags |= TextureFlagBit::GEN_MIPMAP;
         }
-        if (hasFlag(static_cast<TextureFlagBit>(flagsIn), TextureFlagBit::RESIZABLE)) {
-            flags |= TextureFlagBit::RESIZABLE;
-        }
-        if (hasFlag(static_cast<TextureFlagBit>(flagsIn), TextureFlagBit::RESIZABLE)) {
-            flags |= TextureFlagBit::RESIZABLE;
+        if (hasFlag(static_cast<TextureFlagBit>(flagsIn), TextureFlagBit::GENERAL_LAYOUT)) {
+            flags |= TextureFlagBit::GENERAL_LAYOUT;
         }
 
         info.flags = flags;

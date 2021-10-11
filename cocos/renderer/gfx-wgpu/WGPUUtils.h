@@ -140,7 +140,7 @@ static WGPUTextureSampleType textureSampleTypeTrait(Format format) {
         case Format::DEPTH:
             return WGPUTextureSampleType::WGPUTextureSampleType_Depth;
         default:
-            CC_LOG_ERROR("unsupport texture sample type yet, github@hana-alice to fix.");
+            printf("unsupport texture sample type yet, github@hana-alice to fix.");
     }
 }
 

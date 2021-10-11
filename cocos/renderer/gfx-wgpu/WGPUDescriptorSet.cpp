@@ -159,7 +159,7 @@ void CCWGPUDescriptorSet::update() {
                 _gpuBindGroupObj->bindingSet.insert(binding.binding + CC_WGPU_MAX_ATTACHMENTS);
             }
 
-        } else if (binding.descriptorType == DescriptorType::STORAGE_IMAGE || binding.descriptorType == DescriptorType::TEXTURE) {
+        } else if (hasFlag(DESCRIPTOR_TEXTURE_TYPE, bindings[i].descriptorType)) {
             if (_textures[i]) {
                 auto& bindGroupEntry       = _gpuBindGroupObj->bindGroupEntries[i];
                 auto* texture              = static_cast<CCWGPUTexture*>(_textures[i]);
@@ -175,19 +175,31 @@ void CCWGPUDescriptorSet::update() {
 
     std::vector<WGPUBindGroupEntry> bindGroupEntries;
     bindGroupEntries.assign(_gpuBindGroupObj->bindGroupEntries.begin(), _gpuBindGroupObj->bindGroupEntries.end());
-    for (auto iter = bindGroupEntries.begin(); iter != bindGroupEntries.end();) {
-        if (_gpuBindGroupObj->bindingSet.find((*iter).binding) == _gpuBindGroupObj->bindingSet.end() && bindGroupEntries.size() > 1) {
-            iter = bindGroupEntries.erase(iter);
-        } else {
-            ++iter;
-        }
+    // for (auto iter = bindGroupEntries.begin(); iter != bindGroupEntries.end();) {
+    //     if (_gpuBindGroupObj->bindingSet.find((*iter).binding) == _gpuBindGroupObj->bindingSet.end() && bindGroupEntries.size() > 1) {
+    //         iter = bindGroupEntries.erase(iter);
+    //     } else {
+    //         ++iter;
+    //     }
+    // }
+    bindGroupEntries.erase(std::remove_if(
+                               bindGroupEntries.begin(), bindGroupEntries.end(), [this, &bindGroupEntries](const WGPUBindGroupEntry& entry) {
+                                   return _gpuBindGroupObj->bindingSet.find(entry.binding) == _gpuBindGroupObj->bindingSet.end();
+                               }),
+                           bindGroupEntries.end());
+
+    // 1 default buffer avoid missing bindgroup when create pipeline layout
+    CCWGPUDeviceObject* deviceObj = CCWGPUDevice::getInstance()->gpuDeviceObject();
+    if (bindGroupEntries.empty()) {
+        CCWGPUBuffer*      buffer      = deviceObj->defaultResources.buffer;
+        WGPUBindGroupEntry bufferEntry = {
+            .binding = 0,
+            .buffer  = buffer->gpuBufferObject()->wgpuBuffer,
+            .size    = buffer->getSize(),
+            .offset  = buffer->getOffset(),
+        };
+        bindGroupEntries.push_back(bufferEntry);
     }
-    // bindGroupEntries.erase(std::remove_if(
-    //                            bindGroupEntries.begin(), bindGroupEntries.end(), [this, &bindGroupEntries](const WGPUBindGroupEntry& entry) {
-    //                                // size > 1 incase of missing bindgroup
-    //                                return _gpuBindGroupObj->bindingSet.find(entry.binding) == _gpuBindGroupObj->bindingSet.end() && bindGroupEntries.size() > 1;
-    //                            }),
-    //                        bindGroupEntries.end());
 
     // for (size_t j = 0; j < bindGroupEntries.size(); j++) {
     //     const auto& entry = bindGroupEntries[j];
