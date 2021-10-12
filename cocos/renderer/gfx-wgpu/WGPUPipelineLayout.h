@@ -25,6 +25,7 @@
 
 #pragma once
 #include <emscripten/bind.h>
+#include <set>
 #include "gfx-base/GFXPipelineLayout.h"
 
 namespace cc {
@@ -40,7 +41,7 @@ public:
     inline CCWGPUPipelineLayoutObject* gpuPipelineLayoutObject() { return _gpuPipelineLayoutObj; }
 
     //bindgroup not ready yet so delay creation
-    void prepare();
+    void prepare(const std::set<uint8_t>& setInUse);
 
 protected:
     void doInit(const PipelineLayoutInfo& info) override;

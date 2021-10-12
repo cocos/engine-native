@@ -49,6 +49,8 @@ public:
 
     void prepare(const std::set<uint8_t>& bindingInUse);
 
+    static void* defaultBindGroupLayout();
+
 protected:
     void doInit(const DescriptorSetLayoutInfo& info) override;
     void doDestroy() override;

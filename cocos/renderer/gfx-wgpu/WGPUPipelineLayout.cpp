@@ -41,29 +41,16 @@ void CCWGPUPipelineLayout::doInit(const PipelineLayoutInfo& info) {
     _gpuPipelineLayoutObj = CC_NEW(CCWGPUPipelineLayoutObject);
 }
 
-void CCWGPUPipelineLayout::prepare() {
+void CCWGPUPipelineLayout::prepare(const std::set<uint8_t>& setInUse) {
     std::vector<WGPUBindGroupLayout> layouts;
     for (size_t i = 0; i < _setLayouts.size(); i++) {
         auto* descriptorSetLayout = static_cast<CCWGPUDescriptorSetLayout*>(_setLayouts[i]);
-        // const auto& bindGroupLayoutEntries = descriptorSetLayout->gpuLayoutEntryObject()->bindGroupLayoutEntries;
-        // for (size_t j = 0; j < bindGroupLayoutEntries.size(); j++) {
-        //     // const auto &entryLayout = layout->gpuLayoutEntryObject()->bindGroupLayoutEntries[j];
-        //     // printf("set, binding, b, t, s %d, %d, %p, %p, %p\n", i, entry.binding, entry.buffer, entry.textureView, entry.sampler);
-        //     const auto& entry = bindGroupLayoutEntries[j];
-        //     if ((entry.buffer.type != WGPUBufferBindingType_Undefined) +
-        //             (entry.sampler.type != WGPUSamplerBindingType_Undefined) +
-        //             (entry.texture.sampleType != WGPUTextureSampleType_Undefined) +
-        //             (entry.storageTexture.access != WGPUStorageTextureAccess_Undefined) !=
-        //         1) {
-        //         printf("******missing %d, %d, %d, %d, %d\n", entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
-        //     }
-        //     printf("l binding, b, t, s  %d, %d, %d, %d, %d\n", entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
-        // }
-
-        if (!descriptorSetLayout->gpuLayoutEntryObject()->bindGroupLayout) {
-            descriptorSetLayout->prepare({});
+        if (setInUse.find(i) == setInUse.end()) {
+            // give it default bindgrouplayout if not in use
+            layouts.push_back(static_cast<WGPUBindGroupLayout>(CCWGPUDescriptorSetLayout::defaultBindGroupLayout()));
+        } else {
+            layouts.push_back(descriptorSetLayout->gpuLayoutEntryObject()->bindGroupLayout);
         }
-        layouts.push_back(descriptorSetLayout->gpuLayoutEntryObject()->bindGroupLayout);
     }
 
     WGPUPipelineLayoutDescriptor descriptor = {
@@ -72,14 +59,6 @@ void CCWGPUPipelineLayout::prepare() {
         .bindGroupLayoutCount = layouts.size(),
         .bindGroupLayouts     = layouts.data(),
     };
-
-    // for (size_t i = 0; i < descriptor.bindGroupLayoutCount; i++) {
-    //     auto* descriptorSetLayout = static_cast<CCWGPUDescriptorSetLayout*>(info.setLayouts[i]);
-    //     for (size_t j = 0; j < descriptorSetLayout->gpuLayoutEntryObject()->bindGroupLayoutEntries.size(); j++) {
-    //         printf("set, idx, bd, buf, tex, spl, tv %d, %d, %d\n", i, j,
-    //                descriptorSetLayout->gpuLayoutEntryObject()->bindGroupLayoutEntries[j].binding);
-    //     }
-    // }
 
     _gpuPipelineLayoutObj->wgpuPipelineLayout = wgpuDeviceCreatePipelineLayout(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
 }

@@ -41,11 +41,16 @@ CCWGPUPipelineState::CCWGPUPipelineState() : wrapper<PipelineState>(val::object(
 }
 
 void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
-    _gpuPipelineStateObj                         = CC_NEW(CCWGPUPipelineStateObject);
-    auto*                         pipelineLayout = static_cast<CCWGPUPipelineLayout*>(info.pipelineLayout);
-    const DepthStencilAttachment& dsAttachment   = info.renderPass->getDepthStencilAttachment();
-    if (info.bindPoint == PipelineBindPoint::GRAPHICS) {
-        const AttributeList&             attrs  = info.shader->getAttributes();
+    _gpuPipelineStateObj = CC_NEW(CCWGPUPipelineStateObject);
+}
+
+void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
+    _gpuPipelineStateObj = CC_NEW(CCWGPUPipelineStateObject);
+    auto* pipelineLayout = static_cast<CCWGPUPipelineLayout*>(_pipelineLayout);
+
+    const DepthStencilAttachment& dsAttachment = _renderPass->getDepthStencilAttachment();
+    if (_bindPoint == PipelineBindPoint::GRAPHICS) {
+        const AttributeList&             attrs  = _shader->getAttributes();
         uint64_t                         offset = 0;
         std::vector<WGPUVertexAttribute> wgpuAttrs(attrs.size());
         bool                             isInstance = attrs[0].isInstanced;
@@ -65,59 +70,59 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
 
         WGPUVertexState vertexState = {
             .nextInChain = nullptr,
-            .module      = static_cast<CCWGPUShader*>(info.shader)->gpuShaderObject()->wgpuShaderVertexModule,
+            .module      = static_cast<CCWGPUShader*>(_shader)->gpuShaderObject()->wgpuShaderVertexModule,
             .entryPoint  = "main",
             .bufferCount = 1,
             .buffers     = &vertexBufferLayout,
         };
 
-        bool stripTopology = (info.primitive == PrimitiveMode::LINE_STRIP || info.primitive == PrimitiveMode::TRIANGLE_STRIP);
+        bool stripTopology = (_primitive == PrimitiveMode::LINE_STRIP || _primitive == PrimitiveMode::TRIANGLE_STRIP);
 
         WGPUPrimitiveState primitiveState = {
             .nextInChain      = nullptr,
-            .topology         = toWGPUPrimTopology(info.primitive),
+            .topology         = toWGPUPrimTopology(_primitive),
             .stripIndexFormat = WGPUIndexFormat_Undefined, //TODO_Zeqiang: ???
-            .frontFace        = info.rasterizerState.isFrontFaceCCW ? WGPUFrontFace::WGPUFrontFace_CCW : WGPUFrontFace::WGPUFrontFace_CW,
-            .cullMode         = info.rasterizerState.cullMode == CullMode::FRONT ? WGPUCullMode::WGPUCullMode_Front
-                                                                         : info.rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
-                                                                                                                           : WGPUCullMode::WGPUCullMode_None,
+            .frontFace        = _rasterizerState.isFrontFaceCCW ? WGPUFrontFace::WGPUFrontFace_CCW : WGPUFrontFace::WGPUFrontFace_CW,
+            .cullMode         = _rasterizerState.cullMode == CullMode::FRONT  ? WGPUCullMode::WGPUCullMode_Front
+                                : _rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
+                                                                              : WGPUCullMode::WGPUCullMode_None,
         };
 
         WGPUStencilFaceState stencilFront = {
-            .compare     = toWGPUCompareFunction(info.depthStencilState.stencilFuncFront),
-            .failOp      = toWGPUStencilOperation(info.depthStencilState.stencilFailOpFront),
-            .depthFailOp = toWGPUStencilOperation(info.depthStencilState.stencilZFailOpFront),
-            .passOp      = toWGPUStencilOperation(info.depthStencilState.stencilPassOpFront),
+            .compare     = toWGPUCompareFunction(_depthStencilState.stencilFuncFront),
+            .failOp      = toWGPUStencilOperation(_depthStencilState.stencilFailOpFront),
+            .depthFailOp = toWGPUStencilOperation(_depthStencilState.stencilZFailOpFront),
+            .passOp      = toWGPUStencilOperation(_depthStencilState.stencilPassOpFront),
         };
 
         WGPUStencilFaceState stencilBack = {
-            .compare     = toWGPUCompareFunction(info.depthStencilState.stencilFuncBack),
-            .failOp      = toWGPUStencilOperation(info.depthStencilState.stencilFailOpBack),
-            .depthFailOp = toWGPUStencilOperation(info.depthStencilState.stencilZFailOpBack),
-            .passOp      = toWGPUStencilOperation(info.depthStencilState.stencilPassOpBack),
+            .compare     = toWGPUCompareFunction(_depthStencilState.stencilFuncBack),
+            .failOp      = toWGPUStencilOperation(_depthStencilState.stencilFailOpBack),
+            .depthFailOp = toWGPUStencilOperation(_depthStencilState.stencilZFailOpBack),
+            .passOp      = toWGPUStencilOperation(_depthStencilState.stencilPassOpBack),
         };
 
         WGPUDepthStencilState dsState = {
             .nextInChain         = nullptr,
             .format              = toWGPUTextureFormat(dsAttachment.format),
-            .depthWriteEnabled   = info.depthStencilState.depthWrite != 0,
-            .depthCompare        = toWGPUCompareFunction(info.depthStencilState.depthFunc),
+            .depthWriteEnabled   = _depthStencilState.depthWrite != 0,
+            .depthCompare        = toWGPUCompareFunction(_depthStencilState.depthFunc),
             .stencilFront        = stencilFront,
             .stencilBack         = stencilBack,
-            .stencilReadMask     = info.depthStencilState.stencilReadMaskFront,
-            .stencilWriteMask    = info.depthStencilState.stencilWriteMaskFront,
-            .depthBias           = static_cast<int32_t>(info.rasterizerState.depthBias),
-            .depthBiasSlopeScale = info.rasterizerState.depthBiasSlop,
-            .depthBiasClamp      = info.rasterizerState.depthBiasClamp,
+            .stencilReadMask     = _depthStencilState.stencilReadMaskFront,
+            .stencilWriteMask    = _depthStencilState.stencilWriteMaskFront,
+            .depthBias           = static_cast<int32_t>(_rasterizerState.depthBias),
+            .depthBiasSlopeScale = _rasterizerState.depthBiasSlop,
+            .depthBiasClamp      = _rasterizerState.depthBiasClamp,
         };
 
         WGPUMultisampleState msState = {
-            .count                  = static_cast<CCWGPURenderPass*>(info.renderPass)->gpuRenderPassObject()->sampleCount,
+            .count                  = static_cast<CCWGPURenderPass*>(_renderPass)->gpuRenderPassObject()->sampleCount,
             .mask                   = 0xFFFFFFFF,
-            .alphaToCoverageEnabled = info.blendState.isA2C != 0,
+            .alphaToCoverageEnabled = _blendState.isA2C != 0,
         };
 
-        const ColorAttachmentList&        colors = info.renderPass->getColorAttachments();
+        const ColorAttachmentList&        colors = _renderPass->getColorAttachments();
         std::vector<WGPUColorTargetState> colorTargetStates(colors.size());
 
         std::vector<WGPUBlendState> blendState(colors.size());
@@ -126,28 +131,28 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
             colorTargetStates[i].format = toWGPUTextureFormat(colors[i].format);
             blendState[i]
                 .color = {
-                .operation = toWGPUBlendOperation(info.blendState.targets[i].blendAlphaEq),
-                .srcFactor = toWGPUBlendFactor(info.blendState.targets[i].blendSrc),
-                .dstFactor = toWGPUBlendFactor(info.blendState.targets[i].blendDst),
+                .operation = toWGPUBlendOperation(_blendState.targets[i].blendAlphaEq),
+                .srcFactor = toWGPUBlendFactor(_blendState.targets[i].blendSrc),
+                .dstFactor = toWGPUBlendFactor(_blendState.targets[i].blendDst),
             };
             blendState[i].alpha = {
-                .operation = toWGPUBlendOperation(info.blendState.targets[i].blendAlphaEq),
-                .srcFactor = toWGPUBlendFactor(info.blendState.targets[i].blendSrc),
-                .dstFactor = toWGPUBlendFactor(info.blendState.targets[i].blendDst),
+                .operation = toWGPUBlendOperation(_blendState.targets[i].blendAlphaEq),
+                .srcFactor = toWGPUBlendFactor(_blendState.targets[i].blendSrc),
+                .dstFactor = toWGPUBlendFactor(_blendState.targets[i].blendDst),
             };
             colorTargetStates[i].blend     = &blendState[i];
-            colorTargetStates[i].writeMask = toWGPUColorWriteMask(info.blendState.targets[i].blendColorMask);
-            printf("bs sec, dst: %d, %dn", info.blendState.targets[i].blendSrc, info.blendState.targets[i].blendDst);
+            colorTargetStates[i].writeMask = toWGPUColorWriteMask(_blendState.targets[i].blendColorMask);
+            printf("bs sec, dst: %d, %dn", _blendState.targets[i].blendSrc, _blendState.targets[i].blendDst);
         }
 
         WGPUFragmentState fragmentState = {
-            .module      = static_cast<CCWGPUShader*>(info.shader)->gpuShaderObject()->wgpuShaderFragmentModule,
+            .module      = static_cast<CCWGPUShader*>(_shader)->gpuShaderObject()->wgpuShaderFragmentModule,
             .entryPoint  = "main",
             .targetCount = colorTargetStates.size(),
             .targets     = colorTargetStates.data(),
         };
 
-        pipelineLayout->prepare();
+        pipelineLayout->prepare(setInUse);
         WGPURenderPipelineDescriptor2 piplineDesc = {
             .nextInChain  = nullptr,
             .label        = nullptr,
@@ -159,18 +164,18 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
             .fragment     = &fragmentState,
         };
         _gpuPipelineStateObj->wgpuRenderPipeline = wgpuDeviceCreateRenderPipeline2(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &piplineDesc);
-    } else if (info.bindPoint == PipelineBindPoint::COMPUTE) {
+    } else if (_bindPoint == PipelineBindPoint::COMPUTE) {
         WGPUProgrammableStageDescriptor psDesc = {
-            .module     = static_cast<CCWGPUShader*>(info.shader)->gpuShaderObject()->wgpuShaderComputeModule,
+            .module     = static_cast<CCWGPUShader*>(_shader)->gpuShaderObject()->wgpuShaderComputeModule,
             .entryPoint = "main",
         };
-        pipelineLayout->prepare();
+        pipelineLayout->prepare(setInUse);
         WGPUComputePipelineDescriptor piplineDesc = {
             .layout       = pipelineLayout->gpuPipelineLayoutObject()->wgpuPipelineLayout,
             .computeStage = psDesc,
         };
         _gpuPipelineStateObj->wgpuComputePipeline = wgpuDeviceCreateComputePipeline(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &piplineDesc);
-        printf("ppshn: %s\n", static_cast<CCWGPUShader*>(info.shader)->gpuShaderObject()->name.c_str());
+        printf("ppshn: %s\n", static_cast<CCWGPUShader*>(_shader)->gpuShaderObject()->name.c_str());
     } else {
         CC_LOG_ERROR("unsupport pipeline bind point");
     }

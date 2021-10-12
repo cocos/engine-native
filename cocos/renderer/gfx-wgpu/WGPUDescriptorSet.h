@@ -43,7 +43,7 @@ public:
 
     void update() override;
 
-    void prepare();
+    static void* defaultBindGroup();
 
 protected:
     void doInit(const DescriptorSetInfo& info) override;

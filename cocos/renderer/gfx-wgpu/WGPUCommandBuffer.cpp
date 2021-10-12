@@ -171,6 +171,7 @@ void CCWGPUCommandBuffer::endRenderPass() {
     wgpuRenderPassEncoderRelease(_gpuCommandBufferObj->wgpuRenderPassEncoder);
     _gpuCommandBufferObj->wgpuRenderPassEncoder = wgpuDefaultHandle;
 
+    _gpuCommandBufferObj->stateCache.descriptorSets.clear();
     _gpuCommandBufferObj->renderPassBegan = false;
 }
 
@@ -239,27 +240,43 @@ void CCWGPUCommandBuffer::setStencilCompareMask(StencilFace face, uint ref, uint
 }
 
 void CCWGPUCommandBuffer::bindStates() {
-    auto *pipelineState = _gpuCommandBufferObj->stateCache.pipelineState;
+    auto *pipelineState = static_cast<CCWGPUPipelineState *>(_gpuCommandBufferObj->stateCache.pipelineState);
     if (!pipelineState) {
         return;
     }
 
+    std::set<uint8_t> setInUse;
+    for (const auto &descriptorSet : _gpuCommandBufferObj->stateCache.descriptorSets) {
+        setInUse.insert(descriptorSet.index);
+    }
+
+    pipelineState->prepare(setInUse);
     if (pipelineState->getBindPoint() == PipelineBindPoint::GRAPHICS) {
-        auto *pipelineState = _gpuCommandBufferObj->stateCache.pipelineState;
         //pipeline state
         wgpuRenderPassEncoderSetPipeline(_gpuCommandBufferObj->wgpuRenderPassEncoder,
                                          pipelineState->gpuPipelineStateObject()->wgpuRenderPipeline);
         //bindgroup & descriptorset
         const auto &descriptorSets = _gpuCommandBufferObj->stateCache.descriptorSets;
         for (size_t i = 0; i < descriptorSets.size(); i++) {
-            if (!descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup) {
-                descriptorSets[i].descriptorSet->prepare();
-            }
             wgpuRenderPassEncoderSetBindGroup(_gpuCommandBufferObj->wgpuRenderPassEncoder,
                                               descriptorSets[i].index,
                                               descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
                                               descriptorSets[i].dynamicOffsetCount,
                                               descriptorSets[i].dynamicOffsets);
+        }
+
+        // missing
+        if (setInUse.size() != pipelineState->getPipelineLayout()->getSetLayouts().size()) {
+            const auto &setLayouts = pipelineState->getPipelineLayout()->getSetLayouts();
+            for (size_t i = 0; i < setLayouts.size(); i++) {
+                if (setInUse.find(i) == setInUse.end()) {
+                    wgpuRenderPassEncoderSetBindGroup(_gpuCommandBufferObj->wgpuRenderPassEncoder,
+                                                      i,
+                                                      static_cast<WGPUBindGroup>(CCWGPUDescriptorSet::defaultBindGroup()),
+                                                      0,
+                                                      nullptr);
+                }
+            }
         }
 
         //input assembler
@@ -398,12 +415,6 @@ void CCWGPUCommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size
         wgpuCommandEncoderRelease(cmdEncoder);
         wgpuCommandBufferRelease(commandBuffer);
     }
-
-    // auto *ccBuffer = static_cast<CCWGPUBuffer *>(buff);
-    // // queue specific only
-    // ccBuffer->update(data, size);
-    //auto *fbuf = static_cast<const float *>(data);
-    //printf("updbf sz b: %f, %d, %p\n", fbuf[0], size, static_cast<CCWGPUBuffer *>(buff)->gpuBufferObject()->wgpuBuffer);
 }
 
 void CCWGPUCommandBuffer::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) {

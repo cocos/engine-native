@@ -25,6 +25,7 @@
 
 #pragma once
 #include <emscripten/bind.h>
+#include <set>
 #include "gfx-base/GFXPipelineState.h"
 
 namespace cc {
@@ -38,6 +39,8 @@ public:
     ~CCWGPUPipelineState() = default;
 
     inline CCWGPUPipelineStateObject* gpuPipelineStateObject() { return _gpuPipelineStateObj; }
+
+    void prepare(const std::set<uint8_t>& setInUse);
 
 protected:
     void doInit(const PipelineStateInfo& info) override;
