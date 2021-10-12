@@ -217,7 +217,7 @@ void PostProcessStage::render(scene::Camera *camera) {
 
     // add pass
     pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(CommonInsertPoint::DIP_POSTPROCESS), RenderPipeline::fgStrHandlePostprocessPass, postSetup, postExec);
-    pipeline->getFrameGraph().presentFromBlackboard(fgStrHandlePostProcessOutTexture, camera->window->frameBuffer->getColorTextures()[0], !static_cast<bool>(shadingScale - 1.F));
+    pipeline->getFrameGraph().presentFromBlackboard(fgStrHandlePostProcessOutTexture, camera->window->frameBuffer->getColorTextures()[0], shadingScale == 1.F);
 }
 
 } // namespace pipeline
