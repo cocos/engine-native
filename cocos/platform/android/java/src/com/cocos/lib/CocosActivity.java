@@ -44,6 +44,12 @@ import android.widget.FrameLayout;
 import java.io.File;
 import java.lang.reflect.Field;
 
+// ARModule ADD: need add "implementation 'androidx.appcompat:appcompat:1.1.0'" in build.gradle,
+// add "android.useAndroidX = true" in gradle.properties
+// and use sdk 28+
+import androidx.core.app.ActivityCompat;
+import android.Manifest;
+
 public class CocosActivity extends Activity implements SurfaceHolder.Callback {
     private boolean mDestroyed;
     private SurfaceHolder mSurfaceHolder;
@@ -100,6 +106,10 @@ public class CocosActivity extends Activity implements SurfaceHolder.Callback {
         Utils.hideVirtualButton();
 
         mOrientationHelper = new CocosOrientationHelper(this);
+
+        // ARModule ADD: this need switch to editor config option
+        ActivityCompat.requestPermissions(GlobalObject.getActivity(),
+                new String[]{Manifest.permission.CAMERA}, 1);
     }
 
     private void setImmersiveMode() {

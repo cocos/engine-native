@@ -51,6 +51,11 @@
     #define USE_WEBSOCKET_SERVER 0
 #endif
 
+// ARModule ADD
+#ifndef USE_AR_MODULE
+    #define USE_AR_MODULE 1
+#endif
+
 /** @def CC_FIX_ARTIFACTS_BY_STRECHING_TEXEL_TMX
  * If enabled, the texture coordinates will be calculated by using this formula:
  * - texCoord.left = (rect.origin.x*2+1) / (texture.wide*2);

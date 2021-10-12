@@ -31,5 +31,9 @@ android {
 }
 
 dependencies {
+    // ARModule Add
+    implementation 'com.google.ar:core:1.26.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+
     implementation fileTree(include: ['*.jar'], dir: '../java/libs')
 }

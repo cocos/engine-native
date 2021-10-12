@@ -27,7 +27,8 @@ cc_set_if_undefined(USE_JOB_SYSTEM_TASKFLOW  OFF)
 cc_set_if_undefined(USE_JOB_SYSTEM_TBB       OFF)
 cc_set_if_undefined(USE_PHYSICS_PHYSX        OFF)
 cc_set_if_undefined(USE_MODULES              OFF)
-
+# ARModule ADD
+cc_set_if_undefined(USE_AR_MODULE            ON)
 
 if(ANDROID OR WINDOWS)
     cc_set_if_undefined(CC_USE_GLES3 ON)
@@ -1539,6 +1540,14 @@ if(USE_MIDDLEWARE)
     endif()
 endif()
 
+# ARModule ADD
+if(USE_AR_MODULE)
+    cocos_source_files(
+        cocos/bindings/auto/jsb_ar_auto.cpp
+        cocos/bindings/auto/jsb_ar_auto.h
+    )
+endif()
+
 ######## manual
 cocos_source_files(
     NO_WERROR    cocos/bindings/manual/jsb_classtype.cpp
@@ -1568,6 +1577,9 @@ cocos_source_files(
                  cocos/bindings/manual/jsb_xmlhttprequest.h
                  cocos/bindings/manual/jsb_pipeline_manual.h
     NO_WERROR    cocos/bindings/manual/jsb_pipeline_manual.cpp
+    # ARModule ADD
+    NO_WERROR    cocos/bindings/manual/jsb_ar_manual.cpp
+                 cocos/bindings/manual/jsb_ar_manual.h
 )
 
 if(USE_SOCKET)
@@ -1796,6 +1808,26 @@ elseif(WIN32)
     if(USE_EDIT_BOX)
         cocos_source_files(
             NO_WERROR    cocos/ui/edit-box/EditBox-win32.cpp
+        )
+    endif()
+endif()
+
+# ARModule ADD
+##### ar
+if(USE_AR_MODULE)
+    cocos_source_files(
+            cocos/ar/ARModule.cpp
+            cocos/ar/ARModule.h
+            cocos/ar/IARAPI.h
+            cocos/renderer/pipeline/ar/ARBackGroundFlow.cpp
+            cocos/renderer/pipeline/ar/ARBackGroundFlow.h
+            cocos/renderer/pipeline/ar/ARBackGroundStage.cpp
+            cocos/renderer/pipeline/ar/ARBackGroundStage.h
+        )
+    if(ANDROID)
+        cocos_source_files(
+            cocos/ar/android/ARCoreAPIImpl.cpp
+            cocos/ar/android/ARCoreAPIImpl.h
         )
     endif()
 endif()

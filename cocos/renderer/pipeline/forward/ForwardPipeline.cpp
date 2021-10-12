@@ -38,6 +38,9 @@
 #include "platform/Application.h"
 #include "scene/RenderScene.h"
 
+// ARModule ADD, need remove after modify
+#include "../ar/ARBackGroundFlow.h"
+
 namespace cc {
 namespace pipeline {
 namespace {
@@ -108,6 +111,12 @@ bool ForwardPipeline::initialize(const RenderPipelineInfo &info) {
 }
 
 bool ForwardPipeline::activate() {
+    // ARModule ADD, need remove after modify
+    auto arFlow = CC_NEW(ARBackGroundFlow);
+    arFlow->initialize(ARBackGroundFlow::getInitializeInfo());
+    _flows.emplace_back(arFlow);
+    CC_LOG_DEBUG("ARBackGroundFlow init!");
+
     if (!RenderPipeline::activate()) {
         CC_LOG_ERROR("RenderPipeline active failed.");
         return false;
