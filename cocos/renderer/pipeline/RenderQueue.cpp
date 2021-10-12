@@ -67,7 +67,7 @@ void RenderQueue::sort() {
     std::sort(_queue.begin(), _queue.end(), _passDesc.sortFunc);
 }
 
-void RenderQueue::recordCommandBuffer(gfx::Device *device, scene::Camera *camera, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuff, uint32_t subpassIndex) {
+void RenderQueue::recordCommandBuffer(gfx::Device * /*device*/, scene::Camera *camera, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuff, uint32_t subpassIndex) {
     PipelineSceneData *const              sceneData            = _pipeline->getPipelineSceneData();
     const scene::PipelineSharedSceneData *sharedData           = sceneData->getSharedData();
     bool                                  enableOcclusionQuery = _pipeline->getOcclusionQueryEnabled() && _useOcclusionQuery;
