@@ -37,7 +37,6 @@
 #include "scene/Camera.h"
 #include "scene/Model.h"
 
-
 namespace cc {
 namespace gfx {
 class CommandBuffer;
@@ -86,12 +85,15 @@ public:
     inline gfx::Texture *                          getDefaultTexture() const { return _defaultTexture; }
     inline PipelineSceneData *                     getPipelineSceneData() const { return _pipelineSceneData; }
     inline const gfx::CommandBufferList &          getCommandBuffers() const { return _commandBuffers; }
+    inline const gfx::QueryPoolList &              getQueryPools() const { return _queryPools; }
     inline PipelineUBO *                           getPipelineUBO() const { return _pipelineUBO; }
     inline const String &                          getConstantMacros() const { return _constantMacros; }
     inline gfx::Device *                           getDevice() const { return _device; }
     inline bool                                    getBloomEnable() const { return _bloomEnable; }
     RenderStage *                                  getRenderstageByName(const String &name) const;
     bool                                           isOccluded(const scene::Camera *camera, const scene::SubModel *subModel);
+    bool                                           getOcclusionQueryEnabled() const { return _occlusionQueryEnabled && _device->getCapabilities().supportQuery; }
+    void                                           setOcclusionQueryEnabled(bool enable) { _occlusionQueryEnabled = enable; }
 
     gfx::Rect               getRenderArea(scene::Camera *camera);
     void                    genQuadVertexData(const Vec4 &viewport, float *data);
@@ -117,6 +119,7 @@ protected:
     void destroyQuadInputAssembler();
 
     gfx::CommandBufferList           _commandBuffers;
+    gfx::QueryPoolList               _queryPools;
     RenderFlowList                   _flows;
     map<String, InternalBindingInst> _globalBindings;
     DefineMap                        _macros;
@@ -138,14 +141,13 @@ protected:
     std::vector<gfx::Buffer *>                      _quadVB;
     std::unordered_map<uint, gfx::InputAssembler *> _quadIA;
 
-    framegraph::FrameGraph                  _fg;
+    framegraph::FrameGraph                            _fg;
     unordered_map<gfx::ClearFlags, gfx::RenderPass *> _renderPasses;
 
     // use cluster culling or not
     bool _clusterEnabled{false};
     bool _bloomEnable{false};
-
-    std::unordered_map<uint32_t, uint64_t> _occlusionQueryResults;
+    bool _occlusionQueryEnabled{true};
 };
 
 } // namespace pipeline

@@ -34,13 +34,12 @@
 #include "EmptyInputAssembler.h"
 #include "EmptyPipelineLayout.h"
 #include "EmptyPipelineState.h"
-#include "EmptyQuery.h"
+#include "EmptyQueryPool.h"
 #include "EmptyQueue.h"
 #include "EmptyRenderPass.h"
 #include "EmptyShader.h"
 #include "EmptySwapchain.h"
 #include "EmptyTexture.h"
-
 
 namespace cc {
 namespace gfx {
@@ -64,6 +63,9 @@ bool EmptyDevice::doInit(const DeviceInfo & /*info*/) {
     queueInfo.type = QueueType::GRAPHICS;
     _queue         = createQueue(queueInfo);
 
+    QueryPoolInfo queryPoolInfo{QueryType::OCCLUSION, DEFAULT_MAX_QUERY_OBJECTS};
+    _queryPool = createQueryPool(queryPoolInfo);
+
     CommandBufferInfo cmdBuffInfo;
     cmdBuffInfo.type  = CommandBufferType::PRIMARY;
     cmdBuffInfo.queue = _queue;
@@ -76,6 +78,7 @@ bool EmptyDevice::doInit(const DeviceInfo & /*info*/) {
 
 void EmptyDevice::doDestroy() {
     CC_SAFE_DESTROY(_cmdBuff);
+    CC_SAFE_DESTROY(_queryPool);
     CC_SAFE_DESTROY(_queue);
 }
 
@@ -94,8 +97,8 @@ Queue *EmptyDevice::createQueue() {
     return CC_NEW(EmptyQueue());
 }
 
-Query *EmptyDevice::createQuery() {
-    return CC_NEW(EmptyQuery());
+QueryPool *EmptyDevice::createQueryPool() {
+    return CC_NEW(EmptyQueryPool());
 }
 
 Swapchain *EmptyDevice::createSwapchain() {

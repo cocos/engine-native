@@ -33,13 +33,12 @@
 #include "FramebufferValidator.h"
 #include "InputAssemblerValidator.h"
 #include "PipelineStateValidator.h"
-#include "QueryValidator.h"
+#include "QueryPoolValidator.h"
 #include "QueueValidator.h"
 #include "RenderPassValidator.h"
 #include "TextureValidator.h"
 #include "ValidationUtils.h"
 #include "gfx-base/GFXCommandBuffer.h"
-
 
 namespace cc {
 namespace gfx {
@@ -61,17 +60,9 @@ void CommandBufferValidator::initValidator() {
     size_t descriptorSetCount = DeviceValidator::getInstance()->bindingMappingInfo().bufferOffsets.size();
     _curStates.descriptorSets.resize(descriptorSetCount);
     _curStates.dynamicOffsets.resize(descriptorSetCount);
-
-    _query                                         = CC_NEW(QueryValidator(_actor->getQuery()));
-    static_cast<QueryValidator *>(_query)->_inited = true;
 }
 
 void CommandBufferValidator::destroyValidator() {
-    if (_query) {
-        static_cast<QueryValidator *>(_query)->_actor = nullptr;
-        CC_DELETE(_query);
-        _query = nullptr;
-    }
 }
 
 void CommandBufferValidator::doInit(const CommandBufferInfo &info) {
@@ -90,12 +81,6 @@ void CommandBufferValidator::doInit(const CommandBufferInfo &info) {
 void CommandBufferValidator::doDestroy() {
     CCASSERT(isInited(), "destroying twice?");
     _inited = false;
-
-    if (_query) {
-        static_cast<QueryValidator *>(_query)->_actor = nullptr;
-        CC_DELETE(_query);
-        _query = nullptr;
-    }
 
     /////////// execute ///////////
 
@@ -475,25 +460,28 @@ void CommandBufferValidator::pipelineBarrier(const GlobalBarrier *barrier, const
     _actor->pipelineBarrier(barrier, textureBarriers, actorTextures, textureBarrierCount);
 }
 
-void CommandBufferValidator::beginQuery(uint32_t id) {
+void CommandBufferValidator::beginQuery(QueryPool *queryPool, uint32_t id) {
     CCASSERT(isInited(), "already destroyed?");
-    CCASSERT(static_cast<QueryValidator *>(_query)->isInited(), "already destroyed?");
+    CCASSERT(static_cast<QueryPoolValidator *>(queryPool)->isInited(), "already destroyed?");
 
-    _actor->beginQuery(id);
+    QueryPool *actorQueryPool = static_cast<QueryPoolValidator *>(queryPool)->getActor();
+    _actor->beginQuery(actorQueryPool, id);
 }
 
-void CommandBufferValidator::endQuery(uint32_t id) {
+void CommandBufferValidator::endQuery(QueryPool *queryPool, uint32_t id) {
     CCASSERT(isInited(), "already destroyed?");
-    CCASSERT(static_cast<QueryValidator *>(_query)->isInited(), "already destroyed?");
+    CCASSERT(static_cast<QueryPoolValidator *>(queryPool)->isInited(), "already destroyed?");
 
-    _actor->endQuery(id);
+    QueryPool *actorQueryPool = static_cast<QueryPoolValidator *>(queryPool)->getActor();
+    _actor->endQuery(actorQueryPool, id);
 }
 
-void CommandBufferValidator::resetQuery() {
+void CommandBufferValidator::resetQuery(QueryPool *queryPool) {
     CCASSERT(isInited(), "already destroyed?");
-    CCASSERT(static_cast<QueryValidator *>(_query)->isInited(), "already destroyed?");
+    CCASSERT(static_cast<QueryPoolValidator *>(queryPool)->isInited(), "already destroyed?");
 
-    _actor->resetQuery();
+    QueryPool *actorQueryPool = static_cast<QueryPoolValidator *>(queryPool)->getActor();
+    _actor->resetQuery(actorQueryPool);
 }
 
 } // namespace gfx

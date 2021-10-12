@@ -47,7 +47,7 @@ public:
     using Device::createInputAssembler;
     using Device::createPipelineLayout;
     using Device::createPipelineState;
-    using Device::createQuery;
+    using Device::createQueryPool;
     using Device::createQueue;
     using Device::createRenderPass;
     using Device::createSampler;
@@ -61,7 +61,7 @@ public:
 
     CommandBuffer *      createCommandBuffer(const CommandBufferInfo &info, bool emptyhas) override;
     Queue *              createQueue() override;
-    Query *              createQuery() override;
+    QueryPool *          createQueryPool() override;
     Swapchain *          createSwapchain() override;
     Buffer *             createBuffer() override;
     Texture *            createTexture() override;

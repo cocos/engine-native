@@ -37,7 +37,7 @@
 #include "GLES3PipelineLayout.h"
 #include "GLES3PipelineState.h"
 #include "GLES3PrimaryCommandBuffer.h"
-#include "GLES3Query.h"
+#include "GLES3QueryPool.h"
 #include "GLES3Queue.h"
 #include "GLES3RenderPass.h"
 #include "GLES3Shader.h"
@@ -45,7 +45,6 @@
 #include "GLES3Texture.h"
 #include "states/GLES3GlobalBarrier.h"
 #include "states/GLES3Sampler.h"
-
 
 // when capturing GLES commands (RENDERDOC_HOOK_EGL=1, default value)
 // renderdoc doesn't support this extension during replay
@@ -176,8 +175,7 @@ bool GLES3Device::doInit(const DeviceInfo & /*info*/) {
         _features[toNumber(Feature::FORMAT_ASTC)] = true;
         compressedFmts += "astc ";
     }
-    _features[toNumber(Feature::FORMAT_RGB8)]     = true;
-    _features[toNumber(Feature::OCCLUSION_QUERY)] = true;
+    _features[toNumber(Feature::FORMAT_RGB8)] = true;
 
     _renderer = reinterpret_cast<const char *>(glGetString(GL_RENDERER));
     _vendor   = reinterpret_cast<const char *>(glGetString(GL_VENDOR));
@@ -208,10 +206,14 @@ bool GLES3Device::doInit(const DeviceInfo & /*info*/) {
         glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, reinterpret_cast<GLint *>(&_caps.maxComputeWorkGroupCount.y));
         glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, reinterpret_cast<GLint *>(&_caps.maxComputeWorkGroupCount.z));
     }
+    _caps.supportQuery = true;
 
     QueueInfo queueInfo;
     queueInfo.type = QueueType::GRAPHICS;
     _queue         = createQueue(queueInfo);
+
+    QueryPoolInfo queryPoolInfo{QueryType::OCCLUSION, DEFAULT_MAX_QUERY_OBJECTS};
+    _queryPool = GLES3Device::getInstance()->createQueryPool(queryPoolInfo);
 
     CommandBufferInfo cmdBuffInfo;
     cmdBuffInfo.type  = CommandBufferType::PRIMARY;
@@ -239,6 +241,7 @@ void GLES3Device::doDestroy() {
     CCASSERT(!_memoryStatus.textureSize, "Texture memory leaked");
 
     CC_SAFE_DESTROY(_cmdBuff)
+    CC_SAFE_DESTROY(_queryPool)
     CC_SAFE_DESTROY(_queue)
     CC_SAFE_DESTROY(_gpuContext)
 }
@@ -279,8 +282,8 @@ Queue *GLES3Device::createQueue() {
     return CC_NEW(GLES3Queue);
 }
 
-Query *GLES3Device::createQuery() {
-    return CC_NEW(GLES3Query);
+QueryPool *GLES3Device::createQueryPool() {
+    return CC_NEW(GLES3QueryPool);
 }
 
 Swapchain *GLES3Device::createSwapchain() {

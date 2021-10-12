@@ -28,39 +28,38 @@
 #include "VKCommandBuffer.h"
 #include "VKCommands.h"
 #include "VKDevice.h"
-#include "VKQuery.h"
+#include "VKQueryPool.h"
 #include "vulkan/vulkan_core.h"
 
 namespace cc {
 namespace gfx {
 
-CCVKQuery::CCVKQuery() {
+CCVKQueryPool::CCVKQueryPool() {
     _typedID = generateObjectID<decltype(this)>();
 }
 
-CCVKQuery::~CCVKQuery() {
+CCVKQueryPool::~CCVKQueryPool() {
     destroy();
 }
 
-void CCVKQuery::doInit(const QueryInfo& /*info*/) {
-    CCVKDevice* device = CCVKDevice::getInstance();
-    if (device->hasFeature(gfx::Feature::OCCLUSION_QUERY)) {
-        _gpuQuery       = CC_NEW(CCVKGPUQuery);
-        _gpuQuery->type = _type;
-        cmdFuncCCVKCreateQuery(device, _gpuQuery);
+void CCVKQueryPool::doInit(const QueryPoolInfo& /*info*/) {
+    CCVKDevice* device             = CCVKDevice::getInstance();
+    _gpuQueryPool                  = CC_NEW(CCVKGPUQueryPool);
+    _gpuQueryPool->type            = _type;
+    _gpuQueryPool->maxQueryObjects = _maxQueryObjects;
+    cmdFuncCCVKCreateQuery(device, _gpuQueryPool);
+}
+
+void CCVKQueryPool::doDestroy() {
+    if (_gpuQueryPool) {
+        CCVKDevice::getInstance()->gpuRecycleBin()->collect(_gpuQueryPool);
+        _gpuQueryPool = nullptr;
     }
 }
 
-void CCVKQuery::doDestroy() {
-    if (_gpuQuery) {
-        CCVKDevice::getInstance()->gpuRecycleBin()->collect(_gpuQuery);
-        _gpuQuery = nullptr;
-    }
-}
-
-void CCVKQuery::getResults() {
+void CCVKQueryPool::queryGPUResults() {
     auto queryCount = static_cast<uint32_t>(_ids.size());
-    CCASSERT(queryCount <= MAX_QUERY_OBJECTS, "Too many query commands.");
+    CCASSERT(queryCount <= _maxQueryObjects, "Too many query commands.");
     std::vector<uint64_t> results(queryCount, 0ULL);
 
     if (queryCount > 0U) {
@@ -68,7 +67,7 @@ void CCVKQuery::getResults() {
 
         VK_CHECK(vkGetQueryPoolResults(
             device->gpuDevice()->vkDevice,
-            _gpuQuery->pool,
+            _gpuQueryPool->pool,
             0,
             queryCount,
             queryCount * sizeof(uint64_t),
@@ -77,24 +76,21 @@ void CCVKQuery::getResults() {
             VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_WAIT_BIT));
     }
 
-    {
-        std::lock_guard<std::mutex> lock(_mutex);
-        _results.clear();
-        for (auto queryId = 0U; queryId < queryCount; queryId++) {
-            uint32_t id = _ids[queryId];
-
-            if (_results.count(id) == 0) {
-                _results[id] = 0;
-            }
-
-            _results[id] += results[queryId];
+    std::unordered_map<uint32_t, uint64_t> mapResults;
+    for (auto queryId = 0U; queryId < queryCount; queryId++) {
+        uint32_t id   = _ids[queryId];
+        auto     iter = mapResults.find(id);
+        if (iter != mapResults.end()) {
+            iter->second += results[queryId];
+        } else {
+            mapResults[id] = results[queryId];
         }
     }
-}
 
-void CCVKQuery::copyResults(std::unordered_map<uint32_t, uint64_t>& results) {
-    std::lock_guard<std::mutex> lock(_mutex);
-    results = _results;
+    {
+        std::lock_guard<std::mutex> lock(_mutex);
+        _results = std::move(mapResults);
+    }
 }
 
 } // namespace gfx

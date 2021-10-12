@@ -33,7 +33,7 @@
 namespace cc {
 namespace gfx {
 
-class Query;
+class QueryPool;
 
 class CC_DLL CommandBuffer : public GFXObject {
 public:
@@ -66,9 +66,9 @@ public:
     virtual void execute(CommandBuffer *const *cmdBuffs, uint32_t count)                                                                                                                                              = 0;
     virtual void dispatch(const DispatchInfo &info)                                                                                                                                                                   = 0;
     virtual void pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrier *const *textureBarriers, const Texture *const *textures, uint32_t textureBarrierCount)                                            = 0;
-    virtual void beginQuery(uint32_t id)                                                                                                                                                                              = 0;
-    virtual void endQuery(uint32_t id)                                                                                                                                                                                = 0;
-    virtual void resetQuery()                                                                                                                                                                                         = 0;
+    virtual void beginQuery(QueryPool *queryPool, uint32_t id)                                                                                                                                                        = 0;
+    virtual void endQuery(QueryPool *queryPool, uint32_t id)                                                                                                                                                          = 0;
+    virtual void resetQuery(QueryPool *queryPool)                                                                                                                                                                     = 0;
 
     inline void begin();
     inline void begin(RenderPass *renderPass);
@@ -95,7 +95,6 @@ public:
 
     inline Queue *           getQueue() const { return _queue; }
     inline CommandBufferType getType() const { return _type; }
-    inline Query *           getQuery() const { return _query; }
 
     virtual uint32_t getNumDrawCalls() const { return _numDrawCalls; }
     virtual uint32_t getNumInstances() const { return _numInstances; }
@@ -107,7 +106,6 @@ protected:
 
     Queue *           _queue = nullptr;
     CommandBufferType _type  = CommandBufferType::PRIMARY;
-    Query *           _query{nullptr};
 
     uint32_t _numDrawCalls = 0;
     uint32_t _numInstances = 0;

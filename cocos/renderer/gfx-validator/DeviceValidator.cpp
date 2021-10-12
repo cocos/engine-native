@@ -34,7 +34,7 @@
 #include "InputAssemblerValidator.h"
 #include "PipelineLayoutValidator.h"
 #include "PipelineStateValidator.h"
-#include "QueryValidator.h"
+#include "QueryPoolValidator.h"
 #include "QueueValidator.h"
 #include "RenderPassValidator.h"
 #include "ShaderValidator.h"
@@ -42,7 +42,6 @@
 #include "TextureValidator.h"
 #include "ValidationUtils.h"
 #include "gfx-base/GFXSwapchain.h"
-
 
 namespace cc {
 namespace gfx {
@@ -70,6 +69,7 @@ bool DeviceValidator::doInit(const DeviceInfo &info) {
     _api        = _actor->getGfxAPI();
     _deviceName = _actor->getDeviceName();
     _queue      = CC_NEW(QueueValidator(_actor->getQueue()));
+    _queryPool  = CC_NEW(QueryPoolValidator(_actor->getQueryPool()));
     _cmdBuff    = CC_NEW(CommandBufferValidator(_actor->getCommandBuffer()));
     _renderer   = _actor->getRenderer();
     _vendor     = _actor->getVendor();
@@ -77,10 +77,12 @@ bool DeviceValidator::doInit(const DeviceInfo &info) {
     memcpy(_features.data(), _actor->_features.data(), static_cast<uint32_t>(Feature::COUNT) * sizeof(bool));
 
     static_cast<QueueValidator *>(_queue)->_inited          = true;
+    static_cast<QueryPoolValidator *>(_queryPool)->_inited  = true;
     static_cast<CommandBufferValidator *>(_cmdBuff)->_queue = _queue;
     static_cast<CommandBufferValidator *>(_cmdBuff)->initValidator();
 
     DeviceResourceTracker<CommandBuffer>::push(_cmdBuff);
+    DeviceResourceTracker<QueryPool>::push(_queryPool);
     DeviceResourceTracker<Queue>::push(_queue);
 
     CC_LOG_INFO("Device validator enabled.");
@@ -95,6 +97,11 @@ void DeviceValidator::doDestroy() {
         CC_DELETE(_cmdBuff);
         _cmdBuff = nullptr;
     }
+    if (_queryPool) {
+        static_cast<QueryPoolValidator *>(_queryPool)->_actor = nullptr;
+        CC_DELETE(_queryPool);
+        _queryPool = nullptr;
+    }
     if (_queue) {
         static_cast<QueueValidator *>(_queue)->_actor = nullptr;
         CC_DELETE(_queue);
@@ -102,6 +109,7 @@ void DeviceValidator::doDestroy() {
     }
 
     DeviceResourceTracker<CommandBuffer>::checkEmpty();
+    DeviceResourceTracker<QueryPool>::checkEmpty();
     DeviceResourceTracker<Queue>::checkEmpty();
     DeviceResourceTracker<Swapchain>::checkEmpty();
     DeviceResourceTracker<Buffer>::checkEmpty();
@@ -151,9 +159,10 @@ Queue *DeviceValidator::createQueue() {
     return result;
 }
 
-Query *DeviceValidator::createQuery() {
-    Query *actor  = _actor->createQuery();
-    Query *result = CC_NEW(QueryValidator(actor));
+QueryPool *DeviceValidator::createQueryPool() {
+    QueryPool *actor  = _actor->createQueryPool();
+    QueryPool *result = CC_NEW(QueryPoolValidator(actor));
+    DeviceResourceTracker<QueryPool>::push(result);
     return result;
 }
 

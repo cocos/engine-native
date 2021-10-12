@@ -131,6 +131,11 @@ void RenderPipeline::destroy() {
     CC_SAFE_DESTROY(_pipelineUBO);
     CC_SAFE_DESTROY(_pipelineSceneData);
 
+    for (auto *const queryPool : _queryPools) {
+        queryPool->destroy();
+    }
+    _queryPools.clear();
+
     for (auto *const cmdBuffer : _commandBuffers) {
         cmdBuffer->destroy();
     }
@@ -319,12 +324,12 @@ bool RenderPipeline::isOccluded(const scene::Camera *camera, const scene::SubMod
 
     // assume visible if no query in the last frame.
     uint32_t id = subModel->getId();
-    if (_occlusionQueryResults.count(id) == 0) {
+    if (_queryPools[0]->_results.count(id) == 0) {
         return false;
     }
 
     // check query results.
-    return _occlusionQueryResults[id] == 0;
+    return _queryPools[0]->_results[id] == 0;
 }
 
 } // namespace pipeline

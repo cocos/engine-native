@@ -25,39 +25,34 @@
 
 #pragma once
 
-#include <mutex>
 #include <vector>
 #include "GLES3Std.h"
-#include "gfx-base/GFXQuery.h"
-
+#include "gfx-base/GFXQueryPool.h"
 
 namespace cc {
 namespace gfx {
 
-class GLES3GPUQuery;
+class GLES3GPUQueryPool;
 
-class CC_GLES3_API GLES3Query final : public Query {
+class CC_GLES3_API GLES3QueryPool final : public QueryPool {
 public:
-    GLES3Query();
-    ~GLES3Query() override;
+    GLES3QueryPool();
+    ~GLES3QueryPool() override;
 
-    void getResults() override;
-    void copyResults(std::unordered_map<uint32_t, uint64_t> &results) override;
+    void queryGPUResults() override;
 
-    inline GLES3GPUQuery *gpuQuery() const { return _gpuQuery; }
+    inline GLES3GPUQueryPool *gpuQueryPool() const { return _gpuQueryPool; }
 
 protected:
     friend class GLES3CommandBuffer;
 
-    void doInit(const QueryInfo &info) override;
+    void doInit(const QueryPoolInfo &info) override;
     void doDestroy() override;
 
-    GLES3GPUQuery *_gpuQuery = nullptr;
+    GLES3GPUQueryPool *_gpuQueryPool = nullptr;
 
 public:
-    std::mutex                             _mutex;
-    std::vector<uint32_t>                  _ids;
-    std::unordered_map<uint32_t, uint64_t> _results;
+    std::vector<uint32_t> _ids;
 };
 
 } // namespace gfx

@@ -82,17 +82,16 @@ bool ForwardPipeline::activate(gfx::Swapchain *swapchain) {
 }
 
 void ForwardPipeline::render(const vector<scene::Camera *> &cameras) {
-    auto *device = gfx::Device::getInstance();
-    if (device->hasFeature(gfx::Feature::OCCLUSION_QUERY)) {
-        auto *query = _commandBuffers[0]->getQuery();
-        query->copyResults(_occlusionQueryResults);
-        query->getResults();
+    auto *device               = gfx::Device::getInstance();
+    bool  enableOcclusionQuery = getOcclusionQueryEnabled();
+    if (enableOcclusionQuery) {
+        _queryPools[0]->queryGPUResults();
     }
 
     _commandBuffers[0]->begin();
 
-    if (device->hasFeature(gfx::Feature::OCCLUSION_QUERY)) {
-        _commandBuffers[0]->resetQuery();
+    if (enableOcclusionQuery) {
+        _commandBuffers[0]->resetQuery(_queryPools[0]);
     }
 
     _pipelineUBO->updateGlobalUBO(cameras[0]);
@@ -117,6 +116,7 @@ void ForwardPipeline::render(const vector<scene::Camera *> &cameras) {
 
 bool ForwardPipeline::activeRenderer(gfx::Swapchain *swapchain) {
     _commandBuffers.push_back(_device->getCommandBuffer());
+    _queryPools.push_back(_device->getQueryPool());
     auto *const sharedData = _pipelineSceneData->getSharedData();
 
     gfx::Sampler *const shadowMapSampler = _device->getSampler({
@@ -168,6 +168,7 @@ void ForwardPipeline::destroy() {
     }
     _renderPasses.clear();
 
+    _queryPools.clear();
     _commandBuffers.clear();
 
     RenderPipeline::destroy();

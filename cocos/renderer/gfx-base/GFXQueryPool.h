@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -25,29 +25,49 @@
 
 #pragma once
 
-#include "base/Agent.h"
-#include "gfx-base/GFXQuery.h"
+#include <cstdint>
+#include <mutex>
+#include <unordered_map>
+#include "GFXObject.h"
 
 namespace cc {
 namespace gfx {
 
-class CC_DLL QueryValidator final : public Agent<Query> {
+/**
+ * QueryPool usage:
+ * Update
+ * Render
+ *  queryGPUResults
+ *  resetQuery
+ *  for each renderObject
+ *      beginQuery
+ *          drawObject
+ *      endQuery
+ */
+
+class CC_DLL QueryPool : public GFXObject {
 public:
-    explicit QueryValidator(Query *actor);
-    ~QueryValidator() override;
+    QueryPool();
+    ~QueryPool() override;
 
-    void getResults() override;
-    void copyResults(std::unordered_map<uint32_t, uint64_t> &results) override;
+    void initialize(const QueryPoolInfo &info);
+    void destroy();
 
-    inline bool isInited() const { return _inited; }
+    inline QueryType getType() const { return _type; }
+    inline uint32_t  getMaxQueryObjects() const { return _maxQueryObjects; }
+
+    virtual void queryGPUResults() = 0;
 
 protected:
-    friend class CommandBufferValidator;
+    virtual void doInit(const QueryPoolInfo &info) = 0;
+    virtual void doDestroy()                       = 0;
 
-    void doInit(const QueryInfo &info) override;
-    void doDestroy() override;
+    QueryType _type{QueryType::OCCLUSION};
+    uint32_t  _maxQueryObjects{0};
 
-    bool _inited{false};
+public:
+    std::mutex                             _mutex;
+    std::unordered_map<uint32_t, uint64_t> _results;
 };
 
 } // namespace gfx
