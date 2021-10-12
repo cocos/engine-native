@@ -50,15 +50,28 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
 
     const DepthStencilAttachment& dsAttachment = _renderPass->getDepthStencilAttachment();
     if (_bindPoint == PipelineBindPoint::GRAPHICS) {
+        if (_gpuPipelineStateObj->wgpuRenderPipeline)
+            return;
         const AttributeList&             attrs  = _shader->getAttributes();
         uint64_t                         offset = 0;
-        std::vector<WGPUVertexAttribute> wgpuAttrs(attrs.size());
+        std::vector<WGPUVertexAttribute> wgpuAttrs;
         bool                             isInstance = attrs[0].isInstanced;
+        uint8_t                          index      = 0;
         for (size_t i = 0; i < attrs.size(); i++) {
-            wgpuAttrs[i].format         = toWGPUVertexFormat(attrs[i].format);
-            wgpuAttrs[i].offset         = offset;
-            wgpuAttrs[i].shaderLocation = attrs[i].location;
-            offset += GFX_FORMAT_INFOS[static_cast<uint>(attrs[i].format)].size;
+            String   attrName   = attrs[i].name;
+            auto     iter       = std::find_if(_inputState.attributes.begin(), _inputState.attributes.end(), [attrName](const Attribute& attr) {
+                return strcmp(attrName.c_str(), attr.name.c_str()) == 0;
+            });
+            uint64_t realOffset = iter != _inputState.attributes.end() ? offset : 0;
+
+            WGPUVertexAttribute attr = {
+                .format         = toWGPUVertexFormat(attrs[i].format),
+                .offset         = realOffset,
+                .shaderLocation = attrs[i].location,
+            };
+            wgpuAttrs.push_back(attr);
+            if (iter != _inputState.attributes.end())
+                offset += GFX_FORMAT_INFOS[static_cast<uint>(attrs[i].format)].size;
         }
 
         WGPUVertexBufferLayout vertexBufferLayout = {
@@ -142,7 +155,6 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
             };
             colorTargetStates[i].blend     = &blendState[i];
             colorTargetStates[i].writeMask = toWGPUColorWriteMask(_blendState.targets[i].blendColorMask);
-            printf("bs sec, dst: %d, %dn", _blendState.targets[i].blendSrc, _blendState.targets[i].blendDst);
         }
 
         WGPUFragmentState fragmentState = {
@@ -165,6 +177,8 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
         };
         _gpuPipelineStateObj->wgpuRenderPipeline = wgpuDeviceCreateRenderPipeline2(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &piplineDesc);
     } else if (_bindPoint == PipelineBindPoint::COMPUTE) {
+        if (_gpuPipelineStateObj->wgpuComputePipeline)
+            return;
         WGPUProgrammableStageDescriptor psDesc = {
             .module     = static_cast<CCWGPUShader*>(_shader)->gpuShaderObject()->wgpuShaderComputeModule,
             .entryPoint = "main",

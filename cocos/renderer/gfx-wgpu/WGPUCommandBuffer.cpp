@@ -100,6 +100,7 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
             .clearColor    = WGPUColor{0.2, 0.2, 0.2, 1.0},
         };
         colorAttachments.emplace_back(color);
+        printf("sc %p\n", swapchain->gpuSwapchainObject()->swapchainColor->gpuTextureObject()->selfView);
     } else {
         renderPassDesc.nextInChain = nullptr;
         renderPassDesc.label       = "attachments";
@@ -114,6 +115,7 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
                 .clearColor    = toWGPUColor(colors[i]),
             };
             colorAttachments.emplace_back(color);
+            printf("colors %p\n", static_cast<CCWGPUTexture *>(textures[i])->gpuTextureObject()->selfView);
         }
     }
 
@@ -263,6 +265,10 @@ void CCWGPUCommandBuffer::bindStates() {
                                               descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
                                               descriptorSets[i].dynamicOffsetCount,
                                               descriptorSets[i].dynamicOffsets);
+            for (size_t j = 0; j < descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindGroupEntries.size(); j++) {
+                auto entry = descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindGroupEntries[j];
+                printf(" set, bd, b, t, s %d, %d, %p, %p, %p\n", i, entry.binding, entry.buffer, entry.textureView, entry.sampler);
+            }
         }
 
         // missing

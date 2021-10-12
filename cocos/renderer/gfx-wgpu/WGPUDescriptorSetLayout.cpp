@@ -149,8 +149,7 @@ void CCWGPUDescriptorSetLayout::prepare(const std::set<uint8_t>& bindingInUse) {
     bindGroupLayoutEntries.assign(_gpuLayoutEntryObj->bindGroupLayoutEntries.begin(), _gpuLayoutEntryObj->bindGroupLayoutEntries.end());
     bindGroupLayoutEntries.erase(std::remove_if(
                                      bindGroupLayoutEntries.begin(), bindGroupLayoutEntries.end(), [&bindingInUse, &bindGroupLayoutEntries](const WGPUBindGroupLayoutEntry& entry) {
-                                         // size > 1 incase of bind group missing
-                                         return bindingInUse.find(entry.binding) == bindingInUse.end() && bindGroupLayoutEntries.size() > 1;
+                                         return bindingInUse.find(entry.binding) == bindingInUse.end();
                                      }),
                                  bindGroupLayoutEntries.end());
 
