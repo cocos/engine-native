@@ -55,6 +55,12 @@ bool Device::initialize(const DeviceInfo &info) {
         _bindingMappingInfo.samplerOffsets.push_back(0);
     }
 
+#if INTPTR_MAX == INT32_MAX
+    static_assert(sizeof(void*) == 4, "pointer size assumption broken");
+#else
+    static_assert(sizeof(void*) == 8, "pointer size assumption broken");
+#endif
+
     return doInit(info);
 }
 
