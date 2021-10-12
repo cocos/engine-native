@@ -23,28 +23,19 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#pragma once
-
-#include "base/Agent.h"
-#include "gfx-base/GFXQuery.h"
+#include "EmptyQueryPool.h"
 
 namespace cc {
 namespace gfx {
 
-class CC_DLL QueryAgent final : public Agent<Query> {
-public:
-    explicit QueryAgent(Query *actor);
-    ~QueryAgent() override;
+void EmptyQueryPool::doInit(const QueryPoolInfo& info) {
+}
 
-    void getResults() override;
-    void copyResults(std::unordered_map<uint32_t, uint64_t> &results) override;
+void EmptyQueryPool::doDestroy() {
+}
 
-protected:
-    friend class CommandBufferAgent;
-
-    void doInit(const QueryInfo &info) override;
-    void doDestroy() override;
-};
+void EmptyQueryPool::queryGPUResults() {
+}
 
 } // namespace gfx
 } // namespace cc

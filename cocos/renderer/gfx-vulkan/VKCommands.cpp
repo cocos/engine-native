@@ -93,12 +93,12 @@ void cmdFuncCCVKGetDeviceQueue(CCVKDevice *device, CCVKGPUQueue *gpuQueue) {
     gpuQueue->queueFamilyIndex = gpuQueue->possibleQueueFamilyIndices[0];
 }
 
-void cmdFuncCCVKCreateQuery(CCVKDevice *device, CCVKGPUQuery *gpuQuery) {
+void cmdFuncCCVKCreateQuery(CCVKDevice *device, CCVKGPUQueryPool *gpuQueryPool) {
     VkQueryPoolCreateInfo queryPoolInfo = {};
     queryPoolInfo.sType                 = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
-    queryPoolInfo.queryType             = mapVkQueryType(gpuQuery->type);
-    queryPoolInfo.queryCount            = MAX_QUERY_OBJECTS;
-    VK_CHECK(vkCreateQueryPool(device->gpuDevice()->vkDevice, &queryPoolInfo, nullptr, &gpuQuery->pool));
+    queryPoolInfo.queryType             = mapVkQueryType(gpuQueryPool->type);
+    queryPoolInfo.queryCount            = gpuQueryPool->maxQueryObjects;
+    VK_CHECK(vkCreateQueryPool(device->gpuDevice()->vkDevice, &queryPoolInfo, nullptr, &gpuQueryPool->pool));
 }
 
 void cmdFuncCCVKCreateTexture(CCVKDevice *device, CCVKGPUTexture *gpuTexture) {
@@ -1383,8 +1383,8 @@ CC_VULKAN_API void cmdFuncCCVKCopyTextureToBuffers(CCVKDevice *device, CCVKGPUTe
     device->gpuBarrierManager()->checkIn(srcTexture);
 }
 
-void cmdFuncCCVKDestroyQuery(CCVKGPUDevice *gpuDevice, CCVKGPUQuery *gpuQuery) {
-    vkDestroyQueryPool(gpuDevice->vkDevice, gpuQuery->pool, nullptr);
+void cmdFuncCCVKDestroyQuery(CCVKGPUDevice *gpuDevice, CCVKGPUQueryPool *gpuQueryPool) {
+    vkDestroyQueryPool(gpuDevice->vkDevice, gpuQueryPool->pool, nullptr);
 }
 
 void cmdFuncCCVKDestroyRenderPass(CCVKGPUDevice *gpuDevice, CCVKGPURenderPass *gpuRenderPass) {
@@ -1502,10 +1502,10 @@ void CCVKGPURecycleBin::clear() {
                 }
                 break;
             case RecycledType::QUERY:
-                if (res.gpuQuery) {
-                    cmdFuncCCVKDestroyQuery(_device, res.gpuQuery);
-                    CC_DELETE(res.gpuQuery);
-                    res.gpuQuery = nullptr;
+                if (res.gpuQueryPool) {
+                    cmdFuncCCVKDestroyQuery(_device, res.gpuQueryPool);
+                    CC_DELETE(res.gpuQueryPool);
+                    res.gpuQueryPool = nullptr;
                 }
                 break;
             case RecycledType::RENDER_PASS:

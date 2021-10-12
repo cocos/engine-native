@@ -27,7 +27,7 @@
 
 #include "GLES3Commands.h"
 #include "GLES3Device.h"
-#include "GLES3Query.h"
+#include "GLES3QueryPool.h"
 #include "gfx-base/GFXDef-common.h"
 
 #define BUFFER_OFFSET(idx) (static_cast<char *>(0) + (idx))
@@ -1766,45 +1766,45 @@ void cmdFuncGLES3CreateGlobalBarrier(const std::vector<AccessType> &prevAccesses
     }
 }
 
-void cmdFuncGLES3CreateQuery(GLES3Device * /*device*/, GLES3GPUQuery *gpuQuery) {
-    GL_CHECK(glGenQueries(MAX_QUERY_OBJECTS, &gpuQuery->glQueryIds[0]));
+void cmdFuncGLES3CreateQuery(GLES3Device * /*device*/, GLES3GPUQueryPool *gpuQueryPool) {
+    GL_CHECK(glGenQueries(gpuQueryPool->maxQueryObjects, &gpuQueryPool->glQueryIds[0]));
 }
 
-void cmdFuncGLES3DestroyQuery(GLES3Device * /*device*/, GLES3GPUQuery *gpuQuery) {
-    GL_CHECK(glDeleteQueries(MAX_QUERY_OBJECTS, &gpuQuery->glQueryIds[0]));
+void cmdFuncGLES3DestroyQuery(GLES3Device * /*device*/, GLES3GPUQueryPool *gpuQueryPool) {
+    GL_CHECK(glDeleteQueries(gpuQueryPool->maxQueryObjects, &gpuQueryPool->glQueryIds[0]));
 }
 
-void cmdFuncGLES3Query(GLES3Device * /*device*/, GLES3Query *query, GLES3QueryType type, uint32_t id) {
-    GLES3GPUQuery *gpuQuery = query->gpuQuery();
+void cmdFuncGLES3Query(GLES3Device * /*device*/, GLES3QueryPool *queryPool, GLES3QueryType type, uint32_t id) {
+    GLES3GPUQueryPool *gpuQueryPool = queryPool->gpuQueryPool();
 
     switch (type) {
         case GLES3QueryType::BEGIN: {
-            auto   queryId   = static_cast<uint32_t>(query->_ids.size());
-            GLuint glQueryId = gpuQuery->mapGLQueryId(queryId);
+            auto   queryId   = static_cast<uint32_t>(queryPool->_ids.size());
+            GLuint glQueryId = gpuQueryPool->mapGLQueryId(queryId);
             if (glQueryId != -1) {
                 GL_CHECK(glBeginQuery(GL_ANY_SAMPLES_PASSED, glQueryId));
             }
             break;
         }
         case GLES3QueryType::END: {
-            auto   queryId   = static_cast<uint32_t>(query->_ids.size());
-            GLuint glQueryId = gpuQuery->mapGLQueryId(queryId);
+            auto   queryId   = static_cast<uint32_t>(queryPool->_ids.size());
+            GLuint glQueryId = gpuQueryPool->mapGLQueryId(queryId);
             if (glQueryId != -1) {
                 GL_CHECK(glEndQuery(GL_ANY_SAMPLES_PASSED));
-                query->_ids.push_back(id);
+                queryPool->_ids.push_back(id);
             }
             break;
         }
         case GLES3QueryType::RESET: {
-            query->_ids.clear();
+            queryPool->_ids.clear();
             break;
         }
         case GLES3QueryType::GET_RESULTS: {
-            auto                  queryCount = static_cast<uint32_t>(query->_ids.size());
+            auto                  queryCount = static_cast<uint32_t>(queryPool->_ids.size());
             std::vector<uint64_t> results(queryCount);
 
             for (auto queryId = 0U; queryId < queryCount; queryId++) {
-                GLuint glQueryId = gpuQuery->mapGLQueryId(queryId);
+                GLuint glQueryId = gpuQueryPool->mapGLQueryId(queryId);
 
                 if (glQueryId != -1) {
                     GLuint result{0};
@@ -1815,18 +1815,20 @@ void cmdFuncGLES3Query(GLES3Device * /*device*/, GLES3Query *query, GLES3QueryTy
                 }
             }
 
-            {
-                std::lock_guard<std::mutex> lock(query->_mutex);
-                query->_results.clear();
-                for (auto queryId = 0U; queryId < queryCount; queryId++) {
-                    uint32_t id = query->_ids[queryId];
-
-                    if (query->_results.count(id) == 0) {
-                        query->_results[id] = 0;
-                    }
-
-                    query->_results[id] += results[queryId];
+            std::unordered_map<uint32_t, uint64_t> mapResults;
+            for (auto queryId = 0U; queryId < queryCount; queryId++) {
+                uint32_t id   = queryPool->_ids[queryId];
+                auto     iter = mapResults.find(id);
+                if (iter != mapResults.end()) {
+                    iter->second += results[queryId];
+                } else {
+                    mapResults[id] = results[queryId];
                 }
+            }
+
+            {
+                std::lock_guard<std::mutex> lock(queryPool->_mutex);
+                queryPool->_results = std::move(mapResults);
             }
             break;
         }
@@ -3100,7 +3102,7 @@ void cmdFuncGLES3ExecuteCmds(GLES3Device *device, GLES3CmdPackage *cmdPackage) {
             }
             case GLESCmdType::QUERY: {
                 GLES3CmdQuery *cmd = cmdPackage->queryCmds[cmdIdx];
-                cmdFuncGLES3Query(device, cmd->query, cmd->type, cmd->id);
+                cmdFuncGLES3Query(device, cmd->queryPool, cmd->type, cmd->id);
                 break;
             }
             default:

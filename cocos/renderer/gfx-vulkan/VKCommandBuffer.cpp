@@ -33,7 +33,7 @@
 #include "VKFramebuffer.h"
 #include "VKInputAssembler.h"
 #include "VKPipelineState.h"
-#include "VKQuery.h"
+#include "VKQueryPool.h"
 #include "VKQueue.h"
 #include "VKRenderPass.h"
 #include "VKTexture.h"
@@ -62,14 +62,9 @@ void CCVKCommandBuffer::doInit(const CommandBufferInfo & /*info*/) {
     _curGPUDescriptorSets.resize(setCount);
     _curVkDescriptorSets.resize(setCount);
     _curDynamicOffsetsArray.resize(setCount);
-
-    QueryInfo queryInfo{QueryType::OCCLUSION};
-    _query = CCVKDevice::getInstance()->createQuery(queryInfo);
 }
 
 void CCVKCommandBuffer::doDestroy() {
-    CC_SAFE_DESTROY(_query);
-
     if (_gpuCommandBuffer) {
         CC_DELETE(_gpuCommandBuffer);
         _gpuCommandBuffer = nullptr;
@@ -644,33 +639,33 @@ void CCVKCommandBuffer::pipelineBarrier(const GlobalBarrier *barrier, const Text
                          0, nullptr, textureBarrierCount, pImageMemoryBarriers);
 }
 
-void CCVKCommandBuffer::beginQuery(uint32_t /*id*/) {
-    auto *        vkQuery  = static_cast<CCVKQuery *>(_query);
-    CCVKGPUQuery *gpuQuery = vkQuery->gpuQuery();
-    auto          queryId  = static_cast<uint32_t>(vkQuery->_ids.size());
+void CCVKCommandBuffer::beginQuery(QueryPool *queryPool, uint32_t /*id*/) {
+    auto *            vkQueryPool  = static_cast<CCVKQueryPool *>(queryPool);
+    CCVKGPUQueryPool *gpuQueryPool = vkQueryPool->gpuQueryPool();
+    auto              queryId      = static_cast<uint32_t>(vkQueryPool->_ids.size());
 
-    if (queryId < MAX_QUERY_OBJECTS) {
-        vkCmdBeginQuery(_gpuCommandBuffer->vkCommandBuffer, gpuQuery->pool, queryId, 0);
+    if (queryId < queryPool->getMaxQueryObjects()) {
+        vkCmdBeginQuery(_gpuCommandBuffer->vkCommandBuffer, gpuQueryPool->pool, queryId, 0);
     }
 }
 
-void CCVKCommandBuffer::endQuery(uint32_t id) {
-    auto *        vkQuery  = static_cast<CCVKQuery *>(_query);
-    CCVKGPUQuery *gpuQuery = vkQuery->gpuQuery();
-    auto          queryId  = static_cast<uint32_t>(vkQuery->_ids.size());
+void CCVKCommandBuffer::endQuery(QueryPool *queryPool, uint32_t id) {
+    auto *            vkQueryPool  = static_cast<CCVKQueryPool *>(queryPool);
+    CCVKGPUQueryPool *gpuQueryPool = vkQueryPool->gpuQueryPool();
+    auto              queryId      = static_cast<uint32_t>(vkQueryPool->_ids.size());
 
-    if (queryId < MAX_QUERY_OBJECTS) {
-        vkCmdEndQuery(_gpuCommandBuffer->vkCommandBuffer, gpuQuery->pool, queryId);
-        vkQuery->_ids.push_back(id);
+    if (queryId < queryPool->getMaxQueryObjects()) {
+        vkCmdEndQuery(_gpuCommandBuffer->vkCommandBuffer, gpuQueryPool->pool, queryId);
+        vkQueryPool->_ids.push_back(id);
     }
 }
 
-void CCVKCommandBuffer::resetQuery() {
-    auto *        vkQuery  = static_cast<CCVKQuery *>(_query);
-    CCVKGPUQuery *gpuQuery = vkQuery->gpuQuery();
+void CCVKCommandBuffer::resetQuery(QueryPool *queryPool) {
+    auto *            vkQueryPool  = static_cast<CCVKQueryPool *>(queryPool);
+    CCVKGPUQueryPool *gpuQueryPool = vkQueryPool->gpuQueryPool();
 
-    vkCmdResetQueryPool(_gpuCommandBuffer->vkCommandBuffer, gpuQuery->pool, 0, MAX_QUERY_OBJECTS);
-    vkQuery->_ids.clear();
+    vkCmdResetQueryPool(_gpuCommandBuffer->vkCommandBuffer, gpuQueryPool->pool, 0, queryPool->getMaxQueryObjects());
+    vkQueryPool->_ids.clear();
 }
 
 } // namespace gfx

@@ -70,12 +70,12 @@ void RenderQueue::sort() {
 void RenderQueue::recordCommandBuffer(gfx::Device *device, scene::Camera *camera, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuff, uint32_t subpassIndex) {
     PipelineSceneData *const              sceneData            = _pipeline->getPipelineSceneData();
     const scene::PipelineSharedSceneData *sharedData           = sceneData->getSharedData();
-    bool                                  enableOcclusionQuery = device->hasFeature(gfx::Feature::OCCLUSION_QUERY) && _useOcclusionQuery;
-
+    bool                                  enableOcclusionQuery = _pipeline->getOcclusionQueryEnabled() && _useOcclusionQuery;
+    auto *                                queryPool            = _pipeline->getQueryPools()[0];
     for (auto &i : _queue) {
         const auto *subModel = i.subModel;
         if (enableOcclusionQuery) {
-            cmdBuff->beginQuery(subModel->getId());
+            cmdBuff->beginQuery(queryPool, subModel->getId());
         }
 
         if (enableOcclusionQuery && _pipeline->isOccluded(camera, subModel)) {
@@ -104,7 +104,7 @@ void RenderQueue::recordCommandBuffer(gfx::Device *device, scene::Camera *camera
         }
 
         if (enableOcclusionQuery) {
-            cmdBuff->endQuery(subModel->getId());
+            cmdBuff->endQuery(queryPool, subModel->getId());
         }
     }
 }

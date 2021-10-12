@@ -67,13 +67,14 @@ class PipelineState;
 class DescriptorSet;
 class CommandBuffer;
 class Queue;
-class Query;
+class QueryPool;
 class Window;
 class Context;
 
 using TextureBarrierList = vector<TextureBarrier *>;
 using BufferDataList     = vector<const uint8_t *>;
 using CommandBufferList  = vector<CommandBuffer *>;
+using QueryPoolList      = vector<QueryPool *>;
 
 constexpr uint32_t MAX_ATTACHMENTS  = 4U;
 constexpr uint32_t INVALID_BINDING  = ~0U;
@@ -100,7 +101,7 @@ enum class ObjectType : uint32_t {
     INPUT_ASSEMBLER,
     COMMAND_BUFFER,
     QUEUE,
-    QUERY,
+    QUERY_POOL,
     GLOBAL_BARRIER,
     TEXTURE_BARRIER,
     BUFFER_BARRIER,
@@ -170,7 +171,6 @@ enum class Feature : uint32_t {
     // the max number of attachment limit(4) situation for many devices, and shader
     // sources inside this kind of subpass must match this behavior.
     INPUT_ATTACHMENT_BENEFIT,
-    OCCLUSION_QUERY,
     COUNT,
 };
 CC_ENUM_CONVERSION_OPERATOR(Feature);
@@ -791,6 +791,8 @@ struct DeviceCaps {
     Size     maxComputeWorkGroupSize;
     Size     maxComputeWorkGroupCount;
 
+    bool supportQuery{false};
+
     float clipSpaceMinZ{-1.F};
     float screenSpaceSignY{1.F};
     float clipSpaceSignY{1.F};
@@ -1309,8 +1311,11 @@ struct QueueInfo {
     QueueType type{QueueType::GRAPHICS};
 };
 
-struct QueryInfo {
+constexpr uint32_t DEFAULT_MAX_QUERY_OBJECTS = 65536U;
+
+struct QueryPoolInfo {
     QueryType type{QueryType::OCCLUSION};
+    uint32_t  maxQueryObjects{DEFAULT_MAX_QUERY_OBJECTS};
 };
 
 struct FormatInfo {

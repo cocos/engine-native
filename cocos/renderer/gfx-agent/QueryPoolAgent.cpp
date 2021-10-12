@@ -29,17 +29,19 @@
 
 #include "CommandBufferAgent.h"
 #include "DeviceAgent.h"
-#include "QueryAgent.h"
+#include "QueryPoolAgent.h"
 
 namespace cc {
 namespace gfx {
 
-QueryAgent::QueryAgent(Query *actor)
-: Agent<Query>(actor) {
-    _typedID = actor->getTypedID();
+QueryPoolAgent::QueryPoolAgent(QueryPool *actor)
+: Agent<QueryPool>(actor) {
+    _typedID         = actor->getTypedID();
+    _type            = actor->getType();
+    _maxQueryObjects = actor->getMaxQueryObjects();
 }
 
-QueryAgent::~QueryAgent() {
+QueryPoolAgent::~QueryPoolAgent() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),
         QueryDestruct,
@@ -49,7 +51,7 @@ QueryAgent::~QueryAgent() {
         });
 }
 
-void QueryAgent::doInit(const QueryInfo &info) {
+void QueryPoolAgent::doInit(const QueryPoolInfo &info) {
     ENQUEUE_MESSAGE_2(
         DeviceAgent::getInstance()->getMessageQueue(),
         QueryInit,
@@ -60,7 +62,7 @@ void QueryAgent::doInit(const QueryInfo &info) {
         });
 }
 
-void QueryAgent::doDestroy() {
+void QueryPoolAgent::doDestroy() {
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),
         QueryDestroy,
@@ -70,20 +72,21 @@ void QueryAgent::doDestroy() {
         });
 }
 
-void QueryAgent::getResults() {
+void QueryPoolAgent::queryGPUResults() {
     MessageQueue *msgQ = DeviceAgent::getInstance()->getMessageQueue();
 
     ENQUEUE_MESSAGE_1(
         DeviceAgent::getInstance()->getMessageQueue(),
-        QueryGetResults,
+        QueryQueryGPUResults,
         actor, getActor(),
         {
-            actor->getResults();
+            actor->queryGPUResults();
         });
-}
 
-void QueryAgent::copyResults(std::unordered_map<uint32_t, uint64_t> &results) {
-    _actor->copyResults(results);
+    {
+        std::lock_guard<std::mutex> lock(_actor->_mutex);
+        _results = _actor->_results;
+    }
 }
 
 } // namespace gfx

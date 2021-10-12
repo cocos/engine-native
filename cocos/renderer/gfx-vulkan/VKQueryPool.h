@@ -25,19 +25,33 @@
 
 #pragma once
 
-#include "gfx-base/GFXQuery.h"
+#include <mutex>
+#include <vector>
+#include "VKStd.h"
+#include "gfx-base/GFXQueryPool.h"
 
 namespace cc {
 namespace gfx {
 
-class CC_DLL EmptyQuery final : public Query {
+class CCVKGPUQueryPool;
+
+class CC_VULKAN_API CCVKQueryPool final : public QueryPool {
 public:
-    void getResults() override;
-    void copyResults(std::unordered_map<uint32_t, uint64_t> &results) override;
+    CCVKQueryPool();
+    ~CCVKQueryPool() override;
+
+    void queryGPUResults() override;
+
+    inline CCVKGPUQueryPool *gpuQueryPool() const { return _gpuQueryPool; }
 
 protected:
-    void doInit(const QueryInfo &info) override;
+    friend class CCVKCommandBuffer;
+
+    void doInit(const QueryPoolInfo &info) override;
     void doDestroy() override;
+
+    CCVKGPUQueryPool *    _gpuQueryPool{nullptr};
+    std::vector<uint32_t> _ids;
 };
 
 } // namespace gfx

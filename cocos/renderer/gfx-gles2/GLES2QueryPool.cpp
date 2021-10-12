@@ -23,28 +23,33 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#pragma once
-
 #include "GLES2Std.h"
-#include "gfx-base/GFXQuery.h"
+
+#include "GLES2CommandBuffer.h"
+#include "GLES2Commands.h"
+#include "GLES2Device.h"
+#include "GLES2QueryPool.h"
 
 namespace cc {
 namespace gfx {
 
-class CC_GLES2_API GLES2Query final : public Query {
-public:
-    GLES2Query();
-    ~GLES2Query() override;
+GLES2QueryPool::GLES2QueryPool() {
+    _typedID = generateObjectID<decltype(this)>();
+}
 
-    void getResults() override;
-    void copyResults(std::unordered_map<uint32_t, uint64_t> &results) override;
+GLES2QueryPool::~GLES2QueryPool() {
+    destroy();
+}
 
-protected:
-    friend class GLES2Device;
+void GLES2QueryPool::doInit(const QueryPoolInfo& info) {
+}
 
-    void doInit(const QueryInfo &info) override;
-    void doDestroy() override;
-};
+void GLES2QueryPool::doDestroy() {
+}
+
+void GLES2QueryPool::queryGPUResults() {
+    // No occlusion query API for GLES2, just leave it empty.
+}
 
 } // namespace gfx
 } // namespace cc

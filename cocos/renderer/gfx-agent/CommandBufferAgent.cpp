@@ -30,7 +30,7 @@
 #include "FramebufferAgent.h"
 #include "InputAssemblerAgent.h"
 #include "PipelineStateAgent.h"
-#include "QueryAgent.h"
+#include "QueryPoolAgent.h"
 #include "QueueAgent.h"
 #include "RenderPassAgent.h"
 #include "TextureAgent.h"
@@ -39,7 +39,6 @@
 #include "base/job-system/JobSystem.h"
 #include "base/threading/MessageQueue.h"
 #include "base/threading/ThreadSafeLinearAllocator.h"
-
 
 namespace cc {
 namespace gfx {
@@ -102,16 +101,9 @@ void CommandBufferAgent::destroyMessageQueue() {
 
 void CommandBufferAgent::initAgent() {
     initMessageQueue();
-    _query = CC_NEW(QueryAgent(_actor->getQuery()));
 }
 
 void CommandBufferAgent::destroyAgent() {
-    if (_query) {
-        static_cast<QueryAgent *>(_query)->_actor = nullptr;
-        CC_DELETE(_query);
-        _query = nullptr;
-    }
-
     destroyMessageQueue();
 }
 
@@ -139,12 +131,6 @@ void CommandBufferAgent::doDestroy() {
         {
             actor->destroy();
         });
-
-    if (_query) {
-        static_cast<QueryAgent *>(_query)->_actor = nullptr;
-        CC_DELETE(_query);
-        _query = nullptr;
-    }
 }
 
 void CommandBufferAgent::begin(RenderPass *renderPass, uint32_t subpass, Framebuffer *frameBuffer) {
@@ -502,32 +488,38 @@ void CommandBufferAgent::pipelineBarrier(const GlobalBarrier *barrier, const Tex
         });
 }
 
-void CommandBufferAgent::beginQuery(uint32_t id) {
-    ENQUEUE_MESSAGE_2(
+void CommandBufferAgent::beginQuery(QueryPool *queryPool, uint32_t id) {
+    QueryPool *actorQueryPool = static_cast<QueryPoolAgent *>(queryPool)->getActor();
+    ENQUEUE_MESSAGE_3(
         _messageQueue, CommandBufferBeginQuery,
         actor, getActor(),
+        queryPool, actorQueryPool,
         id, id,
         {
-            actor->beginQuery(id);
+            actor->beginQuery(queryPool, id);
         });
 }
 
-void CommandBufferAgent::endQuery(uint32_t id) {
-    ENQUEUE_MESSAGE_2(
+void CommandBufferAgent::endQuery(QueryPool *queryPool, uint32_t id) {
+    QueryPool *actorQueryPool = static_cast<QueryPoolAgent *>(queryPool)->getActor();
+    ENQUEUE_MESSAGE_3(
         _messageQueue, CommandBufferEndQuery,
         actor, getActor(),
+        queryPool, actorQueryPool,
         id, id,
         {
-            actor->endQuery(id);
+            actor->endQuery(queryPool, id);
         });
 }
 
-void CommandBufferAgent::resetQuery() {
-    ENQUEUE_MESSAGE_1(
+void CommandBufferAgent::resetQuery(QueryPool *queryPool) {
+    QueryPool *actorQueryPool = static_cast<QueryPoolAgent *>(queryPool)->getActor();
+    ENQUEUE_MESSAGE_2(
         _messageQueue, CommandBufferResetQuery,
         actor, getActor(),
+        queryPool, actorQueryPool,
         {
-            actor->resetQuery();
+            actor->resetQuery(queryPool);
         });
 }
 

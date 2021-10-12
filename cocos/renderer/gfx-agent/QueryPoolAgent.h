@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -25,23 +25,23 @@
 
 #pragma once
 
-#import "gfx-base/GFXQuery.h"
+#include "base/Agent.h"
+#include "gfx-base/GFXQueryPool.h"
 
 namespace cc {
 namespace gfx {
 
-class CCMTLQuery final : public Query {
+class CC_DLL QueryPoolAgent final : public Agent<QueryPool> {
 public:
-    CCMTLQuery();
-    ~CCMTLQuery() override;
+    explicit QueryPoolAgent(QueryPool *actor);
+    ~QueryPoolAgent() override;
 
-    void getResults() override;
-    void copyResults(std::unordered_map<uint32_t, uint64_t> &results) override;
+    void queryGPUResults() override;
 
 protected:
-    friend class CCMTLDevice;
+    friend class DeviceAgent;
 
-    void doInit(const QueryInfo &info) override;
+    void doInit(const QueryPoolInfo &info) override;
     void doDestroy() override;
 };
 

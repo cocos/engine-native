@@ -251,9 +251,10 @@ public:
     vector<VkCommandBuffer>      commandBuffers;
 };
 
-class CCVKGPUQuery final : public Object {
+class CCVKGPUQueryPool final : public Object {
 public:
-    QueryType   type = QueryType::OCCLUSION;
+    QueryType   type{QueryType::OCCLUSION};
+    uint32_t    maxQueryObjects{0};
     VkQueryPool pool;
 };
 
@@ -1109,7 +1110,7 @@ public:
     DEFINE_RECYCLE_BIN_COLLECT_FN(CCVKGPUFramebuffer, RecycledType::FRAMEBUFFER, res.gpuFramebuffer = gpuRes)
     DEFINE_RECYCLE_BIN_COLLECT_FN(CCVKGPUSampler, RecycledType::SAMPLER, res.gpuSampler = gpuRes)
     DEFINE_RECYCLE_BIN_COLLECT_FN(CCVKGPUShader, RecycledType::SHADER, res.gpuShader = gpuRes)
-    DEFINE_RECYCLE_BIN_COLLECT_FN(CCVKGPUQuery, RecycledType::QUERY, res.gpuQuery = gpuRes)
+    DEFINE_RECYCLE_BIN_COLLECT_FN(CCVKGPUQueryPool, RecycledType::QUERY, res.gpuQueryPool = gpuRes)
     DEFINE_RECYCLE_BIN_COLLECT_FN(CCVKGPUDescriptorSetLayout, RecycledType::DESCRIPTOR_SET_LAYOUT, res.gpuDescriptorSetLayout = gpuRes)
     DEFINE_RECYCLE_BIN_COLLECT_FN(CCVKGPUPipelineLayout, RecycledType::PIPELINE_LAYOUT, res.gpuPipelineLayout = gpuRes)
     DEFINE_RECYCLE_BIN_COLLECT_FN(CCVKGPUPipelineState, RecycledType::PIPELINE_STATE, res.gpuPipelineState = gpuRes)
@@ -1152,7 +1153,7 @@ private:
             CCVKGPUFramebuffer *        gpuFramebuffer;
             CCVKGPUSampler *            gpuSampler;
             CCVKGPUShader *             gpuShader;
-            CCVKGPUQuery *              gpuQuery;
+            CCVKGPUQueryPool *          gpuQueryPool;
             CCVKGPUDescriptorSetLayout *gpuDescriptorSetLayout;
             CCVKGPUPipelineLayout *     gpuPipelineLayout;
             CCVKGPUPipelineState *      gpuPipelineState;
