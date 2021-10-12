@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -23,38 +23,31 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#import "MTLStd.h"
+#pragma once
 
-#import "MTLCommandBuffer.h"
-#import "MTLDevice.h"
-#import "MTLFramebuffer.h"
-#import "MTLGPUObjects.h"
-#import "MTLQuery.h"
-#import "MTLSwapchain.h"
+#include "base/Agent.h"
+#include "gfx-base/GFXQueryPool.h"
 
 namespace cc {
 namespace gfx {
 
-CCMTLQuery::CCMTLQuery() {
-    _typedID = generateObjectID<decltype(this)>();
-}
+class CC_DLL QueryPoolValidator final : public Agent<QueryPool> {
+public:
+    explicit QueryPoolValidator(QueryPool *actor);
+    ~QueryPoolValidator() override;
 
-CCMTLQuery::~CCMTLQuery() {
-    destroy();
-}
+    void queryGPUResults() override;
 
-void CCMTLQuery::doInit(const QueryInfo& info) {
-}
+    inline bool isInited() const { return _inited; }
 
-void CCMTLQuery::doDestroy() {
-}
+protected:
+    friend class DeviceValidator;
 
-void CCMTLQuery::getResults() {
-}
+    void doInit(const QueryPoolInfo &info) override;
+    void doDestroy() override;
 
-void CCMTLQuery::copyResults(std::unordered_map<uint32_t, uint64_t>& results) {
-    // No results
-}
+    bool _inited{false};
+};
 
 } // namespace gfx
 } // namespace cc

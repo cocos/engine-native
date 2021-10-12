@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -25,37 +25,23 @@
 
 #pragma once
 
-#include <mutex>
-#include <vector>
-#include "VKStd.h"
-#include "gfx-base/GFXQuery.h"
-
+#import "gfx-base/GFXQueryPool.h"
 
 namespace cc {
 namespace gfx {
 
-class CCVKGPUQuery;
-
-class CC_VULKAN_API CCVKQuery final : public Query {
+class CCMTLQueryPool final : public QueryPool {
 public:
-    CCVKQuery();
-    ~CCVKQuery() override;
+    CCMTLQueryPool();
+    ~CCMTLQueryPool() override;
 
-    void getResults() override;
-    void copyResults(std::unordered_map<uint32_t, uint64_t> &results) override;
-
-    inline CCVKGPUQuery *gpuQuery() const { return _gpuQuery; }
+    void queryGPUResults() override;
 
 protected:
-    friend class CCVKCommandBuffer;
+    friend class CCMTLDevice;
 
-    void doInit(const QueryInfo &info) override;
+    void doInit(const QueryPoolInfo &info) override;
     void doDestroy() override;
-
-    CCVKGPUQuery *                         _gpuQuery{nullptr};
-    std::mutex                             _mutex;
-    std::vector<uint32_t>                  _ids;
-    std::unordered_map<uint32_t, uint64_t> _results;
 };
 
 } // namespace gfx

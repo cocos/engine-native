@@ -57,14 +57,9 @@ void GLES2CommandBuffer::doInit(const CommandBufferInfo &info) {
     size_t setCount = GLES2Device::getInstance()->bindingMappingInfo().bufferOffsets.size();
     _curGPUDescriptorSets.resize(setCount);
     _curDynamicOffsets.resize(setCount);
-
-    QueryInfo queryInfo{QueryType::OCCLUSION};
-    _query = GLES2Device::getInstance()->createQuery(queryInfo);
 }
 
 void GLES2CommandBuffer::doDestroy() {
-    CC_SAFE_DESTROY(_query);
-
     if (!_cmdAllocator) return;
 
     _cmdAllocator->clearCmds(_curCmdPackage);

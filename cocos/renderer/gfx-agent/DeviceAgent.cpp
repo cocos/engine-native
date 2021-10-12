@@ -36,7 +36,7 @@
 #include "InputAssemblerAgent.h"
 #include "PipelineLayoutAgent.h"
 #include "PipelineStateAgent.h"
-#include "QueryAgent.h"
+#include "QueryPoolAgent.h"
 #include "QueueAgent.h"
 #include "RenderPassAgent.h"
 #include "ShaderAgent.h"
@@ -45,7 +45,6 @@
 #include "base/threading/ThreadSafeLinearAllocator.h"
 #include "gfx-base/GFXDef-common.h"
 #include "gfx-base/GFXSwapchain.h"
-
 
 namespace cc {
 namespace gfx {
@@ -73,6 +72,7 @@ bool DeviceAgent::doInit(const DeviceInfo &info) {
     _api        = _actor->getGfxAPI();
     _deviceName = _actor->getDeviceName();
     _queue      = CC_NEW(QueueAgent(_actor->getQueue()));
+    _queryPool  = CC_NEW(QueryPoolAgent(_actor->getQueryPool()));
     _cmdBuff    = CC_NEW(CommandBufferAgent(_actor->getCommandBuffer()));
     _renderer   = _actor->getRenderer();
     _vendor     = _actor->getVendor();
@@ -104,6 +104,11 @@ void DeviceAgent::doDestroy() {
         static_cast<CommandBufferAgent *>(_cmdBuff)->_actor = nullptr;
         CC_DELETE(_cmdBuff);
         _cmdBuff = nullptr;
+    }
+    if (_queryPool) {
+        static_cast<QueryPoolAgent *>(_queryPool)->_actor = nullptr;
+        CC_DELETE(_queryPool);
+        _queryPool = nullptr;
     }
     if (_queue) {
         static_cast<QueueAgent *>(_queue)->_actor = nullptr;
@@ -196,9 +201,9 @@ Queue *DeviceAgent::createQueue() {
     return CC_NEW(QueueAgent(actor));
 }
 
-Query *DeviceAgent::createQuery() {
-    Query *actor = _actor->createQuery();
-    return CC_NEW(QueryAgent(actor));
+QueryPool *DeviceAgent::createQueryPool() {
+    QueryPool *actor = _actor->createQueryPool();
+    return CC_NEW(QueryPoolAgent(actor));
 }
 
 Swapchain *DeviceAgent::createSwapchain() {

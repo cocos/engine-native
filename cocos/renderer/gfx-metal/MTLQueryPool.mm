@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -23,53 +23,33 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "base/CoreStd.h"
+#import "MTLStd.h"
 
-#include "CommandBufferValidator.h"
-#include "DeviceValidator.h"
-#include "QueryValidator.h"
-#include "ValidationUtils.h"
+#import "MTLCommandBuffer.h"
+#import "MTLDevice.h"
+#import "MTLFramebuffer.h"
+#import "MTLGPUObjects.h"
+#import "MTLQueryPool.h"
+#import "MTLSwapchain.h"
 
 namespace cc {
 namespace gfx {
 
-QueryValidator::QueryValidator(Query *actor)
-: Agent<Query>(actor) {
-    _typedID = actor->getTypedID();
+CCMTLQueryPool::CCMTLQueryPool() {
+    _typedID = generateObjectID<decltype(this)>();
 }
 
-QueryValidator::~QueryValidator() {
-    CC_SAFE_DELETE(_actor);
+CCMTLQueryPool::~CCMTLQueryPool() {
+    destroy();
 }
 
-void QueryValidator::doInit(const QueryInfo &info) {
-    CCASSERT(!isInited(), "initializing twice?");
-    _inited = true;
-
-    /////////// execute ///////////
-
-    _actor->initialize(info);
+void CCMTLQueryPool::doInit(const QueryPoolInfo& info) {
 }
 
-void QueryValidator::doDestroy() {
-    CCASSERT(isInited(), "destroying twice?");
-    _inited = false;
-
-    /////////// execute ///////////
-
-    _actor->destroy();
+void CCMTLQueryPool::doDestroy() {
 }
 
-void QueryValidator::getResults() {
-    CCASSERT(isInited(), "already destroyed?");
-
-    _actor->getResults();
-}
-
-void QueryValidator::copyResults(std::unordered_map<uint32_t, uint64_t> &results) {
-    CCASSERT(isInited(), "already destroyed?");
-
-    _actor->copyResults(results);
+void CCMTLQueryPool::queryGPUResults() {
 }
 
 } // namespace gfx

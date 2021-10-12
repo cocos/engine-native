@@ -676,8 +676,8 @@ cocos_source_files(
                  cocos/renderer/gfx-base/GFXPipelineState.h
                  cocos/renderer/gfx-base/GFXQueue.cpp
                  cocos/renderer/gfx-base/GFXQueue.h
-                 cocos/renderer/gfx-base/GFXQuery.cpp
-                 cocos/renderer/gfx-base/GFXQuery.h
+                 cocos/renderer/gfx-base/GFXQueryPool.cpp
+                 cocos/renderer/gfx-base/GFXQueryPool.h
                  cocos/renderer/gfx-base/GFXRenderPass.cpp
                  cocos/renderer/gfx-base/GFXRenderPass.h
                  cocos/renderer/gfx-base/GFXShader.cpp
@@ -713,8 +713,8 @@ cocos_source_files(
                  cocos/renderer/gfx-agent/PipelineStateAgent.cpp
                  cocos/renderer/gfx-agent/QueueAgent.h
                  cocos/renderer/gfx-agent/QueueAgent.cpp
-                 cocos/renderer/gfx-agent/QueryAgent.h
-                 cocos/renderer/gfx-agent/QueryAgent.cpp
+                 cocos/renderer/gfx-agent/QueryPoolAgent.h
+                 cocos/renderer/gfx-agent/QueryPoolAgent.cpp
                  cocos/renderer/gfx-agent/RenderPassAgent.h
                  cocos/renderer/gfx-agent/RenderPassAgent.cpp
                  cocos/renderer/gfx-agent/SwapchainAgent.h
@@ -744,8 +744,8 @@ cocos_source_files(
                  cocos/renderer/gfx-validator/PipelineStateValidator.cpp
                  cocos/renderer/gfx-validator/QueueValidator.h
                  cocos/renderer/gfx-validator/QueueValidator.cpp
-                 cocos/renderer/gfx-validator/QueryValidator.h
-                 cocos/renderer/gfx-validator/QueryValidator.cpp
+                 cocos/renderer/gfx-validator/QueryPoolValidator.h
+                 cocos/renderer/gfx-validator/QueryPoolValidator.cpp
                  cocos/renderer/gfx-validator/RenderPassValidator.h
                  cocos/renderer/gfx-validator/RenderPassValidator.cpp
                  cocos/renderer/gfx-validator/ShaderValidator.h
@@ -777,8 +777,8 @@ cocos_source_files(
                  cocos/renderer/gfx-empty/EmptyPipelineState.cpp
                  cocos/renderer/gfx-empty/EmptyQueue.h
                  cocos/renderer/gfx-empty/EmptyQueue.cpp
-                 cocos/renderer/gfx-empty/EmptyQuery.h
-                 cocos/renderer/gfx-empty/EmptyQuery.cpp
+                 cocos/renderer/gfx-empty/EmptyQueryPool.h
+                 cocos/renderer/gfx-empty/EmptyQueryPool.cpp
                  cocos/renderer/gfx-empty/EmptyRenderPass.h
                  cocos/renderer/gfx-empty/EmptyRenderPass.cpp
                  cocos/renderer/gfx-empty/EmptyShader.h
@@ -943,8 +943,8 @@ if(CC_USE_GLES2)
                      cocos/renderer/gfx-gles2/GLES2PrimaryCommandBuffer.h
                      cocos/renderer/gfx-gles2/GLES2Queue.cpp
                      cocos/renderer/gfx-gles2/GLES2Queue.h
-                     cocos/renderer/gfx-gles2/GLES2Query.cpp
-                     cocos/renderer/gfx-gles2/GLES2Query.h
+                     cocos/renderer/gfx-gles2/GLES2QueryPool.cpp
+                     cocos/renderer/gfx-gles2/GLES2QueryPool.h
                      cocos/renderer/gfx-gles2/GLES2RenderPass.cpp
                      cocos/renderer/gfx-gles2/GLES2RenderPass.h
                      cocos/renderer/gfx-gles2/GLES2Shader.cpp
@@ -991,8 +991,8 @@ if(CC_USE_GLES3)
                      cocos/renderer/gfx-gles3/GLES3PrimaryCommandBuffer.h
                      cocos/renderer/gfx-gles3/GLES3Queue.cpp
                      cocos/renderer/gfx-gles3/GLES3Queue.h
-                     cocos/renderer/gfx-gles3/GLES3Query.cpp
-                     cocos/renderer/gfx-gles3/GLES3Query.h
+                     cocos/renderer/gfx-gles3/GLES3QueryPool.cpp
+                     cocos/renderer/gfx-gles3/GLES3QueryPool.h
                      cocos/renderer/gfx-gles3/GLES3RenderPass.cpp
                      cocos/renderer/gfx-gles3/GLES3RenderPass.h
                      cocos/renderer/gfx-gles3/GLES3Shader.cpp
@@ -1036,8 +1036,8 @@ if(CC_USE_METAL)
                      cocos/renderer/gfx-metal/MTLDescriptorSet.mm
                      cocos/renderer/gfx-metal/MTLQueue.h
                      cocos/renderer/gfx-metal/MTLQueue.mm
-                     cocos/renderer/gfx-metal/MTLQuery.h
-                     cocos/renderer/gfx-metal/MTLQuery.mm
+                     cocos/renderer/gfx-metal/MTLQueryPool.h
+                     cocos/renderer/gfx-metal/MTLQueryPool.mm
                      cocos/renderer/gfx-metal/MTLRenderPass.h
                      cocos/renderer/gfx-metal/MTLRenderPass.mm
                      cocos/renderer/gfx-metal/MTLSampler.h
@@ -1089,8 +1089,8 @@ if(CC_USE_VULKAN)
                      cocos/renderer/gfx-vulkan/VKPipelineState.h
                      cocos/renderer/gfx-vulkan/VKQueue.cpp
                      cocos/renderer/gfx-vulkan/VKQueue.h
-                     cocos/renderer/gfx-vulkan/VKQuery.cpp
-                     cocos/renderer/gfx-vulkan/VKQuery.h
+                     cocos/renderer/gfx-vulkan/VKQueryPool.cpp
+                     cocos/renderer/gfx-vulkan/VKQueryPool.h
                      cocos/renderer/gfx-vulkan/VKRenderPass.cpp
                      cocos/renderer/gfx-vulkan/VKRenderPass.h
                      cocos/renderer/gfx-vulkan/VKShader.cpp

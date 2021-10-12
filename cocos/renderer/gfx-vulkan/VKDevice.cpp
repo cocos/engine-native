@@ -34,7 +34,7 @@
 #include "VKInputAssembler.h"
 #include "VKPipelineLayout.h"
 #include "VKPipelineState.h"
-#include "VKQuery.h"
+#include "VKQueryPool.h"
 #include "VKQueue.h"
 #include "VKRenderPass.h"
 #include "VKShader.h"
@@ -45,7 +45,6 @@
 #include "states/VKGlobalBarrier.h"
 #include "states/VKSampler.h"
 #include "states/VKTextureBarrier.h"
-
 
 CC_DISABLE_WARNINGS()
 #define VMA_IMPLEMENTATION
@@ -76,6 +75,7 @@ CCVKDevice::CCVKDevice() {
     _api        = API::VULKAN;
     _deviceName = "Vulkan";
 
+    _caps.supportQuery     = true;
     _caps.clipSpaceMinZ    = 0.0F;
     _caps.screenSpaceSignY = -1.0F;
     _caps.clipSpaceSignY   = -1.0F;
@@ -270,8 +270,6 @@ bool CCVKDevice::doInit(const DeviceInfo & /*info*/) {
         compressedFmts += "astc ";
     }
 
-    _features[toNumber(Feature::OCCLUSION_QUERY)] = true;
-
     const VkPhysicalDeviceLimits &limits = _gpuContext->physicalDeviceProperties.limits;
     _caps.maxVertexAttributes            = limits.maxVertexInputAttributes;
     _caps.maxVertexUniformVectors        = limits.maxUniformBufferRange / 16;
@@ -300,6 +298,9 @@ bool CCVKDevice::doInit(const DeviceInfo & /*info*/) {
     QueueInfo queueInfo;
     queueInfo.type = QueueType::GRAPHICS;
     _queue         = createQueue(queueInfo);
+
+    QueryPoolInfo queryPoolInfo{QueryType::OCCLUSION, DEFAULT_MAX_QUERY_OBJECTS};
+    _queryPool = CCVKDevice::getInstance()->createQueryPool(queryPoolInfo);
 
     CommandBufferInfo cmdBuffInfo;
     cmdBuffInfo.type  = CommandBufferType::PRIMARY;
@@ -460,6 +461,7 @@ void CCVKDevice::doDestroy() {
     }
     _depthStencilTextures.clear();
 
+    CC_SAFE_DESTROY(_queryPool)
     CC_SAFE_DESTROY(_queue)
     CC_SAFE_DESTROY(_cmdBuff)
 
@@ -686,8 +688,8 @@ Queue *CCVKDevice::createQueue() {
     return CC_NEW(CCVKQueue);
 }
 
-Query *CCVKDevice::createQuery() {
-    return CC_NEW(CCVKQuery);
+QueryPool *CCVKDevice::createQueryPool() {
+    return CC_NEW(CCVKQueryPool);
 }
 
 Swapchain *CCVKDevice::createSwapchain() {

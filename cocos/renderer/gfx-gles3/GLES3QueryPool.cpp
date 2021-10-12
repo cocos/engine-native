@@ -23,7 +23,7 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "GLES3Query.h"
+#include "GLES3QueryPool.h"
 #include "GLES3CommandBuffer.h"
 #include "GLES3Commands.h"
 #include "GLES3Device.h"
@@ -31,42 +31,36 @@
 namespace cc {
 namespace gfx {
 
-GLES3Query::GLES3Query() {
+GLES3QueryPool::GLES3QueryPool() {
     _typedID = generateObjectID<decltype(this)>();
 }
 
-GLES3Query::~GLES3Query() {
+GLES3QueryPool::~GLES3QueryPool() {
     destroy();
 }
 
-void GLES3Query::doInit(const QueryInfo& /*info*/) {
-    GLES3Device* device = GLES3Device::getInstance();
-    if (device->hasFeature(gfx::Feature::OCCLUSION_QUERY)) {
-        _gpuQuery       = CC_NEW(GLES3GPUQuery);
-        _gpuQuery->type = _type;
-        _gpuQuery->glQueryIds.resize(MAX_QUERY_OBJECTS, 0U);
+void GLES3QueryPool::doInit(const QueryPoolInfo& /*info*/) {
+    GLES3Device* device            = GLES3Device::getInstance();
+    _gpuQueryPool                  = CC_NEW(GLES3GPUQueryPool);
+    _gpuQueryPool->type            = _type;
+    _gpuQueryPool->maxQueryObjects = _maxQueryObjects;
+    _gpuQueryPool->glQueryIds.resize(_maxQueryObjects, 0U);
 
-        cmdFuncGLES3CreateQuery(device, _gpuQuery);
+    cmdFuncGLES3CreateQuery(device, _gpuQueryPool);
+}
+
+void GLES3QueryPool::doDestroy() {
+    if (_gpuQueryPool) {
+        cmdFuncGLES3DestroyQuery(GLES3Device::getInstance(), _gpuQueryPool);
+        CC_DELETE(_gpuQueryPool);
+        _gpuQueryPool = nullptr;
     }
 }
 
-void GLES3Query::doDestroy() {
-    if (_gpuQuery) {
-        cmdFuncGLES3DestroyQuery(GLES3Device::getInstance(), _gpuQuery);
-        CC_DELETE(_gpuQuery);
-        _gpuQuery = nullptr;
-    }
-}
-
-void GLES3Query::getResults() {
+void GLES3QueryPool::queryGPUResults() {
     GLES3Device* device  = GLES3Device::getInstance();
     auto*        cmdBuff = static_cast<GLES3CommandBuffer*>(device->getCommandBuffer());
-    cmdBuff->getQueryResults(this);
-}
-
-void GLES3Query::copyResults(std::unordered_map<uint32_t, uint64_t>& results) {
-    std::lock_guard<std::mutex> lock(_mutex);
-    results = _results;
+    cmdBuff->queryGPUResults(this);
 }
 
 } // namespace gfx

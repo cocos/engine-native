@@ -25,35 +25,24 @@
 
 #pragma once
 
-#include <cstdint>
-#include <unordered_map>
-#include "GFXObject.h"
-
+#include "GLES2Std.h"
+#include "gfx-base/GFXQueryPool.h"
 
 namespace cc {
 namespace gfx {
 
-constexpr uint32_t MAX_QUERY_OBJECTS = 65536U;
-constexpr uint32_t INVALID_QUERY_ID  = -1;
-
-class CC_DLL Query : public GFXObject {
+class CC_GLES2_API GLES2QueryPool final : public QueryPool {
 public:
-    Query();
-    ~Query() override;
+    GLES2QueryPool();
+    ~GLES2QueryPool() override;
 
-    void initialize(const QueryInfo &info);
-    void destroy();
-
-    inline QueryType getType() const { return _type; }
-
-    virtual void getResults()                                                 = 0;
-    virtual void copyResults(std::unordered_map<uint32_t, uint64_t> &results) = 0;
+    void queryGPUResults() override;
 
 protected:
-    virtual void doInit(const QueryInfo &info) = 0;
-    virtual void doDestroy()                   = 0;
+    friend class GLES2Device;
 
-    QueryType _type = QueryType::OCCLUSION;
+    void doInit(const QueryPoolInfo &info) override;
+    void doDestroy() override;
 };
 
 } // namespace gfx

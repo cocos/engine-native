@@ -35,7 +35,7 @@
 #include "GFXObject.h"
 #include "GFXPipelineLayout.h"
 #include "GFXPipelineState.h"
-#include "GFXQuery.h"
+#include "GFXQueryPool.h"
 #include "GFXQueue.h"
 #include "GFXRenderPass.h"
 #include "GFXShader.h"
@@ -44,7 +44,6 @@
 #include "states/GFXGlobalBarrier.h"
 #include "states/GFXSampler.h"
 #include "states/GFXTextureBarrier.h"
-
 
 namespace cc {
 namespace gfx {
@@ -70,7 +69,7 @@ public:
 
     inline CommandBuffer *      createCommandBuffer(const CommandBufferInfo &info);
     inline Queue *              createQueue(const QueueInfo &info);
-    inline Query *              createQuery(const QueryInfo &info);
+    inline QueryPool *          createQueryPool(const QueryPoolInfo &info);
     inline Swapchain *          createSwapchain(const SwapchainInfo &info);
     inline Buffer *             createBuffer(const BufferInfo &info);
     inline Buffer *             createBuffer(const BufferViewInfo &info);
@@ -97,6 +96,7 @@ public:
     inline void acquire(const vector<Swapchain *> &swapchains);
 
     inline Queue *           getQueue() const { return _queue; }
+    inline QueryPool *       getQueryPool() const { return _queryPool; }
     inline CommandBuffer *   getCommandBuffer() const { return _cmdBuff; }
     inline const DeviceCaps &getCapabilities() const { return _caps; }
     inline API               getGfxAPI() const { return _api; }
@@ -124,7 +124,7 @@ protected:
 
     virtual CommandBuffer *      createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) = 0;
     virtual Queue *              createQueue()                                                     = 0;
-    virtual Query *              createQuery()                                                     = 0;
+    virtual QueryPool *          createQueryPool()                                                 = 0;
     virtual Swapchain *          createSwapchain()                                                 = 0;
     virtual Buffer *             createBuffer()                                                    = 0;
     virtual Texture *            createTexture()                                                   = 0;
@@ -156,6 +156,7 @@ protected:
     std::array<bool, static_cast<size_t>(Feature::COUNT)> _features;
 
     Queue *        _queue{nullptr};
+    QueryPool *    _queryPool{nullptr};
     CommandBuffer *_cmdBuff{nullptr};
 
     uint32_t     _numDrawCalls{0U};
@@ -185,8 +186,8 @@ Queue *Device::createQueue(const QueueInfo &info) {
     return res;
 }
 
-Query *Device::createQuery(const QueryInfo &info) {
-    Query *res = createQuery();
+QueryPool *Device::createQueryPool(const QueryPoolInfo &info) {
+    QueryPool *res = createQueryPool();
     res->initialize(info);
     return res;
 }

@@ -97,13 +97,14 @@ public:
     GLuint     glFramebuffer{0};
 };
 
-class GLES3GPUQuery final : public Object {
+class GLES3GPUQueryPool final : public Object {
 public:
-    QueryType           type = QueryType::OCCLUSION;
+    QueryType           type{QueryType::OCCLUSION};
+    uint32_t            maxQueryObjects{0};
     std::vector<GLuint> glQueryIds;
 
     inline GLuint mapGLQueryId(uint32_t queryId) {
-        if (queryId < glQueryIds.size()) {
+        if (queryId < maxQueryObjects) {
             return glQueryIds[queryId];
         }
 

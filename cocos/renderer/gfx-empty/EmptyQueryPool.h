@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -23,28 +23,21 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "GFXQuery.h"
+#pragma once
+
+#include "gfx-base/GFXQueryPool.h"
 
 namespace cc {
 namespace gfx {
 
-Query::Query()
-: GFXObject(ObjectType::QUERY) {
-}
+class CC_DLL EmptyQueryPool final : public QueryPool {
+public:
+    void queryGPUResults() override;
 
-Query::~Query() = default;
-
-void Query::initialize(const QueryInfo& info) {
-    _type = info.type;
-
-    doInit(info);
-}
-
-void Query::destroy() {
-    doDestroy();
-
-    _type = QueryType::OCCLUSION;
-}
+protected:
+    void doInit(const QueryPoolInfo &info) override;
+    void doDestroy() override;
+};
 
 } // namespace gfx
 } // namespace cc

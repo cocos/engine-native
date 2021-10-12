@@ -37,7 +37,7 @@
 #include "GLES2PipelineLayout.h"
 #include "GLES2PipelineState.h"
 #include "GLES2PrimaryCommandBuffer.h"
-#include "GLES2Query.h"
+#include "GLES2QueryPool.h"
 #include "GLES2Queue.h"
 #include "GLES2RenderPass.h"
 #include "GLES2Shader.h"
@@ -195,8 +195,7 @@ bool GLES2Device::doInit(const DeviceInfo & /*info*/) {
         _features[toNumber(Feature::FORMAT_ASTC)] = true;
         compressedFmts += "astc ";
     }
-    _features[toNumber(Feature::FORMAT_RGB8)]     = true;
-    _features[toNumber(Feature::OCCLUSION_QUERY)] = false;
+    _features[toNumber(Feature::FORMAT_RGB8)] = true;
 
     _renderer = reinterpret_cast<const char *>(glGetString(GL_RENDERER));
     _vendor   = reinterpret_cast<const char *>(glGetString(GL_VENDOR));
@@ -213,6 +212,9 @@ bool GLES2Device::doInit(const DeviceInfo & /*info*/) {
     QueueInfo queueInfo;
     queueInfo.type = QueueType::GRAPHICS;
     _queue         = createQueue(queueInfo);
+
+    QueryPoolInfo queryPoolInfo{QueryType::OCCLUSION, DEFAULT_MAX_QUERY_OBJECTS};
+    _queryPool = GLES2Device::getInstance()->createQueryPool(queryPoolInfo);
 
     CommandBufferInfo cmdBuffInfo;
     cmdBuffInfo.type  = CommandBufferType::PRIMARY;
@@ -245,6 +247,7 @@ void GLES2Device::doDestroy() {
     CCASSERT(!_memoryStatus.textureSize, "Texture memory leaked");
 
     CC_SAFE_DESTROY(_cmdBuff)
+    CC_SAFE_DESTROY(_queryPool)
     CC_SAFE_DESTROY(_queue)
     CC_SAFE_DESTROY(_gpuContext)
 }
@@ -285,8 +288,8 @@ Queue *GLES2Device::createQueue() {
     return CC_NEW(GLES2Queue);
 }
 
-Query *GLES2Device::createQuery() {
-    return CC_NEW(GLES2Query);
+QueryPool *GLES2Device::createQueryPool() {
+    return CC_NEW(GLES2QueryPool);
 }
 
 Swapchain *GLES2Device::createSwapchain() {

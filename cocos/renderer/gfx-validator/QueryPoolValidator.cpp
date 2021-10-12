@@ -23,21 +23,51 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "EmptyQuery.h"
+#include "base/CoreStd.h"
+
+#include "CommandBufferValidator.h"
+#include "DeviceValidator.h"
+#include "QueryPoolValidator.h"
+#include "ValidationUtils.h"
 
 namespace cc {
 namespace gfx {
 
-void EmptyQuery::doInit(const QueryInfo& info) {
+QueryPoolValidator::QueryPoolValidator(QueryPool *actor)
+: Agent<QueryPool>(actor) {
+    _typedID         = actor->getTypedID();
+    _type            = actor->getType();
+    _maxQueryObjects = actor->getMaxQueryObjects();
 }
 
-void EmptyQuery::doDestroy() {
+QueryPoolValidator::~QueryPoolValidator() {
+    DeviceResourceTracker<QueryPool>::erase(this);
+    CC_SAFE_DELETE(_actor);
 }
 
-void EmptyQuery::getResults() {
+void QueryPoolValidator::doInit(const QueryPoolInfo &info) {
+    CCASSERT(!isInited(), "initializing twice?");
+    _inited = true;
+
+    /////////// execute ///////////
+
+    _actor->initialize(info);
 }
 
-void EmptyQuery::copyResults(std::unordered_map<uint32_t, uint64_t>& results) {
+void QueryPoolValidator::doDestroy() {
+    CCASSERT(isInited(), "destroying twice?");
+    _inited = false;
+
+    /////////// execute ///////////
+
+    _actor->destroy();
+}
+
+void QueryPoolValidator::queryGPUResults() {
+    CCASSERT(isInited(), "already destroyed?");
+
+    _actor->queryGPUResults();
+    _results = _actor->_results;
 }
 
 } // namespace gfx
