@@ -25,8 +25,10 @@
 
 #include "ar/ARModule.h"
 
+#if CC_PLATFORM_ANDROID
 #include "ar/android/ARCoreAPIImpl.h"
 #define ARAPIImpl ARCoreAPIImpl
+#endif
 
 #include  "bindings/jswrapper/SeApi.h"
 
@@ -34,8 +36,10 @@ namespace cc {
 namespace ar {
 
 ARModule::ARModule() {
+#if CC_PLATFORM_ANDROID
     _impl.reset(new ARAPIImpl());
     arModuleInstance.reset(this);
+#endif
 }
 
 ARModule::~ARModule()
