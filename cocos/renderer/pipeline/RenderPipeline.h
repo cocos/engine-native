@@ -149,7 +149,7 @@ protected:
 
     // use cluster culling or not
     bool _clusterEnabled{false};
-    bool _bloomEnable{false};
+    bool _bloomEnabled{false};
     bool _occlusionQueryEnabled{true};
 };
 
