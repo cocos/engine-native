@@ -168,9 +168,9 @@ jobs:
     name: "iOS"
     runs-on: macos-latest
     steps:
-      - uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: latest-stable
+      # - uses: maxim-lobanov/setup-xcode@v1
+      #   with:
+      #     xcode-version: latest-stable
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
