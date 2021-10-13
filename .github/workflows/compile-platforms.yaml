@@ -209,4 +209,11 @@ jobs:
               -DCOCOS_X_PATH=$COCOS2DX_ROOT
           #cmake --build . --config Debug -- -quiet -jobs $NUM_OF_CORES -allowProvisioningUpdates CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO 
           cmake --build . --config Debug -- -quiet -jobs $NUM_OF_CORES CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+          retcode=$?
+          if [ $retcode -ne 0 ]; then
+              echo "-----------------------------------------------------------------------------------------------"
+              echo "------------------------------------ recompile without `-quiet` -------------------------------"
+              echo "-----------------------------------------------------------------------------------------------"
+              cmake --build . --config Debug --  -jobs $NUM_OF_CORES CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+          fi
           echo "Compile iOS Done!"
