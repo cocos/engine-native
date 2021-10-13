@@ -330,10 +330,6 @@ Sampler *CCMTLDevice::createSampler(const SamplerInfo &info, size_t hash) {
     return new CCMTLSampler(info, hash);
 }
 
-QueryPool *CCMTLDevice::createQueryPool() {
-    return CC_NEW(CCMTLQueryPool);
-}
-
 Swapchain *CCMTLDevice::createSwapchain() {
     return new CCMTLSwapchain();
 }
