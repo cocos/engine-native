@@ -40,6 +40,7 @@
 #include "gfx-base/states/GFXSampler.h"
 #include "pipeline/Define.h"
 #include "scene/SubModel.h"
+#include "scene/RenderScene.h"
 
 namespace cc {
 namespace pipeline {
@@ -130,7 +131,7 @@ void BloomStage::destroy() {
 void BloomStage::render(scene::Camera *camera) {
     auto *pipeline = _pipeline;
     CC_ASSERT(pipeline != nullptr);
-    if (!pipeline->getBloomEnabled()) return;
+    if (!pipeline->getBloomEnabled() || !camera->scene->getDrawBatch2Ds().empty()) return;
 
     if (hasFlag(static_cast<gfx::ClearFlags>(camera->clearFlag), gfx::ClearFlagBit::COLOR)) {
         _clearColors[0].x = camera->clearColor.x;
