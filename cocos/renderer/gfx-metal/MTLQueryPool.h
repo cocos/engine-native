@@ -35,8 +35,6 @@ public:
     CCMTLQueryPool();
     ~CCMTLQueryPool() override;
 
-    void queryGPUResults() override;
-
 protected:
     friend class CCMTLDevice;
 

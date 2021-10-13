@@ -90,7 +90,7 @@ public:
 
     virtual void copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint32_t count) = 0;
     virtual void copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint32_t count)        = 0;
-    virtual void getQueryPoolResults(QueryPool *queryPool) = 0;
+    virtual void getQueryPoolResults(QueryPool *queryPool)                                                                           = 0;
 
     inline void copyBuffersToTexture(const BufferDataList &buffers, Texture *dst, const BufferTextureCopyList &regions);
     inline void flushCommands(const vector<CommandBuffer *> &cmdBuffs);

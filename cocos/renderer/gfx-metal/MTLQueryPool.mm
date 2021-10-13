@@ -49,8 +49,5 @@ void CCMTLQueryPool::doInit(const QueryPoolInfo& info) {
 void CCMTLQueryPool::doDestroy() {
 }
 
-void CCMTLQueryPool::queryGPUResults() {
-}
-
 } // namespace gfx
 } // namespace cc

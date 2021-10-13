@@ -289,7 +289,7 @@ void DeviceValidator::flushCommands(CommandBuffer *const *cmdBuffs, uint32_t cou
     _actor->flushCommands(cmdBuffActors.data(), count);
 }
 
-void DeviceValidator::getQueryPoolResults(QueryPool* queryPool) {
+void DeviceValidator::getQueryPoolResults(QueryPool *queryPool) {
     auto *actorQueryPool = static_cast<QueryPoolValidator *>(queryPool)->getActor();
 
     _actor->getQueryPoolResults(actorQueryPool);

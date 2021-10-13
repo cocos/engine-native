@@ -350,8 +350,8 @@ void GLES3Device::copyTextureToBuffers(Texture *srcTexture, uint8_t *const *buff
     cmdFuncGLES3CopyTextureToBuffers(this, static_cast<GLES3Texture *>(srcTexture)->gpuTexture(), buffers, regions, count);
 }
 
-void GLES3Device::getQueryPoolResults(QueryPool* queryPool) {
-    auto *       cmdBuff = static_cast<GLES3CommandBuffer *>(getCommandBuffer());
+void GLES3Device::getQueryPoolResults(QueryPool *queryPool) {
+    auto *cmdBuff = static_cast<GLES3CommandBuffer *>(getCommandBuffer());
     cmdBuff->getQueryPoolResults(queryPool);
 }
 

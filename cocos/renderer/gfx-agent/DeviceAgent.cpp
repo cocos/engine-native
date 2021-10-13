@@ -368,8 +368,8 @@ void DeviceAgent::getQueryPoolResults(QueryPool *queryPool) {
             actor->getQueryPoolResults(queryPool);
         });
 
-    QueryPoolAgent *            actorQueryPoolAgent = static_cast<QueryPoolAgent *>(actorQueryPool);
-    QueryPoolAgent *            queryPoolAgent      = static_cast<QueryPoolAgent *>(queryPool);
+    auto *                      actorQueryPoolAgent = static_cast<QueryPoolAgent *>(actorQueryPool);
+    auto *                      queryPoolAgent      = static_cast<QueryPoolAgent *>(queryPool);
     std::lock_guard<std::mutex> lock(actorQueryPoolAgent->_mutex);
     queryPoolAgent->_results = actorQueryPoolAgent->_results;
 }

@@ -789,7 +789,7 @@ void CCVKDevice::copyTextureToBuffers(Texture *srcTexture, uint8_t *const *buffe
     }
 }
 
-void CCVKDevice::getQueryPoolResults(QueryPool* queryPool) {
+void CCVKDevice::getQueryPoolResults(QueryPool *queryPool) {
     auto *vkQueryPool = static_cast<CCVKQueryPool *>(queryPool);
     auto  queryCount  = static_cast<uint32_t>(vkQueryPool->_ids.size());
     CCASSERT(queryCount <= vkQueryPool->getMaxQueryObjects(), "Too many query commands.");
