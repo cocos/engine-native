@@ -116,6 +116,11 @@ void CCWGPUDescriptorSetLayout::updateLayout(uint8_t binding, const CCWGPUBuffer
 
     if (iter != _gpuLayoutEntryObj->bindGroupLayoutEntries.end()) {
         if (buffer) {
+            if (buffer->hasDynamicOffset()) {
+                (*iter).buffer.hasDynamicOffset = true;
+            } else {
+                (*iter).buffer.hasDynamicOffset = false;
+            }
         }
         if (sampler) {
             const SamplerInfo& info = sampler->getInfo();
@@ -144,14 +149,17 @@ void CCWGPUDescriptorSetLayout::updateLayout(uint8_t binding, const CCWGPUBuffer
 }
 
 void CCWGPUDescriptorSetLayout::prepare(const std::set<uint8_t>& bindingInUse) {
+    if (_gpuLayoutEntryObj->bindGroupLayout) {
+        return;
+    }
     std::vector<WGPUBindGroupLayoutEntry> bindGroupLayoutEntries;
 
     bindGroupLayoutEntries.assign(_gpuLayoutEntryObj->bindGroupLayoutEntries.begin(), _gpuLayoutEntryObj->bindGroupLayoutEntries.end());
-    bindGroupLayoutEntries.erase(std::remove_if(
-                                     bindGroupLayoutEntries.begin(), bindGroupLayoutEntries.end(), [&bindingInUse, &bindGroupLayoutEntries](const WGPUBindGroupLayoutEntry& entry) {
-                                         return bindingInUse.find(entry.binding) == bindingInUse.end();
-                                     }),
-                                 bindGroupLayoutEntries.end());
+    // bindGroupLayoutEntries.erase(std::remove_if(
+    //                                  bindGroupLayoutEntries.begin(), bindGroupLayoutEntries.end(), [&bindingInUse, &bindGroupLayoutEntries](const WGPUBindGroupLayoutEntry& entry) {
+    //                                      return bindingInUse.find(entry.binding) == bindingInUse.end();
+    //                                  }),
+    //                              bindGroupLayoutEntries.end());
 
     if (_gpuLayoutEntryObj->bindGroupLayout && _gpuLayoutEntryObj->bindGroupLayout != anoymous::defaultBindgroupLayout) {
         wgpuBindGroupLayoutRelease(_gpuLayoutEntryObj->bindGroupLayout);

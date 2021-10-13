@@ -50,8 +50,10 @@ class CCWGPUDescriptorSet;
 class CCWGPUInputAssembler;
 
 struct CCWGPUResource {
+    CCWGPUBuffer* uniformBuffer = nullptr;
+    CCWGPUBuffer* storageBuffer = nullptr;
+
     CCWGPUTexture* texture = nullptr;
-    CCWGPUBuffer*  buffer  = nullptr;
     CCWGPUSampler* sampler = nullptr;
 };
 
@@ -121,7 +123,8 @@ struct CCWGPUBufferObject {
     WGPUBuffer                                   wgpuBuffer = wgpuDefaultHandle;
     std::vector<CCWGPUDrawIndexedIndirectObject> indexedIndirectObjs;
     std::vector<CCWGPUDrawIndirectObject>        indirectObjs;
-    bool                                         mapped = false;
+    bool                                         mapped            = false;
+    bool                                         hasDynamicOffsets = false;
 };
 
 struct CCWGPUSamplerObject {

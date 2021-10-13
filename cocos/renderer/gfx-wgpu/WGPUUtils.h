@@ -344,15 +344,15 @@ static WGPUShaderStageFlags toWGPUShaderStageFlag(ShaderStageFlagBit flag) {
         return WGPUShaderStage_None;
     }
 
-    if (flag & ShaderStageFlagBit::ALL || flag & ShaderStageFlagBit::VERTEX) {
+    if (flag == ShaderStageFlagBit::ALL || hasFlag(flag, ShaderStageFlagBit::VERTEX)) {
         result |= WGPUShaderStage::WGPUShaderStage_Vertex;
     }
 
-    if (flag & ShaderStageFlagBit::ALL || flag & ShaderStageFlagBit::FRAGMENT) {
+    if (flag == ShaderStageFlagBit::ALL || hasFlag(flag, ShaderStageFlagBit::FRAGMENT)) {
         result |= WGPUShaderStage::WGPUShaderStage_Fragment;
     }
 
-    if (flag & ShaderStageFlagBit::ALL || flag & ShaderStageFlagBit::COMPUTE) {
+    if (flag == ShaderStageFlagBit::ALL || hasFlag(flag, ShaderStageFlagBit::COMPUTE)) {
         result |= WGPUShaderStage::WGPUShaderStage_Compute;
     }
 

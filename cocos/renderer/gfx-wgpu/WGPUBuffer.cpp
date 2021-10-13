@@ -33,7 +33,8 @@ namespace cc {
 namespace gfx {
 
 namespace anoymous {
-CCWGPUBuffer *defaultBuffer = nullptr;
+CCWGPUBuffer *defaultUniformBuffer = nullptr;
+CCWGPUBuffer *defaultStorageBuffer = nullptr;
 } // namespace anoymous
 
 using namespace emscripten;
@@ -197,18 +198,44 @@ void CCWGPUBuffer::check() {
     }
 }
 
-CCWGPUBuffer *CCWGPUBuffer::defaultBuffer() {
-    if (!anoymous::defaultBuffer) {
+void CCWGPUBuffer::activeDynamicOffset() {
+    _gpuBufferObject->hasDynamicOffsets = true;
+}
+
+void CCWGPUBuffer::deactiveDynamicOffset() {
+    _gpuBufferObject->hasDynamicOffsets = false;
+}
+
+bool CCWGPUBuffer::hasDynamicOffset() const {
+    return _gpuBufferObject->hasDynamicOffsets;
+}
+
+CCWGPUBuffer *CCWGPUBuffer::defaultUniformBuffer() {
+    if (!anoymous::defaultUniformBuffer) {
         BufferInfo info = {
-            .usage    = BufferUsageBit::NONE,
-            .memUsage = MemoryUsageBit::NONE,
-            .size     = 2,
+            .usage    = BufferUsageBit::UNIFORM,
+            .memUsage = MemoryUsageBit::DEVICE,
+            .size     = 4,
             .flags    = BufferFlagBit::NONE,
         };
-        anoymous::defaultBuffer = CC_NEW(CCWGPUBuffer);
-        anoymous::defaultBuffer->initialize(info);
+        anoymous::defaultUniformBuffer = CC_NEW(CCWGPUBuffer);
+        anoymous::defaultUniformBuffer->initialize(info);
     }
-    return anoymous::defaultBuffer;
+    return anoymous::defaultUniformBuffer;
+}
+
+CCWGPUBuffer *CCWGPUBuffer::defaultStorageBuffer() {
+    if (!anoymous::defaultStorageBuffer) {
+        BufferInfo info = {
+            .usage    = BufferUsageBit::STORAGE,
+            .memUsage = MemoryUsageBit::DEVICE,
+            .size     = 4,
+            .flags    = BufferFlagBit::NONE,
+        };
+        anoymous::defaultStorageBuffer = CC_NEW(CCWGPUBuffer);
+        anoymous::defaultStorageBuffer->initialize(info);
+    }
+    return anoymous::defaultStorageBuffer;
 }
 
 } // namespace gfx

@@ -73,12 +73,14 @@ CCWGPUDevice::~CCWGPUDevice() {
 }
 
 bool CCWGPUDevice::doInit(const DeviceInfo& info) {
-    _gpuDeviceObj                           = CC_NEW(CCWGPUDeviceObject);
-    _gpuDeviceObj->wgpuDevice               = emscripten_webgpu_get_device();
-    _gpuDeviceObj->wgpuQueue                = wgpuDeviceGetQueue(_gpuDeviceObj->wgpuDevice);
-    _gpuDeviceObj->defaultResources.texture = CCWGPUTexture::defaultTexture();
-    _gpuDeviceObj->defaultResources.buffer  = CCWGPUBuffer::defaultBuffer();
-    _gpuDeviceObj->defaultResources.sampler = CCWGPUSampler::defaultSampler();
+    _gpuDeviceObj             = CC_NEW(CCWGPUDeviceObject);
+    _gpuDeviceObj->wgpuDevice = emscripten_webgpu_get_device();
+    _gpuDeviceObj->wgpuQueue  = wgpuDeviceGetQueue(_gpuDeviceObj->wgpuDevice);
+
+    _gpuDeviceObj->defaultResources.uniformBuffer = CCWGPUBuffer::defaultUniformBuffer();
+    _gpuDeviceObj->defaultResources.storageBuffer = CCWGPUBuffer::defaultStorageBuffer();
+    _gpuDeviceObj->defaultResources.texture       = CCWGPUTexture::defaultTexture();
+    _gpuDeviceObj->defaultResources.sampler       = CCWGPUSampler::defaultSampler();
 
     QueueInfo queueInfo = {
         .type = QueueType::GRAPHICS,

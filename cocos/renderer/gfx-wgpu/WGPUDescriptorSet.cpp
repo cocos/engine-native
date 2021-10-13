@@ -74,7 +74,9 @@ void CCWGPUDescriptorSet::doInit(const DescriptorSetInfo& info) {
             _samplerIdxMap.insert(std::make_pair<uint8_t, uint8_t>(bindings[i].binding, _gpuBindGroupObj->bindGroupEntries.size() - 1));
             dsLayout->updateLayout(smpEntry.binding, nullptr, nullptr, sampler);
         } else if (hasFlag(DESCRIPTOR_BUFFER_TYPE, bindings[i].descriptorType)) {
-            CCWGPUBuffer*      buffer      = deviceObj->defaultResources.buffer;
+            CCWGPUBuffer*      buffer      = hasFlag(DescriptorType::DYNAMIC_STORAGE_BUFFER | DescriptorType::STORAGE_BUFFER, bindings[i].descriptorType)
+                                                 ? deviceObj->defaultResources.storageBuffer
+                                                 : deviceObj->defaultResources.uniformBuffer;
             WGPUBindGroupEntry bufferEntry = {
                 .binding = bindings[i].binding,
                 .buffer  = buffer->gpuBufferObject()->wgpuBuffer,
@@ -112,6 +114,8 @@ void CCWGPUDescriptorSet::update() {
     auto*       dsLayout = static_cast<CCWGPUDescriptorSetLayout*>(_layout);
     const auto& bindings = dsLayout->getBindings();
 
+    _dynamicOffsetCount = 0;
+    uint count          = 0;
     for (size_t i = 0; i < bindings.size(); i++) {
         const auto& binding = bindings[i];
         if (hasFlag(DESCRIPTOR_BUFFER_TYPE, bindings[i].descriptorType)) {
@@ -123,6 +127,13 @@ void CCWGPUDescriptorSet::update() {
                 bindGroupEntry.buffer  = buffer->gpuBufferObject()->wgpuBuffer;
                 bindGroupEntry.offset  = buffer->getOffset();
                 bindGroupEntry.size    = buffer->getSize();
+                if (hasFlag(DescriptorType::DYNAMIC_UNIFORM_BUFFER | DescriptorType::DYNAMIC_STORAGE_BUFFER, bindings[i].descriptorType)) {
+                    buffer->activeDynamicOffset();
+                    _dynamicOffsetCount++;
+                    count++;
+                } else {
+                    buffer->deactiveDynamicOffset();
+                }
                 dsLayout->updateLayout(bindGroupEntry.binding, buffer);
                 _gpuBindGroupObj->bindingSet.insert(binding.binding);
             }
@@ -165,11 +176,11 @@ void CCWGPUDescriptorSet::update() {
 
     std::vector<WGPUBindGroupEntry> bindGroupEntries;
     bindGroupEntries.assign(_gpuBindGroupObj->bindGroupEntries.begin(), _gpuBindGroupObj->bindGroupEntries.end());
-    bindGroupEntries.erase(std::remove_if(
-                               bindGroupEntries.begin(), bindGroupEntries.end(), [this, &bindGroupEntries](const WGPUBindGroupEntry& entry) {
-                                   return _gpuBindGroupObj->bindingSet.find(entry.binding) == _gpuBindGroupObj->bindingSet.end();
-                               }),
-                           bindGroupEntries.end());
+    // bindGroupEntries.erase(std::remove_if(
+    //                            bindGroupEntries.begin(), bindGroupEntries.end(), [this, &bindGroupEntries](const WGPUBindGroupEntry& entry) {
+    //                                return _gpuBindGroupObj->bindingSet.find(entry.binding) == _gpuBindGroupObj->bindingSet.end();
+    //                            }),
+    //                        bindGroupEntries.end());
 
     CCWGPUDeviceObject* deviceObj = CCWGPUDevice::getInstance()->gpuDeviceObject();
     if (_gpuBindGroupObj->bindgroup && _gpuBindGroupObj->bindgroup != anoymous::defaultBindGroup) {
@@ -189,7 +200,6 @@ void CCWGPUDescriptorSet::update() {
         };
         _gpuBindGroupObj->bindgroup = wgpuDeviceCreateBindGroup(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &bindGroupDesc);
     }
-
     _isDirty = false;
 }
 
@@ -197,7 +207,7 @@ void* CCWGPUDescriptorSet::defaultBindGroup() {
     CCWGPUDeviceObject* deviceObj = CCWGPUDevice::getInstance()->gpuDeviceObject();
 
     if (!anoymous::defaultBindGroup) {
-        CCWGPUBuffer*      buffer      = deviceObj->defaultResources.buffer;
+        CCWGPUBuffer*      buffer      = deviceObj->defaultResources.uniformBuffer;
         WGPUBindGroupEntry bufferEntry = {
             .binding = 0,
             .buffer  = buffer->gpuBufferObject()->wgpuBuffer,

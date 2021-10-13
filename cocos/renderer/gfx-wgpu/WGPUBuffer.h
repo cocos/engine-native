@@ -43,7 +43,9 @@ public:
 
     inline CCWGPUBufferObject* gpuBufferObject() const { return _gpuBufferObject; }
 
-    static CCWGPUBuffer* defaultBuffer();
+    static CCWGPUBuffer* defaultUniformBuffer();
+
+    static CCWGPUBuffer* defaultStorageBuffer();
 
     inline uint getOffset() const { return _offset; }
 
@@ -51,6 +53,12 @@ public:
         std::vector<uint8_t> buffer = emscripten::convertJSArrayToNumberVector<uint8_t>(v);
         update(reinterpret_cast<const void*>(buffer.data()), size);
     }
+
+    void activeDynamicOffset();
+
+    void deactiveDynamicOffset();
+
+    bool hasDynamicOffset() const;
 
     // used before unmap?
     void check();

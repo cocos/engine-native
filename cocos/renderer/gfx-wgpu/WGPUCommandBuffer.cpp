@@ -27,6 +27,7 @@
 #include <webgpu/webgpu.h>
 #include "WGPUBuffer.h"
 #include "WGPUDescriptorSet.h"
+#include "WGPUDescriptorSetLayout.h"
 #include "WGPUDevice.h"
 #include "WGPUFrameBuffer.h"
 #include "WGPUInputAssembler.h"
@@ -100,7 +101,6 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
             .clearColor    = WGPUColor{0.2, 0.2, 0.2, 1.0},
         };
         colorAttachments.emplace_back(color);
-        printf("sc %p\n", swapchain->gpuSwapchainObject()->swapchainColor->gpuTextureObject()->selfView);
     } else {
         renderPassDesc.nextInChain = nullptr;
         renderPassDesc.label       = "attachments";
@@ -115,7 +115,6 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
                 .clearColor    = toWGPUColor(colors[i]),
             };
             colorAttachments.emplace_back(color);
-            printf("colors %p\n", static_cast<CCWGPUTexture *>(textures[i])->gpuTextureObject()->selfView);
         }
     }
 
@@ -182,16 +181,24 @@ void CCWGPUCommandBuffer::bindPipelineState(PipelineState *pso) {
 }
 
 void CCWGPUCommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) {
-    auto &descriptorSets = _gpuCommandBufferObj->stateCache.descriptorSets;
-    auto  iter           = std::find_if(descriptorSets.begin(), descriptorSets.end(), [set](const CCWGPUDescriptorSetObject &descriptorSet) {
+    uint        dynOffsetCount = dynamicOffsetCount;
+    const uint *dynOffsets     = dynamicOffsets;
+    auto &      descriptorSets = _gpuCommandBufferObj->stateCache.descriptorSets;
+    auto        iter           = std::find_if(descriptorSets.begin(), descriptorSets.end(), [set](const CCWGPUDescriptorSetObject &descriptorSet) {
         return descriptorSet.index == set;
     });
 
+    auto *ccDescriptorSet = static_cast<CCWGPUDescriptorSet *>(descriptorSet);
+    if (!ccDescriptorSet->dynamicOffsetCount() == 0) {
+        dynOffsetCount = 0;
+        dynOffsets     = nullptr;
+    }
+
     CCWGPUDescriptorSetObject dsObj = {
         .index              = set,
-        .descriptorSet      = static_cast<CCWGPUDescriptorSet *>(descriptorSet),
-        .dynamicOffsetCount = dynamicOffsetCount,
-        .dynamicOffsets     = dynamicOffsets,
+        .descriptorSet      = ccDescriptorSet,
+        .dynamicOffsetCount = dynOffsetCount, //dynamicOffsetCount,
+        .dynamicOffsets     = dynOffsets,     //dynamicOffsets,
     };
 
     if (iter != descriptorSets.end()) {
@@ -260,15 +267,24 @@ void CCWGPUCommandBuffer::bindStates() {
         //bindgroup & descriptorset
         const auto &descriptorSets = _gpuCommandBufferObj->stateCache.descriptorSets;
         for (size_t i = 0; i < descriptorSets.size(); i++) {
-            wgpuRenderPassEncoderSetBindGroup(_gpuCommandBufferObj->wgpuRenderPassEncoder,
-                                              descriptorSets[i].index,
-                                              descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
-                                              descriptorSets[i].dynamicOffsetCount,
-                                              descriptorSets[i].dynamicOffsets);
-            // for (size_t j = 0; j < descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindGroupEntries.size(); j++) {
-            //     auto entry = descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindGroupEntries[j];
-            //     printf(" set, bd, b, t, s %d, %d, %p, %p, %p\n", i, entry.binding, entry.buffer, entry.textureView, entry.sampler);
-            // }
+            uint        dynamicCount = descriptorSets[i].dynamicOffsetCount;
+            const uint *dynOffsets   = descriptorSets[i].dynamicOffsets;
+            if (descriptorSets[i].descriptorSet->dynamicOffsetCount() != descriptorSets[i].dynamicOffsetCount) {
+                uint *dynOffsets = new uint[descriptorSets[i].descriptorSet->dynamicOffsetCount()];
+                std::fill(dynOffsets, dynOffsets + descriptorSets[i].descriptorSet->dynamicOffsetCount(), 0);
+                wgpuRenderPassEncoderSetBindGroup(_gpuCommandBufferObj->wgpuRenderPassEncoder,
+                                                  descriptorSets[i].index,
+                                                  descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
+                                                  descriptorSets[i].descriptorSet->dynamicOffsetCount(),
+                                                  dynOffsets);
+                delete[] dynOffsets;
+            } else {
+                wgpuRenderPassEncoderSetBindGroup(_gpuCommandBufferObj->wgpuRenderPassEncoder,
+                                                  descriptorSets[i].index,
+                                                  descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
+                                                  descriptorSets[i].dynamicOffsetCount,
+                                                  descriptorSets[i].dynamicOffsets);
+            }
         }
 
         // missing
