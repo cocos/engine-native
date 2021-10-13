@@ -148,6 +148,13 @@ jobs:
           cd build-mac
           cmake ../ -GXcode -DCC_USE_GLES3=ON -DCMAKE_OSX_ARCHITECTURES=x86_64 -DRES_DIR=$RES_DIR -DCOCOS_X_PATH=$COCOS2DX_ROOT
           cmake --build . --config Release -- -quiet -jobs $NUM_OF_CORES -arch x86_64
+          retcode=$?
+          if [ $retcode -ne 0 ]; then
+              echo "-----------------------------------------------------------------------------------------------"
+              echo "------------------------------------ recompile without `-quiet` -------------------------------"
+              echo "-----------------------------------------------------------------------------------------------"
+              cmake --build . --config Release -- -jobs $NUM_OF_CORES -arch x86_64
+          fi
           echo "Compile MacOSX x86_64 Release Done!"
 
           cd ..
