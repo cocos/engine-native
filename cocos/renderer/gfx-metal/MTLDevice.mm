@@ -270,6 +270,10 @@ Queue *CCMTLDevice::createQueue() {
     return CC_NEW(CCMTLQueue);
 }
 
+QueryPool *CCMTLDevice::createQueryPool() {
+    return CC_NEW(CCMTLQueryPool);
+}
+
 CommandBuffer *CCMTLDevice::createCommandBuffer(const CommandBufferInfo &info, bool /*hasAgent*/) {
     return CC_NEW(CCMTLCommandBuffer);
 }

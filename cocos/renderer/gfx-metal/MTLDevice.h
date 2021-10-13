@@ -98,6 +98,7 @@ protected:
     void                 doDestroy() override;
     CommandBuffer *      createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) override;
     Queue *              createQueue() override;
+    QueryPool *          createQueryPool() override;
     Buffer *             createBuffer() override;
     Texture *            createTexture() override;
     Shader *             createShader() override;
