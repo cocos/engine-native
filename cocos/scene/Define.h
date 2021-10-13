@@ -33,7 +33,6 @@
 #include "renderer/gfx-base/GFXShader.h"
 #include "scene/Model.h"
 
-
 namespace cc {
 namespace scene {
 
@@ -109,27 +108,27 @@ struct Ambient {
 };
 
 struct PipelineSharedSceneData {
-    bool         isHDR{true};
-    float        shadingScale{0.0F};
-    Ambient *    ambient{nullptr};
-    Shadow *     shadow{nullptr};
-    Skybox *     skybox{nullptr};
-    Fog *        fog{nullptr};
+    bool                 isHDR{true};
+    float                shadingScale{0.0F};
+    Ambient *            ambient{nullptr};
+    Shadow *             shadow{nullptr};
+    Skybox *             skybox{nullptr};
+    Fog *                fog{nullptr};
     gfx::InputAssembler *occlusionQueryInputAssembler{nullptr};
     Pass *               occlusionQueryPass{nullptr};
     gfx::Shader *        occlusionQueryShader{nullptr};
-    Pass *       deferredLightPass{nullptr};
-    gfx::Shader *deferredLightPassShader{nullptr};
-    Pass *       bloomPrefilterPass{nullptr};
-    gfx::Shader *bloomPrefilterPassShader{nullptr};
-    Pass *       bloomDownsamplePass{nullptr};
-    gfx::Shader *bloomDownsamplePassShader{nullptr};
-    Pass *       bloomUpsamplePass{nullptr};
-    gfx::Shader *bloomUpsamplePassShader{nullptr};
-    Pass *       bloomCombinePass{nullptr};
-    gfx::Shader *bloomCombinePassShader{nullptr};
-    Pass *       pipelinePostPass{nullptr};
-    gfx::Shader *pipelinePostPassShader{nullptr};
+    Pass *               deferredLightPass{nullptr};
+    gfx::Shader *        deferredLightPassShader{nullptr};
+    Pass *               bloomPrefilterPass{nullptr};
+    gfx::Shader *        bloomPrefilterPassShader{nullptr};
+    Pass *               bloomDownsamplePass{nullptr};
+    gfx::Shader *        bloomDownsamplePassShader{nullptr};
+    Pass *               bloomUpsamplePass{nullptr};
+    gfx::Shader *        bloomUpsamplePassShader{nullptr};
+    Pass *               bloomCombinePass{nullptr};
+    gfx::Shader *        bloomCombinePassShader{nullptr};
+    Pass *               pipelinePostPass{nullptr};
+    gfx::Shader *        pipelinePostPassShader{nullptr};
 };
 
 struct FlatBuffer {
