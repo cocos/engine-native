@@ -34,6 +34,5 @@ void EmptyQueryPool::doInit(const QueryPoolInfo& info) {
 void EmptyQueryPool::doDestroy() {
 }
 
-
 } // namespace gfx
 } // namespace cc

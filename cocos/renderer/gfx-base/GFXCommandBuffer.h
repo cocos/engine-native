@@ -33,8 +33,6 @@
 namespace cc {
 namespace gfx {
 
-class QueryPool;
-
 class CC_DLL CommandBuffer : public GFXObject {
 public:
     CommandBuffer();
