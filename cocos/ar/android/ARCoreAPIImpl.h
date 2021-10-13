@@ -26,6 +26,7 @@
 #pragma once
 
 #include "ar/IARAPI.h"
+#include <array>
 
 class _jobject;
 
@@ -46,10 +47,10 @@ public:
     float* getCameraTexCoords() override;
 protected:
     _jobject* _impl;
-    float* _cameraPose = new float[7];
-    float* _viewMatrix = new float[16];
-    float* _projMatrix = new float[16];
-    float* _cameraTexCoords = new float[8];
+    Pose *_cameraPose = new Pose();
+    Matrix *_viewMatrix = new Matrix();
+    Matrix *_projMatrix = new Matrix();
+    TexCoords *_cameraTexCoords = new TexCoords();
 };
 
 } // namespace ar

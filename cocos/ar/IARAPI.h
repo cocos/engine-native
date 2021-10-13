@@ -37,6 +37,10 @@
 namespace cc {
 namespace ar{
 
+using Pose = std::array<float, 7>;
+using Matrix = std::array<float, 16>;
+using TexCoords = std::array<float, 8>;
+
 class IARAPI {
 public:
     virtual ~IARAPI() = default;

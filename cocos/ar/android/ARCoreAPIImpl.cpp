@@ -132,14 +132,14 @@ float* ARCoreAPIImpl::getCameraPose() {
                                             "getCameraPose",
                                             "(" JARG_ARAPI ")[F"))
         {
-            jfloatArray array = (jfloatArray)methodInfo.env->CallStaticObjectMethod(
+            auto *array = static_cast<jfloatArray>(methodInfo.env->CallStaticObjectMethod(
                     methodInfo.classID,
                     methodInfo.methodID,
                     _impl
-            );
+            ));
             jsize len = methodInfo.env->GetArrayLength(array);
             if (len <= 7) {
-                jfloat* elems = methodInfo.env->GetFloatArrayElements(array, 0);
+                jfloat* elems = methodInfo.env->GetFloatArrayElements(array, nullptr);
                 if (elems) {
                     memcpy(_cameraPose, elems, sizeof(float) * len);
                     methodInfo.env->ReleaseFloatArrayElements(array, elems, 0);
@@ -148,7 +148,7 @@ float* ARCoreAPIImpl::getCameraPose() {
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
         }
     }
-    return _cameraPose;
+    return _cameraPose->data();
 }
 
 float* ARCoreAPIImpl::getCameraViewMatrix() {
@@ -158,14 +158,14 @@ float* ARCoreAPIImpl::getCameraViewMatrix() {
                                             JCLS_ARAPI,
                                             "getCameraViewMatrix",
                                             "(" JARG_ARAPI ")[F")) {
-            jfloatArray array = (jfloatArray)methodInfo.env->CallStaticObjectMethod(
+            auto *array = static_cast<jfloatArray>(methodInfo.env->CallStaticObjectMethod(
                     methodInfo.classID,
                     methodInfo.methodID,
                     _impl
-            );
+            ));
             jsize len = methodInfo.env->GetArrayLength(array);
             if (len <= 16) {
-                jfloat* elems = methodInfo.env->GetFloatArrayElements(array, 0);
+                jfloat* elems = methodInfo.env->GetFloatArrayElements(array, nullptr);
                 if (elems) {
                     memcpy(_viewMatrix, elems, sizeof(float) * len);
                     methodInfo.env->ReleaseFloatArrayElements(array, elems, 0);
@@ -174,7 +174,7 @@ float* ARCoreAPIImpl::getCameraViewMatrix() {
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
         }
     }
-    return _viewMatrix;
+    return _viewMatrix->data();
 }
 
 float* ARCoreAPIImpl::getCameraProjectionMatrix() {
@@ -184,14 +184,14 @@ float* ARCoreAPIImpl::getCameraProjectionMatrix() {
                                             JCLS_ARAPI,
                                             "getCameraProjectionMatrix",
                                             "(" JARG_ARAPI ")[F")) {
-            jfloatArray array = (jfloatArray)methodInfo.env->CallStaticObjectMethod(
+            auto *array = static_cast<jfloatArray>(methodInfo.env->CallStaticObjectMethod(
                     methodInfo.classID,
                     methodInfo.methodID,
                     _impl
-            );
+            ));
             jsize len = methodInfo.env->GetArrayLength(array);
             if (len <= 16) {
-                jfloat* elems = methodInfo.env->GetFloatArrayElements(array, 0);
+                jfloat* elems = methodInfo.env->GetFloatArrayElements(array, nullptr);
                 if (elems) {
                     memcpy(_projMatrix, elems, sizeof(float) * len);
                     methodInfo.env->ReleaseFloatArrayElements(array, elems, 0);
@@ -200,7 +200,7 @@ float* ARCoreAPIImpl::getCameraProjectionMatrix() {
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
         }
     }
-    return _projMatrix;
+    return _projMatrix->data();
 }
 
 float* ARCoreAPIImpl::getCameraTexCoords() {
@@ -210,14 +210,14 @@ float* ARCoreAPIImpl::getCameraTexCoords() {
                                             JCLS_ARAPI,
                                             "getCameraTexCoords",
                                             "(" JARG_ARAPI ")[F")) {
-            jfloatArray array = (jfloatArray)methodInfo.env->CallStaticObjectMethod(
+            auto *array = static_cast<jfloatArray>(methodInfo.env->CallStaticObjectMethod(
                     methodInfo.classID,
                     methodInfo.methodID,
                     _impl
-            );
+            ));
             jsize len = methodInfo.env->GetArrayLength(array);
             if (len <= 8) {
-                jfloat* elems = methodInfo.env->GetFloatArrayElements(array, 0);
+                jfloat* elems = methodInfo.env->GetFloatArrayElements(array, nullptr);
                 if (elems) {
                     memcpy(_cameraTexCoords, elems, sizeof(float) * len);
                     methodInfo.env->ReleaseFloatArrayElements(array, elems, 0);
@@ -226,7 +226,7 @@ float* ARCoreAPIImpl::getCameraTexCoords() {
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
         }
     }
-    return _cameraTexCoords;
+    return _cameraTexCoords->data();
 }
 
 } // namespace ar

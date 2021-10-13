@@ -31,11 +31,11 @@ import android.view.Display;
 import android.view.WindowManager;
 
 public class CocosARDisplayRotationHelper implements DisplayListener {
-    private boolean _viewportChanged;
+    private boolean mViewportChanged;
 
-    private int _viewportWidth;
+    private int mViewportWidth;
 
-    private int _viewportHeight;
+    private int mViewportHeight;
 
     private final Context mContext;
 
@@ -74,9 +74,9 @@ public class CocosARDisplayRotationHelper implements DisplayListener {
      * @param height the updated height of the surface.
      */
     public void updateViewportChanged(int width, int height) {
-        _viewportWidth = width;
-        _viewportHeight = height;
-        _viewportChanged = true;
+        mViewportWidth = width;
+        mViewportHeight = height;
+        mViewportChanged = true;
     }
 
     /**
@@ -88,10 +88,10 @@ public class CocosARDisplayRotationHelper implements DisplayListener {
      * @param session the {@link Session} object to update if display geometry changed.
      */
     public void updateDisplayGeometry(CocosARAPI api) {
-        if (_viewportChanged) {
+        if (mViewportChanged) {
             int displayRotation = mDisplay.getRotation();
-            api.setDisplayGeometry(displayRotation, _viewportWidth, _viewportHeight);
-            _viewportChanged = false;
+            api.setDisplayGeometry(displayRotation, mViewportWidth, mViewportHeight);
+            mViewportChanged = false;
         }
     }
 
@@ -105,6 +105,6 @@ public class CocosARDisplayRotationHelper implements DisplayListener {
 
     @Override
     public void onDisplayChanged(int displayId) {
-        _viewportChanged = true;
+        mViewportChanged = true;
     }
 }

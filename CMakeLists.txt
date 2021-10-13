@@ -120,6 +120,8 @@ cc_inspect_values(
     USE_PHYSICS_PHYSX
     USE_JOB_SYSTEM_TBB
     USE_JOB_SYSTEM_TASKFLOW
+    # ARModule ADD
+    USE_AR_MODULE
 )
 
 ################################# external source code ################################
@@ -1577,10 +1579,15 @@ cocos_source_files(
                  cocos/bindings/manual/jsb_xmlhttprequest.h
                  cocos/bindings/manual/jsb_pipeline_manual.h
     NO_WERROR    cocos/bindings/manual/jsb_pipeline_manual.cpp
-    # ARModule ADD
-    NO_WERROR    cocos/bindings/manual/jsb_ar_manual.cpp
-                 cocos/bindings/manual/jsb_ar_manual.h
 )
+
+# ARModule ADD
+if(USE_AR_MODULE)
+    cocos_source_files(
+        cocos/bindings/manual/jsb_ar_manual.cpp
+        cocos/bindings/manual/jsb_ar_manual.h
+    )
+endif()
 
 if(USE_SOCKET)
     cocos_source_files(
@@ -1981,6 +1988,8 @@ function(cc_apply_definations target)
         $<IF:$<BOOL:${USE_JOB_SYSTEM_TBB}>,USE_JOB_SYSTEM_TBB=1,USE_JOB_SYSTEM_TBB=0>
         $<IF:$<BOOL:${USE_JOB_SYSTEM_TASKFLOW}>,USE_JOB_SYSTEM_TASKFLOW=1,USE_JOB_SYSTEM_TASKFLOW=0>
         $<IF:$<BOOL:${USE_PHYSICS_PHYSX}>,USE_PHYSICS_PHYSX=1,USE_PHYSICS_PHYSX=0>
+        # ARModule ADD
+        $<IF:$<BOOL:${USE_AR_MODULE}>,USE_AR_MODULE=1,USE_AR_MODULE=0>
         $<$<BOOL:${USE_SE_JSC}>:SCRIPT_ENGINE_TYPE=3>
         $<$<CONFIG:Debug>:CC_DEBUG=1>
     )

@@ -65,12 +65,12 @@ public class CocosARCoreAPI implements CocosARAPI {
     private Frame mFrame;
     private Camera mCamera;
 
-    private float[] _cameraPose = new float[7];
-    private float[] _viewMatrix = new float[16];
-    private float[] _projMatrix = new float[16];
+    private float[] mCameraPose = new float[7];
+    private float[] mViewMatrix = new float[16];
+    private float[] mProjMatrix = new float[16];
 
-    private float[] _quadCoords = {-1f, -1f, -1f, 1f, 1f, -1f, 1f, 1f};
-    private float[] _cameraTexCoords = new float[8];
+    private float[] mQuadCoords = {-1f, -1f, -1f, 1f, 1f, -1f, 1f, 1f};
+    private float[] mCameraTexCoords = new float[8];
 
     public static CocosARCoreAPI init() {
         api = new CocosARCoreAPI();
@@ -94,18 +94,18 @@ public class CocosARCoreAPI implements CocosARAPI {
     }
 
     public static float[] getCameraPose(final CocosARCoreAPI api) {
-        return api._cameraPose;
+        return api.mCameraPose;
     }
     public static float[] getCameraViewMatrix(final CocosARCoreAPI api) {
-        api.mCamera.getViewMatrix(api._viewMatrix, 0);
-        return api._viewMatrix;
+        api.mCamera.getViewMatrix(api.mViewMatrix, 0);
+        return api.mViewMatrix;
     }
     public static float[] getCameraProjectionMatrix(final CocosARCoreAPI api) {
-        api.mCamera.getProjectionMatrix(api._projMatrix, 0, 0.01f, 1000.0f);
-        return api._projMatrix;
+        api.mCamera.getProjectionMatrix(api.mProjMatrix, 0, 0.01f, 1000.0f);
+        return api.mProjMatrix;
     }
     public static float[] getCameraTexCoords(final CocosARCoreAPI api) {
-        return api._cameraTexCoords;
+        return api.mCameraTexCoords;
     }
 
     // for CocosARDisplayRotationHelper 
@@ -115,13 +115,13 @@ public class CocosARCoreAPI implements CocosARAPI {
 
     private void updateCameraPose() {
         Pose pose = mCamera.getDisplayOrientedPose();
-        _cameraPose[0] = pose.tx();
-        _cameraPose[1] = pose.ty();
-        _cameraPose[2] = pose.tz();
-        _cameraPose[3] = pose.qx();
-        _cameraPose[4] = pose.qy();
-        _cameraPose[5] = pose.qz();
-        _cameraPose[6] = pose.qw();
+        mCameraPose[0] = pose.tx();
+        mCameraPose[1] = pose.ty();
+        mCameraPose[2] = pose.tz();
+        mCameraPose[3] = pose.qx();
+        mCameraPose[4] = pose.qy();
+        mCameraPose[5] = pose.qz();
+        mCameraPose[6] = pose.qw();
     }
 
     private void updateCameraTexCoords() {
@@ -130,9 +130,9 @@ public class CocosARCoreAPI implements CocosARAPI {
             // coordinates for the screen rect, as they may have changed as well.
             mFrame.transformCoordinates2d(
                 Coordinates2d.OPENGL_NORMALIZED_DEVICE_COORDINATES,
-                _quadCoords,
+                mQuadCoords,
                 Coordinates2d.TEXTURE_NORMALIZED,
-                _cameraTexCoords);
+                mCameraTexCoords);
         }
     }
 

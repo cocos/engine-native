@@ -1,5 +1,6 @@
 #pragma once
 #include "base/Config.h"
+#if USE_AR_MODULE > 0
 #include <type_traits>
 #include "cocos/bindings/jswrapper/SeApi.h"
 #include "cocos/bindings/manual/jsb_conversions.h"
@@ -17,3 +18,4 @@ SE_DECLARE_FUNC(js_ar_ARModule_start);
 SE_DECLARE_FUNC(js_ar_ARModule_update);
 SE_DECLARE_FUNC(js_ar_ARModule_ARModule);
 
+#endif //#if USE_AR_MODULE > 0

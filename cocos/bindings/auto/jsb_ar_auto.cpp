@@ -1,4 +1,5 @@
 #include "cocos/bindings/auto/jsb_ar_auto.h"
+#if USE_AR_MODULE > 0
 #include "cocos/bindings/manual/jsb_conversions.h"
 #include "cocos/bindings/manual/jsb_global.h"
 #include "ar/ARModule.h"
@@ -121,3 +122,4 @@ bool register_all_ar(se::Object* obj)
     return true;
 }
 
+#endif //#if USE_AR_MODULE > 0

@@ -23,9 +23,10 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "base/Config.h"
 #include "jsb_ar_manual.h"
-#if (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_IOS || CC_PLATFORM == CC_PLATFORM_MAC || CC_PLATFORM == CC_PLATFORM_WINDOWS)
+
+#if USE_AR_MODULE > 0
+
 #include "bindings/manual/jsb_conversions.h"
 #include "bindings/manual/jsb_global.h"
 #include "ar/ARModule.h"
@@ -95,4 +96,4 @@ bool register_all_ar_manual(se::Object *obj) {
     return true;
 }
 
-#endif //#if (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_IOS || CC_PLATFORM == CC_PLATFORM_MAC || CC_PLATFORM == CC_PLATFORM_WIN32)
+#endif //#if USE_AR_MODULE > 0
