@@ -89,7 +89,6 @@ public:
     inline PipelineUBO *                           getPipelineUBO() const { return _pipelineUBO; }
     inline const String &                          getConstantMacros() const { return _constantMacros; }
     inline gfx::Device *                           getDevice() const { return _device; }
-    inline bool                                    getBloomEnable() const { return _bloomEnable; }
     RenderStage *                                  getRenderstageByName(const String &name) const;
     bool                                           isOccluded(const scene::Camera *camera, const scene::SubModel *subModel);
     bool                                           getOcclusionQueryEnabled() const { return _occlusionQueryEnabled && _device->getCapabilities().supportQuery; }
@@ -112,6 +111,9 @@ public:
 
     inline bool getClusterEnabled() const { return _clusterEnabled; }
     inline void setClusterEnabled(bool enable) { _clusterEnabled = enable; }
+
+    inline bool getBloomEnabled() const { return _bloomEnabled; }
+    inline void setBloomEnabled(bool enable) { _bloomEnabled = enable; }
 
 protected:
     static RenderPipeline *instance;

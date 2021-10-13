@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include <vector>
 #include "math/Mat4.h"
 #include "math/Vec2.h"
 #include "math/Vec3.h"
@@ -121,9 +122,9 @@ struct PipelineSharedSceneData {
     gfx::Shader *        deferredLightPassShader{nullptr};
     Pass *               bloomPrefilterPass{nullptr};
     gfx::Shader *        bloomPrefilterPassShader{nullptr};
-    Pass *               bloomDownsamplePass{nullptr};
+    std::vector<Pass *> bloomDownsamplePass;
     gfx::Shader *        bloomDownsamplePassShader{nullptr};
-    Pass *               bloomUpsamplePass{nullptr};
+    std::vector<Pass *> bloomUpsamplePass;
     gfx::Shader *        bloomUpsamplePassShader{nullptr};
     Pass *               bloomCombinePass{nullptr};
     gfx::Shader *        bloomCombinePassShader{nullptr};
