@@ -40,12 +40,11 @@ public:
     CCVKQueryPool();
     ~CCVKQueryPool() override;
 
-    void queryGPUResults() override;
-
     inline CCVKGPUQueryPool *gpuQueryPool() const { return _gpuQueryPool; }
 
 protected:
     friend class CCVKCommandBuffer;
+    friend class CCVKDevice;
 
     void doInit(const QueryPoolInfo &info) override;
     void doDestroy() override;

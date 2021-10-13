@@ -36,8 +36,6 @@ public:
     explicit QueryPoolAgent(QueryPool *actor);
     ~QueryPoolAgent() override;
 
-    void queryGPUResults() override;
-
 protected:
     friend class DeviceAgent;
 

@@ -1779,7 +1779,7 @@ void cmdFuncGLES3Query(GLES3Device * /*device*/, GLES3QueryPool *queryPool, GLES
 
     switch (type) {
         case GLES3QueryType::BEGIN: {
-            auto   queryId   = static_cast<uint32_t>(queryPool->_ids.size());
+            auto   queryId   = queryPool->getIdCount();
             GLuint glQueryId = gpuQueryPool->mapGLQueryId(queryId);
             if (glQueryId != -1) {
                 GL_CHECK(glBeginQuery(GL_ANY_SAMPLES_PASSED, glQueryId));
@@ -1787,20 +1787,20 @@ void cmdFuncGLES3Query(GLES3Device * /*device*/, GLES3QueryPool *queryPool, GLES
             break;
         }
         case GLES3QueryType::END: {
-            auto   queryId   = static_cast<uint32_t>(queryPool->_ids.size());
+            auto   queryId   = queryPool->getIdCount();
             GLuint glQueryId = gpuQueryPool->mapGLQueryId(queryId);
             if (glQueryId != -1) {
                 GL_CHECK(glEndQuery(GL_ANY_SAMPLES_PASSED));
-                queryPool->_ids.push_back(id);
+                queryPool->addId(id);
             }
             break;
         }
         case GLES3QueryType::RESET: {
-            queryPool->_ids.clear();
+            queryPool->clearId();
             break;
         }
         case GLES3QueryType::GET_RESULTS: {
-            auto                  queryCount = static_cast<uint32_t>(queryPool->_ids.size());
+            auto                  queryCount = queryPool->getIdCount();
             std::vector<uint64_t> results(queryCount);
 
             for (auto queryId = 0U; queryId < queryCount; queryId++) {
@@ -1817,7 +1817,7 @@ void cmdFuncGLES3Query(GLES3Device * /*device*/, GLES3QueryPool *queryPool, GLES
 
             std::unordered_map<uint32_t, uint64_t> mapResults;
             for (auto queryId = 0U; queryId < queryCount; queryId++) {
-                uint32_t id   = queryPool->_ids[queryId];
+                uint32_t id   = queryPool->getId(queryId);
                 auto     iter = mapResults.find(id);
                 if (iter != mapResults.end()) {
                     iter->second += results[queryId];
@@ -1827,8 +1827,8 @@ void cmdFuncGLES3Query(GLES3Device * /*device*/, GLES3QueryPool *queryPool, GLES
             }
 
             {
-                std::lock_guard<std::mutex> lock(queryPool->_mutex);
-                queryPool->_results = std::move(mapResults);
+                std::lock_guard<std::mutex> lock(queryPool->getMutex());
+                queryPool->setResults(std::move(mapResults));
             }
             break;
         }

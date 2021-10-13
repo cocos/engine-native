@@ -126,6 +126,7 @@ protected:
 
     void copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint32_t count) override;
     void copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint32_t count) override;
+    void getQueryPoolResults(QueryPool *queryPool) override;
 
     void destroySwapchain();
     bool checkSwapchainStatus();

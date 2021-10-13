@@ -357,5 +357,22 @@ void DeviceAgent::flushCommands(CommandBuffer *const *cmdBuffs, uint32_t count) 
         });
 }
 
+void DeviceAgent::getQueryPoolResults(QueryPool *queryPool) {
+    QueryPool *actorQueryPool = static_cast<QueryPoolAgent *>(queryPool)->getActor();
+
+    ENQUEUE_MESSAGE_2(
+        _mainMessageQueue, DeviceGetQueryPoolResults,
+        actor, getActor(),
+        queryPool, actorQueryPool,
+        {
+            actor->getQueryPoolResults(queryPool);
+        });
+
+    QueryPoolAgent *            actorQueryPoolAgent = static_cast<QueryPoolAgent *>(actorQueryPool);
+    QueryPoolAgent *            queryPoolAgent      = static_cast<QueryPoolAgent *>(queryPool);
+    std::lock_guard<std::mutex> lock(actorQueryPoolAgent->_mutex);
+    queryPoolAgent->_results = actorQueryPoolAgent->_results;
+}
+
 } // namespace gfx
 } // namespace cc

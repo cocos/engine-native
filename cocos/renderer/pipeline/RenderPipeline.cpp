@@ -331,12 +331,12 @@ bool RenderPipeline::isOccluded(const scene::Camera *camera, const scene::SubMod
 
     // assume visible if no query in the last frame.
     uint32_t id = subModel->getId();
-    if (_queryPools[0]->_results.count(id) == 0) {
+    if (!_queryPools[0]->hasResult(id)) {
         return false;
     }
 
     // check query results.
-    return _queryPools[0]->_results[id] == 0;
+    return _queryPools[0]->getResult(id) == 0;
 }
 
 } // namespace pipeline

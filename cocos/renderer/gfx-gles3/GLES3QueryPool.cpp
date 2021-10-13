@@ -57,11 +57,5 @@ void GLES3QueryPool::doDestroy() {
     }
 }
 
-void GLES3QueryPool::queryGPUResults() {
-    GLES3Device* device  = GLES3Device::getInstance();
-    auto*        cmdBuff = static_cast<GLES3CommandBuffer*>(device->getCommandBuffer());
-    cmdBuff->queryGPUResults(this);
-}
-
 } // namespace gfx
 } // namespace cc

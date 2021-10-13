@@ -47,9 +47,5 @@ void GLES2QueryPool::doInit(const QueryPoolInfo& info) {
 void GLES2QueryPool::doDestroy() {
 }
 
-void GLES2QueryPool::queryGPUResults() {
-    // No occlusion query API for GLES2, just leave it empty.
-}
-
 } // namespace gfx
 } // namespace cc

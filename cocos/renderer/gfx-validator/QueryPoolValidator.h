@@ -36,8 +36,6 @@ public:
     explicit QueryPoolValidator(QueryPool *actor);
     ~QueryPoolValidator() override;
 
-    void queryGPUResults() override;
-
     inline bool isInited() const { return _inited; }
 
 protected:

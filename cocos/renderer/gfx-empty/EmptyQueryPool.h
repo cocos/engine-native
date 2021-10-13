@@ -31,9 +31,6 @@ namespace cc {
 namespace gfx {
 
 class CC_DLL EmptyQueryPool final : public QueryPool {
-public:
-    void queryGPUResults() override;
-
 protected:
     void doInit(const QueryPoolInfo &info) override;
     void doDestroy() override;

@@ -85,7 +85,7 @@ void ForwardPipeline::render(const vector<scene::Camera *> &cameras) {
     auto *device               = gfx::Device::getInstance();
     bool  enableOcclusionQuery = getOcclusionQueryEnabled();
     if (enableOcclusionQuery) {
-        _queryPools[0]->queryGPUResults();
+        device->getQueryPoolResults(_queryPools[0]);
     }
 
     _commandBuffers[0]->begin();

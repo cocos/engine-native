@@ -71,9 +71,9 @@ public:
 
 protected:
     friend class GLES3Queue;
-    friend class GLES3QueryPool;
+    friend class GLES3Device;
 
-    virtual void queryGPUResults(QueryPool *query);
+    virtual void getQueryPoolResults(QueryPool *query);
 
     void doInit(const CommandBufferInfo &info) override;
     void doDestroy() override;

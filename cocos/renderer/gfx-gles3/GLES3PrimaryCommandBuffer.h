@@ -57,7 +57,7 @@ protected:
     friend class GLES3Queue;
     friend class GLES3QueryPool;
 
-    void queryGPUResults(QueryPool *query) override;
+    void getQueryPoolResults(QueryPool *query) override;
 
     void bindStates() override;
 };

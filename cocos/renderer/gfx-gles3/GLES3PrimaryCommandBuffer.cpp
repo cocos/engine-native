@@ -167,7 +167,7 @@ void GLES3PrimaryCommandBuffer::resetQuery(QueryPool *queryPool) {
     cmdFuncGLES3Query(GLES3Device::getInstance(), gles3QueryPool, GLES3QueryType::RESET, 0);
 }
 
-void GLES3PrimaryCommandBuffer::queryGPUResults(QueryPool *queryPool) {
+void GLES3PrimaryCommandBuffer::getQueryPoolResults(QueryPool *queryPool) {
     auto *gles3QueryPool = static_cast<GLES3QueryPool *>(queryPool);
 
     cmdFuncGLES3Query(GLES3Device::getInstance(), gles3QueryPool, GLES3QueryType::GET_RESULTS, 0);

@@ -72,22 +72,5 @@ void QueryPoolAgent::doDestroy() {
         });
 }
 
-void QueryPoolAgent::queryGPUResults() {
-    MessageQueue *msgQ = DeviceAgent::getInstance()->getMessageQueue();
-
-    ENQUEUE_MESSAGE_1(
-        DeviceAgent::getInstance()->getMessageQueue(),
-        QueryQueryGPUResults,
-        actor, getActor(),
-        {
-            actor->queryGPUResults();
-        });
-
-    {
-        std::lock_guard<std::mutex> lock(_actor->_mutex);
-        _results = _actor->_results;
-    }
-}
-
 } // namespace gfx
 } // namespace cc

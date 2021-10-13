@@ -289,5 +289,16 @@ void DeviceValidator::flushCommands(CommandBuffer *const *cmdBuffs, uint32_t cou
     _actor->flushCommands(cmdBuffActors.data(), count);
 }
 
+void DeviceValidator::getQueryPoolResults(QueryPool* queryPool) {
+    auto *actorQueryPool = static_cast<QueryPoolValidator *>(queryPool)->getActor();
+
+    _actor->getQueryPoolResults(actorQueryPool);
+
+    auto *                      actorQueryPoolValidator = static_cast<QueryPoolValidator *>(actorQueryPool);
+    auto *                      queryPoolValidator      = static_cast<QueryPoolValidator *>(queryPool);
+    std::lock_guard<std::mutex> lock(actorQueryPoolValidator->_mutex);
+    queryPoolValidator->_results = actorQueryPoolValidator->_results;
+}
+
 } // namespace gfx
 } // namespace cc

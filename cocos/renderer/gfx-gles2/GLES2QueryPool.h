@@ -36,8 +36,6 @@ public:
     GLES2QueryPool();
     ~GLES2QueryPool() override;
 
-    void queryGPUResults() override;
-
 protected:
     friend class GLES2Device;
 

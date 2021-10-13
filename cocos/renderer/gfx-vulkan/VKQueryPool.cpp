@@ -57,41 +57,5 @@ void CCVKQueryPool::doDestroy() {
     }
 }
 
-void CCVKQueryPool::queryGPUResults() {
-    auto queryCount = static_cast<uint32_t>(_ids.size());
-    CCASSERT(queryCount <= _maxQueryObjects, "Too many query commands.");
-    std::vector<uint64_t> results(queryCount, 0ULL);
-
-    if (queryCount > 0U) {
-        CCVKDevice* device = CCVKDevice::getInstance();
-
-        VK_CHECK(vkGetQueryPoolResults(
-            device->gpuDevice()->vkDevice,
-            _gpuQueryPool->pool,
-            0,
-            queryCount,
-            queryCount * sizeof(uint64_t),
-            results.data(),
-            sizeof(uint64_t),
-            VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_WAIT_BIT));
-    }
-
-    std::unordered_map<uint32_t, uint64_t> mapResults;
-    for (auto queryId = 0U; queryId < queryCount; queryId++) {
-        uint32_t id   = _ids[queryId];
-        auto     iter = mapResults.find(id);
-        if (iter != mapResults.end()) {
-            iter->second += results[queryId];
-        } else {
-            mapResults[id] = results[queryId];
-        }
-    }
-
-    {
-        std::lock_guard<std::mutex> lock(_mutex);
-        _results = std::move(mapResults);
-    }
-}
-
 } // namespace gfx
 } // namespace cc

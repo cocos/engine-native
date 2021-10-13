@@ -37,7 +37,7 @@ namespace gfx {
  * QueryPool usage:
  * Update
  * Render
- *  queryGPUResults
+ *  getQueryPoolResults
  *  resetQuery
  *  for each renderObject
  *      beginQuery
@@ -53,19 +53,17 @@ public:
     void initialize(const QueryPoolInfo &info);
     void destroy();
 
+    bool             hasResult(uint32_t id) { return _results.count(id) != 0; }
+    uint64_t         getResult(uint32_t id) { return _results[id]; }
     inline QueryType getType() const { return _type; }
     inline uint32_t  getMaxQueryObjects() const { return _maxQueryObjects; }
-
-    virtual void queryGPUResults() = 0;
 
 protected:
     virtual void doInit(const QueryPoolInfo &info) = 0;
     virtual void doDestroy()                       = 0;
 
-    QueryType _type{QueryType::OCCLUSION};
-    uint32_t  _maxQueryObjects{0};
-
-public:
+    QueryType                              _type{QueryType::OCCLUSION};
+    uint32_t                               _maxQueryObjects{0};
     std::mutex                             _mutex;
     std::unordered_map<uint32_t, uint64_t> _results;
 };

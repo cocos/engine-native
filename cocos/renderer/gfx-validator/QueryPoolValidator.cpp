@@ -63,12 +63,5 @@ void QueryPoolValidator::doDestroy() {
     _actor->destroy();
 }
 
-void QueryPoolValidator::queryGPUResults() {
-    CCASSERT(isInited(), "already destroyed?");
-
-    _actor->queryGPUResults();
-    _results = _actor->_results;
-}
-
 } // namespace gfx
 } // namespace cc
