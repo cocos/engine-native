@@ -23,10 +23,12 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#include "RenderPipeline.h"
+#include <boost/functional/hash.hpp>
+
 #include "InstancedBuffer.h"
 #include "PipelineStateManager.h"
 #include "RenderFlow.h"
+#include "RenderPipeline.h"
 #include "gfx-base/GFXCommandBuffer.h"
 #include "gfx-base/GFXDescriptorSet.h"
 #include "gfx-base/GFXDescriptorSetLayout.h"
@@ -181,11 +183,8 @@ gfx::InputAssembler *RenderPipeline::getIAByRenderArea(const gfx::Rect &renderAr
         static_cast<float>(renderArea.height) / bufferHeight,
     };
 
-    uint32_t hash = 4;
-    hash ^= *reinterpret_cast<uint32_t *>(&viewport.x) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-    hash ^= *reinterpret_cast<uint32_t *>(&viewport.y) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-    hash ^= *reinterpret_cast<uint32_t *>(&viewport.z) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-    hash ^= *reinterpret_cast<uint32_t *>(&viewport.w) + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+    size_t hash = boost::hash_range(reinterpret_cast<const uint64_t *>(&viewport.x),
+                                    reinterpret_cast<const uint64_t *>(&viewport.x + 4));
 
     const auto iter = _quadIA.find(hash);
     if (iter != _quadIA.end()) {
