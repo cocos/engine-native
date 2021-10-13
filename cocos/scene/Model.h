@@ -73,7 +73,7 @@ public:
     inline void setEnabled(bool value) { _enabled = value; }
     inline void setInstMatWorldIdx(int32_t idx) { _instMatWorldIdx = idx; }
     inline void setLocalBuffer(gfx::Buffer *buffer) { _localBuffer = buffer; }
-    inline void setLocalWorldBoundBuffer(gfx::Buffer *buffer) { _localWorldBoundBuffer = buffer; }
+    inline void setWorldBoundBuffer(gfx::Buffer *buffer) { _worldBoundBuffer = buffer; }
     inline void setNode(Node *node) { _node = node; }
     inline void setReceiveShadow(bool value) { _receiveShadow = value; }
     inline void setTransform(Node *node) { _transform = node; }
@@ -99,7 +99,7 @@ public:
     inline uint8_t *                          getInstancedBuffer() const { return std::get<0>(_instancedBuffer); }
     inline uint32_t                           getInstancedBufferSize() const { return std::get<1>(_instancedBuffer); }
     inline gfx::Buffer *                      getLocalBuffer() const { return _localBuffer; }
-    inline gfx::Buffer *                      getLocalWorldBoundBuffer() const { return _localWorldBoundBuffer; }
+    inline gfx::Buffer *                      getWorldBoundBuffer() const { return _worldBoundBuffer; }
     inline float *                            getLocalData() const { return _localData; }
     inline const AABB &                       getModelBounds() const { return _modelBounds; }
     inline Node *                             getNode() const { return _node; }
@@ -135,7 +135,7 @@ private:
     float *                         _localData{nullptr};
     std::tuple<uint8_t *, uint32_t> _instancedBuffer{nullptr, 0};
     gfx::Buffer *                   _localBuffer{nullptr};
-    gfx::Buffer *                   _localWorldBoundBuffer{nullptr};
+    gfx::Buffer *                   _worldBoundBuffer{nullptr};
     InstancedAttributeBlock         _instanceAttributeBlock{};
     std::vector<SubModel *>         _subModels;
     std::vector<gfx::Attribute>     _instanceAttributes;

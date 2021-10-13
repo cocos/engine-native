@@ -285,11 +285,11 @@ struct CC_DLL UBOLocal {
     static const String                          NAME;
 };
 
-struct CC_DLL UBOLocalWorldBound {
+struct CC_DLL UBOWorldBound {
     static constexpr uint                        WORLD_BOUND_CENTER       = 0;
-    static constexpr uint                        WORLD_BOUND_HALF_EXTENTS = UBOLocalWorldBound::WORLD_BOUND_CENTER + 4;
-    static constexpr uint                        COUNT                    = UBOLocalWorldBound::WORLD_BOUND_HALF_EXTENTS + 4;
-    static constexpr uint                        SIZE                     = UBOLocalWorldBound::COUNT * 4;
+    static constexpr uint                        WORLD_BOUND_HALF_EXTENTS = UBOWorldBound::WORLD_BOUND_CENTER + 4;
+    static constexpr uint                        COUNT                    = UBOWorldBound::WORLD_BOUND_HALF_EXTENTS + 4;
+    static constexpr uint                        SIZE                     = UBOWorldBound::COUNT * 4;
     static constexpr uint                        BINDING                  = static_cast<uint>(ModelLocalBindings::UBO_LOCAL);
     static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
     static const gfx::UniformBlock               LAYOUT;

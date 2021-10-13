@@ -168,18 +168,18 @@ const gfx::UniformBlock UBOLocal::LAYOUT = {
     1,
 };
 
-const String                          UBOLocalWorldBound::NAME       = "CCLocalWorldBound";
-const gfx::DescriptorSetLayoutBinding UBOLocalWorldBound::DESCRIPTOR = {
-    UBOLocalWorldBound::BINDING,
+const String                          UBOWorldBound::NAME       = "CCWorldBound";
+const gfx::DescriptorSetLayoutBinding UBOWorldBound::DESCRIPTOR = {
+    UBOWorldBound::BINDING,
     gfx::DescriptorType::UNIFORM_BUFFER,
     1,
     gfx::ShaderStageFlagBit::VERTEX | gfx::ShaderStageFlagBit::COMPUTE,
     {},
 };
-const gfx::UniformBlock UBOLocalWorldBound::LAYOUT = {
+const gfx::UniformBlock UBOWorldBound::LAYOUT = {
     localSet,
-    UBOLocalWorldBound::BINDING,
-    UBOLocalWorldBound::NAME,
+    UBOWorldBound::BINDING,
+    UBOWorldBound::NAME,
     {
         {"cc_worldBoundCenter", gfx::Type::FLOAT4, 1},
         {"cc_worldBoundHalfExtents", gfx::Type::FLOAT4, 1},
