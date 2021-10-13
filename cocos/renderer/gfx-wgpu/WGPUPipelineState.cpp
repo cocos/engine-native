@@ -58,20 +58,26 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
         bool                             isInstance = attrs[0].isInstanced;
         uint8_t                          index      = 0;
         for (size_t i = 0; i < attrs.size(); i++) {
-            String   attrName   = attrs[i].name;
-            auto     iter       = std::find_if(_inputState.attributes.begin(), _inputState.attributes.end(), [attrName](const Attribute& attr) {
+            String attrName = attrs[i].name;
+            auto   iter     = std::find_if(_inputState.attributes.begin(), _inputState.attributes.end(), [attrName](const Attribute& attr) {
                 return strcmp(attrName.c_str(), attr.name.c_str()) == 0;
             });
-            uint64_t realOffset = iter != _inputState.attributes.end() ? offset : 0;
+
+            Format format = attrs[i].format;
+            uint64_t realOffset    = 0;
+            if (iter != _inputState.attributes.end()) {
+                realOffset = offset;
+                format     = (*iter).format;
+            }
 
             WGPUVertexAttribute attr = {
-                .format         = toWGPUVertexFormat(attrs[i].format),
+                .format         = toWGPUVertexFormat(format),
                 .offset         = realOffset,
                 .shaderLocation = attrs[i].location,
             };
             wgpuAttrs.push_back(attr);
             if (iter != _inputState.attributes.end())
-                offset += GFX_FORMAT_INFOS[static_cast<uint>(attrs[i].format)].size;
+                offset += GFX_FORMAT_INFOS[static_cast<uint>(format)].size;
         }
 
         WGPUVertexBufferLayout vertexBufferLayout = {

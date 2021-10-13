@@ -265,10 +265,10 @@ void CCWGPUCommandBuffer::bindStates() {
                                               descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
                                               descriptorSets[i].dynamicOffsetCount,
                                               descriptorSets[i].dynamicOffsets);
-            for (size_t j = 0; j < descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindGroupEntries.size(); j++) {
-                auto entry = descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindGroupEntries[j];
-                printf(" set, bd, b, t, s %d, %d, %p, %p, %p\n", i, entry.binding, entry.buffer, entry.textureView, entry.sampler);
-            }
+            // for (size_t j = 0; j < descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindGroupEntries.size(); j++) {
+            //     auto entry = descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindGroupEntries[j];
+            //     printf(" set, bd, b, t, s %d, %d, %p, %p, %p\n", i, entry.binding, entry.buffer, entry.textureView, entry.sampler);
+            // }
         }
 
         // missing

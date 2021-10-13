@@ -492,7 +492,7 @@ static WGPUVertexFormat toWGPUVertexFormat(Format format) {
         case Format::RGBA32I:
             return WGPUVertexFormat_Sint32x4;
         default:
-            CC_LOG_ERROR("unsupport vertex format.");
+            printf("usvf %d\n", format);
     }
 }
 
