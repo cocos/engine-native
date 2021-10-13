@@ -23,11 +23,13 @@
  THE SOFTWARE.
 ****************************************************************************/
 
+#include <memory>
+
 #include "ar/ARModule.h"
 
-#if CC_PLATFORM_ANDROID
+#if CC_PLATFORM == CC_PLATFORM_ANDROID
 #include "ar/android/ARCoreAPIImpl.h"
-#define ARAPIImpl ARCoreAPIImpl
+using ARAPIImpl = cc::ar::ARCoreAPIImpl;
 #endif
 
 #include  "bindings/jswrapper/SeApi.h"
@@ -36,8 +38,8 @@ namespace cc {
 namespace ar {
 
 ARModule::ARModule() {
-#if CC_PLATFORM_ANDROID
-    _impl.reset(new ARAPIImpl());
+#if CC_PLATFORM == CC_PLATFORM_ANDROID
+    _impl = std::make_unique<ARAPIImpl>();
     arModuleInstance.reset(this);
 #endif
 }

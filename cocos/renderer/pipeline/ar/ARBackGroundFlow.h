@@ -6,24 +6,23 @@ namespace cc {
 namespace pipeline {
 
 class ARBackGroundStage;
-struct Camera;
 
 class ARBackGroundFlow : public RenderFlow {
 public:
     static const RenderFlowInfo &getInitializeInfo();
 
     ARBackGroundFlow() = default;
-    virtual ~ARBackGroundFlow();
+    ~ARBackGroundFlow() override;
     
-    virtual bool initialize(const RenderFlowInfo &info) override;
-    virtual void activate(RenderPipeline *pipeline) override;
-    virtual void destroy() override;
-    virtual void render(scene::Camera *camera) override;
+    bool initialize(const RenderFlowInfo &info) override;
+    void activate(RenderPipeline *pipeline) override;
+    void destroy() override;
+    void render(scene::Camera *camera) override;
 
 private:
-    static RenderFlowInfo _initInfo;
+    static RenderFlowInfo initInfo;
 
-    ARBackGroundStage *_ARBackGroundStage = nullptr;
+    ARBackGroundStage *_arBackGroundStage = nullptr;
 };
 
 } // namespace pipeline

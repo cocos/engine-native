@@ -1,5 +1,6 @@
 #include "ARBackGroundStage.h"
 #include "../forward/ForwardPipeline.h"
+#include "GLES2/gl2.h"
 #include "pipeline/PipelineStateManager.h"
 #include "gfx-base/GFXCommandBuffer.h"
 #include "gfx-base/GFXDef.h"
@@ -15,35 +16,30 @@ namespace pipeline {
 //#define USE_ARMODULE 1
 
 // ARCore
-const auto vsAndroid = "attribute vec4 vPosition;\n attribute vec2 vCoord;\n uniform mat4 vMatrix;\n uniform mat4 vCoordMatrix;\n varying vec2 textureCoordinate;\n void main(){\n gl_Position = vMatrix*vPosition;\n textureCoordinate = (vCoordMatrix*vec4(vCoord,0,1)).xy;\n }";
+const auto VS_ANDROID = "attribute vec4 vPosition;\n attribute vec2 vCoord;\n uniform mat4 vMatrix;\n uniform mat4 vCoordMatrix;\n varying vec2 textureCoordinate;\n void main(){\n gl_Position = vMatrix*vPosition;\n textureCoordinate = (vCoordMatrix*vec4(vCoord,0,1)).xy;\n }";
 
 // AREngine Demo
-//const auto vsAndroid = "attribute vec4 vPosition;\n attribute vec2 vCoord;\n uniform mat4 vMatrix;\n uniform mat4 vCoordMatrix;\n varying vec2 textureCoordinate;\n void main(){\n gl_Position = vMatrix*vPosition;\n textureCoordinate = (vCoordMatrix*vec4(vCoord,0,1)).xy;\n textureCoordinate = vec2(textureCoordinate.x, 1.0-textureCoordinate.y);\n }";
+//const auto VS_ANDROID = "attribute vec4 vPosition;\n attribute vec2 vCoord;\n uniform mat4 vMatrix;\n uniform mat4 vCoordMatrix;\n varying vec2 textureCoordinate;\n void main(){\n gl_Position = vMatrix*vPosition;\n textureCoordinate = (vCoordMatrix*vec4(vCoord,0,1)).xy;\n textureCoordinate = vec2(textureCoordinate.x, 1.0-textureCoordinate.y);\n }";
 
-const auto fsAndroid = "#extension GL_OES_EGL_image_external:require\n precision mediump float;\n varying vec2 textureCoordinate;\n uniform samplerExternalOES vTexture;\n void main() {\n gl_FragColor = texture2D(vTexture, textureCoordinate);\n }";
+const auto FS_ANDROID = "#extension GL_OES_EGL_image_external:require\n precision mediump float;\n varying vec2 textureCoordinate;\n uniform samplerExternalOES vTexture;\n void main() {\n gl_FragColor = texture2D(vTexture, textureCoordinate);\n }";
 
-ARBackGroundStage::ARBackGroundStage() : RenderStage() {
-}
+ARBackGroundStage::~ARBackGroundStage() = default;
 
-ARBackGroundStage::~ARBackGroundStage() {
-}
-
-GLuint createShader(const GLenum type, const GLchar *source){
+GLuint createShader(const GLenum type, const GLchar *source) {
     const auto shader = glCreateShader(type);
-    glShaderSource(shader, 1, &source, NULL);
+    glShaderSource(shader, 1, &source, nullptr);
     glCompileShader(shader);
 
     GLint isCompiled = 0;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
-    if(isCompiled == GL_FALSE)
-    {
+    if(isCompiled == GL_FALSE) {
         CC_LOG_ERROR("compile shader error");
         glDeleteShader(shader);
-    }
-    else
-    {
+    } else {
         return shader;
     }
+
+    return -1;
 }
 
 GLuint createProgram(const GLuint vs, const GLuint fs){
@@ -61,9 +57,9 @@ GLuint createProgram(const GLuint vs, const GLuint fs){
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLen);
 
         if(infoLen > 1) {
-            GLchar* infoLog;
+            GLchar* infoLog = nullptr;
 
-            glGetProgramInfoLog(program, infoLen, NULL, infoLog);
+            glGetProgramInfoLog(program, infoLen, nullptr, infoLog);
             CC_LOG_ERROR("Error linking program:\n%s\n", infoLog);
 
             free(infoLog);
@@ -72,11 +68,13 @@ GLuint createProgram(const GLuint vs, const GLuint fs){
     } else {
         return program;
     }
+
+    return -1;
 }
 
 void ARBackGroundStage::initProgram(){
-    const auto vs = createShader(GL_VERTEX_SHADER, vsAndroid);
-    const auto fs = createShader(GL_FRAGMENT_SHADER, fsAndroid);
+    const auto vs = createShader(GL_VERTEX_SHADER, VS_ANDROID);
+    const auto fs = createShader(GL_FRAGMENT_SHADER, FS_ANDROID);
     _program = createProgram(vs, fs);
 }
 
@@ -101,12 +99,12 @@ void ARBackGroundStage::initBuffer(){
     glBindBuffer(GL_ARRAY_BUFFER, _positionBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(_vertices), _vertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(_positionIndex);
-    glVertexAttribPointer(_positionIndex, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(_positionIndex, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     glBindBuffer(GL_ARRAY_BUFFER, _texcoordBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(_uvs), _uvs, GL_STATIC_DRAW);
     glEnableVertexAttribArray(_texcoordIndex);
-    glVertexAttribPointer(_texcoordIndex, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(_texcoordIndex, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 }
 
 void ARBackGroundStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
@@ -127,22 +125,19 @@ void ARBackGroundStage::render(scene::Camera *camera) {
     // DEFAULT: 1073741824 0x40000000 (1 << 30)
     //*
     const scene::Node *camNode = camera->node;
-    const int flag = ((int)camNode->getLayer()) & 0x00800000;
+    const int flag = (static_cast<int>(camNode->getLayer())) & 0x00800000;
     if(flag == 0) return;
 
-//#if USE_ARMODULE
-    const auto armodule = cc::ar::ARModule::get();
+    auto *const armodule = cc::ar::ARModule::get();
     if(!armodule) return;
     if(!_setTexFlag) {
-        armodule->setCameraTextureName(_texture);
+        armodule->setCameraTextureName(static_cast<int>(_texture));
 
         _setTexFlag = true;
     }
-    const auto data = armodule->getCameraTexCoords();
-//#endif
-    
+    auto *const data = armodule->getCameraTexCoords();
 
-    glViewport(0, 0, camera->width, camera->height);
+    glViewport(0, 0, static_cast<GLsizei>(camera->width), static_cast<GLsizei>(camera->height));
     glClearColor(0.875, 0.875, 0.875, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glDepthMask(false);
@@ -160,19 +155,17 @@ void ARBackGroundStage::render(scene::Camera *camera) {
     glBindBuffer(GL_ARRAY_BUFFER, _positionBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(_vertices), _vertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(_positionIndex);
-    glVertexAttribPointer(_positionIndex, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(_positionIndex, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
     
-//#if USE_ARMODULE
     for (size_t i = 0; i < 8; i++)
     {
         _uvs[i] = data[i];
     }
-//#endif
 
     glBindBuffer(GL_ARRAY_BUFFER, _texcoordBuffer);
     glBufferData(GL_ARRAY_BUFFER, sizeof(_uvs), _uvs, GL_STATIC_DRAW);
     glEnableVertexAttribArray(_texcoordIndex);
-    glVertexAttribPointer(_texcoordIndex, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(_texcoordIndex, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
@@ -180,5 +173,5 @@ void ARBackGroundStage::render(scene::Camera *camera) {
     glEnable(GL_DEPTH_TEST);
 }
 
-}
-}
+}  // namespace pipeline
+}  // namespace cc

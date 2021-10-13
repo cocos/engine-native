@@ -10,21 +10,18 @@ namespace pipeline {
 
 class CC_DLL ARBackGroundStage : public RenderStage {
 public:
-    static const RenderStageInfo &getInitializeInfo();
+    //static const RenderStageInfo &getInitializeInfo();
 
-    ARBackGroundStage();
-    ~ARBackGroundStage();
+    ARBackGroundStage() = default;
+    ~ARBackGroundStage() override;
 
-    //virtual bool initialize(const RenderStageInfo &info) override;
-    virtual void activate(RenderPipeline* pipeline, RenderFlow *flow) override;
-    virtual void destroy() override;
-    virtual void render(scene::Camera *camera) override;
+    void activate(RenderPipeline* pipeline, RenderFlow *flow) override;
+    void destroy() override;
+    void render(scene::Camera *camera) override;
 
 protected:
-    static RenderStageInfo _initInfo;
+    //static RenderStageInfo initInfo;
     RenderPipeline *_pipeline = nullptr;
-
-    //gfx::GLES3Context *_renderContext = nullptr;
 
     GLuint _program;
     GLuint _texture;
@@ -65,5 +62,5 @@ private:
     void initBuffer();
 };
 
-}
-}
+}  // namespace pipeline
+}  // namespace cc

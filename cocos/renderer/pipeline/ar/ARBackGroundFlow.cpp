@@ -5,26 +5,29 @@
 
 namespace cc {
 namespace pipeline {
-RenderFlowInfo ARBackGroundFlow::_initInfo = {
+RenderFlowInfo ARBackGroundFlow::initInfo = {
     "ARBackGroundFlow",
     static_cast<uint>(ForwardFlowPriority::FORWARD) - 100,
     static_cast<uint>(RenderFlowTag::SCENE),
     {},
 };
-const RenderFlowInfo &ARBackGroundFlow::getInitializeInfo() { return ARBackGroundFlow::_initInfo; }
+const RenderFlowInfo &ARBackGroundFlow::getInitializeInfo() { return ARBackGroundFlow::initInfo; }
 
-ARBackGroundFlow::~ARBackGroundFlow() {
-}
+ARBackGroundFlow::~ARBackGroundFlow() = default;
 
 bool ARBackGroundFlow::initialize(const RenderFlowInfo &info) {
+#if USE_AR_MODULE
     RenderFlow::initialize(info);
 
     if (_stages.empty()) {
-        auto arStage = CC_NEW(ARBackGroundStage);
+        auto *arStage = CC_NEW(ARBackGroundStage);
         _stages.emplace_back(arStage);
     }
 
     return true;
+#else
+    return false;
+#endif
 }
 
 void ARBackGroundFlow::activate(RenderPipeline *pipeline) {

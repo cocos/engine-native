@@ -39,10 +39,7 @@
 #include "scene/RenderScene.h"
 
 // ARModule ADD, need remove after modify
-#include "cocos/base/Config.h"
-#if CC_PLATFORM_ANDROID && USE_AR_Module
 #include "../ar/ARBackGroundFlow.h"
-#endif
 
 namespace cc {
 namespace pipeline {
@@ -115,13 +112,12 @@ bool ForwardPipeline::initialize(const RenderPipelineInfo &info) {
 
 bool ForwardPipeline::activate() {
     // ARModule ADD, need remove after modify
-    #if CC_PLATFORM_ANDROID && USE_AR_Module
-    auto arFlow = CC_NEW(ARBackGroundFlow);
-    arFlow->initialize(ARBackGroundFlow::getInitializeInfo());
-    _flows.emplace_back(arFlow);
-    CC_LOG_DEBUG("ARBackGroundFlow init!");
-    #endif
-    
+    auto *arFlow = CC_NEW(ARBackGroundFlow);
+    if(arFlow->initialize(ARBackGroundFlow::getInitializeInfo())) {
+        _flows.emplace_back(arFlow);
+        CC_LOG_DEBUG("ARBackGroundFlow init!");
+    }
+
     if (!RenderPipeline::activate()) {
         CC_LOG_ERROR("RenderPipeline active failed.");
         return false;
