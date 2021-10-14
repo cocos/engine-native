@@ -40,25 +40,26 @@
 #include "gfx-base/states/GFXSampler.h"
 #include "pipeline/Define.h"
 #include "scene/SubModel.h"
+#include "scene/RenderScene.h"
 
 namespace cc {
 namespace pipeline {
 namespace {
-const String STAGE_NAME = "BloomStage";
+const String BLOOM_STAGE_NAME = "BloomStage";
 
 framegraph::StringHandle prefilterTexHandle = framegraph::FrameGraph::stringToHandle("prefilterTex");
-framegraph::StringHandle downsampleTexHandles[BloomStage::MAX_SCALING_SAMPLE_PASS_NUM];
-framegraph::StringHandle upsampleTexHandles[BloomStage::MAX_SCALING_SAMPLE_PASS_NUM];
+framegraph::StringHandle downsampleTexHandles[MAX_BLOOM_FILTER_PASS_NUM];
+framegraph::StringHandle upsampleTexHandles[MAX_BLOOM_FILTER_PASS_NUM];
 framegraph::StringHandle prefilterPassHandle;
-framegraph::StringHandle downsamplePassHandles[BloomStage::MAX_SCALING_SAMPLE_PASS_NUM];
-framegraph::StringHandle upsamplePassHandles[BloomStage::MAX_SCALING_SAMPLE_PASS_NUM];
+framegraph::StringHandle downsamplePassHandles[MAX_BLOOM_FILTER_PASS_NUM];
+framegraph::StringHandle upsamplePassHandles[MAX_BLOOM_FILTER_PASS_NUM];
 framegraph::StringHandle combinePassHandle;
 
 void initStrHandle() {
     prefilterPassHandle = framegraph::FrameGraph::stringToHandle("bloomPrefilterPass");
 
     std::string tmp;
-    for (int i = 0; i < BloomStage::MAX_SCALING_SAMPLE_PASS_NUM; ++i) {
+    for (int i = 0; i < MAX_BLOOM_FILTER_PASS_NUM; ++i) {
         tmp                      = std::string("bloomDownsamplePass") + std::to_string(i);
         downsamplePassHandles[i] = framegraph::FrameGraph::stringToHandle(tmp.c_str());
 
@@ -77,7 +78,7 @@ void initStrHandle() {
 } // namespace
 
 RenderStageInfo BloomStage::initInfo = {
-    STAGE_NAME,
+    BLOOM_STAGE_NAME,
     static_cast<uint>(DeferredStagePriority::BLOOM),
     0,
     {{true, RenderQueueSortMode::BACK_TO_FRONT, {"default"}}},
@@ -95,14 +96,15 @@ bool BloomStage::initialize(const RenderStageInfo &info) {
 
 void BloomStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
     RenderStage::activate(pipeline, flow);
-    if (!_pipeline->getBloomEnable()) return;
+    if (!_pipeline->getBloomEnabled()) return;
 
     _phaseID = getPhaseID("default");
 
-    for (int i = 0; i < BloomStage::MAX_SCALING_SAMPLE_PASS_NUM; ++i) {
+    _prefilterUBO = _device->createBuffer({gfx::BufferUsage::UNIFORM, gfx::MemoryUsage::DEVICE | gfx::MemoryUsage::HOST, UBOBloom::SIZE});
+    _combineUBO   = _device->createBuffer({gfx::BufferUsage::UNIFORM, gfx::MemoryUsage::DEVICE | gfx::MemoryUsage::HOST, UBOBloom::SIZE});
+    for (int i = 0; i < MAX_BLOOM_FILTER_PASS_NUM; ++i) {
         _downsampleUBO[i] = _device->createBuffer({gfx::BufferUsage::UNIFORM, gfx::MemoryUsage::DEVICE | gfx::MemoryUsage::HOST, UBOBloom::SIZE});
-
-        _upsampleUBO[i] = _device->createBuffer({gfx::BufferUsage::UNIFORM, gfx::MemoryUsage::DEVICE | gfx::MemoryUsage::HOST, UBOBloom::SIZE});
+        _upsampleUBO[i]   = _device->createBuffer({gfx::BufferUsage::UNIFORM, gfx::MemoryUsage::DEVICE | gfx::MemoryUsage::HOST, UBOBloom::SIZE});
     }
 
     gfx::SamplerInfo info{
@@ -117,27 +119,19 @@ void BloomStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
 }
 
 void BloomStage::destroy() {
-    for (int i = 0; i < BloomStage::MAX_SCALING_SAMPLE_PASS_NUM; ++i) {
+    CC_SAFE_DELETE(_prefilterUBO);
+    CC_SAFE_DELETE(_combineUBO);
+    for (int i = 0; i < MAX_BLOOM_FILTER_PASS_NUM; ++i) {
         CC_SAFE_DELETE(_downsampleUBO[i]);
 
         CC_SAFE_DELETE(_upsampleUBO[i]);
     }
 }
 
-int calcScalingFilterPassNum() {
-    /*
-     * The down/upsample pass number should be calculated using the data passed by user
-     * through the camera, but for now we always return 2.
-     */
-    return 2;
-}
-
 void BloomStage::render(scene::Camera *camera) {
     auto *pipeline = _pipeline;
-    if (!pipeline->getBloomEnable()) return;
-
-    int scalingSampleNum = calcScalingFilterPassNum();
     CC_ASSERT(pipeline != nullptr);
+    if (!pipeline->getBloomEnabled() || !camera->scene->getDrawBatch2Ds().empty()) return;
 
     if (hasFlag(static_cast<gfx::ClearFlags>(camera->clearFlag), gfx::ClearFlagBit::COLOR)) {
         _clearColors[0].x = camera->clearColor.x;
@@ -159,13 +153,21 @@ void BloomStage::render(scene::Camera *camera) {
         framegraph::TextureHandle inputTexHandle;
         framegraph::TextureHandle outputTexHandle;
         gfx::Sampler *            sampler;
+        gfx::Buffer *             bloomUBO;
+        float                     textureSize[4];
     };
+
+    auto *stage = static_cast<BloomStage *>(pipeline->getRenderstageByName(BLOOM_STAGE_NAME));
+    CC_ASSERT(stage != nullptr);
+    int   iterations = stage->getIterations();
+    float intensity  = stage->getIntensity();
+    float threshold  = stage->getThreshold();
 
     auto renderArea = pipeline->getRenderArea(camera);
     renderArea.width >>= 1;
     renderArea.height >>= 1;
-
-    auto prefilterSetup = [&](framegraph::PassNodeBuilder &builder, PrefilterRenderData &data) {
+    float shadingScale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
+    auto  prefilterSetup = [&](framegraph::PassNodeBuilder &builder, PrefilterRenderData &data) {
         data.sampler = _sampler;
         // read lightingout as input
         data.inputTexHandle = framegraph::TextureHandle(
@@ -174,10 +176,10 @@ void BloomStage::render(scene::Camera *camera) {
             framegraph::Texture::Descriptor colorTexInfo;
             colorTexInfo.format = gfx::Format::RGBA16F;
             colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
-            colorTexInfo.width  = pipeline->getWidth();
-            colorTexInfo.height = pipeline->getHeight();
+            colorTexInfo.width  = static_cast<uint>(pipeline->getWidth() * shadingScale);
+            colorTexInfo.height = static_cast<uint>(pipeline->getHeight() * shadingScale);
 
-            data.inputTexHandle = builder.create<framegraph::Texture>(
+            data.inputTexHandle = builder.create(
                 RenderPipeline::fgStrHandleOutColorTexture, colorTexInfo);
         }
 
@@ -190,20 +192,22 @@ void BloomStage::render(scene::Camera *camera) {
             framegraph::Texture::Descriptor colorTexInfo;
             colorTexInfo.format = gfx::Format::RGBA16F;
             colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
-            colorTexInfo.width  = renderArea.width;
-            colorTexInfo.height = renderArea.height;
+            colorTexInfo.width  = static_cast<uint>(renderArea.width * shadingScale);
+            colorTexInfo.height = static_cast<uint>(renderArea.height * shadingScale);
 
-            data.outputTexHandle = builder.create<framegraph::Texture>(prefilterTexHandle, colorTexInfo);
+            data.outputTexHandle = builder.create(prefilterTexHandle, colorTexInfo);
         }
         data.outputTexHandle = builder.write(data.outputTexHandle, colorAttachmentInfo);
         builder.writeToBlackboard(prefilterTexHandle, data.outputTexHandle);
 
-        gfx::Viewport viewport{renderArea.x, renderArea.y, renderArea.width, renderArea.height, 0.F, 1.F};
-        builder.setViewport(viewport, renderArea);
+        builder.setViewport(pipeline->getViewport(camera), renderArea);
+
+        // Update threshold
+        data.bloomUBO       = stage->getPrefilterUBO();
+        data.textureSize[2] = threshold;
     };
 
     auto prefilterExec = [this, camera](PrefilterRenderData const &data, const framegraph::DevicePassResourceTable &table) {
-        //auto *           pipeline   = static_cast<DeferredPipeline *>(RenderPipeline::getInstance());
         auto *           pipeline   = _pipeline;
         gfx::RenderPass *renderPass = table.getRenderPass();
 
@@ -220,8 +224,11 @@ void BloomStage::render(scene::Camera *camera) {
             pass, shader, inputAssembler, renderPass);
         CC_ASSERT(pso != nullptr);
 
-        pass->getDescriptorSet()->bindTexture(0, table.getRead(data.inputTexHandle));
-        pass->getDescriptorSet()->bindSampler(0, data.sampler);
+        data.bloomUBO->update(data.textureSize, sizeof(data.textureSize));
+
+        pass->getDescriptorSet()->bindBuffer(0, data.bloomUBO);
+        pass->getDescriptorSet()->bindTexture(1, table.getRead(data.inputTexHandle));
+        pass->getDescriptorSet()->bindSampler(1, data.sampler);
         pass->getDescriptorSet()->update();
 
         cmdBf->bindDescriptorSet(materialSet, pass->getDescriptorSet());
@@ -241,7 +248,7 @@ void BloomStage::render(scene::Camera *camera) {
         int                       index;
     };
     // downsample pass
-    for (int i = 0; i < scalingSampleNum; ++i) {
+    for (int i = 0; i < iterations; ++i) {
         renderArea.width >>= 1;
         renderArea.height >>= 1;
 
@@ -266,23 +273,20 @@ void BloomStage::render(scene::Camera *camera) {
                 framegraph::Texture::Descriptor colorTexInfo;
                 colorTexInfo.format = gfx::Format::RGBA16F;
                 colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
-                colorTexInfo.width  = renderArea.width;
-                colorTexInfo.height = renderArea.height;
+                colorTexInfo.width  = static_cast<uint>(renderArea.width * shadingScale);
+                colorTexInfo.height = static_cast<uint>(renderArea.height * shadingScale);
 
-                data.outputTexHandle = builder.create<framegraph::Texture>(downsampleTexHandles[data.index], colorTexInfo);
+                data.outputTexHandle = builder.create(downsampleTexHandles[data.index], colorTexInfo);
             }
             data.outputTexHandle = builder.write(data.outputTexHandle, colorAttachmentInfo);
             builder.writeToBlackboard(downsampleTexHandles[data.index], data.outputTexHandle);
 
-            gfx::Viewport viewport{renderArea.x, renderArea.y, renderArea.width, renderArea.height, 0.F, 1.F};
-            builder.setViewport(viewport, renderArea);
+            builder.setViewport(pipeline->getViewport(camera), renderArea);
 
             // Update cc_textureSize
-            auto *stage = static_cast<BloomStage *>(pipeline->getRenderstageByName(STAGE_NAME));
-            CC_ASSERT(stage != nullptr);
             data.bloomUBO       = stage->getDownsampelUBO()[data.index];
-            data.textureSize[0] = static_cast<float>(renderArea.width << 1);
-            data.textureSize[1] = static_cast<float>(renderArea.height << 1);
+            data.textureSize[0] = static_cast<float>(static_cast<uint>(renderArea.width * shadingScale) << 1);
+            data.textureSize[1] = static_cast<float>(static_cast<uint>(renderArea.height * shadingScale) << 1);
         };
 
         auto downsampleExec = [this, camera](ScalingSampleRenderData const &data, const framegraph::DevicePassResourceTable &table) {
@@ -294,7 +298,7 @@ void BloomStage::render(scene::Camera *camera) {
             cmdBf->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), utils::toUint(globalOffsets.size()), globalOffsets.data());
 
             auto *const          sharedData     = pipeline->getPipelineSceneData()->getSharedData();
-            scene::Pass *        pass           = sharedData->bloomDownsamplePass;
+            scene::Pass *        pass           = sharedData->bloomDownsamplePass[data.index];
             gfx::Shader *        shader         = sharedData->bloomDownsamplePassShader;
             auto                 rendeArea      = pipeline->getRenderArea(camera);
             gfx::InputAssembler *inputAssembler = pipeline->getIAByRenderArea(rendeArea);
@@ -319,7 +323,7 @@ void BloomStage::render(scene::Camera *camera) {
     }
 
     // upsample pass
-    for (int i = 0; i < scalingSampleNum; ++i) {
+    for (int i = 0; i < iterations; ++i) {
         renderArea.width <<= 1;
         renderArea.height <<= 1;
 
@@ -329,8 +333,8 @@ void BloomStage::render(scene::Camera *camera) {
             // read from last downsample texture or last upsample texture
             if (data.index == 0) {
                 data.inputTexHandle = builder.read(framegraph::TextureHandle(
-                    builder.readFromBlackboard(downsampleTexHandles[scalingSampleNum - 1])));
-                builder.writeToBlackboard(downsampleTexHandles[scalingSampleNum - 1], data.inputTexHandle);
+                    builder.readFromBlackboard(downsampleTexHandles[iterations - 1])));
+                builder.writeToBlackboard(downsampleTexHandles[iterations - 1], data.inputTexHandle);
             } else {
                 data.inputTexHandle = builder.read(framegraph::TextureHandle(
                     builder.readFromBlackboard(upsampleTexHandles[data.index - 1])));
@@ -344,24 +348,21 @@ void BloomStage::render(scene::Camera *camera) {
                 framegraph::Texture::Descriptor colorTexInfo;
                 colorTexInfo.format = gfx::Format::RGBA16F;
                 colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
-                colorTexInfo.width  = renderArea.width;
-                colorTexInfo.height = renderArea.height;
+                colorTexInfo.width  = static_cast<uint>(renderArea.width * shadingScale);
+                colorTexInfo.height = static_cast<uint>(renderArea.height * shadingScale);
 
-                data.outputTexHandle = builder.create<framegraph::Texture>(
+                data.outputTexHandle = builder.create(
                     upsampleTexHandles[data.index], colorTexInfo);
             }
             data.outputTexHandle = builder.write(data.outputTexHandle, colorAttachmentInfo);
             builder.writeToBlackboard(upsampleTexHandles[data.index], data.outputTexHandle);
 
-            gfx::Viewport viewport{renderArea.x, renderArea.y, renderArea.width, renderArea.height, 0.F, 1.F};
-            builder.setViewport(viewport, renderArea);
+            builder.setViewport(pipeline->getViewport(camera), renderArea);
 
             // Update cc_textureSize
-            auto *stage = static_cast<BloomStage *>(pipeline->getRenderstageByName(STAGE_NAME));
-            CC_ASSERT(stage != nullptr);
             data.bloomUBO       = stage->getUpsampleUBO()[data.index];
-            data.textureSize[0] = static_cast<float>(renderArea.width >> 1);
-            data.textureSize[1] = static_cast<float>(renderArea.height >> 1);
+            data.textureSize[0] = static_cast<float>(static_cast<uint>(renderArea.width * shadingScale) >> 1);
+            data.textureSize[1] = static_cast<float>(static_cast<uint>(renderArea.height * shadingScale) >> 1);
         };
 
         auto upsampleExec = [this, camera](ScalingSampleRenderData const &data, const framegraph::DevicePassResourceTable &table) {
@@ -373,7 +374,7 @@ void BloomStage::render(scene::Camera *camera) {
             cmdBf->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), utils::toUint(globalOffsets.size()), globalOffsets.data());
 
             auto *const          sharedData     = pipeline->getPipelineSceneData()->getSharedData();
-            scene::Pass *        pass           = sharedData->bloomUpsamplePass;
+            scene::Pass *        pass           = sharedData->bloomUpsamplePass[data.index];
             gfx::Shader *        shader         = sharedData->bloomUpsamplePassShader;
             auto                 rendeArea      = pipeline->getRenderArea(camera);
             gfx::InputAssembler *inputAssembler = pipeline->getIAByRenderArea(rendeArea);
@@ -403,6 +404,8 @@ void BloomStage::render(scene::Camera *camera) {
         framegraph::TextureHandle upsampleTexHandle;
         framegraph::TextureHandle bloomOutTexHandle;
         gfx::Sampler *            sampler;
+        gfx::Buffer *             bloomUBO;
+        float                     textureSize[4];
     };
 
     renderArea.width <<= 1;
@@ -417,8 +420,8 @@ void BloomStage::render(scene::Camera *camera) {
         builder.writeToBlackboard(RenderPipeline::fgStrHandleOutColorTexture, data.lightingOutTexHandle);
 
         data.upsampleTexHandle = builder.read(framegraph::TextureHandle(
-            builder.readFromBlackboard(upsampleTexHandles[scalingSampleNum - 1])));
-        builder.writeToBlackboard(upsampleTexHandles[scalingSampleNum - 1], data.upsampleTexHandle);
+            builder.readFromBlackboard(upsampleTexHandles[iterations - 1])));
+        builder.writeToBlackboard(upsampleTexHandles[iterations - 1], data.upsampleTexHandle);
 
         // write to bloomOut texture
         data.bloomOutTexHandle = framegraph::TextureHandle(
@@ -427,17 +430,20 @@ void BloomStage::render(scene::Camera *camera) {
             framegraph::Texture::Descriptor colorTexInfo;
             colorTexInfo.format = gfx::Format::RGBA16F;
             colorTexInfo.usage  = gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED;
-            colorTexInfo.width  = renderArea.width;
-            colorTexInfo.height = renderArea.height;
+            colorTexInfo.width  = static_cast<uint>(renderArea.width * shadingScale);
+            colorTexInfo.height = static_cast<uint>(renderArea.height * shadingScale);
 
-            data.bloomOutTexHandle = builder.create<framegraph::Texture>(
+            data.bloomOutTexHandle = builder.create(
                 RenderPipeline::fgStrHandleBloomOutTexture, colorTexInfo);
         }
         data.bloomOutTexHandle = builder.write(data.bloomOutTexHandle, colorAttachmentInfo);
         builder.writeToBlackboard(RenderPipeline::fgStrHandleBloomOutTexture, data.bloomOutTexHandle);
 
-        gfx::Viewport viewport{renderArea.x, renderArea.y, renderArea.width, renderArea.height, 0.F, 1.F};
-        builder.setViewport(viewport, renderArea);
+        builder.setViewport(pipeline->getViewport(camera), renderArea);
+
+        // Update intensity
+        data.bloomUBO       = stage->getCombineUBO();
+        data.textureSize[3] = intensity;
     };
 
     auto combineExec = [this, camera](CombineRenderData const &data, const framegraph::DevicePassResourceTable &table) {
@@ -457,10 +463,13 @@ void BloomStage::render(scene::Camera *camera) {
             pass, shader, inputAssembler, renderPass);
         CC_ASSERT(pso != nullptr);
 
-        pass->getDescriptorSet()->bindTexture(0, table.getRead(data.lightingOutTexHandle));
-        pass->getDescriptorSet()->bindTexture(1, table.getRead(data.upsampleTexHandle));
-        pass->getDescriptorSet()->bindSampler(0, data.sampler);
+        data.bloomUBO->update(data.textureSize, sizeof(data.textureSize));
+
+        pass->getDescriptorSet()->bindBuffer(0, data.bloomUBO);
+        pass->getDescriptorSet()->bindTexture(1, table.getRead(data.lightingOutTexHandle));
+        pass->getDescriptorSet()->bindTexture(2, table.getRead(data.upsampleTexHandle));
         pass->getDescriptorSet()->bindSampler(1, data.sampler);
+        pass->getDescriptorSet()->bindSampler(2, data.sampler);
         pass->getDescriptorSet()->update();
 
         cmdBf->bindDescriptorSet(materialSet, pass->getDescriptorSet());

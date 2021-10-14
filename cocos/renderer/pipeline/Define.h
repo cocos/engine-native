@@ -132,8 +132,8 @@ struct CC_DLL InternalBindingInst : public InternalBindingDesc {
 };
 
 struct CC_DLL RenderQueueCreateInfo {
-    bool                                                          isTransparent = false;
-    uint                                                          phases        = 0;
+    bool                                                          isTransparent     = false;
+    uint                                                          phases            = 0;
     std::function<bool(const RenderPass &a, const RenderPass &b)> sortFunc;
 };
 
@@ -151,8 +151,8 @@ enum class CC_DLL RenderQueueSortMode {
 CC_ENUM_CONVERSION_OPERATOR(RenderQueueSortMode)
 
 struct CC_DLL RenderQueueDesc {
-    bool                isTransparent = false;
-    RenderQueueSortMode sortMode      = RenderQueueSortMode::FRONT_TO_BACK;
+    bool                isTransparent     = false;
+    RenderQueueSortMode sortMode          = RenderQueueSortMode::FRONT_TO_BACK;
     StringArray         stages;
 };
 using RenderQueueDescList = std::vector<RenderQueueDesc>;
@@ -216,6 +216,7 @@ enum class CC_DLL PipelineGlobalBindings {
     SAMPLER_SHADOWMAP,
     SAMPLER_ENVIRONMENT,
     SAMPLER_SPOT_LIGHTING_MAP,
+    SAMPLER_DIFFUSEMAP,
 
     COUNT,
 };
@@ -279,6 +280,17 @@ struct CC_DLL UBOLocal {
     static constexpr uint                        COUNT               = UBOLocal::LIGHTINGMAP_UVPARAM + 4;
     static constexpr uint                        SIZE                = UBOLocal::COUNT * 4;
     static constexpr uint                        BINDING             = static_cast<uint>(ModelLocalBindings::UBO_LOCAL);
+    static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
+    static const gfx::UniformBlock               LAYOUT;
+    static const String                          NAME;
+};
+
+struct CC_DLL UBOWorldBound {
+    static constexpr uint                        WORLD_BOUND_CENTER       = 0;
+    static constexpr uint                        WORLD_BOUND_HALF_EXTENTS = UBOWorldBound::WORLD_BOUND_CENTER + 4;
+    static constexpr uint                        COUNT                    = UBOWorldBound::WORLD_BOUND_HALF_EXTENTS + 4;
+    static constexpr uint                        SIZE                     = UBOWorldBound::COUNT * 4;
+    static constexpr uint                        BINDING                  = static_cast<uint>(ModelLocalBindings::UBO_LOCAL);
     static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
     static const gfx::UniformBlock               LAYOUT;
     static const String                          NAME;
@@ -498,6 +510,13 @@ struct CC_DLL ENVIRONMENT : public Object {
 
 struct CC_DLL SPOTLIGHTINGMAP : public Object {
     static constexpr uint                        BINDING = static_cast<uint>(PipelineGlobalBindings::SAMPLER_SPOT_LIGHTING_MAP);
+    static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
+    static const gfx::UniformSamplerTexture      LAYOUT;
+    static const String                          NAME;
+};
+
+struct CC_DLL DIFFUSEMAP : public Object {
+    static constexpr uint                        BINDING = static_cast<uint>(PipelineGlobalBindings::SAMPLER_DIFFUSEMAP);
     static const gfx::DescriptorSetLayoutBinding DESCRIPTOR;
     static const gfx::UniformSamplerTexture      LAYOUT;
     static const String                          NAME;

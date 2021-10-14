@@ -167,12 +167,16 @@ void GlobalDSManager::setDescriptorSetLayout() {
     globalDescriptorSetLayout.bindings[ENVIRONMENT::BINDING]     = ENVIRONMENT::DESCRIPTOR;
     globalDescriptorSetLayout.samplers[SPOTLIGHTINGMAP::NAME]    = SPOTLIGHTINGMAP::LAYOUT;
     globalDescriptorSetLayout.bindings[SPOTLIGHTINGMAP::BINDING] = SPOTLIGHTINGMAP::DESCRIPTOR;
+    globalDescriptorSetLayout.samplers[DIFFUSEMAP::NAME]         = DIFFUSEMAP::LAYOUT;
+    globalDescriptorSetLayout.bindings[DIFFUSEMAP::BINDING]      = DIFFUSEMAP::DESCRIPTOR;
 
     localDescriptorSetLayout.bindings.resize(static_cast<size_t>(ModelLocalBindings::COUNT));
     localDescriptorSetLayout.blocks[UBOLocalBatched::NAME]           = UBOLocalBatched::LAYOUT;
     localDescriptorSetLayout.bindings[UBOLocalBatched::BINDING]      = UBOLocalBatched::DESCRIPTOR;
     localDescriptorSetLayout.blocks[UBOLocal::NAME]                  = UBOLocal::LAYOUT;
     localDescriptorSetLayout.bindings[UBOLocal::BINDING]             = UBOLocal::DESCRIPTOR;
+    localDescriptorSetLayout.blocks[UBOWorldBound::NAME]        = UBOWorldBound::LAYOUT;
+    localDescriptorSetLayout.bindings[UBOWorldBound::BINDING]   = UBOWorldBound::DESCRIPTOR;
     localDescriptorSetLayout.blocks[UBOForwardLight::NAME]           = UBOForwardLight::LAYOUT;
     localDescriptorSetLayout.bindings[UBOForwardLight::BINDING]      = UBOForwardLight::DESCRIPTOR;
     localDescriptorSetLayout.blocks[UBOSkinningTexture::NAME]        = UBOSkinningTexture::LAYOUT;

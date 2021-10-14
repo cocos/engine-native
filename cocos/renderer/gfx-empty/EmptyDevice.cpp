@@ -34,6 +34,7 @@
 #include "EmptyInputAssembler.h"
 #include "EmptyPipelineLayout.h"
 #include "EmptyPipelineState.h"
+#include "EmptyQueryPool.h"
 #include "EmptyQueue.h"
 #include "EmptyRenderPass.h"
 #include "EmptyShader.h"
@@ -62,6 +63,9 @@ bool EmptyDevice::doInit(const DeviceInfo & /*info*/) {
     queueInfo.type = QueueType::GRAPHICS;
     _queue         = createQueue(queueInfo);
 
+    QueryPoolInfo queryPoolInfo{QueryType::OCCLUSION, DEFAULT_MAX_QUERY_OBJECTS};
+    _queryPool = createQueryPool(queryPoolInfo);
+
     CommandBufferInfo cmdBuffInfo;
     cmdBuffInfo.type  = CommandBufferType::PRIMARY;
     cmdBuffInfo.queue = _queue;
@@ -74,6 +78,7 @@ bool EmptyDevice::doInit(const DeviceInfo & /*info*/) {
 
 void EmptyDevice::doDestroy() {
     CC_SAFE_DESTROY(_cmdBuff);
+    CC_SAFE_DESTROY(_queryPool);
     CC_SAFE_DESTROY(_queue);
 }
 
@@ -90,6 +95,10 @@ CommandBuffer *EmptyDevice::createCommandBuffer(const CommandBufferInfo & /*info
 
 Queue *EmptyDevice::createQueue() {
     return CC_NEW(EmptyQueue());
+}
+
+QueryPool *EmptyDevice::createQueryPool() {
+    return CC_NEW(EmptyQueryPool());
 }
 
 Swapchain *EmptyDevice::createSwapchain() {
@@ -136,15 +145,15 @@ PipelineState *EmptyDevice::createPipelineState() {
     return CC_NEW(EmptyPipelineState());
 }
 
-Sampler *EmptyDevice::createSampler(const SamplerInfo &info, uint32_t hash) {
+Sampler *EmptyDevice::createSampler(const SamplerInfo &info, size_t hash) {
     return CC_NEW(Sampler(info, hash));
 }
 
-GlobalBarrier *EmptyDevice::createGlobalBarrier(const GlobalBarrierInfo &info, uint32_t hash) {
+GlobalBarrier *EmptyDevice::createGlobalBarrier(const GlobalBarrierInfo &info, size_t hash) {
     return CC_NEW(GlobalBarrier(info, hash));
 }
 
-TextureBarrier *EmptyDevice::createTextureBarrier(const TextureBarrierInfo &info, uint32_t hash) {
+TextureBarrier *EmptyDevice::createTextureBarrier(const TextureBarrierInfo &info, size_t hash) {
     return CC_NEW(TextureBarrier(info, hash));
 }
 
@@ -152,6 +161,9 @@ void EmptyDevice::copyBuffersToTexture(const uint8_t *const *buffers, Texture *d
 }
 
 void EmptyDevice::copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint32_t count) {
+}
+
+void EmptyDevice::getQueryPoolResults(QueryPool *queryPool) {
 }
 
 } // namespace gfx

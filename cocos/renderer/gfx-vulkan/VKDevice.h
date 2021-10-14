@@ -64,6 +64,7 @@ public:
     using Device::createInputAssembler;
     using Device::createPipelineLayout;
     using Device::createPipelineState;
+    using Device::createQueryPool;
     using Device::createQueue;
     using Device::createRenderPass;
     using Device::createSampler;
@@ -106,6 +107,7 @@ protected:
     void                 doDestroy() override;
     CommandBuffer *      createCommandBuffer(const CommandBufferInfo &info, bool hasAgent) override;
     Queue *              createQueue() override;
+    QueryPool *          createQueryPool() override;
     Swapchain *          createSwapchain() override;
     Buffer *             createBuffer() override;
     Texture *            createTexture() override;
@@ -118,12 +120,13 @@ protected:
     PipelineLayout *     createPipelineLayout() override;
     PipelineState *      createPipelineState() override;
 
-    Sampler *       createSampler(const SamplerInfo &info, uint32_t hash) override;
-    GlobalBarrier * createGlobalBarrier(const GlobalBarrierInfo &info, uint32_t hash) override;
-    TextureBarrier *createTextureBarrier(const TextureBarrierInfo &info, uint32_t hash) override;
+    Sampler *       createSampler(const SamplerInfo &info, size_t hash) override;
+    GlobalBarrier * createGlobalBarrier(const GlobalBarrierInfo &info, size_t hash) override;
+    TextureBarrier *createTextureBarrier(const TextureBarrierInfo &info, size_t hash) override;
 
     void copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint32_t count) override;
     void copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint32_t count) override;
+    void getQueryPoolResults(QueryPool *queryPool) override;
 
     void destroySwapchain();
     bool checkSwapchainStatus();

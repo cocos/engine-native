@@ -71,7 +71,7 @@ void GbufferStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
         uint                  phase    = convertPhase(descriptor.stages);
         RenderQueueSortFunc   sortFunc = convertQueueSortFunc(descriptor.sortMode);
         RenderQueueCreateInfo info     = {descriptor.isTransparent, phase, sortFunc};
-        _renderQueues.emplace_back(CC_NEW(RenderQueue(std::move(info))));
+        _renderQueues.emplace_back(CC_NEW(RenderQueue(_pipeline, std::move(info))));
     }
     _planarShadowQueue = CC_NEW(PlanarShadowQueue(_pipeline));
 }
@@ -127,7 +127,7 @@ void GbufferStage::dispenseRenderObject2Queues() {
         queue->sort();
     }
 }
-void GbufferStage::recordCommands(DeferredPipeline *pipeline, gfx::RenderPass *renderPass) {
+void GbufferStage::recordCommands(DeferredPipeline *pipeline, scene::Camera *camera, gfx::RenderPass *renderPass) {
     auto *cmdBuff = pipeline->getCommandBuffers()[0];
 
     // DescriptorSet bindings
@@ -135,7 +135,7 @@ void GbufferStage::recordCommands(DeferredPipeline *pipeline, gfx::RenderPass *r
     cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), utils::toUint(globalOffsets.size()), globalOffsets.data());
 
     // record commands
-    _renderQueues[0]->recordCommandBuffer(_device, renderPass, cmdBuff);
+    _renderQueues[0]->recordCommandBuffer(_device, camera, renderPass, cmdBuff);
     _instancedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
     _batchedQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
 }
@@ -146,8 +146,9 @@ void GbufferStage::render(scene::Camera *camera) {
         framegraph::TextureHandle depth;
     };
 
-    auto *pipeline = static_cast<DeferredPipeline *>(_pipeline);
-    _renderArea    = pipeline->getRenderArea(camera);
+    auto  *pipeline = static_cast<DeferredPipeline *>(_pipeline);
+    float  shadingScale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
+    _renderArea     = pipeline->getRenderArea(camera);
 
     // render area is not oriented, copy buffer must be called outsize of RenderPass, it should not be called in execute lambda expression
     // If there are only transparent object, lighting pass is ignored, we should call getIAByRenderArea here
@@ -161,30 +162,30 @@ void GbufferStage::render(scene::Camera *camera) {
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::INPUT_ATTACHMENT,
             gfx::Format::RGBA8,
-            pipeline->getWidth(),
-            pipeline->getHeight(),
+            static_cast<uint>(pipeline->getWidth() * shadingScale),
+            static_cast<uint>(pipeline->getHeight() * shadingScale),
         };
         gfx::TextureInfo gbufferInfoFloat = {
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::INPUT_ATTACHMENT,
             gfx::Format::RGBA16F,
-            pipeline->getWidth(),
-            pipeline->getHeight(),
+            static_cast<uint>(pipeline->getWidth() * shadingScale),
+            static_cast<uint>(pipeline->getHeight() * shadingScale),
         };
         for (int i = 0; i < DeferredPipeline::GBUFFER_COUNT - 1; ++i) {
             if (i != 0) { // positions & normals need more precision
-                data.gbuffer[i] = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleGbufferTexture[i], gbufferInfoFloat);
+                data.gbuffer[i] = builder.create(DeferredPipeline::fgStrHandleGbufferTexture[i], gbufferInfoFloat);
             } else {
-                data.gbuffer[i] = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleGbufferTexture[i], gbufferInfo);
+                data.gbuffer[i] = builder.create(DeferredPipeline::fgStrHandleGbufferTexture[i], gbufferInfo);
             }
         }
 
         auto subpassEnabled = _device->hasFeature(gfx::Feature::INPUT_ATTACHMENT_BENEFIT);
         if (subpassEnabled) {
             // when subpass enabled, the color result (gles2/gles3) will write to gbuffer[3] and the blit to color texture, so the format should be RGBA16F
-            data.gbuffer[3] = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleGbufferTexture[3], gbufferInfoFloat);
+            data.gbuffer[3] = builder.create(DeferredPipeline::fgStrHandleGbufferTexture[3], gbufferInfoFloat);
         } else {
-            data.gbuffer[3] = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleGbufferTexture[3], gbufferInfo);
+            data.gbuffer[3] = builder.create(DeferredPipeline::fgStrHandleGbufferTexture[3], gbufferInfo);
         }
 
         gfx::Color clearColor{0.0, 0.0, 0.0, 0.0};
@@ -205,10 +206,10 @@ void GbufferStage::render(scene::Camera *camera) {
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT,
             gfx::Format::DEPTH_STENCIL,
-            pipeline->getWidth(),
-            pipeline->getHeight(),
+            static_cast<uint>(pipeline->getWidth() * shadingScale),
+            static_cast<uint>(pipeline->getHeight() * shadingScale),
         };
-        data.depth = builder.create<framegraph::Texture>(DeferredPipeline::fgStrHandleOutDepthTexture, depthTexInfo);
+        data.depth = builder.create(DeferredPipeline::fgStrHandleOutDepthTexture, depthTexInfo);
 
         framegraph::RenderTargetAttachment::Descriptor depthInfo;
         depthInfo.usage        = framegraph::RenderTargetAttachment::Usage::DEPTH_STENCIL;
@@ -220,11 +221,11 @@ void GbufferStage::render(scene::Camera *camera) {
         builder.writeToBlackboard(DeferredPipeline::fgStrHandleOutDepthTexture, data.depth);
 
         // viewport setup
-        builder.setViewport(_renderArea);
+        builder.setViewport(pipeline->getViewport(camera), _renderArea);
     };
 
-    auto gbufferExec = [this](const RenderData & /*data*/, const framegraph::DevicePassResourceTable &table) {
-        recordCommands(static_cast<DeferredPipeline *>(_pipeline), table.getRenderPass());
+    auto gbufferExec = [this, camera](const RenderData & /*data*/, const framegraph::DevicePassResourceTable &table) {
+        recordCommands(static_cast<DeferredPipeline *>(_pipeline), camera, table.getRenderPass());
     };
 
     // Command 'updateBuffer' must be recorded outside render passes, cannot put them in execute lambda

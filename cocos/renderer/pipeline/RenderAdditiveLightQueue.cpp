@@ -72,31 +72,35 @@ RenderAdditiveLightQueue ::~RenderAdditiveLightQueue() {
     destroy();
 }
 
-void RenderAdditiveLightQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer) {
+void RenderAdditiveLightQueue::recordCommandBuffer(gfx::Device *device, scene::Camera *camera, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer) {
     _instancedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
     _batchedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
+    bool enableOcclusionQuery = _pipeline->getOcclusionQueryEnabled();
 
     for (const auto &lightPass : _lightPasses) {
-        const auto *const subModel       = lightPass.subModel;
-        const auto *      pass           = lightPass.pass;
-        const auto &      dynamicOffsets = lightPass.dynamicOffsets;
-        auto *            shader         = lightPass.shader;
-        const auto        lights         = lightPass.lights;
-        auto *            ia             = subModel->getInputAssembler();
-        auto *            pso            = PipelineStateManager::getOrCreatePipelineState(pass, shader, ia, renderPass);
-        auto *            descriptorSet  = subModel->getDescriptorSet();
+        const auto *const subModel = lightPass.subModel;
 
-        cmdBuffer->bindPipelineState(pso);
-        cmdBuffer->bindDescriptorSet(materialSet, pass->getDescriptorSet());
-        cmdBuffer->bindInputAssembler(ia);
+        if (!enableOcclusionQuery || !_pipeline->isOccluded(camera, subModel)) {
+            const auto *pass           = lightPass.pass;
+            const auto &dynamicOffsets = lightPass.dynamicOffsets;
+            auto *      shader         = lightPass.shader;
+            const auto  lights         = lightPass.lights;
+            auto *      ia             = subModel->getInputAssembler();
+            auto *      pso            = PipelineStateManager::getOrCreatePipelineState(pass, shader, ia, renderPass);
+            auto *      descriptorSet  = subModel->getDescriptorSet();
 
-        for (size_t i = 0; i < dynamicOffsets.size(); ++i) {
-            const auto light               = lights[i];
-            auto *     globalDescriptorSet = _pipeline->getGlobalDSManager()->getOrCreateDescriptorSet(light);
-            _dynamicOffsets[0]             = dynamicOffsets[i];
-            cmdBuffer->bindDescriptorSet(globalSet, globalDescriptorSet);
-            cmdBuffer->bindDescriptorSet(localSet, descriptorSet, _dynamicOffsets);
-            cmdBuffer->draw(ia);
+            cmdBuffer->bindPipelineState(pso);
+            cmdBuffer->bindDescriptorSet(materialSet, pass->getDescriptorSet());
+            cmdBuffer->bindInputAssembler(ia);
+
+            for (size_t i = 0; i < dynamicOffsets.size(); ++i) {
+                const auto light               = lights[i];
+                auto *     globalDescriptorSet = _pipeline->getGlobalDSManager()->getOrCreateDescriptorSet(light);
+                _dynamicOffsets[0]             = dynamicOffsets[i];
+                cmdBuffer->bindDescriptorSet(globalSet, globalDescriptorSet);
+                cmdBuffer->bindDescriptorSet(localSet, descriptorSet, _dynamicOffsets);
+                cmdBuffer->draw(ia);
+            }
         }
     }
 }
@@ -228,9 +232,10 @@ void RenderAdditiveLightQueue::addRenderQueue(const scene::Pass *pass, const sce
 }
 
 void RenderAdditiveLightQueue::updateUBOs(const scene::Camera *camera, gfx::CommandBuffer *cmdBuffer) {
-    const auto  exposure        = camera->exposure;
-    const auto  validLightCount = _validLights.size();
-    auto *const sceneData       = _pipeline->getPipelineSceneData();
+    const auto  exposure            = camera->exposure;
+    const auto  validLightCount     = _validLights.size();
+    auto *const sceneData           = _pipeline->getPipelineSceneData();
+
     auto *const sharedData      = sceneData->getSharedData();
     const auto *shadowInfo      = sharedData->shadow;
     size_t      offset          = 0;
@@ -272,11 +277,12 @@ void RenderAdditiveLightQueue::updateUBOs(const scene::Camera *camera, gfx::Comm
             _lightBufferData[index++] = color.z;
         }
 
-        float illuminance = isSpotLight ? spotLight->getIlluminance() : sphereLight->getIlluminance();
+        float luminanceHDR = isSpotLight ? spotLight->getLuminanceHDR() : sphereLight->getLuminanceHDR();
+        float luminanceLDR = isSpotLight ? spotLight->getLuminanceLDR() : sphereLight->getLuminanceLDR();
         if (sharedData->isHDR) {
-            _lightBufferData[index] = illuminance * sharedData->fpScale * _lightMeterScale;
+            _lightBufferData[index] = luminanceHDR * exposure * _lightMeterScale;
         } else {
-            _lightBufferData[index] = illuminance * exposure * _lightMeterScale;
+            _lightBufferData[index] = luminanceLDR;
         }
 
         switch (light->getType()) {
