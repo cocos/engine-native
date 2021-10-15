@@ -162,10 +162,14 @@ void CCWGPUDescriptorSet::update() {
             }
         }
     }
+}
 
+void CCWGPUDescriptorSet::prepare() {
+    auto* dsLayout = static_cast<CCWGPUDescriptorSetLayout*>(_layout);
     dsLayout->prepare(_gpuBindGroupObj->bindingSet);
 
-    // std::vector<WGPUBindGroupEntry> bindGroupEntries;
+    // std::vector<WGPUBindGroupEntry>
+    //     bindGroupEntries;
     // bindGroupEntries.assign(_gpuBindGroupObj->bindGroupEntries.begin(), _gpuBindGroupObj->bindGroupEntries.end());
     // bindGroupEntries.erase(std::remove_if(
     //                            bindGroupEntries.begin(), bindGroupEntries.end(), [this, &bindGroupEntries](const WGPUBindGroupEntry& entry) {

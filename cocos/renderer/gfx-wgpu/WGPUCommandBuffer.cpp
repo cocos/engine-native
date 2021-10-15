@@ -259,14 +259,14 @@ void CCWGPUCommandBuffer::bindStates() {
         setInUse.insert(descriptorSet.index);
     }
 
-    pipelineState->prepare(setInUse);
     if (pipelineState->getBindPoint() == PipelineBindPoint::GRAPHICS) {
-        //pipeline state
-        wgpuRenderPassEncoderSetPipeline(_gpuCommandBufferObj->wgpuRenderPassEncoder,
-                                         pipelineState->gpuPipelineStateObject()->wgpuRenderPipeline);
         //bindgroup & descriptorset
         const auto &descriptorSets = _gpuCommandBufferObj->stateCache.descriptorSets;
         for (size_t i = 0; i < descriptorSets.size(); i++) {
+            if (!descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup) {
+                descriptorSets[i].descriptorSet->prepare();
+            }
+
             uint        dynamicCount = descriptorSets[i].dynamicOffsetCount;
             const uint *dynOffsets   = descriptorSets[i].dynamicOffsets;
             if (descriptorSets[i].descriptorSet->dynamicOffsetCount() != descriptorSets[i].dynamicOffsetCount) {
@@ -292,6 +292,9 @@ void CCWGPUCommandBuffer::bindStates() {
             const auto &setLayouts = pipelineState->getPipelineLayout()->getSetLayouts();
             for (size_t i = 0; i < setLayouts.size(); i++) {
                 if (setInUse.find(i) == setInUse.end()) {
+                    if (!descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup) {
+                        descriptorSets[i].descriptorSet->prepare();
+                    }
                     wgpuRenderPassEncoderSetBindGroup(_gpuCommandBufferObj->wgpuRenderPassEncoder,
                                                       i,
                                                       static_cast<WGPUBindGroup>(CCWGPUDescriptorSet::defaultBindGroup()),
@@ -300,6 +303,11 @@ void CCWGPUCommandBuffer::bindStates() {
                 }
             }
         }
+
+        pipelineState->prepare(setInUse);
+        //pipeline state
+        wgpuRenderPassEncoderSetPipeline(_gpuCommandBufferObj->wgpuRenderPassEncoder,
+                                         pipelineState->gpuPipelineStateObject()->wgpuRenderPipeline);
 
         //input assembler
         const auto *ia               = _gpuCommandBufferObj->stateCache.inputAssembler;
@@ -331,8 +339,6 @@ void CCWGPUCommandBuffer::bindStates() {
         wgpuRenderPassEncoderSetScissorRect(_gpuCommandBufferObj->wgpuRenderPassEncoder, rect.x, rect.y, rect.width, rect.height);
     } else if (pipelineState->getBindPoint() == PipelineBindPoint::COMPUTE) {
         auto *pipelineState = _gpuCommandBufferObj->stateCache.pipelineState;
-        wgpuComputePassEncoderSetPipeline(_gpuCommandBufferObj->wgpuComputeEncoder,
-                                          pipelineState->gpuPipelineStateObject()->wgpuComputePipeline);
 
         //bindgroup & descriptorset
         const auto &descriptorSets = _gpuCommandBufferObj->stateCache.descriptorSets;
@@ -345,6 +351,10 @@ void CCWGPUCommandBuffer::bindStates() {
                                                    descriptorSets[i].dynamicOffsets);
             }
         }
+
+        pipelineState->prepare(setInUse);
+        wgpuComputePassEncoderSetPipeline(_gpuCommandBufferObj->wgpuComputeEncoder,
+                                          pipelineState->gpuPipelineStateObject()->wgpuComputePipeline);
 
     } else {
         CC_LOG_ERROR("wrong pipeline state bind point.");

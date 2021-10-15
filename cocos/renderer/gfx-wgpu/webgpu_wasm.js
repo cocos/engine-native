@@ -3778,10 +3778,6 @@ function _time(ptr) {
  return ret;
 }
 
-function _wgpuBindGroupLayoutRelease(id) {
- WebGPU.mgrBindGroupLayout.release(id);
-}
-
 function _wgpuBindGroupRelease(id) {
  WebGPU.mgrBindGroup.release(id);
 }
@@ -4687,7 +4683,6 @@ var asmLibraryArg = {
  "segfault": segfault,
  "setTempRet0": _setTempRet0,
  "time": _time,
- "wgpuBindGroupLayoutRelease": _wgpuBindGroupLayoutRelease,
  "wgpuBindGroupRelease": _wgpuBindGroupRelease,
  "wgpuBufferDestroy": _wgpuBufferDestroy,
  "wgpuBufferGetMappedRange": _wgpuBufferGetMappedRange,

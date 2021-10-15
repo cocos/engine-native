@@ -172,9 +172,6 @@ void CCWGPUDescriptorSetLayout::prepare(const std::set<uint8_t>& bindingInUse) {
     //                              bindGroupLayoutEntries.end());
 
     const auto& entries = _gpuLayoutEntryObj->bindGroupLayoutEntries;
-    if (_gpuLayoutEntryObj->bindGroupLayout && _gpuLayoutEntryObj->bindGroupLayout != anoymous::defaultBindgroupLayout) {
-        wgpuBindGroupLayoutRelease(_gpuLayoutEntryObj->bindGroupLayout);
-    }
 
     if (entries.empty()) {
         _gpuLayoutEntryObj->bindGroupLayout = anoymous::defaultBindgroupLayout;

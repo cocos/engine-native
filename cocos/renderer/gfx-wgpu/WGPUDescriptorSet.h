@@ -45,6 +45,8 @@ public:
 
     uint8_t dynamicOffsetCount() const;
 
+    void prepare();
+
     static void* defaultBindGroup();
 
 protected:
