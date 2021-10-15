@@ -70,12 +70,14 @@ void CCWGPUDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo& info) {
             };
             _gpuLayoutEntryObj->bindGroupLayoutEntries.push_back(samplerLayout);
         } else if (hasFlag(DESCRIPTOR_BUFFER_TYPE, _bindings[i].descriptorType)) {
+            bool hasDynamicOffset = hasAnyFlags(_bindings[i].descriptorType, DescriptorType::DYNAMIC_STORAGE_BUFFER | DescriptorType::DYNAMIC_UNIFORM_BUFFER);
+            _dynamicOffsetCount += (hasDynamicOffset);
             if (hasFlag(_bindings[i].descriptorType, DescriptorType::STORAGE_BUFFER | DescriptorType::DYNAMIC_STORAGE_BUFFER)) {
                 WGPUBindGroupLayoutEntry layout = {
                     .nextInChain = nullptr,
                     .binding     = _bindings[i].binding,
                     .visibility  = toWGPUShaderStageFlag(_bindings[i].stageFlags),
-                    .buffer      = {nullptr, WGPUBufferBindingType::WGPUBufferBindingType_Storage, false, 0},
+                    .buffer      = {nullptr, WGPUBufferBindingType::WGPUBufferBindingType_Storage, hasDynamicOffset, 0},
                 };
                 _gpuLayoutEntryObj->bindGroupLayoutEntries.push_back(layout);
             } else if (hasFlag(_bindings[i].descriptorType, DescriptorType::UNIFORM_BUFFER | DescriptorType::DYNAMIC_UNIFORM_BUFFER)) {
@@ -83,7 +85,7 @@ void CCWGPUDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo& info) {
                     .nextInChain = nullptr,
                     .binding     = _bindings[i].binding,
                     .visibility  = toWGPUShaderStageFlag(_bindings[i].stageFlags),
-                    .buffer      = {nullptr, WGPUBufferBindingType::WGPUBufferBindingType_Uniform, false, 0},
+                    .buffer      = {nullptr, WGPUBufferBindingType::WGPUBufferBindingType_Uniform, hasDynamicOffset, 0},
                 };
                 _gpuLayoutEntryObj->bindGroupLayoutEntries.push_back(layout);
             } else {
@@ -95,6 +97,19 @@ void CCWGPUDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo& info) {
                 .binding     = _bindings[i].binding,
                 .visibility  = toWGPUShaderStageFlag(_bindings[i].stageFlags),
                 .sampler     = {nullptr, WGPUSamplerBindingType::WGPUSamplerBindingType_Comparison},
+            };
+            _gpuLayoutEntryObj->bindGroupLayoutEntries.push_back(layout);
+        } else if (_bindings[i].descriptorType == DescriptorType::STORAGE_IMAGE) {
+            WGPUBindGroupLayoutEntry layout = {
+                .nextInChain    = nullptr,
+                .binding        = _bindings[i].binding,
+                .visibility     = toWGPUShaderStageFlag(_bindings[i].stageFlags),
+                .storageTexture = {
+                    nullptr,
+                    WGPUStorageTextureAccess::WGPUStorageTextureAccess_ReadOnly,
+                    WGPUTextureFormat::WGPUTextureFormat_RGBA8Uint,
+                    WGPUTextureViewDimension::WGPUTextureViewDimension_2D,
+                },
             };
             _gpuLayoutEntryObj->bindGroupLayoutEntries.push_back(layout);
         } else {
@@ -116,11 +131,7 @@ void CCWGPUDescriptorSetLayout::updateLayout(uint8_t binding, const CCWGPUBuffer
 
     if (iter != _gpuLayoutEntryObj->bindGroupLayoutEntries.end()) {
         if (buffer) {
-            if (buffer->hasDynamicOffset()) {
-                (*iter).buffer.hasDynamicOffset = true;
-            } else {
-                (*iter).buffer.hasDynamicOffset = false;
-            }
+            //
         }
         if (sampler) {
             const SamplerInfo& info = sampler->getInfo();
@@ -132,7 +143,7 @@ void CCWGPUDescriptorSetLayout::updateLayout(uint8_t binding, const CCWGPUBuffer
         if (tex) {
             if (tex->getInfo().usage == TextureUsageBit::STORAGE) {
                 (*iter).storageTexture.nextInChain   = nullptr;
-                (*iter).storageTexture.access        = WGPUStorageTextureAccess::WGPUStorageTextureAccess_Force32;
+                (*iter).storageTexture.access        = WGPUStorageTextureAccess::WGPUStorageTextureAccess_ReadOnly;
                 (*iter).storageTexture.format        = toWGPUTextureFormat(tex->getFormat());
                 TextureType type                     = tex->isTextureView() ? tex->getViewInfo().type : tex->getInfo().type;
                 (*iter).storageTexture.viewDimension = toWGPUTextureViewDimension(type);
@@ -152,27 +163,27 @@ void CCWGPUDescriptorSetLayout::prepare(const std::set<uint8_t>& bindingInUse) {
     if (_gpuLayoutEntryObj->bindGroupLayout) {
         return;
     }
-    std::vector<WGPUBindGroupLayoutEntry> bindGroupLayoutEntries;
-
-    bindGroupLayoutEntries.assign(_gpuLayoutEntryObj->bindGroupLayoutEntries.begin(), _gpuLayoutEntryObj->bindGroupLayoutEntries.end());
+    // std::vector<WGPUBindGroupLayoutEntry> bindGroupLayoutEntries;
+    // bindGroupLayoutEntries.assign(_gpuLayoutEntryObj->bindGroupLayoutEntries.begin(), _gpuLayoutEntryObj->bindGroupLayoutEntries.end());
     // bindGroupLayoutEntries.erase(std::remove_if(
     //                                  bindGroupLayoutEntries.begin(), bindGroupLayoutEntries.end(), [&bindingInUse, &bindGroupLayoutEntries](const WGPUBindGroupLayoutEntry& entry) {
     //                                      return bindingInUse.find(entry.binding) == bindingInUse.end();
     //                                  }),
     //                              bindGroupLayoutEntries.end());
 
+    const auto& entries = _gpuLayoutEntryObj->bindGroupLayoutEntries;
     if (_gpuLayoutEntryObj->bindGroupLayout && _gpuLayoutEntryObj->bindGroupLayout != anoymous::defaultBindgroupLayout) {
         wgpuBindGroupLayoutRelease(_gpuLayoutEntryObj->bindGroupLayout);
     }
 
-    if (bindGroupLayoutEntries.empty()) {
+    if (entries.empty()) {
         _gpuLayoutEntryObj->bindGroupLayout = anoymous::defaultBindgroupLayout;
     } else {
         WGPUBindGroupLayoutDescriptor descriptor = {
             .nextInChain = nullptr,
             .label       = nullptr,
-            .entryCount  = bindGroupLayoutEntries.size(),
-            .entries     = bindGroupLayoutEntries.data(),
+            .entryCount  = entries.size(),
+            .entries     = entries.data(),
         };
         _gpuLayoutEntryObj->bindGroupLayout = wgpuDeviceCreateBindGroupLayout(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
     }

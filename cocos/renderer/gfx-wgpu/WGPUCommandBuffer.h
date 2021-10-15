@@ -67,6 +67,11 @@ public:
     virtual void dispatch(const DispatchInfo &info);
     virtual void pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrier *const *textureBarriers, const Texture *const *textures, uint textureBarrierCount);
 
+    //TODO_Zeqiang: wgpu query pool
+    virtual void beginQuery(QueryPool *queryPool, uint32_t id){};
+    virtual void endQuery(QueryPool *queryPool, uint32_t id){};
+    virtual void resetQuery(QueryPool *queryPool){};
+
     inline CCWGPUCommandBufferObject *gpuCommandBufferObject() { return _gpuCommandBufferObj; }
 
     void updateIndirectBuffer(Buffer *buffer, const DrawInfoList &list);

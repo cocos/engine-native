@@ -49,6 +49,9 @@ void CCWGPUPipelineLayout::prepare(const std::set<uint8_t>& setInUse) {
             // give it default bindgrouplayout if not in use
             layouts.push_back(static_cast<WGPUBindGroupLayout>(CCWGPUDescriptorSetLayout::defaultBindGroupLayout()));
         } else {
+            if (!descriptorSetLayout->gpuLayoutEntryObject()->bindGroupLayout) {
+                descriptorSetLayout->prepare({});
+            }
             layouts.push_back(descriptorSetLayout->gpuLayoutEntryObject()->bindGroupLayout);
         }
     }

@@ -53,7 +53,9 @@ struct CCWGPUResource {
     CCWGPUBuffer* uniformBuffer = nullptr;
     CCWGPUBuffer* storageBuffer = nullptr;
 
-    CCWGPUTexture* texture = nullptr;
+    CCWGPUTexture* commonTexture  = nullptr;
+    CCWGPUTexture* storageTexture = nullptr;
+
     CCWGPUSampler* sampler = nullptr;
 };
 
@@ -221,6 +223,12 @@ struct CCWGPUCommandBufferObject {
 
     WGPURenderPassDescriptor renderPassDescriptor;
     CCWGPUStateCache         stateCache;
+};
+
+struct CCWGPUQueryPoolObject {
+    QueryType             type            = QueryType::OCCLUSION;
+    uint32_t              maxQueryObjects = 0;
+    std::vector<uint32_t> idPool;
 };
 
 } // namespace gfx

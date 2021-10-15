@@ -35,6 +35,7 @@
 #include "WGPUObject.h"
 #include "WGPUPipelineLayout.h"
 #include "WGPUPipelineState.h"
+#include "WGPUQueryPool.h"
 #include "WGPUQueue.h"
 #include "WGPURenderPass.h"
 #include "WGPUSampler.h"
@@ -77,10 +78,11 @@ bool CCWGPUDevice::doInit(const DeviceInfo& info) {
     _gpuDeviceObj->wgpuDevice = emscripten_webgpu_get_device();
     _gpuDeviceObj->wgpuQueue  = wgpuDeviceGetQueue(_gpuDeviceObj->wgpuDevice);
 
-    _gpuDeviceObj->defaultResources.uniformBuffer = CCWGPUBuffer::defaultUniformBuffer();
-    _gpuDeviceObj->defaultResources.storageBuffer = CCWGPUBuffer::defaultStorageBuffer();
-    _gpuDeviceObj->defaultResources.texture       = CCWGPUTexture::defaultTexture();
-    _gpuDeviceObj->defaultResources.sampler       = CCWGPUSampler::defaultSampler();
+    _gpuDeviceObj->defaultResources.uniformBuffer  = CCWGPUBuffer::defaultUniformBuffer();
+    _gpuDeviceObj->defaultResources.storageBuffer  = CCWGPUBuffer::defaultStorageBuffer();
+    _gpuDeviceObj->defaultResources.commonTexture  = CCWGPUTexture::defaultCommonTexture();
+    _gpuDeviceObj->defaultResources.storageTexture = CCWGPUTexture::defaultStorageTexture();
+    _gpuDeviceObj->defaultResources.sampler        = CCWGPUSampler::defaultSampler();
 
     QueueInfo queueInfo = {
         .type = QueueType::GRAPHICS,
@@ -200,17 +202,25 @@ Shader* CCWGPUDevice::createShader(const SPVShaderInfoInstance& info) {
     return shader;
 }
 
+QueryPool* CCWGPUDevice::createQueryPool() {
+    return CC_NEW(CCWGPUQueryPool);
+}
+
 void CCWGPUDevice::present() {
 }
 
-GlobalBarrier* CCWGPUDevice::createGlobalBarrier(const GlobalBarrierInfo& info, uint32_t hash) {
+GlobalBarrier* CCWGPUDevice::createGlobalBarrier(const GlobalBarrierInfo& info, size_t hash) {
 }
 
-TextureBarrier* CCWGPUDevice::createTextureBarrier(const TextureBarrierInfo& info, uint32_t hash) {
+TextureBarrier* CCWGPUDevice::createTextureBarrier(const TextureBarrierInfo& info, size_t hash) {
 }
 
-Sampler* CCWGPUDevice::createSampler(const SamplerInfo& info, uint32_t hash) {
+Sampler* CCWGPUDevice::createSampler(const SamplerInfo& info, size_t hash) {
     return new CCWGPUSampler(info, hash);
+}
+
+void CCWGPUDevice::getQueryPoolResults(QueryPool* queryPool) {
+    // _cmdBuff->getQueryPoolResults(queryPool);
 }
 
 void CCWGPUDevice::debug() {

@@ -54,12 +54,6 @@ public:
         update(reinterpret_cast<const void*>(buffer.data()), size);
     }
 
-    void activeDynamicOffset();
-
-    void deactiveDynamicOffset();
-
-    bool hasDynamicOffset() const;
-
     // used before unmap?
     void check();
 

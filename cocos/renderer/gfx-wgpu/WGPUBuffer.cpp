@@ -198,18 +198,6 @@ void CCWGPUBuffer::check() {
     }
 }
 
-void CCWGPUBuffer::activeDynamicOffset() {
-    _gpuBufferObject->hasDynamicOffsets = true;
-}
-
-void CCWGPUBuffer::deactiveDynamicOffset() {
-    _gpuBufferObject->hasDynamicOffsets = false;
-}
-
-bool CCWGPUBuffer::hasDynamicOffset() const {
-    return _gpuBufferObject->hasDynamicOffsets;
-}
-
 CCWGPUBuffer *CCWGPUBuffer::defaultUniformBuffer() {
     if (!anoymous::defaultUniformBuffer) {
         BufferInfo info = {

@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -23,42 +23,41 @@
  THE SOFTWARE.
 ****************************************************************************/
 
-#pragma once
-#include <emscripten/bind.h>
-#include "gfx-base/GFXTexture.h"
+#include "WGPUQueryPool.h"
+#include "WGPUCommandBuffer.h"
+#include "WGPUDevice.h"
+#include "WGPUObject.h"
 
 namespace cc {
 namespace gfx {
 
-struct CCWGPUTextureObject;
-class CCWGPUSwapchain;
+CCWGPUQueryPool::CCWGPUQueryPool() {
+    _typedID = generateObjectID<decltype(this)>();
+}
 
-class CCWGPUTexture final : public emscripten::wrapper<Texture> {
-public:
-    EMSCRIPTEN_WRAPPER(CCWGPUTexture);
-    CCWGPUTexture();
-    ~CCWGPUTexture() = default;
+CCWGPUQueryPool::~CCWGPUQueryPool() {
+    destroy();
+}
 
-    inline CCWGPUTextureObject* gpuTextureObject() { return _gpuTextureObj; }
+void CCWGPUQueryPool::doInit(const QueryPoolInfo& /*info*/) {
+    CCWGPUDevice* device           = CCWGPUDevice::getInstance();
+    _gpuQueryPool                  = CC_NEW(CCWGPUQueryPoolObject);
+    _gpuQueryPool->type            = _type;
+    _gpuQueryPool->maxQueryObjects = _maxQueryObjects;
+    _gpuQueryPool->idPool.resize(_maxQueryObjects, 0U);
 
-    static CCWGPUTexture* defaultCommonTexture();
+    //TODO_Zeqiang: wgpu query
 
-    static CCWGPUTexture* defaultStorageTexture();
+    //cmdFuncGLES3CreateQuery(device, _gpuQueryPool);
+}
 
-    CCWGPUSwapchain* swapchain();
-
-    void update();
-
-protected:
-    void doInit(const TextureInfo& info) override;
-    void doInit(const TextureViewInfo& info) override;
-    void doDestroy() override;
-    void doResize(uint32_t width, uint32_t height, uint32_t size) override;
-
-    void doInit(const SwapchainTextureInfo& info) override;
-
-    CCWGPUTextureObject* _gpuTextureObj = nullptr;
-};
+void CCWGPUQueryPool::doDestroy() {
+    if (_gpuQueryPool) {
+        //cmdFuncGLES3DestroyQuery(GLES3Device::getInstance(), _gpuQueryPool);
+        CC_DELETE(_gpuQueryPool);
+        _gpuQueryPool = nullptr;
+    }
+}
 
 } // namespace gfx
 } // namespace cc

@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -24,40 +24,34 @@
 ****************************************************************************/
 
 #pragma once
-#include <emscripten/bind.h>
-#include "gfx-base/GFXTexture.h"
+
+#include <vector>
+#include "gfx-base/GFXQueryPool.h"
 
 namespace cc {
 namespace gfx {
 
-struct CCWGPUTextureObject;
-class CCWGPUSwapchain;
+class CCWGPUQueryPoolObject;
 
-class CCWGPUTexture final : public emscripten::wrapper<Texture> {
+class CCWGPUQueryPool final : public QueryPool {
 public:
-    EMSCRIPTEN_WRAPPER(CCWGPUTexture);
-    CCWGPUTexture();
-    ~CCWGPUTexture() = default;
+    CCWGPUQueryPool();
+    ~CCWGPUQueryPool() override;
 
-    inline CCWGPUTextureObject* gpuTextureObject() { return _gpuTextureObj; }
-
-    static CCWGPUTexture* defaultCommonTexture();
-
-    static CCWGPUTexture* defaultStorageTexture();
-
-    CCWGPUSwapchain* swapchain();
-
-    void update();
+    inline CCWGPUQueryPoolObject *gpuQueryPool() const { return _gpuQueryPool; }
+    inline uint32_t               getIdCount() const { return static_cast<uint32_t>(_ids.size()); }
+    inline void                   clearId() { _ids.clear(); }
+    inline void                   addId(uint32_t id) { _ids.push_back(id); }
+    inline uint32_t               getId(uint32_t index) const { return _ids[index]; }
+    inline std::mutex &           getMutex() { return _mutex; }
+    inline void                   setResults(std::unordered_map<uint32_t, uint64_t> &&results) { _results = results; }
 
 protected:
-    void doInit(const TextureInfo& info) override;
-    void doInit(const TextureViewInfo& info) override;
+    void doInit(const QueryPoolInfo &info) override;
     void doDestroy() override;
-    void doResize(uint32_t width, uint32_t height, uint32_t size) override;
 
-    void doInit(const SwapchainTextureInfo& info) override;
-
-    CCWGPUTextureObject* _gpuTextureObj = nullptr;
+    CCWGPUQueryPoolObject *_gpuQueryPool = nullptr;
+    std::vector<uint32_t>  _ids;
 };
 
 } // namespace gfx

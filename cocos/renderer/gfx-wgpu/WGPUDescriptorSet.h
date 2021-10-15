@@ -43,7 +43,7 @@ public:
 
     void update() override;
 
-    inline bool dynamicOffsetCount() const { return _dynamicOffsetCount; }
+    uint8_t dynamicOffsetCount() const;
 
     static void* defaultBindGroup();
 
@@ -51,8 +51,7 @@ protected:
     void doInit(const DescriptorSetInfo& info) override;
     void doDestroy() override;
 
-    uint8_t                _dynamicOffsetCount = 0;
-    CCWGPUBindGroupObject* _gpuBindGroupObj    = nullptr;
+    CCWGPUBindGroupObject* _gpuBindGroupObj = nullptr;
 
     std::map<uint8_t, uint8_t> _textureIdxMap;
     std::map<uint8_t, uint8_t> _samplerIdxMap;

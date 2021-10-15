@@ -34,8 +34,9 @@ namespace cc {
 namespace gfx {
 
 namespace anoymous {
-CCWGPUTexture *defaultTexture = nullptr;
-}
+CCWGPUTexture *defaultCommonTexture  = nullptr;
+CCWGPUTexture *defaultStorageTexture = nullptr;
+} // namespace anoymous
 
 using namespace emscripten;
 
@@ -190,13 +191,12 @@ void CCWGPUTexture::update() {
     _gpuTextureObj->selfView = _gpuTextureObj->wgpuTextureView = wgpuTextureCreateView(_gpuTextureObj->wgpuTexture, &texViewDesc);
 }
 
-CCWGPUTexture *
-CCWGPUTexture::defaultTexture() {
-    if (!anoymous::defaultTexture) {
+CCWGPUTexture *CCWGPUTexture::defaultCommonTexture() {
+    if (!anoymous::defaultCommonTexture) {
         TextureInfo info = {
             .type        = TextureType::TEX2D,
-            .usage       = TextureUsageBit::NONE,
-            .format      = Format::BGRA8,
+            .usage       = TextureUsageBit::SAMPLED,
+            .format      = Format::RGBA8,
             .width       = 2,
             .height      = 2,
             .flags       = TextureFlagBit::NONE,
@@ -206,11 +206,33 @@ CCWGPUTexture::defaultTexture() {
             .depth       = 1,
             .externalRes = nullptr,
         };
-        anoymous::defaultTexture = CC_NEW(CCWGPUTexture);
-        anoymous::defaultTexture->initialize(info);
+        anoymous::defaultCommonTexture = CC_NEW(CCWGPUTexture);
+        anoymous::defaultCommonTexture->initialize(info);
     }
 
-    return anoymous::defaultTexture;
+    return anoymous::defaultCommonTexture;
+}
+
+CCWGPUTexture *CCWGPUTexture::defaultStorageTexture() {
+    if (!anoymous::defaultStorageTexture) {
+        TextureInfo info = {
+            .type        = TextureType::TEX2D,
+            .usage       = TextureUsageBit::STORAGE,
+            .format      = Format::RGBA8,
+            .width       = 2,
+            .height      = 2,
+            .flags       = TextureFlagBit::NONE,
+            .layerCount  = 1,
+            .levelCount  = 1,
+            .samples     = SampleCount::ONE,
+            .depth       = 1,
+            .externalRes = nullptr,
+        };
+        anoymous::defaultStorageTexture = CC_NEW(CCWGPUTexture);
+        anoymous::defaultStorageTexture->initialize(info);
+    }
+
+    return anoymous::defaultStorageTexture;
 }
 
 CCWGPUSwapchain *CCWGPUTexture::swapchain() {

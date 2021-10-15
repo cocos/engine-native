@@ -49,6 +49,8 @@ public:
 
     void prepare(const std::set<uint8_t>& bindingInUse);
 
+    inline uint8_t dynamicOffsetCount() { return _dynamicOffsetCount; }
+
     static void* defaultBindGroupLayout();
 
 protected:
@@ -56,6 +58,8 @@ protected:
     void doDestroy() override;
 
     CCWGPUBindGroupLayoutObject* _gpuLayoutEntryObj = nullptr;
+
+    uint8_t _dynamicOffsetCount = 0;
 };
 
 } // namespace gfx
