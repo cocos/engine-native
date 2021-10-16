@@ -189,7 +189,7 @@ void CCWGPUCommandBuffer::bindDescriptorSet(uint set, DescriptorSet *descriptorS
     });
 
     auto *ccDescriptorSet = static_cast<CCWGPUDescriptorSet *>(descriptorSet);
-    if (!ccDescriptorSet->dynamicOffsetCount() == 0) {
+    if (ccDescriptorSet->dynamicOffsetCount() == 0) {
         dynOffsetCount = 0;
         dynOffsets     = nullptr;
     }
@@ -263,15 +263,21 @@ void CCWGPUCommandBuffer::bindStates() {
         //bindgroup & descriptorset
         const auto &descriptorSets = _gpuCommandBufferObj->stateCache.descriptorSets;
         for (size_t i = 0; i < descriptorSets.size(); i++) {
-            if (!descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup) {
-                descriptorSets[i].descriptorSet->prepare();
-            }
-
+            descriptorSets[i].descriptorSet->prepare();
             uint        dynamicCount = descriptorSets[i].dynamicOffsetCount;
             const uint *dynOffsets   = descriptorSets[i].dynamicOffsets;
             if (descriptorSets[i].descriptorSet->dynamicOffsetCount() != descriptorSets[i].dynamicOffsetCount) {
-                uint *dynOffsets = new uint[descriptorSets[i].descriptorSet->dynamicOffsetCount()];
-                std::fill(dynOffsets, dynOffsets + descriptorSets[i].descriptorSet->dynamicOffsetCount(), 0);
+                uint *       dynOffsets       = new uint[descriptorSets[i].descriptorSet->dynamicOffsetCount()];
+                const Pairs &dynamicOffsets   = descriptorSets[i].descriptorSet->dynamicOffsets();
+                uint         givenOffsetIndex = 0;
+                for (size_t j = 0; j < descriptorSets[i].descriptorSet->dynamicOffsetCount(); ++j) {
+                    if (j >= descriptorSets[i].dynamicOffsetCount || dynamicOffsets[j].second == 0) {
+                        dynOffsets[j] = 0;
+                    } else {
+                        dynOffsets[j] = descriptorSets[i].dynamicOffsets[givenOffsetIndex++];
+                    }
+                }
+
                 wgpuRenderPassEncoderSetBindGroup(_gpuCommandBufferObj->wgpuRenderPassEncoder,
                                                   descriptorSets[i].index,
                                                   descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
@@ -292,9 +298,6 @@ void CCWGPUCommandBuffer::bindStates() {
             const auto &setLayouts = pipelineState->getPipelineLayout()->getSetLayouts();
             for (size_t i = 0; i < setLayouts.size(); i++) {
                 if (setInUse.find(i) == setInUse.end()) {
-                    if (!descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup) {
-                        descriptorSets[i].descriptorSet->prepare();
-                    }
                     wgpuRenderPassEncoderSetBindGroup(_gpuCommandBufferObj->wgpuRenderPassEncoder,
                                                       i,
                                                       static_cast<WGPUBindGroup>(CCWGPUDescriptorSet::defaultBindGroup()),

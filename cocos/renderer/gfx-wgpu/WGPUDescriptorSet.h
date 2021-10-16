@@ -27,11 +27,14 @@
 
 #include <emscripten/bind.h>
 #include <map>
+#include <vector>
 #include "gfx-base/GFXDescriptorSet.h"
 namespace cc {
 namespace gfx {
 
 struct CCWGPUBindGroupObject;
+
+using Pairs = std::vector<std::pair<uint8_t, uint8_t>>;
 
 class CCWGPUDescriptorSet final : public emscripten::wrapper<DescriptorSet> {
 public:
@@ -49,14 +52,20 @@ public:
 
     static void* defaultBindGroup();
 
+    inline Pairs& dynamicOffsets() { return _dynamicOffsets; }
+
 protected:
     void doInit(const DescriptorSetInfo& info) override;
     void doDestroy() override;
 
     CCWGPUBindGroupObject* _gpuBindGroupObj = nullptr;
 
+    // seperate combined sampler-texture index
     std::map<uint8_t, uint8_t> _textureIdxMap;
     std::map<uint8_t, uint8_t> _samplerIdxMap;
+
+    // dynamic offsets, inuse ? 1 : 0;
+    Pairs _dynamicOffsets;
 };
 
 } // namespace gfx
