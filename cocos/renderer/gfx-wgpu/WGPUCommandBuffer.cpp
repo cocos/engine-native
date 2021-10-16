@@ -42,6 +42,10 @@
 namespace cc {
 namespace gfx {
 
+namespace {
+uint32_t dynamicOffsetBuffer[256];
+}
+
 CCWGPUCommandBuffer::CCWGPUCommandBuffer() : wrapper<CommandBuffer>(val::object()) {
 }
 
@@ -264,10 +268,9 @@ void CCWGPUCommandBuffer::bindStates() {
         const auto &descriptorSets = _gpuCommandBufferObj->stateCache.descriptorSets;
         for (size_t i = 0; i < descriptorSets.size(); i++) {
             descriptorSets[i].descriptorSet->prepare();
-            uint        dynamicCount = descriptorSets[i].dynamicOffsetCount;
-            const uint *dynOffsets   = descriptorSets[i].dynamicOffsets;
+
             if (descriptorSets[i].descriptorSet->dynamicOffsetCount() != descriptorSets[i].dynamicOffsetCount) {
-                uint *       dynOffsets       = new uint[descriptorSets[i].descriptorSet->dynamicOffsetCount()];
+                uint *       dynOffsets       = dynamicOffsetBuffer;
                 const Pairs &dynamicOffsets   = descriptorSets[i].descriptorSet->dynamicOffsets();
                 uint         givenOffsetIndex = 0;
                 for (size_t j = 0; j < descriptorSets[i].descriptorSet->dynamicOffsetCount(); ++j) {
@@ -283,7 +286,7 @@ void CCWGPUCommandBuffer::bindStates() {
                                                   descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
                                                   descriptorSets[i].descriptorSet->dynamicOffsetCount(),
                                                   dynOffsets);
-                delete[] dynOffsets;
+
             } else {
                 wgpuRenderPassEncoderSetBindGroup(_gpuCommandBufferObj->wgpuRenderPassEncoder,
                                                   descriptorSets[i].index,
