@@ -1,6 +1,6 @@
 
 var wasmDevice = (function() {
-  var _scriptDir = typeof document !== 'undefined' && document.currentScript ? document.currentScript.src : undefined;
+  var _scriptDir = import.meta.url;
   
   return (
 function(wasmDevice) {
@@ -1547,10 +1547,13 @@ function createExportWrapper(name, fixedasm) {
 
 var wasmBinaryFile;
 
-wasmBinaryFile = "webgpu_wasm.wasm";
-
-if (!isDataURI(wasmBinaryFile)) {
- wasmBinaryFile = locateFile(wasmBinaryFile);
+if (Module["locateFile"]) {
+ wasmBinaryFile = "webgpu_wasm.wasm";
+ if (!isDataURI(wasmBinaryFile)) {
+  wasmBinaryFile = locateFile(wasmBinaryFile);
+ }
+} else {
+ wasmBinaryFile = new URL("webgpu_wasm.wasm", import.meta.url).toString();
 }
 
 function getBinary(file) {
@@ -6167,9 +6170,4 @@ run();
 }
 );
 })();
-if (typeof exports === 'object' && typeof module === 'object')
-  module.exports = wasmDevice;
-else if (typeof define === 'function' && define['amd'])
-  define([], function() { return wasmDevice; });
-else if (typeof exports === 'object')
-  exports["wasmDevice"] = wasmDevice;
+export default wasmDevice;
