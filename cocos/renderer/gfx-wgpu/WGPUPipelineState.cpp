@@ -45,7 +45,6 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
 }
 
 void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
-    _gpuPipelineStateObj = CC_NEW(CCWGPUPipelineStateObject);
     auto* pipelineLayout = static_cast<CCWGPUPipelineLayout*>(_pipelineLayout);
 
     const DepthStencilAttachment& dsAttachment = _renderPass->getDepthStencilAttachment();
@@ -63,8 +62,8 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
                 return strcmp(attrName.c_str(), attr.name.c_str()) == 0;
             });
 
-            Format format = attrs[i].format;
-            uint64_t realOffset    = 0;
+            Format   format     = attrs[i].format;
+            uint64_t realOffset = 0;
             if (iter != _inputState.attributes.end()) {
                 realOffset = offset;
                 format     = (*iter).format;
@@ -102,9 +101,9 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
             .topology         = toWGPUPrimTopology(_primitive),
             .stripIndexFormat = WGPUIndexFormat_Undefined, //TODO_Zeqiang: ???
             .frontFace        = _rasterizerState.isFrontFaceCCW ? WGPUFrontFace::WGPUFrontFace_CCW : WGPUFrontFace::WGPUFrontFace_CW,
-            .cullMode         = _rasterizerState.cullMode == CullMode::FRONT  ? WGPUCullMode::WGPUCullMode_Front
-                                : _rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
-                                                                              : WGPUCullMode::WGPUCullMode_None,
+            .cullMode         = _rasterizerState.cullMode == CullMode::FRONT ? WGPUCullMode::WGPUCullMode_Front
+                                                                     : _rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
+                                                                                                                   : WGPUCullMode::WGPUCullMode_None,
         };
 
         WGPUStencilFaceState stencilFront = {
@@ -202,6 +201,7 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
 }
 
 void CCWGPUPipelineState::doDestroy() {
+    printf("pso des %p\n", this);
     if (_gpuPipelineStateObj) {
         if (_gpuPipelineStateObj->wgpuRenderPipeline) {
             wgpuRenderPipelineRelease(_gpuPipelineStateObj->wgpuRenderPipeline);
