@@ -651,7 +651,8 @@ void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRende
                 dependency.srcStageMask |= info.stageMask;
                 dependency.dstStageMask |= dstStage;
                 dependency.srcAccessMask |= info.hasWriteAccess ? info.accessMask : 0;
-                dependency.dstAccessMask |= (desc.loadOp == VK_ATTACHMENT_LOAD_OP_CLEAR ? dstAccessWrite : dstAccessRead);
+                dependency.dstAccessMask |= dstAccessRead;
+                if (desc.loadOp == VK_ATTACHMENT_LOAD_OP_CLEAR || desc.initialLayout != ref.layout) dependency.dstAccessMask |= dstAccessWrite;
                 return true;
             }
             return false;
@@ -1247,38 +1248,43 @@ void cmdFuncCCVKCopyBuffersToTexture(CCVKDevice *device, const uint8_t *const *b
                              0, 1, &vkBarrier, 0, nullptr, 0, nullptr);
     }
 
-    uint32_t         totalSize = 0U;
-    vector<uint32_t> regionSizes(count);
     for (size_t i = 0U; i < count; ++i) {
-        const BufferTextureCopy &region = regions[i];
-        uint32_t                 w      = region.buffStride > 0 ? region.buffStride : region.texExtent.width;
-        uint32_t                 h      = region.buffTexHeight > 0 ? region.buffTexHeight : region.texExtent.height;
-        totalSize += regionSizes[i]     = formatSize(gpuTexture->format, w, h, region.texExtent.depth);
+        const BufferTextureCopy &region{regions[i]};
+
+        uint32_t regionWidth  = region.buffStride > 0 ? region.buffStride : region.texExtent.width;
+        uint32_t regionHeight = region.buffTexHeight > 0 ? region.buffTexHeight : region.texExtent.height;
+        size_t   regionSize   = formatSize(gpuTexture->format, regionWidth, regionHeight, region.texExtent.depth);
+
+        // calculate the max height to upload per staging buffer chunk
+        uint32_t stepHeight      = regionHeight;
+        size_t   stepSize        = regionSize;
+        uint32_t heightAlignment = formatAlignment(gpuTexture->format).second; // for compressed textures
+        while (stepSize > CCVKGPUStagingBufferPool::CHUNK_SIZE) {
+            stepHeight = utils::alignTo((stepHeight - 1) / 2 + 1, heightAlignment);
+            stepSize   = formatSize(gpuTexture->format, regionWidth, stepHeight, region.texExtent.depth);
+        }
+
+        // upload in chunks
+        for (size_t h = 0U, s = 0U; h < regionHeight; h += stepHeight, s += stepSize) {
+            auto heightOffset = static_cast<int32_t>(h);
+
+            CCVKGPUBuffer stagingBuffer;
+            stagingBuffer.size = std::min(regionSize - s, stepSize);
+            device->gpuStagingBufferPool()->alloc(&stagingBuffer, GFX_FORMAT_INFOS[toNumber(gpuTexture->format)].size);
+            memcpy(stagingBuffer.mappedData, buffers[i] + s, stagingBuffer.size);
+
+            VkBufferImageCopy stagingRegion;
+            stagingRegion.bufferOffset      = stagingBuffer.startOffset;
+            stagingRegion.bufferRowLength   = region.buffStride;
+            stagingRegion.bufferImageHeight = region.buffTexHeight;
+            stagingRegion.imageSubresource  = {gpuTexture->aspectMask, region.texSubres.mipLevel, region.texSubres.baseArrayLayer, region.texSubres.layerCount};
+            stagingRegion.imageOffset       = {region.texOffset.x, region.texOffset.y + heightOffset, region.texOffset.z};
+            stagingRegion.imageExtent       = {region.texExtent.width, std::min(stepHeight, regionHeight - heightOffset), region.texExtent.depth};
+
+            vkCmdCopyBufferToImage(gpuCommandBuffer->vkCommandBuffer, stagingBuffer.vkBuffer, gpuTexture->vkImage,
+                                   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &stagingRegion);
+        }
     }
-
-    CCVKGPUBuffer stagingBuffer;
-    stagingBuffer.size = totalSize;
-    uint32_t texelSize = GFX_FORMAT_INFOS[toNumber(gpuTexture->format)].size;
-    device->gpuStagingBufferPool()->alloc(&stagingBuffer, texelSize);
-
-    vector<VkBufferImageCopy> stagingRegions(count);
-    VkDeviceSize              offset = 0;
-    for (size_t i = 0U; i < count; ++i) {
-        const BufferTextureCopy &region        = regions[i];
-        VkBufferImageCopy &      stagingRegion = stagingRegions[i];
-        stagingRegion.bufferOffset             = stagingBuffer.startOffset + offset;
-        stagingRegion.bufferRowLength          = region.buffStride;
-        stagingRegion.bufferImageHeight        = region.buffTexHeight;
-        stagingRegion.imageSubresource         = {gpuTexture->aspectMask, region.texSubres.mipLevel, region.texSubres.baseArrayLayer, region.texSubres.layerCount};
-        stagingRegion.imageOffset              = {region.texOffset.x, region.texOffset.y, region.texOffset.z};
-        stagingRegion.imageExtent              = {region.texExtent.width, region.texExtent.height, region.texExtent.depth};
-
-        memcpy(stagingBuffer.mappedData + offset, buffers[i], regionSizes[i]);
-        offset += regionSizes[i];
-    }
-
-    vkCmdCopyBufferToImage(gpuCommandBuffer->vkCommandBuffer, stagingBuffer.vkBuffer, gpuTexture->vkImage,
-                           VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, utils::toUint(stagingRegions.size()), stagingRegions.data());
 
     if (hasFlag(gpuTexture->flags, TextureFlags::GEN_MIPMAP)) {
         VkFormatProperties formatProperties;

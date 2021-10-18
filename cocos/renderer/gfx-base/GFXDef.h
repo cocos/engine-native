@@ -96,6 +96,8 @@ constexpr uint32_t DRAW_INFO_SIZE = 28U;
 extern const FormatInfo GFX_FORMAT_INFOS[];
 extern const uint32_t   GFX_TYPE_SIZES[];
 
+std::pair<uint32_t, uint32_t> formatAlignment(Format format);
+
 uint32_t formatSize(Format format, uint32_t width, uint32_t height, uint32_t depth);
 
 uint32_t formatSurfaceSize(Format format, uint32_t width, uint32_t height, uint32_t depth, uint32_t mips);

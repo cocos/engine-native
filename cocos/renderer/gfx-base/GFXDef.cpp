@@ -512,6 +512,91 @@ uint32_t formatSize(Format format, uint32_t width, uint32_t height, uint32_t dep
     }
 }
 
+std::pair<uint32_t, uint32_t> formatAlignment(Format format) {
+    switch (format) {
+        case Format::BC1:
+        case Format::BC1_ALPHA:
+        case Format::BC1_SRGB:
+        case Format::BC1_SRGB_ALPHA:
+        case Format::BC2:
+        case Format::BC2_SRGB:
+        case Format::BC3:
+        case Format::BC3_SRGB:
+        case Format::BC4:
+        case Format::BC4_SNORM:
+        case Format::BC6H_SF16:
+        case Format::BC6H_UF16:
+        case Format::BC7:
+        case Format::BC7_SRGB:
+        case Format::BC5:
+        case Format::BC5_SNORM:
+        case Format::ETC_RGB8:
+        case Format::ETC2_RGB8:
+        case Format::ETC2_SRGB8:
+        case Format::ETC2_RGB8_A1:
+        case Format::EAC_R11:
+        case Format::EAC_R11SN:
+        case Format::ETC2_RGBA8:
+        case Format::ETC2_SRGB8_A1:
+        case Format::EAC_RG11:
+        case Format::EAC_RG11SN:
+        case Format::PVRTC_RGB2:
+        case Format::PVRTC_RGBA2:
+        case Format::PVRTC2_2BPP:
+            return std::make_pair(4, 4);
+
+        case Format::PVRTC_RGB4:
+        case Format::PVRTC_RGBA4:
+        case Format::PVRTC2_4BPP:
+            return std::make_pair(2, 2);
+
+        case Format::ASTC_RGBA_4X4:
+        case Format::ASTC_SRGBA_4X4:
+            return std::make_pair(4, 4);
+        case Format::ASTC_RGBA_5X4:
+        case Format::ASTC_SRGBA_5X4:
+            return std::make_pair(5, 4);
+        case Format::ASTC_RGBA_5X5:
+        case Format::ASTC_SRGBA_5X5:
+            return std::make_pair(5, 5);
+        case Format::ASTC_RGBA_6X5:
+        case Format::ASTC_SRGBA_6X5:
+            return std::make_pair(6, 5);
+        case Format::ASTC_RGBA_6X6:
+        case Format::ASTC_SRGBA_6X6:
+            return std::make_pair(6, 6);
+        case Format::ASTC_RGBA_8X5:
+        case Format::ASTC_SRGBA_8X5:
+            return std::make_pair(8, 5);
+        case Format::ASTC_RGBA_8X6:
+        case Format::ASTC_SRGBA_8X6:
+            return std::make_pair(8, 6);
+        case Format::ASTC_RGBA_8X8:
+        case Format::ASTC_SRGBA_8X8:
+            return std::make_pair(8, 8);
+        case Format::ASTC_RGBA_10X5:
+        case Format::ASTC_SRGBA_10X5:
+            return std::make_pair(10, 5);
+        case Format::ASTC_RGBA_10X6:
+        case Format::ASTC_SRGBA_10X6:
+            return std::make_pair(10, 6);
+        case Format::ASTC_RGBA_10X8:
+        case Format::ASTC_SRGBA_10X8:
+            return std::make_pair(10, 8);
+        case Format::ASTC_RGBA_10X10:
+        case Format::ASTC_SRGBA_10X10:
+            return std::make_pair(10, 10);
+        case Format::ASTC_RGBA_12X10:
+        case Format::ASTC_SRGBA_12X10:
+            return std::make_pair(12, 10);
+        case Format::ASTC_RGBA_12X12:
+        case Format::ASTC_SRGBA_12X12:
+            return std::make_pair(12, 12);
+        default:
+            return std::make_pair(1, 1);
+    }
+}
+
 const uint32_t GFX_TYPE_SIZES[] = {
     0,  // UNKNOWN
     4,  // BOOL
