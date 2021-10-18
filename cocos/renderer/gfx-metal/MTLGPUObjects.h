@@ -353,5 +353,11 @@ struct CCMTLGPUDeviceObject {
 
 };
 
+struct CCMTLGPUQueryPool {
+    QueryType   type = QueryType::OCCLUSION;
+    uint32_t    maxQueryObjects = 0;
+    id<MTLBuffer> visibilityResultBuffer = nil;
+}
+
 } // namespace gfx
 } // namespace cc

@@ -44,9 +44,27 @@ CCMTLQueryPool::~CCMTLQueryPool() {
 }
 
 void CCMTLQueryPool::doInit(const QueryPoolInfo& info) {
+    id<MTLDevice> mtlDevice = id<MTLDevice>(CCMTLDevice::getInstance()->getMTLDevice());
+    _gpuQueryPool                  = CC_NEW(CCMTLGPUQueryPool);
+    _gpuQueryPool->type            = _type;
+    _gpuQueryPool->maxQueryObjects = _maxQueryObjects;
+    _gpuQueryPool->visibilityResultBuffer = [device.newBufferWithLength:_maxQueryObjects * sizeof(uint64_t) options: MTLResourceStorageModeShared];
 }
 
 void CCMTLQueryPool::doDestroy() {
+    if(_gpuQueryPool) {
+        id<MTLBuffer> mtlBuffer = _gpuQueryPool->visibilityResultBuffer;
+        _gpuQueryPool->visibilityResultBuffer = nil;
+        
+        auto destroyFunc = [mtlBuffer]() {
+            if(mtlBuffer) {
+                [mtlBuffer release];
+            }
+        };
+        CCMTLGPUGarbageCollectionPool::getInstance()->collect(destroyFunc);
+        
+        CC_SAFE_DELETE(_gpuQueryPool);
+    }
 }
 
 } // namespace gfx
