@@ -318,14 +318,6 @@ PipelineState *CCMTLDevice::createPipelineState() {
     return CC_NEW(CCMTLPipelineState);
 }
 
-GlobalBarrier *CCMTLDevice::createGlobalBarrier(const GlobalBarrierInfo& info) {
-    return new GlobalBarrier(info);
-}
-
-TextureBarrier *CCMTLDevice::createTextureBarrier(const TextureBarrierInfo& info) {
-    return new TextureBarrier(info);
-}
-
 Sampler *CCMTLDevice::createSampler(const SamplerInfo &info) {
     return new CCMTLSampler(info);
 }

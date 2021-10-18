@@ -32,7 +32,7 @@ namespace gfx {
 
 class CC_DLL GlobalBarrier : public GFXObject {
 public:
-    GlobalBarrier(const GlobalBarrierInfo &info);
+    explicit GlobalBarrier(const GlobalBarrierInfo &info);
 
     static size_t computeHash(const GlobalBarrierInfo &info);
 

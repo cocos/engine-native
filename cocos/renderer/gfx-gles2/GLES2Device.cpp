@@ -340,14 +340,6 @@ Sampler *GLES2Device::createSampler(const SamplerInfo &info) {
     return CC_NEW(GLES2Sampler(info));
 }
 
-GlobalBarrier *GLES2Device::createGlobalBarrier(const GlobalBarrierInfo &info) {
-    return CC_NEW(GlobalBarrier(info));
-}
-
-TextureBarrier *GLES2Device::createTextureBarrier(const TextureBarrierInfo &info) {
-    return CC_NEW(TextureBarrier(info));
-}
-
 void GLES2Device::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint32_t count) {
     cmdFuncGLES2CopyBuffersToTexture(this, buffers, static_cast<GLES2Texture *>(dst)->gpuTexture(), regions, count);
 }

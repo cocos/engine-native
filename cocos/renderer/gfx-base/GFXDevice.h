@@ -84,9 +84,9 @@ public:
     inline PipelineLayout *     createPipelineLayout(const PipelineLayoutInfo &info);
     inline PipelineState *      createPipelineState(const PipelineStateInfo &info);
 
-    inline Sampler *       getSampler(const SamplerInfo &info);
-    inline GlobalBarrier * getGlobalBarrier(const GlobalBarrierInfo &info);
-    inline TextureBarrier *getTextureBarrier(const TextureBarrierInfo &info);
+    virtual Sampler *       getSampler(const SamplerInfo &info);
+    virtual GlobalBarrier * getGlobalBarrier(const GlobalBarrierInfo &info);
+    virtual TextureBarrier *getTextureBarrier(const TextureBarrierInfo &info);
 
     virtual void copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint32_t count) = 0;
     virtual void copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint32_t count)        = 0;
@@ -138,9 +138,9 @@ protected:
     virtual PipelineLayout *     createPipelineLayout()                                            = 0;
     virtual PipelineState *      createPipelineState()                                             = 0;
 
-    virtual Sampler *       createSampler(const SamplerInfo &info)               = 0;
-    virtual GlobalBarrier * createGlobalBarrier(const GlobalBarrierInfo &info)   = 0;
-    virtual TextureBarrier *createTextureBarrier(const TextureBarrierInfo &info) = 0;
+    virtual Sampler *       createSampler(const SamplerInfo &info) { return CC_NEW(Sampler(info)); }
+    virtual GlobalBarrier * createGlobalBarrier(const GlobalBarrierInfo &info) { return CC_NEW(GlobalBarrier(info)); }
+    virtual TextureBarrier *createTextureBarrier(const TextureBarrierInfo &info) { return CC_NEW(TextureBarrier(info)); }
 
     // For context switching between threads
     virtual void bindContext(bool bound) {}
@@ -270,27 +270,6 @@ PipelineState *Device::createPipelineState(const PipelineStateInfo &info) {
     PipelineState *res = createPipelineState();
     res->initialize(info);
     return res;
-}
-
-Sampler *Device::getSampler(const SamplerInfo &info) {
-    if (!_samplers.count(info)) {
-        _samplers[info] = createSampler(info);
-    }
-    return _samplers[info];
-}
-
-GlobalBarrier *Device::getGlobalBarrier(const GlobalBarrierInfo &info) {
-    if (!_globalBarriers.count(info)) {
-        _globalBarriers[info] = createGlobalBarrier(info);
-    }
-    return _globalBarriers[info];
-}
-
-TextureBarrier *Device::getTextureBarrier(const TextureBarrierInfo &info) {
-    if (!_textureBarriers.count(info)) {
-        _textureBarriers[info] = createTextureBarrier(info);
-    }
-    return _textureBarriers[info];
 }
 
 void Device::copyBuffersToTexture(const BufferDataList &buffers, Texture *dst, const BufferTextureCopyList &regions) {

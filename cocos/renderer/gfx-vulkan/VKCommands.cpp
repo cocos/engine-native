@@ -316,17 +316,27 @@ struct SubpassDependencyManager final {
         _hashes.clear();
     }
 
-    void append(const VkSubpassDependency2 &dependency) {
-        // only cares about src/dst attributes
-        size_t hash = boost::hash_range(reinterpret_cast<const uint64_t *>(&dependency.srcSubpass),
-                                        reinterpret_cast<const uint64_t *>(&dependency.dependencyFlags));
-        if (_hashes.count(hash)) return;
-        subpassDependencies.push_back(dependency);
-        _hashes.insert(hash);
+    void append(const VkSubpassDependency2 &info) {
+        if (_hashes.count(info)) return;
+        subpassDependencies.push_back(info);
+        _hashes.insert(info);
     }
 
 private:
-    unordered_set<size_t> _hashes;
+    // only the src/dst attributes differs
+    struct DependencyHasher {
+        size_t operator()(const VkSubpassDependency2 &info) const {
+            return boost::hash_range(reinterpret_cast<const uint64_t *>(&info.srcSubpass),
+                                     reinterpret_cast<const uint64_t *>(&info.dependencyFlags));
+        }
+    };
+    struct DependencyComparer {
+        size_t operator()(const VkSubpassDependency2 &lhs, const VkSubpassDependency2 &rhs) const {
+            auto size = static_cast<size_t>(reinterpret_cast<const uint8_t *>(&lhs.dependencyFlags) - reinterpret_cast<const uint8_t *>(&lhs.srcSubpass));
+            return !memcmp(&lhs.srcSubpass, &rhs.srcSubpass, size);
+        }
+    };
+    unordered_set<VkSubpassDependency2, DependencyHasher, DependencyComparer> _hashes;
 };
 
 void cmdFuncCCVKCreateRenderPass(CCVKDevice *device, CCVKGPURenderPass *gpuRenderPass) {
@@ -1266,12 +1276,13 @@ void cmdFuncCCVKCopyBuffersToTexture(CCVKDevice *device, const uint8_t *const *b
 
         // upload in chunks
         for (size_t h = 0U, s = 0U; h < regionHeight; h += stepHeight, s += stepSize) {
-            auto heightOffset = static_cast<int32_t>(h);
+            auto   heightOffset = static_cast<int32_t>(h);
+            size_t curSize      = std::min(regionSize - s, stepSize);
 
             CCVKGPUBuffer stagingBuffer;
-            stagingBuffer.size = std::min(regionSize - s, stepSize);
+            stagingBuffer.size = curSize;
             device->gpuStagingBufferPool()->alloc(&stagingBuffer, GFX_FORMAT_INFOS[toNumber(gpuTexture->format)].size);
-            memcpy(stagingBuffer.mappedData, buffers[i] + s, stagingBuffer.size);
+            memcpy(stagingBuffer.mappedData, buffers[i] + s, curSize);
 
             VkBufferImageCopy stagingRegion;
             stagingRegion.bufferOffset      = stagingBuffer.startOffset;

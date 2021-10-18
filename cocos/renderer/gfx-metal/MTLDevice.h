@@ -109,8 +109,6 @@ protected:
     DescriptorSetLayout *createDescriptorSetLayout() override;
     PipelineLayout      *createPipelineLayout() override;
     PipelineState       *createPipelineState() override;
-    GlobalBarrier       *createGlobalBarrier(const GlobalBarrierInfo &info) override;
-    TextureBarrier      *createTextureBarrier(const TextureBarrierInfo& info) override;
     Sampler             *createSampler(const SamplerInfo& info) override;
     Swapchain           *createSwapchain() override;
     void                 copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint count) override;

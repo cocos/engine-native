@@ -103,8 +103,6 @@ protected:
     PipelineState *      createPipelineState() override;
 
     Sampler *       createSampler(const SamplerInfo &info) override;
-    GlobalBarrier * createGlobalBarrier(const GlobalBarrierInfo &info) override;
-    TextureBarrier *createTextureBarrier(const TextureBarrierInfo &info) override;
 
     void copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint32_t count) override;
     void copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint32_t count) override;

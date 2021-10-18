@@ -338,10 +338,6 @@ GlobalBarrier *GLES3Device::createGlobalBarrier(const GlobalBarrierInfo &info) {
     return CC_NEW(GLES3GlobalBarrier(info));
 }
 
-TextureBarrier *GLES3Device::createTextureBarrier(const TextureBarrierInfo &info) {
-    return CC_NEW(TextureBarrier(info));
-}
-
 void GLES3Device::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint32_t count) {
     cmdFuncGLES3CopyBuffersToTexture(this, buffers, static_cast<GLES3Texture *>(dst)->gpuTexture(), regions, count);
 }
