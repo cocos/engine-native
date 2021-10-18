@@ -125,6 +125,41 @@ size_t Hasher<BufferInfo>::operator()(const BufferInfo& info) const {
     return quickHashTrivialStruct(&info);
 }
 
+template <>
+size_t Hasher<SamplerInfo>::operator()(const SamplerInfo& info) const {
+    // return quickHashTrivialStruct(&info);
+
+    // the hash may be used to reconstruct the original struct
+    auto hash = static_cast<size_t>(info.minFilter);
+    hash |= static_cast<size_t>(info.magFilter) << 2;
+    hash |= static_cast<size_t>(info.mipFilter) << 4;
+    hash |= static_cast<size_t>(info.addressU) << 6;
+    hash |= static_cast<size_t>(info.addressV) << 8;
+    hash |= static_cast<size_t>(info.addressW) << 10;
+    hash |= static_cast<size_t>(info.maxAnisotropy) << 12;
+    hash |= static_cast<size_t>(info.cmpFunc) << 16;
+    return hash;
+}
+
+template <>
+size_t Hasher<GlobalBarrierInfo>::operator()(const GlobalBarrierInfo& info) const {
+    size_t seed = 2;
+    boost::hash_combine(seed, info.prevAccesses);
+    boost::hash_combine(seed, info.nextAccesses);
+    return seed;
+}
+
+template <>
+size_t Hasher<TextureBarrierInfo>::operator()(const TextureBarrierInfo& info) const {
+    size_t seed = 5;
+    boost::hash_combine(seed, info.prevAccesses);
+    boost::hash_combine(seed, info.nextAccesses);
+    boost::hash_combine(seed, info.discardContents);
+    boost::hash_combine(seed, info.srcQueue);
+    boost::hash_combine(seed, info.dstQueue);
+    return seed;
+}
+
 bool operator==(const ColorAttachment& lhs, const ColorAttachment& rhs) {
     return lhs.format == rhs.format &&
            lhs.sampleCount == rhs.sampleCount &&
@@ -186,18 +221,12 @@ bool operator==(const Viewport& lhs, const Viewport& rhs) {
            lhs.minDepth == rhs.minDepth &&
            lhs.maxDepth == rhs.maxDepth;
 }
-bool operator!=(const Viewport& lhs, const Viewport& rhs) {
-    return !(lhs == rhs);
-}
 
 bool operator==(const Rect& lhs, const Rect& rhs) {
     return lhs.x == rhs.x &&
            lhs.y == rhs.y &&
            lhs.width == rhs.width &&
            lhs.height == rhs.height;
-}
-bool operator!=(const Rect& lhs, const Rect& rhs) {
-    return !(lhs == rhs);
 }
 
 bool operator==(const Color& lhs, const Color& rhs) {
@@ -235,6 +264,23 @@ bool operator==(const TextureViewInfo& lhs, const TextureViewInfo& rhs) {
 
 bool operator==(const BufferInfo& lhs, const BufferInfo& rhs) {
     return !memcmp(&lhs, &rhs, sizeof(BufferInfo));
+}
+
+bool operator==(const SamplerInfo& lhs, const SamplerInfo& rhs) {
+    return !memcmp(&lhs, &rhs, sizeof(SamplerInfo));
+}
+
+bool operator==(const GlobalBarrierInfo& lhs, const GlobalBarrierInfo& rhs) {
+    return lhs.prevAccesses == rhs.prevAccesses &&
+           lhs.nextAccesses == rhs.nextAccesses;
+}
+
+bool operator==(const TextureBarrierInfo& lhs, const TextureBarrierInfo& rhs) {
+    return lhs.prevAccesses == rhs.prevAccesses &&
+           lhs.nextAccesses == rhs.nextAccesses &&
+           lhs.discardContents == rhs.discardContents &&
+           lhs.srcQueue == rhs.srcQueue &&
+           lhs.dstQueue == rhs.dstQueue;
 }
 
 const FormatInfo GFX_FORMAT_INFOS[] = {

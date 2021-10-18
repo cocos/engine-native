@@ -138,9 +138,9 @@ protected:
     virtual PipelineLayout *     createPipelineLayout()                                            = 0;
     virtual PipelineState *      createPipelineState()                                             = 0;
 
-    virtual Sampler *       createSampler(const SamplerInfo &info, size_t hash)                 = 0;
-    virtual GlobalBarrier * createGlobalBarrier(const GlobalBarrierInfo &info, size_t hash)     = 0;
-    virtual TextureBarrier *createTextureBarrier(const TextureBarrierInfo &info, size_t hash)   = 0;
+    virtual Sampler *       createSampler(const SamplerInfo &info)               = 0;
+    virtual GlobalBarrier * createGlobalBarrier(const GlobalBarrierInfo &info)   = 0;
+    virtual TextureBarrier *createTextureBarrier(const TextureBarrierInfo &info) = 0;
 
     // For context switching between threads
     virtual void bindContext(bool bound) {}
@@ -165,9 +165,9 @@ protected:
     uint32_t     _numTriangles{0U};
     MemoryStatus _memoryStatus;
 
-    unordered_map<size_t, Sampler *>        _samplers;
-    unordered_map<size_t, GlobalBarrier *>  _globalBarriers;
-    unordered_map<size_t, TextureBarrier *> _textureBarriers;
+    unordered_map<SamplerInfo, Sampler *, Hasher<SamplerInfo>>                      _samplers;
+    unordered_map<GlobalBarrierInfo, GlobalBarrier *, Hasher<GlobalBarrierInfo>>    _globalBarriers;
+    unordered_map<TextureBarrierInfo, TextureBarrier *, Hasher<TextureBarrierInfo>> _textureBarriers;
 
 private:
     vector<Swapchain *> _swapchains;
@@ -273,27 +273,24 @@ PipelineState *Device::createPipelineState(const PipelineStateInfo &info) {
 }
 
 Sampler *Device::getSampler(const SamplerInfo &info) {
-    size_t hash = gfx::Sampler::computeHash(info);
-    if (!_samplers.count(hash)) {
-        _samplers[hash] = createSampler(info, hash);
+    if (!_samplers.count(info)) {
+        _samplers[info] = createSampler(info);
     }
-    return _samplers[hash];
+    return _samplers[info];
 }
 
 GlobalBarrier *Device::getGlobalBarrier(const GlobalBarrierInfo &info) {
-    size_t hash = gfx::GlobalBarrier::computeHash(info);
-    if (!_globalBarriers.count(hash)) {
-        _globalBarriers[hash] = createGlobalBarrier(info, hash);
+    if (!_globalBarriers.count(info)) {
+        _globalBarriers[info] = createGlobalBarrier(info);
     }
-    return _globalBarriers[hash];
+    return _globalBarriers[info];
 }
 
 TextureBarrier *Device::getTextureBarrier(const TextureBarrierInfo &info) {
-    size_t hash = gfx::TextureBarrier::computeHash(info);
-    if (!_textureBarriers.count(hash)) {
-        _textureBarriers[hash] = createTextureBarrier(info, hash);
+    if (!_textureBarriers.count(info)) {
+        _textureBarriers[info] = createTextureBarrier(info);
     }
-    return _textureBarriers[hash];
+    return _textureBarriers[info];
 }
 
 void Device::copyBuffersToTexture(const BufferDataList &buffers, Texture *dst, const BufferTextureCopyList &regions) {

@@ -145,16 +145,16 @@ PipelineState *EmptyDevice::createPipelineState() {
     return CC_NEW(EmptyPipelineState());
 }
 
-Sampler *EmptyDevice::createSampler(const SamplerInfo &info, size_t hash) {
-    return CC_NEW(Sampler(info, hash));
+Sampler *EmptyDevice::createSampler(const SamplerInfo &info) {
+    return CC_NEW(Sampler(info));
 }
 
-GlobalBarrier *EmptyDevice::createGlobalBarrier(const GlobalBarrierInfo &info, size_t hash) {
-    return CC_NEW(GlobalBarrier(info, hash));
+GlobalBarrier *EmptyDevice::createGlobalBarrier(const GlobalBarrierInfo &info) {
+    return CC_NEW(GlobalBarrier(info));
 }
 
-TextureBarrier *EmptyDevice::createTextureBarrier(const TextureBarrierInfo &info, size_t hash) {
-    return CC_NEW(TextureBarrier(info, hash));
+TextureBarrier *EmptyDevice::createTextureBarrier(const TextureBarrierInfo &info) {
+    return CC_NEW(TextureBarrier(info));
 }
 
 void EmptyDevice::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint32_t count) {

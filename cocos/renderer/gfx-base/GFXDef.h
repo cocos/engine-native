@@ -38,24 +38,29 @@ struct Hasher final { size_t operator()(const T& info) const; };
 template <typename T, typename Enable = std::enable_if_t<std::is_class<T>::value>>
 size_t hash_value(const T& info) { return Hasher<T>()(info); } // NOLINT(readability-identifier-naming)
 
-bool operator==(const ColorAttachment& lhs, const ColorAttachment& rhs);
-bool operator==(const DepthStencilAttachment& lhs, const DepthStencilAttachment& rhs);
-bool operator==(const SubpassInfo& lhs, const SubpassInfo& rhs);
-bool operator==(const SubpassDependency& lhs, const SubpassDependency& rhs);
-bool operator==(const RenderPassInfo& lhs, const RenderPassInfo& rhs);
-bool operator==(const FramebufferInfo& lhs, const FramebufferInfo& rhs);
-bool operator==(const Viewport& lhs, const Viewport& rhs);
-bool operator==(const Rect& lhs, const Rect& rhs);
-bool operator==(const Color& lhs, const Color& rhs);
-bool operator==(const Offset& lhs, const Offset& rhs);
-bool operator==(const Extent& lhs, const Extent& rhs);
-bool operator==(const Size& lhs, const Size& rhs);
-bool operator==(const TextureInfo& lhs, const TextureInfo& rhs);
-bool operator==(const TextureViewInfo& lhs, const TextureViewInfo& rhs);
-bool operator==(const BufferInfo& lhs, const BufferInfo& rhs);
+#define DEFINE_CMP_OP(type)                            \
+    bool operator==(const type& lhs, const type& rhs); \
+    inline bool operator!=(const type& lhs, const type& rhs) { return !(lhs == rhs); }
 
-bool operator!=(const Viewport& lhs, const Viewport& rhs);
-bool operator!=(const Rect& lhs, const Rect& rhs);
+DEFINE_CMP_OP(DepthStencilAttachment)
+DEFINE_CMP_OP(SubpassInfo)
+DEFINE_CMP_OP(SubpassDependency)
+DEFINE_CMP_OP(RenderPassInfo)
+DEFINE_CMP_OP(FramebufferInfo)
+DEFINE_CMP_OP(Viewport)
+DEFINE_CMP_OP(Rect)
+DEFINE_CMP_OP(Color)
+DEFINE_CMP_OP(Offset)
+DEFINE_CMP_OP(Extent)
+DEFINE_CMP_OP(Size)
+DEFINE_CMP_OP(TextureInfo)
+DEFINE_CMP_OP(TextureViewInfo)
+DEFINE_CMP_OP(BufferInfo)
+DEFINE_CMP_OP(SamplerInfo)
+DEFINE_CMP_OP(GlobalBarrierInfo)
+DEFINE_CMP_OP(TextureBarrierInfo)
+
+#undef DEFINE_CMP_OP
 
 struct SwapchainTextureInfo final {
     Swapchain* swapchain{nullptr};
