@@ -49,8 +49,9 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
 
     const DepthStencilAttachment& dsAttachment = _renderPass->getDepthStencilAttachment();
     if (_bindPoint == PipelineBindPoint::GRAPHICS) {
-        if (_gpuPipelineStateObj->wgpuRenderPipeline)
+        if (_gpuPipelineStateObj->wgpuRenderPipeline) {
             return;
+        }
         const AttributeList&             attrs  = _shader->getAttributes();
         uint64_t                         offset = 0;
         std::vector<WGPUVertexAttribute> wgpuAttrs;
@@ -101,9 +102,9 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
             .topology         = toWGPUPrimTopology(_primitive),
             .stripIndexFormat = WGPUIndexFormat_Undefined, //TODO_Zeqiang: ???
             .frontFace        = _rasterizerState.isFrontFaceCCW ? WGPUFrontFace::WGPUFrontFace_CCW : WGPUFrontFace::WGPUFrontFace_CW,
-            .cullMode         = _rasterizerState.cullMode == CullMode::FRONT ? WGPUCullMode::WGPUCullMode_Front
-                                                                     : _rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
-                                                                                                                   : WGPUCullMode::WGPUCullMode_None,
+            .cullMode         = _rasterizerState.cullMode == CullMode::FRONT  ? WGPUCullMode::WGPUCullMode_Front
+                                : _rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
+                                                                              : WGPUCullMode::WGPUCullMode_None,
         };
 
         WGPUStencilFaceState stencilFront = {
@@ -145,21 +146,23 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
 
         std::vector<WGPUBlendState> blendState(colors.size());
 
-        for (size_t i = 0; i < colors.size(); i++) {
+        for (size_t i = 0, targetIndex = 0; i < colors.size(); i++) {
             colorTargetStates[i].format = toWGPUTextureFormat(colors[i].format);
-            blendState[i]
-                .color = {
-                .operation = toWGPUBlendOperation(_blendState.targets[i].blendAlphaEq),
-                .srcFactor = toWGPUBlendFactor(_blendState.targets[i].blendSrc),
-                .dstFactor = toWGPUBlendFactor(_blendState.targets[i].blendDst),
+            blendState[i].color         = {
+                .operation = toWGPUBlendOperation(_blendState.targets[targetIndex].blendEq),
+                .srcFactor = toWGPUBlendFactor(_blendState.targets[targetIndex].blendSrc),
+                .dstFactor = toWGPUBlendFactor(_blendState.targets[targetIndex].blendDst),
             };
             blendState[i].alpha = {
-                .operation = toWGPUBlendOperation(_blendState.targets[i].blendAlphaEq),
-                .srcFactor = toWGPUBlendFactor(_blendState.targets[i].blendSrc),
-                .dstFactor = toWGPUBlendFactor(_blendState.targets[i].blendDst),
+                .operation = toWGPUBlendOperation(_blendState.targets[targetIndex].blendAlphaEq),
+                .srcFactor = toWGPUBlendFactor(_blendState.targets[targetIndex].blendSrcAlpha),
+                .dstFactor = toWGPUBlendFactor(_blendState.targets[targetIndex].blendDstAlpha),
             };
             colorTargetStates[i].blend     = &blendState[i];
-            colorTargetStates[i].writeMask = toWGPUColorWriteMask(_blendState.targets[i].blendColorMask);
+            colorTargetStates[i].writeMask = toWGPUColorWriteMask(_blendState.targets[targetIndex].blendColorMask);
+            if (targetIndex < _blendState.targets.size() - 1) {
+                ++targetIndex;
+            }
         }
 
         WGPUFragmentState fragmentState = {
@@ -201,7 +204,6 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
 }
 
 void CCWGPUPipelineState::doDestroy() {
-    printf("pso des %p\n", this);
     if (_gpuPipelineStateObj) {
         if (_gpuPipelineStateObj->wgpuRenderPipeline) {
             wgpuRenderPipelineRelease(_gpuPipelineStateObj->wgpuRenderPipeline);

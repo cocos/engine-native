@@ -45,12 +45,16 @@ CCWGPUTexture::CCWGPUTexture() : wrapper<Texture>(val::object()) {
 }
 
 void CCWGPUTexture::doInit(const TextureInfo &info) {
+    uint8_t depthOrArrayLayers = info.depth;
+    if (info.type == TextureType::CUBE) {
+        depthOrArrayLayers = 6;
+    }
     WGPUTextureDescriptor descriptor = {
         .nextInChain   = nullptr,
         .label         = nullptr,
         .usage         = toWGPUTextureUsage(info.usage),
         .dimension     = toWGPUTextureDimension(info.type),
-        .size          = {info.width, info.height, info.depth},
+        .size          = {info.width, info.height, depthOrArrayLayers},
         .format        = toWGPUTextureFormat(info.format),
         .mipLevelCount = info.levelCount,
         .sampleCount   = toWGPUSampleCount(info.samples),
@@ -64,9 +68,9 @@ void CCWGPUTexture::doInit(const TextureInfo &info) {
         .format          = descriptor.format,
         .dimension       = toWGPUTextureViewDimension(info.type),
         .baseMipLevel    = 0,
-        .mipLevelCount   = 1,
+        .mipLevelCount   = _info.levelCount,
         .baseArrayLayer  = 0,
-        .arrayLayerCount = 1,
+        .arrayLayerCount = _info.layerCount,
         .aspect          = WGPUTextureAspect_All,
     };
     _gpuTextureObj->selfView = wgpuTextureCreateView(_gpuTextureObj->wgpuTexture, &texViewDesc);
@@ -145,12 +149,16 @@ void CCWGPUTexture::doResize(uint32_t width, uint32_t height, uint32_t size) {
         //wgpuTextureDestroy(_gpuTextureObj->wgpuTexture);
     }
 
+    uint8_t depthOrArrayLayers = _info.depth;
+    if (_info.type == TextureType::CUBE) {
+        depthOrArrayLayers = 6;
+    }
     WGPUTextureDescriptor descriptor = {
         .nextInChain   = nullptr,
         .label         = nullptr,
         .usage         = toWGPUTextureUsage(_info.usage),
         .dimension     = toWGPUTextureDimension(_info.type),
-        .size          = {_info.width, _info.height, _info.depth},
+        .size          = {_info.width, _info.height, depthOrArrayLayers},
         .format        = toWGPUTextureFormat(_info.format),
         .mipLevelCount = _info.levelCount,
         .sampleCount   = toWGPUSampleCount(_info.samples),
@@ -163,9 +171,9 @@ void CCWGPUTexture::doResize(uint32_t width, uint32_t height, uint32_t size) {
         .format          = descriptor.format,
         .dimension       = toWGPUTextureViewDimension(_info.type),
         .baseMipLevel    = 0,
-        .mipLevelCount   = 1,
+        .mipLevelCount   = _info.levelCount,
         .baseArrayLayer  = 0,
-        .arrayLayerCount = 1,
+        .arrayLayerCount = _info.layerCount,
         .aspect          = WGPUTextureAspect_All,
     };
     _gpuTextureObj->selfView = wgpuTextureCreateView(_gpuTextureObj->wgpuTexture, &texViewDesc);

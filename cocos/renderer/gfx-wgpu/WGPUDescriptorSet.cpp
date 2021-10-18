@@ -74,9 +74,9 @@ void CCWGPUDescriptorSet::doInit(const DescriptorSetInfo& info) {
             _samplerIdxMap.insert(std::make_pair<uint8_t, uint8_t>(bindings[i].binding, _gpuBindGroupObj->bindGroupEntries.size() - 1));
             dsLayout->updateLayout(smpEntry.binding, nullptr, nullptr, sampler);
         } else if (hasFlag(DESCRIPTOR_BUFFER_TYPE, bindings[i].descriptorType)) {
-            CCWGPUBuffer* buffer = hasFlag(DescriptorType::DYNAMIC_STORAGE_BUFFER | DescriptorType::STORAGE_BUFFER, bindings[i].descriptorType)
-                                       ? deviceObj->defaultResources.storageBuffer
-                                       : deviceObj->defaultResources.uniformBuffer;
+            CCWGPUBuffer*      buffer      = hasFlag(DescriptorType::DYNAMIC_STORAGE_BUFFER | DescriptorType::STORAGE_BUFFER, bindings[i].descriptorType)
+                                                 ? deviceObj->defaultResources.storageBuffer
+                                                 : deviceObj->defaultResources.uniformBuffer;
             WGPUBindGroupEntry bufferEntry = {
                 .binding = bindings[i].binding,
                 .buffer  = buffer->gpuBufferObject()->wgpuBuffer,
@@ -119,10 +119,11 @@ void CCWGPUDescriptorSet::update() {
     const auto& bindings = dsLayout->getBindings();
 
     for (size_t i = 0; i < bindings.size(); i++) {
-        const auto& binding = bindings[i];
+        const auto& binding       = bindings[i];
+        uint8_t     resourceIndex = _layout->getDescriptorIndices()[i];
         if (hasFlag(DESCRIPTOR_BUFFER_TYPE, bindings[i].descriptorType)) {
-            if (_buffers[i]) {
-                auto* buffer         = static_cast<CCWGPUBuffer*>(_buffers[i]);
+            if (_buffers[resourceIndex]) {
+                auto* buffer         = static_cast<CCWGPUBuffer*>(_buffers[resourceIndex]);
                 auto& bindGroupEntry = _gpuBindGroupObj->bindGroupEntries[i];
                 buffer->check();
                 bindGroupEntry.binding = binding.binding;
@@ -145,17 +146,17 @@ void CCWGPUDescriptorSet::update() {
             //assert((texIter != _textureIdxMap.end()) + (smpIter != _samplerIdxMap.end()) == 1);
             uint8_t textureIdx = texIter != _textureIdxMap.end() ? texIter->second : 255;
             uint8_t samplerIdx = smpIter != _samplerIdxMap.end() ? smpIter->second : 255;
-            if (textureIdx != 255 && _textures[i]) {
+            if (textureIdx != 255 && _textures[resourceIndex]) {
                 auto& bindGroupEntry       = _gpuBindGroupObj->bindGroupEntries[textureIdx];
-                auto* texture              = static_cast<CCWGPUTexture*>(_textures[i]);
+                auto* texture              = static_cast<CCWGPUTexture*>(_textures[resourceIndex]);
                 bindGroupEntry.binding     = binding.binding;
                 bindGroupEntry.textureView = texture->gpuTextureObject()->selfView;
                 dsLayout->updateLayout(bindGroupEntry.binding, nullptr, texture);
                 _gpuBindGroupObj->bindingSet.insert(binding.binding);
             }
-            if (samplerIdx != 255 && _samplers[i]) {
+            if (samplerIdx != 255 && _samplers[resourceIndex]) {
                 auto& bindGroupEntry   = _gpuBindGroupObj->bindGroupEntries[samplerIdx];
-                auto* sampler          = static_cast<CCWGPUSampler*>(_samplers[i]);
+                auto* sampler          = static_cast<CCWGPUSampler*>(_samplers[resourceIndex]);
                 bindGroupEntry.binding = binding.binding + CC_WGPU_MAX_ATTACHMENTS;
                 bindGroupEntry.sampler = sampler->gpuSampler();
                 dsLayout->updateLayout(bindGroupEntry.binding, nullptr, nullptr, sampler);
@@ -163,9 +164,9 @@ void CCWGPUDescriptorSet::update() {
             }
 
         } else if (hasFlag(DESCRIPTOR_TEXTURE_TYPE, bindings[i].descriptorType)) {
-            if (_textures[i]) {
+            if (_textures[resourceIndex]) {
                 auto& bindGroupEntry       = _gpuBindGroupObj->bindGroupEntries[i];
-                auto* texture              = static_cast<CCWGPUTexture*>(_textures[i]);
+                auto* texture              = static_cast<CCWGPUTexture*>(_textures[resourceIndex]);
                 bindGroupEntry.binding     = binding.binding;
                 bindGroupEntry.textureView = texture->gpuTextureObject()->selfView;
                 dsLayout->updateLayout(bindGroupEntry.binding, nullptr, texture);

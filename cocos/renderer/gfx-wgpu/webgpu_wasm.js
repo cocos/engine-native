@@ -1,6 +1,6 @@
 
 var wasmDevice = (function() {
-  var _scriptDir = import.meta.url;
+  var _scriptDir = typeof document !== 'undefined' && document.currentScript ? document.currentScript.src : undefined;
   
   return (
 function(wasmDevice) {
@@ -1547,13 +1547,10 @@ function createExportWrapper(name, fixedasm) {
 
 var wasmBinaryFile;
 
-if (Module["locateFile"]) {
- wasmBinaryFile = "webgpu_wasm.wasm";
- if (!isDataURI(wasmBinaryFile)) {
-  wasmBinaryFile = locateFile(wasmBinaryFile);
- }
-} else {
- wasmBinaryFile = new URL("webgpu_wasm.wasm", import.meta.url).toString();
+wasmBinaryFile = "webgpu_wasm.wasm";
+
+if (!isDataURI(wasmBinaryFile)) {
+ wasmBinaryFile = locateFile(wasmBinaryFile);
 }
 
 function getBinary(file) {
@@ -1616,9 +1613,8 @@ function createWasm() {
  }
  function instantiateArrayBuffer(receiver) {
   return getBinaryPromise().then(function(binary) {
-   return WebAssembly.instantiate(binary, info);
-  }).then(function(instance) {
-   return instance;
+   var result = WebAssembly.instantiate(binary, info);
+   return result;
   }).then(receiver, function(reason) {
    err("failed to asynchronously prepare wasm: " + reason);
    if (isFileURI(wasmBinaryFile)) {
@@ -1733,7 +1729,9 @@ function ___cxa_atexit(a0, a1) {
  return _atexit(a0, a1);
 }
 
-function _tzset_impl() {
+function _tzset() {
+ if (_tzset.called) return;
+ _tzset.called = true;
  var currentYear = new Date().getFullYear();
  var winter = new Date(currentYear, 0, 1);
  var summer = new Date(currentYear, 6, 1);
@@ -1757,12 +1755,6 @@ function _tzset_impl() {
   SAFE_HEAP_STORE(__get_tzname() | 0, summerNamePtr | 0, 4);
   SAFE_HEAP_STORE(__get_tzname() + 4 | 0, winterNamePtr | 0, 4);
  }
-}
-
-function _tzset() {
- if (_tzset.called) return;
- _tzset.called = true;
- _tzset_impl();
 }
 
 function _localtime_r(time, tmPtr) {
@@ -5130,10 +5122,6 @@ if (!Object.getOwnPropertyDescriptor(Module, "callRuntimeCallbacks")) Module["ca
  abort("'callRuntimeCallbacks' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
 
-if (!Object.getOwnPropertyDescriptor(Module, "handleException")) Module["handleException"] = function() {
- abort("'handleException' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
-};
-
 if (!Object.getOwnPropertyDescriptor(Module, "runtimeKeepalivePush")) Module["runtimeKeepalivePush"] = function() {
  abort("'runtimeKeepalivePush' was not exported. add it to EXPORTED_RUNTIME_METHODS (see the FAQ)");
 };
@@ -6170,4 +6158,9 @@ run();
 }
 );
 })();
-export default wasmDevice;
+if (typeof exports === 'object' && typeof module === 'object')
+  module.exports = wasmDevice;
+else if (typeof define === 'function' && define['amd'])
+  define([], function() { return wasmDevice; });
+else if (typeof exports === 'object')
+  exports["wasmDevice"] = wasmDevice;

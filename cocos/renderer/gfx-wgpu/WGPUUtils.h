@@ -86,9 +86,11 @@ static WGPUTextureViewDimension toWGPUTextureViewDimension(TextureType type) {
         case TextureType::TEX1D_ARRAY:
             return WGPUTextureViewDimension::WGPUTextureViewDimension_1D;
         case TextureType::TEX2D:
-        case TextureType::TEX2D_ARRAY:
-        case TextureType::CUBE:
             return WGPUTextureViewDimension::WGPUTextureViewDimension_2D;
+        case TextureType::TEX2D_ARRAY:
+            return WGPUTextureViewDimension::WGPUTextureViewDimension_2DArray;
+        case TextureType::CUBE:
+            return WGPUTextureViewDimension::WGPUTextureViewDimension_Cube;
         case TextureType::TEX3D:
             return WGPUTextureViewDimension::WGPUTextureViewDimension_3D;
         default:
@@ -260,7 +262,7 @@ static WGPUTextureFormat toWGPUTextureFormat(Format format) {
         case Format::BC7_SRGB:
             return WGPUTextureFormat::WGPUTextureFormat_BC7RGBAUnormSrgb;
         default:
-            CC_LOG_ERROR("unsupport WebGPU texture format.");
+            printf("unsupport WebGPU texture format %d\n", format);
             return WGPUTextureFormat::WGPUTextureFormat_Force32;
     }
 }
@@ -526,6 +528,8 @@ static WGPUBlendOperation toWGPUBlendOperation(BlendOp blendOp) {
             return WGPUBlendOperation::WGPUBlendOperation_Min;
         case BlendOp::MAX:
             return WGPUBlendOperation::WGPUBlendOperation_Max;
+        default:
+            return WGPUBlendOperation::WGPUBlendOperation_Add;
     }
 }
 
@@ -558,7 +562,7 @@ static WGPUBlendFactor toWGPUBlendFactor(BlendFactor blendFactor) {
         case BlendFactor::ONE_MINUS_CONSTANT_COLOR:
             return WGPUBlendFactor::WGPUBlendFactor_OneMinusConstant;
         default:
-            CC_LOG_ERROR("unsupport blend factor config.");
+            printf("unsupport blend factor config %d\n", blendFactor);
             return WGPUBlendFactor::WGPUBlendFactor_Force32;
     }
 }

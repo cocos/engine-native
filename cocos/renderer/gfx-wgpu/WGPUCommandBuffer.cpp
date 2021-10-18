@@ -309,7 +309,6 @@ void CCWGPUCommandBuffer::bindStates() {
                 }
             }
         }
-
         pipelineState->prepare(setInUse);
         //pipeline state
         wgpuRenderPassEncoderSetPipeline(_gpuCommandBufferObj->wgpuRenderPassEncoder,
@@ -363,7 +362,7 @@ void CCWGPUCommandBuffer::bindStates() {
                                           pipelineState->gpuPipelineStateObject()->wgpuComputePipeline);
 
     } else {
-        CC_LOG_ERROR("wrong pipeline state bind point.");
+        printf("wrong pipeline state bind point.");
     }
 }
 
