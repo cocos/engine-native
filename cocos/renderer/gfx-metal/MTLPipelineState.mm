@@ -346,11 +346,11 @@ void CCMTLPipelineState::setBlendStates(MTLRenderPipelineDescriptor *descriptor)
     int i = 0;
     for (const auto blendTarget : _blendState.targets) {
         MTLRenderPipelineColorAttachmentDescriptor *colorDescriptor = descriptor.colorAttachments[i];
+        colorDescriptor.writeMask = mu::toMTLColorWriteMask(blendTarget.blendColorMask);
         colorDescriptor.blendingEnabled = blendTarget.blend != 0;
         if (!blendTarget.blend)
             continue;
 
-        colorDescriptor.writeMask = mu::toMTLColorWriteMask(blendTarget.blendColorMask);
         colorDescriptor.sourceRGBBlendFactor = mu::toMTLBlendFactor(blendTarget.blendSrc);
         colorDescriptor.destinationRGBBlendFactor = mu::toMTLBlendFactor(blendTarget.blendDst);
         colorDescriptor.rgbBlendOperation = mu::toMTLBlendOperation(blendTarget.blendEq);

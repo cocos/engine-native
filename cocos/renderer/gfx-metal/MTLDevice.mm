@@ -346,11 +346,9 @@ void CCMTLDevice::getQueryPoolResults(QueryPool *queryPool) {
     CCMTLGPUQueryPool *gpuQueryPool = mtlQueryPool->gpuQueryPool();
     auto  queryCount  = static_cast<uint32_t>(mtlQueryPool->_ids.size());
     CCASSERT(queryCount <= mtlQueryPool->getMaxQueryObjects(), "Too many query commands.");
-    std::vector<uint64_t> results(queryCount, 0ULL);
-
-    if (queryCount > 0U) {
-        memcpy(results.data(), gpuQueryPool.visibilityResultBuffer.contents, queryCount * sizeof(uint64_t));
-    }
+    
+    gpuQueryPool->semaphore->wait();
+    uint64_t* results = queryCount > 0U ? static_cast<uint64_t*>(gpuQueryPool->visibilityResultBuffer.contents) : nullptr;
 
     std::unordered_map<uint32_t, uint64_t> mapResults;
     for (auto queryId = 0U; queryId < queryCount; queryId++) {

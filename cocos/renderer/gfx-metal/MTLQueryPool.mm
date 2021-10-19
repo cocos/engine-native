@@ -31,6 +31,7 @@
 #import "MTLGPUObjects.h"
 #import "MTLQueryPool.h"
 #import "MTLSwapchain.h"
+#import "MTLSemaphore.h"
 
 namespace cc {
 namespace gfx {
@@ -48,11 +49,17 @@ void CCMTLQueryPool::doInit(const QueryPoolInfo& info) {
     _gpuQueryPool                  = CC_NEW(CCMTLGPUQueryPool);
     _gpuQueryPool->type            = _type;
     _gpuQueryPool->maxQueryObjects = _maxQueryObjects;
-    _gpuQueryPool->visibilityResultBuffer = [device.newBufferWithLength:_maxQueryObjects * sizeof(uint64_t) options: MTLResourceStorageModeShared];
+    _gpuQueryPool->visibilityResultBuffer = [mtlDevice newBufferWithLength:_maxQueryObjects * sizeof(uint64_t) options: MTLResourceStorageModeShared];
+    _gpuQueryPool->semaphore = CC_NEW(CCMTLSemaphore(1));
 }
 
 void CCMTLQueryPool::doDestroy() {
     if(_gpuQueryPool) {
+        if (_gpuQueryPool->semaphore) {
+            _gpuQueryPool->semaphore->syncAll();
+            CC_SAFE_DELETE(_gpuQueryPool->semaphore);
+        }
+        
         id<MTLBuffer> mtlBuffer = _gpuQueryPool->visibilityResultBuffer;
         _gpuQueryPool->visibilityResultBuffer = nil;
         

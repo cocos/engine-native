@@ -47,6 +47,7 @@ class CCMTLRenderPass;
 class CCMTLFramebuffer;
 class CCMTLInputAssembler;
 class CCMTLPipelineState;
+class CCMTLSemaphore;
 
 namespace {
     constexpr size_t MegaBytesToBytes = 1024 * 1024;
@@ -357,7 +358,8 @@ struct CCMTLGPUQueryPool {
     QueryType   type = QueryType::OCCLUSION;
     uint32_t    maxQueryObjects = 0;
     id<MTLBuffer> visibilityResultBuffer = nil;
-}
+    CCMTLSemaphore *semaphore = nullptr;
+};
 
 } // namespace gfx
 } // namespace cc

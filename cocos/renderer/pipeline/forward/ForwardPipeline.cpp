@@ -108,6 +108,10 @@ void ForwardPipeline::render(const vector<scene::Camera *> &cameras) {
         _fg.execute();
         _pipelineUBO->incCameraUBOOffset();
     }
+    
+    if (enableOcclusionQuery) {
+        _commandBuffers[0]->completeQuery(_queryPools[0]);
+    }
 
     _commandBuffers[0]->end();
     _device->flushCommands(_commandBuffers);

@@ -35,6 +35,8 @@
 #import "MTLInputAssembler.h"
 #import "MTLPipelineState.h"
 #import "MTLQueue.h"
+#import "MTLQueryPool.h"
+#import "MTLSemaphore.h"
 #import "MTLRenderPass.h"
 #import "MTLSampler.h"
 #import "MTLSwapchain.h"
@@ -212,13 +214,9 @@ void CCMTLCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fb
 
     mtlRenderPassDescriptor.depthAttachment.clearDepth     = depth;
     mtlRenderPassDescriptor.stencilAttachment.clearStencil = stencil;
-    if (_mtlDevice->getCapabilities().supportQuery) {
-        auto* queryPool = static_cast<CCMTLQueryPool*>(_mtlDevice->getQueryPool());
-        mtlRenderPassDescriptor.visibilityResultBuffer = queryPool->gpuQueryPool()->visibilityResultBuffer;
-    }
-    else {
-        mtlRenderPassDescriptor.visibilityResultBuffer = nil;
-    }
+    
+    auto* queryPool = static_cast<CCMTLQueryPool*>(_mtlDevice->getQueryPool());
+    mtlRenderPassDescriptor.visibilityResultBuffer = _mtlDevice->getCapabilities().supportQuery ? queryPool->gpuQueryPool()->visibilityResultBuffer : nil;
 
     id<MTLCommandBuffer> mtlCommandBuffer = _gpuCommandBufferObj->mtlCommandBuffer;
     if (!isRenderingEntireDrawable(renderArea, static_cast<CCMTLRenderPass *>(renderPass))) {
@@ -855,7 +853,8 @@ void CCMTLCommandBuffer::beginQuery(QueryPool *queryPool, uint32_t id) {
     auto queryId = static_cast<uint32_t>(mtlQueryPool->_ids.size());
 
     if (queryId < queryPool->getMaxQueryObjects()) {
-        _renderEncoder->setVisibilityResultMode(MTLVisibilityResultModeBoolean, queryId * sizeof(uint64_t));
+        auto                 *mtlEncoder     = _renderEncoder.getMTLEncoder();
+        [mtlEncoder setVisibilityResultMode: MTLVisibilityResultModeBoolean offset: queryId * sizeof(uint64_t)];
     }
 }
 
@@ -864,7 +863,8 @@ void CCMTLCommandBuffer::endQuery(QueryPool *queryPool, uint32_t id) {
     auto queryId = static_cast<uint32_t>(mtlQueryPool->_ids.size());
 
     if (queryId < queryPool->getMaxQueryObjects()) {
-        _renderEncoder->setVisibilityResultMode(MTLVisibilityResultModeDisabled, queryId * sizeof(uint64_t));
+        auto                 *mtlEncoder     = _renderEncoder.getMTLEncoder();
+        [mtlEncoder setVisibilityResultMode: MTLVisibilityResultModeDisabled offset: queryId * sizeof(uint64_t)];
         mtlQueryPool->_ids.push_back(id);
     }
 }
@@ -873,6 +873,15 @@ void CCMTLCommandBuffer::resetQuery(QueryPool *queryPool) {
     auto* mtlQueryPool  = static_cast<CCMTLQueryPool *>(queryPool);
 
     mtlQueryPool->_ids.clear();
+}
+
+void CCMTLCommandBuffer::completeQuery(QueryPool *queryPool) {
+    auto *mtlQueryPool = static_cast<CCMTLQueryPool *>(queryPool);
+    CCMTLGPUQueryPool *gpuQueryPool = mtlQueryPool->gpuQueryPool();
+    
+    [_gpuCommandBufferObj->mtlCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
+        gpuQueryPool->semaphore->signal();
+    }];
 }
 
 } // namespace gfx
