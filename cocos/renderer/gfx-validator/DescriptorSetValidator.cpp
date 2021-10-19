@@ -85,11 +85,18 @@ void DescriptorSetValidator::bindBuffer(uint32_t binding, Buffer *buffer, uint32
     const DescriptorSetLayoutBindingList &bindings       = _layout->getBindings();
     CCASSERT(binding < bindingIndices.size() && bindingIndices[binding] < bindings.size(), "Illegal binding");
 
+    CCASSERT(hasAnyFlags(info.descriptorType, DESCRIPTOR_BUFFER_TYPE), "Setting binding is not DESCRIPTOR_BUFFER_TYPE");
+
     const DescriptorSetLayoutBinding &info = bindings[bindingIndices[binding]];
     if (hasAnyFlags(info.descriptorType, DESCRIPTOR_DYNAMIC_TYPE)) {
         CCASSERT(buffer->isBufferView(), "Should bind buffer views for dynamic descriptors");
     }
-    CCASSERT(hasAnyFlags(info.descriptorType, DESCRIPTOR_BUFFER_TYPE), "Setting binding is not DESCRIPTOR_BUFFER_TYPE");
+
+    if (hasAnyFlags(info.descriptorType, DescriptorType::UNIFORM_BUFFER | DescriptorType::DYNAMIC_UNIFORM_BUFFER)) {
+        CCASSERT(hasFlag(buffer->getInfo().usage, BufferUsageBit::UNIFORM), "Input is not a uniform buffer");
+    } else if (hasAnyFlags(info.descriptorType, DescriptorType::STORAGE_BUFFER | DescriptorType::DYNAMIC_STORAGE_BUFFER)) {
+        CCASSERT(hasFlag(texture->getInfo().usage, BufferUsageBit::STORAGE), "Input is not a storage buffer");
+    }
 
     /////////// execute ///////////
 
@@ -108,6 +115,14 @@ void DescriptorSetValidator::bindTexture(uint32_t binding, Texture *texture, uin
 
     const DescriptorSetLayoutBinding &info = bindings[bindingIndices[binding]];
     CCASSERT(hasAnyFlags(info.descriptorType, DESCRIPTOR_TEXTURE_TYPE), "Setting binding is not DESCRIPTOR_TEXTURE_TYPE");
+
+    if (hasFlag(info.descriptorType, DescriptorType::INPUT_ATTACHMENT)) {
+        CCASSERT(hasFlag(texture->getInfo().usage, TextureUsageBit::INPUT_ATTACHMENT), "Input is not an input attachment");
+    } else if (hasFlag(info.descriptorType, DescriptorType::STORAGE_IMAGE)) {
+        CCASSERT(hasFlag(texture->getInfo().usage, TextureUsageBit::STORAGE), "Input is not a storage image");
+    } else {
+        CCASSERT(hasFlag(texture->getInfo().usage, TextureUsageBit::SAMPLED), "Input is not a sampled texture");
+    }
 
     /////////// execute ///////////
 
