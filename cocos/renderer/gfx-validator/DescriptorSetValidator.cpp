@@ -85,17 +85,17 @@ void DescriptorSetValidator::bindBuffer(uint32_t binding, Buffer *buffer, uint32
     const DescriptorSetLayoutBindingList &bindings       = _layout->getBindings();
     CCASSERT(binding < bindingIndices.size() && bindingIndices[binding] < bindings.size(), "Illegal binding");
 
+    const DescriptorSetLayoutBinding &info = bindings[bindingIndices[binding]];
     CCASSERT(hasAnyFlags(info.descriptorType, DESCRIPTOR_BUFFER_TYPE), "Setting binding is not DESCRIPTOR_BUFFER_TYPE");
 
-    const DescriptorSetLayoutBinding &info = bindings[bindingIndices[binding]];
     if (hasAnyFlags(info.descriptorType, DESCRIPTOR_DYNAMIC_TYPE)) {
         CCASSERT(buffer->isBufferView(), "Should bind buffer views for dynamic descriptors");
     }
 
     if (hasAnyFlags(info.descriptorType, DescriptorType::UNIFORM_BUFFER | DescriptorType::DYNAMIC_UNIFORM_BUFFER)) {
-        CCASSERT(hasFlag(buffer->getInfo().usage, BufferUsageBit::UNIFORM), "Input is not a uniform buffer");
+        CCASSERT(hasFlag(buffer->getUsage(), BufferUsageBit::UNIFORM), "Input is not a uniform buffer");
     } else if (hasAnyFlags(info.descriptorType, DescriptorType::STORAGE_BUFFER | DescriptorType::DYNAMIC_STORAGE_BUFFER)) {
-        CCASSERT(hasFlag(texture->getInfo().usage, BufferUsageBit::STORAGE), "Input is not a storage buffer");
+        CCASSERT(hasFlag(buffer->getUsage(), BufferUsageBit::STORAGE), "Input is not a storage buffer");
     }
 
     /////////// execute ///////////
