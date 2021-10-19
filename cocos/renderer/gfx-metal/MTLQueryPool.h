@@ -42,11 +42,11 @@ public:
 protected:
     friend class CCMTLCommandBuffer;
     friend class CCMTLDevice;
-    
+
     void doInit(const QueryPoolInfo &info) override;
     void doDestroy() override;
 
-    CCMTLGPUQueryPool *    _gpuQueryPool{nullptr};
+    CCMTLGPUQueryPool *   _gpuQueryPool{nullptr};
     std::vector<uint32_t> _ids;
 };
 

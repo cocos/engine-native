@@ -34,15 +34,14 @@
 #import "MTLFramebuffer.h"
 #import "MTLInputAssembler.h"
 #import "MTLPipelineState.h"
-#import "MTLQueue.h"
 #import "MTLQueryPool.h"
-#import "MTLSemaphore.h"
+#import "MTLQueue.h"
 #import "MTLRenderPass.h"
 #import "MTLSampler.h"
+#import "MTLSemaphore.h"
 #import "MTLSwapchain.h"
 #import "MTLTexture.h"
 #import "TargetConditionals.h"
-
 
 namespace cc {
 namespace gfx {
@@ -214,8 +213,8 @@ void CCMTLCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fb
 
     mtlRenderPassDescriptor.depthAttachment.clearDepth     = depth;
     mtlRenderPassDescriptor.stencilAttachment.clearStencil = stencil;
-    
-    auto* queryPool = static_cast<CCMTLQueryPool*>(_mtlDevice->getQueryPool());
+
+    auto *queryPool                                = static_cast<CCMTLQueryPool *>(_mtlDevice->getQueryPool());
     mtlRenderPassDescriptor.visibilityResultBuffer = _mtlDevice->getCapabilities().supportQuery ? queryPool->gpuQueryPool()->visibilityResultBuffer : nil;
 
     id<MTLCommandBuffer> mtlCommandBuffer = _gpuCommandBufferObj->mtlCommandBuffer;
@@ -849,36 +848,36 @@ void CCMTLCommandBuffer::copyTextureToBuffers(Texture *src, uint8_t *const *buff
 }
 
 void CCMTLCommandBuffer::beginQuery(QueryPool *queryPool, uint32_t id) {
-    auto* mtlQueryPool = static_cast<CCMTLQueryPool*>(queryPool);
-    auto queryId = static_cast<uint32_t>(mtlQueryPool->_ids.size());
+    auto *mtlQueryPool = static_cast<CCMTLQueryPool *>(queryPool);
+    auto  queryId      = static_cast<uint32_t>(mtlQueryPool->_ids.size());
 
     if (queryId < queryPool->getMaxQueryObjects()) {
-        auto                 *mtlEncoder     = _renderEncoder.getMTLEncoder();
-        [mtlEncoder setVisibilityResultMode: MTLVisibilityResultModeBoolean offset: queryId * sizeof(uint64_t)];
+        auto *mtlEncoder = _renderEncoder.getMTLEncoder();
+        [mtlEncoder setVisibilityResultMode:MTLVisibilityResultModeBoolean offset:queryId * sizeof(uint64_t)];
     }
 }
 
 void CCMTLCommandBuffer::endQuery(QueryPool *queryPool, uint32_t id) {
-    auto* mtlQueryPool = static_cast<CCMTLQueryPool*>(queryPool);
-    auto queryId = static_cast<uint32_t>(mtlQueryPool->_ids.size());
+    auto *mtlQueryPool = static_cast<CCMTLQueryPool *>(queryPool);
+    auto  queryId      = static_cast<uint32_t>(mtlQueryPool->_ids.size());
 
     if (queryId < queryPool->getMaxQueryObjects()) {
-        auto                 *mtlEncoder     = _renderEncoder.getMTLEncoder();
-        [mtlEncoder setVisibilityResultMode: MTLVisibilityResultModeDisabled offset: queryId * sizeof(uint64_t)];
+        auto *mtlEncoder = _renderEncoder.getMTLEncoder();
+        [mtlEncoder setVisibilityResultMode:MTLVisibilityResultModeDisabled offset:queryId * sizeof(uint64_t)];
         mtlQueryPool->_ids.push_back(id);
     }
 }
 
 void CCMTLCommandBuffer::resetQuery(QueryPool *queryPool) {
-    auto* mtlQueryPool  = static_cast<CCMTLQueryPool *>(queryPool);
+    auto *mtlQueryPool = static_cast<CCMTLQueryPool *>(queryPool);
 
     mtlQueryPool->_ids.clear();
 }
 
 void CCMTLCommandBuffer::completeQuery(QueryPool *queryPool) {
-    auto *mtlQueryPool = static_cast<CCMTLQueryPool *>(queryPool);
+    auto *             mtlQueryPool = static_cast<CCMTLQueryPool *>(queryPool);
     CCMTLGPUQueryPool *gpuQueryPool = mtlQueryPool->gpuQueryPool();
-    
+
     [_gpuCommandBufferObj->mtlCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
         gpuQueryPool->semaphore->signal();
     }];

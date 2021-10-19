@@ -33,7 +33,6 @@
 #include "MTLGPUObjects.h"
 #include "MTLRenderCommandEncoder.h"
 
-
 namespace cc {
 namespace gfx {
 

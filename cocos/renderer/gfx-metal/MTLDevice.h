@@ -28,7 +28,6 @@
 #import "MTLConfig.h"
 #import "gfx-base/GFXDevice.h"
 
-
 namespace cc {
 namespace gfx {
 
