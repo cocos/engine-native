@@ -50,7 +50,7 @@ void CCWGPUDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo& info) {
     for (size_t i = 0; i < _bindings.size(); i++) {
         if (_bindings[i].descriptorType == DescriptorType::UNKNOWN)
             continue;
-        if (_bindings[i].descriptorType == DescriptorType::SAMPLER_TEXTURE) {
+        if (hasFlag(COMBINED_ST_IN_USE, _bindings[i].descriptorType)) {
             // 1. texture
             WGPUBindGroupLayoutEntry textureLayout = {
                 .nextInChain        = nullptr,
@@ -173,17 +173,17 @@ void CCWGPUDescriptorSetLayout::prepare(const std::set<uint8_t>& bindingInUse) {
 
     const auto& entries = _gpuLayoutEntryObj->bindGroupLayoutEntries;
 
-    for (size_t j = 0; j < _gpuLayoutEntryObj->bindGroupLayoutEntries.size(); j++) {
-        const auto& entry = _gpuLayoutEntryObj->bindGroupLayoutEntries[j];
-        if ((entry.buffer.type != WGPUBufferBindingType_Undefined) +
-                (entry.sampler.type != WGPUSamplerBindingType_Undefined) +
-                (entry.texture.sampleType != WGPUTextureSampleType_Undefined) +
-                (entry.storageTexture.access != WGPUStorageTextureAccess_Undefined) !=
-            1) {
-            printf("******missing %d, %d, %d, %d, %d\n", entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
-            printf("desc %d\n", _bindings[j].descriptorType);
-        }
-    }
+    // for (size_t j = 0; j < entries.size(); j++) {
+    //     const auto& entry = entries[j];
+    //     if ((entry.buffer.type != WGPUBufferBindingType_Undefined) +
+    //             (entry.sampler.type != WGPUSamplerBindingType_Undefined) +
+    //             (entry.texture.sampleType != WGPUTextureSampleType_Undefined) +
+    //             (entry.storageTexture.access != WGPUStorageTextureAccess_Undefined) !=
+    //         1) {
+    //         printf("******missing %d, %d, %d, %d, %d\n", entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
+    //     }
+    //     printf("l binding, b, t, s  %d, %d, %d, %d, %d\n", entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
+    // }
 
     if (entries.empty()) {
         _gpuLayoutEntryObj->bindGroupLayout = anoymous::defaultBindgroupLayout;

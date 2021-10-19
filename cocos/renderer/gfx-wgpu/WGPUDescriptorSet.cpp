@@ -53,7 +53,8 @@ void CCWGPUDescriptorSet::doInit(const DescriptorSetInfo& info) {
     const auto&                  bindings      = dsLayout->getBindings();
     CCWGPUDeviceObject*          deviceObj     = CCWGPUDevice::getInstance()->gpuDeviceObject();
     for (size_t i = 0; i < bindings.size(); i++) {
-        if (bindings[i].descriptorType == DescriptorType::SAMPLER_TEXTURE) {
+        // effect.ts: INPUT_ATTACHMENT as combined texture but no sampler_texture desc type.
+        if (hasFlag(COMBINED_ST_IN_USE, bindings[i].descriptorType)) {
             //1. texture
             CCWGPUTexture*     texture  = deviceObj->defaultResources.commonTexture;
             WGPUBindGroupEntry texEntry = {
@@ -140,7 +141,7 @@ void CCWGPUDescriptorSet::update() {
                     (*iter).second = 1;
                 }
             }
-        } else if (binding.descriptorType == DescriptorType::SAMPLER_TEXTURE) {
+        } else if (hasFlag(COMBINED_ST_IN_USE, bindings[i].descriptorType)) {
             auto texIter = _textureIdxMap.find(binding.binding);
             auto smpIter = _samplerIdxMap.find(binding.binding);
             //assert((texIter != _textureIdxMap.end()) + (smpIter != _samplerIdxMap.end()) == 1);
@@ -161,16 +162,6 @@ void CCWGPUDescriptorSet::update() {
                 bindGroupEntry.sampler = sampler->gpuSampler();
                 dsLayout->updateLayout(bindGroupEntry.binding, nullptr, nullptr, sampler);
                 _gpuBindGroupObj->bindingSet.insert(binding.binding + CC_WGPU_MAX_ATTACHMENTS);
-            }
-
-        } else if (hasFlag(DESCRIPTOR_TEXTURE_TYPE, bindings[i].descriptorType)) {
-            if (_textures[resourceIndex]) {
-                auto& bindGroupEntry       = _gpuBindGroupObj->bindGroupEntries[i];
-                auto* texture              = static_cast<CCWGPUTexture*>(_textures[resourceIndex]);
-                bindGroupEntry.binding     = binding.binding;
-                bindGroupEntry.textureView = texture->gpuTextureObject()->selfView;
-                dsLayout->updateLayout(bindGroupEntry.binding, nullptr, texture);
-                _gpuBindGroupObj->bindingSet.insert(binding.binding);
             }
         }
     }

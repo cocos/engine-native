@@ -41,6 +41,8 @@ constexpr uint8_t CC_WGPU_MAX_ATTACHMENTS = 16;
 
 constexpr decltype(nullptr) wgpuDefaultHandle = nullptr;
 
+const DescriptorType COMBINED_ST_IN_USE = DescriptorType::SAMPLER_TEXTURE | DescriptorType::INPUT_ATTACHMENT;
+
 class CCWGPUTexture;
 class CCWGPUBuffer;
 class CCWGPUSampler;
