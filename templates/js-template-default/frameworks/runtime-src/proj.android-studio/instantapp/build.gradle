@@ -125,7 +125,5 @@ dependencies {
     implementation fileTree(dir: '../libs', include: ['*.jar','*.aar'])
     implementation fileTree(dir: 'libs', include: ['*.jar','*.aar'])
     implementation fileTree(dir: "../../../cocos2d-x/cocos/platform/android/java/libs", include: ['*.jar'])
-    implementation 'com.google.android.instantapps:instantapps:1.1.0'
-    implementation 'com.google.android.gms:play-services-instantapps:17.0.1'
     implementation project(':libcocos2dx')
 }
