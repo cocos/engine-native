@@ -168,7 +168,7 @@ void CCWGPUDescriptorSet::update() {
 }
 
 void CCWGPUDescriptorSet::prepare() {
-    if (_isDirty) {
+    if (_isDirty || !_gpuBindGroupObj->bindgroup) {
         auto* dsLayout = static_cast<CCWGPUDescriptorSetLayout*>(_layout);
         dsLayout->prepare(_gpuBindGroupObj->bindingSet);
 
