@@ -66,20 +66,22 @@ void CCWGPUCommandBuffer::begin(RenderPass *renderPass, uint subpass, Framebuffe
 
 void CCWGPUCommandBuffer::end() {
     auto *pipelineState = _gpuCommandBufferObj->stateCache.pipelineState;
-    if (pipelineState->getBindPoint() == PipelineBindPoint::GRAPHICS) {
-        auto *queue                             = _gpuCommandBufferObj->queue;
-        _gpuCommandBufferObj->wgpuCommandBuffer = wgpuCommandEncoderFinish(_gpuCommandBufferObj->wgpuCommandEncoder, nullptr);
-        wgpuQueueSubmit(queue->gpuQueueObject()->wgpuQueue, 1, &_gpuCommandBufferObj->wgpuCommandBuffer);
-        wgpuCommandEncoderRelease(_gpuCommandBufferObj->wgpuCommandEncoder);
-        _gpuCommandBufferObj->wgpuCommandEncoder = wgpuDefaultHandle;
-    } else {
-        wgpuComputePassEncoderEndPass(_gpuCommandBufferObj->wgpuComputeEncoder);
-        wgpuComputePassEncoderRelease(_gpuCommandBufferObj->wgpuComputeEncoder);
-        _gpuCommandBufferObj->wgpuCommandBuffer = wgpuCommandEncoderFinish(_gpuCommandBufferObj->wgpuCommandEncoder, nullptr);
-        wgpuQueueSubmit(static_cast<CCWGPUQueue *>(_queue)->gpuQueueObject()->wgpuQueue, 1, &_gpuCommandBufferObj->wgpuCommandBuffer);
-        wgpuCommandEncoderRelease(_gpuCommandBufferObj->wgpuCommandEncoder);
-        _gpuCommandBufferObj->wgpuComputeEncoder = wgpuDefaultHandle;
-        _gpuCommandBufferObj->wgpuCommandEncoder = wgpuDefaultHandle;
+    if (pipelineState) {
+        if (pipelineState->getBindPoint() == PipelineBindPoint::GRAPHICS) {
+            auto *queue                             = _gpuCommandBufferObj->queue;
+            _gpuCommandBufferObj->wgpuCommandBuffer = wgpuCommandEncoderFinish(_gpuCommandBufferObj->wgpuCommandEncoder, nullptr);
+            wgpuQueueSubmit(queue->gpuQueueObject()->wgpuQueue, 1, &_gpuCommandBufferObj->wgpuCommandBuffer);
+            wgpuCommandEncoderRelease(_gpuCommandBufferObj->wgpuCommandEncoder);
+            _gpuCommandBufferObj->wgpuCommandEncoder = wgpuDefaultHandle;
+        } else {
+            wgpuComputePassEncoderEndPass(_gpuCommandBufferObj->wgpuComputeEncoder);
+            wgpuComputePassEncoderRelease(_gpuCommandBufferObj->wgpuComputeEncoder);
+            _gpuCommandBufferObj->wgpuCommandBuffer = wgpuCommandEncoderFinish(_gpuCommandBufferObj->wgpuCommandEncoder, nullptr);
+            wgpuQueueSubmit(static_cast<CCWGPUQueue *>(_queue)->gpuQueueObject()->wgpuQueue, 1, &_gpuCommandBufferObj->wgpuCommandBuffer);
+            wgpuCommandEncoderRelease(_gpuCommandBufferObj->wgpuCommandEncoder);
+            _gpuCommandBufferObj->wgpuComputeEncoder = wgpuDefaultHandle;
+            _gpuCommandBufferObj->wgpuCommandEncoder = wgpuDefaultHandle;
+        }
     }
 }
 
