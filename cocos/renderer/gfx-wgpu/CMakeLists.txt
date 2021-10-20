@@ -3,6 +3,10 @@ cmake_minimum_required(VERSION 2.8)
 set(APP_NAME "webgpu" CACHE STRING "Project Name")
 project(${APP_NAME}_wasm)
 
+if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
+endif()
+
 set(ENGINE_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/../../..)
 
 include(${ENGINE_ROOT_DIR}/cmake/predefine.cmake)
