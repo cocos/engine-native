@@ -213,7 +213,7 @@ bool GLES3Device::doInit(const DeviceInfo & /*info*/) {
     _queue         = createQueue(queueInfo);
 
     QueryPoolInfo queryPoolInfo{QueryType::OCCLUSION, DEFAULT_MAX_QUERY_OBJECTS};
-    _queryPool = GLES3Device::getInstance()->createQueryPool(queryPoolInfo);
+    _queryPool = createQueryPool(queryPoolInfo);
 
     CommandBufferInfo cmdBuffInfo;
     cmdBuffInfo.type  = CommandBufferType::PRIMARY;
@@ -330,16 +330,12 @@ PipelineState *GLES3Device::createPipelineState() {
     return CC_NEW(GLES3PipelineState);
 }
 
-Sampler *GLES3Device::createSampler(const SamplerInfo &info, size_t hash) {
-    return CC_NEW(GLES3Sampler(info, hash));
+Sampler *GLES3Device::createSampler(const SamplerInfo &info) {
+    return CC_NEW(GLES3Sampler(info));
 }
 
-GlobalBarrier *GLES3Device::createGlobalBarrier(const GlobalBarrierInfo &info, size_t hash) {
-    return CC_NEW(GLES3GlobalBarrier(info, hash));
-}
-
-TextureBarrier *GLES3Device::createTextureBarrier(const TextureBarrierInfo &info, size_t hash) {
-    return CC_NEW(TextureBarrier(info, hash));
+GlobalBarrier *GLES3Device::createGlobalBarrier(const GlobalBarrierInfo &info) {
+    return CC_NEW(GLES3GlobalBarrier(info));
 }
 
 void GLES3Device::copyBuffersToTexture(const uint8_t *const *buffers, Texture *dst, const BufferTextureCopy *regions, uint32_t count) {

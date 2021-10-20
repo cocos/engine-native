@@ -43,6 +43,7 @@ namespace gfx {
  *      beginQuery
  *          drawObject
  *      endQuery
+ *  completeQuery
  */
 
 class CC_DLL QueryPool : public GFXObject {
@@ -53,8 +54,8 @@ public:
     void initialize(const QueryPoolInfo &info);
     void destroy();
 
-    bool             hasResult(uint32_t id) { return _results.count(id) != 0; }
-    uint64_t         getResult(uint32_t id) { return _results[id]; }
+    inline bool      hasResult(uint32_t id) { return _results.count(id) != 0; }
+    inline uint64_t  getResult(uint32_t id) { return _results[id]; }
     inline QueryType getType() const { return _type; }
     inline uint32_t  getMaxQueryObjects() const { return _maxQueryObjects; }
 
