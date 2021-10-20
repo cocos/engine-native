@@ -206,17 +206,11 @@ QueryPool* CCWGPUDevice::createQueryPool() {
     return CC_NEW(CCWGPUQueryPool);
 }
 
+Sampler* CCWGPUDevice::createSampler(const SamplerInfo& info) {
+    return new CCWGPUSampler(info);
+}
+
 void CCWGPUDevice::present() {
-}
-
-GlobalBarrier* CCWGPUDevice::createGlobalBarrier(const GlobalBarrierInfo& info, size_t hash) {
-}
-
-TextureBarrier* CCWGPUDevice::createTextureBarrier(const TextureBarrierInfo& info, size_t hash) {
-}
-
-Sampler* CCWGPUDevice::createSampler(const SamplerInfo& info, size_t hash) {
-    return new CCWGPUSampler(info, hash);
 }
 
 void CCWGPUDevice::getQueryPoolResults(QueryPool* queryPool) {

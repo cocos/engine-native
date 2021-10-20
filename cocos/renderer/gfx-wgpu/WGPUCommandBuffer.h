@@ -43,34 +43,35 @@ public:
     CCWGPUCommandBuffer();
     ~CCWGPUCommandBuffer() = default;
 
-    virtual void begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer);
-    virtual void end();
-    virtual void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, uint stencil, CommandBuffer *const *secondaryCBs, uint secondaryCBCount);
-    virtual void endRenderPass();
-    virtual void bindPipelineState(PipelineState *pso);
-    virtual void bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets);
-    virtual void bindInputAssembler(InputAssembler *ia);
-    virtual void setViewport(const Viewport &vp);
-    virtual void setScissor(const Rect &rect);
-    virtual void setLineWidth(float width);
-    virtual void setDepthBias(float constant, float clamp, float slope);
-    virtual void setBlendConstants(const Color &constants);
-    virtual void setDepthBound(float minBounds, float maxBounds);
-    virtual void setStencilWriteMask(StencilFace face, uint mask);
-    virtual void setStencilCompareMask(StencilFace face, uint ref, uint mask);
-    virtual void nextSubpass();
-    virtual void draw(const DrawInfo &info);
-    virtual void updateBuffer(Buffer *buff, const void *data, uint size);
-    virtual void copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count);
-    virtual void blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlit *regions, uint count, Filter filter);
-    virtual void execute(CommandBuffer *const *cmdBuffs, uint32_t count);
-    virtual void dispatch(const DispatchInfo &info);
-    virtual void pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrier *const *textureBarriers, const Texture *const *textures, uint textureBarrierCount);
+    void begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) override;
+    void end() override;
+    void beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, uint stencil, CommandBuffer *const *secondaryCBs, uint secondaryCBCount) override;
+    void endRenderPass() override;
+    void bindPipelineState(PipelineState *pso) override;
+    void bindDescriptorSet(uint set, DescriptorSet *descriptorSet, uint dynamicOffsetCount, const uint *dynamicOffsets) override;
+    void bindInputAssembler(InputAssembler *ia) override;
+    void setViewport(const Viewport &vp) override;
+    void setScissor(const Rect &rect) override;
+    void setLineWidth(float width) override;
+    void setDepthBias(float constant, float clamp, float slope) override;
+    void setBlendConstants(const Color &constants) override;
+    void setDepthBound(float minBounds, float maxBounds) override;
+    void setStencilWriteMask(StencilFace face, uint mask) override;
+    void setStencilCompareMask(StencilFace face, uint ref, uint mask) override;
+    void nextSubpass() override;
+    void draw(const DrawInfo &info) override;
+    void updateBuffer(Buffer *buff, const void *data, uint size) override;
+    void copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) override;
+    void blitTexture(Texture *srcTexture, Texture *dstTexture, const TextureBlit *regions, uint count, Filter filter) override;
+    void execute(CommandBuffer *const *cmdBuffs, uint32_t count) override;
+    void dispatch(const DispatchInfo &info) override;
+    void pipelineBarrier(const GlobalBarrier *barrier, const TextureBarrier *const *textureBarriers, const Texture *const *textures, uint textureBarrierCount) override;
 
     //TODO_Zeqiang: wgpu query pool
-    virtual void beginQuery(QueryPool *queryPool, uint32_t id){};
-    virtual void endQuery(QueryPool *queryPool, uint32_t id){};
-    virtual void resetQuery(QueryPool *queryPool){};
+    void beginQuery(QueryPool *queryPool, uint32_t id) override{};
+    void endQuery(QueryPool *queryPool, uint32_t id) override{};
+    void resetQuery(QueryPool *queryPool) override{};
+    void completeQuery(QueryPool *queryPool) override{};
 
     inline CCWGPUCommandBufferObject *gpuCommandBufferObject() { return _gpuCommandBufferObj; }
 

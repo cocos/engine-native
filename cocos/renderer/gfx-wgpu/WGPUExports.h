@@ -964,7 +964,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
     class_<Sampler>("Sampler")
         .function("getInfo", &Sampler::getInfo);
     class_<CCWGPUSampler, base<Sampler>>("CCWGPUSampler")
-        .constructor<const SamplerInfo &, uint32_t>();
+        .constructor<const SamplerInfo &>();
 
     class_<Buffer>("Buffer")
         .function("initialize", select_overload<void(const BufferInfo &)>(&Buffer::initialize), allow_raw_pointer<arg<0>>())
