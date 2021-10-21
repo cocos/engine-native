@@ -182,7 +182,7 @@ void PostProcessStage::render(scene::Camera *camera) {
         data.depth = builder.write(data.depth, depthAttachmentInfo);
         builder.writeToBlackboard(RenderPipeline::fgStrHandleOutDepthTexture, data.depth);
 
-        builder.setViewport(pipeline->getRenderArea(camera));
+        builder.setViewport(pipeline->getViewport(camera), pipeline->getScissor(camera));
     };
 
     auto postExec = [this, camera](RenderData const &data, const framegraph::DevicePassResourceTable &table) {

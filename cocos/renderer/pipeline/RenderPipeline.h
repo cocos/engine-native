@@ -96,6 +96,7 @@ public:
 
     gfx::Rect               getRenderArea(scene::Camera *camera);
     gfx::Viewport           getViewport(scene::Camera *camera);
+    gfx::Rect               getScissor(scene::Camera *camera);
     void                    genQuadVertexData(const Vec4 &viewport, float *data);
     uint                    getWidth() const { return _width; }
     uint                    getHeight() const { return _height; }

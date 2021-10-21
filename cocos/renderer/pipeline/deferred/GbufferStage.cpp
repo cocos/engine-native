@@ -221,7 +221,7 @@ void GbufferStage::render(scene::Camera *camera) {
         builder.writeToBlackboard(DeferredPipeline::fgStrHandleOutDepthTexture, data.depth);
 
         // viewport setup
-        builder.setViewport(pipeline->getViewport(camera), _renderArea);
+        builder.setViewport(pipeline->getViewport(camera), pipeline->getScissor(camera));
     };
 
     auto gbufferExec = [this, camera](const RenderData & /*data*/, const framegraph::DevicePassResourceTable &table) {

@@ -202,7 +202,7 @@ void ForwardStage::render(scene::Camera *camera) {
         data.depth = builder.create(RenderPipeline::fgStrHandleOutDepthTexture, depthTexInfo);
         data.depth = builder.write(data.depth, depthAttachmentInfo);
         builder.writeToBlackboard(RenderPipeline::fgStrHandleOutDepthTexture, data.depth);
-        builder.setViewport(pipeline->getViewport(camera), _renderArea);
+        builder.setViewport(pipeline->getViewport(camera), pipeline->getScissor(camera));
     };
 
     auto offset      = _pipeline->getPipelineUBO()->getCurrentCameraUBOOffset();

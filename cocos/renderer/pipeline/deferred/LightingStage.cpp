@@ -387,7 +387,7 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         data.outputTex                    = builder.write(data.outputTex, colorAttachmentInfo);
         builder.writeToBlackboard(RenderPipeline::fgStrHandleOutColorTexture, data.outputTex);
         // set render area
-        builder.setViewport(pipeline->getViewport(camera), pipeline->getRenderArea(camera));
+        builder.setViewport(pipeline->getViewport(camera), pipeline->getScissor(camera));
     };
 
     auto lightingExec = [this, camera](RenderData const &data, const framegraph::DevicePassResourceTable &table) {
@@ -492,7 +492,7 @@ void LightingStage::fgTransparent(scene::Camera *camera) {
         builder.writeToBlackboard(DeferredPipeline::fgStrHandleOutDepthTexture, data.depth);
 
         // set render area
-        builder.setViewport(pipeline->getViewport(camera), pipeline->getRenderArea(camera));
+        builder.setViewport(pipeline->getViewport(camera), pipeline->getScissor(camera));
     };
 
     auto transparentExec = [this, camera](RenderData const & /*data*/, const framegraph::DevicePassResourceTable &table) {
@@ -775,7 +775,7 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
         data.depth = builder.write(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::fgStrHandleOutDepthTexture)), depthAttachmentInfo);
         builder.writeToBlackboard(DeferredPipeline::fgStrHandleOutDepthTexture, data.depth);
 
-        builder.setViewport(pipeline->getViewport(camera), pipeline->getRenderArea(camera));
+        builder.setViewport(pipeline->getViewport(camera), pipeline->getScissor(camera));
     };
 
     auto renderExec = [this, camera](DataRender const &data, const framegraph::DevicePassResourceTable &table) {

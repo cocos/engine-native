@@ -131,7 +131,7 @@ void BloomStage::destroy() {
 void BloomStage::render(scene::Camera *camera) {
     auto *pipeline = _pipeline;
     CC_ASSERT(pipeline != nullptr);
-    if (!pipeline->getBloomEnabled() || !camera->scene->getDrawBatch2Ds().empty()) return;
+    if (!pipeline->getBloomEnabled() || !pipeline->getPipelineSceneData()->getRenderObjects().empty()) return;
 
     if (hasFlag(static_cast<gfx::ClearFlags>(camera->clearFlag), gfx::ClearFlagBit::COLOR)) {
         _clearColors[0].x = camera->clearColor.x;
@@ -199,8 +199,6 @@ void BloomStage::render(scene::Camera *camera) {
         }
         data.outputTexHandle = builder.write(data.outputTexHandle, colorAttachmentInfo);
         builder.writeToBlackboard(prefilterTexHandle, data.outputTexHandle);
-
-        builder.setViewport(pipeline->getViewport(camera), renderArea);
 
         // Update threshold
         data.bloomUBO       = stage->getPrefilterUBO();
@@ -281,8 +279,6 @@ void BloomStage::render(scene::Camera *camera) {
             data.outputTexHandle = builder.write(data.outputTexHandle, colorAttachmentInfo);
             builder.writeToBlackboard(downsampleTexHandles[data.index], data.outputTexHandle);
 
-            builder.setViewport(pipeline->getViewport(camera), renderArea);
-
             // Update cc_textureSize
             data.bloomUBO       = stage->getDownsampelUBO()[data.index];
             data.textureSize[0] = static_cast<float>(static_cast<uint>(renderArea.width * shadingScale) << 1);
@@ -356,8 +352,6 @@ void BloomStage::render(scene::Camera *camera) {
             }
             data.outputTexHandle = builder.write(data.outputTexHandle, colorAttachmentInfo);
             builder.writeToBlackboard(upsampleTexHandles[data.index], data.outputTexHandle);
-
-            builder.setViewport(pipeline->getViewport(camera), renderArea);
 
             // Update cc_textureSize
             data.bloomUBO       = stage->getUpsampleUBO()[data.index];
@@ -438,8 +432,6 @@ void BloomStage::render(scene::Camera *camera) {
         }
         data.bloomOutTexHandle = builder.write(data.bloomOutTexHandle, colorAttachmentInfo);
         builder.writeToBlackboard(RenderPipeline::fgStrHandleBloomOutTexture, data.bloomOutTexHandle);
-
-        builder.setViewport(pipeline->getViewport(camera), renderArea);
 
         // Update intensity
         data.bloomUBO       = stage->getCombineUBO();
