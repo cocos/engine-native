@@ -25,6 +25,7 @@
 
 #include "WGPUPipelineState.h"
 #include <emscripten/html5_webgpu.h>
+#include <numeric>
 #include "WGPUDescriptorSetLayout.h"
 #include "WGPUDevice.h"
 #include "WGPUObject.h"
@@ -32,6 +33,7 @@
 #include "WGPURenderPass.h"
 #include "WGPUShader.h"
 #include "WGPUUtils.h"
+
 namespace cc {
 namespace gfx {
 
@@ -86,8 +88,12 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
             wgpuAttrs.push_back(attr);
         }
 
+        uint64_t stride = std::accumulate(_inputState.attributes.begin(), _inputState.attributes.end(), 0, [](uint64_t initVal, const Attribute& in) {
+            return initVal + GFX_FORMAT_INFOS[static_cast<uint>(in.format)].size;
+        });
+
         WGPUVertexBufferLayout vertexBufferLayout = {
-            .arrayStride    = offset[0], // TODO_Zeqiang: ???
+            .arrayStride    = stride, // TODO_Zeqiang: ???
             .stepMode       = isInstance ? WGPUInputStepMode_Instance : WGPUInputStepMode_Vertex,
             .attributeCount = wgpuAttrs.size(),
             .attributes     = wgpuAttrs.data(),
@@ -108,9 +114,9 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
             .topology         = toWGPUPrimTopology(_primitive),
             .stripIndexFormat = WGPUIndexFormat_Undefined, //TODO_Zeqiang: ???
             .frontFace        = _rasterizerState.isFrontFaceCCW ? WGPUFrontFace::WGPUFrontFace_CCW : WGPUFrontFace::WGPUFrontFace_CW,
-            .cullMode         = _rasterizerState.cullMode == CullMode::FRONT  ? WGPUCullMode::WGPUCullMode_Front
-                                : _rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
-                                                                              : WGPUCullMode::WGPUCullMode_None,
+            .cullMode         = _rasterizerState.cullMode == CullMode::FRONT ? WGPUCullMode::WGPUCullMode_Front
+                                                                     : _rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
+                                                                                                                   : WGPUCullMode::WGPUCullMode_None,
         };
 
         WGPUStencilFaceState stencilFront = {
