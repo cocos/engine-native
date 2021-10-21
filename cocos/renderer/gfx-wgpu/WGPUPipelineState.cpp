@@ -52,11 +52,17 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
         if (_gpuPipelineStateObj->wgpuRenderPipeline) {
             return;
         }
-        const AttributeList&             attrs  = _shader->getAttributes();
-        uint64_t                         offset = 0;
+
+        // should never happen
+        assert(attrs.size() > 0);
+        assert(_inputState.attributes.size() > 0);
+
+        const AttributeList&             attrs       = _shader->getAttributes();
+        uint64_t                         offset[256] = {0};
         std::vector<WGPUVertexAttribute> wgpuAttrs;
         bool                             isInstance = attrs[0].isInstanced;
         uint8_t                          index      = 0;
+        //uint8_t                          curStream  = _inputState.attributes[0].stream;
         for (size_t i = 0; i < attrs.size(); i++) {
             String attrName = attrs[i].name;
             auto   iter     = std::find_if(_inputState.attributes.begin(), _inputState.attributes.end(), [attrName](const Attribute& attr) {
@@ -66,8 +72,9 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
             Format   format     = attrs[i].format;
             uint64_t realOffset = 0;
             if (iter != _inputState.attributes.end()) {
-                realOffset = offset;
+                realOffset = offset[(*iter).stream];
                 format     = (*iter).format;
+                offset[(*iter).stream] += GFX_FORMAT_INFOS[static_cast<uint>(format)].size;
             }
 
             WGPUVertexAttribute attr = {
@@ -76,12 +83,10 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
                 .shaderLocation = attrs[i].location,
             };
             wgpuAttrs.push_back(attr);
-            if (iter != _inputState.attributes.end())
-                offset += GFX_FORMAT_INFOS[static_cast<uint>(format)].size;
         }
 
         WGPUVertexBufferLayout vertexBufferLayout = {
-            .arrayStride    = offset,
+            .arrayStride    = offset[0], // TODO_Zeqiang: ???
             .stepMode       = isInstance ? WGPUInputStepMode_Instance : WGPUInputStepMode_Vertex,
             .attributeCount = wgpuAttrs.size(),
             .attributes     = wgpuAttrs.data(),
