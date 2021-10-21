@@ -86,6 +86,8 @@ void CCWGPUCommandBuffer::end() {
 }
 
 void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, uint stencil, CommandBuffer *const *secondaryCBs, uint secondaryCBCount) {
+    _renderPass = renderPass;
+
     CCWGPUFramebuffer *ccFrameBuffer = static_cast<CCWGPUFramebuffer *>(fbo);
 
     const ColorAttachmentList &   colorConfigs       = renderPass->getColorAttachments();
@@ -101,9 +103,9 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
         renderPassDesc.label                = "swapchain";
         WGPURenderPassColorAttachment color = {
             .view          = swapchain->gpuSwapchainObject()->swapchainColor->gpuTextureObject()->selfView,
-            .resolveTarget = nullptr, //TODO_Zeqiang: wgpu offscr msaa
-            .loadOp        = toWGPULoadOp(colorConfigs[0].loadOp),
-            .storeOp       = toWGPUStoreOp(colorConfigs[0].storeOp),
+            .resolveTarget = nullptr,           //TODO_Zeqiang: wgpu offscr msaa
+            .loadOp        = WGPULoadOp_Clear,  //toWGPULoadOp(colorConfigs[0].loadOp),
+            .storeOp       = WGPUStoreOp_Clear, //toWGPUStoreOp(colorConfigs[0].storeOp),
             .clearColor    = WGPUColor{0.2, 0.2, 0.2, 1.0},
         };
         colorAttachments.emplace_back(color);
@@ -171,7 +173,7 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
     renderPassDesc.colorAttachmentCount         = colorAttachments.size();
     renderPassDesc.depthStencilAttachment       = depthStencils.empty() ? nullptr : depthStencils.data();
     _gpuCommandBufferObj->wgpuRenderPassEncoder = wgpuCommandEncoderBeginRenderPass(_gpuCommandBufferObj->wgpuCommandEncoder, &renderPassDesc);
-}
+} // namespace gfx
 
 void CCWGPUCommandBuffer::endRenderPass() {
     wgpuRenderPassEncoderEndPass(_gpuCommandBufferObj->wgpuRenderPassEncoder);
@@ -311,6 +313,7 @@ void CCWGPUCommandBuffer::bindStates() {
                 }
             }
         }
+        pipelineState->check(_renderPass);
         pipelineState->prepare(setInUse);
         //pipeline state
         wgpuRenderPassEncoderSetPipeline(_gpuCommandBufferObj->wgpuRenderPassEncoder,

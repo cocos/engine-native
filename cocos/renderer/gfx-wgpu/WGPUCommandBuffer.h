@@ -95,6 +95,8 @@ protected:
 
     CCWGPUCommandBufferObject *_gpuCommandBufferObj = nullptr;
 
+    RenderPass *_renderPass = nullptr;
+
     // command buffer inner impl
     //std::queue<EncodeFunc> _renderPassFuncQ;
     //std::queue<EncodeFunc> _computeFuncQ;

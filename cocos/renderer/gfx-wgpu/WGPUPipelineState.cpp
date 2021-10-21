@@ -44,6 +44,11 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
     _gpuPipelineStateObj = CC_NEW(CCWGPUPipelineStateObject);
 }
 
+void CCWGPUPipelineState::check(RenderPass* renderPass) {
+    // if(_renderPass != renderPass)
+    _renderPass = renderPass;
+}
+
 void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
     auto* pipelineLayout = static_cast<CCWGPUPipelineLayout*>(_pipelineLayout);
 
@@ -52,10 +57,6 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
         if (_gpuPipelineStateObj->wgpuRenderPipeline) {
             return;
         }
-
-        // should never happen
-        assert(attrs.size() > 0);
-        assert(_inputState.attributes.size() > 0);
 
         const AttributeList&             attrs       = _shader->getAttributes();
         uint64_t                         offset[256] = {0};

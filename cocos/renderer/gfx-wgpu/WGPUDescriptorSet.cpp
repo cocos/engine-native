@@ -137,7 +137,7 @@ void CCWGPUDescriptorSet::update() {
                     auto iter = std::find_if(_dynamicOffsets.begin(), _dynamicOffsets.end(), [bindIndex](const std::pair<uint8_t, uint8_t> dynIndex) {
                         return dynIndex.first == bindIndex;
                     });
-                    assert(iter != _dynamicOffsets.end()); //can't happen
+                    //assert(iter != _dynamicOffsets.end()); //can't happen
                     (*iter).second = 1;
                 }
             }

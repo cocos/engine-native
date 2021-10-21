@@ -40,6 +40,8 @@ public:
 
     inline CCWGPUPipelineStateObject* gpuPipelineStateObject() { return _gpuPipelineStateObj; }
 
+    void check(RenderPass* renderPass);
+
     void prepare(const std::set<uint8_t>& setInUse);
 
 protected:
