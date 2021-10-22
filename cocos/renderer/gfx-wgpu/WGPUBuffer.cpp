@@ -72,11 +72,13 @@ void CCWGPUBuffer::doInit(const BufferInfo &info) {
     }
 
     _gpuBufferObject->wgpuBuffer = wgpuDeviceCreateBuffer(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
+    _internalChanged             = true;
 } // namespace gfx
 
 void CCWGPUBuffer::doInit(const BufferViewInfo &info) {
     _gpuBufferObject             = CC_NEW(CCWGPUBufferObject);
     _gpuBufferObject->wgpuBuffer = static_cast<CCWGPUBuffer *>(info.buffer)->gpuBufferObject()->wgpuBuffer;
+    _internalChanged             = true;
 }
 
 void CCWGPUBuffer::doDestroy() {
@@ -86,6 +88,7 @@ void CCWGPUBuffer::doDestroy() {
         }
         CC_DELETE(_gpuBufferObject);
     }
+    _internalChanged = true;
 }
 
 void CCWGPUBuffer::doResize(uint size, uint count) {
@@ -113,6 +116,8 @@ void CCWGPUBuffer::doResize(uint size, uint count) {
         .mappedAtCreation = false, //hasFlag(_memUsage, MemoryUsageBit::DEVICE),
     };
     _gpuBufferObject->wgpuBuffer = wgpuDeviceCreateBuffer(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
+
+    _internalChanged = true;
 } // namespace gfx
 
 void bufferUpdateCallback(WGPUBufferMapAsyncStatus status, void *userdata) {
@@ -197,6 +202,10 @@ void CCWGPUBuffer::check() {
         wgpuBufferUnmap(_gpuBufferObject->wgpuBuffer);
         _gpuBufferObject->mapped = false;
     }
+}
+
+void CCWGPUBuffer::stamp() {
+    _internalChanged = false;
 }
 
 CCWGPUBuffer *CCWGPUBuffer::defaultUniformBuffer() {

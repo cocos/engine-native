@@ -168,10 +168,22 @@ void CCWGPUDescriptorSet::update() {
 }
 
 void CCWGPUDescriptorSet::prepare() {
-    if (_isDirty || !_gpuBindGroupObj->bindgroup) {
+    auto buffIter = std::find_if(_buffers.begin(), _buffers.end(), [](const Buffer* buffer) {
+        return buffer ? static_cast<const CCWGPUBuffer*>(buffer)->internalChanged() : false;
+    });
+    auto texIter  = std::find_if(_textures.begin(), _textures.end(), [](const Texture* texture) {
+        return texture ? static_cast<const CCWGPUTexture*>(texture)->internalChanged() : false;
+    });
+
+    bool forceUpdate = buffIter != _buffers.end() || texIter != _textures.end();
+    if (forceUpdate) {
+        _isDirty = true;
+        update();
+    }
+
+    if (_isDirty || forceUpdate || !_gpuBindGroupObj->bindgroup) {
         auto* dsLayout = static_cast<CCWGPUDescriptorSetLayout*>(_layout);
         dsLayout->prepare(_gpuBindGroupObj->bindingSet);
-
         // std::vector<WGPUBindGroupEntry>
         //     bindGroupEntries;
         // bindGroupEntries.assign(_gpuBindGroupObj->bindGroupEntries.begin(), _gpuBindGroupObj->bindGroupEntries.end());
@@ -202,6 +214,16 @@ void CCWGPUDescriptorSet::prepare() {
             _gpuBindGroupObj->bindgroup = wgpuDeviceCreateBindGroup(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &bindGroupDesc);
         }
         _isDirty = false;
+        if (buffIter != _buffers.end())
+            std::for_each(_buffers.begin(), _buffers.end(), [](Buffer* buffer) {
+                if (buffer)
+                    static_cast<CCWGPUBuffer*>(buffer)->stamp();
+            });
+        if (texIter != _textures.end())
+            std::for_each(_textures.begin(), _textures.end(), [](Texture* texture) {
+                if (texture)
+                    static_cast<CCWGPUTexture*>(texture)->stamp();
+            });
     }
 }
 

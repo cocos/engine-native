@@ -74,6 +74,8 @@ void CCWGPUTexture::doInit(const TextureInfo &info) {
         .aspect          = WGPUTextureAspect_All,
     };
     _gpuTextureObj->selfView = wgpuTextureCreateView(_gpuTextureObj->wgpuTexture, &texViewDesc);
+
+    _internalChanged = true;
 } // namespace gfx
 
 void CCWGPUTexture::doInit(const TextureViewInfo &info) {
@@ -93,6 +95,8 @@ void CCWGPUTexture::doInit(const TextureViewInfo &info) {
     WGPUTexture wgpuTexture         = ccTexture->gpuTextureObject()->wgpuTexture;
     _gpuTextureObj->wgpuTextureView = ccTexture->gpuTextureObject()->selfView;
     _gpuTextureObj->selfView        = ccTexture->gpuTextureObject()->selfView;
+
+    _internalChanged = true;
 }
 
 void CCWGPUTexture::doInit(const SwapchainTextureInfo &info) {
@@ -127,6 +131,7 @@ void CCWGPUTexture::doInit(const SwapchainTextureInfo &info) {
         } else {
             _gpuTextureObj->selfView = wgpuSwapChainGetCurrentTextureView(swapchain->gpuSwapchainObject()->wgpuSwapChain);
         }
+        _internalChanged = true;
     }
 }
 
@@ -134,9 +139,17 @@ void CCWGPUTexture::doDestroy() {
     if (_gpuTextureObj) {
         if (_gpuTextureObj->wgpuTexture) {
             wgpuTextureDestroy(_gpuTextureObj->wgpuTexture);
+            wgpuTextureRelease(_gpuTextureObj->wgpuTexture);
+        }
+        if (_gpuTextureObj->wgpuTextureView) {
+            wgpuTextureViewRelease(_gpuTextureObj->wgpuTextureView);
+        }
+        if (_gpuTextureObj->selfView) {
+            wgpuTextureViewRelease(_gpuTextureObj->selfView);
         }
         CC_DELETE(_gpuTextureObj);
     }
+    _internalChanged = true;
 }
 
 void CCWGPUTexture::doResize(uint32_t width, uint32_t height, uint32_t size) {
@@ -146,7 +159,14 @@ void CCWGPUTexture::doResize(uint32_t width, uint32_t height, uint32_t size) {
         return;
     }
     if (_gpuTextureObj->wgpuTexture) {
-        //wgpuTextureDestroy(_gpuTextureObj->wgpuTexture);
+        wgpuTextureDestroy(_gpuTextureObj->wgpuTexture);
+        wgpuTextureRelease(_gpuTextureObj->wgpuTexture);
+    }
+    if (_gpuTextureObj->wgpuTextureView) {
+        wgpuTextureViewRelease(_gpuTextureObj->wgpuTextureView);
+    }
+    if (_gpuTextureObj->selfView) {
+        wgpuTextureViewRelease(_gpuTextureObj->selfView);
     }
 
     uint8_t depthOrArrayLayers = _info.depth;
@@ -177,26 +197,12 @@ void CCWGPUTexture::doResize(uint32_t width, uint32_t height, uint32_t size) {
         .aspect          = WGPUTextureAspect_All,
     };
     _gpuTextureObj->selfView = wgpuTextureCreateView(_gpuTextureObj->wgpuTexture, &texViewDesc);
+
+    _internalChanged = true;
 }
 
-void CCWGPUTexture::update() {
-    WGPUTextureViewDescriptor texViewDesc = {
-        .nextInChain     = nullptr,
-        .label           = nullptr,
-        .format          = toWGPUTextureFormat(_info.format),
-        .dimension       = toWGPUTextureViewDimension(_info.type),
-        .baseMipLevel    = 0,
-        .mipLevelCount   = 1,
-        .baseArrayLayer  = 0,
-        .arrayLayerCount = 1,
-        .aspect          = WGPUTextureAspect_All,
-    };
-    if (_gpuTextureObj->selfView)
-        wgpuTextureViewRelease(_gpuTextureObj->selfView);
-    if (_gpuTextureObj->wgpuTextureView)
-        wgpuTextureViewRelease(_gpuTextureObj->wgpuTextureView);
-
-    _gpuTextureObj->selfView = _gpuTextureObj->wgpuTextureView = wgpuTextureCreateView(_gpuTextureObj->wgpuTexture, &texViewDesc);
+void CCWGPUTexture::stamp() {
+    _internalChanged = false;
 }
 
 CCWGPUTexture *CCWGPUTexture::defaultCommonTexture() {

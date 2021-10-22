@@ -42,6 +42,11 @@ public:
 
     static CCWGPUSampler* defaultSampler();
 
+    //stamp current state
+    void stamp() {}
+
+    bool internalChanged() const { return false; }
+
 protected:
     WGPUSampler _wgpuSampler = wgpuDefaultHandle;
 };

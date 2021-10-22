@@ -59,6 +59,12 @@ public:
     // used before unmap?
     void check();
 
+    // stamp current resource handler
+    void stamp();
+
+    // resource handler changed?
+    inline bool internalChanged() const { return _internalChanged; }
+
 protected:
     void doInit(const BufferInfo& info) override;
     void doInit(const BufferViewInfo& info) override;
@@ -66,6 +72,8 @@ protected:
     void doResize(uint size, uint count) override;
 
     CCWGPUBufferObject* _gpuBufferObject = nullptr;
+
+    bool _internalChanged = false;
 };
 
 } // namespace gfx

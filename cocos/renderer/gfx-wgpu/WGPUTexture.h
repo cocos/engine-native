@@ -47,7 +47,11 @@ public:
 
     CCWGPUSwapchain* swapchain();
 
-    void update();
+    // stamp current state
+    void stamp();
+
+    // resource handler changed?
+    inline bool internalChanged() const { return _internalChanged; }
 
 protected:
     void doInit(const TextureInfo& info) override;
@@ -58,6 +62,8 @@ protected:
     void doInit(const SwapchainTextureInfo& info) override;
 
     CCWGPUTextureObject* _gpuTextureObj = nullptr;
+
+    bool _internalChanged = false;
 };
 
 } // namespace gfx
