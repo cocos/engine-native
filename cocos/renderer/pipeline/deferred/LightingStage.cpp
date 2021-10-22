@@ -300,13 +300,7 @@ void LightingStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
 
     _reflectionRenderQueue = CC_NEW(RenderQueue(_pipeline, std::move(info)));
 
-    gfx::SamplerInfo samplerInfo;
-    samplerInfo.minFilter = gfx::Filter::POINT;
-    samplerInfo.magFilter = gfx::Filter::POINT;
-    samplerInfo.addressU  = gfx::Address::CLAMP;
-    samplerInfo.addressV  = gfx::Address::CLAMP;
-    samplerInfo.addressW  = gfx::Address::CLAMP;
-    _defaultSampler       = _device->getSampler(samplerInfo);
+    _defaultSampler       = pipeline->getGlobalDSManager()->getPointSampler();
 }
 
 void LightingStage::destroy() {
