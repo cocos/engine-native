@@ -211,6 +211,9 @@ struct CCWGPUStateCache {
     Viewport viewport;
     Rect     rect;
 
+    uint32_t minAttachmentWidth = 0;
+    uint32_t minAttachmentHeight = 0;
+
     std::vector<CCWGPUDescriptorSetObject>    descriptorSets;
     std::map<StencilFace, CCWGPUStencilMasks> stencilMasks;
 };

@@ -25,6 +25,7 @@
 
 #include "WGPUCommandBuffer.h"
 #include <webgpu/webgpu.h>
+#include <limits>
 #include "WGPUBuffer.h"
 #include "WGPUDescriptorSet.h"
 #include "WGPUDescriptorSetLayout.h"
@@ -159,15 +160,35 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
         }
     }
 
+    uint32_t minWidth = std::numeric_limits<uint32_t>::max();
+    uint32_t minHeight = std::numeric_limits<uint32_t>::max();
+    for(size_t i = 0; i < textures.size(); i++) {
+        minWidth = minWidth > textures[i]->getWidth() ? textures[i]->getWidth() : minWidth;
+        minHeight = minHeight > textures[i]->getHeight() ? textures[i]->getHeight() : minHeight;
+    }
+
     _gpuCommandBufferObj->renderPassBegan = true;
+
+    uint32_t width = renderArea.width ;
+    uint32_t height = renderArea.height ;
+    if(renderArea.x + renderArea.width > minWidth ) {
+        width = renderArea.x > minWidth ? 0 : minWidth - renderArea.x;
+    }
+
+    if(renderArea.y + renderArea.height > minHeight ) {
+        height = renderArea.y > minHeight ? 0 : minHeight - renderArea.y;
+    }
 
     _gpuCommandBufferObj->stateCache.viewport.left     = renderArea.x;
     _gpuCommandBufferObj->stateCache.viewport.top      = renderArea.y;
-    _gpuCommandBufferObj->stateCache.viewport.width    = renderArea.width;
-    _gpuCommandBufferObj->stateCache.viewport.height   = renderArea.height;
+    _gpuCommandBufferObj->stateCache.viewport.width    = width;
+    _gpuCommandBufferObj->stateCache.viewport.height   = height;
     _gpuCommandBufferObj->stateCache.viewport.minDepth = 0.0f;
     _gpuCommandBufferObj->stateCache.viewport.maxDepth = 1.0f;
-    _gpuCommandBufferObj->stateCache.rect              = renderArea;
+    _gpuCommandBufferObj->stateCache.rect              = {renderArea.x, renderArea.y, width, height};
+
+    _gpuCommandBufferObj->stateCache.minAttachmentWidth = width;
+    _gpuCommandBufferObj->stateCache.minAttachmentHeight = height;
 
     renderPassDesc.colorAttachments             = colorAttachments.data();
     renderPassDesc.colorAttachmentCount         = colorAttachments.size();
@@ -221,7 +242,16 @@ void CCWGPUCommandBuffer::bindInputAssembler(InputAssembler *ia) {
 }
 
 void CCWGPUCommandBuffer::setViewport(const Viewport &vp) {
-    _gpuCommandBufferObj->stateCache.viewport = vp;
+    uint32_t width = vp.width;
+    uint32_t height = vp.height;
+    if(vp.left + vp.width > _gpuCommandBufferObj->stateCache.minAttachmentWidth ) {
+        width = vp.left > _gpuCommandBufferObj->stateCache.minAttachmentWidth ? 0 : _gpuCommandBufferObj->stateCache.minAttachmentWidth - vp.left;
+    }
+
+    if(vp.top + vp.height > _gpuCommandBufferObj->stateCache.minAttachmentHeight ) {
+        height = vp.top > _gpuCommandBufferObj->stateCache.minAttachmentHeight ? 0 : _gpuCommandBufferObj->stateCache.minAttachmentHeight - vp.top;
+    }
+    _gpuCommandBufferObj->stateCache.viewport = {vp.left, vp.top, width, height, vp.minDepth, vp.maxDepth};
 }
 
 void CCWGPUCommandBuffer::setScissor(const Rect &rect) {
