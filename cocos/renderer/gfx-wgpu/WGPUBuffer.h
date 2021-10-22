@@ -54,6 +54,8 @@ public:
         update(reinterpret_cast<const void*>(buffer.data()), size);
     }
 
+    void update(const DrawInfoList& drawInfos);
+
     // used before unmap?
     void check();
 

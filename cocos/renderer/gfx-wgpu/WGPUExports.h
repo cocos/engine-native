@@ -973,6 +973,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .function("destroy", &Buffer::destroy);
     class_<CCWGPUBuffer, base<Buffer>>("CCWGPUBuffer")
         .function("update", select_overload<void(const emscripten::val &v, uint)>(&CCWGPUBuffer::update), allow_raw_pointer<arg<0>>())
+        .function("updateDrawInfo", select_overload<void(const DrawInfoList &infos)>(&CCWGPUBuffer::update), allow_raw_pointer<arg<0>>())
         .constructor<>();
 
     class_<DescriptorSetLayout>("DescriptorSetLayout")
