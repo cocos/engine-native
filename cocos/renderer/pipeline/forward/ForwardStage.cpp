@@ -142,7 +142,7 @@ void ForwardStage::render(scene::Camera *camera) {
     auto *const sharedData = sceneData->getSharedData();
 
     float shadingScale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
-    _renderArea = pipeline->getRenderArea(camera);
+    _renderArea = RenderPipeline::getRenderArea(camera);
     // Command 'updateBuffer' must be recorded outside render passes, cannot put them in execute lambda
     dispenseRenderObject2Queues();
     pipeline->getPipelineUBO()->updateShadowUBO(camera);

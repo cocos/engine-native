@@ -399,7 +399,7 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         const std::array<uint, 1> globalOffsets = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
         cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), utils::toUint(globalOffsets.size()), globalOffsets.data());
         // get PSO and draw quad
-        auto rendeArea = pipeline->getRenderArea(camera);
+        auto rendeArea = RenderPipeline::getRenderArea(camera);
 
         scene::Pass *        pass           = sceneData->getSharedData()->deferredLightPass;
         gfx::Shader *        shader         = sceneData->getSharedData()->deferredLightPassShader;

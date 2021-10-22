@@ -200,7 +200,7 @@ void PostProcessStage::render(scene::Camera *camera) {
             gfx::Shader *sd        = sceneData->getSharedData()->pipelinePostPassShader;
             float                  shadingScale{sceneData->getSharedData()->shadingScale};
             // get pso and draw quad
-            gfx::InputAssembler *ia  = pipeline->getIAByRenderArea(pipeline->getRenderArea(camera));
+            gfx::InputAssembler *      ia       = pipeline->getIAByRenderArea(RenderPipeline::getRenderArea(camera));
             gfx::PipelineState * pso = PipelineStateManager::getOrCreatePipelineState(pv, sd, ia, renderPass);
             pipeline::GlobalDSManager *globalDS = pipeline->getGlobalDSManager();
             gfx::Sampler *             sampler  = shadingScale < 1.F ? globalDS->getPointSampler() : globalDS->getLinearSampler();

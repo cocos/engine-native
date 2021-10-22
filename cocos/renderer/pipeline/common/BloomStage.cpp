@@ -163,7 +163,7 @@ void BloomStage::render(scene::Camera *camera) {
     float intensity  = stage->getIntensity();
     float threshold  = stage->getThreshold();
 
-    auto renderArea = pipeline->getRenderArea(camera);
+    auto renderArea =  RenderPipeline::getRenderArea(camera);
     renderArea.width >>= 1;
     renderArea.height >>= 1;
     float shadingScale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
@@ -216,7 +216,7 @@ void BloomStage::render(scene::Camera *camera) {
         auto *const          sharedData     = pipeline->getPipelineSceneData()->getSharedData();
         scene::Pass *        pass           = sharedData->bloomPrefilterPass;
         gfx::Shader *        shader         = sharedData->bloomPrefilterPassShader;
-        auto                 rendeArea      = pipeline->getRenderArea(camera);
+        auto                 rendeArea      = RenderPipeline::getRenderArea(camera);
         gfx::InputAssembler *inputAssembler = pipeline->getIAByRenderArea(rendeArea);
         gfx::PipelineState * pso            = PipelineStateManager::getOrCreatePipelineState(
             pass, shader, inputAssembler, renderPass);
@@ -296,7 +296,7 @@ void BloomStage::render(scene::Camera *camera) {
             auto *const          sharedData     = pipeline->getPipelineSceneData()->getSharedData();
             scene::Pass *        pass           = sharedData->bloomDownsamplePass[data.index];
             gfx::Shader *        shader         = sharedData->bloomDownsamplePassShader;
-            auto                 rendeArea      = pipeline->getRenderArea(camera);
+            auto                 rendeArea      = RenderPipeline::getRenderArea(camera);
             gfx::InputAssembler *inputAssembler = pipeline->getIAByRenderArea(rendeArea);
             gfx::PipelineState * pso            = PipelineStateManager::getOrCreatePipelineState(
                 pass, shader, inputAssembler, renderPass);
@@ -370,7 +370,7 @@ void BloomStage::render(scene::Camera *camera) {
             auto *const          sharedData     = pipeline->getPipelineSceneData()->getSharedData();
             scene::Pass *        pass           = sharedData->bloomUpsamplePass[data.index];
             gfx::Shader *        shader         = sharedData->bloomUpsamplePassShader;
-            auto                 rendeArea      = pipeline->getRenderArea(camera);
+            auto                 rendeArea      = RenderPipeline::getRenderArea(camera);
             gfx::InputAssembler *inputAssembler = pipeline->getIAByRenderArea(rendeArea);
             gfx::PipelineState * pso            = PipelineStateManager::getOrCreatePipelineState(
                 pass, shader, inputAssembler, renderPass);
@@ -449,7 +449,7 @@ void BloomStage::render(scene::Camera *camera) {
         auto *const          sharedData     = pipeline->getPipelineSceneData()->getSharedData();
         scene::Pass *        pass           = sharedData->bloomCombinePass;
         gfx::Shader *        shader         = sharedData->bloomCombinePassShader;
-        auto                 rendeArea      = pipeline->getRenderArea(camera);
+        auto                 rendeArea      = RenderPipeline::getRenderArea(camera);
         gfx::InputAssembler *inputAssembler = pipeline->getIAByRenderArea(rendeArea);
         gfx::PipelineState * pso            = PipelineStateManager::getOrCreatePipelineState(
             pass, shader, inputAssembler, renderPass);
