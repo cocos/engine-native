@@ -53,9 +53,13 @@ public:
 
     static void* defaultBindGroupLayout();
 
+    void print();
+
 protected:
     void doInit(const DescriptorSetLayoutInfo& info) override;
     void doDestroy() override;
+
+    size_t hash();
 
     CCWGPUBindGroupLayoutObject* _gpuLayoutEntryObj = nullptr;
 

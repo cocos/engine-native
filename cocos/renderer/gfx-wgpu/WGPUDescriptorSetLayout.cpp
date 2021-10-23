@@ -32,15 +32,19 @@
 #include "WGPUSampler.h"
 #include "WGPUTexture.h"
 #include "WGPUUtils.h"
+#include <boost/functional/hash.hpp>
 
 namespace cc {
 namespace gfx {
 
 namespace anoymous {
 WGPUBindGroupLayout defaultBindgroupLayout = wgpuDefaultHandle;
+
+std::unordered_map<size_t, WGPUBindGroupLayout> layoutPool;
 }
 
 using namespace emscripten;
+using namespace anoymous;
 
 CCWGPUDescriptorSetLayout::CCWGPUDescriptorSetLayout() : wrapper<DescriptorSetLayout>(val::object()) {
 }
@@ -56,7 +60,7 @@ void CCWGPUDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo& info) {
                 .nextInChain        = nullptr,
                 .binding            = _bindings[i].binding,
                 .visibility         = toWGPUShaderStageFlag(_bindings[i].stageFlags),
-                .texture.sampleType = WGPUTextureSampleType_Uint,
+                .texture.sampleType = WGPUTextureSampleType_Float,
 
             };
             _gpuLayoutEntryObj->bindGroupLayoutEntries.push_back(textureLayout);
@@ -66,7 +70,7 @@ void CCWGPUDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo& info) {
                 .nextInChain  = nullptr,
                 .binding      = _bindings[i].binding + CC_WGPU_MAX_ATTACHMENTS,
                 .visibility   = toWGPUShaderStageFlag(_bindings[i].stageFlags),
-                .sampler.type = WGPUSamplerBindingType_Comparison,
+                .sampler.type = WGPUSamplerBindingType_Filtering,
             };
             _gpuLayoutEntryObj->bindGroupLayoutEntries.push_back(samplerLayout);
         } else if (hasFlag(DESCRIPTOR_BUFFER_TYPE, _bindings[i].descriptorType)) {
@@ -159,6 +163,47 @@ void CCWGPUDescriptorSetLayout::updateLayout(uint8_t binding, const CCWGPUBuffer
     }
 }
 
+size_t CCWGPUDescriptorSetLayout::hash() {
+    const auto& entries = _gpuLayoutEntryObj->bindGroupLayoutEntries;
+    // size_t seed = 129;
+    // boost::hash_combine(seed, entries.size());
+    // for(size_t i = 0; i < entries.size(); i++) {
+    //     boost::hash_combine(seed, i);
+    //     boost::hash_combine(seed, entries[i].binding);
+    //     boost::hash_combine(seed, entries[i].buffer.type);
+    //     boost::hash_combine(seed, entries[i].sampler.type);
+    //     boost::hash_combine(seed, entries[i].texture.sampleType);
+    //     boost::hash_combine(seed, entries[i].storageTexture.access);
+    // }
+    std::size_t seed = entries.size();
+    for(size_t i = 0; i < entries.size(); i++) {
+        const auto& entry = entries[i];
+        seed ^= i + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        seed ^= entry.binding + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        seed ^= entry.buffer.type + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        seed ^= entry.sampler.type + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        seed ^= entry.texture.sampleType + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        seed ^= entry.storageTexture.access + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+    }
+    return seed;
+}
+
+void CCWGPUDescriptorSetLayout::print() {
+    printf("pr %p\n", _gpuLayoutEntryObj);
+    const auto& entries = _gpuLayoutEntryObj->bindGroupLayoutEntries;
+    for (size_t j = 0; j < entries.size(); j++) {
+        const auto& entry = entries[j];
+        if ((entry.buffer.type != WGPUBufferBindingType_Undefined) +
+                (entry.sampler.type != WGPUSamplerBindingType_Undefined) +
+                (entry.texture.sampleType != WGPUTextureSampleType_Undefined) +
+                (entry.storageTexture.access != WGPUStorageTextureAccess_Undefined) !=
+            1) {
+            printf("******missing %d, %d, %d, %d, %d\n", entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
+        }
+        printf("l binding, b, t, s  %d, %d, %d, %d, %d\n", entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
+    }
+}
+
 void CCWGPUDescriptorSetLayout::prepare(const std::set<uint8_t>& bindingInUse) {
     if (_gpuLayoutEntryObj->bindGroupLayout) {
         return;
@@ -171,6 +216,12 @@ void CCWGPUDescriptorSetLayout::prepare(const std::set<uint8_t>& bindingInUse) {
     //                                  }),
     //                              bindGroupLayoutEntries.end());
 
+    size_t hashVal = hash();
+    auto iter = layoutPool.find(hashVal);
+    if(iter != layoutPool.end()) {
+        _gpuLayoutEntryObj->bindGroupLayout = iter->second;
+        return;
+    }
     const auto& entries = _gpuLayoutEntryObj->bindGroupLayoutEntries;
 
     // for (size_t j = 0; j < entries.size(); j++) {
@@ -196,6 +247,8 @@ void CCWGPUDescriptorSetLayout::prepare(const std::set<uint8_t>& bindingInUse) {
         };
         _gpuLayoutEntryObj->bindGroupLayout = wgpuDeviceCreateBindGroupLayout(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
     }
+    // printf("bgl %p\n", _gpuLayoutEntryObj->bindGroupLayout);
+    layoutPool.insert({hashVal, _gpuLayoutEntryObj->bindGroupLayout});
 }
 
 void* CCWGPUDescriptorSetLayout::defaultBindGroupLayout() {

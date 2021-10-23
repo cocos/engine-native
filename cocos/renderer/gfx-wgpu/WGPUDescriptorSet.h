@@ -54,6 +54,10 @@ public:
 
     inline Pairs& dynamicOffsets() { return _dynamicOffsets; }
 
+    void* bgl() const{return _bgl;}
+
+    DescriptorSetLayout* local()const {return _local;}
+
 protected:
     void doInit(const DescriptorSetInfo& info) override;
     void doDestroy() override;
@@ -66,6 +70,10 @@ protected:
 
     // dynamic offsets, inuse ? 1 : 0;
     Pairs _dynamicOffsets;
+
+    void* _bgl = nullptr;
+
+    DescriptorSetLayout* _local = nullptr;
 };
 
 } // namespace gfx

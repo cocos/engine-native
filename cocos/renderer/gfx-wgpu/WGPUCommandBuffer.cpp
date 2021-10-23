@@ -62,10 +62,12 @@ void CCWGPUCommandBuffer::doDestroy() {
 
 void CCWGPUCommandBuffer::begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) {
     //TODO_Zeqiang: subpass support
+    //   printf("begin\n");
     _gpuCommandBufferObj->wgpuCommandEncoder = wgpuDeviceCreateCommandEncoder(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, nullptr);
 }
 
 void CCWGPUCommandBuffer::end() {
+    //  printf("end\n");
     auto *pipelineState = _gpuCommandBufferObj->stateCache.pipelineState;
     if (pipelineState) {
         if (pipelineState->getBindPoint() == PipelineBindPoint::GRAPHICS) {
@@ -88,7 +90,7 @@ void CCWGPUCommandBuffer::end() {
 
 void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, uint stencil, CommandBuffer *const *secondaryCBs, uint secondaryCBCount) {
     _renderPass = renderPass;
-
+    // printf("beginr\n");
     CCWGPUFramebuffer *ccFrameBuffer = static_cast<CCWGPUFramebuffer *>(fbo);
 
     const ColorAttachmentList &   colorConfigs       = renderPass->getColorAttachments();
@@ -197,6 +199,7 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
 } // namespace gfx
 
 void CCWGPUCommandBuffer::endRenderPass() {
+    //  printf("endr\n");
     wgpuRenderPassEncoderEndPass(_gpuCommandBufferObj->wgpuRenderPassEncoder);
     wgpuRenderPassEncoderRelease(_gpuCommandBufferObj->wgpuRenderPassEncoder);
     _gpuCommandBufferObj->wgpuRenderPassEncoder = wgpuDefaultHandle;
@@ -297,12 +300,14 @@ void CCWGPUCommandBuffer::bindStates() {
         setInUse.insert(descriptorSet.index);
     }
 
+    // printf("ppl binding %p\n", pipelineState);
+
     if (pipelineState->getBindPoint() == PipelineBindPoint::GRAPHICS) {
         //bindgroup & descriptorset
         const auto &descriptorSets = _gpuCommandBufferObj->stateCache.descriptorSets;
         for (size_t i = 0; i < descriptorSets.size(); i++) {
             descriptorSets[i].descriptorSet->prepare();
-
+            
             if (descriptorSets[i].descriptorSet->dynamicOffsetCount() != descriptorSets[i].dynamicOffsetCount) {
                 uint *       dynOffsets       = dynamicOffsetBuffer;
                 const Pairs &dynamicOffsets   = descriptorSets[i].descriptorSet->dynamicOffsets();
@@ -314,7 +319,8 @@ void CCWGPUCommandBuffer::bindStates() {
                         dynOffsets[j] = descriptorSets[i].dynamicOffsets[givenOffsetIndex++];
                     }
                 }
-
+                // printf("set %d %p %p\n", descriptorSets[i].index, descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup, 
+                //     descriptorSets[i].descriptorSet->bgl());
                 wgpuRenderPassEncoderSetBindGroup(_gpuCommandBufferObj->wgpuRenderPassEncoder,
                                                   descriptorSets[i].index,
                                                   descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
@@ -327,6 +333,8 @@ void CCWGPUCommandBuffer::bindStates() {
                                                   descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
                                                   descriptorSets[i].dynamicOffsetCount,
                                                   descriptorSets[i].dynamicOffsets);
+                                                //   printf("set %d %p %p\n", i, descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
+                                                //   descriptorSets[i].descriptorSet->bgl());
             }
         }
 
@@ -340,11 +348,20 @@ void CCWGPUCommandBuffer::bindStates() {
                                                       static_cast<WGPUBindGroup>(CCWGPUDescriptorSet::defaultBindGroup()),
                                                       0,
                                                       nullptr);
+                                                    //   printf("default %d %p\n", i, CCWGPUDescriptorSetLayout::defaultBindGroupLayout());
                 }
             }
         }
         pipelineState->check(_renderPass);
         pipelineState->prepare(setInUse);
+
+        const auto& pplLayout = static_cast<const CCWGPUPipelineLayout*>(pipelineState->ppl());
+        // for(size_t i = 0; i < pplLayout->layouts().size(); ++i) {
+        //     printf("bgl in ppl: %p\n", pplLayout->layouts()[i]);
+        // }
+        // if(pipelineState->ppl() != pipelineState->getPipelineLayout()){
+        //     printf("oooooooooooooooooooooooooooooooops\n");
+        // }
         //pipeline state
         wgpuRenderPassEncoderSetPipeline(_gpuCommandBufferObj->wgpuRenderPassEncoder,
                                          pipelineState->gpuPipelineStateObject()->wgpuRenderPipeline);

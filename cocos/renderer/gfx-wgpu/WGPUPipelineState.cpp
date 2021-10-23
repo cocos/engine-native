@@ -196,6 +196,7 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
             .fragment     = &fragmentState,
         };
         _gpuPipelineStateObj->wgpuRenderPipeline = wgpuDeviceCreateRenderPipeline2(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &piplineDesc);
+        _ppl = pipelineLayout;
     } else if (_bindPoint == PipelineBindPoint::COMPUTE) {
         if (_gpuPipelineStateObj->wgpuComputePipeline)
             return;

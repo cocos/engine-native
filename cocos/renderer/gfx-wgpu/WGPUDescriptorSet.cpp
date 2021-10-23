@@ -202,6 +202,7 @@ void CCWGPUDescriptorSet::prepare() {
 
         if (entries.empty()) {
             _gpuBindGroupObj->bindgroup = anoymous::defaultBindGroup;
+            _bgl = CCWGPUDescriptorSetLayout::defaultBindGroupLayout();
         } else {
             dsLayout->prepare(_gpuBindGroupObj->bindingSet);
             WGPUBindGroupDescriptor bindGroupDesc = {
@@ -212,6 +213,8 @@ void CCWGPUDescriptorSet::prepare() {
                 .entries     = entries.data(),
             };
             _gpuBindGroupObj->bindgroup = wgpuDeviceCreateBindGroup(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &bindGroupDesc);
+            _bgl = dsLayout->gpuLayoutEntryObject()->bindGroupLayout;
+            _local = dsLayout;
         }
         _isDirty = false;
         if (buffIter != _buffers.end())
