@@ -290,12 +290,10 @@ void EventDispatcher::dispatchOrientationChangeEvent(int orientation) {
 
 void EventDispatcher::dispatchEnterBackgroundEvent() {
     EventDispatcher::doDispatchEvent(EVENT_COME_TO_BACKGROUND, "onPause", se::EmptyValueArray);
-    EventDispatcher::doDispatchEvent(EVENT_DESTROY_WINDOW, "", se::EmptyValueArray);
 }
 
 void EventDispatcher::dispatchEnterForegroundEvent() {
-    EventDispatcher::doDispatchEvent(EVENT_COME_TO_FOREGROUND, "onResume", se::EmptyValueArray);
-    EventDispatcher::doDispatchEvent(EVENT_RECREATE_WINDOW, "", se::EmptyValueArray);
+    EventDispatcher::doDispatchEvent(EVENT_COME_TO_FOREGROUND, "onResume", se::EmptyValueArray); 
 }
 
 void EventDispatcher::dispatchMemoryWarningEvent() {
