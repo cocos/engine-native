@@ -512,25 +512,25 @@ void CommandBufferAgent::endQuery(QueryPool *queryPool, uint32_t id) {
         });
 }
 
-void CommandBufferAgent::resetQuery(QueryPool *queryPool) {
+void CommandBufferAgent::resetQueryPool(QueryPool *queryPool) {
     QueryPool *actorQueryPool = static_cast<QueryPoolAgent *>(queryPool)->getActor();
     ENQUEUE_MESSAGE_2(
-        _messageQueue, CommandBufferResetQuery,
+        _messageQueue, CommandBufferResetQueryPool,
         actor, getActor(),
         queryPool, actorQueryPool,
         {
-            actor->resetQuery(queryPool);
+            actor->resetQueryPool(queryPool);
         });
 }
 
-void CommandBufferAgent::completeQuery(QueryPool *queryPool) {
+void CommandBufferAgent::completeQueryPool(QueryPool *queryPool) {
     QueryPool *actorQueryPool = static_cast<QueryPoolAgent *>(queryPool)->getActor();
     ENQUEUE_MESSAGE_2(
-        _messageQueue, CommandBufferCompleteQuery,
+        _messageQueue, CommandBufferCompleteQueryPool,
         actor, getActor(),
         queryPool, actorQueryPool,
         {
-            actor->completeQuery(queryPool);
+            actor->completeQueryPool(queryPool);
         });
 }
 

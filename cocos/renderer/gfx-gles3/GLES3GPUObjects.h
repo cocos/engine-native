@@ -101,7 +101,7 @@ public:
             return glQueryIds[queryId];
         }
 
-        return ~0U;
+        return UINT_MAX;
     }
 };
 

@@ -38,12 +38,12 @@ namespace gfx {
  * Update
  * Render
  *  getQueryPoolResults
- *  resetQuery
+ *  resetQueryPool
  *  for each renderObject
  *      beginQuery
  *          drawObject
  *      endQuery
- *  completeQuery
+ *  completeQueryPool
  */
 
 class CC_DLL QueryPool : public GFXObject {
