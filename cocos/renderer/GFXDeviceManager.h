@@ -101,14 +101,6 @@ public:
         EventDispatcher::addCustomEventListener(EVENT_RECREATE_WINDOW, [device](const CustomEvent &e) -> void {
             device->createSurface(e.args->ptrVal);
         });
-
-        EventDispatcher::addCustomEventListener(EVENT_COME_TO_BACKGROUND, [device](const CustomEvent &e) -> void {
-            device->destroySurface(e.args->ptrVal);
-        });
-
-        EventDispatcher::addCustomEventListener(EVENT_COME_TO_FOREGROUND, [device](const CustomEvent &e) -> void {
-            device->createSurface(e.args->ptrVal);
-        });
     }
 
 private:
