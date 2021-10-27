@@ -806,7 +806,7 @@ void CCVKDevice::getQueryPoolResults(QueryPool *queryPool) {
             vkQueryPool->_gpuQueryPool->pool,
             0,
             queryCount,
-            queryCount * stride,
+            static_cast<size_t>(queryCount * stride),
             results.data(),
             stride,
             VK_QUERY_RESULT_64_BIT | flag);
