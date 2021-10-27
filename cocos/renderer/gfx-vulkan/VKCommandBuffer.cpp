@@ -668,7 +668,7 @@ void CCVKCommandBuffer::endQuery(QueryPool *queryPool, uint32_t id) {
     }
 }
 
-void CCVKCommandBuffer::resetQuery(QueryPool *queryPool) {
+void CCVKCommandBuffer::resetQueryPool(QueryPool *queryPool) {
     auto *            vkQueryPool  = static_cast<CCVKQueryPool *>(queryPool);
     CCVKGPUQueryPool *gpuQueryPool = vkQueryPool->gpuQueryPool();
 

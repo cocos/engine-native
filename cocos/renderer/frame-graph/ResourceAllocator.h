@@ -50,14 +50,13 @@ public:
     void                      gc(uint32_t unusedFrameCount) noexcept;
 
 private:
-    using DeviceResourcePtr  = DeviceResourceType *;
-    using DeviceResourcePool = std::vector<DeviceResourcePtr>;
+    using DeviceResourcePool = std::vector<DeviceResourceType *>;
 
     ResourceAllocator() noexcept = default;
     ~ResourceAllocator()         = default;
 
     std::unordered_map<DescriptorType, DeviceResourcePool, gfx::Hasher<DescriptorType>> _pool{};
-    std::unordered_map<DeviceResourcePtr, int64_t>                                      _ages{};
+    std::unordered_map<DeviceResourceType *, int64_t>                                   _ages{};
     uint64_t                                                                            _age{0};
 };
 
@@ -72,10 +71,10 @@ ResourceAllocator<DeviceResourceType, DescriptorType, DeviceResourceCreatorType>
 
 template <typename DeviceResourceType, typename DescriptorType, typename DeviceResourceCreatorType>
 DeviceResourceType *ResourceAllocator<DeviceResourceType, DescriptorType, DeviceResourceCreatorType>::alloc(const DescriptorType &desc) noexcept {
-    auto &pool{_pool[desc]};
+    DeviceResourcePool &pool{_pool[desc]};
 
-    DeviceResourcePtr resource{nullptr};
-    for (auto *res : pool) {
+    DeviceResourceType *resource{nullptr};
+    for (DeviceResourceType *res : pool) {
         if (_ages[res] >= 0) {
             resource = res;
             break;
@@ -125,7 +124,7 @@ void ResourceAllocator<DeviceResourceType, DescriptorType, DeviceResourceCreator
 
             for (; j > i; --j) {
                 int64_t ageJ = _ages[pool[j]];
-                if (_age - ageJ < unusedFrameCount) {
+                if (ageJ < 0 || _age - ageJ < unusedFrameCount) {
                     std::swap(pool[i], pool[j]);
                     destroyBegin = j - 1;
                     break;
