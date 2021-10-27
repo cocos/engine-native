@@ -308,6 +308,15 @@ void EventDispatcher::dispatchCloseEvent() {
     EventDispatcher::doDispatchEvent(EVENT_CLOSE, "onClose", se::EmptyValueArray);
 }
 
+void EventDispatcher::dispatchDestroyWindowEvent() {
+    EventDispatcher::doDispatchEvent(EVENT_DESTROY_WINDOW, "", se::EmptyValueArray);
+}
+
+void EventDispatcher::dispatchRecreateWindowEvent() {
+    EventDispatcher::doDispatchEvent(EVENT_RECREATE_WINDOW, "", se::EmptyValueArray);
+}
+
+
 void EventDispatcher::doDispatchEvent(const char *eventName, const char *jsFunctionName, const std::vector<se::Value> &args) {
     if (!se::ScriptEngine::getInstance()->isValid()) {
         return;
