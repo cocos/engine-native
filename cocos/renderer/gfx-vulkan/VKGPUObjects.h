@@ -257,7 +257,8 @@ class CCVKGPUQueryPool final : public Object {
 public:
     QueryType   type{QueryType::OCCLUSION};
     uint32_t    maxQueryObjects{0};
-    VkQueryPool pool;
+    bool        forceWait{true};
+    VkQueryPool pool{VK_NULL_HANDLE};
 };
 
 struct CCVKGPUShaderStage {

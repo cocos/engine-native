@@ -299,7 +299,7 @@ bool CCVKDevice::doInit(const DeviceInfo & /*info*/) {
     queueInfo.type = QueueType::GRAPHICS;
     _queue         = createQueue(queueInfo);
 
-    QueryPoolInfo queryPoolInfo{QueryType::OCCLUSION, DEFAULT_MAX_QUERY_OBJECTS};
+    QueryPoolInfo queryPoolInfo{QueryType::OCCLUSION, DEFAULT_MAX_QUERY_OBJECTS, false};
     _queryPool = createQueryPool(queryPoolInfo);
 
     CommandBufferInfo cmdBuffInfo;
@@ -794,14 +794,14 @@ void CCVKDevice::getQueryPoolResults(QueryPool *queryPool) {
     auto  queryCount  = static_cast<uint32_t>(vkQueryPool->_ids.size());
     CCASSERT(queryCount <= vkQueryPool->getMaxQueryObjects(), "Too many query commands.");
 
-    const bool            bWait  = false;
+    const bool            bWait  = queryPool->getForceWait();
     uint32_t              width  = bWait ? 1U : 2U;
     uint64_t              stride = sizeof(uint64_t) * width;
     VkQueryResultFlagBits flag   = bWait ? VK_QUERY_RESULT_WAIT_BIT : VK_QUERY_RESULT_WITH_AVAILABILITY_BIT;
     std::vector<uint64_t> results(queryCount * width, 0ULL);
 
     if (queryCount > 0U) {
-        vkGetQueryPoolResults(
+        VkResult result = vkGetQueryPoolResults(
             gpuDevice()->vkDevice,
             vkQueryPool->_gpuQueryPool->pool,
             0,
@@ -810,6 +810,7 @@ void CCVKDevice::getQueryPoolResults(QueryPool *queryPool) {
             results.data(),
             stride,
             VK_QUERY_RESULT_64_BIT | flag);
+        CCASSERT(result == VK_SUCCESS || result == VK_NOT_READY, "Unexpected error code.");
     }
 
     std::unordered_map<uint32_t, uint64_t> mapResults;

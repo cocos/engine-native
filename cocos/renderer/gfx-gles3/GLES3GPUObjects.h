@@ -94,6 +94,7 @@ class GLES3GPUQueryPool final : public Object {
 public:
     QueryType           type{QueryType::OCCLUSION};
     uint32_t            maxQueryObjects{0};
+    bool                forceWait{true};
     std::vector<GLuint> glQueryIds;
 
     inline GLuint mapGLQueryId(uint32_t queryId) {
