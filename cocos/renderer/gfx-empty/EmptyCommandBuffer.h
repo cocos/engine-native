@@ -58,7 +58,6 @@ public:
     void beginQuery(QueryPool *queryPool, uint32_t id) override;
     void endQuery(QueryPool *queryPool, uint32_t id) override;
     void resetQueryPool(QueryPool *queryPool) override;
-    void completeQueryPool(QueryPool *queryPool) override;
 
 protected:
     void doInit(const CommandBufferInfo &info) override;
