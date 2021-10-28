@@ -489,7 +489,8 @@ void CommandBufferAgent::pipelineBarrier(const GlobalBarrier *barrier, const Tex
 }
 
 void CommandBufferAgent::beginQuery(QueryPool *queryPool, uint32_t id) {
-    QueryPool *actorQueryPool = static_cast<QueryPoolAgent *>(queryPool)->getActor();
+    auto *actorQueryPool = static_cast<QueryPoolAgent *>(queryPool)->getActor();
+
     ENQUEUE_MESSAGE_3(
         _messageQueue, CommandBufferBeginQuery,
         actor, getActor(),
@@ -501,7 +502,8 @@ void CommandBufferAgent::beginQuery(QueryPool *queryPool, uint32_t id) {
 }
 
 void CommandBufferAgent::endQuery(QueryPool *queryPool, uint32_t id) {
-    QueryPool *actorQueryPool = static_cast<QueryPoolAgent *>(queryPool)->getActor();
+    auto *actorQueryPool = static_cast<QueryPoolAgent *>(queryPool)->getActor();
+
     ENQUEUE_MESSAGE_3(
         _messageQueue, CommandBufferEndQuery,
         actor, getActor(),
@@ -513,7 +515,8 @@ void CommandBufferAgent::endQuery(QueryPool *queryPool, uint32_t id) {
 }
 
 void CommandBufferAgent::resetQueryPool(QueryPool *queryPool) {
-    QueryPool *actorQueryPool = static_cast<QueryPoolAgent *>(queryPool)->getActor();
+    auto *actorQueryPool = static_cast<QueryPoolAgent *>(queryPool)->getActor();
+
     ENQUEUE_MESSAGE_2(
         _messageQueue, CommandBufferResetQueryPool,
         actor, getActor(),
@@ -524,7 +527,8 @@ void CommandBufferAgent::resetQueryPool(QueryPool *queryPool) {
 }
 
 void CommandBufferAgent::completeQueryPool(QueryPool *queryPool) {
-    QueryPool *actorQueryPool = static_cast<QueryPoolAgent *>(queryPool)->getActor();
+    auto *actorQueryPool = static_cast<QueryPoolAgent *>(queryPool)->getActor();
+
     ENQUEUE_MESSAGE_2(
         _messageQueue, CommandBufferCompleteQueryPool,
         actor, getActor(),
