@@ -1022,8 +1022,7 @@ String mu::spirv2MSL(const uint32_t *ir, size_t word_count,
     const auto &samplerBindingOffset = device->bindingMappingInfo().samplerOffsets;
     
     // avoid conflict index with input attachments.
-    const uint8_t rtOffsets = CCMTLDevice::getInstance()->getCapabilities().maxColorRenderTargets;
-    const uint8_t maxTexUnits = CCMTLDevice::getInstance()->getCapabilities().maxTextureUnits;
+    const uint8_t rtOffsets = executionModel == spv::ExecutionModelFragment ? resources.subpass_inputs.size() : 0;
     for (const auto &sampler : resources.sampled_images) {
         auto set = msl.get_decoration(sampler.id, spv::DecorationDescriptorSet);
         auto binding = msl.get_decoration(sampler.id, spv::DecorationBinding);
@@ -1034,8 +1033,7 @@ String mu::spirv2MSL(const uint32_t *ir, size_t word_count,
         }
 
         for (int i = 0; i < size; ++i) {
-            uint8_t avgStride = maxTexUnits / 3; // current 3 descriptorsets
-            auto mappedBinding = set * avgStride + binding + rtOffsets;
+            auto mappedBinding = samplerIndex + rtOffsets;
             newBinding.desc_set = set;
             newBinding.binding = binding + i;
             newBinding.msl_texture = mappedBinding;
