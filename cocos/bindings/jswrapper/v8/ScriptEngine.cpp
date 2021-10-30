@@ -235,6 +235,7 @@ ScriptEngineV8Context *gSharedV8 = nullptr;
 } // namespace
 
 void ScriptEngine::callExceptionCallback(const char *location, const char *message, const char *stack) {
+     _isolate->CancelTerminateExecution();
     if (_nativeExceptionCallback) {
         _nativeExceptionCallback(location, message, stack);
     }
@@ -252,6 +253,7 @@ void ScriptEngine::onFatalErrorCallback(const char *location, const char *messag
     SE_LOGE("%s\n", errorStr.c_str());
 
     getInstance()->callExceptionCallback(location, message, "(no stack information)");
+   // v8::Isolate::GetCurrent()->CancelTerminateExecution();
 }
 
 void ScriptEngine::onOOMErrorCallback(const char *location, bool isHeapOom) {
@@ -336,7 +338,9 @@ void ScriptEngine::onPromiseRejectCallback(v8::PromiseRejectMessage msg) {
 
     if (!value.IsEmpty()) {
         // prepend error object to stack message
-        v8::Local<v8::String> str = value->ToString(isolate->GetCurrentContext()).ToLocalChecked();
+        v8::MaybeLocal<v8::String> maybeStr = value->ToString(isolate->GetCurrentContext());
+       // isolate->CancelTerminateExecution();
+        v8::Local<v8::String>      str      = maybeStr.IsEmpty() ? v8::String::NewFromUtf8(isolate, "[empty string]").ToLocalChecked() : maybeStr.ToLocalChecked();
         v8::String::Utf8Value valueUtf8(isolate, str);
         auto *                strp = *valueUtf8;
         if (strp == nullptr) {
