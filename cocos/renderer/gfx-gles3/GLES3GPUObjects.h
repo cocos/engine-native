@@ -94,6 +94,7 @@ class GLES3GPUQueryPool final : public Object {
 public:
     QueryType           type{QueryType::OCCLUSION};
     uint32_t            maxQueryObjects{0};
+    bool                forceWait{true};
     std::vector<GLuint> glQueryIds;
 
     inline GLuint mapGLQueryId(uint32_t queryId) {
@@ -101,7 +102,7 @@ public:
             return glQueryIds[queryId];
         }
 
-        return ~0U;
+        return UINT_MAX;
     }
 };
 
@@ -154,9 +155,9 @@ using GLES3GPUTextureList = vector<GLES3GPUTexture *>;
 
 class GLES3GPUSwapchain final : public Object {
 public:
-    EGLSurface eglSurface{EGL_NO_SURFACE};
-    EGLint     eglSwapInterval{0};
-    GLuint     glFramebuffer{0};
+    EGLSurface       eglSurface{EGL_NO_SURFACE};
+    EGLint           eglSwapInterval{0};
+    GLuint           glFramebuffer{0};
     GLES3GPUTexture *gpuColorTexture{nullptr};
 };
 
@@ -168,7 +169,6 @@ public:
     Address addressU    = Address::CLAMP;
     Address addressV    = Address::CLAMP;
     Address addressW    = Address::CLAMP;
-    GLuint  glSampler   = 0;
     GLenum  glMinFilter = 0;
     GLenum  glMagFilter = 0;
     GLenum  glWrapS     = 0;
@@ -335,13 +335,13 @@ public:
         uint32_t height{UINT_MAX};
     };
     struct GLFramebuffer {
-        inline void   initialize(GLES3GPUSwapchain *sc) { swapchain = sc; }
+        inline void initialize(GLES3GPUSwapchain *sc) { swapchain = sc; }
         inline void initialize(const GLFramebufferInfo &info) {
             _glFramebuffer = info.glFramebuffer;
             _width         = info.width;
             _height        = info.height;
         }
-        inline GLuint getFramebuffer() const { return swapchain ? swapchain->glFramebuffer : _glFramebuffer; }
+        inline GLuint   getFramebuffer() const { return swapchain ? swapchain->glFramebuffer : _glFramebuffer; }
         inline uint32_t getWidth() const { return swapchain ? swapchain->gpuColorTexture->width : _width; }
         inline uint32_t getHeight() const { return swapchain ? swapchain->gpuColorTexture->height : _height; }
 
@@ -350,7 +350,7 @@ public:
         GLES3GPUSwapchain *swapchain{nullptr};
 
     private:
-        GLuint _glFramebuffer{0U};
+        GLuint   _glFramebuffer{0U};
         uint32_t _width{0U};
         uint32_t _height{0U};
     };
@@ -539,11 +539,25 @@ private:
     bool _initialized{false};
 };
 
+class GLES3GPUSamplerRegistry final : public Object {
+public:
+    ~GLES3GPUSamplerRegistry() override {
+        vector<GLuint> glSampelrs;
+        for (const auto &pair : _cache) {
+            glSampelrs.push_back(pair.second);
+        }
+        GL_CHECK(glDeleteSamplers(static_cast<GLsizei>(glSampelrs.size()), glSampelrs.data()));
+    }
+
+    GLuint getGLSampler(GLES3GPUSampler *gpuSampler);
+
+private:
+    unordered_map<GLES3GPUSampler *, GLuint> _cache;
+};
+
 class GLES3GPUFramebufferCacheMap final : public Object {
 public:
     explicit GLES3GPUFramebufferCacheMap(GLES3GPUStateCache *cache) : _cache(cache) {}
-
-    ~GLES3GPUFramebufferCacheMap() override = default;
 
     void registerExternal(GLuint glFramebuffer, const GLES3GPUTexture *gpuTexture, uint32_t mipLevel) {
         bool   isTexture  = gpuTexture->glTexture;
@@ -646,6 +660,27 @@ private:
     using CacheMap = unordered_map<GLuint, vector<FramebufferRecord>>;
     CacheMap _renderbufferMap; // renderbuffer -> mip level -> framebuffer
     CacheMap _textureMap;      // texture -> mip level -> framebuffer
+};
+
+class GLES3GPUFramebufferHub final : public Object {
+public:
+    void connect(GLES3GPUTexture *texture, GLES3GPUFramebuffer *framebuffer) {
+        _framebuffers[texture].push_back(framebuffer);
+    }
+
+    void disengage(GLES3GPUTexture *texture) {
+        _framebuffers.erase(texture);
+    }
+
+    void disengage(GLES3GPUTexture *texture, GLES3GPUFramebuffer *framebuffer) {
+        auto &pool = _framebuffers[texture];
+        pool.erase(std::remove(pool.begin(), pool.end(), framebuffer), pool.end());
+    }
+
+    void update(GLES3GPUTexture *texture);
+
+private:
+    unordered_map<GLES3GPUTexture *, vector<GLES3GPUFramebuffer *>> _framebuffers;
 };
 
 } // namespace gfx

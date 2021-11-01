@@ -42,6 +42,7 @@ class Pass;
 
 struct Fog {
     bool     enabled{false};
+    bool     accurate{false};
     uint32_t type{0};
     float    density{0.0F};
     float    start{0.0F};
@@ -110,7 +111,7 @@ struct Ambient {
 
 struct PipelineSharedSceneData {
     bool                 isHDR{true};
-    float                shadingScale{0.0F};
+    float                shadingScale{1.0F};
     Ambient *            ambient{nullptr};
     Shadow *             shadow{nullptr};
     Skybox *             skybox{nullptr};

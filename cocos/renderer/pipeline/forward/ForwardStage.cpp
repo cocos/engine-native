@@ -142,7 +142,7 @@ void ForwardStage::render(scene::Camera *camera) {
     auto *const sharedData = sceneData->getSharedData();
 
     float shadingScale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
-    _renderArea = pipeline->getRenderArea(camera);
+    _renderArea = RenderPipeline::getRenderArea(camera);
     // Command 'updateBuffer' must be recorded outside render passes, cannot put them in execute lambda
     dispenseRenderObject2Queues();
     pipeline->getPipelineUBO()->updateShadowUBO(camera);
@@ -170,15 +170,6 @@ void ForwardStage::render(scene::Camera *camera) {
         colorAttachmentInfo.usage      = framegraph::RenderTargetAttachment::Usage::COLOR;
         colorAttachmentInfo.clearColor = _clearColors[0];
         colorAttachmentInfo.loadOp     = gfx::LoadOp::CLEAR;
-
-        auto clearFlags = static_cast<gfx::ClearFlagBit>(camera->clearFlag);
-        if (!hasFlag(clearFlags, gfx::ClearFlagBit::COLOR)) {
-            if (hasFlag(clearFlags, static_cast<gfx::ClearFlagBit>(skyboxFlag))) {
-                colorAttachmentInfo.loadOp = gfx::LoadOp::DISCARD;
-            } else {
-                colorAttachmentInfo.loadOp = gfx::LoadOp::LOAD;
-            }
-        }
         colorAttachmentInfo.beginAccesses = {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE};
         colorAttachmentInfo.endAccesses   = {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE};
         data.outputTex                    = builder.write(data.outputTex, colorAttachmentInfo);
@@ -188,8 +179,8 @@ void ForwardStage::render(scene::Camera *camera) {
             gfx::TextureType::TEX2D,
             gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT,
             gfx::Format::DEPTH_STENCIL,
-            static_cast<uint>(camera->window->getWidth() * shadingScale),
-            static_cast<uint>(camera->window->getHeight() * shadingScale),
+            static_cast<uint>(pipeline->getWidth() * shadingScale),
+            static_cast<uint>(pipeline->getHeight() * shadingScale),
         };
 
         framegraph::RenderTargetAttachment::Descriptor depthAttachmentInfo;
@@ -202,7 +193,7 @@ void ForwardStage::render(scene::Camera *camera) {
         data.depth = builder.create(RenderPipeline::fgStrHandleOutDepthTexture, depthTexInfo);
         data.depth = builder.write(data.depth, depthAttachmentInfo);
         builder.writeToBlackboard(RenderPipeline::fgStrHandleOutDepthTexture, data.depth);
-        builder.setViewport(pipeline->getViewport(camera), _renderArea);
+        builder.setViewport(pipeline->getViewport(camera), pipeline->getScissor(camera));
     };
 
     auto offset      = _pipeline->getPipelineUBO()->getCurrentCameraUBOOffset();

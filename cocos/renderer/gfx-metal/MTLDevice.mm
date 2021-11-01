@@ -140,7 +140,7 @@ bool CCMTLDevice::doInit(const DeviceInfo &info) {
     queueInfo.type = QueueType::GRAPHICS;
     _queue         = createQueue(queueInfo);
 
-    QueryPoolInfo queryPoolInfo{QueryType::OCCLUSION, DEFAULT_MAX_QUERY_OBJECTS};
+    QueryPoolInfo queryPoolInfo{QueryType::OCCLUSION, DEFAULT_MAX_QUERY_OBJECTS, true};
     _queryPool = createQueryPool(queryPoolInfo);
 
     CommandBufferInfo cmdBuffInfo;
@@ -336,7 +336,6 @@ void CCMTLDevice::copyBuffersToTexture(const uint8_t *const *buffers, Texture *t
 }
 
 void CCMTLDevice::copyTextureToBuffers(Texture *src, uint8_t *const *buffers, const BufferTextureCopy *region, uint count) {
-    _cmdBuff->begin();
     static_cast<CCMTLCommandBuffer *>(_cmdBuff)->copyTextureToBuffers(src, buffers, region, count);
 }
 

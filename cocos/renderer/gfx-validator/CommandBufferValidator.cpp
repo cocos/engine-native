@@ -24,6 +24,7 @@
 ****************************************************************************/
 
 #include "base/CoreStd.h"
+#include "base/Macros.h"
 #include "base/job-system/JobSystem.h"
 
 #include "BufferValidator.h"
@@ -128,6 +129,16 @@ void CommandBufferValidator::beginRenderPass(RenderPass *renderPass, Framebuffer
 
     CCASSERT(_type == CommandBufferType::PRIMARY, "Command 'endRenderPass' must be recorded in primary command buffers.");
     CCASSERT(!_insideRenderPass, "Already inside a render pass?");
+
+    for (size_t i = 0; i < renderPass->getColorAttachments().size(); ++i) {
+        const auto &desc = renderPass->getColorAttachments()[i];
+        const auto *tex  = fbo->getColorTextures()[i];
+        CCASSERT(tex->getFormat() == desc.format, "attachment format mismatch");
+    }
+    if (fbo->getDepthStencilTexture()) {
+        CCASSERT(fbo->getDepthStencilTexture()->getFormat() == renderPass->getDepthStencilAttachment().format, "attachment format mismatch");
+    }
+
     _insideRenderPass = true;
     _curSubpass       = 0U;
 
@@ -401,6 +412,9 @@ void CommandBufferValidator::blitTexture(Texture *srcTexture, Texture *dstTextur
     CCASSERT(srcTexture && static_cast<TextureValidator *>(srcTexture)->isInited(), "already destroyed?");
     CCASSERT(dstTexture && static_cast<TextureValidator *>(dstTexture)->isInited(), "already destroyed?");
 
+    CCASSERT(srcTexture->getInfo().samples == SampleCount::ONE, "blit on multisampled texture is not allowed");
+    CCASSERT(dstTexture->getInfo().samples == SampleCount::ONE, "blit on multisampled texture is not allowed");
+
     CCASSERT(!_insideRenderPass, "Command 'blitTexture' must be recorded outside render passes.");
 
     for (uint32_t i = 0; i < count; ++i) {
@@ -476,20 +490,20 @@ void CommandBufferValidator::endQuery(QueryPool *queryPool, uint32_t id) {
     _actor->endQuery(actorQueryPool, id);
 }
 
-void CommandBufferValidator::resetQuery(QueryPool *queryPool) {
+void CommandBufferValidator::resetQueryPool(QueryPool *queryPool) {
     CCASSERT(isInited(), "already destroyed?");
     CCASSERT(static_cast<QueryPoolValidator *>(queryPool)->isInited(), "already destroyed?");
 
     QueryPool *actorQueryPool = static_cast<QueryPoolValidator *>(queryPool)->getActor();
-    _actor->resetQuery(actorQueryPool);
+    _actor->resetQueryPool(actorQueryPool);
 }
 
-void CommandBufferValidator::completeQuery(QueryPool *queryPool) {
+void CommandBufferValidator::completeQueryPool(QueryPool *queryPool) {
     CCASSERT(isInited(), "already destroyed?");
     CCASSERT(static_cast<QueryPoolValidator *>(queryPool)->isInited(), "already destroyed?");
 
     QueryPool *actorQueryPool = static_cast<QueryPoolValidator *>(queryPool)->getActor();
-    _actor->completeQuery(actorQueryPool);
+    _actor->completeQueryPool(actorQueryPool);
 }
 
 } // namespace gfx

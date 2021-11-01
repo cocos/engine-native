@@ -156,10 +156,10 @@ void CCVKCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo
         clearValues[attachmentCount].depthStencil = {depth, stencil};
     }
     VkRenderPassBeginInfo passBeginInfo{VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO};
-    passBeginInfo.renderPass        = gpuRenderPass->vkRenderPass;
-    passBeginInfo.framebuffer       = framebuffer;
-    passBeginInfo.clearValueCount   = utils::toUint(clearValues.size());
-    passBeginInfo.pClearValues      = clearValues.data();
+    passBeginInfo.renderPass      = gpuRenderPass->vkRenderPass;
+    passBeginInfo.framebuffer     = framebuffer;
+    passBeginInfo.clearValueCount = utils::toUint(clearValues.size());
+    passBeginInfo.pClearValues    = clearValues.data();
 
     // don't quote me on this but:
     // metal doesn't really have the concept of render area (to limit the range of load ops)
@@ -178,6 +178,8 @@ void CCVKCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo
                             static_cast<float>(renderArea.width), static_cast<float>(renderArea.height), 0.F, 1.F};
         vkCmdSetViewport(_gpuCommandBuffer->vkCommandBuffer, 0, 1, &viewport);
         _curDynamicStates.viewport = {renderArea.x, renderArea.y, renderArea.width, renderArea.height};
+        vkCmdSetScissor(_gpuCommandBuffer->vkCommandBuffer, 0, 1, &passBeginInfo.renderArea);
+        _curDynamicStates.scissor = {0, 0, renderArea.width, renderArea.height};
     }
 }
 
@@ -250,7 +252,8 @@ void CCVKCommandBuffer::bindInputAssembler(InputAssembler *ia) {
                                gpuInputAssembler->vertexBuffers.data(), gpuInputAssembler->vertexBufferOffsets.data());
 
         if (gpuInputAssembler->gpuIndexBuffer) {
-            vkCmdBindIndexBuffer(_gpuCommandBuffer->vkCommandBuffer, gpuInputAssembler->gpuIndexBuffer->gpuBuffer->vkBuffer, 0,
+            vkCmdBindIndexBuffer(_gpuCommandBuffer->vkCommandBuffer, gpuInputAssembler->gpuIndexBuffer->gpuBuffer->vkBuffer,
+                                 gpuInputAssembler->gpuIndexBuffer->gpuBuffer->getStartOffset(gpuDevice->curBackBufferIndex),
                                  gpuInputAssembler->gpuIndexBuffer->gpuBuffer->stride == 4 ? VK_INDEX_TYPE_UINT32 : VK_INDEX_TYPE_UINT16);
         }
         _curGPUInputAssember = gpuInputAssembler;
@@ -650,7 +653,7 @@ void CCVKCommandBuffer::beginQuery(QueryPool *queryPool, uint32_t /*id*/) {
     auto              queryId      = static_cast<uint32_t>(vkQueryPool->_ids.size());
 
     if (queryId < queryPool->getMaxQueryObjects()) {
-        vkCmdBeginQuery(_gpuCommandBuffer->vkCommandBuffer, gpuQueryPool->pool, queryId, 0);
+        vkCmdBeginQuery(_gpuCommandBuffer->vkCommandBuffer, gpuQueryPool->vkPool, queryId, 0);
     }
 }
 
@@ -660,16 +663,16 @@ void CCVKCommandBuffer::endQuery(QueryPool *queryPool, uint32_t id) {
     auto              queryId      = static_cast<uint32_t>(vkQueryPool->_ids.size());
 
     if (queryId < queryPool->getMaxQueryObjects()) {
-        vkCmdEndQuery(_gpuCommandBuffer->vkCommandBuffer, gpuQueryPool->pool, queryId);
+        vkCmdEndQuery(_gpuCommandBuffer->vkCommandBuffer, gpuQueryPool->vkPool, queryId);
         vkQueryPool->_ids.push_back(id);
     }
 }
 
-void CCVKCommandBuffer::resetQuery(QueryPool *queryPool) {
+void CCVKCommandBuffer::resetQueryPool(QueryPool *queryPool) {
     auto *            vkQueryPool  = static_cast<CCVKQueryPool *>(queryPool);
     CCVKGPUQueryPool *gpuQueryPool = vkQueryPool->gpuQueryPool();
 
-    vkCmdResetQueryPool(_gpuCommandBuffer->vkCommandBuffer, gpuQueryPool->pool, 0, queryPool->getMaxQueryObjects());
+    vkCmdResetQueryPool(_gpuCommandBuffer->vkCommandBuffer, gpuQueryPool->vkPool, 0, queryPool->getMaxQueryObjects());
     vkQueryPool->_ids.clear();
 }
 
