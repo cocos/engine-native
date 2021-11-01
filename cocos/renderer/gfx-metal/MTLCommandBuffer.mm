@@ -67,8 +67,10 @@ void CCMTLCommandBuffer::doInit(const CommandBufferInfo &info) {
 }
 
 void CCMTLCommandBuffer::doDestroy() {
-    if(_texCopySemaphore)
+    if(_texCopySemaphore) {
         CC_DELETE(_texCopySemaphore);
+        _texCopySemaphore = nullptr;
+    }
     
     _GPUDescriptorSets.clear();
     _dynamicOffsets.clear();
@@ -853,7 +855,7 @@ void CCMTLCommandBuffer::copyTextureToBuffers(Texture *src, uint8_t *const *buff
     } else {
         // TODO_Zeqiang: metal commandbuffer ownership
         auto *mtlQueue = static_cast<CCMTLQueue *>(_queue)->gpuQueueObj()->mtlCommandQueue;
-        id<MTLCommandBuffer> cmdBuff = [mtlQueue commandBuffer];
+        id<MTLCommandBuffer> cmdBuff = [mtlQueue commandBufferWithUnretainedReferences];
         [cmdBuff enqueue];
         std::vector<std::pair<uint8_t*, uint32_t>> stagingAddrs(count);
         for (size_t i = 0; i < count; ++i) {
