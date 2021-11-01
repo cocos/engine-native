@@ -70,8 +70,8 @@ public:
     //TODO_Zeqiang: wgpu query pool
     void beginQuery(QueryPool *queryPool, uint32_t id) override{};
     void endQuery(QueryPool *queryPool, uint32_t id) override{};
-    void resetQuery(QueryPool *queryPool) override{};
-    void completeQuery(QueryPool *queryPool) override{};
+    void resetQueryPool(QueryPool *queryPool) override{};
+    void completeQueryPool(QueryPool *queryPool) override{};
 
     inline CCWGPUCommandBufferObject *gpuCommandBufferObject() { return _gpuCommandBufferObj; }
 

@@ -75,7 +75,7 @@ static WGPUTextureDimension toWGPUTextureDimension(TextureType type) {
         case TextureType::TEX3D:
             return WGPUTextureDimension::WGPUTextureDimension_3D;
         default:
-            CC_LOG_ERROR("unsupport type %d.", type);
+            printf("unsupport type %d.", type);
             return WGPUTextureDimension::WGPUTextureDimension_Force32;
     }
 }
@@ -94,7 +94,7 @@ static WGPUTextureViewDimension toWGPUTextureViewDimension(TextureType type) {
         case TextureType::TEX3D:
             return WGPUTextureViewDimension::WGPUTextureViewDimension_3D;
         default:
-            CC_LOG_ERROR("unsupport type %d.", type);
+            printf("unsupport type %d.", type);
             return WGPUTextureViewDimension::WGPUTextureViewDimension_Undefined;
     }
 }
@@ -283,7 +283,7 @@ static WGPUAddressMode toWGPUAddressMode(Address addrMode) {
 static WGPUFilterMode toWGPUFilterMode(Filter filter) {
     switch (filter) {
         case Filter::NONE:
-            return WGPUFilterMode::WGPUFilterMode_Force32;
+            return WGPUFilterMode::WGPUFilterMode_Linear;
         case Filter::POINT:
             return WGPUFilterMode::WGPUFilterMode_Nearest;
         case Filter::LINEAR:
@@ -312,7 +312,7 @@ static WGPUCompareFunction toWGPUCompareFunction(ComparisonFunc compareFunc) {
         case ComparisonFunc::ALWAYS:
             return WGPUCompareFunction::WGPUCompareFunction_Always;
         default:
-            CC_LOG_ERROR("unsupport compareFunc: %d", compareFunc);
+            printf("unsupport compareFunc: %d", compareFunc);
             return WGPUCompareFunction::WGPUCompareFunction_Force32;
     }
 }
@@ -359,7 +359,7 @@ static WGPUShaderStageFlags toWGPUShaderStageFlag(ShaderStageFlagBit flag) {
     }
 
     if (result == WGPUShaderStage_None) {
-        CC_LOG_ERROR("unsupport shader stage detected");
+        printf("unsupport shader stage detected");
     }
     return result;
 }
@@ -513,7 +513,7 @@ static WGPUPrimitiveTopology toWGPUPrimTopology(PrimitiveMode mode) {
         case PrimitiveMode::TRIANGLE_STRIP:
             return WGPUPrimitiveTopology_TriangleStrip;
         default:
-            CC_LOG_ERROR("unsupport primitive topology.");
+            printf("unsupport primitive topology.");
             return WGPUPrimitiveTopology_Force32;
     }
 }
