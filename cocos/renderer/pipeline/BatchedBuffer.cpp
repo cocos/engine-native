@@ -43,7 +43,7 @@ BatchedBuffer *BatchedBuffer::get(scene::Pass *pass, uint extraKey) {
 }
 
 void BatchedBuffer::destroyBatchedBuffer() {
-    for (auto &pair : buffers) {
+    for (auto &pair : BatchedBuffer::buffers) {
         const map<uint, BatchedBuffer *> &bufferItem = pair.second;
         for (const auto &item : bufferItem) {
             BatchedBuffer *batchedBuffer = item.second;
@@ -52,7 +52,7 @@ void BatchedBuffer::destroyBatchedBuffer() {
             }
         }
     }
-    buffers.clear();
+    BatchedBuffer::buffers.clear();
 }
 
 BatchedBuffer::BatchedBuffer(const scene::Pass *pass)
