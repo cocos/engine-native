@@ -835,7 +835,7 @@ void CCMTLCommandBuffer::copyTextureToBuffers(Texture *src, uint8_t *const *buff
     Format         convertedFormat = ccMTLTexture->getConvertedFormat();
     id<MTLTexture> mtlTexture      = ccMTLTexture->getMTLTexture();
     
-    if([mtlTexture storageMode] == MTLStorageModeShared || [mtlTexture storageMode] == MTLStorageModeManaged) {
+    if([mtlTexture storageMode] == MTLStorageModeShared) {
         for (size_t i = 0; i < count; ++i) {
             uint32_t      width         = regions[i].texExtent.width;
             uint32_t      height        = regions[i].texExtent.height;
