@@ -158,6 +158,9 @@ void PostProcessStage::render(scene::Camera *camera) {
             static_cast<uint>(camera->window->getWidth() * shadingScale),
             static_cast<uint>(camera->window->getHeight() * shadingScale),
         };
+        if (shadingScale != 1.F) {
+            textureInfo.usage |= gfx::TextureUsageBit::TRANSFER_SRC;
+        }
         data.backBuffer = builder.create(fgStrHandlePostProcessOutTexture, textureInfo);
         data.backBuffer = builder.write(data.backBuffer, colorAttachmentInfo);
         builder.writeToBlackboard(fgStrHandlePostProcessOutTexture, data.backBuffer);
