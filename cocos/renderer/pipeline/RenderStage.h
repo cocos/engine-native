@@ -66,7 +66,7 @@ public:
 protected:
     gfx::Rect             _renderArea;
     // Generate quad ia, cannot be updated inside renderpass
-    gfx::InputAssembler * _inputAssembler;
+    gfx::InputAssembler * _inputAssembler{nullptr};
     RenderQueueDescList   _renderQueueDescriptors;
     vector<RenderQueue *> _renderQueues;
     RenderPipeline *      _pipeline = nullptr;
