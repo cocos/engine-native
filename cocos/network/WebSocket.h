@@ -188,6 +188,9 @@ public:
      */
     void send(const unsigned char *binaryMsg, unsigned int len);
 
+
+    std::string sendSync(const std::string &message);
+
     /**
      *  @brief Closes the connection to server synchronously.
      *  @note It's a synchronous method, it will not return until websocket thread exits.

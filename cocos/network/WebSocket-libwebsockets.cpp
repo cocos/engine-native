@@ -213,6 +213,7 @@ public:
 
     void                              send(const std::string &message);
     void                              send(const unsigned char *binaryMsg, unsigned int len);
+    std::string                       sendSync(const std::string &message);
     void                              close();
     void                              closeAsync();
     void                              closeAsync(int code, const std::string &reason);
@@ -283,6 +284,7 @@ static std::recursive_mutex          instanceMutex;
 static struct lws_context *          wsContext{nullptr};
 static WsThreadHelper *              wsHelper{nullptr};
 static std::atomic_bool              wsPolling{false};
+static std::vector<char>             *sendSyncReceived;
 
 #if (CC_PLATFORM == CC_PLATFORM_ANDROID || CC_PLATFORM == CC_PLATFORM_OHOS)
 static std::string getFileNameForPath(const std::string &filePath) {
@@ -789,6 +791,37 @@ void WebSocketImpl::send(const unsigned char *binaryMsg, unsigned int len) {
     }
 }
 
+std::string WebSocketImpl::sendSync(const std::string &message) {
+    if (_readyState == cc::network::WebSocket::State::OPEN) {
+        // In main thread
+        auto *data  = new (std::nothrow) cc::network::WebSocket::Data();
+        data->bytes = static_cast<char *>(malloc(message.length() + 1));
+        // Make sure the last byte is '\0'
+        data->bytes[message.length()] = '\0';
+        strcpy(data->bytes, message.c_str());
+        data->len = static_cast<ssize_t>(message.length());
+
+        auto *msg = new (std::nothrow) WsMessage();
+        msg->what = WS_MSG_TO_SUBTRHEAD_SENDING_STRING;
+        msg->data = data;
+        msg->user = this;
+        wsHelper->sendMessageToWebSocketThread(msg);
+        // 轮询
+        while (true) {
+            if (sendSyncReceived != nullptr) {
+                std::string ret  = static_cast<char *>(sendSyncReceived->data());
+                delete sendSyncReceived;
+                sendSyncReceived = nullptr;
+
+                return ret;
+            }
+            Sleep(5);
+        }
+    } else {
+        LOGD("Couldn't send message since websocket wasn't opened!\n");
+    }
+}
+
 void WebSocketImpl::close() {
     if (_closeState != CloseState::NONE) {
         LOGD("close was invoked, don't invoke it again!\n");
@@ -1172,6 +1205,14 @@ int WebSocketImpl::onClientReceivedData(void *in, ssize_t len) {
             frameData->push_back('\0');
         }
 
+        // 收到数据，判断是否是sync的包，是则不回调
+        if ((*frameData)[0] == 's' && (*frameData)[1] == 'y' && (*frameData)[2] == 'n' && (*frameData)[3] == 'c') {
+            frameData->erase(frameData->begin(), frameData->begin() + 4);
+            sendSyncReceived = frameData;
+            //sendSyncReceived->erase(sendSyncReceived->begin(), sendSyncReceived->begin() + 4);
+            return 0;
+        }
+
         std::shared_ptr<std::atomic<bool>> isDestroyed = _isDestroyed;
         wsHelper->sendMessageToCocosThread([this, frameData, frameSize, isBinary, isDestroyed]() {
             // In UI thread
@@ -1371,6 +1412,10 @@ void WebSocket::send(const std::string &message) {
 
 void WebSocket::send(const unsigned char *binaryMsg, unsigned int len) {
     _impl->send(binaryMsg, len);
+}
+
+std::string WebSocket::sendSync(const std::string &message) {
+    return _impl->sendSync(message);
 }
 
 void WebSocket::close() {

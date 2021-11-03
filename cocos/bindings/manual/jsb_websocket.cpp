@@ -393,6 +393,48 @@ static bool webSocketSend(const se::State &s) {
 }
 SE_BIND_FUNC(webSocketSend)
 
+static bool webSocketSendSync(se::State &s) {
+    const auto &args = s.args();
+    int         argc = static_cast<int>(args.size());
+
+    if (argc == 1) {
+        auto *cobj = static_cast<cc::network::WebSocket *>(s.nativeThisObject());
+        bool  ok   = false;
+        if (args[0].isString()) {
+            std::string data;
+            ok = seval_to_std_string(args[0], &data);
+            SE_PRECONDITION2(ok, false, "Convert string failed");
+
+            auto result = cobj->sendSync(data);
+            ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
+            SE_PRECONDITION2(ok, false, "webSocketSendSync : Error processing arguments");
+            SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
+        } else if (args[0].isObject()) {
+            se::Object *dataObj = args[0].toObject();
+            uint8_t *   ptr     = nullptr;
+            size_t      length  = 0;
+            if (dataObj->isArrayBuffer()) {
+                ok = dataObj->getArrayBufferData(&ptr, &length);
+                SE_PRECONDITION2(ok, false, "getArrayBufferData failed!");
+            } else if (dataObj->isTypedArray()) {
+                ok = dataObj->getTypedArrayData(&ptr, &length);
+                SE_PRECONDITION2(ok, false, "getTypedArrayData failed!");
+            } else {
+                assert(false);
+            }
+
+            cobj->send(ptr, static_cast<unsigned int>(length));
+        } else {
+            assert(false);
+        }
+
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting 1", argc);
+    return false;
+}
+SE_BIND_FUNC(webSocketSendSync)
+
 static bool webSocketClose(se::State &s) {
     const auto &args = s.args();
     int         argc = static_cast<int>(args.size());
@@ -501,6 +543,7 @@ bool register_all_websocket(se::Object *obj) { // NOLINT (readability-identifier
     cls->defineFinalizeFunction(_SE(webSocketFinalize));
 
     cls->defineFunction("send", _SE(webSocketSend));
+    cls->defineFunction("sendSync", _SE(webSocketSendSync));
     cls->defineFunction("close", _SE(webSocketClose));
     cls->defineProperty("readyState", _SE(webSocketGetReadyState), nullptr);
     cls->defineProperty("bufferedAmount", _SE(webSocketGetBufferedAmount), nullptr);
