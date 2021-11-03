@@ -39,6 +39,7 @@ class RenderAdditiveLightQueue;
 class PlanarShadowQueue;
 struct DeferredRenderData;
 class DeferredPipeline;
+class UIPhase;
 
 struct RenderElem {
     RenderObject        renderObject;
@@ -71,7 +72,7 @@ private:
     static RenderStageInfo initInfo;
     PlanarShadowQueue *    _planarShadowQueue{nullptr};
     uint                   _phaseID{0};
-
+    UIPhase *                 _uiPhase = nullptr;
     gfx::Buffer *             _deferredLitsBufs{nullptr};
     gfx::Buffer *             _deferredLitsBufView{nullptr};
     std::vector<float>        _lightBufferData;

@@ -142,5 +142,9 @@ void PlanarShadowQueue::destroy() {
     CC_SAFE_DELETE(_instancedQueue);
 }
 
+bool PlanarShadowQueue::isEmpty() {
+    return _pendingModels.empty();
+}
+
 } // namespace pipeline
 } // namespace cc

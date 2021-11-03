@@ -172,6 +172,14 @@ void ForwardStage::render(scene::Camera *camera) {
         colorAttachmentInfo.loadOp     = gfx::LoadOp::CLEAR;
         colorAttachmentInfo.beginAccesses = {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE};
         colorAttachmentInfo.endAccesses   = {gfx::AccessType::FRAGMENT_SHADER_READ_TEXTURE};
+        auto clearFlags                   = static_cast<gfx::ClearFlagBit>(camera->clearFlag);
+        if (!hasFlag(clearFlags, gfx::ClearFlagBit::COLOR) && camera->window->swapchain) {
+            if (hasFlag(clearFlags, static_cast<gfx::ClearFlagBit>(skyboxFlag))) {
+                colorAttachmentInfo.loadOp = gfx::LoadOp::DISCARD;
+            } else {
+                colorAttachmentInfo.loadOp = gfx::LoadOp::LOAD;
+            }
+        }
         data.outputTex                    = builder.write(data.outputTex, colorAttachmentInfo);
         builder.writeToBlackboard(RenderPipeline::fgStrHandleOutColorTexture, data.outputTex);
         // depth
@@ -188,8 +196,16 @@ void ForwardStage::render(scene::Camera *camera) {
         depthAttachmentInfo.loadOp       = gfx::LoadOp::CLEAR;
         depthAttachmentInfo.clearDepth   = camera->clearDepth;
         depthAttachmentInfo.clearStencil = camera->clearStencil;
+        depthAttachmentInfo.beginAccesses = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
         depthAttachmentInfo.endAccesses  = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
-
+        if ((clearFlags & gfx::ClearFlagBit::DEPTH_STENCIL) != gfx::ClearFlagBit::DEPTH_STENCIL && camera->window->swapchain) {
+            if ((clearFlags & gfx::ClearFlagBit::DEPTH) != gfx::ClearFlagBit::DEPTH) {
+                depthAttachmentInfo.loadOp = gfx::LoadOp::LOAD;
+            }
+            if ((clearFlags & gfx::ClearFlagBit::STENCIL) != gfx::ClearFlagBit::STENCIL) {
+                depthAttachmentInfo.loadOp = gfx::LoadOp::LOAD;
+            }
+        }
         data.depth = builder.create(RenderPipeline::fgStrHandleOutDepthTexture, depthTexInfo);
         data.depth = builder.write(data.depth, depthAttachmentInfo);
         builder.writeToBlackboard(RenderPipeline::fgStrHandleOutDepthTexture, data.depth);
@@ -212,6 +228,7 @@ void ForwardStage::render(scene::Camera *camera) {
             _planarShadowQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
             _renderQueues[1]->recordCommandBuffer(_device, camera, renderPass, cmdBuff);
         }
+        _uiPhase->render(camera, renderPass);
     };
 
     // add pass

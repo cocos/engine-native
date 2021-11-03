@@ -38,6 +38,7 @@
 #include "pipeline/Define.h"
 #include "pipeline/helper/Utils.h"
 #include "scene/SubModel.h"
+#include "scene/RenderScene.h"
 
 namespace cc {
 namespace pipeline {
@@ -139,7 +140,7 @@ void PostProcessStage::render(scene::Camera *camera) {
         colorAttachmentInfo.loadOp     = gfx::LoadOp::CLEAR;
 
         auto clearFlags = static_cast<gfx::ClearFlagBit>(camera->clearFlag);
-        if (!hasFlag(clearFlags, gfx::ClearFlagBit::COLOR)) {
+        if (!hasFlag(clearFlags, gfx::ClearFlagBit::COLOR) && camera->window->swapchain) {
             if (hasFlag(clearFlags, static_cast<gfx::ClearFlagBit>(skyboxFlag))) {
                 colorAttachmentInfo.loadOp = gfx::LoadOp::DISCARD;
             } else {
@@ -197,7 +198,7 @@ void PostProcessStage::render(scene::Camera *camera) {
         const std::array<uint, 1> globalOffsets = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
         cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), utils::toUint(globalOffsets.size()), globalOffsets.data());
 
-        if (!pipeline->getPipelineSceneData()->getRenderObjects().empty()) {
+        if (!pipeline->getPipelineSceneData()->getRenderObjects().empty() || !camera->scene->getDrawBatch2Ds().empty()) {
             // post process
             auto *const  sceneData = pipeline->getPipelineSceneData();
             scene::Pass *pv        = sceneData->getSharedData()->pipelinePostPass;
@@ -218,7 +219,7 @@ void PostProcessStage::render(scene::Camera *camera) {
             cmdBuff->draw(_inputAssembler);
         }
 
-        _uiPhase->render(camera, renderPass);
+        
         renderProfiler(renderPass, cmdBuff, pipeline->getProfiler(), camera->window->swapchain);
     };
 

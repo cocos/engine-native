@@ -45,6 +45,7 @@
 #include "scene/RenderScene.h"
 #include "scene/Sphere.h"
 #include "scene/SphereLight.h"
+#include "pipeline/common/UIPhase.h"
 
 namespace cc {
 namespace pipeline {
@@ -92,7 +93,9 @@ RenderStageInfo LightingStage::initInfo = {
 
 const RenderStageInfo &LightingStage::getInitializeInfo() { return LightingStage::initInfo; }
 
-LightingStage::LightingStage() = default;
+LightingStage::LightingStage(){
+    _uiPhase = CC_NEW(UIPhase);
+}
 
 LightingStage::~LightingStage() {
     CC_SAFE_DESTROY(_deferredLitsBufs);
@@ -295,7 +298,7 @@ void LightingStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
     _reflectionComp->init(_device, 8, 8);
 
     _reflectionRenderQueue = CC_NEW(RenderQueue(_pipeline, std::move(info)));
-
+    _uiPhase->activate(pipeline);
     _defaultSampler       = pipeline->getGlobalDSManager()->getPointSampler();
 }
 
@@ -304,6 +307,7 @@ void LightingStage::destroy() {
     CC_SAFE_DESTROY(_descLayout);
     CC_SAFE_DESTROY(_planarShadowQueue);
     CC_SAFE_DELETE(_reflectionRenderQueue);
+    CC_SAFE_DELETE(_uiPhase);
     RenderStage::destroy();
 
     CC_SAFE_DELETE(_reflectionComp);
@@ -332,6 +336,7 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
     float      shadingScale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
     _renderArea      = RenderPipeline::getRenderArea(camera);
     _inputAssembler    = pipeline->getIAByRenderArea(_renderArea);
+    _planarShadowQueue->gatherShadowPasses(camera, pipeline->getCommandBuffers()[0]);
     auto lightingSetup = [&](framegraph::PassNodeBuilder &builder, RenderData &data) {
         builder.subpass(true);
 
@@ -500,7 +505,8 @@ void LightingStage::fgTransparent(scene::Camera *camera) {
             queue->recordCommandBuffer(pipeline->getDevice(), camera, table.getRenderPass(), cmdBuff, table.getSubpassIndex());
         }
 
-        //_planarShadowQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
+        if(!_planarShadowQueue->isEmpty()) _planarShadowQueue->recordCommandBuffer(_device, table.getRenderPass(), cmdBuff);
+        _uiPhase->render(camera, table.getRenderPass());
     };
 
     putTransparentObj2Queue();
@@ -513,7 +519,7 @@ void LightingStage::fgTransparent(scene::Camera *camera) {
         }
     }
 
-    if (!empty) {
+    if (!empty || !camera->scene->getDrawBatch2Ds().empty() || !_planarShadowQueue->isEmpty()) {
         pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(DeferredInsertPoint::DIP_TRANSPARENT),
                                                       DeferredPipeline::fgStrHandleTransparentPass, transparentSetup, transparentExec);
     }

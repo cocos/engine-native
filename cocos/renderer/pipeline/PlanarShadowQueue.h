@@ -50,6 +50,7 @@ public:
     void gatherShadowPasses(scene::Camera *camera, gfx::CommandBuffer *cmdBuffer);
     void recordCommandBuffer(gfx::Device *, gfx::RenderPass *, gfx::CommandBuffer *);
     void destroy();
+    bool isEmpty();
 
 private:
     RenderPipeline *                  _pipeline       = nullptr;
