@@ -109,7 +109,6 @@ bool View::pollEvent(bool *quit, bool *resume, bool *pause, bool *close) {
                 case SDL_WINDOWEVENT_SHOWN:
                 case SDL_WINDOWEVENT_RESTORED:
                     *resume = true;
-                    *pause  = false;
                     break;
                 case SDL_WINDOWEVENT_SIZE_CHANGED:
                 case SDL_WINDOWEVENT_RESIZED:
@@ -120,7 +119,6 @@ bool View::pollEvent(bool *quit, bool *resume, bool *pause, bool *close) {
                 case SDL_WINDOWEVENT_HIDDEN:
                 case SDL_WINDOWEVENT_MINIMIZED:
                     *pause = true;
-                    *resume = false;
                     break;
                 case SDL_WINDOWEVENT_ENTER:
                     SDL_CaptureMouse(SDL_TRUE);

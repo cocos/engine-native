@@ -128,28 +128,23 @@ void AppDelegate::start() {
     _game->onResume();
 
 
-    resume = false;
-    pause  = false;
-    close  = false;
+    
     while (!_quit) {
         desiredInterval = (LONGLONG)(1.0 / _game->getPreferredFramesPerSecond() * nFreq.QuadPart);
-
+        resume = false;
+        pause  = false;
+        close  = false;
         while (_view->pollEvent(&_quit, &resume, &pause, &close)) {
         }
 
-        if (pause) {
-            _game->onPause();
-            cc::EventDispatcher::dispatchDestroyWindowEvent();
-        }
-        if (resume) {
-            _game->onResume();
-            cc::EventDispatcher::dispatchRecreateWindowEvent();
-        } 
+        
+        if (pause) _game->onPause();
+        if (resume) _game->onResume(); 
         if (close) _game->onClose();
 
         QueryPerformanceCounter(&nNow);
         actualInterval = nNow.QuadPart - nLast.QuadPart;
-        if (actualInterval >= desiredInterval && !pause) {
+        if (actualInterval >= desiredInterval) {
             nLast.QuadPart = nNow.QuadPart;
             _game->tick();
             _view->swapbuffer();
