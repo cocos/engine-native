@@ -138,8 +138,14 @@ void AppDelegate::start() {
         }
 
         
-        if (pause) _game->onPause();
-        if (resume) _game->onResume(); 
+        if (pause) {
+            _game->onPause();
+            cc::EventDispatcher::dispatchDestroyWindowEvent();
+        }
+        if (resume) {
+            cc::EventDispatcher::dispatchRecreateWindowEvent();
+            _game->onResume();
+        } 
         if (close) _game->onClose();
 
         QueryPerformanceCounter(&nNow);

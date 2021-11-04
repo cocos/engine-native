@@ -73,12 +73,10 @@ bool Game::init() {
 void Game::onPause() {
     cc::Application::onPause();
     cc::EventDispatcher::dispatchEnterBackgroundEvent();
-    cc::EventDispatcher::dispatchDestroyWindowEvent();
 }
 
 void Game::onResume() {
     cc::EventDispatcher::dispatchEnterForegroundEvent();
-    cc::EventDispatcher::dispatchRecreateWindowEvent();
     cc::Application::onResume();
 }
 
