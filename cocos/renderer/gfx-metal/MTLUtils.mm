@@ -976,7 +976,7 @@ String mu::spirv2MSL(const uint32_t *ir, size_t word_count,
             CC_LOG_ERROR("Implementation limits: %s binding at %d, should not use more than %d entries in the buffer argument table", ubo.name.c_str(), binding, maxBufferBindingIndex);
         }
 
-        uint nameHash = std::hash<String>{}(ubo.name);
+        uint nameHash = static_cast<uint>(std::hash<String>{}(ubo.name));
         if (gpuShader->blocks.find(nameHash) == gpuShader->blocks.end()) {
             auto mappedBinding = gpuShader->bufferIndex;
             newBinding.desc_set = set;
@@ -1005,7 +1005,7 @@ String mu::spirv2MSL(const uint32_t *ir, size_t word_count,
             CC_LOG_ERROR("Implementation limits: %s binding at %d, should not use more than %d entries in the buffer argument table", ubo.name.c_str(), binding, maxBufferBindingIndex);
         }
         
-        uint nameHash = std::hash<String>{}(ubo.name);
+        uint nameHash = static_cast<uint>(std::hash<String>{}(ubo.name));
         if (gpuShader->blocks.find(nameHash) == gpuShader->blocks.end()) {
             auto mappedBinding = gpuShader->bufferIndex;
             newBinding.desc_set = set;

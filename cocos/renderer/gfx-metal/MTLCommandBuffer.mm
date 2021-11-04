@@ -557,26 +557,22 @@ void CCMTLCommandBuffer::updateBuffer(Buffer *buff, const void *data, uint size)
         return;
     }
     
-    if(!_gpuCommandBufferObj->mtlCommandBuffer) {
-        auto *mtlQueue = static_cast<CCMTLQueue *>(_queue)->gpuQueueObj()->mtlCommandQueue;
-        _gpuCommandBufferObj->mtlCommandBuffer = [[mtlQueue commandBuffer] retain];
-    }
-
-    id<MTLDevice> mtlDevice = static_cast<id<MTLDevice>>(_mtlDevice->getMTLDevice());
-    id<MTLBuffer> tempBuffer = [mtlDevice newBufferWithBytes:data length:size options:MTLResourceStorageModeShared];
+    auto *mtlQueue = static_cast<CCMTLQueue *>(_queue)->gpuQueueObj()->mtlCommandQueue;
+    id<MTLCommandBuffer> cmdBuff = [mtlQueue commandBufferWithUnretainedReferences];
     
-    id<MTLBlitCommandEncoder> encoder = [_gpuCommandBufferObj->mtlCommandBuffer blitCommandEncoder];
-
-    [_gpuCommandBufferObj->mtlCommandBuffer addCompletedHandler:^(id<MTLCommandBuffer> cmdbuffer) {
-        [tempBuffer release];
-    }];
-    
-    [encoder copyFromBuffer:tempBuffer
-               sourceOffset:0
+    CCMTLGPUBuffer stagingBuffer;
+    stagingBuffer.size = size;
+    _mtlDevice->gpuStagingBufferPool()->alloc(&stagingBuffer);
+    memcpy(stagingBuffer.mappedData, data, size);
+    id<MTLBlitCommandEncoder> encoder = [cmdBuff blitCommandEncoder];
+    [encoder copyFromBuffer:stagingBuffer.mtlBuffer
+               sourceOffset:stagingBuffer.startOffset
                    toBuffer:static_cast<CCMTLBuffer *>(buff)->getMTLBuffer()
           destinationOffset:0
                        size:size];
     [encoder endEncoding];
+    [cmdBuff enqueue];
+    [cmdBuff commit];
 }
 
 void CCMTLCommandBuffer::copyBuffersToTexture(const uint8_t *const *buffers, Texture *texture, const BufferTextureCopy *regions, uint count) {
