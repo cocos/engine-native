@@ -8,7 +8,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/../common/CMakeLists.txt)
 set(CMAKE_OSX_DEPLOYMENT_TARGET ${TARGET_OSX_VERSION})
 
 if("${TARGET_OSX_VERSION}" VERSION_GREATER_EQUAL "11.0")
-    add_definitions(-DMEMORY_LESS_TEXTURE_SUPPORT=1)
+    add_definitions(-DMAC_MEMORY_LESS_TEXTURE_SUPPORT=1)
 endif()
 
 set(LIB_NAME ${APP_NAME}-desktop)

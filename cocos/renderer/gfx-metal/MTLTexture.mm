@@ -177,7 +177,7 @@ bool CCMTLTexture::createMTLTexture() {
 
     if(hasAllFlags(TextureUsage::COLOR_ATTACHMENT | TextureUsage::INPUT_ATTACHMENT, _info.usage) && mu::isImageBlockSupported()) {
         // mac SDK mem_less unavailable before 11.0
-#ifdef MEMORY_LESS_TEXTURE_SUPPORT
+#if MAC_MEMORY_LESS_TEXTURE_SUPPORT || CC_PLATFORM == CC_PLATFORM_MAC_IOS
         //xcode OS version warning
         if (@available(macOS 11.0, *)) {
             descriptor.storageMode = MTLStorageModeMemoryless;
