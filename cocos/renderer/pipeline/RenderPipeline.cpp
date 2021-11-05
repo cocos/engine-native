@@ -26,6 +26,7 @@
 #include <boost/functional/hash.hpp>
 
 #include "InstancedBuffer.h"
+#include "BatchedBuffer.h"
 #include "PipelineStateManager.h"
 #include "RenderFlow.h"
 #include "RenderPipeline.h"
@@ -69,6 +70,10 @@ bool RenderPipeline::initialize(const RenderPipelineInfo &info) {
     _flows = info.flows;
     _tag   = info.tag;
     return true;
+}
+
+bool RenderPipeline::isEnvmapEnabled() const {
+    return _pipelineSceneData->getSharedData()->skybox->useIBL;
 }
 
 bool RenderPipeline::activate(gfx::Swapchain * /*swapchain*/) {
@@ -149,6 +154,7 @@ void RenderPipeline::destroy() {
     CC_SAFE_DESTROY(_defaultTexture);
 
     PipelineStateManager::destroyAll();
+    BatchedBuffer::destroyBatchedBuffer();
     InstancedBuffer::destroyInstancedBuffer();
 }
 

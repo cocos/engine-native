@@ -150,10 +150,6 @@ void GbufferStage::render(scene::Camera *camera) {
     float  shadingScale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
     _renderArea = RenderPipeline::getRenderArea(camera);
 
-    // render area is not oriented, copy buffer must be called outsize of RenderPass, it should not be called in execute lambda expression
-    // If there are only transparent object, lighting pass is ignored, we should call getIAByRenderArea here
-    pipeline->getIAByRenderArea(_renderArea);
-
     auto gbufferSetup = [&](framegraph::PassNodeBuilder &builder, RenderData &data) {
         builder.subpass();
 
@@ -204,7 +200,7 @@ void GbufferStage::render(scene::Camera *camera) {
         // depth setup
         gfx::TextureInfo depthTexInfo = {
             gfx::TextureType::TEX2D,
-            gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT,
+            gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
             gfx::Format::DEPTH_STENCIL,
             static_cast<uint>(pipeline->getWidth() * shadingScale),
             static_cast<uint>(pipeline->getHeight() * shadingScale),

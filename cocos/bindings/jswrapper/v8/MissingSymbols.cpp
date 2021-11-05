@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2020-2021 Huawei Technologies Co., Ltd.
+ Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -22,34 +22,17 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 ****************************************************************************/
+#if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
-#pragma once
+//TODO(PatriceJiang): modify this when OHOS llvm upgrade
+#if CC_PLATFORM == CC_PLATFORM_OHOS
+extern "C" {
+int local_bcmp(const void *cs, const void *ct, size_t count) {
+return memcmp(cs, ct, count);
+}
+int bcmp(const void *cs, const void *ct, size_t count) __attribute__((weak, alias("local_bcmp")));
+} // extern "C"
+#endif
 
-#include "../RenderStage.h"
-#include "frame-graph/Handle.h"
-#include "Enum.h"
 
-namespace cc {
-namespace pipeline {
-
-class UIPhase;
-
-class CC_DLL PostProcessStage : public RenderStage {
-public:
-    PostProcessStage();
-    ~PostProcessStage() override = default;
-
-    static const RenderStageInfo &getInitializeInfo();
-    bool initialize(const RenderStageInfo &info) override;
-    void activate(RenderPipeline *pipeline, RenderFlow *flow) override;
-    void destroy() override;
-    void render(scene::Camera *camera) override;
-
-private:
-    UIPhase * _uiPhase = nullptr;
-    uint      _phaseID = 0;
-
-    static RenderStageInfo initInfo;
-};
-} // namespace pipeline
-} // namespace cc
+#endif // #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
