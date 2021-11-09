@@ -23,6 +23,12 @@ AUX_SOURCE_DIRECTORY(
 )
 
 AUX_SOURCE_DIRECTORY(
+    ../../../cocos/base/threading
+    COCOS_BASE_THREAD
+)
+list(FILTER COCOS_BASE_THREAD EXCLUDE REGEX "[\\w+]*.mm")
+
+AUX_SOURCE_DIRECTORY(
     ../../../cocos/base
     COCOS_BASE
 )
@@ -70,6 +76,7 @@ set(RENDERER
 
 set(NATIVE_SRC
     ${COCOS_BASE}
+    ${COCOS_BASE_THREAD}
     ${RENDERER}
     ${WGPU_SRC}
 )

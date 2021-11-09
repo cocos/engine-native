@@ -163,6 +163,9 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
         }
     }
 
+    setViewport({renderArea.x, renderArea.y, renderArea.width, renderArea.height, 0.0F, 1.0F});
+    setScissor(renderArea);
+
     _gpuCommandBufferObj->renderPassBegan = true;
 
     renderPassDesc.colorAttachments             = colorAttachments.data();
@@ -361,7 +364,10 @@ void CCWGPUCommandBuffer::bindStates() {
         for (size_t i = 0; i < textures.size(); i++) {
             rtWidth  = rtWidth > textures[i]->getWidth() ? textures[i]->getWidth() : rtWidth;
             rtHeight = rtHeight > textures[i]->getHeight() ? textures[i]->getHeight() : rtHeight;
+            printf("w, h %d %d\n", textures[i]->getWidth(), textures[i]->getHeight());
         }
+
+        printf("minrt %u, %u\n", rtWidth, rtHeight);
 
         const Viewport &vp   = _gpuCommandBufferObj->stateCache.viewport;
         uint32_t        left = vp.left > 0 ? vp.left : 0;
@@ -372,6 +378,7 @@ void CCWGPUCommandBuffer::bindStates() {
 
         uint32_t height = vp.top > 0 ? vp.height : vp.height + vp.top;
         height          = top + height > rtHeight ? rtHeight - top : height;
+        printf("vp %u, %u, %u, %u\n", left, top, width, height);
         wgpuRenderPassEncoderSetViewport(_gpuCommandBufferObj->wgpuRenderPassEncoder, left, top, width, height, vp.minDepth, vp.maxDepth);
 
         const Rect &rect = _gpuCommandBufferObj->stateCache.rect;
@@ -381,6 +388,7 @@ void CCWGPUCommandBuffer::bindStates() {
         width            = left + width > rtWidth ? rtWidth - left : width;
         height           = rect.y > 0 ? rect.height : rect.height + rect.y;
         height           = top + height > rtHeight ? rtHeight - top : height;
+        printf("sc %u, %u, %u, %u\n", left, top, width, height);
         wgpuRenderPassEncoderSetScissorRect(_gpuCommandBufferObj->wgpuRenderPassEncoder, left, top, width, height);
     } else if (pipelineState->getBindPoint() == PipelineBindPoint::COMPUTE) {
         auto *pipelineState = _gpuCommandBufferObj->stateCache.pipelineState;

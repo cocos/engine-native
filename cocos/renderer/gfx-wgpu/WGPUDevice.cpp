@@ -25,6 +25,8 @@
 
 #include "WGPUDevice.h"
 #include <emscripten/val.h>
+#include <numeric>
+#include "../../base/threading/Semaphore.h"
 #include "WGPUBuffer.h"
 #include "WGPUCommandBuffer.h"
 #include "WGPUDescriptorSet.h"
@@ -46,6 +48,13 @@
 namespace cc {
 
 namespace gfx {
+
+struct BufferMapData {
+    Semaphore*       semaphore = nullptr;
+    WGPUBuffer       buffer    = wgpuDefaultHandle;
+    emscripten::val* retBuffer = nullptr;
+    uint32_t         size      = 0;
+};
 
 CCWGPUDevice* CCWGPUDevice::instance = nullptr;
 
@@ -185,6 +194,94 @@ void CCWGPUDevice::copyBuffersToTexture(const uint8_t* const* buffers, Texture* 
         };
         wgpuQueueWriteTexture(_gpuDeviceObj->wgpuQueue, &imageCopyTexture, buffers[i], bufferSize, &texDataLayout, &extent);
     }
+}
+
+void onMapDone(WGPUBufferMapAsyncStatus status, void* userdata) {
+    auto* bufferMapData = static_cast<BufferMapData*>(userdata);
+    if (status == WGPUBufferMapAsyncStatus_Success) {
+        auto* mappedBuffer        = static_cast<uint8_t*>(wgpuBufferGetMappedRange(bufferMapData->buffer, 0, bufferMapData->size));
+        *bufferMapData->retBuffer = emscripten::val(emscripten::typed_memory_view(bufferMapData->size, mappedBuffer));
+    }
+    bufferMapData->semaphore->signal();
+}
+
+emscripten::val CCWGPUDevice::copyTextureToBuffers(Texture* src, const BufferTextureCopyList& regions) {
+    auto*    texture            = static_cast<CCWGPUTexture*>(src);
+    Format   dstFormat          = src->getFormat();
+    uint32_t pxSize             = GFX_FORMAT_INFOS[static_cast<uint>(dstFormat)].size;
+    auto     wgpuCommandEncoder = wgpuDeviceCreateCommandEncoder(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, nullptr);
+
+    uint64_t size = std::accumulate(regions.begin(), regions.end(), 0, [pxSize](uint64_t initVal, const BufferTextureCopy& in) {
+        uint32_t bytesPerRow = (pxSize * in.texExtent.width + 255) / 256 * 256;
+        uint32_t bufferSize  = bytesPerRow * in.texExtent.height * in.texExtent.depth;
+        return initVal + bufferSize;
+    });
+
+    printf("buff size %lld \n", size);
+
+    WGPUBufferDescriptor descriptor = {
+        .nextInChain      = nullptr,
+        .label            = nullptr,
+        .usage            = WGPUBufferUsage_MapRead | WGPUBufferUsage_CopyDst,
+        .size             = size,
+        .mappedAtCreation = false,
+    };
+
+    WGPUBuffer buffer = wgpuDeviceCreateBuffer(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &descriptor);
+    uint64_t   offset = 0;
+    for (size_t i = 0; i < regions.size(); i++) {
+        uint32_t             bytesPerRow      = (pxSize * regions[i].texExtent.width + 255) / 256 * 256;
+        WGPUImageCopyTexture imageCopyTexture = {
+            .texture  = texture->gpuTextureObject()->wgpuTexture,
+            .mipLevel = regions[i].texSubres.mipLevel,
+            .origin   = WGPUOrigin3D{
+                static_cast<uint32_t>(regions[i].texOffset.x),
+                static_cast<uint32_t>(regions[i].texOffset.y),
+                static_cast<uint32_t>(regions[i].texOffset.z)},
+            .aspect = WGPUTextureAspect_All,
+        };
+
+        WGPUTextureDataLayout texDataLayout = {
+            .offset       = offset,
+            .bytesPerRow  = bytesPerRow,
+            .rowsPerImage = regions[i].texExtent.height,
+        };
+        uint32_t bufferSize = pxSize * regions[i].texExtent.width * regions[i].texExtent.depth;
+        offset += bufferSize;
+
+        printf("offset %ld \n", bufferSize);
+
+        WGPUImageCopyBuffer imageCopyBuffer = {
+            .layout = texDataLayout,
+            .buffer = buffer,
+        };
+
+        WGPUExtent3D extent = {
+            .width              = regions[i].texExtent.width,
+            .height             = regions[i].texExtent.height,
+            .depthOrArrayLayers = regions[i].texExtent.depth,
+        };
+
+        wgpuCommandEncoderCopyTextureToBuffer(wgpuCommandEncoder, &imageCopyTexture, &imageCopyBuffer, &extent);
+    }
+    auto wgpuCommandBuffer = wgpuCommandEncoderFinish(wgpuCommandEncoder, nullptr);
+    wgpuQueueSubmit(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuQueue, 1, &wgpuCommandBuffer);
+
+    uint8_t         data[1] = {0};
+    emscripten::val typedArray(emscripten::typed_memory_view(1, data));
+
+    Semaphore sem(1);
+    sem.wait();
+    BufferMapData bufferMapData = {
+        .semaphore = &sem,
+        .buffer    = buffer,
+        .retBuffer = &typedArray,
+    };
+
+    wgpuBufferMapAsync(buffer, WGPUMapMode_Write, 0, size, onMapDone, &bufferMapData);
+    sem.wait();
+    wgpuBufferRelease(buffer);
+    return typedArray;
 }
 
 void CCWGPUDevice::copyTextureToBuffers(Texture* src, uint8_t* const* buffers, const BufferTextureCopy* region, uint count) {

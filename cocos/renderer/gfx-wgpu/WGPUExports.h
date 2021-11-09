@@ -924,7 +924,7 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
         .function("createDescriptorSet", select_overload<DescriptorSet *(const DescriptorSetInfoInstance &)>(&CCWGPUDevice::createDescriptorSet),
                   /* pure_virtual(), */ allow_raw_pointer<arg<0>>())
-        .function("copyTextureToBuffers", select_overload<void(Texture *, const emscripten::val &, const BufferTextureCopyList &)>(&CCWGPUDevice::copyTextureToBuffers),
+        .function("copyTextureToBuffers", select_overload<emscripten::val(Texture *, const BufferTextureCopyList &)>(&CCWGPUDevice::copyTextureToBuffers),
                   /* pure_virtual(), */ allow_raw_pointers())
         .function("copyBuffersToTexture", select_overload<void(const emscripten::val &, Texture *, const BufferTextureCopyList &)>(&CCWGPUDevice::copyBuffersToTexture),
                   /* pure_virtual(), */ allow_raw_pointers());
