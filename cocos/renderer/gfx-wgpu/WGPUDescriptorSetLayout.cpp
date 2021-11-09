@@ -26,13 +26,13 @@
 #include "WGPUDescriptorSetLayout.h"
 #include <emscripten/html5_webgpu.h>
 #include <algorithm>
+#include <boost/functional/hash.hpp>
 #include "WGPUBuffer.h"
 #include "WGPUDevice.h"
 #include "WGPUObject.h"
 #include "WGPUSampler.h"
 #include "WGPUTexture.h"
 #include "WGPUUtils.h"
-#include <boost/functional/hash.hpp>
 
 namespace cc {
 namespace gfx {
@@ -41,7 +41,7 @@ namespace anoymous {
 WGPUBindGroupLayout defaultBindgroupLayout = wgpuDefaultHandle;
 
 std::unordered_map<size_t, WGPUBindGroupLayout> layoutPool;
-}
+} // namespace anoymous
 
 using namespace emscripten;
 using namespace anoymous;
@@ -139,7 +139,7 @@ void CCWGPUDescriptorSetLayout::updateLayout(uint8_t binding, const CCWGPUBuffer
         }
         if (sampler) {
             const SamplerInfo& info = sampler->getInfo();
-            if (info.minFilter != Filter::LINEAR && info.magFilter != Filter::LINEAR && info.mipFilter != Filter::LINEAR)
+            if (info.minFilter == Filter::POINT && info.magFilter == Filter::POINT && info.mipFilter == Filter::POINT)
                 (*iter).sampler.type = WGPUSamplerBindingType::WGPUSamplerBindingType_NonFiltering;
             else
                 (*iter).sampler.type = WGPUSamplerBindingType::WGPUSamplerBindingType_Filtering;
@@ -176,7 +176,7 @@ size_t CCWGPUDescriptorSetLayout::hash() {
     //     boost::hash_combine(seed, entries[i].storageTexture.access);
     // }
     std::size_t seed = entries.size();
-    for(size_t i = 0; i < entries.size(); i++) {
+    for (size_t i = 0; i < entries.size(); i++) {
         const auto& entry = entries[i];
         seed ^= i + 0x9e3779b9 + (seed << 6) + (seed >> 2);
         seed ^= entry.binding + 0x9e3779b9 + (seed << 6) + (seed >> 2);
@@ -204,8 +204,8 @@ void CCWGPUDescriptorSetLayout::print() {
     }
 }
 
-void CCWGPUDescriptorSetLayout::prepare(const std::set<uint8_t>& bindingInUse) {
-    if (_gpuLayoutEntryObj->bindGroupLayout) {
+void CCWGPUDescriptorSetLayout::prepare(bool forceUpdate) {
+    if (_gpuLayoutEntryObj->bindGroupLayout && !forceUpdate) {
         return;
     }
     // std::vector<WGPUBindGroupLayoutEntry> bindGroupLayoutEntries;
@@ -217,8 +217,8 @@ void CCWGPUDescriptorSetLayout::prepare(const std::set<uint8_t>& bindingInUse) {
     //                              bindGroupLayoutEntries.end());
 
     size_t hashVal = hash();
-    auto iter = layoutPool.find(hashVal);
-    if(iter != layoutPool.end()) {
+    auto   iter    = layoutPool.find(hashVal);
+    if (iter != layoutPool.end()) {
         _gpuLayoutEntryObj->bindGroupLayout = iter->second;
         return;
     }

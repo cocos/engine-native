@@ -47,7 +47,7 @@ public:
 
     void updateLayout(uint8_t binding, const CCWGPUBuffer* buffer = nullptr, const CCWGPUTexture* tex = nullptr, const CCWGPUSampler* sampler = nullptr);
 
-    void prepare(const std::set<uint8_t>& bindingInUse);
+    void prepare(bool forceUpdate = false);
 
     inline uint8_t dynamicOffsetCount() { return _dynamicOffsetCount; }
 

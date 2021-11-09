@@ -183,7 +183,7 @@ void CCWGPUDescriptorSet::prepare() {
 
     if (_isDirty || forceUpdate || !_gpuBindGroupObj->bindgroup) {
         auto* dsLayout = static_cast<CCWGPUDescriptorSetLayout*>(_layout);
-        dsLayout->prepare(_gpuBindGroupObj->bindingSet);
+        dsLayout->prepare(forceUpdate);
         // std::vector<WGPUBindGroupEntry>
         //     bindGroupEntries;
         // bindGroupEntries.assign(_gpuBindGroupObj->bindGroupEntries.begin(), _gpuBindGroupObj->bindGroupEntries.end());
@@ -202,9 +202,8 @@ void CCWGPUDescriptorSet::prepare() {
 
         if (entries.empty()) {
             _gpuBindGroupObj->bindgroup = anoymous::defaultBindGroup;
-            _bgl = CCWGPUDescriptorSetLayout::defaultBindGroupLayout();
         } else {
-            dsLayout->prepare(_gpuBindGroupObj->bindingSet);
+            dsLayout->prepare(forceUpdate);
             WGPUBindGroupDescriptor bindGroupDesc = {
                 .nextInChain = nullptr,
                 .label       = nullptr,
@@ -213,8 +212,6 @@ void CCWGPUDescriptorSet::prepare() {
                 .entries     = entries.data(),
             };
             _gpuBindGroupObj->bindgroup = wgpuDeviceCreateBindGroup(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &bindGroupDesc);
-            _bgl = dsLayout->gpuLayoutEntryObject()->bindGroupLayout;
-            _local = dsLayout;
         }
         _isDirty = false;
         if (buffIter != _buffers.end())

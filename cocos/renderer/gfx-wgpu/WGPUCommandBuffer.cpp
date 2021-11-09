@@ -89,7 +89,8 @@ void CCWGPUCommandBuffer::end() {
 }
 
 void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, uint stencil, CommandBuffer *const *secondaryCBs, uint secondaryCBCount) {
-    _renderPass = renderPass;
+    _renderPass  = renderPass;
+    _frameBuffer = fbo;
     // printf("beginr\n");
     CCWGPUFramebuffer *ccFrameBuffer = static_cast<CCWGPUFramebuffer *>(fbo);
 
@@ -162,35 +163,7 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
         }
     }
 
-    uint32_t minWidth = std::numeric_limits<uint32_t>::max();
-    uint32_t minHeight = std::numeric_limits<uint32_t>::max();
-    for(size_t i = 0; i < textures.size(); i++) {
-        minWidth = minWidth > textures[i]->getWidth() ? textures[i]->getWidth() : minWidth;
-        minHeight = minHeight > textures[i]->getHeight() ? textures[i]->getHeight() : minHeight;
-    }
-
     _gpuCommandBufferObj->renderPassBegan = true;
-
-    uint32_t width = renderArea.width ;
-    uint32_t height = renderArea.height ;
-    if(renderArea.x + renderArea.width > minWidth ) {
-        width = renderArea.x > minWidth ? 0 : minWidth - renderArea.x;
-    }
-
-    if(renderArea.y + renderArea.height > minHeight ) {
-        height = renderArea.y > minHeight ? 0 : minHeight - renderArea.y;
-    }
-
-    _gpuCommandBufferObj->stateCache.viewport.left     = renderArea.x;
-    _gpuCommandBufferObj->stateCache.viewport.top      = renderArea.y;
-    _gpuCommandBufferObj->stateCache.viewport.width    = width;
-    _gpuCommandBufferObj->stateCache.viewport.height   = height;
-    _gpuCommandBufferObj->stateCache.viewport.minDepth = 0.0f;
-    _gpuCommandBufferObj->stateCache.viewport.maxDepth = 1.0f;
-    _gpuCommandBufferObj->stateCache.rect              = {renderArea.x, renderArea.y, width, height};
-
-    _gpuCommandBufferObj->stateCache.minAttachmentWidth = width;
-    _gpuCommandBufferObj->stateCache.minAttachmentHeight = height;
 
     renderPassDesc.colorAttachments             = colorAttachments.data();
     renderPassDesc.colorAttachmentCount         = colorAttachments.size();
@@ -245,16 +218,7 @@ void CCWGPUCommandBuffer::bindInputAssembler(InputAssembler *ia) {
 }
 
 void CCWGPUCommandBuffer::setViewport(const Viewport &vp) {
-    uint32_t width = vp.width;
-    uint32_t height = vp.height;
-    if(vp.left + vp.width > _gpuCommandBufferObj->stateCache.minAttachmentWidth ) {
-        width = vp.left > _gpuCommandBufferObj->stateCache.minAttachmentWidth ? 0 : _gpuCommandBufferObj->stateCache.minAttachmentWidth - vp.left;
-    }
-
-    if(vp.top + vp.height > _gpuCommandBufferObj->stateCache.minAttachmentHeight ) {
-        height = vp.top > _gpuCommandBufferObj->stateCache.minAttachmentHeight ? 0 : _gpuCommandBufferObj->stateCache.minAttachmentHeight - vp.top;
-    }
-    _gpuCommandBufferObj->stateCache.viewport = {vp.left, vp.top, width, height, vp.minDepth, vp.maxDepth};
+    _gpuCommandBufferObj->stateCache.viewport = {vp.left, vp.top, vp.width, vp.height, vp.minDepth, vp.maxDepth};
 }
 
 void CCWGPUCommandBuffer::setScissor(const Rect &rect) {
@@ -307,7 +271,7 @@ void CCWGPUCommandBuffer::bindStates() {
         const auto &descriptorSets = _gpuCommandBufferObj->stateCache.descriptorSets;
         for (size_t i = 0; i < descriptorSets.size(); i++) {
             descriptorSets[i].descriptorSet->prepare();
-            
+
             if (descriptorSets[i].descriptorSet->dynamicOffsetCount() != descriptorSets[i].dynamicOffsetCount) {
                 uint *       dynOffsets       = dynamicOffsetBuffer;
                 const Pairs &dynamicOffsets   = descriptorSets[i].descriptorSet->dynamicOffsets();
@@ -319,7 +283,7 @@ void CCWGPUCommandBuffer::bindStates() {
                         dynOffsets[j] = descriptorSets[i].dynamicOffsets[givenOffsetIndex++];
                     }
                 }
-                // printf("set %d %p %p\n", descriptorSets[i].index, descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup, 
+                // printf("set %d %p %p\n", descriptorSets[i].index, descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
                 //     descriptorSets[i].descriptorSet->bgl());
                 wgpuRenderPassEncoderSetBindGroup(_gpuCommandBufferObj->wgpuRenderPassEncoder,
                                                   descriptorSets[i].index,
@@ -333,8 +297,8 @@ void CCWGPUCommandBuffer::bindStates() {
                                                   descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
                                                   descriptorSets[i].dynamicOffsetCount,
                                                   descriptorSets[i].dynamicOffsets);
-                                                //   printf("set %d %p %p\n", i, descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
-                                                //   descriptorSets[i].descriptorSet->bgl());
+                //   printf("set %d %p %p\n", i, descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
+                //   descriptorSets[i].descriptorSet->bgl());
             }
         }
 
@@ -348,14 +312,14 @@ void CCWGPUCommandBuffer::bindStates() {
                                                       static_cast<WGPUBindGroup>(CCWGPUDescriptorSet::defaultBindGroup()),
                                                       0,
                                                       nullptr);
-                                                    //   printf("default %d %p\n", i, CCWGPUDescriptorSetLayout::defaultBindGroupLayout());
+                    //   printf("default %d %p\n", i, CCWGPUDescriptorSetLayout::defaultBindGroupLayout());
                 }
             }
         }
         pipelineState->check(_renderPass);
         pipelineState->prepare(setInUse);
 
-        const auto& pplLayout = static_cast<const CCWGPUPipelineLayout*>(pipelineState->ppl());
+        const auto &pplLayout = static_cast<const CCWGPUPipelineLayout *>(pipelineState->ppl());
         // for(size_t i = 0; i < pplLayout->layouts().size(); ++i) {
         //     printf("bgl in ppl: %p\n", pplLayout->layouts()[i]);
         // }
@@ -389,11 +353,35 @@ void CCWGPUCommandBuffer::bindStates() {
         WGPUColor blendColor = toWGPUColor(_gpuCommandBufferObj->stateCache.blendConstants);
         wgpuRenderPassEncoderSetBlendConstant(_gpuCommandBufferObj->wgpuRenderPassEncoder, &blendColor);
 
-        const Viewport &vp = _gpuCommandBufferObj->stateCache.viewport;
-        wgpuRenderPassEncoderSetViewport(_gpuCommandBufferObj->wgpuRenderPassEncoder, vp.left, vp.top, vp.width, vp.height, vp.minDepth, vp.maxDepth);
+        CCWGPUFramebuffer *ccFrameBuffer = static_cast<CCWGPUFramebuffer *>(_frameBuffer);
+        const TextureList &textures      = ccFrameBuffer->getColorTextures();
+        // minimum rendertarget w/h
+        uint32_t rtWidth  = std::numeric_limits<uint32_t>::max();
+        uint32_t rtHeight = std::numeric_limits<uint32_t>::max();
+        for (size_t i = 0; i < textures.size(); i++) {
+            rtWidth  = rtWidth > textures[i]->getWidth() ? textures[i]->getWidth() : rtWidth;
+            rtHeight = rtHeight > textures[i]->getHeight() ? textures[i]->getHeight() : rtHeight;
+        }
+
+        const Viewport &vp   = _gpuCommandBufferObj->stateCache.viewport;
+        uint32_t        left = vp.left > 0 ? vp.left : 0;
+        uint32_t        top  = vp.top > 0 ? vp.top : 0;
+
+        uint32_t width = vp.left > 0 ? vp.width : vp.width + vp.left;
+        width          = left + width > rtWidth ? rtWidth - left : width;
+
+        uint32_t height = vp.top > 0 ? vp.height : vp.height + vp.top;
+        height          = top + height > rtHeight ? rtHeight - top : height;
+        wgpuRenderPassEncoderSetViewport(_gpuCommandBufferObj->wgpuRenderPassEncoder, left, top, width, height, vp.minDepth, vp.maxDepth);
 
         const Rect &rect = _gpuCommandBufferObj->stateCache.rect;
-        wgpuRenderPassEncoderSetScissorRect(_gpuCommandBufferObj->wgpuRenderPassEncoder, rect.x, rect.y, rect.width, rect.height);
+        left             = rect.x > 0 ? rect.x : 0;
+        top              = rect.y > 0 ? rect.y : 0;
+        width            = rect.x > 0 ? rect.width : rect.width + rect.x;
+        width            = left + width > rtWidth ? rtWidth - left : width;
+        height           = rect.y > 0 ? rect.height : rect.height + rect.y;
+        height           = top + height > rtHeight ? rtHeight - top : height;
+        wgpuRenderPassEncoderSetScissorRect(_gpuCommandBufferObj->wgpuRenderPassEncoder, left, top, width, height);
     } else if (pipelineState->getBindPoint() == PipelineBindPoint::COMPUTE) {
         auto *pipelineState = _gpuCommandBufferObj->stateCache.pipelineState;
 
