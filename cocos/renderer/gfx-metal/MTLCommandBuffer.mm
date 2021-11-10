@@ -858,7 +858,6 @@ void CCMTLCommandBuffer::copyTextureToBuffers(Texture *src, uint8_t *const *buff
             const Extent &extent        = regions[i].texExtent;
 
             id<MTLBlitCommandEncoder> encoder = [mtlCommandBuffer blitCommandEncoder];
-            [encoder setLabel:@"copy xx 2 xx"];
             CCMTLGPUBuffer stagingBuffer;
             stagingBuffer.size = bytesPerImage;
             _mtlDevice->gpuStagingBufferPool()->alloc(&stagingBuffer);
@@ -885,7 +884,6 @@ void CCMTLCommandBuffer::copyTextureToBuffers(Texture *src, uint8_t *const *buff
             [commandBuffer release];
             _texCopySemaphore->signal();
         }];
-        [mtlCommandBuffer setLabel:@"copyCmdBuff"];
         [mtlCommandBuffer enqueue];
         [mtlCommandBuffer commit];
         _gpuCommandBufferObj->mtlCommandBuffer = nil;
