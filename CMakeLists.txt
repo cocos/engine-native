@@ -122,13 +122,13 @@ cc_inspect_values(
 
 ################################# external source code ################################
 
-
+set(USE_SE_V8 OFF)
 if(NOT EXISTS ${CMAKE_CURRENT_LIST_DIR}/external/CMakeLists.txt)
     message(FATAL_ERROR "Please download external libraries! File ${CMAKE_CURRENT_LIST_DIR}/external/CMakeLists.txt not exists!")
 endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/external/CMakeLists.txt)
-
+set(USE_SE_V8 ON)
 ##### audio
 if(USE_AUDIO)
     cocos_source_files(
