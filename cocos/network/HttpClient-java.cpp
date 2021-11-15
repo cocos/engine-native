@@ -86,9 +86,6 @@ public:
     explicit HttpURLConnection(HttpClient *httpClient)
     : _client(httpClient),
       _httpURLConnection(nullptr),
-      _requestmethod(""),
-      _responseCookies(""),
-      _cookieFileName(""),
       _contentLength(0) {
     }
 
@@ -370,7 +367,7 @@ public:
         _cookieFileName = filename;
     }
 
-    int getContentLength() {
+    int getContentLength() const {
         return _contentLength;
     }
 
@@ -549,7 +546,7 @@ private:
             return nullptr;
         }
         std::string strValue = cc::StringUtils::getStringUTFCharsJNI(env, jstr);
-        size_t size = strValue.size()+1;
+        size_t size = strValue.size() + 1;
         char* retVal = static_cast<char *>(malloc(size));
         memcpy(retVal, strValue.c_str(), size);
         return retVal;
@@ -573,7 +570,6 @@ private:
         return _responseCookies;
     }
 
-private:
     HttpClient *_client;
     jobject     _httpURLConnection;
     std::string _requestmethod;
@@ -585,7 +581,7 @@ private:
 
 // Process Response
 void HttpClient::processResponse(HttpResponse *response, char *responseMessage) {
-    auto              request     = response->getHttpRequest();
+    auto*              request    = response->getHttpRequest();
     HttpRequest::Type requestType = request->getRequestType();
 
     if (HttpRequest::Type::GET != requestType &&
@@ -731,7 +727,7 @@ void HttpClient::networkThread() {
 
         _schedulerMutex.lock();
         if (auto sche = _scheduler.lock()) {
-            sche->performFunctionInCocosThread(CC_CALLBACK_0(HttpClient::dispatchResponseCallbacks, this));
+            sche->performFunctionInCocosThread(CC_CALLBACK_0(HttpClient::dispatchResponseCallbacks, this)); //NOLINT
         }
         _schedulerMutex.unlock();
     }
@@ -790,7 +786,7 @@ void HttpClient::destroyInstance() {
 
     CC_LOG_DEBUG("HttpClient::destroyInstance ...");
 
-    auto thiz   = gHttpClient;
+    auto *thiz  = gHttpClient;
     gHttpClient = nullptr;
 
     if (auto sche = thiz->_scheduler.lock()) {
@@ -847,7 +843,7 @@ bool HttpClient::lazyInitThreadSemaphore() {
         return true;
     }
 
-    auto t = std::thread(CC_CALLBACK_0(HttpClient::networkThread, this));
+    auto t = std::thread(CC_CALLBACK_0(HttpClient::networkThread, this)); //NOLINT
     t.detach();
     _isInited = true;
 
