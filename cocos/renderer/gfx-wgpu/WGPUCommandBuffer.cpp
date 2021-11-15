@@ -432,12 +432,20 @@ void CCWGPUCommandBuffer::draw(const DrawInfo &info) {
             // todo
         } else {
             if (info.indexCount) {
+                //indexedIndirect not supported, emsdk 2.0.26
                 uint32_t drawInfoCount = indirectBuffer->getCount();
-                for (size_t i = 0; i < drawInfoCount; i++) {
-                    wgpuRenderPassEncoderDrawIndexedIndirect(_gpuCommandBufferObj->wgpuRenderPassEncoder,
-                                                             indirectBuffer->gpuBufferObject()->wgpuBuffer,
-                                                             indirectBuffer->getOffset() + i * sizeof(CCWGPUDrawIndexedIndirectObject));
-                }
+                // for (size_t i = 0; i < drawInfoCount; i++) {
+                //     wgpuRenderPassEncoderDrawIndexedIndirect(_gpuCommandBufferObj->wgpuRenderPassEncoder,
+                //                                              indirectBuffer->gpuBufferObject()->wgpuBuffer,
+                //                                              indirectBuffer->getOffset() + i * sizeof(CCWGPUDrawIndexedIndirectObject));
+                // }
+
+                wgpuRenderPassEncoderDrawIndexed(_gpuCommandBufferObj->wgpuRenderPassEncoder,
+                                                 info.indexCount,
+                                                 info.instanceCount > 1 ? info.instanceCount : 1,
+                                                 info.firstIndex,
+                                                 info.vertexOffset,
+                                                 info.firstInstance);
             } else {
                 uint32_t drawInfoCount = indirectBuffer->getCount();
                 for (size_t i = 0; i < drawInfoCount; i++) {
@@ -450,6 +458,7 @@ void CCWGPUCommandBuffer::draw(const DrawInfo &info) {
     } else {
         auto *indexBuffer = static_cast<CCWGPUBuffer *>(ia->getIndexBuffer());
         bool  drawIndexed = indexBuffer && info.indexCount;
+
         if (drawIndexed) {
             wgpuRenderPassEncoderDrawIndexed(_gpuCommandBufferObj->wgpuRenderPassEncoder,
                                              info.indexCount,
