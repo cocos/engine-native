@@ -175,20 +175,30 @@ size_t CCWGPUDescriptorSetLayout::hash() {
     //     boost::hash_combine(seed, entries[i].texture.sampleType);
     //     boost::hash_combine(seed, entries[i].storageTexture.access);
     // }
+
+    std::string hashStr = "";
+
     std::size_t seed = entries.size();
     for (size_t i = 0; i < entries.size(); i++) {
         const auto& entry = entries[i];
-        seed ^= i + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-        seed ^= entry.binding + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-        seed ^= entry.buffer.type + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-        seed ^= entry.sampler.type + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-        seed ^= entry.texture.sampleType + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-        seed ^= entry.storageTexture.access + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+        hashStr += std::to_string(entry.binding);
+        hashStr += std::to_string(entry.visibility);
+        hashStr += std::to_string(entry.buffer.type);
+        hashStr += std::to_string(entry.buffer.hasDynamicOffset);
+        hashStr += std::to_string(entry.buffer.minBindingSize);
+        hashStr += std::to_string(entry.sampler.type);
+        hashStr += std::to_string(entry.texture.sampleType);
+        hashStr += std::to_string(entry.texture.viewDimension);
+        hashStr += std::to_string(entry.texture.multisampled);
+        hashStr += std::to_string(entry.storageTexture.access);
+        hashStr += std::to_string(entry.storageTexture.format);
+        hashStr += std::to_string(entry.storageTexture.viewDimension);
     }
-    return seed;
+
+    return std::hash<std::string>{}(hashStr);
 }
 
-void CCWGPUDescriptorSetLayout::print() {
+void CCWGPUDescriptorSetLayout::print() const {
     printf("pr %p\n", _gpuLayoutEntryObj);
     const auto& entries = _gpuLayoutEntryObj->bindGroupLayoutEntries;
     for (size_t j = 0; j < entries.size(); j++) {
@@ -200,7 +210,7 @@ void CCWGPUDescriptorSetLayout::print() {
             1) {
             printf("******missing %d, %d, %d, %d, %d\n", entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
         }
-        printf("l binding, b, t, s  %d, %d, %d, %d, %d\n", entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
+        printf("l binding, b, t, s  %d, %d, %d, %d, %d, %d\n", entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access, entry.visibility);
     }
 }
 

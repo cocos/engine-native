@@ -53,7 +53,7 @@ public:
 
     static void* defaultBindGroupLayout();
 
-    void print();
+    void print() const;
 
 protected:
     void doInit(const DescriptorSetLayoutInfo& info) override;

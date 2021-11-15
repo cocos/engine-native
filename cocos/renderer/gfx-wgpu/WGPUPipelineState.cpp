@@ -114,9 +114,9 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
             .topology         = toWGPUPrimTopology(_primitive),
             .stripIndexFormat = WGPUIndexFormat_Undefined, //TODO_Zeqiang: ???
             .frontFace        = _rasterizerState.isFrontFaceCCW ? WGPUFrontFace::WGPUFrontFace_CCW : WGPUFrontFace::WGPUFrontFace_CW,
-            .cullMode         = _rasterizerState.cullMode == CullMode::FRONT ? WGPUCullMode::WGPUCullMode_Front
-                                                                     : _rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
-                                                                                                                   : WGPUCullMode::WGPUCullMode_None,
+            .cullMode         = _rasterizerState.cullMode == CullMode::FRONT  ? WGPUCullMode::WGPUCullMode_Front
+                                : _rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
+                                                                              : WGPUCullMode::WGPUCullMode_None,
         };
 
         WGPUStencilFaceState stencilFront = {
@@ -185,6 +185,15 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
         };
 
         pipelineLayout->prepare(setInUse);
+        // const auto setLayouts = pipelineLayout->getSetLayouts();
+        // for (size_t i = 0; i < setLayouts.size(); ++i) {
+        //     const auto* layout = setLayouts[i];
+        //     if (layout) {
+        //         printf("---set %d---\n", i);
+        //         static_cast<const CCWGPUDescriptorSetLayout*>(layout)->print();
+        //     }
+        // }
+
         WGPURenderPipelineDescriptor2 piplineDesc = {
             .nextInChain  = nullptr,
             .label        = nullptr,
@@ -196,7 +205,7 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
             .fragment     = &fragmentState,
         };
         _gpuPipelineStateObj->wgpuRenderPipeline = wgpuDeviceCreateRenderPipeline2(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &piplineDesc);
-        _ppl = pipelineLayout;
+        _ppl                                     = pipelineLayout;
     } else if (_bindPoint == PipelineBindPoint::COMPUTE) {
         if (_gpuPipelineStateObj->wgpuComputePipeline)
             return;
