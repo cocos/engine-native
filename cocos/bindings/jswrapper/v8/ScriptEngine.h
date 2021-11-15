@@ -114,14 +114,14 @@ public:
          *  @return true if succeed, otherwise false.
          *  @note This method will invoke all callbacks of native binding modules by the order of registration.
          */
-    bool start();
+    bool start(v8::Isolate *isolate);
 
     /**
          *  @brief Initializes script engine.
          *  @return true if succeed, otherwise false.
          *  @note This method will create JavaScript context and global object.
          */
-    bool init();
+    bool init(v8::Isolate *isolate);
 
     /**
          *  @brief Adds a hook function before initializing script engine.

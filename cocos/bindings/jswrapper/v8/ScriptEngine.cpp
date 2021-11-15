@@ -204,8 +204,8 @@ SE_BIND_FUNC(jsbConsoleAssert)
 class ScriptEngineV8Context {
 public:
     ScriptEngineV8Context() {
-        platform = v8::platform::NewDefaultPlatform().release();
-        v8::V8::InitializePlatform(platform);
+        //platform = v8::platform::NewDefaultPlatform().release();
+        //v8::V8::InitializePlatform(platform);
 
         std::string flags;
         //NOTICE: spaces are required between flags
@@ -216,11 +216,11 @@ public:
         flags.append(" --jitless");
     #endif
         if (!flags.empty()) {
-            v8::V8::SetFlagsFromString(flags.c_str(), static_cast<int>(flags.length()));
+            //v8::V8::SetFlagsFromString(flags.c_str(), static_cast<int>(flags.length()));
         }
 
-        bool ok = v8::V8::Initialize();
-        assert(ok);
+        //bool ok = v8::V8::Initialize();
+        //assert(ok);
     }
 
     ~ScriptEngineV8Context() {
@@ -450,7 +450,7 @@ ScriptEngine::ScriptEngine()
 
 ScriptEngine::~ScriptEngine() = default;
 
-bool ScriptEngine::init() {
+bool ScriptEngine::init(v8::Isolate *isolate) {
     cleanup();
     SE_LOGD("Initializing V8, version: %s\n", v8::V8::GetVersion());
     ++_vmId;
@@ -461,9 +461,11 @@ bool ScriptEngine::init() {
         hook();
     }
     _beforeInitHookArray.clear();
-    v8::Isolate::CreateParams createParams;
-    createParams.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator();
-    _isolate                            = v8::Isolate::New(createParams);
+    //v8::Isolate::CreateParams createParams;
+    //createParams.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator();
+    //_isolate                            = v8::Isolate::New(createParams);
+
+    _isolate = isolate;
     v8::HandleScope hs(_isolate);
     _isolate->Enter();
 
@@ -474,8 +476,12 @@ bool ScriptEngine::init() {
     _isolate->AddMessageListener(onMessageCallback);
     _isolate->SetPromiseRejectCallback(onPromiseRejectCallback);
 
-    _context.Reset(_isolate, v8::Context::New(_isolate));
-    _context.Get(_isolate)->Enter();
+    //_context.Reset(_isolate, v8::Context::New(_isolate));
+    //_context.Get(_isolate)->Enter();
+    
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
+    _context.Reset(isolate, context);
+    _context.Get(isolate)->Enter();
 
     NativePtrToObjectMap::init();
     NonRefNativePtrCreatedByCtorMap::init();
@@ -484,9 +490,14 @@ bool ScriptEngine::init() {
     Class::setIsolate(_isolate);
     Object::setIsolate(_isolate);
 
-    _globalObj = Object::_createJSObject(nullptr, _context.Get(_isolate)->Global());
+    _globalObj = Object::_createJSObject(nullptr, isolate->GetCurrentContext()->Global());
     _globalObj->root();
     _globalObj->setProperty("window", Value(_globalObj));
+    //v8::Local<v8::Object> globalObj = _globalObj->_obj.handle();
+    //globalObj.As<v8::Object>().  Set(_context, key, ret);
+    
+    se::Value tmp;
+    bool myok = _globalObj->getProperty("window", &tmp);
 
     se::Value consoleVal;
     if (_globalObj->getProperty("console", &consoleVal) && consoleVal.isObject()) {
@@ -637,11 +648,10 @@ void ScriptEngine::addPermanentRegisterCallback(RegisterCallback cb) {
     }
 }
 
-bool ScriptEngine::start() {
-    if (!init()) {
+bool ScriptEngine::start(v8::Isolate *isolate) {
+    if (!init(isolate)) {
         return false;
     }
-
     se::AutoHandleScope hs;
 
     // debugger
