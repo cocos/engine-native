@@ -548,6 +548,9 @@ private:
         std::string strValue = cc::StringUtils::getStringUTFCharsJNI(env, jstr);
         size_t size = strValue.size() + 1;
         char* retVal = static_cast<char *>(malloc(size));
+        if (retVal == nullptr) {
+            return nullptr;
+        }
         memcpy(retVal, strValue.c_str(), size);
         return retVal;
     }
