@@ -94,6 +94,8 @@ protected:
     void        bindDescriptorSets();
     void        updateDepthStencilState(uint32_t subPassIndex, MTLRenderPassDescriptor *descriptor);
     static bool isRenderingEntireDrawable(const Rect &rect, const CCMTLRenderPass *renderPass);
+    
+    id<MTLCommandBuffer> getMTLCommandBuffer();
 
     vector<CCMTLGPUDescriptorSet *> _GPUDescriptorSets; // NOLINT(bugprone-reserved-identifier)
     vector<vector<uint>>            _dynamicOffsets;
@@ -101,6 +103,7 @@ protected:
 
     bool                                _indirectDrawSuppotred = false;
     bool                                _commandBufferBegan    = false;
+    bool                                _firstRenderPass       = true;
     CCMTLDevice *                       _mtlDevice             = nullptr;
     id<MTLCommandQueue>                 _mtlCommandQueue       = nil;
     CCMTLRenderCommandEncoder           _renderEncoder;

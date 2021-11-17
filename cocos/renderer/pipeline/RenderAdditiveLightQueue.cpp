@@ -76,6 +76,7 @@ void RenderAdditiveLightQueue::recordCommandBuffer(gfx::Device *device, scene::C
     _instancedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
     _batchedQueue->recordCommandBuffer(device, renderPass, cmdBuffer);
     bool enableOcclusionQuery = _pipeline->getOcclusionQueryEnabled();
+    auto offset               = _pipeline->getPipelineUBO()->getCurrentCameraUBOOffset();
 
     for (const auto &lightPass : _lightPasses) {
         const auto *const subModel = lightPass.subModel;
@@ -97,7 +98,7 @@ void RenderAdditiveLightQueue::recordCommandBuffer(gfx::Device *device, scene::C
                 const auto light               = lights[i];
                 auto *     globalDescriptorSet = _pipeline->getGlobalDSManager()->getOrCreateDescriptorSet(light);
                 _dynamicOffsets[0]             = dynamicOffsets[i];
-                cmdBuffer->bindDescriptorSet(globalSet, globalDescriptorSet);
+                cmdBuffer->bindDescriptorSet(globalSet, globalDescriptorSet, 1, &offset);
                 cmdBuffer->bindDescriptorSet(localSet, descriptorSet, _dynamicOffsets);
                 cmdBuffer->draw(ia);
             }
@@ -146,15 +147,6 @@ void RenderAdditiveLightQueue::gatherLightPasses(const scene::Camera *camera, gf
 }
 
 void RenderAdditiveLightQueue::destroy() const {
-    for (auto &pair : _pipeline->getGlobalDSManager()->getDescriptorSetMap()) {
-        auto *descriptorSet = pair.second;
-        if (descriptorSet) {
-            auto *shadowBuffer = descriptorSet->getBuffer(UBOShadow::BINDING);
-            CC_SAFE_DESTROY(shadowBuffer);
-            CC_SAFE_DESTROY(descriptorSet);
-        }
-    }
-    _pipeline->getGlobalDSManager()->getDescriptorSetMap().clear();
 }
 
 void RenderAdditiveLightQueue::clear() {

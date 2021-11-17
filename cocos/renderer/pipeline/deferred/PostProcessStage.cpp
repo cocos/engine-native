@@ -28,7 +28,7 @@
 #include "../PipelineStateManager.h"
 #include "../RenderPipeline.h"
 #include "../RenderQueue.h"
-#include "UIPhase.h"
+#include "pipeline/UIPhase.h"
 #include "frame-graph/DevicePass.h"
 #include "frame-graph/PassNodeBuilder.h"
 #include "frame-graph/Resource.h"
@@ -219,7 +219,7 @@ void PostProcessStage::render(scene::Camera *camera) {
         }
 
         _uiPhase->render(camera, renderPass);
-        renderProfiler(renderPass, cmdBuff, pipeline->getProfiler(), camera->window->swapchain);
+        renderProfiler(renderPass, cmdBuff, pipeline->getProfiler(), camera);
     };
 
     // add pass

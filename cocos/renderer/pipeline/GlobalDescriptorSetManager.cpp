@@ -139,6 +139,7 @@ gfx::DescriptorSet *GlobalDSManager::getOrCreateDescriptorSet(uint idx) {
             UBOShadow::SIZE,
             gfx::BufferFlagBit::NONE,
         });
+        _shadowUBOs.push_back(shadowUBO);
         descriptorSet->bindBuffer(UBOShadow::BINDING, shadowUBO);
 
         descriptorSet->update();
@@ -148,8 +149,16 @@ gfx::DescriptorSet *GlobalDSManager::getOrCreateDescriptorSet(uint idx) {
 }
 
 void GlobalDSManager::destroy() {
-    CC_SAFE_DESTROY(_descriptorSetLayout);
-    CC_SAFE_DESTROY(_globalDescriptorSet);
+    for (auto *shadowUBO : _shadowUBOs) {
+        CC_SAFE_DELETE(shadowUBO);
+    }
+    for (auto &pair : _descriptorSetMap) {
+        CC_SAFE_DELETE(pair.second);
+    }
+    _descriptorSetMap.clear();
+
+    CC_SAFE_DELETE(_descriptorSetLayout);
+    CC_SAFE_DELETE(_globalDescriptorSet);
 }
 
 void GlobalDSManager::setDescriptorSetLayout() {
