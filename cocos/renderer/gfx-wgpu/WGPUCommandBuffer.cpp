@@ -39,7 +39,6 @@
 #include "WGPUSwapchain.h"
 #include "WGPUTexture.h"
 #include "WGPUUtils.h"
-
 namespace cc {
 namespace gfx {
 
@@ -269,6 +268,8 @@ void CCWGPUCommandBuffer::bindStates() {
 
     // printf("ppl binding %p\n", pipelineState);
 
+    // std::vector<void*> wgpuLayouts;
+
     if (pipelineState->getBindPoint() == PipelineBindPoint::GRAPHICS) {
         //bindgroup & descriptorset
         const auto &descriptorSets = _gpuCommandBufferObj->stateCache.descriptorSets;
@@ -288,6 +289,7 @@ void CCWGPUCommandBuffer::bindStates() {
                 }
                 // printf("set %d %p %p\n", descriptorSets[i].index, descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
                 //     descriptorSets[i].descriptorSet->bgl());
+                // wgpuLayouts.push_back(descriptorSets[i].descriptorSet->bgl());
                 wgpuRenderPassEncoderSetBindGroup(_gpuCommandBufferObj->wgpuRenderPassEncoder,
                                                   descriptorSets[i].index,
                                                   descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
@@ -302,6 +304,7 @@ void CCWGPUCommandBuffer::bindStates() {
                                                   descriptorSets[i].dynamicOffsets);
                 //   printf("set %d %p %p\n", i, descriptorSets[i].descriptorSet->gpuBindGroupObject()->bindgroup,
                 //   descriptorSets[i].descriptorSet->bgl());
+                //   wgpuLayouts.push_back(descriptorSets[i].descriptorSet->bgl());
             }
         }
 
@@ -316,15 +319,23 @@ void CCWGPUCommandBuffer::bindStates() {
                                                       0,
                                                       nullptr);
                     //   printf("default %d %p\n", i, CCWGPUDescriptorSetLayout::defaultBindGroupLayout());
+                      wgpuLayouts.push_back(CCWGPUDescriptorSetLayout::defaultBindGroupLayout());
                 }
             }
         }
         pipelineState->check(_renderPass);
         pipelineState->prepare(setInUse);
 
+        // printf("ppshn: %s\n", static_cast<CCWGPUShader*>(pipelineState->getShader())->gpuShaderObject()->name.c_str());
+
         const auto &pplLayout = static_cast<const CCWGPUPipelineLayout *>(pipelineState->ppl());
         // for(size_t i = 0; i < pplLayout->layouts().size(); ++i) {
-        //     printf("bgl in ppl: %p\n", pplLayout->layouts()[i]);
+        //     // printf("bgl in ppl: %p\n", pplLayout->layouts()[i]);
+        //     if(pplLayout->layouts()[i] != wgpuLayouts[i]) {
+        //         printf("oooooooooooops %d %p %p\n", i, pplLayout->layouts()[i], wgpuLayouts[i]);
+        //         static_cast<CCWGPUDescriptorSetLayout*>(descriptorSets[i].descriptorSet->getLayout())->print();
+        //         static_cast<CCWGPUDescriptorSetLayout*>(pplLayout->getSetLayouts()[i])->print();
+        //     }
         // }
         // if(pipelineState->ppl() != pipelineState->getPipelineLayout()){
         //     printf("oooooooooooooooooooooooooooooooops\n");

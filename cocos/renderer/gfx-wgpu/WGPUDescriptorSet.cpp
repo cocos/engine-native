@@ -113,7 +113,7 @@ void CCWGPUDescriptorSet::doDestroy() {
 }
 
 void CCWGPUDescriptorSet::update() {
-    if (!_isDirty || !_layout) {
+    if (!_isDirty) {
         return;
     }
     auto*       dsLayout = static_cast<CCWGPUDescriptorSetLayout*>(_layout);
@@ -163,6 +163,14 @@ void CCWGPUDescriptorSet::update() {
                 dsLayout->updateLayout(bindGroupEntry.binding, nullptr, nullptr, sampler);
                 _gpuBindGroupObj->bindingSet.insert(binding.binding + CC_WGPU_MAX_ATTACHMENTS);
             }
+        } else if (DescriptorType::STORAGE_IMAGE == bindings[i].descriptorType) {
+            if(_textures[resourceIndex]) {
+                auto& bindGroupEntry       = _gpuBindGroupObj->bindGroupEntries[resourceIndex];
+                auto* texture              = static_cast<CCWGPUTexture*>(_textures[resourceIndex]);
+                bindGroupEntry.binding     = binding.binding;
+                bindGroupEntry.textureView = texture->gpuTextureObject()->selfView;
+                dsLayout->updateLayout(bindGroupEntry.binding, nullptr, texture);
+            }
         }
     }
 }
@@ -202,8 +210,8 @@ void CCWGPUDescriptorSet::prepare() {
 
         if (entries.empty()) {
             _gpuBindGroupObj->bindgroup = anoymous::defaultBindGroup;
+            // _bgl = CCWGPUDescriptorSetLayout::defaultBindGroupLayout();
         } else {
-            dsLayout->prepare(forceUpdate);
             WGPUBindGroupDescriptor bindGroupDesc = {
                 .nextInChain = nullptr,
                 .label       = nullptr,
@@ -212,6 +220,8 @@ void CCWGPUDescriptorSet::prepare() {
                 .entries     = entries.data(),
             };
             _gpuBindGroupObj->bindgroup = wgpuDeviceCreateBindGroup(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &bindGroupDesc);
+            // _bgl = dsLayout->gpuLayoutEntryObject()->bindGroupLayout;
+            // _local = dsLayout;
         }
         _isDirty = false;
         if (buffIter != _buffers.end())

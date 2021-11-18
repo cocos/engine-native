@@ -59,7 +59,7 @@ protected:
     void doInit(const DescriptorSetLayoutInfo& info) override;
     void doDestroy() override;
 
-    size_t hash();
+    size_t hash() const;
 
     CCWGPUBindGroupLayoutObject* _gpuLayoutEntryObj = nullptr;
 
