@@ -60,6 +60,8 @@ public:
 
     bool inPool = false;
     void reset();
+
+    float totalLiveTime = 0.0f;
 };
 
 class ParticlePool {
@@ -250,6 +252,8 @@ private:
     cocos2d::Color4B   _startColorVar = cocos2d::Color4B::WHITE;
     cocos2d::Color4B   _endColor = cocos2d::Color4B::BLACK;
     cocos2d::Color4B   _endColorVar = cocos2d::Color4B::WHITE;
+
+    std::vector<float>  _tempUV;
 public:
     int                 positionType        = PositionType::FREE;
     float               emissionRate        = 0.0f;
@@ -282,6 +286,9 @@ public:
     float               rotatePerS          = 0.0f;
     float               rotatePerSVar       = 0.0f;
     float               aspectRatio         = 1.0f;
+    bool                textureAnimation    = false;
+    int                 numTilesX           = 1;  
+    int                 numTilesY           = 1;    
 };
 
 NS_CC_END

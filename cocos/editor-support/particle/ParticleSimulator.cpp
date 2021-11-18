@@ -63,6 +63,8 @@ void Particle::reset()
     degreesPerSecond = 0;
     radius = 0;
     deltaRadius = 0;
+
+    totalLiveTime = 0;
 }
 
 ParticlePool::ParticlePool()
@@ -82,6 +84,7 @@ ParticlePool::~ParticlePool()
 ParticleSimulator::ParticleSimulator()
 {
     
+    _tempUV.reserve(8);
 }
 
 ParticleSimulator::~ParticleSimulator()
@@ -96,6 +99,7 @@ ParticleSimulator::~ParticleSimulator()
         delete particle;
     }
     _particles.clear();
+    _tempUV.clear();
 }
 
 void ParticleSimulator::stop()
@@ -118,6 +122,7 @@ void ParticleSimulator::reset()
         _pool.put(particle);
     }
     _particles.clear();
+    _tempUV.clear();
 }
 
 void ParticleSimulator::emitParticle(cocos2d::Vec3 &pos)
@@ -130,7 +135,7 @@ void ParticleSimulator::emitParticle(cocos2d::Vec3 &pos)
     // no negative life. prevent division by 0
     particle.timeToLive = life + lifeVar * random(-1.0f, 1.0f);
     // avoid divide zero
-    float timeToLive = particle.timeToLive = std::max(0.001f, particle.timeToLive);
+    float timeToLive = particle.totalLiveTime = particle.timeToLive = std::max(0.001f, particle.timeToLive);
 
     // position
     particle.pos.x = _sourcePos.x + _posVar.x * random(-1.0f, 1.0f);
@@ -407,6 +412,40 @@ void ParticleSimulator::render(float dt)
             {
                 newPos.add(particle.startPos);
             }
+
+            // copy uv
+            std::copy(_uv.begin(), _uv.end(), _tempUV.begin());
+
+            // when textureAnimation is enabled, update the textureRect.
+            if(textureAnimation && (numTilesX > 1 || numTilesY > 1))
+            {
+                int frameIndex = floor((1 - particle.timeToLive / particle.totalLiveTime) * (numTilesX * numTilesY));
+                float sx = _uv[4];
+                float sy = _uv[5];
+                float sw = _uv[2] - _uv[4];
+                float wh = _uv[3] - _uv[5];
+                int xc = numTilesX;
+                int yc = numTilesY;
+                float xl = sw / xc;
+                float yl = wh / yc;
+
+                // bl
+                _tempUV[0] = sx + frameIndex % xc * xl;
+                _tempUV[1] = sy + floor(frameIndex / xc) * yl + yl;
+
+                //br
+                _tempUV[2] = sx + frameIndex % xc * xl + xl;
+                _tempUV[3] = sy + floor(frameIndex / xc) * yl + yl;
+
+                // tl
+                _tempUV[4] = sx + frameIndex % xc * xl;
+                _tempUV[5] = sy + floor(frameIndex / xc) * yl;
+
+                // tr
+                _tempUV[6] = sx + frameIndex % xc * xl + xl;
+                _tempUV[7] = sy + floor(frameIndex / xc) * yl;
+            }
+           
             
             auto x = newPos.x, y = newPos.y;
             auto width = particle.size;
@@ -434,29 +473,29 @@ void ParticleSimulator::render(float dt)
             // bl
             vb.writeFloat32(x1 * cr - y1 * sr + x);
             vb.writeFloat32(x1 * sr + y1 * cr + y);
-            vb.writeFloat32(_uv[0]);
-            vb.writeFloat32(_uv[1]);
+            vb.writeFloat32(_tempUV[0]);
+            vb.writeFloat32(_tempUV[1]);
             vb.writeUint32(tempColor);
             
             // br
             vb.writeFloat32(x2 * cr - y1 * sr + x);
             vb.writeFloat32(x2 * sr + y1 * cr + y);
-            vb.writeFloat32(_uv[2]);
-            vb.writeFloat32(_uv[3]);
+            vb.writeFloat32(_tempUV[2]);
+            vb.writeFloat32(_tempUV[3]);
             vb.writeUint32(tempColor);
             
             // tl
             vb.writeFloat32(x1 * cr - y2 * sr + x);
             vb.writeFloat32(x1 * sr + y2 * cr + y);
-            vb.writeFloat32(_uv[4]);
-            vb.writeFloat32(_uv[5]);
+            vb.writeFloat32(_tempUV[4]);
+            vb.writeFloat32(_tempUV[5]);
             vb.writeUint32(tempColor);
             
             // tr
             vb.writeFloat32(x2 * cr - y2 * sr + x);
             vb.writeFloat32(x2 * sr + y2 * cr + y);
-            vb.writeFloat32(_uv[6]);
-            vb.writeFloat32(_uv[7]);
+            vb.writeFloat32(_tempUV[6]);
+            vb.writeFloat32(_tempUV[7]);
             vb.writeUint32(tempColor);
             
             ib.writeUint16(vbOffset);

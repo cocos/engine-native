@@ -1342,6 +1342,90 @@ static bool js_cocos2dx_particle_ParticleSimulator_set_aspectRatio(se::State& s)
 }
 SE_BIND_PROP_SET(js_cocos2dx_particle_ParticleSimulator_set_aspectRatio)
 
+static bool js_cocos2dx_particle_ParticleSimulator_get_textureAnimation(se::State& s)
+{
+    cocos2d::ParticleSimulator* cobj = (cocos2d::ParticleSimulator*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_particle_ParticleSimulator_get_textureAnimation : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= boolean_to_seval(cobj->textureAnimation, &jsret);
+    s.rval() = jsret;
+    return true;
+}
+SE_BIND_PROP_GET(js_cocos2dx_particle_ParticleSimulator_get_textureAnimation)
+
+static bool js_cocos2dx_particle_ParticleSimulator_set_textureAnimation(se::State& s)
+{
+    const auto& args = s.args();
+    cocos2d::ParticleSimulator* cobj = (cocos2d::ParticleSimulator*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_particle_ParticleSimulator_set_textureAnimation : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    bool arg0;
+    ok &= seval_to_boolean(args[0], &arg0);
+    SE_PRECONDITION2(ok, false, "js_cocos2dx_particle_ParticleSimulator_set_textureAnimation : Error processing new value");
+    cobj->textureAnimation = arg0;
+    return true;
+}
+SE_BIND_PROP_SET(js_cocos2dx_particle_ParticleSimulator_set_textureAnimation)
+
+static bool js_cocos2dx_particle_ParticleSimulator_get_numTilesX(se::State& s)
+{
+    cocos2d::ParticleSimulator* cobj = (cocos2d::ParticleSimulator*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_particle_ParticleSimulator_get_numTilesX : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= int32_to_seval(cobj->numTilesX, &jsret);
+    s.rval() = jsret;
+    return true;
+}
+SE_BIND_PROP_GET(js_cocos2dx_particle_ParticleSimulator_get_numTilesX)
+
+static bool js_cocos2dx_particle_ParticleSimulator_set_numTilesX(se::State& s)
+{
+    const auto& args = s.args();
+    cocos2d::ParticleSimulator* cobj = (cocos2d::ParticleSimulator*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_particle_ParticleSimulator_set_numTilesX : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    int arg0 = 0;
+    do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (int)tmp; } while(false);
+    SE_PRECONDITION2(ok, false, "js_cocos2dx_particle_ParticleSimulator_set_numTilesX : Error processing new value");
+    cobj->numTilesX = arg0;
+    return true;
+}
+SE_BIND_PROP_SET(js_cocos2dx_particle_ParticleSimulator_set_numTilesX)
+
+static bool js_cocos2dx_particle_ParticleSimulator_get_numTilesY(se::State& s)
+{
+    cocos2d::ParticleSimulator* cobj = (cocos2d::ParticleSimulator*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_particle_ParticleSimulator_get_numTilesY : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    se::Value jsret;
+    ok &= int32_to_seval(cobj->numTilesY, &jsret);
+    s.rval() = jsret;
+    return true;
+}
+SE_BIND_PROP_GET(js_cocos2dx_particle_ParticleSimulator_get_numTilesY)
+
+static bool js_cocos2dx_particle_ParticleSimulator_set_numTilesY(se::State& s)
+{
+    const auto& args = s.args();
+    cocos2d::ParticleSimulator* cobj = (cocos2d::ParticleSimulator*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_particle_ParticleSimulator_set_numTilesY : Invalid Native Object");
+
+    CC_UNUSED bool ok = true;
+    int arg0 = 0;
+    do { int32_t tmp = 0; ok &= seval_to_int32(args[0], &tmp); arg0 = (int)tmp; } while(false);
+    SE_PRECONDITION2(ok, false, "js_cocos2dx_particle_ParticleSimulator_set_numTilesY : Error processing new value");
+    cobj->numTilesY = arg0;
+    return true;
+}
+SE_BIND_PROP_SET(js_cocos2dx_particle_ParticleSimulator_set_numTilesY)
+
 SE_DECLARE_FINALIZE_FUNC(js_cocos2d_ParticleSimulator_finalize)
 
 static bool js_cocos2dx_particle_ParticleSimulator_constructor(se::State& s)
@@ -1408,6 +1492,9 @@ bool js_register_cocos2dx_particle_ParticleSimulator(se::Object* obj)
     cls->defineProperty("rotatePerS", _SE(js_cocos2dx_particle_ParticleSimulator_get_rotatePerS), _SE(js_cocos2dx_particle_ParticleSimulator_set_rotatePerS));
     cls->defineProperty("rotatePerSVar", _SE(js_cocos2dx_particle_ParticleSimulator_get_rotatePerSVar), _SE(js_cocos2dx_particle_ParticleSimulator_set_rotatePerSVar));
     cls->defineProperty("aspectRatio", _SE(js_cocos2dx_particle_ParticleSimulator_get_aspectRatio), _SE(js_cocos2dx_particle_ParticleSimulator_set_aspectRatio));
+    cls->defineProperty("textureAnimation", _SE(js_cocos2dx_particle_ParticleSimulator_get_textureAnimation), _SE(js_cocos2dx_particle_ParticleSimulator_set_textureAnimation));
+    cls->defineProperty("numTilesX", _SE(js_cocos2dx_particle_ParticleSimulator_get_numTilesX), _SE(js_cocos2dx_particle_ParticleSimulator_set_numTilesX));
+    cls->defineProperty("numTilesY", _SE(js_cocos2dx_particle_ParticleSimulator_get_numTilesY), _SE(js_cocos2dx_particle_ParticleSimulator_set_numTilesY));
     cls->defineFunction("setGravity", _SE(js_cocos2dx_particle_ParticleSimulator_setGravity));
     cls->defineFunction("render", _SE(js_cocos2dx_particle_ParticleSimulator_render));
     cls->defineFunction("setSourcePos", _SE(js_cocos2dx_particle_ParticleSimulator_setSourcePos));
