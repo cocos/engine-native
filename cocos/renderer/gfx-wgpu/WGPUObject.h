@@ -211,7 +211,7 @@ struct CCWGPUStateCache {
     Viewport viewport;
     Rect     rect;
 
-    uint32_t minAttachmentWidth = 0;
+    uint32_t minAttachmentWidth  = 0;
     uint32_t minAttachmentHeight = 0;
 
     std::vector<CCWGPUDescriptorSetObject>    descriptorSets;
@@ -221,7 +221,6 @@ struct CCWGPUStateCache {
 struct CCWGPUCommandBufferObject {
     bool renderPassBegan = false;
 
-    WGPUCommandBuffer      wgpuCommandBuffer     = wgpuDefaultHandle;
     WGPUCommandEncoder     wgpuCommandEncoder    = wgpuDefaultHandle;
     WGPURenderPassEncoder  wgpuRenderPassEncoder = wgpuDefaultHandle;
     WGPUComputePassEncoder wgpuComputeEncoder    = wgpuDefaultHandle;

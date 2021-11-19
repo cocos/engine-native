@@ -164,7 +164,7 @@ void CCWGPUDescriptorSet::update() {
                 _gpuBindGroupObj->bindingSet.insert(binding.binding + CC_WGPU_MAX_ATTACHMENTS);
             }
         } else if (DescriptorType::STORAGE_IMAGE == bindings[i].descriptorType) {
-            if(_textures[resourceIndex]) {
+            if (_textures[resourceIndex]) {
                 auto& bindGroupEntry       = _gpuBindGroupObj->bindGroupEntries[resourceIndex];
                 auto* texture              = static_cast<CCWGPUTexture*>(_textures[resourceIndex]);
                 bindGroupEntry.binding     = binding.binding;

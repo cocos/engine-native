@@ -33,7 +33,7 @@ static WGPUStoreOp toWGPUStoreOp(StoreOp op) {
 
 static WGPUTextureUsageFlags toWGPUTextureUsage(TextureUsage usage) {
     if (usage == TextureUsageBit::NONE)
-        return WGPUTextureUsage::WGPUTextureUsage_Sampled | WGPUTextureUsage::WGPUTextureUsage_CopyDst;
+        return WGPUTextureUsage::WGPUTextureUsage_CopyDst;
 
     WGPUTextureUsageFlags res = WGPUTextureUsage::WGPUTextureUsage_None;
     if (hasFlag(usage, TextureUsageBit::TRANSFER_SRC)) {
@@ -58,7 +58,8 @@ static WGPUTextureUsageFlags toWGPUTextureUsage(TextureUsage usage) {
         res |= WGPUTextureUsage::WGPUTextureUsage_RenderAttachment;
     }
     // TODO_Zeqiang: unexpected texture copy in pipeline.
-    res |= WGPUTextureUsage::WGPUTextureUsage_CopyDst;
+    // if (!hasFlag(usage, TextureUsageBit::TRANSFER_DST))
+    //     res |= WGPUTextureUsage::WGPUTextureUsage_CopyDst;
 
     return res;
 }
@@ -109,6 +110,7 @@ static WGPUTextureSampleType textureSampleTypeTrait(Format format) {
         case Format::RG8SN:
         case Format::SRGB8_A8:
         case Format::RGB10A2:
+        case Format::RGBA16F:
             return WGPUTextureSampleType::WGPUTextureSampleType_Float;
         case Format::R8UI:
         case Format::R16UI:
@@ -136,7 +138,6 @@ static WGPUTextureSampleType textureSampleTypeTrait(Format format) {
         case Format::RG16F:
         case Format::R11G11B10F:
         case Format::RG32F:
-        case Format::RGBA16F:
         case Format::RGBA32F:
             return WGPUTextureSampleType::WGPUTextureSampleType_UnfilterableFloat;
         case Format::DEPTH:

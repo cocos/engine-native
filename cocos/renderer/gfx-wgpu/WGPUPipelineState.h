@@ -44,7 +44,7 @@ public:
 
     void prepare(const std::set<uint8_t>& setInUse);
 
-    void* ppl()const {return _ppl;}
+    void* ppl() const { return _ppl; }
 
 protected:
     void doInit(const PipelineStateInfo& info) override;
@@ -52,7 +52,8 @@ protected:
 
     CCWGPUPipelineStateObject* _gpuPipelineStateObj = nullptr;
 
-    void* _ppl = nullptr;
+    void* _ppl         = nullptr;
+    bool  _forceUpdate = false;
 };
 
 } // namespace gfx

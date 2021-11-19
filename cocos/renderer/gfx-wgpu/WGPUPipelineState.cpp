@@ -47,8 +47,10 @@ void CCWGPUPipelineState::doInit(const PipelineStateInfo& info) {
 }
 
 void CCWGPUPipelineState::check(RenderPass* renderPass) {
-    // if(_renderPass != renderPass)
-    _renderPass = renderPass;
+    if (_renderPass != renderPass) {
+        _renderPass  = renderPass;
+        _forceUpdate = true;
+    }
 }
 
 void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
@@ -56,7 +58,7 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
 
     const DepthStencilAttachment& dsAttachment = _renderPass->getDepthStencilAttachment();
     if (_bindPoint == PipelineBindPoint::GRAPHICS) {
-        if (_gpuPipelineStateObj->wgpuRenderPipeline) {
+        if (_gpuPipelineStateObj->wgpuRenderPipeline && !_forceUpdate) {
             return;
         }
 
@@ -206,6 +208,7 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
         };
         _gpuPipelineStateObj->wgpuRenderPipeline = wgpuDeviceCreateRenderPipeline2(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &piplineDesc);
         _ppl                                     = pipelineLayout;
+        printf("ppshn: %s\n", static_cast<CCWGPUShader*>(_shader)->gpuShaderObject()->name.c_str());
     } else if (_bindPoint == PipelineBindPoint::COMPUTE) {
         if (_gpuPipelineStateObj->wgpuComputePipeline)
             return;
