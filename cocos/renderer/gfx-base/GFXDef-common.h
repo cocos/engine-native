@@ -1288,7 +1288,7 @@ struct QueueInfo {
     QueueType type{QueueType::GRAPHICS};
 };
 
-constexpr uint32_t DEFAULT_MAX_QUERY_OBJECTS = 65536U;
+constexpr uint32_t DEFAULT_MAX_QUERY_OBJECTS = 32767U;
 
 struct QueryPoolInfo {
     QueryType type{QueryType::OCCLUSION};
