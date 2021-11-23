@@ -48,6 +48,7 @@ public:
     RenderScene &operator=(const RenderScene &) = delete;
     RenderScene &operator=(RenderScene &&) = delete;
 
+    void activate();
     void update(uint32_t stamp);
 
     void addSphereLight(SphereLight *);
