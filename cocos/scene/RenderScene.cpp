@@ -26,9 +26,8 @@
 #include "scene/RenderScene.h"
 #include <utility>
 #include "base/Log.h"
-#include "scene/Octree.h"
 #include "renderer/pipeline/RenderPipeline.h"
-
+#include "scene/Octree.h"
 
 extern void jsbFlushFastMQ();
 
@@ -36,7 +35,6 @@ namespace cc {
 namespace scene {
 
 RenderScene::RenderScene() {
-    
 }
 
 RenderScene::~RenderScene() {

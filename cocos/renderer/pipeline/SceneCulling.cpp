@@ -144,12 +144,12 @@ void updateDirLight(scene::Shadow *shadows, const scene::Light *light, std::arra
 }
 
 void validPunctualLightsCulling(RenderPipeline *pipeline, scene::Camera *camera) {
-    const auto *const    scene               = camera->scene;
-    PipelineSceneData *  sceneData           = pipeline->getPipelineSceneData();
-    vector<const scene::Light*> validPunctualLights = sceneData->getValidPunctualLights();
+    const auto *const            scene               = camera->scene;
+    PipelineSceneData *          sceneData           = pipeline->getPipelineSceneData();
+    vector<const scene::Light *> validPunctualLights = sceneData->getValidPunctualLights();
     validPunctualLights.clear();
 
-    scene::Sphere     sphere;
+    scene::Sphere sphere;
     for (auto *light : scene->getSpotLights()) {
         sphere.setCenter(light->getPosition());
         sphere.setRadius(light->getRange());

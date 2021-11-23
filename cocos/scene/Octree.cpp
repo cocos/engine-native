@@ -271,7 +271,7 @@ Octree::~Octree() {
 
 void Octree::resize(const Vec3& minPos, const Vec3& maxPos, uint32_t maxDepth) {
     const Vec3 expand{OCTREE_BOX_EXPAND_SIZE, OCTREE_BOX_EXPAND_SIZE, OCTREE_BOX_EXPAND_SIZE};
-    BBox rootBox = _root->getBox();
+    BBox       rootBox = _root->getBox();
     if ((minPos - expand) == rootBox.min && maxPos == rootBox.max && maxDepth == _maxDepth) {
         return;
     }
