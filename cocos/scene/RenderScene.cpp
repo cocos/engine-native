@@ -34,9 +34,6 @@ extern void jsbFlushFastMQ();
 namespace cc {
 namespace scene {
 
-RenderScene::RenderScene() {
-}
-
 RenderScene::~RenderScene() {
     CC_SAFE_DELETE(_octree);
 }
