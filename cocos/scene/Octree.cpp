@@ -84,7 +84,7 @@ BBox OctreeNode::getChildBox(uint32_t index) const {
         max.z = center.z;
     }
 
-    return BBox(min, max);
+    return {min, max};
 }
 
 OctreeNode* OctreeNode::getOrCreateChild(uint32_t index) {
