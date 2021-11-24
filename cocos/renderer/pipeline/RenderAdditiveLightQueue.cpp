@@ -131,7 +131,7 @@ void RenderAdditiveLightQueue::gatherLightPasses(const scene::Camera *camera, gf
             const auto lightPassIdx = lightPassIndices[i];
             if (lightPassIdx == UINT_MAX) continue;
             const auto *pass          = subModel->getPass(lightPassIdx);
-            const bool  isTransparent = subModel->getPasses()[0]->getBlendState()->targets[0].blend;
+            const bool  isTransparent = subModel->getPass(0)->getBlendState()->targets[0].blend;
             if (isTransparent) {
                 continue;
             }
