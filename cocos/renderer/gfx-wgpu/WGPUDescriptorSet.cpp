@@ -203,6 +203,13 @@ void CCWGPUDescriptorSet::prepare() {
 
         const auto& entries = _gpuBindGroupObj->bindGroupEntries;
 
+        // for (size_t j = 0; j < entries.size(); j++) {
+        //     const auto& entry = entries[j];
+        //     if ((entry.buffer != 0) + (entry.textureView != 0) + (entry.sampler != 0) != 1) {
+        //         printf("***************missing binding, b, t, s %d,  %p, %p, %p\n", entry.binding, entry.buffer, entry.textureView, entry.sampler);
+        //     }
+        // }
+
         CCWGPUDeviceObject* deviceObj = CCWGPUDevice::getInstance()->gpuDeviceObject();
         if (_gpuBindGroupObj->bindgroup && _gpuBindGroupObj->bindgroup != anoymous::defaultBindGroup) {
             wgpuBindGroupRelease(_gpuBindGroupObj->bindgroup);

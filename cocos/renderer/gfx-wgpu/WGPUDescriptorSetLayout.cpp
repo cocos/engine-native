@@ -57,11 +57,11 @@ void CCWGPUDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo& info) {
         if (hasFlag(COMBINED_ST_IN_USE, _bindings[i].descriptorType)) {
             // 1. texture
             WGPUBindGroupLayoutEntry textureLayout = {
-                .nextInChain            = nullptr,
-                .binding                = _bindings[i].binding,
-                .visibility             = toWGPUShaderStageFlag(_bindings[i].stageFlags),
-                .texture.sampleType     = WGPUTextureSampleType_Float,
-                .texture.viewDimension  = WGPUTextureViewDimension_2D,
+                .nextInChain           = nullptr,
+                .binding               = _bindings[i].binding,
+                .visibility            = toWGPUShaderStageFlag(_bindings[i].stageFlags),
+                .texture.sampleType    = WGPUTextureSampleType_Float,
+                .texture.viewDimension = WGPUTextureViewDimension_2D,
             };
             _gpuLayoutEntryObj->bindGroupLayoutEntries.push_back(textureLayout);
 
@@ -183,20 +183,20 @@ size_t CCWGPUDescriptorSetLayout::hash() const {
         const auto& entry = entries[i];
         hashStr += std::to_string(entry.binding);
         hashStr += std::to_string(entry.visibility);
-        if(entry.buffer.type != WGPUBufferBindingType_Undefined) {
+        if (entry.buffer.type != WGPUBufferBindingType_Undefined) {
             hashStr += std::to_string(entry.buffer.type);
             hashStr += std::to_string(entry.buffer.hasDynamicOffset ? 1 : 0);
             hashStr += std::to_string(entry.buffer.minBindingSize);
         }
-        if(entry.sampler.type == WGPUSamplerBindingType_Undefined) {
+        if (entry.sampler.type == WGPUSamplerBindingType_Undefined) {
             hashStr += std::to_string(entry.sampler.type);
         }
-        if(entry.texture.sampleType != WGPUTextureSampleType_Undefined) {
+        if (entry.texture.sampleType != WGPUTextureSampleType_Undefined) {
             hashStr += std::to_string(entry.texture.sampleType);
             hashStr += std::to_string(entry.texture.viewDimension);
             hashStr += std::to_string(entry.texture.multisampled ? 1 : 0);
         }
-        if(entry.storageTexture.access != WGPUStorageTextureAccess_Undefined) {
+        if (entry.storageTexture.access != WGPUStorageTextureAccess_Undefined) {
             hashStr += std::to_string(entry.storageTexture.access);
             hashStr += std::to_string(entry.storageTexture.format);
             hashStr += std::to_string(entry.storageTexture.viewDimension);
@@ -220,16 +220,16 @@ void CCWGPUDescriptorSetLayout::print() const {
             printf("******missing %d, %d, %d, %d, %d\n", entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
         }
         printf("%d, %d\n", entry.binding, entry.visibility);
-        if(entry.buffer.type != WGPUBufferBindingType_Undefined) {
+        if (entry.buffer.type != WGPUBufferBindingType_Undefined) {
             printf("b %d %d %d\n", entry.buffer.type, entry.buffer.hasDynamicOffset ? 1 : 0, entry.buffer.minBindingSize);
         }
-        if(entry.sampler.type != WGPUSamplerBindingType_Undefined) {
+        if (entry.sampler.type != WGPUSamplerBindingType_Undefined) {
             printf("s %d\n", entry.sampler.type);
         }
-        if(entry.texture.sampleType != WGPUTextureSampleType_Undefined) {
+        if (entry.texture.sampleType != WGPUTextureSampleType_Undefined) {
             printf("t %d %d %d\n", entry.texture.sampleType, entry.texture.viewDimension, entry.texture.multisampled ? 1 : 0);
         }
-        if(entry.storageTexture.access != WGPUStorageTextureAccess_Undefined) {
+        if (entry.storageTexture.access != WGPUStorageTextureAccess_Undefined) {
             printf("st %d %d %d\n", entry.storageTexture.access, entry.storageTexture.format, entry.storageTexture.viewDimension);
         }
     }
@@ -264,7 +264,7 @@ void CCWGPUDescriptorSetLayout::prepare(bool forceUpdate) {
     //         1) {
     //         printf("******missing %d, %d, %d, %d, %d\n", entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
     //     }
-    //     printf("l binding, b, t, s  %d, %d, %d, %d, %d\n", entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
+    //     // printf("l binding, b, t, s  %d, %d, %d, %d, %d\n", entry.binding, entry.buffer.type, entry.sampler.type, entry.texture.sampleType, entry.storageTexture.access);
     // }
 
     if (entries.empty()) {

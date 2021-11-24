@@ -208,7 +208,6 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
         };
         _gpuPipelineStateObj->wgpuRenderPipeline = wgpuDeviceCreateRenderPipeline2(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &piplineDesc);
         _ppl                                     = pipelineLayout;
-        printf("ppshn: %s\n", static_cast<CCWGPUShader*>(_shader)->gpuShaderObject()->name.c_str());
     } else if (_bindPoint == PipelineBindPoint::COMPUTE) {
         if (_gpuPipelineStateObj->wgpuComputePipeline)
             return;
@@ -222,7 +221,6 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
             .computeStage = psDesc,
         };
         _gpuPipelineStateObj->wgpuComputePipeline = wgpuDeviceCreateComputePipeline(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &piplineDesc);
-        printf("ppshn: %s\n", static_cast<CCWGPUShader*>(_shader)->gpuShaderObject()->name.c_str());
     } else {
         CC_LOG_ERROR("unsupport pipeline bind point");
     }
