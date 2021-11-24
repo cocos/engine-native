@@ -66,5 +66,5 @@ if(MSVC)
             COMMAND ${CMAKE_COMMAND} -E copy_if_different ${abs} $<TARGET_FILE_DIR:${LIB_NAME}>/${filename}
         )
     endforeach()
-    target_link_options(${LIB_NAME} PRIVATE /SUBSYSTEM:WINDOWS)
+    target_link_options(${LIB_NAME} PRIVATE /SUBSYSTEM:WINDOWS /LARGEADDRESSAWARE)
 endif()
