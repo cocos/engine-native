@@ -145,8 +145,8 @@ void ForwardStage::render(scene::Camera *camera) {
     _renderArea = RenderPipeline::getRenderArea(camera);
     // Command 'updateBuffer' must be recorded outside render passes, cannot put them in execute lambda
     dispenseRenderObject2Queues();
-    pipeline->getPipelineUBO()->updateShadowUBO(camera);
     auto *cmdBuff{pipeline->getCommandBuffers()[0]};
+    pipeline->getPipelineUBO()->updateShadowUBO(camera);
 
     _instancedQueue->uploadBuffers(cmdBuff);
     _batchedQueue->uploadBuffers(cmdBuff);

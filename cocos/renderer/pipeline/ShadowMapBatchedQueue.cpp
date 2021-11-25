@@ -56,8 +56,6 @@ void ShadowMapBatchedQueue::gatherLightPasses(gfx::DescriptorSet *globalDS, cons
     const RenderObjectList & dirShadowObjects  = sceneData->getDirShadowObjects();
     const RenderObjectList & castShadowObjects = sceneData->getCastShadowObjects();
     if (light && shadowInfo->enabled && shadowInfo->shadowType == scene::ShadowType::SHADOWMAP) {
-        _pipeline->getPipelineUBO()->updateShadowUBOLight(globalDS, light);
-
         switch (light->getType()) {
             case scene::LightType::DIRECTIONAL: {
                 for (const auto ro : dirShadowObjects) {
