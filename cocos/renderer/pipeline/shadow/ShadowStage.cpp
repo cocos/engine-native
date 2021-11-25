@@ -64,7 +64,6 @@ void ShadowStage::render(scene::Camera *camera) {
         return;
     }
 
-    _pipeline->getPipelineUBO()->updateShadowUBO(camera);
     auto *cmdBuffer = _pipeline->getCommandBuffers()[0];
 
     _additiveShadowQueue->gatherLightPasses(_globalDS, camera, _light, cmdBuffer);
