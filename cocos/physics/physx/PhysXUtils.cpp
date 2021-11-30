@@ -28,8 +28,6 @@
 namespace cc {
 namespace physics {
 
-static physx::PxRigidActor *tempRigidActor = nullptr;
-
 void pxSetFromTwoVectors(physx::PxQuat &out, const physx::PxVec3 &a, const physx::PxVec3 &b) {
     float dot = a.dot(b);
     if (dot < -0.999999) {
@@ -44,20 +42,6 @@ void pxSetFromTwoVectors(physx::PxQuat &out, const physx::PxVec3 &a, const physx
         out             = physx::PxQuat{c.x, c.y, c.z, 1 + dot};
         out.normalize();
     }
-}
-
-void releaseTempRigidActor() {
-    if (tempRigidActor) {
-        tempRigidActor->release();
-        tempRigidActor = nullptr;
-    }
-}
-
-physx::PxRigidActor &getTempRigidActor() {
-    if (!tempRigidActor) {
-        tempRigidActor = PxGetPhysics().createRigidDynamic(physx::PxTransform{physx::PxIdentity});
-    }
-    return *tempRigidActor;
 }
 
 } // namespace physics

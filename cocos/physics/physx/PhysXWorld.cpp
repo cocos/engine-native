@@ -26,6 +26,7 @@
 #include "physics/physx/PhysXWorld.h"
 #include "physics/physx/PhysXFilterShader.h"
 #include "physics/physx/PhysXInc.h"
+#include "physics/physx/joints/PhysXJoint.h"
 #include "physics/physx/PhysXUtils.h"
 #include "physics/spec/IWorld.h"
 
@@ -89,7 +90,7 @@ PhysXWorld::~PhysXWorld() {
     // clear material cache
     materialMap.clear();
     delete _mEventMgr;
-    releaseTempRigidActor();
+    PhysXJoint::releaseTempRigidActor();
     PX_RELEASE(_mScene);
     PX_RELEASE(_mDispatcher);
     PX_RELEASE(_mPhysics);
