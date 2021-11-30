@@ -85,7 +85,11 @@ PhysXWorld::PhysXWorld() {
 }
 
 PhysXWorld::~PhysXWorld() {
+    auto& materialMap = getPxMaterialMap();
+    // clear material cache
+    materialMap.clear();
     delete _mEventMgr;
+    releaseTempRigidActor();
     PX_RELEASE(_mScene);
     PX_RELEASE(_mDispatcher);
     PX_RELEASE(_mPhysics);
@@ -94,6 +98,8 @@ PhysXWorld::~PhysXWorld() {
     PX_RELEASE(_mPvd);
     PX_RELEASE(transport);
 #endif
+    // release cooking before foundation
+    PX_RELEASE(_mCooking);
     PxCloseExtensions();
     PX_RELEASE(_mFoundation);
 }
@@ -172,6 +178,8 @@ uintptr_t PhysXWorld::createMaterial(uint16_t id, float f, float df, float r,
     auto &             m = getPxMaterialMap();
     if (m.find(id) == m.end()) {
         mat   = PxGetPhysics().createMaterial(f, df, r);
+        // add reference count avoid auto releasing by physx
+        mat->acquireReference();
         m[id] = reinterpret_cast<uintptr_t>(mat);
         mat->setFrictionCombineMode(physx::PxCombineMode::Enum(m0));
         mat->setRestitutionCombineMode(physx::PxCombineMode::Enum(m1));

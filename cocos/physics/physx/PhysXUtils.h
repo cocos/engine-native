@@ -149,6 +149,7 @@ inline QueryFilterShader &getQueryFilterShader() {
 }
 
 physx::PxRigidActor &getTempRigidActor();
+void releaseTempRigidActor();
 
 } // namespace physics
 } // namespace cc
