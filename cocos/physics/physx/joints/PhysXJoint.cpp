@@ -31,7 +31,7 @@
 namespace cc {
 namespace physics {
 
-physx::PxRigidActor* PhysXJoint::_tempRigidActor = nullptr;
+physx::PxRigidActor* PhysXJoint::tempRigidActor = nullptr;
 
 void PhysXJoint::initialize(scene::Node* node) {
     auto& ins    = PhysXWorld::getInstance();
@@ -80,16 +80,16 @@ void PhysXJoint::setEnableCollision(const bool v) {
 }
 
 physx::PxRigidActor& PhysXJoint::getTempRigidActor() {
-    if (!PhysXJoint::_tempRigidActor) {
-        PhysXJoint::_tempRigidActor = PxGetPhysics().createRigidDynamic(physx::PxTransform{physx::PxIdentity});
+    if (!PhysXJoint::tempRigidActor) {
+        PhysXJoint::tempRigidActor = PxGetPhysics().createRigidDynamic(physx::PxTransform{physx::PxIdentity});
     }
-    return *PhysXJoint::_tempRigidActor;
+    return *PhysXJoint::tempRigidActor;
 };
 
 void PhysXJoint::releaseTempRigidActor() {
-    if (PhysXJoint::_tempRigidActor) {
-        PhysXJoint::_tempRigidActor->release();
-        PhysXJoint::_tempRigidActor = nullptr;
+    if (PhysXJoint::tempRigidActor) {
+        PhysXJoint::tempRigidActor->release();
+        PhysXJoint::tempRigidActor = nullptr;
     }
 }
 

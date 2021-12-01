@@ -60,7 +60,7 @@ protected:
     virtual void     onComponentSet() = 0;
 
 private:
-    static physx::PxRigidActor* _tempRigidActor;
+    static physx::PxRigidActor* tempRigidActor;
 };
 
 } // namespace physics
