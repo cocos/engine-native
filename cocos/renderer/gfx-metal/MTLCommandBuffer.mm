@@ -160,7 +160,8 @@ void CCMTLCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fb
     auto *                   swapchain               = static_cast<CCMTLSwapchain *>(_gpuCommandBufferObj->fbo->swapChain());
 
     // if not rendering to full framebuffer(eg. left top area), draw a quad to pretend viewport clear.
-    bool renderingFullFramebuffer   = isRenderingEntireDrawable(renderArea, static_cast<CCMTLRenderPass *>(renderPass));
+    bool renderingFullFramebuffer   = true;
+    
     if (subpasses.empty()) {
         if (dsTexture) {
             auto *ccMtlTexture = static_cast<CCMTLTexture *>(dsTexture);
@@ -202,6 +203,8 @@ void CCMTLCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fb
                 mtlRenderPassDescriptor.colorAttachments[input].storeAction = mu::isFramebufferFetchSupported() ? mu::toMTLStoreAction(colorAttachments[input].storeOp) : MTLStoreActionStore;
                 visited[input]                                              = true;
             }
+            if(renderingFullFramebuffer)
+                renderingFullFramebuffer = isRenderingEntireDrawable(renderArea, static_cast<CCMTLRenderPass *>(renderPass));;
             for (size_t j = 0; j < subpasses[i].colors.size(); ++j) {
                 uint32_t color = subpasses[i].colors[j];
                 if (visited[color])
