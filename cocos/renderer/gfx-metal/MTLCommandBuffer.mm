@@ -91,13 +91,15 @@ void CCMTLCommandBuffer::doDestroy() {
     CC_SAFE_DELETE(_gpuCommandBufferObj);
 }
 
-bool CCMTLCommandBuffer::isRenderingEntireDrawable(const Rect &rect, const CCMTLRenderPass *renderPass) {
-    const int num = renderPass->getColorRenderTargetNums();
-    if (num == 0) {
-        return true;
+bool CCMTLCommandBuffer::isRenderingEntireDrawable(const Rect &rect, const CCMTLFramebuffer *fbo) {
+    const auto& colors = fbo->getColorTextures();
+    bool res = true;
+    for(size_t i = 0; i < fbo->getColorTextures().size(); ++i) {
+        if(!(rect.x == 0 && rect.y == 0 && rect.width == colors[i]->getWidth() && rect.height == colors[i]->getHeight())) {
+            res = false;
+        }
     }
-    const auto &renderTargetSize = renderPass->getRenderTargetSizes()[0];
-    return rect.x == 0 && rect.y == 0 && rect.width == renderTargetSize.x && rect.height == renderTargetSize.y;
+    return res;
 }
 
 id<MTLCommandBuffer> CCMTLCommandBuffer::getMTLCommandBuffer() {
@@ -160,8 +162,7 @@ void CCMTLCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fb
     auto *                   swapchain               = static_cast<CCMTLSwapchain *>(_gpuCommandBufferObj->fbo->swapChain());
 
     // if not rendering to full framebuffer(eg. left top area), draw a quad to pretend viewport clear.
-    bool renderingFullFramebuffer   = true;
-    
+    bool renderingFullFramebuffer   = isRenderingEntireDrawable(renderArea, static_cast<CCMTLFramebuffer *>(fbo));
     if (subpasses.empty()) {
         if (dsTexture) {
             auto *ccMtlTexture = static_cast<CCMTLTexture *>(dsTexture);
@@ -203,8 +204,6 @@ void CCMTLCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fb
                 mtlRenderPassDescriptor.colorAttachments[input].storeAction = mu::isFramebufferFetchSupported() ? mu::toMTLStoreAction(colorAttachments[input].storeOp) : MTLStoreActionStore;
                 visited[input]                                              = true;
             }
-            if(renderingFullFramebuffer)
-                renderingFullFramebuffer = isRenderingEntireDrawable(renderArea, static_cast<CCMTLRenderPass *>(renderPass));;
             for (size_t j = 0; j < subpasses[i].colors.size(); ++j) {
                 uint32_t color = subpasses[i].colors[j];
                 if (visited[color])
