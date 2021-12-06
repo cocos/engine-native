@@ -449,6 +449,7 @@ void CCMTLCommandBuffer::nextSubpass() {
                 mtlRenderPassDescriptor.colorAttachments[slot].storeAction = mu::toMTLStoreAction(colorAttachments[slot].storeOp);
             }
             updateDepthStencilState(curSubpassIndex, mtlRenderPassDescriptor);
+            mtlRenderPassDescriptor.depthAttachment.loadAction = MTLLoadActionLoad;
             _renderEncoder.initialize(getMTLCommandBuffer(), ccRenderpass->getMTLRenderPassDescriptor());
             const TextureList &    colorTextures = _gpuCommandBufferObj->fbo->getColorTextures();
             const SubpassInfoList &subpasses     = curRenderPass->getSubpasses();
