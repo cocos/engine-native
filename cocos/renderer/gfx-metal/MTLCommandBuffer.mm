@@ -304,7 +304,7 @@ void CCMTLCommandBuffer::updateDepthStencilState(uint32_t index, MTLRenderPassDe
     const SubpassInfoList &subpasses     = curRenderPass->getSubpasses();
     
     const DepthStencilAttachment& dsAttachment  = curRenderPass->getDepthStencilAttachment();
-    const SubpassInfo      subpass              = subpasses[index];
+    const SubpassInfo&      subpass             = subpasses[index];
     if (subpass.depthStencil != INVALID_BINDING) {
         const TextureList &colorTextures = curFBO->getColorTextures();
         if (subpass.depthStencil >= colorTextures.size()) {
@@ -318,6 +318,8 @@ void CCMTLCommandBuffer::updateDepthStencilState(uint32_t index, MTLRenderPassDe
             if (ccMTLTexture->getFormat() == Format::DEPTH_STENCIL)
                 descriptor.stencilAttachment.texture = ccMTLTexture->getMTLTexture();
         }
+
+        //the first and last time using depth buffer are affected respectively by load and store op.
         //loadop
         if(index == 0) {
             descriptor.depthAttachment.loadAction   = dsAttachment.depthLoadOp == LoadOp::LOAD ? MTLLoadActionLoad : MTLLoadActionClear;
