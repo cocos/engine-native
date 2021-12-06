@@ -50,9 +50,6 @@ if(USE_PHYSICS_PHYSX)
     if (ANDROID AND CMAKE_ANDROID_ARCH_ABI MATCHES x86)
         set(USE_PHYSICS_PHYSX OFF)
         message(AUTHOR_WARNING "Native PhysX does not support Google Android X86")
-    elseif(MACOSX AND CMAKE_OSX_ARCHITECTURES MATCHES arm64)
-        set(USE_PHYSICS_PHYSX OFF)
-        message(AUTHOR_WARNING "Currently Native PhysX not support MacOS arm64")
     endif()
 endif()
 
@@ -844,13 +841,13 @@ cocos_source_files(
                  cocos/renderer/pipeline/shadow/ShadowFlow.h
                  cocos/renderer/pipeline/shadow/ShadowStage.cpp
                  cocos/renderer/pipeline/shadow/ShadowStage.h
-                 cocos/renderer/pipeline/common/Enum.h
-                 cocos/renderer/pipeline/common/BloomStage.cpp
-                 cocos/renderer/pipeline/common/BloomStage.h
-                 cocos/renderer/pipeline/common/PostProcessStage.cpp
-                 cocos/renderer/pipeline/common/PostProcessStage.h
-                 cocos/renderer/pipeline/common/UIPhase.cpp
-                 cocos/renderer/pipeline/common/UIPhase.h
+                 cocos/renderer/pipeline/Enum.h
+                 cocos/renderer/pipeline/deferred/BloomStage.cpp
+                 cocos/renderer/pipeline/deferred/BloomStage.h
+                 cocos/renderer/pipeline/deferred/PostProcessStage.cpp
+                 cocos/renderer/pipeline/deferred/PostProcessStage.h
+                 cocos/renderer/pipeline/UIPhase.cpp
+                 cocos/renderer/pipeline/UIPhase.h
 
                  cocos/renderer/pipeline/helper/DefineMap.h
                  cocos/renderer/pipeline/helper/DefineMap.cpp
@@ -1634,6 +1631,8 @@ if(USE_SE_V8)
                      cocos/bindings/jswrapper/v8/SeApi.h
         NO_WERROR    cocos/bindings/jswrapper/v8/Utils.cpp
                      cocos/bindings/jswrapper/v8/Utils.h
+                     cocos/bindings/jswrapper/v8/MissingSymbols.cpp
+                     cocos/bindings/jswrapper/v8/MissingSymbols.h
     )
     if(USE_V8_DEBUGGER)
     cocos_source_files(MODULE ccbindings

@@ -27,7 +27,7 @@
 
 #include "../RenderStage.h"
 #include "frame-graph/Handle.h"
-#include "Enum.h"
+#include "pipeline/Enum.h"
 
 #define MAX_BLOOM_FILTER_PASS_NUM 6
 
@@ -67,7 +67,6 @@ public:
     }
 
 private:
-    gfx::Rect _renderArea;
     uint      _phaseID = 0;
 
     static RenderStageInfo initInfo;

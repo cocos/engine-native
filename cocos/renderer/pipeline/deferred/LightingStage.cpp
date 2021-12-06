@@ -330,6 +330,9 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
     auto *     pipeline   = static_cast<DeferredPipeline *>(_pipeline);
     gfx::Color clearColor = pipeline->getClearcolor(camera);
     float      shadingScale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
+    _renderArea      = RenderPipeline::getRenderArea(camera);
+    _inputAssembler    = pipeline->getIAByRenderArea(_renderArea);
+    _planarShadowQueue->gatherShadowPasses(camera, pipeline->getCommandBuffers()[0]);
     auto lightingSetup = [&](framegraph::PassNodeBuilder &builder, RenderData &data) {
         builder.subpass(true);
 
@@ -395,12 +398,9 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         const std::array<uint, 1> globalOffsets = {_pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
         cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), utils::toUint(globalOffsets.size()), globalOffsets.data());
         // get PSO and draw quad
-        auto rendeArea = RenderPipeline::getRenderArea(camera);
-
         scene::Pass *        pass           = sceneData->getSharedData()->deferredLightPass;
         gfx::Shader *        shader         = sceneData->getSharedData()->deferredLightPassShader;
-        gfx::InputAssembler *inputAssembler = pipeline->getIAByRenderArea(rendeArea);
-        gfx::PipelineState * pso            = PipelineStateManager::getOrCreatePipelineState(pass, shader, inputAssembler, table.getRenderPass(), table.getSubpassIndex());
+        gfx::PipelineState * pso            = PipelineStateManager::getOrCreatePipelineState(pass, shader, _inputAssembler, table.getRenderPass(), table.getSubpassIndex());
 
         for (uint i = 0; i < DeferredPipeline::GBUFFER_COUNT; ++i) {
             pass->getDescriptorSet()->bindTexture(i, table.getRead(data.gbuffer[i]));
@@ -417,10 +417,11 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         pass->getDescriptorSet()->update();
 
         cmdBuff->bindPipelineState(pso);
-        cmdBuff->bindInputAssembler(inputAssembler);
+        cmdBuff->bindInputAssembler(_inputAssembler);
         cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet());
         cmdBuff->bindDescriptorSet(materialSet, pass->getDescriptorSet());
-        cmdBuff->draw(inputAssembler);
+        cmdBuff->draw(_inputAssembler);
+        if(_isTransparentQueueEmpty) _planarShadowQueue->recordCommandBuffer(_device, table.getRenderPass(), cmdBuff);
     };
 
     pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(DeferredInsertPoint::DIP_LIGHTING), DeferredPipeline::fgStrHandleLightingPass, lightingSetup, lightingExec);
@@ -477,6 +478,7 @@ void LightingStage::fgTransparent(scene::Camera *camera) {
                 static_cast<uint>(pipeline->getHeight() * shadingScale),
             };
             data.depth = builder.create(DeferredPipeline::fgStrHandleOutDepthTexture, depthTexInfo);
+            depthAttachmentInfo.loadOp = gfx::LoadOp::CLEAR;
         }
         data.depth = builder.write(data.depth, depthAttachmentInfo);
         builder.writeToBlackboard(DeferredPipeline::fgStrHandleOutDepthTexture, data.depth);
@@ -501,20 +503,10 @@ void LightingStage::fgTransparent(scene::Camera *camera) {
             queue->recordCommandBuffer(pipeline->getDevice(), camera, table.getRenderPass(), cmdBuff, table.getSubpassIndex());
         }
 
-        //_planarShadowQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
+        _planarShadowQueue->recordCommandBuffer(_device, table.getRenderPass(), cmdBuff);
     };
 
-    putTransparentObj2Queue();
-
-    bool empty = true;
-    for (auto *node : _renderQueues) {
-        if (!node->empty()) {
-            empty = false;
-            break;
-        }
-    }
-
-    if (!empty) {
+    if (!_isTransparentQueueEmpty) {
         pipeline->getFrameGraph().addPass<RenderData>(static_cast<uint>(DeferredInsertPoint::DIP_TRANSPARENT),
                                                       DeferredPipeline::fgStrHandleTransparentPass, transparentSetup, transparentExec);
     }
@@ -527,7 +519,7 @@ void LightingStage::putTransparentObj2Queue() {
 
     auto *const sceneData     = _pipeline->getPipelineSceneData();
     const auto &renderObjects = sceneData->getRenderObjects();
-
+    _isTransparentQueueEmpty  = true;
     uint   m = 0;
     uint   p = 0;
     size_t k = 0;
@@ -540,6 +532,7 @@ void LightingStage::putTransparentObj2Queue() {
                 // TODO(xwx): need to fallback unlit and gizmo material.
                 if (pass->getPhase() != _phaseID) continue;
                 for (k = 0; k < _renderQueues.size(); k++) {
+                    _isTransparentQueueEmpty = false;
                     _renderQueues[k]->insertRenderPass(ro, m, p);
                 }
                 p++;
@@ -861,7 +854,7 @@ void LightingStage::fgSsprPass(scene::Camera *camera) {
 void LightingStage::render(scene::Camera *camera) {
     auto *pipeline = static_cast<DeferredPipeline *>(_pipeline);
     pipeline->getPipelineUBO()->updateShadowUBO(camera);
-
+    putTransparentObj2Queue();
     // if gbuffer pass does not exist, skip lighting pass.
     // transparent objects draw after lighting pass, can be automatically merged by FG
     if (pipeline->getFrameGraph().hasPass(DeferredPipeline::fgStrHandleGbufferPass)) {

@@ -623,6 +623,7 @@ SE_DECLARE_FUNC(js_gfx_CommandBuffer_bindDescriptorSet);
 SE_DECLARE_FUNC(js_gfx_CommandBuffer_bindInputAssembler);
 SE_DECLARE_FUNC(js_gfx_CommandBuffer_bindPipelineState);
 SE_DECLARE_FUNC(js_gfx_CommandBuffer_blitTexture);
+SE_DECLARE_FUNC(js_gfx_CommandBuffer_completeQueryPool);
 SE_DECLARE_FUNC(js_gfx_CommandBuffer_destroy);
 SE_DECLARE_FUNC(js_gfx_CommandBuffer_dispatch);
 SE_DECLARE_FUNC(js_gfx_CommandBuffer_draw);
@@ -637,7 +638,7 @@ SE_DECLARE_FUNC(js_gfx_CommandBuffer_getType);
 SE_DECLARE_FUNC(js_gfx_CommandBuffer_initialize);
 SE_DECLARE_FUNC(js_gfx_CommandBuffer_nextSubpass);
 SE_DECLARE_FUNC(js_gfx_CommandBuffer_pipelineBarrier);
-SE_DECLARE_FUNC(js_gfx_CommandBuffer_resetQuery);
+SE_DECLARE_FUNC(js_gfx_CommandBuffer_resetQueryPool);
 SE_DECLARE_FUNC(js_gfx_CommandBuffer_setBlendConstants);
 SE_DECLARE_FUNC(js_gfx_CommandBuffer_setDepthBias);
 SE_DECLARE_FUNC(js_gfx_CommandBuffer_setDepthBound);
@@ -728,6 +729,7 @@ bool register_all_gfx(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::gfx::QueryPool);
 SE_DECLARE_FUNC(js_gfx_QueryPool_destroy);
+SE_DECLARE_FUNC(js_gfx_QueryPool_getForceWait);
 SE_DECLARE_FUNC(js_gfx_QueryPool_getMaxQueryObjects);
 SE_DECLARE_FUNC(js_gfx_QueryPool_getResult);
 SE_DECLARE_FUNC(js_gfx_QueryPool_getType);
@@ -881,7 +883,7 @@ bool js_register_cc_gfx_DeviceManager(se::Object* obj);
 bool register_all_gfx(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::gfx::DeviceManager);
-SE_DECLARE_FUNC(js_gfx_DeviceManager_destroy);
 SE_DECLARE_FUNC(js_gfx_DeviceManager_create);
+SE_DECLARE_FUNC(js_gfx_DeviceManager_destroy);
 SE_DECLARE_FUNC(js_gfx_DeviceManager_addSurfaceEventListener);
 

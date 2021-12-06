@@ -36,7 +36,7 @@ namespace gfx {
 
 SwapchainValidator::SwapchainValidator(Swapchain *actor)
 : Agent<Swapchain>(actor) {
-    _typedID = actor->getTypedID();
+    _typedID            = actor->getTypedID();
     _preRotationEnabled = static_cast<SwapchainValidator *>(actor)->_preRotationEnabled;
 }
 
@@ -69,12 +69,14 @@ void SwapchainValidator::doInit(const SwapchainInfo &info) {
     SwapchainTextureInfo textureInfo;
     textureInfo.swapchain = this;
     textureInfo.format    = _actor->getColorTexture()->getFormat();
-    textureInfo.width     = info.width;
-    textureInfo.height    = info.height;
+    textureInfo.width     = _actor->getWidth();
+    textureInfo.height    = _actor->getHeight();
     initTexture(textureInfo, _colorTexture);
 
     textureInfo.format = _actor->getDepthStencilTexture()->getFormat();
     initTexture(textureInfo, _depthStencilTexture);
+
+    _transform = _actor->getSurfaceTransform();
 }
 
 void SwapchainValidator::doDestroy() {
@@ -93,6 +95,12 @@ void SwapchainValidator::doResize(uint32_t width, uint32_t height, SurfaceTransf
     CCASSERT(isInited(), "alread destroyed?");
 
     _actor->resize(width, height, transform);
+
+    auto *colorTexture        = static_cast<TextureValidator *>(_colorTexture);
+    auto *depthStencilTexture = static_cast<TextureValidator *>(_depthStencilTexture);
+    colorTexture->_info.width = depthStencilTexture->_info.width = _actor->getWidth();
+    colorTexture->_info.height = depthStencilTexture->_info.height = _actor->getHeight();
+    _transform = _actor->getSurfaceTransform();
 }
 
 void SwapchainValidator::doDestroySurface() {

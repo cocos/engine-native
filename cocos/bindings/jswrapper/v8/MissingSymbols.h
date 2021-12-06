@@ -22,33 +22,25 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 ****************************************************************************/
+#include <cstddef>
+#include <cerrno>
+#include <cstring>
 
-#pragma once
+#if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
+#if CC_PLATFORM == CC_PLATFORM_ANDROID
+#if __ANDROID_API__ < 21
+extern "C" {
+int localSigemptyset(void *set) {
+    if (set == NULL) { // NOLINT(modernize-use-nullptr)
+        errno = EINVAL;
+        return -1;
+    }
+    memset(set, 0, sizeof(unsigned long)); // NOLINT(google-runtime-int)
+    return 0;
+}
 
-#include "../RenderFlow.h"
-
-namespace cc {
-namespace pipeline {
-
-class ForwardStage;
-
-class ForwardFlow : public RenderFlow {
-public:
-    static const RenderFlowInfo &getInitializeInfo();
-
-    ForwardFlow() = default;
-    ~ForwardFlow() override;
-
-    bool initialize(const RenderFlowInfo &info) override;
-    void activate(RenderPipeline *pipeline) override;
-    void destroy() override;
-    void render(scene::Camera *camera) override;
-
-private:
-    static RenderFlowInfo initInfo;
-
-    ForwardStage *_forwardStage = nullptr;
-};
-
-} // namespace pipeline
-} // namespace cc
+int sigemptyset(void *set) __attribute__((weak, alias("localSigemptyset")));
+}
+#endif
+#endif
+#endif // #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8

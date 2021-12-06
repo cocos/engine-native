@@ -169,16 +169,18 @@ void CCMTLDevice::doDestroy() {
         [(NSAutoreleasePool *)_autoreleasePool drain];
         _autoreleasePool = nullptr;
     }
+    
+    CC_SAFE_DESTROY(_queryPool)
+    CC_SAFE_DESTROY(_queue);
+    CC_SAFE_DESTROY(_cmdBuff);
 
     CCMTLGPUGarbageCollectionPool::getInstance()->flush();
 
     if (_inFlightSemaphore) {
-        _inFlightSemaphore->syncAll();
+        // has present ? syncSuccess : no need to wait;
+        _inFlightSemaphore->trySyncAll(1000);
     }
 
-    CC_SAFE_DESTROY(_queryPool)
-    CC_SAFE_DESTROY(_queue);
-    CC_SAFE_DESTROY(_cmdBuff);
     CC_SAFE_DELETE(_inFlightSemaphore);
 
     for (int i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i) {
@@ -187,6 +189,9 @@ void CCMTLDevice::doDestroy() {
     }
 
     cc::gfx::mu::clearUtilResource();
+    
+    CC_DESTROY(CCMTLTexture::getDefaultTexture());
+    CC_DELETE(CCMTLSampler::getDefaultSampler());
 
     CCASSERT(!_memoryStatus.bufferSize, "Buffer memory leaked");
     CCASSERT(!_memoryStatus.textureSize, "Texture memory leaked");
@@ -229,24 +234,21 @@ void CCMTLDevice::present() {
         swapchain->release();
     }
 
-    // NSWindow-related(: drawable) should be udpated in main thread.
-    dispatch_async(dispatch_get_main_queue(), ^{
+    // present drawable
+    {
         id<MTLCommandBuffer> cmdBuffer = [queue->gpuQueueObj()->mtlCommandQueue commandBufferWithUnretainedReferences];
-
         [cmdBuffer enqueue];
 
         for (auto drawable : releaseQ) {
             [cmdBuffer presentDrawable:drawable];
             [drawable release];
         }
-
         [cmdBuffer addCompletedHandler:^(id<MTLCommandBuffer> commandBuffer) {
             onPresentCompleted();
         }];
-
         [cmdBuffer commit];
-    });
-
+    }
+    
     if (_autoreleasePool) {
         //        CC_LOG_INFO("POOL: %p RELEASED", _autoreleasePool);
         [(NSAutoreleasePool *)_autoreleasePool drain];
@@ -331,7 +333,6 @@ void CCMTLDevice::copyBuffersToTexture(const uint8_t *const *buffers, Texture *t
     // the wiggle room to leverage immediate update vs. copy-upload strategies without
     // breaking compatibilities. When we reached some conclusion on this subject,
     // getting rid of this interface all together may become a better option.
-    _cmdBuff->begin();
     static_cast<CCMTLCommandBuffer *>(_cmdBuff)->copyBuffersToTexture(buffers, texture, regions, count);
 }
 

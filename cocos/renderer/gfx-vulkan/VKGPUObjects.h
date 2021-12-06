@@ -1104,20 +1104,23 @@ public:
     }
 
     void collect(CCVKGPUFramebuffer *gpuFramebuffer) {
-        if (_resources.size() <= _count) {
-            _resources.resize(_count * 2);
-        }
-        if (_device->swapchains.count(gpuFramebuffer->swapchain)) {
-            FramebufferListMap &fboListMap     = gpuFramebuffer->swapchain->vkSwapchainFramebufferListMap;
-            auto                fboListMapIter = fboListMap.find(gpuFramebuffer);
-            if (fboListMapIter != fboListMap.end()) {
-                for (auto &i : fboListMapIter->second) {
-                    vkDestroyFramebuffer(_device->vkDevice, i, nullptr);
+        if (gpuFramebuffer->swapchain) {
+            if (_device->swapchains.count(gpuFramebuffer->swapchain)) { // make sure the swapchain is still alive
+                auto &list = gpuFramebuffer->swapchain->vkSwapchainFramebufferListMap[gpuFramebuffer];
+                if (_resources.size() < _count + list.size()) {
+                    _resources.resize(_count * 2);
                 }
-                fboListMapIter->second.clear();
-                fboListMap.erase(fboListMapIter);
+                for (VkFramebuffer vkFramebuffer : list) {
+                    Resource &res     = _resources[_count++];
+                    res.type          = RecycledType::FRAMEBUFFER;
+                    res.vkFramebuffer = vkFramebuffer;
+                }
+                list.clear();
             }
         } else if (gpuFramebuffer->vkFramebuffer) {
+            if (_resources.size() <= _count) {
+                _resources.resize(_count * 2);
+            }
             Resource &res     = _resources[_count++];
             res.type          = RecycledType::FRAMEBUFFER;
             res.vkFramebuffer = gpuFramebuffer->vkFramebuffer;

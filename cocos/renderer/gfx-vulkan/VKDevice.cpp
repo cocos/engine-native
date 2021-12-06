@@ -222,8 +222,8 @@ bool CCVKDevice::doInit(const DeviceInfo & /*info*/) {
     findPreferredDepthFormat(depthFormatPriorityList, 3, &_gpuDevice->depthFormat);
 
     VkFormat depthStencilFormatPriorityList[]{
-        VK_FORMAT_D32_SFLOAT_S8_UINT,
         VK_FORMAT_D24_UNORM_S8_UINT,
+        VK_FORMAT_D32_SFLOAT_S8_UINT,
         VK_FORMAT_D16_UNORM_S8_UINT,
     };
     findPreferredDepthFormat(depthStencilFormatPriorityList, 3, &_gpuDevice->depthStencilFormat);
@@ -254,19 +254,20 @@ bool CCVKDevice::doInit(const DeviceInfo & /*info*/) {
         _gpuDevice->createRenderPass2 = vkCreateRenderPass2KHRFallback;
     }
 
-    VkFormatFeatureFlags requiredFeatures = VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT | VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
-    VkFormatProperties   formatProperties;
-    vkGetPhysicalDeviceFormatProperties(_gpuContext->physicalDevice, VK_FORMAT_R8G8B8_UNORM, &formatProperties);
-    if (formatProperties.optimalTilingFeatures & requiredFeatures) {
+    if (isFormatSupported(_gpuContext->physicalDevice, VK_FORMAT_R8G8B8_UNORM)) {
         _features[toNumber(Feature::FORMAT_RGB8)] = true;
     }
 
     String compressedFmts;
-    if (deviceFeatures.textureCompressionETC2) {
+    if (isFormatSupported(_gpuContext->physicalDevice, VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK)) {
         _features[toNumber(Feature::FORMAT_ETC2)] = true;
         compressedFmts += "etc2 ";
     }
-    if (deviceFeatures.textureCompressionASTC_LDR) {
+    if (isFormatSupported(_gpuContext->physicalDevice, VK_FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG)) {
+        _features[toNumber(Feature::FORMAT_PVRTC)] = true;
+        compressedFmts += "pvrtc ";
+    }
+    if (isFormatSupported(_gpuContext->physicalDevice, VK_FORMAT_ASTC_4x4_UNORM_BLOCK)) {
         _features[toNumber(Feature::FORMAT_ASTC)] = true;
         compressedFmts += "astc ";
     }

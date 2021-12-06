@@ -35,6 +35,7 @@
 #include "gfx-base/GFXSwapchain.h"
 #include "gfx-base/states/GFXTextureBarrier.h"
 #include "platform/Application.h"
+#include "../helper/Utils.h"
 
 namespace cc {
 namespace pipeline {
@@ -106,6 +107,7 @@ void DeferredPipeline::render(const vector<scene::Camera *> &cameras) {
     _pipelineUBO->updateGlobalUBO(cameras[0]);
     _pipelineUBO->updateMultiCameraUBO(cameras);
     ensureEnoughSize(cameras);
+    decideProfilerCamera(cameras);
 
     for (auto *camera : cameras) {
         sceneCulling(this, camera);
@@ -144,12 +146,7 @@ bool DeferredPipeline::activeRenderer(gfx::Swapchain *swapchain) {
 
     // Main light sampler binding
     _descriptorSet->bindSampler(SHADOWMAP::BINDING, sampler);
-    _descriptorSet->bindTexture(SHADOWMAP::BINDING, getDefaultTexture());
-
-    // Spot light sampler binding
     _descriptorSet->bindSampler(SPOTLIGHTINGMAP::BINDING, sampler);
-    _descriptorSet->bindTexture(SPOTLIGHTINGMAP::BINDING, getDefaultTexture());
-
     _descriptorSet->update();
 
     // update global defines when all states initialized.

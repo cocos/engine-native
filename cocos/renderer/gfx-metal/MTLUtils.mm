@@ -318,7 +318,7 @@ gfx::Shader *createShader(CCMTLDevice *device) {
     String vs = R"(
             layout(location = 0) in vec2 a_position;
             void main() {
-                gl_Position = vec4(a_position, 0.0, 1.0);
+                gl_Position = vec4(a_position, 1.0, 1.0);
             }
     )";
     String fs = R"(
@@ -364,62 +364,23 @@ CCMTLGPUPipelineState *getClearRenderPassPipelineState(CCMTLDevice *device, Rend
         return ccMtlPiplineState->getGPUPipelineState();
     }
 
-    RenderPass* renderPass = nullptr;
-    const auto rpIter = renderPassMap.find(rpHash);
-    if(rpIter != renderPassMap.end()) {
-        renderPass = rpIter->second;
-    } else {
-        const ColorAttachmentList& originAttachments = curPass->getColorAttachments();
-        const SubpassInfoList& subpasses = curPass->getSubpasses();
-        uint32_t curSubpassIndex = static_cast<CCMTLRenderPass*>(curPass)->getCurrentSubpassIndex();
-        if(!subpasses.empty()) {
-            gfx::ColorAttachmentList colorAttachments;
-            gfx::DepthStencilAttachment depthStencilAttachment;
-            for (size_t i = 0; i < subpasses[curSubpassIndex].colors.size(); i++) {
-                uint32_t color = subpasses[curSubpassIndex].colors[i];
-                colorAttachments.push_back(originAttachments[color]);
-            }
-
-            uint32_t depthStencil = subpasses[curSubpassIndex].depthStencil;
-            if(depthStencil >= subpasses[curSubpassIndex].colors.size()) {
-                depthStencilAttachment = curPass->getDepthStencilAttachment();
-            } else {
-                const ColorAttachment& dsa = originAttachments[depthStencil];
-                depthStencilAttachment.depthLoadOp = dsa.loadOp;
-                depthStencilAttachment.depthStoreOp = dsa.storeOp;
-                depthStencilAttachment.stencilLoadOp = dsa.loadOp;
-                depthStencilAttachment.stencilStoreOp = dsa.storeOp;
-                depthStencilAttachment.beginAccesses = dsa.beginAccesses;
-                depthStencilAttachment.endAccesses = dsa.endAccesses;
-                depthStencilAttachment.format = dsa.format;
-                depthStencilAttachment.sampleCount = dsa.sampleCount;
-            }
-            renderPass = device->createRenderPass({
-                colorAttachments,
-                depthStencilAttachment,
-                {},
-            });
-        } else {
-            renderPass = device->createRenderPass({
-                originAttachments,
-                curPass->getDepthStencilAttachment(),
-                {},
-            });
-        }
-    }
-
     gfx::Attribute position = {"a_position", gfx::Format::RG32F, false, 0, false};
     gfx::PipelineStateInfo pipelineInfo;
     pipelineInfo.primitive = gfx::PrimitiveMode::TRIANGLE_LIST;
     pipelineInfo.shader = createShader(device);
     pipelineInfo.inputState = {{position}};
-    pipelineInfo.renderPass = renderPass;
+    pipelineInfo.renderPass = curPass;
+    
+    DepthStencilState dsState;
+    dsState.depthWrite  = 0;
+    dsState.depthTest   = 1;
+    dsState.depthFunc   = ComparisonFunc::LESS_EQUAL;
+    pipelineInfo.depthStencilState = dsState;
 
     PipelineState *pipelineState = device->createPipelineState(std::move(pipelineInfo));
-    CC_DELETE(pipelineInfo.shader);
     pipelineMap.emplace(std::make_pair(curPass->getHash(), pipelineState));
-    renderPassMap.emplace(std::make_pair(curPass->getHash(), renderPass));
     ((CCMTLPipelineState*)pipelineState)->check();
+    CC_DELETE(pipelineInfo.shader);
     return static_cast<CCMTLPipelineState *>(pipelineState)->getGPUPipelineState();
 }
 }
@@ -427,7 +388,7 @@ CCMTLGPUPipelineState *getClearRenderPassPipelineState(CCMTLDevice *device, Rend
 MTLResourceOptions mu::toMTLResourceOption(MemoryUsage usage) {
     if (usage & MemoryUsage::HOST && usage & MemoryUsage::DEVICE)
         return MTLResourceStorageModeShared;
-    else if (hasFlag(usage, MemoryUsage::DEVICE))
+    else if (hasFlag(MemoryUsage::DEVICE, usage))
         return MTLResourceStorageModePrivate;
     else
 #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS)
@@ -975,19 +936,25 @@ String mu::spirv2MSL(const uint32_t *ir, size_t word_count,
         if (binding >= maxBufferBindingIndex) {
             CC_LOG_ERROR("Implementation limits: %s binding at %d, should not use more than %d entries in the buffer argument table", ubo.name.c_str(), binding, maxBufferBindingIndex);
         }
-        auto mappedBinding = binding + bufferBindingOffset[set];
-        newBinding.desc_set = set;
-        newBinding.binding = binding;
-        newBinding.msl_buffer = mappedBinding;
-        newBinding.msl_texture = 0;
-        newBinding.msl_sampler = 0;
-        msl.add_msl_resource_binding(newBinding);
 
-        if (gpuShader->blocks.find(mappedBinding) == gpuShader->blocks.end())
-            gpuShader->blocks[mappedBinding] = {ubo.name, set, binding, mappedBinding, shaderType, size};
-        else {
-            gpuShader->blocks[mappedBinding].stages |= shaderType;
+        uint nameHash = static_cast<uint>(std::hash<String>{}(ubo.name));
+        if (gpuShader->blocks.find(nameHash) == gpuShader->blocks.end()) {
+            auto mappedBinding = gpuShader->bufferIndex;
+            newBinding.desc_set = set;
+            newBinding.binding = binding;
+            newBinding.msl_buffer = mappedBinding;
+            msl.add_msl_resource_binding(newBinding);
+            gpuShader->blocks[nameHash] = {ubo.name, set, binding, mappedBinding, shaderType, size};
+        } else {
+            auto mappedBinding = gpuShader->blocks[nameHash].mappedBinding;
+            newBinding.desc_set = set;
+            newBinding.binding = binding;
+            newBinding.msl_buffer = mappedBinding;
+            msl.add_msl_resource_binding(newBinding);
+            gpuShader->blocks[nameHash].stages |= shaderType;
         }
+        //msl.set_decoration(ubo.id, spv::DecorationLocation, gpuShader->blocks[nameHash].mappedBinding);
+        ++gpuShader->bufferIndex;
     }
 
     for (const auto &ubo : resources.storage_buffers) {
@@ -998,17 +965,25 @@ String mu::spirv2MSL(const uint32_t *ir, size_t word_count,
         if (binding >= maxBufferBindingIndex) {
             CC_LOG_ERROR("Implementation limits: %s binding at %d, should not use more than %d entries in the buffer argument table", ubo.name.c_str(), binding, maxBufferBindingIndex);
         }
-        auto mappedBinding = binding + bufferBindingOffset[set];
-        newBinding.desc_set = set;
-        newBinding.binding = binding;
-        newBinding.msl_buffer = mappedBinding;
-        msl.add_msl_resource_binding(newBinding);
-
-        if (gpuShader->blocks.find(mappedBinding) == gpuShader->blocks.end())
-            gpuShader->blocks[mappedBinding] = {ubo.name, set, binding, mappedBinding, shaderType, size};
-        else {
-            gpuShader->blocks[mappedBinding].stages |= shaderType;
+        
+        uint nameHash = static_cast<uint>(std::hash<String>{}(ubo.name));
+        if (gpuShader->blocks.find(nameHash) == gpuShader->blocks.end()) {
+            auto mappedBinding = gpuShader->bufferIndex;
+            newBinding.desc_set = set;
+            newBinding.binding = binding;
+            newBinding.msl_buffer = mappedBinding;
+            msl.add_msl_resource_binding(newBinding);
+            gpuShader->blocks[nameHash] = {ubo.name, set, binding, mappedBinding, shaderType, size};
+        } else {
+            auto mappedBinding = gpuShader->blocks[nameHash].mappedBinding;
+            newBinding.desc_set = set;
+            newBinding.binding = binding;
+            newBinding.msl_buffer = mappedBinding;
+            msl.add_msl_resource_binding(newBinding);
+            gpuShader->blocks[nameHash].stages |= shaderType;
         }
+        //msl.set_decoration(ubo.id, spv::DecorationLocation, gpuShader->blocks[nameHash].mappedBinding);
+        ++gpuShader->bufferIndex;
     }
 
     //TODO: coulsonwang, need to set sampler binding explicitly
@@ -1018,7 +993,6 @@ String mu::spirv2MSL(const uint32_t *ir, size_t word_count,
     }
 
     // Get all sampled images in the shader.
-    unsigned int samplerIndex = 0;
     const auto &samplerBindingOffset = device->bindingMappingInfo().samplerOffsets;
     
     // avoid conflict index with input attachments.
@@ -1033,11 +1007,11 @@ String mu::spirv2MSL(const uint32_t *ir, size_t word_count,
         }
 
         for (int i = 0; i < size; ++i) {
-            auto mappedBinding = samplerIndex + rtOffsets;
+            auto mappedBinding = gpuShader->samplerIndex + rtOffsets;
             newBinding.desc_set = set;
             newBinding.binding = binding + i;
             newBinding.msl_texture = mappedBinding;
-            newBinding.msl_sampler = samplerIndex;
+            newBinding.msl_sampler = gpuShader->samplerIndex;
             msl.add_msl_resource_binding(newBinding);
 
             if (gpuShader->samplers.find(mappedBinding) == gpuShader->samplers.end()) {
@@ -1045,8 +1019,7 @@ String mu::spirv2MSL(const uint32_t *ir, size_t word_count,
             } else {
                 gpuShader->samplers[mappedBinding].stages |= shaderType;
             }
-
-            samplerIndex++;
+            ++gpuShader->samplerIndex;
         }
     }
 
@@ -1657,12 +1630,11 @@ bool mu::isSamplerDescriptorCompareFunctionSupported(uint family) {
 #endif
 }
 
-void mu::clearRenderArea(CCMTLDevice *device, id<MTLCommandBuffer> commandBuffer, RenderPass *renderPass, const Rect &renderArea, const Color *colors, float /*depth*/, uint /*stencil*/) {
+void mu::clearRenderArea(CCMTLDevice *device, id<MTLRenderCommandEncoder> renderEncoder, RenderPass *renderPass, const Rect &renderArea, const Color *colors, float /*depth*/, uint /*stencil*/) {
     const auto gpuPSO = getClearRenderPassPipelineState(device, renderPass);
     const auto mtlRenderPass = static_cast<CCMTLRenderPass *>(renderPass);
     uint slot = 0u;
-    MTLRenderPassDescriptor *renderPassDescriptor = mtlRenderPass->getMTLRenderPassDescriptor();
-    renderPassDescriptor.colorAttachments[slot].loadAction = MTLLoadActionLoad;
+    
     const auto &renderTargetSizes = mtlRenderPass->getRenderTargetSizes();
     float renderTargetWidth = renderTargetSizes[slot].x;
     float renderTargetHeight = renderTargetSizes[slot].y;
@@ -1681,7 +1653,6 @@ void mu::clearRenderArea(CCMTLDevice *device, id<MTLCommandBuffer> commandBuffer
     const auto &colorAttachments = renderPass->getColorAttachments();
     const auto &depthStencilAttachment = renderPass->getDepthStencilAttachment();
 
-    id<MTLRenderCommandEncoder> renderEncoder = [commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
     [renderEncoder setViewport:(MTLViewport){0, 0, renderTargetWidth, renderTargetHeight}];
     MTLScissorRect scissorArea = {static_cast<NSUInteger>(renderArea.x), static_cast<NSUInteger>(renderArea.y), static_cast<NSUInteger>(renderArea.width), static_cast<NSUInteger>(renderArea.height)};
 #if defined(CC_DEBUG) && (CC_DEBUG > 0)
@@ -1709,8 +1680,6 @@ void mu::clearRenderArea(CCMTLDevice *device, id<MTLCommandBuffer> commandBuffer
                       vertexStart:0
                       vertexCount:count];
 
-    [renderEncoder endEncoding];
-    renderPassDescriptor.colorAttachments[slot].loadAction = MTLLoadActionLoad;
 }
 
 void mu::clearUtilResource() {

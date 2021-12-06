@@ -608,7 +608,31 @@ void cmdFuncGLES2CreateTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture)
         return;
     }
 
-    if (gpuTexture->glSamples <= 1) {
+    if (gpuTexture->glSamples > 1 || hasAllFlags(TextureUsage::COLOR_ATTACHMENT | TextureUsage::DEPTH_STENCIL_ATTACHMENT, gpuTexture->usage)) {
+        gpuTexture->glInternalFmt = mapGLInternalFormat(gpuTexture->format);
+        switch (gpuTexture->type) {
+            case TextureType::TEX2D: {
+                gpuTexture->glTarget = GL_RENDERBUFFER;
+                GL_CHECK(glGenRenderbuffers(1, &gpuTexture->glRenderbuffer));
+                if (gpuTexture->size > 0) {
+                    GLuint &glRenderbuffer = device->stateCache()->glRenderbuffer;
+                    if (gpuTexture->glRenderbuffer != glRenderbuffer) {
+                        GL_CHECK(glBindRenderbuffer(GL_RENDERBUFFER, gpuTexture->glRenderbuffer));
+                        glRenderbuffer = gpuTexture->glRenderbuffer;
+                    }
+                    if (gpuTexture->glSamples > 1) {
+                        GL_CHECK(glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, gpuTexture->glSamples, gpuTexture->glInternalFmt, gpuTexture->width, gpuTexture->height));
+                    } else {
+                        GL_CHECK(glRenderbufferStorage(GL_RENDERBUFFER, gpuTexture->glInternalFmt, gpuTexture->width, gpuTexture->height));
+                    }
+                }
+                break;
+            }
+            default:
+                CCASSERT(false, "Unsupported TextureType, create texture failed.");
+                break;
+        }
+    } else {
 #if CC_PLATFORM == CC_PLATFORM_WINDOWS // PVRVFrame issue
         gpuTexture->glInternalFmt = mapGLInternalFormat(gpuTexture->format);
 #endif
@@ -626,14 +650,18 @@ void cmdFuncGLES2CreateTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture)
                     uint32_t h = gpuTexture->height;
                     if (!GFX_FORMAT_INFOS[static_cast<int>(gpuTexture->format)].isCompressed) {
                         for (uint32_t i = 0; i < gpuTexture->mipLevel; ++i) {
-                            GL_CHECK(glTexImage2D(GL_TEXTURE_2D, i, gpuTexture->glInternalFmt, w, h, 0, gpuTexture->glFormat, gpuTexture->glType, nullptr));
+                            GL_CHECK(glTexImage2D(GL_TEXTURE_2D, i, gpuTexture->glInternalFmt, w, h,
+                                                  0, gpuTexture->glFormat, gpuTexture->glType,
+                                                  nullptr));
                             w = std::max(1U, w >> 1);
                             h = std::max(1U, h >> 1);
                         }
                     } else {
                         for (uint32_t i = 0; i < gpuTexture->mipLevel; ++i) {
                             uint32_t imgSize = formatSize(gpuTexture->format, w, h, 1);
-                            GL_CHECK(glCompressedTexImage2D(GL_TEXTURE_2D, i, gpuTexture->glInternalFmt, w, h, 0, imgSize, nullptr));
+                            GL_CHECK(glCompressedTexImage2D(GL_TEXTURE_2D, i,
+                                                            gpuTexture->glInternalFmt, w, h, 0,
+                                                            imgSize, nullptr));
                             w = std::max(1U, w >> 1);
                             h = std::max(1U, h >> 1);
                         }
@@ -655,7 +683,10 @@ void cmdFuncGLES2CreateTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture)
                             uint32_t w = gpuTexture->width;
                             uint32_t h = gpuTexture->height;
                             for (uint32_t i = 0; i < gpuTexture->mipLevel; ++i) {
-                                GL_CHECK(glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, gpuTexture->glInternalFmt, w, h, 0, gpuTexture->glFormat, gpuTexture->glType, nullptr));
+                                GL_CHECK(glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i,
+                                                      gpuTexture->glInternalFmt, w, h, 0,
+                                                      gpuTexture->glFormat, gpuTexture->glType,
+                                                      nullptr));
                                 w = std::max(1U, w >> 1);
                                 h = std::max(1U, h >> 1);
                             }
@@ -666,32 +697,14 @@ void cmdFuncGLES2CreateTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture)
                             uint32_t h = gpuTexture->height;
                             for (uint32_t i = 0; i < gpuTexture->mipLevel; ++i) {
                                 uint32_t imgSize = formatSize(gpuTexture->format, w, h, 1);
-                                GL_CHECK(glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, gpuTexture->glInternalFmt, w, h, 0, imgSize, nullptr));
+                                GL_CHECK(glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f,
+                                                                i, gpuTexture->glInternalFmt, w, h,
+                                                                0, imgSize, nullptr));
                                 w = std::max(1U, w >> 1);
                                 h = std::max(1U, h >> 1);
                             }
                         }
                     }
-                }
-                break;
-            }
-            default:
-                CCASSERT(false, "Unsupported TextureType, create texture failed.");
-                break;
-        }
-    } else {
-        gpuTexture->glInternalFmt = mapGLInternalFormat(gpuTexture->format);
-        switch (gpuTexture->type) {
-            case TextureType::TEX2D: {
-                gpuTexture->glTarget = GL_RENDERBUFFER;
-                GL_CHECK(glGenRenderbuffers(1, &gpuTexture->glRenderbuffer));
-                if (gpuTexture->size > 0) {
-                    GLuint &glRenderbuffer = device->stateCache()->glRenderbuffer;
-                    if (gpuTexture->glRenderbuffer != glRenderbuffer) {
-                        GL_CHECK(glBindRenderbuffer(GL_RENDERBUFFER, gpuTexture->glRenderbuffer));
-                        glRenderbuffer = gpuTexture->glRenderbuffer;
-                    }
-                    GL_CHECK(glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, gpuTexture->glSamples, gpuTexture->glInternalFmt, gpuTexture->width, gpuTexture->height));
                 }
                 break;
             }
@@ -805,7 +818,11 @@ void cmdFuncGLES2ResizeTexture(GLES2Device *device, GLES2GPUTexture *gpuTexture)
                         GL_CHECK(glBindRenderbuffer(GL_RENDERBUFFER, gpuTexture->glRenderbuffer));
                         glRenderbuffer = gpuTexture->glRenderbuffer;
                     }
-                    GL_CHECK(glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, gpuTexture->glSamples, gpuTexture->glInternalFmt, gpuTexture->width, gpuTexture->height));
+                    if (gpuTexture->glSamples > 1) {
+                        GL_CHECK(glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, gpuTexture->glSamples, gpuTexture->glInternalFmt, gpuTexture->width, gpuTexture->height));
+                    } else {
+                        GL_CHECK(glRenderbufferStorage(GL_RENDERBUFFER, gpuTexture->glInternalFmt, gpuTexture->width, gpuTexture->height));
+                    }
                 }
                 break;
             }
@@ -1283,13 +1300,13 @@ void cmdFuncGLES2DestroyInputAssembler(GLES2Device *device, GLES2GPUInputAssembl
 }
 
 static GLES2GPUFramebuffer::GLFramebufferInfo doCreateFramebuffer(GLES2Device *                    device,
-                                  const vector<GLES2GPUTexture *> &attachments, const uint32_t *colors, size_t colorCount,
-                                  const GLES2GPUTexture *depthStencil,
-                                  const uint32_t *       resolves            = nullptr,
-                                  const GLES2GPUTexture *depthStencilResolve = nullptr,
-                                  GLbitfield *           resolveMask         = nullptr) {
-    static vector<GLenum> drawBuffers;
-    GLES2GPUStateCache *  cache = device->stateCache();
+                                                                  const vector<GLES2GPUTexture *> &attachments, const uint32_t *colors, size_t colorCount,
+                                                                  const GLES2GPUTexture *depthStencil,
+                                                                  const uint32_t *       resolves            = nullptr,
+                                                                  const GLES2GPUTexture *depthStencilResolve = nullptr,
+                                                                  GLbitfield *           resolveMask         = nullptr) {
+    static vector<GLenum>                  drawBuffers;
+    GLES2GPUStateCache *                   cache = device->stateCache();
     GLES2GPUFramebuffer::GLFramebufferInfo res;
 
     GL_CHECK(glGenFramebuffers(1, &res.glFramebuffer));
@@ -1324,7 +1341,7 @@ static GLES2GPUFramebuffer::GLFramebufferInfo doCreateFramebuffer(GLES2Device * 
             GL_CHECK(glFramebufferRenderbuffer(GL_FRAMEBUFFER, static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + j),
                                                gpuColorTexture->glTarget, gpuColorTexture->glRenderbuffer));
         }
-        res.width = std::min(res.width, gpuColorTexture->width);
+        res.width  = std::min(res.width, gpuColorTexture->width);
         res.height = std::min(res.height, gpuColorTexture->height);
     }
     if (depthStencil) {
@@ -1339,7 +1356,7 @@ static GLES2GPUFramebuffer::GLFramebufferInfo doCreateFramebuffer(GLES2Device * 
 
         // fallback to blit-based manual resolve
         if (depthStencilResolve) *resolveMask |= hasStencil ? GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT : GL_DEPTH_BUFFER_BIT;
-        res.width = std::min(res.width, depthStencil->width);
+        res.width  = std::min(res.width, depthStencil->width);
         res.height = std::min(res.height, depthStencil->height);
     }
 
@@ -1539,17 +1556,9 @@ void cmdFuncGLES2BeginRenderPass(GLES2Device *device, uint32_t subpassIdx, GLES2
                 cache->viewport.height = renderArea->height;
             }
 
-            uint32_t fboWidth = instance.framebuffer.getWidth();
-            uint32_t fboHeight = instance.framebuffer.getHeight();
-            if (cache->scissor.x != 0 ||
-                cache->scissor.y != 0 ||
-                cache->scissor.width != fboWidth ||
-                cache->scissor.height != fboHeight) {
-                GL_CHECK(glScissor(0, 0, fboWidth, fboHeight));
-                cache->scissor.x      = 0;
-                cache->scissor.y      = 0;
-                cache->scissor.width  = fboWidth;
-                cache->scissor.height = fboHeight;
+            if (cache->scissor != *renderArea) {
+                GL_CHECK(glScissor(renderArea->x, renderArea->y, renderArea->width, renderArea->height));
+                cache->scissor = *renderArea;
             }
         }
 
@@ -2051,8 +2060,8 @@ void cmdFuncGLES2BindState(GLES2Device *device, GLES2GPUPipelineState *gpuPipeli
             const GLES2GPUDescriptor &   gpuDescriptor    = gpuDescriptorSet->gpuDescriptors[descriptorIndex];
 
             if (!gpuDescriptor.gpuBuffer && !gpuDescriptor.gpuBufferView) {
-                CC_LOG_ERROR("Buffer binding '%s' at set %d binding %d is not bounded",
-                             glBlock.name.c_str(), glBlock.set, glBlock.binding);
+                //CC_LOG_ERROR("Buffer binding '%s' at set %d binding %d is not bounded",
+                //             glBlock.name.c_str(), glBlock.set, glBlock.binding);
                 continue;
             }
 
@@ -2174,9 +2183,8 @@ void cmdFuncGLES2BindState(GLES2Device *device, GLES2GPUPipelineState *gpuPipeli
                 auto unit = static_cast<uint32_t>(glSamplerTexture.units[u]);
 
                 if (!gpuDescriptor->gpuTexture || !gpuDescriptor->gpuSampler) {
-                    CC_LOG_ERROR(
-                        "Sampler binding '%s' at set %d binding %d index %d is not bounded",
-                        glSamplerTexture.name.c_str(), glSamplerTexture.set, glSamplerTexture.binding, u);
+                    //CC_LOG_ERROR("Sampler texture '%s' at set %d binding %d index %d is not bounded",
+                    //             glSamplerTexture.name.c_str(), glSamplerTexture.set, glSamplerTexture.binding, u);
                     continue;
                 }
 

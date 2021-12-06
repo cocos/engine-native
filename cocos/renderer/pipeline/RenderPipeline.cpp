@@ -62,7 +62,6 @@ RenderPipeline::RenderPipeline()
 }
 
 RenderPipeline::~RenderPipeline() {
-    framegraph::FrameGraph::gc(0);
     RenderPipeline::instance = nullptr;
 }
 
@@ -89,18 +88,6 @@ bool RenderPipeline::activate(gfx::Swapchain * /*swapchain*/) {
 
     for (auto *const flow : _flows) {
         flow->activate(this);
-    }
-
-    // has not initBuiltinRes,
-    // create temporary default Texture to binding sampler2d
-    if (!_defaultTexture) {
-        _defaultTexture = _device->createTexture({
-            gfx::TextureType::TEX2D,
-            gfx::TextureUsageBit::COLOR_ATTACHMENT | gfx::TextureUsageBit::SAMPLED,
-            gfx::Format::RGBA8,
-            1U,
-            1U,
-        });
     }
 
     return true;
@@ -151,11 +138,10 @@ void RenderPipeline::destroy() {
     }
     _commandBuffers.clear();
 
-    CC_SAFE_DESTROY(_defaultTexture);
-
     PipelineStateManager::destroyAll();
     BatchedBuffer::destroyBatchedBuffer();
     InstancedBuffer::destroyInstancedBuffer();
+    framegraph::FrameGraph::gc(0);
 }
 
 gfx::Color RenderPipeline::getClearcolor(scene::Camera *camera) const {
@@ -345,7 +331,7 @@ bool RenderPipeline::isOccluded(const scene::Camera *camera, const scene::SubMod
 void RenderPipeline::framegraphGC() {
     static uint64_t frameCount{0U};
     static constexpr uint32_t INTERVAL_IN_SECONDS = 30;
-    if (++frameCount % (INTERVAL_IN_SECONDS * 60)) {
+    if (++frameCount % (INTERVAL_IN_SECONDS * 60) == 0) {
         framegraph::FrameGraph::gc(INTERVAL_IN_SECONDS * 60);
     }
 }

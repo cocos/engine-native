@@ -24,58 +24,21 @@
 ****************************************************************************/
 
 #pragma once
-
-#include "Define.h"
+#include "RenderPipeline.h"
 #include "scene/Camera.h"
 
 namespace cc {
-
-namespace gfx {
-class Framebuffer;
-} // namespace gfx
-
 namespace pipeline {
 
-class RenderFlow;
-class RenderPipeline;
-class RenderQueue;
-
-struct CC_DLL RenderStageInfo {
-    String              name;
-    uint                priority = 0;
-    uint                tag      = 0;
-    RenderQueueDescList renderQueues;
-};
-
-class CC_DLL RenderStage : public Object {
+class CC_DLL UIPhase {
 public:
-    RenderStage();
-    ~RenderStage() override;
-
-    virtual void activate(RenderPipeline *pipeline, RenderFlow *flow);
-    virtual bool initialize(const RenderStageInfo &info);
-
-    virtual void destroy();
-    virtual void render(scene::Camera *camera) = 0;
-
-    inline const String &getName() const { return _name; }
-    inline uint          getPriority() const { return _priority; }
-    inline uint          getTag() const { return _tag; }
-    inline RenderFlow *  getFlow() const { return _flow; }
+    UIPhase() = default;
+    void activate(RenderPipeline* pipeline);
+    void render(scene::Camera* camera, gfx::RenderPass* renderPass);
 
 protected:
-    gfx::Rect             _renderArea;
-    // Generate quad ia, cannot be updated inside renderpass
-    gfx::InputAssembler * _inputAssembler{nullptr};
-    RenderQueueDescList   _renderQueueDescriptors;
-    vector<RenderQueue *> _renderQueues;
-    RenderPipeline *      _pipeline = nullptr;
-    RenderFlow *          _flow     = nullptr;
-    gfx::Device *         _device   = nullptr;
-    String                _name;
-    uint                  _priority    = 0;
-    uint                  _tag         = 0;
-    gfx::ColorList        _clearColors = {{0.0F, 0.0F, 0.0F, 0.0F}, {0.0F, 0.0F, 0.0F, 0.0F}, {0.0F, 0.0F, 0.0F, 0.0F}, {0.0F, 0.0F, 0.0F, 0.0F}};
+    RenderPipeline* _pipeline = nullptr;
+    uint            _phaseID  = 0;
 };
 
 } // namespace pipeline

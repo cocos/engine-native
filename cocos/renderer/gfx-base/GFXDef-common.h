@@ -908,7 +908,7 @@ struct ALIGNAS(8) BufferInfo {
     BufferUsage usage{BufferUsageBit::NONE};
     MemoryUsage memUsage{MemoryUsageBit::NONE};
     uint32_t    size{0U};
-    uint32_t    stride{0U}; // in bytes
+    uint32_t    stride{1U}; // in bytes
     BufferFlags flags{BufferFlagBit::NONE};
     uint32_t    _padding{0U};
 };
@@ -1288,7 +1288,8 @@ struct QueueInfo {
     QueueType type{QueueType::GRAPHICS};
 };
 
-constexpr uint32_t DEFAULT_MAX_QUERY_OBJECTS = 65536U;
+// Although the standard is not limited, some devices do not support up to 65536 queries
+constexpr uint32_t DEFAULT_MAX_QUERY_OBJECTS = 32767U;
 
 struct QueryPoolInfo {
     QueryType type{QueryType::OCCLUSION};
