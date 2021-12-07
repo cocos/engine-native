@@ -852,6 +852,8 @@ cocos_source_files(
                  cocos/renderer/pipeline/helper/DefineMap.h
                  cocos/renderer/pipeline/helper/DefineMap.cpp
                  cocos/renderer/pipeline/helper/Utils.h
+                 cocos/renderer/pipeline/GeometryRenderer.h
+                 cocos/renderer/pipeline/GeometryRenderer.cpp
 )
 
 ##### scene
