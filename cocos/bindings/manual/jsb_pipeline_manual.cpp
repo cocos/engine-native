@@ -33,7 +33,7 @@
 #include "renderer/pipeline/PipelineStateManager.h"
 #include "renderer/pipeline/RenderPipeline.h"
 
-static bool js_pipeline_RenderPipeline_getMacros(se::State &s) {
+static bool js_pipeline_RenderPipeline_getMacros(se::State &s) { // NOLINT(readability-identifier-naming)
     auto *cobj = static_cast<cc::pipeline::RenderPipeline *>(s.nativeThisObject());
     SE_PRECONDITION2(cobj, false, "js_pipeline_RenderPipeline_getMacros : Invalid Native Object.");
     const auto &   args = s.args();
@@ -49,7 +49,7 @@ static bool js_pipeline_RenderPipeline_getMacros(se::State &s) {
 }
 SE_BIND_PROP_GET(js_pipeline_RenderPipeline_getMacros)
 
-static bool JSB_getOrCreatePipelineState(se::State &s) {
+static bool JSB_getOrCreatePipelineState(se::State &s) { // NOLINT(readability-identifier-naming)
     const auto &args = s.args();
     size_t      argc = args.size();
     if (argc == 4) {
@@ -102,7 +102,7 @@ static bool js_pipeline_GeometryRenderer_flushFromJSB(se::State &s) // NOLINT(re
 }
 SE_BIND_FUNC(js_pipeline_GeometryRenderer_flushFromJSB)
 
-bool register_all_pipeline_manual(se::Object *obj) {
+bool register_all_pipeline_manual(se::Object *obj) { // NOLINT(readability-identifier-naming)
     // Get the ns
     se::Value nrVal;
     if (!obj->getProperty("nr", &nrVal)) {
