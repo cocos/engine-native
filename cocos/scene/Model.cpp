@@ -24,6 +24,7 @@
  ****************************************************************************/
 #include "scene/Model.h"
 #include "renderer/pipeline/Define.h"
+#include "renderer/pipeline/RenderPipeline.h"
 #include "scene/RenderScene.h"
 #include "scene/SubModel.h"
 
@@ -80,7 +81,10 @@ void Model::updateUBOs(uint32_t stamp) {
         memcpy(bufferView.data() + pipeline::UBOLocal::MAT_WORLD_IT_OFFSET, mat4.m, sizeof(Mat4));
         _localBuffer->update(bufferView.data(), pipeline::UBOLocal::SIZE);
 
-        updateWorldBoundUBOs();
+        const bool enableOcclusionQuery = pipeline::RenderPipeline::getInstance()->getOcclusionQueryEnabled();
+        if (enableOcclusionQuery) {
+            updateWorldBoundUBOs();
+        }
     }
 }
 
