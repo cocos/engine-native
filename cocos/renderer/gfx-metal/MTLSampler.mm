@@ -79,6 +79,11 @@ CCMTLSampler* CCMTLSampler::getDefaultSampler() {
     }
     return defaultSampler;
 }
-
+void CCMTLSampler::destroyDefaultSampler(){
+    if(defaultSampler){
+        delete defaultSampler;
+        defaultSampler = nullptr;
+    }
+}
 } // namespace gfx
 } // namespace cc
