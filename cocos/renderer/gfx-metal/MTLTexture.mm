@@ -303,7 +303,7 @@ CCMTLTexture* CCMTLTexture::getDefaultTexture() {
 
 void CCMTLTexture::destroyDefaultTexture(){
     if (defaultTexture) {
-        CC_DESTROY(defaultTexture);
+        delete defaultTexture;
         defaultTexture = nullptr;
     }
 }
