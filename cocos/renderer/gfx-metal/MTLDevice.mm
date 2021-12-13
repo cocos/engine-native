@@ -192,8 +192,8 @@ void CCMTLDevice::doDestroy() {
     
     
     
-    CCMTLTexture::destroyDefaultTexture();
-    CCMTLSampler::destroyDefaultSampler();
+    CCMTLTexture::deleteDefaultTexture();
+    CCMTLSampler::deleteDefaultSampler();
 
     CCASSERT(!_memoryStatus.bufferSize, "Buffer memory leaked");
     CCASSERT(!_memoryStatus.textureSize, "Texture memory leaked");
