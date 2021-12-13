@@ -79,7 +79,7 @@ CCMTLSampler* CCMTLSampler::getDefaultSampler() {
     }
     return defaultSampler;
 }
-void CCMTLSampler::destroyDefaultSampler(){
+void CCMTLSampler::deleteDefaultSampler(){
     if(defaultSampler){
         delete defaultSampler;
         defaultSampler = nullptr;

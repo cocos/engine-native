@@ -301,7 +301,7 @@ CCMTLTexture* CCMTLTexture::getDefaultTexture() {
     return defaultTexture;
 }
 
-void CCMTLTexture::destroyDefaultTexture(){
+void CCMTLTexture::deleteDefaultTexture(){
     if (defaultTexture) {
         delete defaultTexture;
         defaultTexture = nullptr;

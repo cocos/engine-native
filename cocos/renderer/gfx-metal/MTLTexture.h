@@ -58,7 +58,7 @@ public:
     CCMTLSwapchain* swapChain();
     
     static CCMTLTexture* getDefaultTexture();
-    static void destroyDefaultTexture();
+    static void deleteDefaultTexture();
 
 protected:
     void doInit(const TextureInfo &info) override;
