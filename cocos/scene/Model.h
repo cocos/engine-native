@@ -88,31 +88,39 @@ public:
         _instanceAttributes     = attributes;
         _transformUpdated       = true;
     }
-    inline void setOctreeNode(OctreeNode *node) { _octreeNode = node; }
-    inline void setScene(RenderScene *scene) { _scene = scene; if (scene) _transformUpdated = true;  }
+    inline void setOctreeNode(OctreeNode * node) { _octreeNode = node; }
+    inline void setScene(RenderScene * scene) { _scene = scene; if (scene) _transformUpdated = true;  }
+    inline void setLightmapUVParam(Vec4 & lightmapUVParam) { _lightmapSettings._lightmapUVParam = lightmapUVParam; }
+    inline void setLightmap(gfx::Texture * lightmap) { _lightmapSettings._lightmap = lightmap; }
+    inline void setSampler(gfx::Sampler * sampler) { _lightmapSettings._sampler = sampler; }
 
-    inline bool                               getCastShadow() const { return _castShadow; }
-    inline bool                               getEnabled() const { return _enabled; }
-    inline int32_t                            getInstMatWorldIdx() const { return _instMatWorldIdx; }
-    inline const std::vector<gfx::Attribute> &getInstanceAttributes() const { return _instanceAttributes; }
-    inline InstancedAttributeBlock *          getInstancedAttributeBlock() { return &_instanceAttributeBlock; }
-    inline uint8_t *                          getInstancedBuffer() const { return std::get<0>(_instancedBuffer); }
-    inline uint32_t                           getInstancedBufferSize() const { return std::get<1>(_instancedBuffer); }
-    inline gfx::Buffer *                      getLocalBuffer() const { return _localBuffer; }
-    inline gfx::Buffer *                      getWorldBoundBuffer() const { return _worldBoundBuffer; }
-    inline float *                            getLocalData() const { return _localData; }
-    inline const AABB &                       getModelBounds() const { return _modelBounds; }
-    inline Node *                             getNode() const { return _node; }
-    inline bool                               getReceiveShadow() const { return _receiveShadow; }
-    inline const std::vector<SubModel *> &    getSubModels() const { return _subModels; }
-    inline Node *                             getTransform() const { return _transform; }
-    inline bool                               getTransformUpdated() const { return _transformUpdated; }
-    inline int32_t                            getUpdatStamp() const { return _updateStamp; }
-    inline uint32_t                           getVisFlags() const { return _visFlags; }
-    inline AABB *                             getWorldBounds() const { return _worldBounds; }
-    inline ModelType                          getType() const { return _type; };
-    inline OctreeNode *                       getOctreeNode() const { return _octreeNode; }
-    inline RenderScene *                      getScene() const { return _scene; }
+    inline bool                                getCastShadow() const { return _castShadow; }
+    inline bool                                getEnabled() const { return _enabled; }
+    inline int32_t                             getInstMatWorldIdx() const { return _instMatWorldIdx; }
+    inline const std::vector<gfx::Attribute> & getInstanceAttributes() const { return _instanceAttributes; }
+    inline InstancedAttributeBlock *           getInstancedAttributeBlock() { return &_instanceAttributeBlock; }
+    inline uint8_t *                           getInstancedBuffer() const { return std::get<0>(_instancedBuffer); }
+    inline uint32_t                            getInstancedBufferSize() const { return std::get<1>(_instancedBuffer); }
+    inline gfx::Buffer *                       getLocalBuffer() const { return _localBuffer; }
+    inline gfx::Buffer *                       getWorldBoundBuffer() const { return _worldBoundBuffer; }
+    inline float *                             getLocalData() const { return _localData; }
+    inline const AABB &                        getModelBounds() const { return _modelBounds; }
+    inline Node *                              getNode() const { return _node; }
+    inline bool                                getReceiveShadow() const { return _receiveShadow; }
+    inline const std::vector<SubModel *> &     getSubModels() const { return _subModels; }
+    inline Node *                              getTransform() const { return _transform; }
+    inline bool                                getTransformUpdated() const { return _transformUpdated; }
+    inline int32_t                             getUpdatStamp() const { return _updateStamp; }
+    inline uint32_t                            getVisFlags() const { return _visFlags; }
+    inline AABB *                              getWorldBounds() const { return _worldBounds; }
+    inline ModelType                           getType() const { return _type; }
+    inline OctreeNode *                        getOctreeNode() const { return _octreeNode; }
+    inline RenderScene *                       getScene() const { return _scene; }
+    inline Vec4                                getLightmapUVParam() const { return _lightmapSettings._lightmapUVParam; }
+    inline gfx::Texture *                      getLightmap() const { return _lightmapSettings._lightmap; }
+    inline gfx::Sampler *                      getSampler() const { return _lightmapSettings._sampler; }
+
+    void updateLightingmap();
 
 protected:
     ModelType    _type{ModelType::DEFAULT};
@@ -140,6 +148,12 @@ private:
     std::vector<SubModel *>         _subModels;
     std::vector<gfx::Attribute>     _instanceAttributes;
     static void                     uploadMat4AsVec4x3(const Mat4 &mat, float *v1, float *v2, float *v3);
+
+    struct LightmapSettings {
+        Vec4          _lightmapUVParam;
+        gfx::Texture *_lightmap{nullptr};
+        gfx::Sampler *_sampler{nullptr};
+    } _lightmapSettings{};
 };
 
 } // namespace scene
