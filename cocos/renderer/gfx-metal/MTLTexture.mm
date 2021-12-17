@@ -34,8 +34,15 @@
 #import <CoreVideo/CVMetalTexture.h>
 #import <CoreVideo/CVMetalTextureCache.h>
 
+// deferred testcase 'camera'
+#define MEMLESS_ON 0
+
 namespace cc {
 namespace gfx {
+
+namespace {
+CCMTLTexture* defaultTexture = nullptr;
+}
 
 CCMTLTexture::CCMTLTexture() : Texture() {
     _typedID = generateObjectID<decltype(this)>();
@@ -176,6 +183,7 @@ bool CCMTLTexture::createMTLTexture() {
     descriptor.arrayLength = _info.type == TextureType::CUBE ? 1 : _info.layerCount;
 
     if(hasAllFlags(TextureUsage::COLOR_ATTACHMENT | TextureUsage::INPUT_ATTACHMENT, _info.usage) && mu::isImageBlockSupported()) {
+#if MEMLESS_ON
         // mac SDK mem_less unavailable before 11.0
 #if MAC_MEMORY_LESS_TEXTURE_SUPPORT || CC_PLATFORM == CC_PLATFORM_MAC_IOS
         //xcode OS version warning
@@ -184,6 +192,9 @@ bool CCMTLTexture::createMTLTexture() {
         } else {
             descriptor.storageMode = MTLStorageModePrivate;
         }
+#else
+        descriptor.storageMode = MTLStorageModePrivate;
+#endif
 #else
         descriptor.storageMode = MTLStorageModePrivate;
 #endif
@@ -227,7 +238,8 @@ void CCMTLTexture::doDestroy() {
 
     std::function<void(void)> destroyFunc = [mtlTexure]() {
         if (mtlTexure) {
-            [mtlTexure setPurgeableState:MTLPurgeableStateEmpty];
+            //TODO_Zeqiang: [mac12 | ios15, ...) validate here
+//            [mtlTexure setPurgeableState:MTLPurgeableStateEmpty];
             [mtlTexure release];
         }
     };
@@ -263,7 +275,8 @@ void CCMTLTexture::doResize(uint width, uint height, uint size) {
     if (oldMTLTexture) {
         std::function<void(void)> destroyFunc = [=]() {
             if (oldMTLTexture) {
-                [oldMTLTexture setPurgeableState:MTLPurgeableStateEmpty];
+                //TODO_Zeqiang: [mac12 | ios15, ...) validate here
+//                [oldMTLTexture setPurgeableState:MTLPurgeableStateEmpty];
                 [oldMTLTexture release];
             }
         };
@@ -272,6 +285,29 @@ void CCMTLTexture::doResize(uint width, uint height, uint size) {
         CCMTLDevice::getInstance()->getMemoryStatus().textureSize -= oldSize;
     }
 }
+
+CCMTLTexture* CCMTLTexture::getDefaultTexture() {
+    if(!defaultTexture) {
+        TextureInfo info;
+        info.type = TextureType::TEX2D;
+        info.usage = TextureUsage::SAMPLED;
+        info.format = Format::BGRA8;
+        info.width = 2;
+        info.height = 2;
+        
+        defaultTexture = new CCMTLTexture();
+        defaultTexture->initialize(info);
+    }
+    return defaultTexture;
+}
+
+void CCMTLTexture::deleteDefaultTexture(){
+    if (defaultTexture) {
+        delete defaultTexture;
+        defaultTexture = nullptr;
+    }
+}
+
 
 } // namespace gfx
 } // namespace cc

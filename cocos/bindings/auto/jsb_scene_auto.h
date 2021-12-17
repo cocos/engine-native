@@ -58,6 +58,8 @@ bool js_register_cc_scene_Light(se::Object* obj);
 bool register_all_scene(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::scene::Light);
+SE_DECLARE_FUNC(js_scene_Light_getBaked);
+SE_DECLARE_FUNC(js_scene_Light_setBaked);
 SE_DECLARE_FUNC(js_scene_Light_setColor);
 SE_DECLARE_FUNC(js_scene_Light_setColorTemperatureRGB);
 SE_DECLARE_FUNC(js_scene_Light_setNode);
@@ -230,6 +232,16 @@ template<>
 bool sevalue_to_native(const se::Value &, cc::scene::Ambient *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cc::scene::Ambient);
 
+extern se::Object* __jsb_cc_scene_OctreeInfo_proto;
+extern se::Class* __jsb_cc_scene_OctreeInfo_class;
+
+bool js_register_cc_scene_OctreeInfo(se::Object* obj);
+bool register_all_scene(se::Object* obj);
+
+template<>
+bool sevalue_to_native(const se::Value &, cc::scene::OctreeInfo *, se::Object *ctx);
+JSB_REGISTER_OBJECT_TYPE(cc::scene::OctreeInfo);
+
 extern se::Object* __jsb_cc_scene_PipelineSharedSceneData_proto;
 extern se::Class* __jsb_cc_scene_PipelineSharedSceneData_class;
 
@@ -348,17 +360,6 @@ SE_DECLARE_FUNC(js_scene_BakedSkinningModel_setJointMedium);
 SE_DECLARE_FUNC(js_scene_BakedSkinningModel_updateModelBounds);
 SE_DECLARE_FUNC(js_scene_BakedSkinningModel_BakedSkinningModel);
 
-extern se::Object* __jsb_cc_scene_DrawCall_proto;
-extern se::Class* __jsb_cc_scene_DrawCall_class;
-
-bool js_register_cc_scene_DrawCall(se::Object* obj);
-bool register_all_scene(se::Object* obj);
-
-template<>
-bool sevalue_to_native(const se::Value &, cc::scene::DrawCall *, se::Object *ctx);
-JSB_REGISTER_OBJECT_TYPE(cc::scene::DrawCall);
-SE_DECLARE_FUNC(js_scene_DrawCall_setDynamicOffsets);
-
 extern se::Object* __jsb_cc_scene_DrawBatch2D_proto;
 extern se::Class* __jsb_cc_scene_DrawBatch2D_class;
 
@@ -368,8 +369,6 @@ bool register_all_scene(se::Object* obj);
 template<>
 bool sevalue_to_native(const se::Value &, cc::scene::DrawBatch2D *, se::Object *ctx);
 JSB_REGISTER_OBJECT_TYPE(cc::scene::DrawBatch2D);
-SE_DECLARE_FUNC(js_scene_DrawBatch2D_clearDrawCalls);
-SE_DECLARE_FUNC(js_scene_DrawBatch2D_pushDrawCall);
 
 extern se::Object* __jsb_cc_scene_JointTransform_proto;
 extern se::Class* __jsb_cc_scene_JointTransform_class;
@@ -411,6 +410,7 @@ bool js_register_cc_scene_RenderScene(se::Object* obj);
 bool register_all_scene(se::Object* obj);
 
 JSB_REGISTER_OBJECT_TYPE(cc::scene::RenderScene);
+SE_DECLARE_FUNC(js_scene_RenderScene_activate);
 SE_DECLARE_FUNC(js_scene_RenderScene_addBakedSkinningModel);
 SE_DECLARE_FUNC(js_scene_RenderScene_addBatch);
 SE_DECLARE_FUNC(js_scene_RenderScene_addModel);

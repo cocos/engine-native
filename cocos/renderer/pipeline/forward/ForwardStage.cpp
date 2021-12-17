@@ -37,7 +37,6 @@
 #include "gfx-base/GFXFramebuffer.h"
 #include "pipeline/UIPhase.h"
 
-
 namespace cc {
 namespace pipeline {
 
@@ -145,8 +144,8 @@ void ForwardStage::render(scene::Camera *camera) {
     _renderArea = RenderPipeline::getRenderArea(camera);
     // Command 'updateBuffer' must be recorded outside render passes, cannot put them in execute lambda
     dispenseRenderObject2Queues();
-    pipeline->getPipelineUBO()->updateShadowUBO(camera);
     auto *cmdBuff{pipeline->getCommandBuffers()[0]};
+    pipeline->getPipelineUBO()->updateShadowUBO(camera);
 
     _instancedQueue->uploadBuffers(cmdBuff);
     _batchedQueue->uploadBuffers(cmdBuff);
@@ -168,21 +167,23 @@ void ForwardStage::render(scene::Camera *camera) {
         if (shadingScale != 1.F) {
             colorTexInfo.usage |= gfx::TextureUsageBit::TRANSFER_SRC;
         }
-        data.outputTex      = builder.create(RenderPipeline::fgStrHandleOutColorTexture, colorTexInfo);
+        data.outputTex = builder.create(RenderPipeline::fgStrHandleOutColorTexture, colorTexInfo);
         framegraph::RenderTargetAttachment::Descriptor colorAttachmentInfo;
         colorAttachmentInfo.usage      = framegraph::RenderTargetAttachment::Usage::COLOR;
         colorAttachmentInfo.clearColor = _clearColors[0];
         colorAttachmentInfo.loadOp     = gfx::LoadOp::CLEAR;
         auto clearFlags                = static_cast<gfx::ClearFlagBit>(camera->clearFlag);
-        if (!hasFlag(clearFlags, gfx::ClearFlagBit::COLOR)) {
+        bool isSwapchain = !!camera->window->swapchain;
+        if (isSwapchain && !hasFlag(clearFlags, gfx::ClearFlagBit::COLOR)) {
             if (hasFlag(clearFlags, static_cast<gfx::ClearFlagBit>(skyboxFlag))) {
                 colorAttachmentInfo.loadOp = gfx::LoadOp::DISCARD;
             } else {
                 colorAttachmentInfo.loadOp = gfx::LoadOp::LOAD;
             }
         }
-        colorAttachmentInfo.endAccesses   = {gfx::AccessType::COLOR_ATTACHMENT_WRITE};
-        data.outputTex                    = builder.write(data.outputTex, colorAttachmentInfo);
+        colorAttachmentInfo.beginAccesses = colorAttachmentInfo.endAccesses = {gfx::AccessType::COLOR_ATTACHMENT_WRITE};
+
+        data.outputTex = builder.write(data.outputTex, colorAttachmentInfo);
         builder.writeToBlackboard(RenderPipeline::fgStrHandleOutColorTexture, data.outputTex);
         // depth
         gfx::TextureInfo depthTexInfo{
@@ -198,8 +199,12 @@ void ForwardStage::render(scene::Camera *camera) {
         depthAttachmentInfo.loadOp       = gfx::LoadOp::CLEAR;
         depthAttachmentInfo.clearDepth   = camera->clearDepth;
         depthAttachmentInfo.clearStencil = camera->clearStencil;
+        depthAttachmentInfo.beginAccesses  = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
         depthAttachmentInfo.endAccesses  = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
-
+        if (isSwapchain && static_cast<gfx::ClearFlagBit>(clearFlags & gfx::ClearFlagBit::DEPTH_STENCIL) != gfx::ClearFlagBit::DEPTH_STENCIL
+            && (!hasFlag(clearFlags, gfx::ClearFlagBit::DEPTH) || !hasFlag(clearFlags, gfx::ClearFlagBit::STENCIL))) {
+            depthAttachmentInfo.loadOp = gfx::LoadOp::LOAD;
+        }
         data.depth = builder.create(RenderPipeline::fgStrHandleOutDepthTexture, depthTexInfo);
         data.depth = builder.write(data.depth, depthAttachmentInfo);
         builder.writeToBlackboard(RenderPipeline::fgStrHandleOutDepthTexture, data.depth);
@@ -218,6 +223,7 @@ void ForwardStage::render(scene::Camera *camera) {
 
             _additiveLightQueue->recordCommandBuffer(_device, camera, renderPass, cmdBuff);
 
+            cmdBuff->bindDescriptorSet(globalSet, _pipeline->getDescriptorSet(), 1, &offset);
             _planarShadowQueue->recordCommandBuffer(_device, renderPass, cmdBuff);
             _renderQueues[1]->recordCommandBuffer(_device, camera, renderPass, cmdBuff);
         }
