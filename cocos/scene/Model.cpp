@@ -91,14 +91,15 @@ void Model::updateUBOs(uint32_t stamp) {
     }
 }
 
-void Model::updateLightingmap() {
-    gfx::Sampler *sampler = _lightmapSettings._sampler;
-    gfx::Texture *texture = _lightmapSettings._lightmap;
+void Model::updateLightingmap(const Vec4 &lightmapUVParam, gfx::Sampler *sampler, gfx::Texture *lightmap) {
+    _lightmapSettings._lightmapUVParam = lightmapUVParam;
+    _lightmapSettings._sampler         = sampler;
+    _lightmapSettings._lightmap        = lightmap;
     for (const SubModel *subModel : _subModels) {
-        if (sampler && texture) {
+        if (sampler && lightmap) {
             gfx::DescriptorSet *descriptorSet = subModel->getDescriptorSet();
             descriptorSet->bindSampler(pipeline::LIGHTMAPTEXTURE::BINDING, sampler);
-            descriptorSet->bindTexture(pipeline::LIGHTMAPTEXTURE::BINDING, texture);
+            descriptorSet->bindTexture(pipeline::LIGHTMAPTEXTURE::BINDING, lightmap);
             descriptorSet->update();
         }
     }

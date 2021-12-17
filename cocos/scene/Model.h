@@ -90,9 +90,6 @@ public:
     }
     inline void setOctreeNode(OctreeNode * node) { _octreeNode = node; }
     inline void setScene(RenderScene * scene) { _scene = scene; if (scene) _transformUpdated = true;  }
-    inline void setLightmapUVParam(Vec4 & lightmapUVParam) { _lightmapSettings._lightmapUVParam = lightmapUVParam; }
-    inline void setLightmap(gfx::Texture * lightmap) { _lightmapSettings._lightmap = lightmap; }
-    inline void setSampler(gfx::Sampler * sampler) { _lightmapSettings._sampler = sampler; }
 
     inline bool                                getCastShadow() const { return _castShadow; }
     inline bool                                getEnabled() const { return _enabled; }
@@ -116,11 +113,8 @@ public:
     inline ModelType                           getType() const { return _type; }
     inline OctreeNode *                        getOctreeNode() const { return _octreeNode; }
     inline RenderScene *                       getScene() const { return _scene; }
-    inline Vec4                                getLightmapUVParam() const { return _lightmapSettings._lightmapUVParam; }
-    inline gfx::Texture *                      getLightmap() const { return _lightmapSettings._lightmap; }
-    inline gfx::Sampler *                      getSampler() const { return _lightmapSettings._sampler; }
 
-    void updateLightingmap();
+    void updateLightingmap(const Vec4 &lightmapUVParam, gfx::Sampler *sampler, gfx::Texture *lightmap);
 
 protected:
     ModelType    _type{ModelType::DEFAULT};
