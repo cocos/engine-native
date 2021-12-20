@@ -90,6 +90,7 @@ private:
     std::vector<gfx::Buffer *>                                     _buffers;
     std::vector<JointInfo>                                         _joints;
     std::vector<std::array<float, pipeline::UBOSkinning::COUNT> *> _dataArray;
+    std::vector<JointTransform *>                                  _transStacks;
 };
 
 } // namespace scene

@@ -58,18 +58,17 @@ LegacyAutoreleasePool::~LegacyAutoreleasePool() {
 }
 
 void LegacyAutoreleasePool::addObject(Ref *object) {
-    _managedObjectArray.push_back(object);
+    _managedObjectArray.emplace_back(object);
 }
 
 void LegacyAutoreleasePool::clear() {
 #if defined(CC_DEBUG) && (CC_DEBUG > 0)
     _isClearing = true;
 #endif
-    std::vector<Ref *> releasings;
-    releasings.swap(_managedObjectArray);
-    for (const auto &obj : releasings) {
+    for (const auto &obj : _managedObjectArray) {
         obj->release();
     }
+    _managedObjectArray.clear();
 #if defined(CC_DEBUG) && (CC_DEBUG > 0)
     _isClearing = false;
 #endif
@@ -145,7 +144,7 @@ bool PoolManager::isObjectInPools(Ref *obj) const {
 }
 
 void PoolManager::push(LegacyAutoreleasePool *pool) {
-    _releasePoolStack.push_back(pool);
+    _releasePoolStack.emplace_back(pool);
 }
 
 void PoolManager::pop() {
