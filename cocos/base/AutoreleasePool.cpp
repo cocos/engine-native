@@ -76,7 +76,7 @@ void LegacyAutoreleasePool::clear() {
 }
 
 bool LegacyAutoreleasePool::contains(Ref *object) const {
-    for (const auto &obj : _managedObjectArray) {
+    for (const auto &obj : _managedObjectArray) {//NOLINT(readability-use-anyofallof)
         if (obj == object) {
             return true;
         }
@@ -136,7 +136,7 @@ LegacyAutoreleasePool *PoolManager::getCurrentPool() const {
 }
 
 bool PoolManager::isObjectInPools(Ref *obj) const {
-    for (const auto &pool : _releasePoolStack) {
+    for (const auto &pool : _releasePoolStack) {//NOLINT(readability-use-anyofallof)
         if (pool->contains(obj)) {
             return true;
         }

@@ -31,10 +31,10 @@
 namespace cc {
 namespace scene {
 
-    std::vector<JointTransform *> SkinningModel::_transStacks;
+    std::vector<JointTransform *> SkinningModel::transStacks;
 
 void SkinningModel::updateWorldMatrix(JointInfo* info, uint32_t stamp) {
-    _transStacks.clear();
+    transStacks.clear();
 
     int i = -1;
     _worldMatrix.setIdentity();
@@ -47,7 +47,7 @@ void SkinningModel::updateWorldMatrix(JointInfo* info, uint32_t stamp) {
             break;
         }
         currTransform->stamp = stamp;
-        _transStacks.emplace_back(currTransform);
+        transStacks.emplace_back(currTransform);
         i++;
         if (i >= parentSize) {
             break;
@@ -55,7 +55,7 @@ void SkinningModel::updateWorldMatrix(JointInfo* info, uint32_t stamp) {
         currTransform = &info->parents[i];
     }
     while (i > -1) {
-        currTransform = _transStacks[i--];
+        currTransform = transStacks[i--];
         auto* node    = currTransform->node;
         Mat4::fromRTS(node->getRotation(), node->getPosition(), node->getScale(), &currTransform->local);
         Mat4::multiply(_worldMatrix, currTransform->local, &currTransform->world);
