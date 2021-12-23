@@ -61,7 +61,7 @@ void ShadowMapBatchedQueue::gatherLightPasses(const scene::Camera *camera, const
             case scene::LightType::DIRECTIONAL: {
                 for (const auto ro : dirShadowObjects) {
                     const auto *model = ro.model;
-                    add(model, cmdBuffer);
+                    add(model);
                 }
             } break;
 
@@ -81,7 +81,7 @@ void ShadowMapBatchedQueue::gatherLightPasses(const scene::Camera *camera, const
                     if (model->getWorldBounds()) {
                         model->getWorldBounds()->transform(matShadowViewProj, &ab);
                         if (ab.aabbFrustum(camera->frustum)) {
-                            add(model, cmdBuffer);
+                            add(model);
                         }
                     }
                 }
@@ -110,7 +110,7 @@ void ShadowMapBatchedQueue::clear() {
     if (_batchedQueue) _batchedQueue->clear();
 }
 
-void ShadowMapBatchedQueue::add(const scene::Model *model, gfx::CommandBuffer *cmdBuffer) {
+void ShadowMapBatchedQueue::add(const scene::Model *model) {
     // this assumes light pass index is the same for all subModels
     const auto shadowPassIdx = getShadowPassIndex(model);
     if (shadowPassIdx == -1) {
