@@ -53,9 +53,10 @@ void ShadowMapBatchedQueue::gatherLightPasses(const scene::Camera *camera, const
 
     const PipelineSceneData *sceneData         = _pipeline->getPipelineSceneData();
     const scene::Shadow *    shadowInfo        = sceneData->getSharedData()->shadow;
-    const RenderObjectList & dirShadowObjects  = sceneData->getDirShadowObjects();
-    const RenderObjectList & castShadowObjects = sceneData->getCastShadowObjects();
     if (light && shadowInfo->enabled && shadowInfo->shadowType == scene::ShadowType::SHADOWMAP) {
+        const RenderObjectList &dirShadowObjects  = sceneData->getDirShadowObjects();
+        const RenderObjectList &castShadowObjects = sceneData->getCastShadowObjects();
+
         switch (light->getType()) {
             case scene::LightType::DIRECTIONAL: {
                 for (const auto ro : dirShadowObjects) {
@@ -95,6 +96,9 @@ void ShadowMapBatchedQueue::gatherLightPasses(const scene::Camera *camera, const
             default: {
             } break;
         }
+
+        _instancedQueue->uploadBuffers(cmdBuffer);
+        _batchedQueue->uploadBuffers(cmdBuffer);
     }
 }
 
@@ -131,9 +135,6 @@ void ShadowMapBatchedQueue::add(const scene::Model *model, gfx::CommandBuffer *c
             _passes.emplace_back(pass);
         }
     }
-
-    _instancedQueue->uploadBuffers(cmdBuffer);
-    _batchedQueue->uploadBuffers(cmdBuffer);
 }
 
 void ShadowMapBatchedQueue::recordCommandBuffer(gfx::Device *device, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer) const {
