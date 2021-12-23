@@ -30,7 +30,7 @@
 
 namespace cc {
 
-LegacyAutoreleasePool::LegacyAutoreleasePool()
+LegacyAutoreleasePool::LegacyAutoreleasePool() //NOLINT(misc-no-recursion)
 #if defined(CC_DEBUG) && (CC_DEBUG > 0)
 : _isClearing(false)
 #endif
@@ -65,10 +65,11 @@ void LegacyAutoreleasePool::clear() {
 #if defined(CC_DEBUG) && (CC_DEBUG > 0)
     _isClearing = true;
 #endif
-    for (const auto &obj : _managedObjectArray) {
+    std::vector<Ref *> releasings;
+    releasings.swap(_managedObjectArray);
+    for (const auto &obj : releasings) {
         obj->release();
     }
-    _managedObjectArray.clear();
 #if defined(CC_DEBUG) && (CC_DEBUG > 0)
     _isClearing = false;
 #endif
@@ -100,7 +101,7 @@ void LegacyAutoreleasePool::dump() {
 
 PoolManager *PoolManager::_singleInstance = nullptr;
 
-PoolManager *PoolManager::getInstance() {
+PoolManager *PoolManager::getInstance() {//NOLINT(misc-no-recursion)
     if (_singleInstance == nullptr) {
         _singleInstance = new (std::nothrow) PoolManager();
         _singleInstance->push(new LegacyAutoreleasePool());

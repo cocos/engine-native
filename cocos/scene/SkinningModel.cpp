@@ -30,6 +30,9 @@
 
 namespace cc {
 namespace scene {
+
+    std::vector<JointTransform *> SkinningModel::_transStacks;
+
 void SkinningModel::updateWorldMatrix(JointInfo* info, uint32_t stamp) {
     _transStacks.clear();
 
