@@ -16,7 +16,7 @@ jobs:
         run: |
           echo ${{github.base_ref}}
 
-      - name: 'call test cases jobs'
+      - name: 'call test cases job'
         run: |
           dir
           python3 -u ./pr-test/main.py ${{github.base_ref}}
