@@ -11,12 +11,11 @@ jobs:
         with:
           path: engine-native
 
-      - name: 'creator version'
+      - name: 'CocosCreator version'
         shell: bash
         run: |
           echo ${{github.base_ref}}
 
-      - name: 'call test cases job'
+      - name: 'call run test cases job'
         run: |
-          dir
           python3 -u ./pr-test/main.py ${{github.base_ref}}
