@@ -1,0 +1,22 @@
+name: run test cases
+on: pull_request
+
+jobs:
+  run-test-cases:
+    runs-on: run-test-win01
+
+    steps:
+      - name: 'Checkout engine-native'
+        uses: actions/checkout@v2
+        with:
+          path: engine-native
+
+      - name: 'version'
+        shell: bash
+        run: |
+          echo ${{github.base_ref}}
+
+      - name: 'call test'
+        run: |
+          dir
+          python3 -u ./pr-test/main.py ${{github.base_ref}}
