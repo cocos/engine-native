@@ -1,4 +1,4 @@
-ame: run test cases
+name: run test cases
 on: pull_request
 
 jobs:
