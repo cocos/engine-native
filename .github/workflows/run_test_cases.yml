@@ -11,11 +11,12 @@ jobs:
         with:
           path: engine-native
 
-      - name: 'version'
+      - name: 'creator version'
         shell: bash
         run: |
           echo ${{github.base_ref}}
-      - name: 'call test'
+
+      - name: 'call test cases jobs'
         run: |
           dir
           python3 -u ./pr-test/main.py ${{github.base_ref}}
