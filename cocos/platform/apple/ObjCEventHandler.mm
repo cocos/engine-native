@@ -24,18 +24,18 @@
 ****************************************************************************/
 #include <iostream>
 #include <string>
-#include "JsObjCEventHandler.h"
+#include "ObjCEventHandler.h"
 #include "JsbBridge.h"
 
 #import <Foundation/Foundation.h>
 
-@implementation JsObjCEventHandler{
+@implementation ObjCEventHandler{
     NSMutableDictionary<NSString*, NSMutableArray*> *cbDictionnary;
     
 }
-static JsObjCEventHandler* instance = nil;
+static ObjCEventHandler* instance = nil;
 static ICallback cb = ^void (NSString* _arg0, NSString* _arg1){
-    [[JsObjCEventHandler sharedInstance] triggerEvent:_arg0 arg1:_arg1];
+    [[ObjCEventHandler sharedInstance] triggerEvent:_arg0 arg1:_arg1];
 };
 +(instancetype)sharedInstance{
     static dispatch_once_t pred = 0;
@@ -46,18 +46,17 @@ static ICallback cb = ^void (NSString* _arg0, NSString* _arg1){
 }
 
 +(id)allocWithZone:(struct _NSZone *)zone{
-    return [JsObjCEventHandler sharedInstance];
+    return [ObjCEventHandler sharedInstance];
 }
 
 -(id)copyWithZone:(struct _NSZone *)zone{
-    return [JsObjCEventHandler sharedInstance];
+    return [ObjCEventHandler sharedInstance];
 }
 
 -(void)addCallback:(NSString *)arg0 callback:(eventCallback)callback {
     if(![cbDictionnary objectForKey:arg0]){
         [cbDictionnary setValue:[NSMutableArray<eventCallback> new] forKey:arg0];
     }
-    
     [[cbDictionnary objectForKey:arg0] addObject:callback];
 }
 
@@ -74,7 +73,7 @@ static ICallback cb = ^void (NSString* _arg0, NSString* _arg1){
     if(![cbDictionnary objectForKey:arg0]){
         return;
     }
-    NSMutableArray* arr = [cbDictionnary objectForKey:arg0];
+    NSMutableArray<eventCallback>* arr = [cbDictionnary objectForKey:arg0];
     [arr removeAllObjects];
     [cbDictionnary removeObjectForKey:arg0];
 }
@@ -91,11 +90,11 @@ static ICallback cb = ^void (NSString* _arg0, NSString* _arg1){
     }
     return true;
 }
--(void)sendToScript:(NSString *)name arg1:(NSString *)arg1 {
+-(void)dispatchScriptEvent:(NSString *)name arg1:(NSString *)arg1 {
     JsbBridge* m = [JsbBridge sharedInstance];
     [m sendToScript:name arg1:arg1];
 }
--(void)sendToScript:(NSString *)name{
+-(void)dispatchScriptEvent:(NSString *)name{
     JsbBridge* m = [JsbBridge sharedInstance];
     [m sendToScript:name];
 }

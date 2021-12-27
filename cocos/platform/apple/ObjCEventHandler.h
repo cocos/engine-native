@@ -27,11 +27,11 @@
 
 typedef void(^eventCallback)(NSString*);
 
-@interface JsObjCEventHandler: NSObject
+@interface ObjCEventHandler: NSObject
 +(instancetype)sharedInstance;
 -(void)addCallback:(NSString*)arg0 callback:(eventCallback)callback;
 -(bool)removeCallback:(NSString*)arg0 callback:(eventCallback)callback;
 -(void)removeEvent:(NSString*)arg0;
--(void)sendToScript:(NSString*)name arg1:(NSString*)arg1;
--(void)sendToScript:(NSString*)name;
+-(void)dispatchScriptEvent:(NSString*)name arg1:(NSString*)arg1;
+-(void)dispatchScriptEvent:(NSString*)name;
 @end

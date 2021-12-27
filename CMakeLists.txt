@@ -1607,8 +1607,8 @@ elseif(APPLE)
                     cocos/bindings/manual/JavaScriptObjCBridge.mm
                     cocos/platform/apple/JsbBridge.h
                     cocos/platform/apple/JsbBridge.mm
-                    cocos/platform/apple/JsObjCEventHandler.h
-                    cocos/platform/apple/JsObjCEventHandler.mm
+                    cocos/platform/apple/ObjCEventHandler.h
+                    cocos/platform/apple/ObjCEventHandler.mm
     )
 elseif(WIN32)
     cocos_source_files(
