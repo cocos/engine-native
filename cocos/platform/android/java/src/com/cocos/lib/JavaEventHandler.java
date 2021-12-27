@@ -4,14 +4,14 @@ package com.cocos.lib;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class JsJavaEventHandler {
+public class JavaEventHandler {
     public interface javaCallback{
         void onTrigger(String arg);
     }
-    public static JsJavaEventHandler getInstance(){
+    public static JavaEventHandler getInstance(){
         if(instance == null)
         {
-            instance = new JsJavaEventHandler();
+            instance = new JavaEventHandler();
         }
         return instance;
     }
@@ -43,7 +43,7 @@ public class JsJavaEventHandler {
         JsbBridge.sendToScript(event);
     }
 
-    private JsJavaEventHandler(){
+    private JavaEventHandler(){
         JsbBridge.setCallback(new JsbBridge.ICallback() {
             @Override
             public void onScript(String arg0, String arg1) {
@@ -51,10 +51,11 @@ public class JsJavaEventHandler {
             }
         });
     }
-    private HashMap<String, ArrayList<javaCallback> > eventMap = new HashMap<>();
-    private static JsJavaEventHandler instance;
+    private final HashMap<String, ArrayList<javaCallback>> eventMap = new HashMap<>();
+    private static JavaEventHandler instance;
     private void triggerEvents(String event, String arg){
         ArrayList<javaCallback> arr = eventMap.get(event);
+        if (arr == null) return;
         for(javaCallback m: arr){
             m.onTrigger(arg);
         }
