@@ -39,7 +39,7 @@ jobs:
           cd $GITHUB_WORKSPACE/templates/windows
           mkdir -p build-win32/proj
           touch build-win32/proj/cfg.cmake
-          let msg=${{github.event.head_commit.message}}
+          msg="${{github.event.head_commit.message}}"
           echo ${msg}
           if [[ ${msg} =~ "WGPU_CI_ON" ]];
             then
