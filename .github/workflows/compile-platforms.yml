@@ -39,11 +39,11 @@ jobs:
           cd $GITHUB_WORKSPACE/templates/windows
           mkdir -p build-win32/proj
           touch build-win32/proj/cfg.cmake
-          if [[ github.event.head_commit.message =~ "WGPU_CI_ON" ]];
+          if [[ ${{ github.event.head_commit.message }} =~ "WGPU_CI_ON" ]];
             then
               echo "set(CMAKE_SYSTEM_NAME Emscripten)" >> build-win32/proj/cfg.cmake
           fi
-          echo github.event.head_commit.message
+          echo ${{ github.event.head_commit.message }}
           echo "set(CC_USE_GLES3 ON)" >> build-win32/proj/cfg.cmake
           echo "set(CC_USE_VULKAN ON)" >> build-win32/proj/cfg.cmake
           echo "set(CC_USE_GLES2 ON)" >> build-win32/proj/cfg.cmake
