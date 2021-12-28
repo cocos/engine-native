@@ -25,13 +25,13 @@
 #pragma once
 #import <Cocoa/Cocoa.h>
 
-typedef void(^eventCallback)(NSString*);
+typedef void (^eventCallback)(NSString*);
 
-@interface ObjCEventHandler: NSObject
-+(instancetype)sharedInstance;
--(void)addCallback:(NSString*)arg0 callback:(eventCallback)callback;
--(bool)removeCallback:(NSString*)arg0 callback:(eventCallback)callback;
--(void)removeEvent:(NSString*)arg0;
--(void)dispatchScriptEvent:(NSString*)name arg1:(NSString*)arg1;
--(void)dispatchScriptEvent:(NSString*)name;
+@interface ObjCEventHandler : NSObject
++ (instancetype)sharedInstance;
+- (void)addCallback:(NSString*)arg0 callback:(eventCallback)callback;
+- (bool)removeCallback:(NSString*)arg0 callback:(eventCallback)callback;
+- (void)removeEvent:(NSString*)arg0;
+- (void)dispatchScriptEvent:(NSString*)name arg1:(NSString*)arg1;
+- (void)dispatchScriptEvent:(NSString*)name;
 @end

@@ -22,88 +22,93 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 ****************************************************************************/
+#include "ObjCEventHandler.h"
 #include <iostream>
 #include <string>
-#include "ObjCEventHandler.h"
 #include "JsbBridge.h"
 
-#import <Foundation/Foundation.h>
-
-@implementation ObjCEventHandler{
-    NSMutableDictionary<NSString*, NSMutableArray*> *cbDictionnary;
-    
+@implementation ObjCEventHandler {
+    NSMutableDictionary<NSString*, NSMutableArray<eventCallback>*>* cbDictionnary;
 }
+
 static ObjCEventHandler* instance = nil;
-static ICallback cb = ^void (NSString* _arg0, NSString* _arg1){
+static ICallback         cb       = ^void(NSString* _arg0, NSString* _arg1) {
     [[ObjCEventHandler sharedInstance] triggerEvent:_arg0 arg1:_arg1];
 };
-+(instancetype)sharedInstance{
++ (instancetype)sharedInstance {
     static dispatch_once_t pred = 0;
     dispatch_once(&pred, ^{
-        instance = [[super allocWithZone:NULL]init];
+        instance = [[super allocWithZone:NULL] init];
     });
     return instance;
 }
 
-+(id)allocWithZone:(struct _NSZone *)zone{
++ (id)allocWithZone:(struct _NSZone*)zone {
     return [ObjCEventHandler sharedInstance];
 }
 
--(id)copyWithZone:(struct _NSZone *)zone{
+- (id)copyWithZone:(struct _NSZone*)zone {
     return [ObjCEventHandler sharedInstance];
 }
 
--(void)addCallback:(NSString *)arg0 callback:(eventCallback)callback {
-    if(![cbDictionnary objectForKey:arg0]){
+- (void)addCallback:(NSString*)arg0 callback:(eventCallback)callback {
+    if (![cbDictionnary objectForKey:arg0]) {
         [cbDictionnary setValue:[NSMutableArray<eventCallback> new] forKey:arg0];
     }
     [[cbDictionnary objectForKey:arg0] addObject:callback];
+    [callback release];
 }
 
--(void)triggerEvent:(NSString*)name arg1:(NSString*)arg1 {
-    if(![cbDictionnary objectForKey:name]){
+- (void)triggerEvent:(NSString*)name arg1:(NSString*)arg1 {
+    NSMutableArray<eventCallback>* arr = [cbDictionnary objectForKey:name];
+    if (!arr) {
         return;
     }
-    NSMutableArray<eventCallback>* arr = [cbDictionnary objectForKey:name];
-    for (int i = 0; i< [arr count]; i++) {
+    for (int i = 0; i < [arr count]; i++) {
         arr[i](arg1);
     }
 }
--(void)removeEvent:(NSString *)arg0 {
-    if(![cbDictionnary objectForKey:arg0]){
+- (void)removeEvent:(NSString*)arg0 {
+    NSMutableArray<eventCallback>* arr = [cbDictionnary objectForKey:arg0];
+    if (!arr) {
         return;
     }
-    NSMutableArray<eventCallback>* arr = [cbDictionnary objectForKey:arg0];
-    [arr removeAllObjects];
+    [arr release];
     [cbDictionnary removeObjectForKey:arg0];
 }
--(bool)removeCallback:(NSString *)arg0 callback:(eventCallback)callback {
-    if(![cbDictionnary objectForKey:arg0]){
+- (bool)removeCallback:(NSString*)arg0 callback:(eventCallback)callback {
+    NSMutableArray<eventCallback>* arr = [cbDictionnary objectForKey:arg0];
+    if (!arr) {
         return false;
     }
-    NSMutableArray<eventCallback>* arr = [cbDictionnary objectForKey:arg0];
-    for(int i =0;i< arr.count;i++){
-        if(arr[i] == callback){
-            [arr removeObjectAtIndex:i];
-            //Possible to have second callback
+
+    for (int i = 0; i < arr.count; i++) {
+        if (arr[i] == callback) {
+            [arr removeObjectAtIndex:i]; // Do not break, possible to add same callback
         }
     }
     return true;
 }
--(void)dispatchScriptEvent:(NSString *)name arg1:(NSString *)arg1 {
+- (void)dispatchScriptEvent:(NSString*)name arg1:(NSString*)arg1 {
     JsbBridge* m = [JsbBridge sharedInstance];
     [m sendToScript:name arg1:arg1];
 }
--(void)dispatchScriptEvent:(NSString *)name{
+- (void)dispatchScriptEvent:(NSString*)name {
     JsbBridge* m = [JsbBridge sharedInstance];
     [m sendToScript:name];
 }
--(id)init{
-    self = [super init];
+- (id)init {
+    self          = [super init];
     cbDictionnary = [NSMutableDictionary new];
-    JsbBridge* m = [JsbBridge sharedInstance];
+    JsbBridge* m  = [JsbBridge sharedInstance];
     [m setCallback:cb];
     return self;
 }
-
+- (void)dealloc {
+    for (NSMutableArray* arr : cbDictionnary) {
+        [arr release];
+    }
+    [cbDictionnary release];
+    [super dealloc];
+}
 @end
