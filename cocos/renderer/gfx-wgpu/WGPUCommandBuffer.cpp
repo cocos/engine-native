@@ -59,7 +59,7 @@ void CCWGPUCommandBuffer::doDestroy() {
     CC_SAFE_DELETE(_gpuCommandBufferObj);
 }
 
-void CCWGPUCommandBuffer::begin(RenderPass *renderPass, uint subpass, Framebuffer *frameBuffer) {
+void CCWGPUCommandBuffer::begin(RenderPass * /*renderPass*/, uint /*subpass*/, Framebuffer * /*frameBuffer*/) {
     //TODO_Zeqiang: subpass support
     //   printf("begin\n");
     _gpuCommandBufferObj->wgpuCommandEncoder = wgpuDeviceCreateCommandEncoder(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, nullptr);
@@ -87,7 +87,7 @@ void CCWGPUCommandBuffer::end() {
     }
 }
 
-void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, uint stencil, CommandBuffer *const *secondaryCBs, uint secondaryCBCount) {
+void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, uint stencil, CommandBuffer *const * /*secondaryCBs*/, uint /*secondaryCBCount*/) {
     _renderPass  = renderPass;
     _frameBuffer = fbo;
     // printf("beginr\n");
@@ -227,7 +227,7 @@ void CCWGPUCommandBuffer::setScissor(const Rect &rect) {
     _gpuCommandBufferObj->stateCache.rect = rect;
 }
 
-void CCWGPUCommandBuffer::setLineWidth(float width) {
+void CCWGPUCommandBuffer::setLineWidth(float /*width*/) {
     CC_LOG_WARNING("linewith not support in webGPU, ignored.");
 }
 
@@ -601,7 +601,7 @@ void CCWGPUCommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, 
     }
 }
 
-void CCWGPUCommandBuffer::execute(CommandBuffer *const *cmdBuffs, uint32_t count) {
+void CCWGPUCommandBuffer::execute(CommandBuffer *const * /*cmdBuffs*/, uint32_t /*count*/) {
     CC_LOG_ERROR(".....");
 }
 
