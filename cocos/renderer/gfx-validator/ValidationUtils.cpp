@@ -31,7 +31,7 @@
 namespace cc {
 
 namespace utils {
-#if !CC_WGPU_WASM
+#ifndef CC_WGPU_WASM
     #include "bindings/jswrapper/SeApi.h"
 String getStacktraceJS() {
     return se::ScriptEngine::getInstance()->getCurrentStackTrace();
