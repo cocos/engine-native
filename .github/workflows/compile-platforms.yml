@@ -39,11 +39,12 @@ jobs:
           cd $GITHUB_WORKSPACE/templates/windows
           mkdir -p build-win32/proj
           touch build-win32/proj/cfg.cmake
-          if [[ ${{ github.event.head_commit.message }} =~ "WGPU_CI_ON" ]];
+          let msg=${{github.event.head_commit.message}}
+          echo ${msg}
+          if [[ ${msg} =~ "WGPU_CI_ON" ]];
             then
               echo "set(CMAKE_SYSTEM_NAME Emscripten)" >> build-win32/proj/cfg.cmake
           fi
-          echo ${{ github.event.head_commit.message }}
           echo "set(CC_USE_GLES3 ON)" >> build-win32/proj/cfg.cmake
           echo "set(CC_USE_VULKAN ON)" >> build-win32/proj/cfg.cmake
           echo "set(CC_USE_GLES2 ON)" >> build-win32/proj/cfg.cmake
@@ -88,7 +89,7 @@ jobs:
           cd $COCOS2DX_ROOT/templates/android/build
           mkdir -p build-android/proj
           touch build-android/proj/cfg.cmake
-          echo "set(CMAKE_SYSTEM_NAME "Emscripten")" >> build-win32/proj/cfg.cmake
+          echo "set(CMAKE_SYSTEM_NAME Emscripten)" >> build-android/proj/cfg.cmake
           echo "set(CC_USE_GLES3 ON)" >> build-android/proj/cfg.cmake
           echo "set(CC_USE_VULKAN ON)" >> build-android/proj/cfg.cmake
           echo "set(CC_USE_GLES2 ON)" >> build-android/proj/cfg.cmake
@@ -143,7 +144,7 @@ jobs:
           cd  $COCOS2DX_ROOT/templates/mac
           mkdir -p build-mac/proj
           touch build-mac/proj/cfg.cmake
-          echo "set(CMAKE_SYSTEM_NAME "Emscripten")" >> build-win32/proj/cfg.cmake
+          echo "set(CMAKE_SYSTEM_NAME Emscripten)" >> build-mac/proj/cfg.cmake
           echo "set(CC_USE_VULKAN OFF)" >> build-mac/proj/cfg.cmake
           echo "set(CC_USE_GLES2 OFF)" >> build-mac/proj/cfg.cmake
           echo "set(CC_USE_METAL ON)" >> build-mac/proj/cfg.cmake
@@ -206,7 +207,7 @@ jobs:
           cd  $COCOS2DX_ROOT/templates/ios
           mkdir -p build-ios/proj
           touch build-ios/proj/cfg.cmake
-          echo "set(CMAKE_SYSTEM_NAME "Emscripten")" >> build-win32/proj/cfg.cmake
+          echo "set(CMAKE_SYSTEM_NAME Emscripten)" >> build-ios/proj/cfg.cmake
           echo "set(CC_USE_GLES3 OFF)" >> build-ios/proj/cfg.cmake
           echo "set(CC_USE_VULKAN OFF)" >> build-ios/proj/cfg.cmake
           echo "set(CC_USE_GLES2 OFF)" >> build-ios/proj/cfg.cmake
