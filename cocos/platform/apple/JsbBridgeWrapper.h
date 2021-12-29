@@ -23,15 +23,33 @@
  THE SOFTWARE.
 ****************************************************************************/
 #pragma once
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 typedef void (^eventCallback)(NSString*);
 
-@interface ObjCEventHandler : NSObject
+@interface JsbBridgeWrapper : NSObject
+/**
+ * Get the instance of JsbBridgetWrapper
+ */
 + (instancetype)sharedInstance;
-- (void)addCallback:(NSString*)arg0 callback:(eventCallback)callback;
-- (bool)removeCallback:(NSString*)arg0 callback:(eventCallback)callback;
-- (void)removeEvent:(NSString*)arg0;
-- (void)dispatchScriptEvent:(NSString*)name arg1:(NSString*)arg1;
+/**
+ * add a callback to specified event, if the event does not exist, the wrapper will create one
+ */
+- (void)addCallback:(NSString*)event callback:(eventCallback)callback;
+/**
+ * remove callback for specified event, concurrent event will be deleted.
+ */
+- (bool)removeCallback:(NSString*)event callback:(eventCallback)callback;
+/**
+ * Return true if successfully remove the callback, false if event does not exist
+ */
+- (void)removeEvent:(NSString*)event;
+/**
+ * Dispatch the event with argument, the event should be regiestered in javascript, or other script language in future.
+ */
+- (void)dispatchScriptEvent:(NSString*)name arg:(NSString*)arg;
+/**
+ * Dispatch the event which is regiestered in javascript, or other script language in future.
+ */
 - (void)dispatchScriptEvent:(NSString*)name;
 @end

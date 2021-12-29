@@ -22,18 +22,19 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 ****************************************************************************/
-#include "ObjCEventHandler.h"
+#include "JsbBridgeWrapper.h"
 #include <iostream>
 #include <string>
 #include "JsbBridge.h"
 
-@implementation ObjCEventHandler {
+@implementation JsbBridgeWrapper {
+    JsbBridge* jb;
     NSMutableDictionary<NSString*, NSMutableArray<eventCallback>*>* cbDictionnary;
 }
 
-static ObjCEventHandler* instance = nil;
-static ICallback         cb       = ^void(NSString* _arg0, NSString* _arg1) {
-    [[ObjCEventHandler sharedInstance] triggerEvent:_arg0 arg1:_arg1];
+static JsbBridgeWrapper* instance = nil;
+static ICallback         cb       = ^void(NSString* _event, NSString* _arg) {
+    [[JsbBridgeWrapper sharedInstance] triggerEvent:_event arg:_arg];
 };
 + (instancetype)sharedInstance {
     static dispatch_once_t pred = 0;
@@ -44,64 +45,61 @@ static ICallback         cb       = ^void(NSString* _arg0, NSString* _arg1) {
 }
 
 + (id)allocWithZone:(struct _NSZone*)zone {
-    return [ObjCEventHandler sharedInstance];
+    return [JsbBridgeWrapper sharedInstance];
 }
 
 - (id)copyWithZone:(struct _NSZone*)zone {
-    return [ObjCEventHandler sharedInstance];
+    return [JsbBridgeWrapper sharedInstance];
 }
 
-- (void)addCallback:(NSString*)arg0 callback:(eventCallback)callback {
-    if (![cbDictionnary objectForKey:arg0]) {
-        [cbDictionnary setValue:[NSMutableArray<eventCallback> new] forKey:arg0];
+- (void)addCallback:(NSString*)event callback:(eventCallback)callback {
+    if (![cbDictionnary objectForKey:event]) {
+        [cbDictionnary setValue:[NSMutableArray<eventCallback> new] forKey:event];
     }
-    [[cbDictionnary objectForKey:arg0] addObject:callback];
+    NSMutableArray* arr = [cbDictionnary objectForKey:event];
+    if (![arr containsObject:callback]) {
+        [arr addObject:callback];
+    }
     [callback release];
 }
 
-- (void)triggerEvent:(NSString*)name arg1:(NSString*)arg1 {
-    NSMutableArray<eventCallback>* arr = [cbDictionnary objectForKey:name];
+- (void)triggerEvent:(NSString*)event arg:(NSString*)arg {
+    NSMutableArray<eventCallback>* arr = [cbDictionnary objectForKey:event];
     if (!arr) {
         return;
     }
-    for (int i = 0; i < [arr count]; i++) {
-        arr[i](arg1);
+    for (eventCallback cb : arr) {
+        cb(arg);
     }
 }
-- (void)removeEvent:(NSString*)arg0 {
-    NSMutableArray<eventCallback>* arr = [cbDictionnary objectForKey:arg0];
-    if (!arr) {
+- (void)removeEvent:(NSString*)event {
+    if (![cbDictionnary objectForKey:event]) {
         return;
     }
-    [arr release];
-    [cbDictionnary removeObjectForKey:arg0];
+    [cbDictionnary removeObjectForKey:event];
 }
-- (bool)removeCallback:(NSString*)arg0 callback:(eventCallback)callback {
-    NSMutableArray<eventCallback>* arr = [cbDictionnary objectForKey:arg0];
+
+- (bool)removeCallback:(NSString*)event callback:(eventCallback)callback {
+    NSMutableArray<eventCallback>* arr = [cbDictionnary objectForKey:event];
     if (!arr) {
         return false;
     }
-
-    for (int i = 0; i < arr.count; i++) {
-        if (arr[i] == callback) {
-            [arr removeObjectAtIndex:i]; // Do not break, possible to add same callback
-        }
-    }
+    [arr removeObject:callback];
     return true;
 }
-- (void)dispatchScriptEvent:(NSString*)name arg1:(NSString*)arg1 {
-    JsbBridge* m = [JsbBridge sharedInstance];
-    [m sendToScript:name arg1:arg1];
+
+- (void)dispatchScriptEvent:(NSString*)event arg:(NSString*)arg {
+    [jb sendToScript:event arg1:arg];
 }
-- (void)dispatchScriptEvent:(NSString*)name {
-    JsbBridge* m = [JsbBridge sharedInstance];
-    [m sendToScript:name];
+
+- (void)dispatchScriptEvent:(NSString*)event {
+    [jb sendToScript:event];
 }
 - (id)init {
     self          = [super init];
     cbDictionnary = [NSMutableDictionary new];
-    JsbBridge* m  = [JsbBridge sharedInstance];
-    [m setCallback:cb];
+    jb = [JsbBridge sharedInstance];
+    [jb setCallback:cb];
     return self;
 }
 - (void)dealloc {
@@ -112,3 +110,4 @@ static ICallback         cb       = ^void(NSString* _arg0, NSString* _arg1) {
     [super dealloc];
 }
 @end
+
