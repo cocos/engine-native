@@ -1,6 +1,6 @@
 name: 🏗️ Compile
 
-on: [pull_request]
+on: [push, pull_request]
 
 jobs:
   compile_windows:
