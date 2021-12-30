@@ -83,6 +83,17 @@ bool GLES2Device::doInit(const DeviceInfo & /*info*/) {
         return false;
     };
 
+    _bindingMappings.blockOffsets.resize(_bindingMappingInfo.setIndices.size());
+    _bindingMappings.samplerTextureOffsets.resize(_bindingMappingInfo.setIndices.size());
+    for (size_t i = 0; i < _bindingMappingInfo.setIndices.size(); ++i) {
+        uint32_t cur{_bindingMappingInfo.setIndices[i]};
+        uint32_t last{i ? _bindingMappingInfo.setIndices[i - 1] : cur};
+        _bindingMappings.blockOffsets[cur]          = i ? static_cast<int32_t>(_bindingMappingInfo.maxBlockCounts[last]) + _bindingMappings.blockOffsets[last] : 0;
+        _bindingMappings.samplerTextureOffsets[cur] = i ? static_cast<int32_t>(_bindingMappingInfo.maxSamplerTextureCounts[last]) + _bindingMappings.samplerTextureOffsets[last] : 0;
+        _bindingMappings.samplerTextureOffsets[cur] -= static_cast<int32_t>(_bindingMappingInfo.maxBlockCounts[cur]);
+    }
+    _bindingMappings.flexibleSet = _bindingMappingInfo.setIndices.back();
+
     String extStr = reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS));
     _extensions   = StringUtil::split(extStr, " ");
 
