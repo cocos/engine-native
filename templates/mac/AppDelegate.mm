@@ -2,7 +2,7 @@
 #include <string>
 #import "Game.h"
 #import "ViewController.h"
-#import "platform/apple/ObjCEventHandler.h"
+#import "platform/apple/JsbBridgeWrapper.h"
 
 @interface AppDelegate () {
     NSWindow* _window;
@@ -65,7 +65,7 @@
 }
 
 - (void)applicationWillTerminate:(NSNotification*)aNotification {
-    [[ObjCEventHandler sharedInstance] dealloc];
+    [[JsbBridgeWrapper sharedInstance] dealloc];
     delete _game;
     //FIXME: will crash if relase it here.
     // [_window release];
