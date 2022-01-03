@@ -34,7 +34,6 @@ public:
     SimpleSprite2D();
     virtual ~SimpleSprite2D();
     virtual void fillBuffers(NodeProxy* node, ModelBatcher* batcher, std::size_t index) override;
-    virtual void updateOpacity(std::size_t index, uint8_t opacity) override;
 };
 
 RENDERER_END

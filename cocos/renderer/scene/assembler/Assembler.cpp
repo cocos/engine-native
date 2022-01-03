@@ -167,7 +167,7 @@ void Assembler::fillBuffers(NodeProxy* node, ModelBatcher* batcher, std::size_t 
 
     float* worldVerts = buffer->vData + vBufferOffset;
     memcpy(worldVerts, data->getVertices() + vertexStart * _bytesPerVertex, vertexCount * _bytesPerVertex);
-    
+
     // Calculate vertices world positions
     if (!_useModel && !_ignoreWorldMatrix)
     {
@@ -197,7 +197,27 @@ void Assembler::fillBuffers(NodeProxy* node, ModelBatcher* batcher, std::size_t 
                 break;
         }
     }
-    
+
+    uint8_t* ptrAlpha = (uint8_t*)data->getVertices() + _alphaOffset;
+    size_t dataPerVertex = _bytesPerVertex / sizeof(uint8_t);
+    uint8_t* ptrColor = (uint8_t*)worldVerts + _vfColor->offset;
+
+    for (uint32_t i = 0; i < vertexCount; ++i)
+    {
+        float alpha = *(ptrAlpha) / 255.0;
+
+        uint8_t valueB = *(ptrAlpha - 1) * alpha;
+        uint8_t valueG = *(ptrAlpha - 2) * alpha;
+        uint8_t valueR = *(ptrAlpha - 3) * alpha;
+
+        *ptrColor = valueR;
+        *(ptrColor + 1) = valueG;
+        *(ptrColor + 2) = valueB;
+
+        ptrAlpha += dataPerVertex;
+        ptrColor += dataPerVertex;
+    }
+
     // Copy index buffer with vertex offset
     uint16_t* indices = (uint16_t*)data->getIndices();
     uint16_t* dst = buffer->iData;
@@ -256,27 +276,10 @@ void Assembler::updateOpacity(std::size_t index, uint8_t opacity)
     
     size_t dataPerVertex = _bytesPerVertex / sizeof(uint8_t);
     uint8_t* ptrAlpha = (uint8_t*)data->getVertices() + _alphaOffset;
-    const Vector<Pass*>& passes = ia.getEffect()->getPasses();
-    if (passes.at(0)->getBlendSrc() == BlendFactor::ONE)
+    for (uint32_t i = 0; i < vertexCount; ++i)
     {
-        float alpha = opacity / 255.0;
-        for (uint32_t i = 0; i < vertexCount; ++i)
-        {
-           *(ptrAlpha-1) *= alpha;
-           *(ptrAlpha-2) *= alpha;
-           *(ptrAlpha-3) *= alpha;
-           
-           *ptrAlpha = opacity;
-           ptrAlpha += dataPerVertex;
-        }
-    }
-    else
-    {
-        for (uint32_t i = 0; i < vertexCount; ++i)
-        {
-           *ptrAlpha = opacity;
-           ptrAlpha += dataPerVertex;
-        }
+        *ptrAlpha = opacity;
+        ptrAlpha += dataPerVertex;
     }
     
     *_dirty &= ~VERTICES_OPACITY_CHANGED;

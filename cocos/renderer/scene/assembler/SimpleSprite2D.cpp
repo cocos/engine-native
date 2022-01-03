@@ -122,35 +122,4 @@ void SimpleSprite2D::fillBuffers(NodeProxy* node, ModelBatcher* batcher, std::si
     }
 }
 
-void SimpleSprite2D::updateOpacity(std::size_t index, uint8_t opacity)
-{
-    // has no color info in vertex buffer
-    if(!_vfColor || !_datas || !_vfmt)
-    {
-        return;
-    }
-    
-    const IARenderData& ia = _iaDatas[index];
-    std::size_t meshIndex = ia.meshIndex >= 0 ? ia.meshIndex : index;
-    
-    RenderData* data = _datas->getRenderData(meshIndex);
-    if (!data)
-    {
-        return;
-    }
-    
-    CCASSERT(data->getVBytes() % _bytesPerVertex == 0, "Assembler::updateOpacity vertices data doesn't follow vertex format");
-    uint32_t vertexCount = (uint32_t)data->getVBytes() / _bytesPerVertex;
-    
-    size_t dataPerVertex = _bytesPerVertex / sizeof(uint8_t);
-    uint8_t* ptrAlpha = (uint8_t*)data->getVertices() + _alphaOffset;
-    for (uint32_t i = 0; i < vertexCount; ++i)
-    {
-       *ptrAlpha = opacity;
-       ptrAlpha += dataPerVertex;
-    }
-    
-    *_dirty &= ~VERTICES_OPACITY_CHANGED;
-}
-
 RENDERER_END

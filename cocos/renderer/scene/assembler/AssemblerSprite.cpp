@@ -104,6 +104,26 @@ void AssemblerSprite::fillBuffers(NodeProxy* node, ModelBatcher* batcher, std::s
     float* dstWorldVerts = buffer->vData + vBufferOffset;
     memcpy(dstWorldVerts, data->getVertices() + vertexStart * _bytesPerVertex, vertexCount * _bytesPerVertex);
     
+    uint8_t* ptrAlpha = (uint8_t*)data->getVertices() + _alphaOffset;
+    size_t dataPerVertex = _bytesPerVertex / sizeof(uint8_t);
+    uint8_t* ptrColor = (uint8_t*)dstWorldVerts + _vfColor->offset;
+
+    for (uint32_t i = 0; i < vertexCount; ++i)
+    {
+        float alpha = *(ptrAlpha) / 255.0;
+
+        uint8_t valueB = *(ptrAlpha - 1) * alpha;
+        uint8_t valueG = *(ptrAlpha - 2) * alpha;
+        uint8_t valueR = *(ptrAlpha - 3) * alpha;
+
+        *ptrColor = valueR;
+        *(ptrColor + 1) = valueG;
+        *(ptrColor + 2) = valueB;
+
+        ptrAlpha += dataPerVertex;
+        ptrColor += dataPerVertex;
+    }
+
     // Copy index buffer with vertex offset
     uint16_t* srcIndices = (uint16_t*)data->getIndices();
     uint16_t* dstIndices = buffer->iData;
@@ -157,4 +177,5 @@ void AssemblerSprite::calculateWorldVertices(const Mat4& worldMat)
     
     *_dirty &= ~VERTICES_DIRTY;
 }
+
 RENDERER_END
