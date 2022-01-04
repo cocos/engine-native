@@ -65,7 +65,6 @@
 }
 
 - (void)applicationWillTerminate:(NSNotification*)aNotification {
-    [[JsbBridgeWrapper sharedInstance] dealloc];
     delete _game;
     //FIXME: will crash if relase it here.
     // [_window release];

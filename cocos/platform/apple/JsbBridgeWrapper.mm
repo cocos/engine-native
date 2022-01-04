@@ -26,6 +26,7 @@
 #include <iostream>
 #include <string>
 #include "JsbBridge.h"
+#include "Application.h"
 
 @implementation JsbBridgeWrapper {
     JsbBridge* jb;
@@ -111,3 +112,6 @@ static ICallback         cb       = ^void(NSString* _event, NSString* _arg) {
 }
 @end
 
+void cc::Application::destroyJBW(){
+    [[JsbBridgeWrapper sharedInstance] dealloc];
+}
