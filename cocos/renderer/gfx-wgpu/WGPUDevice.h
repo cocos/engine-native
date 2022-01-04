@@ -68,47 +68,47 @@ public:
 
     // ems export override
     Swapchain *createSwapchain(const SwapchainInfoInstance &info) {
-        return this->Device::createSwapchain(static_cast<const SwapchainInfo &>(info));
+        return Device::createSwapchain(static_cast<const SwapchainInfo &>(info));
     }
 
     Framebuffer *createFramebuffer(const FramebufferInfoInstance &info) {
-        return this->Device::createFramebuffer(static_cast<const FramebufferInfo &>(info));
+        return Device::createFramebuffer(static_cast<const FramebufferInfo &>(info));
     }
 
     Texture *createTexture(const TextureInfoInstance &info) {
-        return this->Device::createTexture(static_cast<const TextureInfo &>(info));
+        return Device::createTexture(static_cast<const TextureInfo &>(info));
     }
 
     Texture *createTexture(const TextureViewInfoInstance &info) {
-        return this->Device::createTexture(static_cast<const TextureViewInfo &>(info));
+        return Device::createTexture(static_cast<const TextureViewInfo &>(info));
     }
 
     Buffer *createBuffer(const BufferInfoInstance &info) {
-        return this->Device::createBuffer(static_cast<const BufferInfo &>(info));
+        return Device::createBuffer(static_cast<const BufferInfo &>(info));
     }
 
     Buffer *createBuffer(const BufferViewInfoInstance &info) {
-        return this->Device::createBuffer(static_cast<const BufferViewInfo &>(info));
+        return Device::createBuffer(static_cast<const BufferViewInfo &>(info));
     }
 
     DescriptorSet *createDescriptorSet(const DescriptorSetInfoInstance &info) {
-        return this->Device::createDescriptorSet(static_cast<const DescriptorSetInfo &>(info));
+        return Device::createDescriptorSet(static_cast<const DescriptorSetInfo &>(info));
     }
 
     DescriptorSetLayout *createDescriptorSetLayout(const DescriptorSetLayoutInfoInstance &info) {
-        return this->Device::createDescriptorSetLayout(static_cast<const DescriptorSetLayoutInfo &>(info));
+        return Device::createDescriptorSetLayout(static_cast<const DescriptorSetLayoutInfo &>(info));
     }
 
     InputAssembler *createInputAssembler(const InputAssemblerInfoInstance &info) {
-        return this->Device::createInputAssembler(static_cast<const InputAssemblerInfo &>(info));
+        return Device::createInputAssembler(static_cast<const InputAssemblerInfo &>(info));
     }
 
     PipelineState *createPipelineState(const PipelineStateInfoInstance &info) {
-        return this->Device::createPipelineState(static_cast<const PipelineStateInfo &>(info));
+        return Device::createPipelineState(static_cast<const PipelineStateInfo &>(info));
     }
 
     CommandBuffer *createCommandBuffer(const CommandBufferInfoInstance &info) {
-        return this->Device::createCommandBuffer(static_cast<const CommandBufferInfo &>(info));
+        return Device::createCommandBuffer(static_cast<const CommandBufferInfo &>(info));
     }
 
     emscripten::val copyTextureToBuffers(Texture *src, const BufferTextureCopyList &regions);
