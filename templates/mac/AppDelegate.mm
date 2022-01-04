@@ -2,7 +2,6 @@
 #include <string>
 #import "Game.h"
 #import "ViewController.h"
-#import "platform/apple/JsbBridgeWrapper.h"
 
 @interface AppDelegate () {
     NSWindow* _window;
