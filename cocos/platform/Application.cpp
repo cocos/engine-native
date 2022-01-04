@@ -85,9 +85,7 @@ void Application::close() { // NOLINT
     scheduler->unscheduleAll();
 
     scriptEngine->cleanup();
-#if (CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX)
-    destroyJBW();
-#endif
+
     cc::EventDispatcher::destroy();
 
     // exit

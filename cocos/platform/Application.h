@@ -158,8 +158,6 @@ public:
 
     std::string getSystemVersion();
 
-    void destroyJBW();
-
     // return size in logical pixel unit.
     inline const cc::Vec2 &getViewLogicalSize() const { return _viewLogicalSize; }
 

@@ -112,6 +112,3 @@ static ICallback         cb       = ^void(NSString* _event, NSString* _arg) {
 }
 @end
 
-void cc::Application::destroyJBW(){
-    [[JsbBridgeWrapper sharedInstance] dealloc];
-}
