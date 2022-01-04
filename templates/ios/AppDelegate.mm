@@ -25,6 +25,7 @@
  ****************************************************************************/
 #include "AppDelegate.h"
 #import "ViewController.h"
+#import "platform/apple/JsbBridgeWrapper.h"
 #include "platform/ios/View.h"
 
 #include "Game.h"
@@ -93,6 +94,7 @@ Game *      game = nullptr;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
+    [[JsbBridgeWrapper sharedInstance] dealloc];
     game->onClose();
     [[SDKWrapper shared] applicationWillTerminate:application];
     delete game;
