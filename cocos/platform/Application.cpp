@@ -85,7 +85,6 @@ void Application::close() { // NOLINT
     scheduler->unscheduleAll();
 
     scriptEngine->cleanup();
-
     cc::EventDispatcher::destroy();
 
     // exit
