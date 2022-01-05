@@ -198,7 +198,7 @@ void Assembler::fillBuffers(NodeProxy* node, ModelBatcher* batcher, std::size_t 
         }
     }
 
-    updateVertexAlphas(ia, data, worldVerts, vertexCount);
+    premultiplyVertexAlpha(ia, worldVerts, vertexCount);
 
     // Copy index buffer with vertex offset
     uint16_t* indices = (uint16_t*)data->getIndices();
@@ -209,12 +209,12 @@ void Assembler::fillBuffers(NodeProxy* node, ModelBatcher* batcher, std::size_t 
     }
 }
 
-void Assembler::updateVertexAlphas(const IARenderData& ia, RenderData* data, float* worldVerts, uint32_t vertexCount)
+void Assembler::premultiplyVertexAlpha(const IARenderData& ia, float* worldVerts, uint32_t vertexCount)
 {
     const Vector<Pass*>& passes = ia.getEffect()->getPasses();
     if (passes.at(0)->getBlendSrc() == BlendFactor::ONE)
     {
-        uint8_t* ptrAlpha = (uint8_t*)data->getVertices() + _alphaOffset;
+        uint8_t* ptrAlpha = (uint8_t*)worldVerts + _alphaOffset;
         size_t dataPerVertex = _bytesPerVertex / sizeof(uint8_t);
         uint8_t* ptrColor = (uint8_t*)worldVerts + _vfColor->offset;
 

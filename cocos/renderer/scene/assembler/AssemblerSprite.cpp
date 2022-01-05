@@ -104,7 +104,7 @@ void AssemblerSprite::fillBuffers(NodeProxy* node, ModelBatcher* batcher, std::s
     float* dstWorldVerts = buffer->vData + vBufferOffset;
     memcpy(dstWorldVerts, data->getVertices() + vertexStart * _bytesPerVertex, vertexCount * _bytesPerVertex);
     
-    updateVertexAlphas(ia, data, dstWorldVerts, vertexCount);
+    premultiplyVertexAlpha(ia, dstWorldVerts, vertexCount);
 
     // Copy index buffer with vertex offset
     uint16_t* srcIndices = (uint16_t*)data->getIndices();

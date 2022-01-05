@@ -150,7 +150,7 @@ public:
     /**
      *  @brief update vertices alpha value
      */
-    void updateVertexAlphas(const IARenderData& ia, RenderData* data, float* worldVerts, uint32_t vertexCount);
+    void premultiplyVertexAlpha(const IARenderData& ia, float* worldVerts, uint32_t vertexCount);
 
     /**
      *  @brief Update the material for the given index.
