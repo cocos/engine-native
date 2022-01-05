@@ -148,6 +148,11 @@ public:
     void updateVerticesRange(std::size_t iaIndex, int start, int count);
     
     /**
+     *  @brief update vertices alpha value
+     */
+    void updateVertexAlphas(const IARenderData& ia, RenderData* data, float* worldVerts, uint32_t vertexCount);
+
+    /**
      *  @brief Update the material for the given index.
      *  @param[in] iaIndex Render data index.
      *  @param[in] effect Effect pointer.

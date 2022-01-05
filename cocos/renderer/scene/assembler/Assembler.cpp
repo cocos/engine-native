@@ -198,25 +198,7 @@ void Assembler::fillBuffers(NodeProxy* node, ModelBatcher* batcher, std::size_t 
         }
     }
 
-    uint8_t* ptrAlpha = (uint8_t*)data->getVertices() + _alphaOffset;
-    size_t dataPerVertex = _bytesPerVertex / sizeof(uint8_t);
-    uint8_t* ptrColor = (uint8_t*)worldVerts + _vfColor->offset;
-
-    for (uint32_t i = 0; i < vertexCount; ++i)
-    {
-        float alpha = *(ptrAlpha) / 255.0;
-
-        uint8_t valueB = *(ptrAlpha - 1) * alpha;
-        uint8_t valueG = *(ptrAlpha - 2) * alpha;
-        uint8_t valueR = *(ptrAlpha - 3) * alpha;
-
-        *ptrColor = valueR;
-        *(ptrColor + 1) = valueG;
-        *(ptrColor + 2) = valueB;
-
-        ptrAlpha += dataPerVertex;
-        ptrColor += dataPerVertex;
-    }
+    updateVertexAlphas(ia, data, worldVerts, vertexCount);
 
     // Copy index buffer with vertex offset
     uint16_t* indices = (uint16_t*)data->getIndices();
@@ -224,6 +206,33 @@ void Assembler::fillBuffers(NodeProxy* node, ModelBatcher* batcher, std::size_t 
     for (auto i = 0, j = ia.indicesStart; i < indexCount; ++i, ++j)
     {
         dst[indexId++] = vertexOffset + indices[j];
+    }
+}
+
+void Assembler::updateVertexAlphas(const IARenderData& ia, RenderData* data, float* worldVerts, uint32_t vertexCount)
+{
+    const Vector<Pass*>& passes = ia.getEffect()->getPasses();
+    if (passes.at(0)->getBlendSrc() == BlendFactor::ONE)
+    {
+        uint8_t* ptrAlpha = (uint8_t*)data->getVertices() + _alphaOffset;
+        size_t dataPerVertex = _bytesPerVertex / sizeof(uint8_t);
+        uint8_t* ptrColor = (uint8_t*)worldVerts + _vfColor->offset;
+
+        for (uint32_t i = 0; i < vertexCount; ++i)
+        {
+            float alpha = *(ptrAlpha) / 255.0;
+
+            uint8_t valueB = *(ptrAlpha - 1) * alpha;
+            uint8_t valueG = *(ptrAlpha - 2) * alpha;
+            uint8_t valueR = *(ptrAlpha - 3) * alpha;
+
+            *ptrColor = valueR;
+            *(ptrColor + 1) = valueG;
+            *(ptrColor + 2) = valueB;
+
+            ptrAlpha += dataPerVertex;
+            ptrColor += dataPerVertex;
+        }
     }
 }
 
