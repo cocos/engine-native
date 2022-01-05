@@ -80,7 +80,7 @@ void PipelineUBO::updateCameraUBOView(const RenderPipeline *pipeline, float *out
     const auto *                   ambient       = sharedData->ambient;
     const auto *                   fog           = sharedData->fog;
     const auto *                   shadowInfo    = sharedData->shadow;
-    const auto                     isHDR     = sharedData->isHDR;
+    const auto                     isHDR         = sharedData->isHDR;
 
     auto *device = gfx::Device::getInstance();
 
