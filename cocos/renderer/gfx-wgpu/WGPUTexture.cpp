@@ -93,9 +93,7 @@ void CCWGPUTexture::doInit(const TextureViewInfo &info) {
 
     auto *      ccTexture           = static_cast<CCWGPUTexture *>(info.texture);
     WGPUTexture wgpuTexture         = ccTexture->gpuTextureObject()->wgpuTexture;
-    _gpuTextureObj->wgpuTextureView = ccTexture->gpuTextureObject()->selfView;
-    _gpuTextureObj->selfView        = ccTexture->gpuTextureObject()->selfView;
-
+    _gpuTextureObj->selfView = _gpuTextureObj->wgpuTextureView = wgpuTextureCreateView(wgpuTexture, &descriptor);
     _internalChanged = true;
 }
 

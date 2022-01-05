@@ -90,7 +90,7 @@ void CCWGPUCommandBuffer::end() {
 void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *fbo, const Rect &renderArea, const Color *colors, float depth, uint stencil, CommandBuffer *const * /*secondaryCBs*/, uint /*secondaryCBCount*/) {
     _renderPass  = renderPass;
     _frameBuffer = fbo;
-    // printf("beginr\n");
+
     CCWGPUFramebuffer *ccFrameBuffer = static_cast<CCWGPUFramebuffer *>(fbo);
 
     const ColorAttachmentList &   colorConfigs       = renderPass->getColorAttachments();
@@ -568,12 +568,12 @@ void CCWGPUCommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, 
         WGPUOrigin3D srcOrigin = {
             .x = static_cast<uint32_t>(regions[i].srcOffset.x),
             .y = static_cast<uint32_t>(regions[i].srcOffset.y),
-            .z = static_cast<uint32_t>(regions[i].srcOffset.z),
+            .z = static_cast<uint32_t>(regions[i].srcSubres.baseArrayLayer),
         };
 
         WGPUImageCopyTexture imageCopyTextureSrc = {
             .texture  = srcTex->gpuTextureObject()->wgpuTexture,
-            .mipLevel = 0,
+            .mipLevel = regions[i].srcSubres.mipLevel,
             .origin   = srcOrigin,
             .aspect   = WGPUTextureAspect_All,
         };
@@ -581,20 +581,20 @@ void CCWGPUCommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, 
         WGPUOrigin3D dstOrigin = {
             .x = static_cast<uint32_t>(regions[i].dstOffset.x),
             .y = static_cast<uint32_t>(regions[i].dstOffset.y),
-            .z = static_cast<uint32_t>(regions[i].dstOffset.z),
+            .z = static_cast<uint32_t>(regions[i].dstSubres.baseArrayLayer),
         };
 
         WGPUImageCopyTexture imageCopyTextureDst = {
             .texture  = dstTex->gpuTextureObject()->wgpuTexture,
-            .mipLevel = 0,
+            .mipLevel = regions[i].dstSubres.mipLevel,
             .origin   = dstOrigin,
             .aspect   = WGPUTextureAspect_All,
         };
 
         WGPUExtent3D extent = {
-            .width              = regions[i].srcExtent.width,
-            .height             = regions[i].srcExtent.height,
-            .depthOrArrayLayers = regions[i].srcExtent.depth,
+            .width              = regions[i].dstExtent.width,
+            .height             = regions[i].dstExtent.height,
+            .depthOrArrayLayers = regions[i].dstExtent.depth,
         };
 
         wgpuCommandEncoderCopyTextureToTexture(_gpuCommandBufferObj->wgpuCommandEncoder, &imageCopyTextureSrc, &imageCopyTextureDst, &extent);

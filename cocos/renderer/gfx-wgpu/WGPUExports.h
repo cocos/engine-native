@@ -746,9 +746,9 @@ EMSCRIPTEN_BINDINGS(WEBGPU_DEVICE_WASM_EXPORT) {
         .field("srcSubres", &TextureBlit::srcSubres)
         .field("srcOffset", &TextureBlit::srcOffset)
         .field("srcExtent", &TextureBlit::srcExtent)
-        .field("srcSubres", &TextureBlit::dstSubres)
-        .field("srcOffset", &TextureBlit::dstOffset)
-        .field("srcExtent", &TextureBlit::dstExtent);
+        .field("dstSubres", &TextureBlit::dstSubres)
+        .field("dstOffset", &TextureBlit::dstOffset)
+        .field("dstExtent", &TextureBlit::dstExtent);
     function("TextureBlit", &GenInstance<TextureBlit>::instance);
 
     // struct with pointers
