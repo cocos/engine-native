@@ -214,23 +214,17 @@ void Assembler::premultiplyVertexAlpha(const IARenderData& ia, float* worldVerts
     const Vector<Pass*>& passes = ia.getEffect()->getPasses();
     if (passes.at(0)->getBlendSrc() == BlendFactor::ONE)
     {
-        uint8_t* ptrAlpha = (uint8_t*)worldVerts + _alphaOffset;
         size_t dataPerVertex = _bytesPerVertex / sizeof(uint8_t);
         uint8_t* ptrColor = (uint8_t*)worldVerts + _vfColor->offset;
 
         for (uint32_t i = 0; i < vertexCount; ++i)
         {
-            float alpha = *(ptrAlpha) / 255.0;
+            float alpha = *(ptrColor + 3) / 255.0;
 
-            uint8_t valueB = *(ptrAlpha - 1) * alpha;
-            uint8_t valueG = *(ptrAlpha - 2) * alpha;
-            uint8_t valueR = *(ptrAlpha - 3) * alpha;
+            *ptrColor *= alpha;
+            *(ptrColor + 1) *= alpha;
+            *(ptrColor + 2) *= alpha;
 
-            *ptrColor = valueR;
-            *(ptrColor + 1) = valueG;
-            *(ptrColor + 2) = valueB;
-
-            ptrAlpha += dataPerVertex;
             ptrColor += dataPerVertex;
         }
     }
