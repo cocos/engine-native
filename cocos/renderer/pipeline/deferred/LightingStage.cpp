@@ -319,7 +319,7 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
     }
 
     struct RenderData {
-        framegraph::TextureHandle gbuffer[4]; // read from gbuffer stage
+        framegraph::TextureHandle gbuffer[3]; // read from gbuffer stage
         framegraph::TextureHandle outputTex;  // output texture
         framegraph::TextureHandle depth;
         framegraph::BufferHandle  lightBuffer;      // light storage buffer
@@ -337,7 +337,7 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         builder.subpass(true);
 
         // read gbuffer
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             data.gbuffer[i] = builder.read(framegraph::TextureHandle(builder.readFromBlackboard(DeferredPipeline::fgStrHandleGbufferTexture[i])));
             builder.writeToBlackboard(DeferredPipeline::fgStrHandleGbufferTexture[i], data.gbuffer[i]);
         }
@@ -351,6 +351,7 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
 
         data.depth = framegraph::TextureHandle(builder.readFromBlackboard(RenderPipeline::fgStrHandleOutDepthTexture));
         data.depth = builder.write(data.depth, depthAttachmentInfo);
+        data.depth = builder.read(data.depth);
         builder.writeToBlackboard(RenderPipeline::fgStrHandleOutDepthTexture, data.depth);
 
         if (_pipeline->getClusterEnabled()) {
@@ -412,6 +413,8 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
             pass->getDescriptorSet()->bindTexture(i, table.getRead(data.gbuffer[i]));
             pass->getDescriptorSet()->bindSampler(i, _defaultSampler);
         }
+        pass->getDescriptorSet()->bindTexture(3, table.getRead(data.depth));
+        pass->getDescriptorSet()->bindSampler(3, _defaultSampler);
 
         if (_pipeline->getClusterEnabled()) {
             // cluster buffer bind

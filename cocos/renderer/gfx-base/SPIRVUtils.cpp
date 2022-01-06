@@ -114,6 +114,9 @@ void SPIRVUtils::compileGLSL(ShaderStageFlagBit type, const String& source) {
 
     if (!_shader->parse(&glslang::DefaultTBuiltInResource, _clientInputSemanticsVersion, false, messages)) {
         CC_LOG_ERROR("GLSL Parsing Failed:\n%s\n%s", _shader->getInfoLog(), _shader->getInfoDebugLog());
+        FILE *file = fopen("C:\\w00377744\\wgl.txt", "w");
+        fputs(string, file);
+        fclose(file);
     }
 
     _program = std::make_unique<glslang::TProgram>();
