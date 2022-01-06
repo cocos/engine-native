@@ -51,9 +51,9 @@ typedef void (^OnScriptEventListener)(NSString*);
 /**
  * Dispatch the event with argument, the event should be registered in javascript, or other script language in future.
  */
-- (void)dispatchScriptEvent:(NSString*)eventName arg:(NSString*)arg;
+- (void)dispatchEventToScript:(NSString*)eventName arg:(NSString*)arg;
 /**
  * Dispatch the event which is registered in javascript, or other script language in future.
  */
-- (void)dispatchScriptEvent:(NSString*)eventName;
+- (void)dispatchEventToScript:(NSString*)eventName;
 @end

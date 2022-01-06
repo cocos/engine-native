@@ -92,11 +92,11 @@ static ICallback         cb       = ^void(NSString* _event, NSString* _arg) {
 - (void)removeAllListeners {
     [cbDictionnary removeAllObjects];
 }
-- (void)dispatchScriptEvent:(NSString*)eventName arg:(NSString*)arg {
+- (void)dispatchEventToScript:(NSString*)eventName arg:(NSString*)arg {
     [jb sendToScript:eventName arg1:arg];
 }
 
-- (void)dispatchScriptEvent:(NSString*)eventName {
+- (void)dispatchEventToScript:(NSString*)eventName {
     [jb sendToScript:eventName];
 }
 - (id)init {

@@ -76,13 +76,13 @@ public class JsbBridgeWrapper {
     /**
      * Dispatch the event with argument, the event should be registered in javascript, or other script language in future.
      */
-    public void dispatchScriptEvent(String eventName, String arg) {
+    public void dispatchEventToScript(String eventName, String arg) {
         JsbBridge.sendToScript(eventName, arg);
     }
     /**
      * Dispatch the event which is registered in javascript, or other script language in future.
      */
-    public void dispatchScriptEvent(String eventName) {
+    public void dispatchEventToScript(String eventName) {
         JsbBridge.sendToScript(eventName);
     }
 
