@@ -356,11 +356,17 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
         if (_pipeline->getClusterEnabled()) {
             // read cluster and light info
             data.lightBuffer = framegraph::BufferHandle(builder.readFromBlackboard(fgStrHandleClusterLightBuffer));
-            builder.read(data.lightBuffer);
+            if (data.lightBuffer.isValid()) {
+                builder.read(data.lightBuffer);
+            }
             data.lightIndexBuffer = framegraph::BufferHandle(builder.readFromBlackboard(fgStrHandleClusterLightIndexBuffer));
-            builder.read(data.lightIndexBuffer);
+            if (data.lightIndexBuffer.isValid()) {
+                builder.read(data.lightIndexBuffer);
+            }
             data.lightGridBuffer = framegraph::BufferHandle(builder.readFromBlackboard(fgStrHandleClusterLightGridBuffer));
-            builder.read(data.lightGridBuffer);
+            if (data.lightGridBuffer.isValid()) {
+                builder.read(data.lightGridBuffer);
+            }
         }
 
         // write to lighting output
@@ -409,9 +415,15 @@ void LightingStage::fgLightingPass(scene::Camera *camera) {
 
         if (_pipeline->getClusterEnabled()) {
             // cluster buffer bind
-            pass->getDescriptorSet()->bindBuffer(CLUSTER_LIGHT_BINDING, table.getRead(data.lightBuffer));
-            pass->getDescriptorSet()->bindBuffer(CLUSTER_LIGHT_INDEX_BINDING, table.getRead(data.lightIndexBuffer));
-            pass->getDescriptorSet()->bindBuffer(CLUSTER_LIGHT_GRID_BINDING, table.getRead(data.lightGridBuffer));
+            if (data.lightBuffer.isValid()) {
+                pass->getDescriptorSet()->bindBuffer(CLUSTER_LIGHT_BINDING, table.getRead(data.lightBuffer));
+            }
+            if (data.lightIndexBuffer.isValid()) {
+                pass->getDescriptorSet()->bindBuffer(CLUSTER_LIGHT_INDEX_BINDING, table.getRead(data.lightIndexBuffer));
+            }
+            if (data.lightGridBuffer.isValid()) {
+                pass->getDescriptorSet()->bindBuffer(CLUSTER_LIGHT_GRID_BINDING, table.getRead(data.lightGridBuffer));
+            }
         }
 
         pass->getDescriptorSet()->update();
@@ -491,8 +503,11 @@ void LightingStage::fgTransparent(scene::Camera *camera) {
         auto *pipeline = static_cast<DeferredPipeline *>(_pipeline);
         auto *cmdBuff  = pipeline->getCommandBuffers()[0];
 
-        vector<uint> dynamicOffsets = {0};
-        cmdBuff->bindDescriptorSet(localSet, _descriptorSet, dynamicOffsets);
+        // no need to bind localSet in cluster
+        if (!_pipeline->getClusterEnabled()) {
+            vector<uint> dynamicOffsets = {0};
+            cmdBuff->bindDescriptorSet(localSet, _descriptorSet, dynamicOffsets);
+        }
 
         const std::array<uint, 1> globalOffsets = {pipeline->getPipelineUBO()->getCurrentCameraUBOOffset()};
         cmdBuff->bindDescriptorSet(globalSet, pipeline->getDescriptorSet(), utils::toUint(globalOffsets.size()), globalOffsets.data());
