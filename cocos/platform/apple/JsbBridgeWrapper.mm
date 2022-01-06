@@ -30,7 +30,7 @@
 
 @implementation JsbBridgeWrapper {
     JsbBridge* jb;
-    NSMutableDictionary<NSString*, NSMutableArray<NativeEventListener>*>* cbDictionnary;
+    NSMutableDictionary<NSString*, NSMutableArray<onNativeEventListener>*>* cbDictionnary;
 }
 
 static JsbBridgeWrapper* instance = nil;
@@ -53,9 +53,9 @@ static ICallback         cb       = ^void(NSString* _event, NSString* _arg) {
     return [JsbBridgeWrapper sharedInstance];
 }
 
-- (void)addNativeEventListener:(NSString*)eventName listener:(NativeEventListener)listener {
+- (void)addScriptEventListener:(NSString*)eventName listener:(onNativeEventListener)listener {
     if (![cbDictionnary objectForKey:eventName]) {
-        [cbDictionnary setValue:[NSMutableArray<NativeEventListener> new] forKey:eventName];
+        [cbDictionnary setValue:[NSMutableArray<onNativeEventListener> new] forKey:eventName];
     }
     NSMutableArray* arr = [cbDictionnary objectForKey:eventName];
     if (![arr containsObject:listener]) {
@@ -65,11 +65,11 @@ static ICallback         cb       = ^void(NSString* _event, NSString* _arg) {
 }
 
 - (void)triggerEvent:(NSString*)eventName arg:(NSString*)arg {
-    NSMutableArray<NativeEventListener>* arr = [cbDictionnary objectForKey:eventName];
+    NSMutableArray<onNativeEventListener>* arr = [cbDictionnary objectForKey:eventName];
     if (!arr) {
         return;
     }
-    for (NativeEventListener listener : arr) {
+    for (onNativeEventListener listener : arr) {
         listener(arg);
     }
 }
@@ -81,8 +81,8 @@ static ICallback         cb       = ^void(NSString* _event, NSString* _arg) {
     [cbDictionnary removeObjectForKey:eventName];
 }
 
-- (bool)removeNativeEventListener:(NSString*)eventName listener:(NativeEventListener)listener {
-    NSMutableArray<NativeEventListener>* arr = [cbDictionnary objectForKey:eventName];
+- (bool)removeScriptEventListener:(NSString*)eventName listener:(onNativeEventListener)listener {
+    NSMutableArray<onNativeEventListener>* arr = [cbDictionnary objectForKey:eventName];
     if (!arr) {
         return false;
     }

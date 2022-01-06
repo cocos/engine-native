@@ -44,7 +44,7 @@ public class JsbBridgeWrapper {
     /**
      * Add a listener to specified event, if the event does not exist, the wrapper will create one. Concurrent listener will be ignored
      */
-    public void addNativeEventListener(String eventName, onNativeEventListener listener) {
+    public void addScriptEventListener(String eventName, onNativeEventListener listener) {
         if (eventMap.get(eventName) == null) {
             eventMap.put(eventName, new ArrayList<onNativeEventListener>());
         }
@@ -53,7 +53,7 @@ public class JsbBridgeWrapper {
     /**
      * Remove listener for specified event, concurrent event will be deleted. Return false only if the event does not exist
      */
-    public boolean removeNativeEventListener(String eventName, onNativeEventListener listener) {
+    public boolean removeScriptEventListener(String eventName, onNativeEventListener listener) {
         ArrayList<onNativeEventListener> arr = eventMap.get(eventName);
         if (arr == null) {
             return false;
