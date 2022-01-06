@@ -25,7 +25,7 @@
 #pragma once
 #import <Foundation/Foundation.h>
 
-typedef void (^onNativeEventListener)(NSString*);
+typedef void (^OnNativeEventListener)(NSString*);
 
 @interface JsbBridgeWrapper : NSObject
 /**
@@ -35,11 +35,11 @@ typedef void (^onNativeEventListener)(NSString*);
 /**
  * Add a listener to specified event, if the event does not exist, the wrapper will create one. Concurrent listener will be ignored
  */
-- (void)addScriptEventListener:(NSString*)eventName listener:(onNativeEventListener)listener;
+- (void)addScriptEventListener:(NSString*)eventName listener:(OnNativeEventListener)listener;
 /**
  * Remove listener for specified event, concurrent event will be deleted. Return false only if the event does not exist
  */
-- (bool)removeScriptEventListener:(NSString*)eventName listener:(onNativeEventListener)listener;
+- (bool)removeScriptEventListener:(NSString*)eventName listener:(OnNativeEventListener)listener;
 /**
  * Remove all listener for event specified.
  */

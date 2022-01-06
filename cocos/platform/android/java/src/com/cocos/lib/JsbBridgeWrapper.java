@@ -29,7 +29,7 @@ import java.util.HashMap;
 
 public class JsbBridgeWrapper {
     //Interface for listener, should be implemented and dispatched
-    public interface onNativeEventListener {
+    public interface OnNativeEventListener {
         void onNativeEvent(String arg);
     }
     /**
@@ -44,17 +44,17 @@ public class JsbBridgeWrapper {
     /**
      * Add a listener to specified event, if the event does not exist, the wrapper will create one. Concurrent listener will be ignored
      */
-    public void addScriptEventListener(String eventName, onNativeEventListener listener) {
+    public void addScriptEventListener(String eventName, OnNativeEventListener listener) {
         if (eventMap.get(eventName) == null) {
-            eventMap.put(eventName, new ArrayList<onNativeEventListener>());
+            eventMap.put(eventName, new ArrayList<OnNativeEventListener>());
         }
         eventMap.get(eventName).add(listener);
     }
     /**
      * Remove listener for specified event, concurrent event will be deleted. Return false only if the event does not exist
      */
-    public boolean removeScriptEventListener(String eventName, onNativeEventListener listener) {
-        ArrayList<onNativeEventListener> arr = eventMap.get(eventName);
+    public boolean removeScriptEventListener(String eventName, OnNativeEventListener listener) {
+        ArrayList<OnNativeEventListener> arr = eventMap.get(eventName);
         if (arr == null) {
             return false;
         }
@@ -95,14 +95,14 @@ public class JsbBridgeWrapper {
         });
     }
 
-    private final HashMap<String, ArrayList<onNativeEventListener>> eventMap = new HashMap<>();
+    private final HashMap<String, ArrayList<OnNativeEventListener>> eventMap = new HashMap<>();
     private static JsbBridgeWrapper instance;
 
     private void triggerEvents(String eventName, String arg) {
-        ArrayList<onNativeEventListener> arr = eventMap.get(eventName);
+        ArrayList<OnNativeEventListener> arr = eventMap.get(eventName);
         if (arr == null)
             return;
-        for (onNativeEventListener m : arr) {
+        for (OnNativeEventListener m : arr) {
             m.onNativeEvent(arg);
         }
     }
