@@ -30,7 +30,7 @@ import java.util.HashMap;
 public class JsbBridgeWrapper {
     //Interface for listener, should be implemented and dispatched
     public interface OnScriptEventListener {
-        void onNativeEvent(String arg);
+        void onScriptEvent(String arg);
     }
     /**
      * Get the instance of JsbBridgetWrapper
@@ -103,7 +103,7 @@ public class JsbBridgeWrapper {
         if (arr == null)
             return;
         for (OnScriptEventListener m : arr) {
-            m.onNativeEvent(arg);
+            m.onScriptEvent(arg);
         }
     }
 }
