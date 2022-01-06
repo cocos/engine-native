@@ -29,7 +29,7 @@ import java.util.HashMap;
 
 public class JsbBridgeWrapper {
     //Interface for listener, should be implemented and dispatched
-    public interface OnNativeEventListener {
+    public interface OnScriptEventListener {
         void onNativeEvent(String arg);
     }
     /**
@@ -44,17 +44,17 @@ public class JsbBridgeWrapper {
     /**
      * Add a listener to specified event, if the event does not exist, the wrapper will create one. Concurrent listener will be ignored
      */
-    public void addScriptEventListener(String eventName, OnNativeEventListener listener) {
+    public void addScriptEventListener(String eventName, OnScriptEventListener listener) {
         if (eventMap.get(eventName) == null) {
-            eventMap.put(eventName, new ArrayList<OnNativeEventListener>());
+            eventMap.put(eventName, new ArrayList<OnScriptEventListener>());
         }
         eventMap.get(eventName).add(listener);
     }
     /**
      * Remove listener for specified event, concurrent event will be deleted. Return false only if the event does not exist
      */
-    public boolean removeScriptEventListener(String eventName, OnNativeEventListener listener) {
-        ArrayList<OnNativeEventListener> arr = eventMap.get(eventName);
+    public boolean removeScriptEventListener(String eventName, OnScriptEventListener listener) {
+        ArrayList<OnScriptEventListener> arr = eventMap.get(eventName);
         if (arr == null) {
             return false;
         }
@@ -70,7 +70,7 @@ public class JsbBridgeWrapper {
     /**
      * Remove all event registered. Use it carefully!
      */
-    public void removeAllEvents() {
+    public void removeAllListeners() {
         this.eventMap.clear();
     }
     /**
@@ -95,14 +95,14 @@ public class JsbBridgeWrapper {
         });
     }
 
-    private final HashMap<String, ArrayList<OnNativeEventListener>> eventMap = new HashMap<>();
+    private final HashMap<String, ArrayList<OnScriptEventListener>> eventMap = new HashMap<>();
     private static JsbBridgeWrapper instance;
 
     private void triggerEvents(String eventName, String arg) {
-        ArrayList<OnNativeEventListener> arr = eventMap.get(eventName);
+        ArrayList<OnScriptEventListener> arr = eventMap.get(eventName);
         if (arr == null)
             return;
-        for (OnNativeEventListener m : arr) {
+        for (OnScriptEventListener m : arr) {
             m.onNativeEvent(arg);
         }
     }
