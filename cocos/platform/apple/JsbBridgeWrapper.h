@@ -37,11 +37,11 @@ typedef void (^NativeEventListener)(NSString*);
  */
 - (void)addNativeEventListener:(NSString*)eventName listener:(NativeEventListener)listener;
 /**
- * Remove listener for specified event, concurrent event will be deleted.
+ * Remove listener for specified event, concurrent event will be deleted. Return false only if the event does not exist
  */
 - (bool)removeNativeEventListener:(NSString*)eventName listener:(NativeEventListener)listener;
 /**
- * Return true if successfully remove the callback, false if event does not exist
+ * Remove all listener for event specified.
  */
 - (void)removeAllListenersForEvent:(NSString*)eventName;
 /**
@@ -49,11 +49,11 @@ typedef void (^NativeEventListener)(NSString*);
  */
 - (void)removeAllEvents;
 /**
- * Dispatch the event with argument, the event should be regiestered in javascript, or other script language in future.
+ * Dispatch the event with argument, the event should be registered in javascript, or other script language in future.
  */
 - (void)dispatchScriptEvent:(NSString*)eventName arg:(NSString*)arg;
 /**
- * Dispatch the event which is regiestered in javascript, or other script language in future.
+ * Dispatch the event which is registered in javascript, or other script language in future.
  */
 - (void)dispatchScriptEvent:(NSString*)eventName;
 @end
