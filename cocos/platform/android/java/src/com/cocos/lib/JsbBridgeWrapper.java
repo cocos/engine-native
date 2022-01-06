@@ -28,7 +28,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class JsbBridgeWrapper {
+    //TODO: onScriptEventListener
     public interface JavaCallback {
+        //TODO: onScriptEvent
         void onTrigger(String arg);
     }
 
@@ -38,14 +40,14 @@ public class JsbBridgeWrapper {
         }
         return instance;
     }
-
+    //TODO: addScriptEventListener
     public void addCallback(String event, JavaCallback cb) {
         if (eventMap.get(event) == null) {
             eventMap.put(event, new ArrayList<JavaCallback>());
         }
         eventMap.get(event).add(cb);
     }
-
+    //TODO: removeScriptEventListener event->eventName
     public void removeCallback(String event, JavaCallback cb) {
         ArrayList<JavaCallback> arr = eventMap.get(event);
         if (arr == null) {

@@ -25,7 +25,7 @@
 #pragma once
 #import <Foundation/Foundation.h>
 
-typedef void (^eventCallback)(NSString*);
+typedef void (^NativeEventListener)(NSString*);
 
 @interface JsbBridgeWrapper : NSObject
 /**
@@ -33,23 +33,27 @@ typedef void (^eventCallback)(NSString*);
  */
 + (instancetype)sharedInstance;
 /**
- * add a callback to specified event, if the event does not exist, the wrapper will create one
+ * Add a listener to specified event, if the event does not exist, the wrapper will create one. Concurrent listener will be ignored
  */
-- (void)addCallback:(NSString*)event callback:(eventCallback)callback;
+- (void)addNativeEventListener:(NSString*)eventName listener:(NativeEventListener)listener;
 /**
- * remove callback for specified event, concurrent event will be deleted.
+ * Remove listener for specified event, concurrent event will be deleted.
  */
-- (bool)removeCallback:(NSString*)event callback:(eventCallback)callback;
+- (bool)removeNativeEventListener:(NSString*)eventName listener:(NativeEventListener)listener;
 /**
  * Return true if successfully remove the callback, false if event does not exist
  */
-- (void)removeEvent:(NSString*)event;
+- (void)removeAllListenersForEvent:(NSString*)eventName;
+/**
+ * Remove all event registered. Use it carefully!
+ */
+- (void)removeAllEvents;
 /**
  * Dispatch the event with argument, the event should be regiestered in javascript, or other script language in future.
  */
-- (void)dispatchScriptEvent:(NSString*)name arg:(NSString*)arg;
+- (void)dispatchScriptEvent:(NSString*)eventName arg:(NSString*)arg;
 /**
  * Dispatch the event which is regiestered in javascript, or other script language in future.
  */
-- (void)dispatchScriptEvent:(NSString*)name;
+- (void)dispatchScriptEvent:(NSString*)eventName;
 @end
