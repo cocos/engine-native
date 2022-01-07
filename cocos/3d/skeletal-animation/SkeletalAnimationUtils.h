@@ -66,6 +66,13 @@ struct IJointTextureHandle {
     ITextureBufferHandle                                      handle;
     std::unordered_map<uint32_t, std::vector<geometry::AABB>> bounds;
     cc::optional<std::vector<IInternalJointAnimInfo>>         animInfos;
+
+    static IJointTextureHandle *createJoinTextureHandle() {
+        return new IJointTextureHandle();
+    }
+
+private:
+    IJointTextureHandle() = default;
 };
 
 class JointTexturePool : public RefCounted {
@@ -86,7 +93,7 @@ public:
      * @zh
      * 获取默认姿势的骨骼贴图。
      */
-    cc::optional<IJointTextureHandle> getDefaultPoseTexture(Skeleton *skeleton, Mesh *mesh, Node *skinningRoot);
+    cc::optional<IJointTextureHandle *> getDefaultPoseTexture(Skeleton *skeleton, Mesh *mesh, Node *skinningRoot);
 
     /**
      * @en
@@ -96,7 +103,7 @@ public:
      */
     // cc::optional<IJointTextureHandle> getSequencePoseTexture(Skeleton *skeleton, AnimationClip *clip, Mesh *mesh, Node *skinningRoot);
 
-    void releaseHandle(IJointTextureHandle &handle);
+    void releaseHandle(IJointTextureHandle *handle);
 
     void releaseSkeleton(Skeleton *skeleton);
 
@@ -105,13 +112,13 @@ public:
 private:
     // const IInternalJointAnimInfo &createAnimInfos(Skeleton *skeleton, AnimationClip *clip, Node *skinningRoot); // TODO(xwx): AnimationClip not define
 
-    gfx::Device *                                     _device{nullptr};
-    IntrusivePtr<TextureBufferPool>                   _pool;
-    std::unordered_map<uint64_t, IJointTextureHandle> _textureBuffers;
-    uint32_t                                          _formatSize{0};
-    float                                             _pixelsPerJoint{0}; // TODO(xwx): int or float?
-    IntrusivePtr<TextureBufferPool>                   _customPool;
-    std::unordered_map<uint64_t, index_t>             _chunkIdxMap; // hash -> chunkIdx
+    gfx::Device *                                       _device{nullptr};
+    IntrusivePtr<TextureBufferPool>                     _pool;
+    std::unordered_map<uint64_t, IJointTextureHandle *> _textureBuffers;
+    uint32_t                                            _formatSize{0};
+    float                                               _pixelsPerJoint{0}; // TODO(xwx): int or float?
+    IntrusivePtr<TextureBufferPool>                     _customPool;
+    std::unordered_map<uint64_t, index_t>               _chunkIdxMap; // hash -> chunkIdx
 
     CC_DISALLOW_COPY_MOVE_ASSIGN(JointTexturePool);
 };
