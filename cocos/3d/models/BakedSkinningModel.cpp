@@ -228,7 +228,7 @@ void BakedSkinningModel::syncDataForJS(const std::vector<cc::optional<geometry::
     _jointMedium.animInfo.frameDataBytes = animInfoData.byteLength();
     IJointTextureHandle *textureInfo     = IJointTextureHandle::createJoinTextureHandle();
     textureInfo->handle.texture          = tex;
-    _jointMedium.texture                 = std::move(textureInfo);
+    _jointMedium.texture                 = textureInfo;
 
     updateInstancedJointTextureInfo();
 
