@@ -2764,6 +2764,7 @@ if(MSVC)
         )
     endif()
     target_compile_options(cocos2d PUBLIC /MP 
+        /bigobj
         /wd4018 # signed/unsigned mismatch
         /wd4244 # type conversion data lost
         /wd4267 # conversion from 'size_t' to 'type', possible loss of data
