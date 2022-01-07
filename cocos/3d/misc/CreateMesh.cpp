@@ -1,8 +1,8 @@
 #include "3d/misc/CreateMesh.h"
 #include <algorithm>
 #include "3d/assets/Mesh.h"
-#include "3d/misc/BufferBlob.h"
 #include "3d/misc/Buffer.h"
+#include "3d/misc/BufferBlob.h"
 #include "core/ArrayBuffer.h"
 #include "core/DataView.h"
 #include "renderer/gfx-base/GFXDef-common.h"

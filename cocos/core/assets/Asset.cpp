@@ -58,7 +58,6 @@ std::string Asset::getNativeUrl() const {
 }
 
 Asset::~Asset() {
-    
 }
 
 NativeDep Asset::getNativeDep() const {
