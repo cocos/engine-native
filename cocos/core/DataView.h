@@ -25,10 +25,9 @@
 
 #pragma once
 
-#include <variant>
 #include "base/Macros.h"
 #include "base/TypeDef.h"
-#include "cocos/base/Variant.h"
+#include "base/Variant.h"
 #include "core/ArrayBuffer.h"
 
 namespace cc {
