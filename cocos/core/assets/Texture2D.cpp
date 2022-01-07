@@ -198,7 +198,6 @@ void Texture2D::setImage(ImageAsset *value) {
     setMipmaps(mipmaps);
 }
 
-
 bool Texture2D::validate() const {
     return !_mipmaps.empty();
 }
