@@ -153,7 +153,7 @@ bool AudioDecoder::resample() {
     std::vector<int> Ovalues;
 
     if (Ovalues.empty()) {
-        Ovalues.push_back(outputFrames);
+        Ovalues.push_back(static_cast<int>(outputFrames));
     }
     for (size_t i = 0, j = 0; i < outputFrames;) {
         size_t thisFrames = Ovalues[j++];
@@ -163,8 +163,8 @@ bool AudioDecoder::resample() {
         if (thisFrames == 0 || thisFrames > outputFrames - i) {
             thisFrames = outputFrames - i;
         }
-        int outFrames = resampler->resample((int *)outputVAddr + outputChannels * i, thisFrames,
-                                            &provider);
+        int outFrames = static_cast<int>(resampler->resample(static_cast<int32_t *>(outputVAddr) + outputChannels * i, thisFrames,
+                                                             &provider));
         ALOGV("outFrames: %d", outFrames);
         i += thisFrames;
     }
@@ -208,7 +208,7 @@ bool AudioDecoder::resample() {
     }
 
     // Reset result
-    _result.numFrames  = outputFrames;
+    _result.numFrames  = static_cast<int>(outputFrames);
     _result.sampleRate = outFrameRate;
 
     auto buffer = std::make_shared<std::vector<char>>();

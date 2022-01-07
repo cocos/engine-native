@@ -99,12 +99,8 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if(NOT VS)
-    set(CMAKE_CXX_FLAGS  "-Werror=return-type -Wshorten-64-to-32")
-endif()
-
 if("$ENV{COCOS_ENGINE_DEV}" EQUAL "1")
-    set(WERROR_FLAGS "-Werror")
+    set(WERROR_FLAGS "-Werror") # -Wshorten-64-to-32 -Werror=return-type
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
         set(WERROR_FLAGS "/WX")
     endif()
