@@ -183,8 +183,10 @@ public:
 
 JavaScriptJavaBridge::CallInfo::~CallInfo()
 {
+    m_env->DeleteLocalRef(m_classID);
     if (m_returnType == ValueType::STRING && m_ret.stringValue)
     {
+        m_env->DeleteLocalRef(m_retjstring);
         delete m_ret.stringValue;
     }
 }
