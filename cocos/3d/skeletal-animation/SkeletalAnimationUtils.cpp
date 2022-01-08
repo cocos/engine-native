@@ -134,7 +134,7 @@ JointTexturePool::JointTexturePool(gfx::Device *device) {
     _device            = device;
     const auto &format = selectJointsMediumFormat(_device);
     _formatSize        = gfx::GFX_FORMAT_INFOS[static_cast<uint32_t>(format)].size;
-    _pixelsPerJoint    = 48.F / static_cast<float>(_formatSize);
+    _pixelsPerJoint    = 48 / _formatSize;
     _pool              = new TextureBufferPool(device);
     ITextureBufferPoolInfo poolInfo;
     poolInfo.format    = format;
