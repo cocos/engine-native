@@ -57,7 +57,8 @@ struct IInternalJointAnimInfo {
     cc::optional<Mat4>              bindposeCorrection; // correction factor from the original bindpose
 };
 
-struct IJointTextureHandle {
+class IJointTextureHandle {
+public:
     uint32_t                                                  pixelOffset{0};
     uint32_t                                                  refCount{0};
     uint64_t                                                  clipHash{0};
