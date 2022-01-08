@@ -117,7 +117,7 @@ private:
     IntrusivePtr<TextureBufferPool>                     _pool;
     std::unordered_map<uint64_t, IJointTextureHandle *> _textureBuffers;
     uint32_t                                            _formatSize{0};
-    float                                               _pixelsPerJoint{0}; // TODO(xwx): int or float?
+    uint32_t                                            _pixelsPerJoint{0};
     IntrusivePtr<TextureBufferPool>                     _customPool;
     std::unordered_map<uint64_t, index_t>               _chunkIdxMap; // hash -> chunkIdx
 
