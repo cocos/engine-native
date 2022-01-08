@@ -48,7 +48,6 @@ const std::string INST_JOINT_ANIM_INFO = "a_jointAnimInfo";
 namespace cc {
 
 BakedSkinningModel::BakedSkinningModel()
-: Super()
 //, _dataPoolManager(Root::getInstance()->getDataPoolManager())
 {
     _type = Model::Type::BAKED_SKINNING;

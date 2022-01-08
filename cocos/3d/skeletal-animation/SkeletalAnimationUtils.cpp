@@ -355,7 +355,7 @@ void JointTexturePool::releaseHandle(IJointTextureHandle *handle) {
 
 void JointTexturePool::releaseSkeleton(Skeleton *skeleton) {
     for (const auto &texture : _textureBuffers) {
-        auto handle = texture.second;
+        auto *handle = texture.second;
         if (handle->skeletonHash == skeleton->getHash()) {
             handle->readyToBeDeleted = true;
             if (handle->refCount > 0) {
