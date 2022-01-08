@@ -57,8 +57,7 @@ std::string Asset::getNativeUrl() const {
     return _nativeUrl;
 }
 
-Asset::~Asset() {
-}
+Asset::~Asset() = default;
 
 NativeDep Asset::getNativeDep() const {
     if (!_native.empty()) {

@@ -145,7 +145,7 @@ Mesh::ICreateInfo createMeshInfo(const IGeometry &geometry, const ICreateMeshOpt
     }
 
     if (geometry.customAttributes.has_value()) {
-        for (auto ca : geometry.customAttributes.value()) {
+        for (const auto &ca : geometry.customAttributes.value()) {
             const auto &info = gfx::GFX_FORMAT_INFOS[static_cast<uint32_t>(attr->format)];
             attributes.emplace_back(ca.attr);
             vertCount = std::max(vertCount, static_cast<uint32_t>(std::floor(ca.values.size() / info.count)));
