@@ -344,7 +344,7 @@ IProgramInfo *ProgramLib::define(IShaderInfo &shader) {
                 if (pBool != nullptr) {
                     return *pBool ? 1 : 0;
                 }
-                const auto *pInt = cc::get_if<int>(&value);
+                const auto *pInt = cc::get_if<int32_t>(&value);
                 if (pInt != nullptr) {
                     return *pInt ? 1 : 0;
                 }
