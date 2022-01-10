@@ -292,7 +292,7 @@ void toMat(const float *data, int num, se::Value *ret) {
 ////////////////////////////////////////////////////////////////////////////
 
 // NOLINTNEXTLINE(readability-identifier-naming)
-bool seval_to_ccvalue(const se::Value &v, cc::Value *ret) {
+bool seval_to_ccvalue(const se::Value &v, cc::Value *ret) { // NOLINT
     assert(ret != nullptr);
     bool ok = true;
     if (v.isObject()) {
@@ -326,7 +326,7 @@ bool seval_to_ccvalue(const se::Value &v, cc::Value *ret) {
 }
 
 // NOLINTNEXTLINE(readability-identifier-naming)
-bool seval_to_ccvaluemap(const se::Value &v, cc::ValueMap *ret) {
+bool seval_to_ccvaluemap(const se::Value &v, cc::ValueMap *ret) { // NOLINT
     assert(ret != nullptr);
 
     if (v.isNullOrUndefined()) {
@@ -397,7 +397,7 @@ bool seval_to_ccvaluemapintkey(const se::Value &v, cc::ValueMapIntKey *ret) {
 }
 
 // NOLINTNEXTLINE(readability-identifier-naming)
-bool seval_to_ccvaluevector(const se::Value &v, cc::ValueVector *ret) {
+bool seval_to_ccvaluevector(const se::Value &v, cc::ValueVector *ret) { // NOLINT
     assert(ret != nullptr);
 
     SE_PRECONDITION3(v.isObject(), false, ret->clear());
@@ -1239,7 +1239,7 @@ bool seval_to_Map_string_key(const se::Value &v, cc::Map<std::string, cc::middle
 // native to seval
 
 // NOLINTNEXTLINE(readability-identifier-naming)
-bool ccvalue_to_seval(const cc::Value &v, se::Value *ret) {
+bool ccvalue_to_seval(const cc::Value &v, se::Value *ret) { // NOLINT
     assert(ret != nullptr);
     bool ok = true;
     switch (v.getType()) {
@@ -1281,7 +1281,7 @@ bool ccvalue_to_seval(const cc::Value &v, se::Value *ret) {
 }
 
 // NOLINTNEXTLINE(readability-identifier-naming)
-bool ccvaluemap_to_seval(const cc::ValueMap &v, se::Value *ret) {
+bool ccvaluemap_to_seval(const cc::ValueMap &v, se::Value *ret) { // NOLINT
     assert(ret != nullptr);
 
     se::HandleObject obj(se::Object::createPlainObject());
@@ -1311,7 +1311,7 @@ bool ccvaluemap_to_seval(const cc::ValueMap &v, se::Value *ret) {
 }
 
 // NOLINTNEXTLINE(readability-identifier-naming)
-bool ccvaluemapintkey_to_seval(const cc::ValueMapIntKey &v, se::Value *ret) {
+bool ccvaluemapintkey_to_seval(const cc::ValueMapIntKey &v, se::Value *ret) { // NOLINT
     assert(ret != nullptr);
 
     se::HandleObject obj(se::Object::createPlainObject());
@@ -1343,7 +1343,7 @@ bool ccvaluemapintkey_to_seval(const cc::ValueMapIntKey &v, se::Value *ret) {
 }
 
 // NOLINTNEXTLINE(readability-identifier-naming)
-bool ccvaluevector_to_seval(const cc::ValueVector &v, se::Value *ret) {
+bool ccvaluevector_to_seval(const cc::ValueVector &v, se::Value *ret) { // NOLINT
     assert(ret != nullptr);
     se::HandleObject obj(se::Object::createArrayObject(v.size()));
     bool             ok = true;
