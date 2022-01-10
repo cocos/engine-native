@@ -786,8 +786,7 @@ bool sevalue_to_native(const se::Value &from, cc::MacroValue *to, se::Object * /
     if (from.isBoolean()) {
         *to = from.toBoolean();
     } else if (from.isNumber()) {
-        // cjh TODO: how to check it's a int32_t or float?
-        *to = from.toInt32();
+        *to = from.toInt32();// NOTE: We only support macro with int32_t type now.
     } else if (from.isString()) {
         *to = from.toString();
     }
