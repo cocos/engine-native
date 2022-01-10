@@ -1317,12 +1317,6 @@ inline bool nativevalue_to_se(const std::array<float, N> &from, se::Value &to, s
 }
 
 template <typename R, typename... Args>
-inline bool nativevalue_to_se(std::function<R(Args...)> & /*from*/, se::Value & /*to*/, se::Object * /*ctx*/) { // NOLINT(readability-identifier-naming)
-    SE_LOGE("Can not convert C++ lambda to JS object");                                                         
-    return false;
-}
-
-template <typename R, typename... Args>
 inline bool nativevalue_to_se(const std::function<R(Args...)> & /*from*/, se::Value & /*to*/, se::Object * /*ctx*/) { // NOLINT(readability-identifier-naming)
     SE_LOGE("Can not convert C++ const lambda to JS object");                                                         
     return false;
