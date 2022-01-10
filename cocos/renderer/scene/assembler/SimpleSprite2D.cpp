@@ -93,8 +93,6 @@ void SimpleSprite2D::fillBuffers(NodeProxy* node, ModelBatcher* batcher, std::si
     float* dstWorldVerts = buffer->vData + vBufferOffset;
     memcpy(dstWorldVerts, data->getVertices(), 4 * _bytesPerVertex);
 
-    premultiplyVertexAlpha(_iaDatas[index], dstWorldVerts, 4);
-
     // Copy index buffer with vertex offset
     uint16_t* srcIndices = (uint16_t*)data->getIndices();
     uint16_t* dstIndices = buffer->iData;
