@@ -96,7 +96,7 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
 
         WGPUVertexBufferLayout vertexBufferLayout = {
             .arrayStride    = stride, // TODO_Zeqiang: ???
-            .stepMode       = isInstance ? WGPUInputStepMode_Instance : WGPUInputStepMode_Vertex,
+            .stepMode       = isInstance ? WGPUVertexStepMode_Instance : WGPUVertexStepMode_Vertex,
             .attributeCount = wgpuAttrs.size(),
             .attributes     = wgpuAttrs.data(),
         };
@@ -196,7 +196,7 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
         //     }
         // }
 
-        WGPURenderPipelineDescriptor2 piplineDesc = {
+        WGPURenderPipelineDescriptor piplineDesc = {
             .nextInChain  = nullptr,
             .label        = nullptr,
             .layout       = pipelineLayout->gpuPipelineLayoutObject()->wgpuPipelineLayout,
@@ -206,7 +206,7 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
             .multisample  = msState,
             .fragment     = &fragmentState,
         };
-        _gpuPipelineStateObj->wgpuRenderPipeline = wgpuDeviceCreateRenderPipeline2(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &piplineDesc);
+        _gpuPipelineStateObj->wgpuRenderPipeline = wgpuDeviceCreateRenderPipeline(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &piplineDesc);
         _ppl                                     = pipelineLayout;
     } else if (_bindPoint == PipelineBindPoint::COMPUTE) {
         if (_gpuPipelineStateObj->wgpuComputePipeline)
@@ -217,12 +217,12 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
         };
         pipelineLayout->prepare(setInUse);
         WGPUComputePipelineDescriptor piplineDesc = {
-            .layout       = pipelineLayout->gpuPipelineLayoutObject()->wgpuPipelineLayout,
-            .computeStage = psDesc,
+            .layout  = pipelineLayout->gpuPipelineLayoutObject()->wgpuPipelineLayout,
+            .compute = psDesc,
         };
         _gpuPipelineStateObj->wgpuComputePipeline = wgpuDeviceCreateComputePipeline(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &piplineDesc);
     } else {
-        CC_LOG_ERROR("unsupport pipeline bind point");
+        printf("unsupport pipeline bind point");
     }
 }
 

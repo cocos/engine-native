@@ -168,7 +168,7 @@ void CCWGPUDevice::copyBuffersToTexture(const uint8_t* const* buffers, Texture* 
     auto*    texture   = static_cast<CCWGPUTexture*>(dst);
 
     for (size_t i = 0; i < count; i++) {
-        uint32_t bufferSize = pxSize * regions[i].texExtent.width * regions[i].texExtent.depth;
+        uint32_t bufferSize = pxSize * regions[i].texExtent.width * regions[i].texExtent.height;
 
         uint32_t bytesPerRow = pxSize * regions[i].texExtent.width;
         //it's buffer data layout

@@ -106,9 +106,9 @@ void CCWGPUCommandBuffer::beginRenderPass(RenderPass *renderPass, Framebuffer *f
         renderPassDesc.label                = "swapchain";
         WGPURenderPassColorAttachment color = {
             .view          = swapchain->gpuSwapchainObject()->swapchainColor->gpuTextureObject()->selfView,
-            .resolveTarget = nullptr,           //TODO_Zeqiang: wgpu offscr msaa
-            .loadOp        = WGPULoadOp_Clear,  //toWGPULoadOp(colorConfigs[0].loadOp),
-            .storeOp       = WGPUStoreOp_Clear, //toWGPUStoreOp(colorConfigs[0].storeOp),
+            .resolveTarget = nullptr,             //TODO_Zeqiang: wgpu offscr msaa
+            .loadOp        = WGPULoadOp_Clear,    //toWGPULoadOp(colorConfigs[0].loadOp),
+            .storeOp       = WGPUStoreOp_Discard, //toWGPUStoreOp(colorConfigs[0].storeOp),
             .clearColor    = WGPUColor{0.2, 0.2, 0.2, 1.0},
         };
         colorAttachments.emplace_back(color);
@@ -228,7 +228,7 @@ void CCWGPUCommandBuffer::setScissor(const Rect &rect) {
 }
 
 void CCWGPUCommandBuffer::setLineWidth(float /*width*/) {
-    CC_LOG_WARNING("linewith not support in webGPU, ignored.");
+    printf("linewith not support in webGPU, ignored.");
 }
 
 void CCWGPUCommandBuffer::setDepthBias(float constant, float clamp, float slope) {
@@ -357,11 +357,11 @@ void CCWGPUCommandBuffer::bindStates() {
         }
         const auto *indexBuffer = static_cast<CCWGPUBuffer *>(ia->getIndexBuffer());
         if (indexBuffer) {
-            wgpuRenderPassEncoderSetIndexBufferWithFormat(_gpuCommandBufferObj->wgpuRenderPassEncoder,
-                                                          indexBuffer->gpuBufferObject()->wgpuBuffer,
-                                                          indexBuffer->getStride() == 2 ? WGPUIndexFormat::WGPUIndexFormat_Uint16 : WGPUIndexFormat_Uint32,
-                                                          indexBuffer->getOffset(),
-                                                          indexBuffer->getSize());
+            wgpuRenderPassEncoderSetIndexBuffer(_gpuCommandBufferObj->wgpuRenderPassEncoder,
+                                                indexBuffer->gpuBufferObject()->wgpuBuffer,
+                                                indexBuffer->getStride() == 2 ? WGPUIndexFormat::WGPUIndexFormat_Uint16 : WGPUIndexFormat_Uint32,
+                                                indexBuffer->getOffset(),
+                                                indexBuffer->getSize());
         }
 
         WGPUColor blendColor = toWGPUColor(_gpuCommandBufferObj->stateCache.blendConstants);
@@ -426,7 +426,7 @@ void CCWGPUCommandBuffer::bindStates() {
 }
 
 void CCWGPUCommandBuffer::nextSubpass() {
-    CC_LOG_INFO("@hana-alice to implement.");
+    printf("@hana-alice to implement.");
 }
 
 void CCWGPUCommandBuffer::draw(const DrawInfo &info) {
@@ -602,7 +602,7 @@ void CCWGPUCommandBuffer::blitTexture(Texture *srcTexture, Texture *dstTexture, 
 }
 
 void CCWGPUCommandBuffer::execute(CommandBuffer *const * /*cmdBuffs*/, uint32_t /*count*/) {
-    CC_LOG_ERROR(".....");
+    printf(".....");
 }
 
 void CCWGPUCommandBuffer::dispatch(const DispatchInfo &info) {

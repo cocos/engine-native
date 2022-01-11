@@ -1,6 +1,5 @@
 #pragma once
 #include <webgpu/webgpu.h>
-#include "cocos/base/Log.h"
 #include "cocos/base/Macros.h"
 #include "cocos/base/TypeDef.h"
 #include "gfx-base/GFXDef-common.h"
@@ -25,9 +24,9 @@ static WGPUStoreOp toWGPUStoreOp(StoreOp op) {
         case StoreOp::STORE:
             return WGPUStoreOp::WGPUStoreOp_Store;
         case StoreOp::DISCARD:
-            return WGPUStoreOp::WGPUStoreOp_Clear;
+            return WGPUStoreOp::WGPUStoreOp_Discard;
         default:
-            return WGPUStoreOp::WGPUStoreOp_Clear;
+            return WGPUStoreOp::WGPUStoreOp_Discard;
     }
 }
 
@@ -43,13 +42,13 @@ static WGPUTextureUsageFlags toWGPUTextureUsage(TextureUsage usage) {
         res |= WGPUTextureUsage::WGPUTextureUsage_CopyDst;
     }
     if (hasFlag(usage, TextureUsageBit::SAMPLED)) {
-        res |= WGPUTextureUsage::WGPUTextureUsage_Sampled;
+        res |= WGPUTextureUsage::WGPUTextureUsage_TextureBinding;
     }
     if (hasFlag(usage, TextureUsageBit::STORAGE)) {
-        res |= WGPUTextureUsage::WGPUTextureUsage_Storage;
+        res |= WGPUTextureUsage::WGPUTextureUsage_StorageBinding;
     }
     if (hasFlag(usage, TextureUsageBit::INPUT_ATTACHMENT)) {
-        res |= WGPUTextureUsage::WGPUTextureUsage_Sampled;
+        res |= WGPUTextureUsage::WGPUTextureUsage_TextureBinding;
     }
     if (hasFlag(usage, TextureUsageBit::COLOR_ATTACHMENT)) {
         res |= WGPUTextureUsage::WGPUTextureUsage_RenderAttachment;

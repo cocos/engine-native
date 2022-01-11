@@ -72,7 +72,7 @@ void CCWGPUShader::initialize(const SPVShaderInfoInstance& spvInfo) {
         } else if (stage.stage == ShaderStageFlagBit::COMPUTE) {
             _gpuShaderObject->wgpuShaderComputeModule = wgpuDeviceCreateShaderModule(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &desc);
         } else {
-            CC_LOG_ERROR("unsupport shader stage.");
+            printf("unsupport shader stage.");
         }
     }
 }

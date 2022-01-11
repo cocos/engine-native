@@ -73,7 +73,7 @@ void CCWGPUSwapchain::doInit(const SwapchainInfo& info) {
     WGPUSwapChainDescriptor swapChainDesc;
     swapChainDesc.nextInChain = nullptr;
     swapChainDesc.label       = "defaultSwapChain";
-    swapChainDesc.usage       = WGPUTextureUsage_OutputAttachment;
+    swapChainDesc.usage       = WGPUTextureUsage_RenderAttachment;
     swapChainDesc.format      = WGPUTextureFormat_BGRA8Unorm;
     swapChainDesc.width       = info.width;
     swapChainDesc.height      = info.height;

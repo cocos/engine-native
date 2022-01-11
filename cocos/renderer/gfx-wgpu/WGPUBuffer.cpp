@@ -93,7 +93,7 @@ void CCWGPUBuffer::doDestroy() {
 
 void CCWGPUBuffer::doResize(uint size, uint count) {
     if (_isBufferView) {
-        CC_LOG_ERROR("Resize is not support on buffer view!");
+        printf("Resize is not support on buffer view!");
         return;
     }
     if (_gpuBufferObject->wgpuBuffer) {

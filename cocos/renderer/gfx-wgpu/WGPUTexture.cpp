@@ -91,10 +91,10 @@ void CCWGPUTexture::doInit(const TextureViewInfo &info) {
         .aspect          = textureAspectTrait(info.format),
     };
 
-    auto *      ccTexture           = static_cast<CCWGPUTexture *>(info.texture);
-    WGPUTexture wgpuTexture         = ccTexture->gpuTextureObject()->wgpuTexture;
+    auto *      ccTexture    = static_cast<CCWGPUTexture *>(info.texture);
+    WGPUTexture wgpuTexture  = ccTexture->gpuTextureObject()->wgpuTexture;
     _gpuTextureObj->selfView = _gpuTextureObj->wgpuTextureView = wgpuTextureCreateView(wgpuTexture, &descriptor);
-    _internalChanged = true;
+    _internalChanged                                           = true;
 }
 
 void CCWGPUTexture::doInit(const SwapchainTextureInfo &info) {
@@ -104,7 +104,7 @@ void CCWGPUTexture::doInit(const SwapchainTextureInfo &info) {
             WGPUTextureDescriptor descriptor = {
                 .nextInChain   = nullptr,
                 .label         = nullptr,
-                .usage         = WGPUTextureUsage_OutputAttachment,
+                .usage         = WGPUTextureUsage_RenderAttachment,
                 .dimension     = WGPUTextureDimension_2D,
                 .size          = {info.width, info.height, 1},
                 .format        = toWGPUTextureFormat(info.format),
@@ -153,7 +153,7 @@ void CCWGPUTexture::doDestroy() {
 void CCWGPUTexture::doResize(uint32_t width, uint32_t height, uint32_t size) {
     printf("tex rsz\n");
     if (_isTextureView) {
-        CC_LOG_ERROR("Resize is not support on texture view!");
+        printf("Resize is not support on texture view!");
         return;
     }
     if (_gpuTextureObj->wgpuTexture) {

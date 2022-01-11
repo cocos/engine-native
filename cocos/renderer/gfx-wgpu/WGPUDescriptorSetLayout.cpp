@@ -93,7 +93,7 @@ void CCWGPUDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo& info) {
                 };
                 _gpuLayoutEntryObj->bindGroupLayoutEntries.push_back(layout);
             } else {
-                CC_LOG_ERROR("unsupport buffer descriptor type.");
+                printf("unsupport buffer descriptor type.");
             }
         } else if (_bindings[i].descriptorType == DescriptorType::SAMPLER) {
             WGPUBindGroupLayoutEntry layout = {
@@ -110,7 +110,7 @@ void CCWGPUDescriptorSetLayout::doInit(const DescriptorSetLayoutInfo& info) {
                 .visibility     = toWGPUShaderStageFlag(_bindings[i].stageFlags),
                 .storageTexture = {
                     nullptr,
-                    WGPUStorageTextureAccess::WGPUStorageTextureAccess_ReadOnly,
+                    WGPUStorageTextureAccess::WGPUStorageTextureAccess_WriteOnly,
                     WGPUTextureFormat::WGPUTextureFormat_RGBA8Unorm,
                     WGPUTextureViewDimension::WGPUTextureViewDimension_2D,
                 },
@@ -147,7 +147,7 @@ void CCWGPUDescriptorSetLayout::updateLayout(uint8_t binding, const CCWGPUBuffer
         if (tex) {
             if (tex->getInfo().usage == TextureUsageBit::STORAGE) {
                 (*iter).storageTexture.nextInChain   = nullptr;
-                (*iter).storageTexture.access        = WGPUStorageTextureAccess::WGPUStorageTextureAccess_ReadOnly;
+                (*iter).storageTexture.access        = WGPUStorageTextureAccess::WGPUStorageTextureAccess_WriteOnly;
                 (*iter).storageTexture.format        = toWGPUTextureFormat(tex->getFormat());
                 TextureType type                     = tex->isTextureView() ? tex->getViewInfo().type : tex->getInfo().type;
                 (*iter).storageTexture.viewDimension = toWGPUTextureViewDimension(type);
