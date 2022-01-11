@@ -235,11 +235,11 @@ inline bool sevalue_to_native(const se::Value &from, double *to, se::Object * /*
 
 
 
-bool sevalue_to_native(const se::Value &from, cc::TextureCube **to, se::Object *ctx);
-bool sevalue_to_native(const se::Value &from, cc::TextureCube *to, se::Object *ctx);
+bool sevalue_to_native(const se::Value &from, cc::TextureCube **to, se::Object *ctx);// NOLINT(readability-identifier-naming)
+bool sevalue_to_native(const se::Value &from, cc::TextureCube *to, se::Object *ctx);// NOLINT(readability-identifier-naming)
 
-bool sevalue_to_native(const se::Value &from, cc::ImageAsset **to, se::Object *ctx);
-bool sevalue_to_native(const se::Value &from, cc::ImageAsset *to, se::Object *ctx);
+bool sevalue_to_native(const se::Value &from, cc::ImageAsset **to, se::Object *ctx);// NOLINT(readability-identifier-naming)
+bool sevalue_to_native(const se::Value &from, cc::ImageAsset *to, se::Object *ctx);// NOLINT(readability-identifier-naming)
 
 //inline bool sevalue_to_native(const se::Value & /*from*/, void * /*to*/, se::Object * /*ctx*/) { // NOLINT(readability-identifier-naming)
 //    assert(false);                                                                               // void not supported

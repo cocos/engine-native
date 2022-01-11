@@ -793,6 +793,7 @@ bool sevalue_to_native(const se::Value &from, cc::ImageAsset *to, se::Object * /
 
     return true;
 }
+// NOLINTNEXTLINE(readability-identifier-naming)
 bool sevalue_to_native(const se::Value &from, cc::ImageAsset **to, se::Object *ctx) {
     se::Object *obj         = from.toObject();
     void *      privateData = obj->getPrivateData();
