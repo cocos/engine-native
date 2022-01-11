@@ -31,6 +31,7 @@
 #include "cocos/math/Vec2.h"
 #include "cocos/math/Vec3.h"
 #include "core/ArrayBuffer.h"
+#include "core/assets/ImageAsset.h"
 #include "core/assets/TextureCube.h"
 #include "core/geometry/AABB.h"
 #include "extensions/cocos-ext.h"
@@ -79,7 +80,7 @@ set_member_field(se::Object *obj, T *to, const std::string &property, F f, se::V
     return true;
 }
 
-template <typename A, typename T, typename F>
+template <typename T, typename F>
 typename std::enable_if<std::is_member_object_pointer<F>::value, bool>::type
 set_member_field(se::Object *obj, T *to, const std::string &property, F f, se::Value &tmp) { // NOLINT
     bool ok = obj->getProperty(property.data(), &tmp, true);
@@ -482,10 +483,10 @@ bool sevalue_to_native(const se::Value &from, cc::Vec4 *to, se::Object * /*unuse
     SE_PRECONDITION2(from.isObject(), false, "Convert parameter to Vec4 failed!");
     se::Object *obj = from.toObject();
     se::Value   tmp;
-    set_member_field<float>(obj, to, "x", &cc::Vec4::x, tmp);
-    set_member_field<float>(obj, to, "y", &cc::Vec4::y, tmp);
-    set_member_field<float>(obj, to, "z", &cc::Vec4::z, tmp);
-    set_member_field<float>(obj, to, "w", &cc::Vec4::w, tmp);
+    set_member_field(obj, to, "x", &cc::Vec4::x, tmp);
+    set_member_field(obj, to, "y", &cc::Vec4::y, tmp);
+    set_member_field(obj, to, "z", &cc::Vec4::z, tmp);
+    set_member_field(obj, to, "w", &cc::Vec4::w, tmp);
     return true;
 }
 
@@ -580,9 +581,9 @@ bool sevalue_to_native(const se::Value &from, cc::Vec3 *to, se::Object * /*unuse
 
     se::Object *obj = from.toObject();
     se::Value   tmp;
-    set_member_field<float>(obj, to, "x", &cc::Vec3::x, tmp);
-    set_member_field<float>(obj, to, "y", &cc::Vec3::y, tmp);
-    set_member_field<float>(obj, to, "z", &cc::Vec3::z, tmp);
+    set_member_field(obj, to, "x", &cc::Vec3::x, tmp);
+    set_member_field(obj, to, "y", &cc::Vec3::y, tmp);
+    set_member_field(obj, to, "z", &cc::Vec3::z, tmp);
     return true;
 }
 
@@ -592,10 +593,10 @@ bool sevalue_to_native(const se::Value &from, cc::Color *to, se::Object * /*unus
 
     se::Object *obj = from.toObject();
     se::Value   t;
-    set_member_field<uint8_t>(obj, to, "r", &cc::Color::r, t);
-    set_member_field<uint8_t>(obj, to, "g", &cc::Color::g, t);
-    set_member_field<uint8_t>(obj, to, "b", &cc::Color::b, t);
-    set_member_field<uint8_t>(obj, to, "a", &cc::Color::a, t);
+    set_member_field(obj, to, "r", &cc::Color::r, t);
+    set_member_field(obj, to, "g", &cc::Color::g, t);
+    set_member_field(obj, to, "b", &cc::Color::b, t);
+    set_member_field(obj, to, "a", &cc::Color::a, t);
     return true;
 }
 
@@ -605,8 +606,8 @@ bool sevalue_to_native(const se::Value &from, cc::Vec2 *to, se::Object * /*unuse
 
     se::Object *obj = from.toObject();
     se::Value   tmp;
-    set_member_field<float>(obj, to, "x", &cc::Vec2::x, tmp);
-    set_member_field<float>(obj, to, "y", &cc::Vec2::y, tmp);
+    set_member_field(obj, to, "x", &cc::Vec2::x, tmp);
+    set_member_field(obj, to, "y", &cc::Vec2::y, tmp);
     return true;
 }
 
@@ -616,8 +617,8 @@ bool sevalue_to_native(const se::Value &from, cc::Size *to, se::Object * /*unuse
 
     se::Object *obj = from.toObject();
     se::Value   tmp;
-    set_member_field<float>(obj, to, "width", &cc::Size::width, tmp);
-    set_member_field<float>(obj, to, "height", &cc::Size::height, tmp);
+    set_member_field(obj, to, "width", &cc::Size::width, tmp);
+    set_member_field(obj, to, "height", &cc::Size::height, tmp);
     return true;
 }
 
@@ -626,10 +627,10 @@ bool sevalue_to_native(const se::Value &from, cc::Quaternion *to, se::Object * /
     SE_PRECONDITION2(from.isObject(), false, "Convert parameter to Quaternion failed!");
     se::Object *obj = from.toObject();
     se::Value   tmp;
-    set_member_field<float>(obj, to, "x", &cc::Quaternion::x, tmp);
-    set_member_field<float>(obj, to, "y", &cc::Quaternion::y, tmp);
-    set_member_field<float>(obj, to, "z", &cc::Quaternion::z, tmp);
-    set_member_field<float>(obj, to, "w", &cc::Quaternion::w, tmp);
+    set_member_field(obj, to, "x", &cc::Quaternion::x, tmp);
+    set_member_field(obj, to, "y", &cc::Quaternion::y, tmp);
+    set_member_field(obj, to, "z", &cc::Quaternion::z, tmp);
+    set_member_field(obj, to, "w", &cc::Quaternion::w, tmp);
     return true;
 }
 
@@ -640,8 +641,8 @@ bool sevalue_to_native(const se::Value &from, cc::geometry::AABB *to, se::Object
     SE_PRECONDITION2(from.isObject(), false, "Convert parameter to AABB failed!");
     se::Object *obj = from.toObject();
     se::Value   tmp;
-    set_member_field<cc::Vec3>(obj, to, "halfExtents", &cc::geometry::AABB::halfExtents, tmp);
-    set_member_field<cc::Vec3>(obj, to, "center", &cc::geometry::AABB::center, tmp);
+    set_member_field(obj, to, "halfExtents", &cc::geometry::AABB::halfExtents, tmp);
+    set_member_field(obj, to, "center", &cc::geometry::AABB::center, tmp);
     return true;
 }
 
@@ -650,9 +651,9 @@ bool sevalue_to_native(const se::Value &from, cc::geometry::Capsule *to, se::Obj
     SE_PRECONDITION2(from.isObject(), false, "Convert parameter to Capsule failed!");
     se::Object *obj = from.toObject();
     se::Value   tmp;
-    set_member_field<float>(obj, to, "radius", &cc::geometry::Capsule::radius, tmp);
-    set_member_field<float>(obj, to, "halfHeight", &cc::geometry::Capsule::halfHeight, tmp);
-    set_member_field<cc::geometry::Capsule::CenterEnum>(obj, to, "axis", &cc::geometry::Capsule::axis, tmp);
+    set_member_field(obj, to, "radius", &cc::geometry::Capsule::radius, tmp);
+    set_member_field(obj, to, "halfHeight", &cc::geometry::Capsule::halfHeight, tmp);
+    set_member_field(obj, to, "axis", &cc::geometry::Capsule::axis, tmp);
     return true;
 }
 
@@ -661,8 +662,8 @@ bool sevalue_to_native(const se::Value &from, cc::geometry::Line *to, se::Object
     SE_PRECONDITION2(from.isObject(), false, "Convert parameter to Line failed!");
     se::Object *obj = from.toObject();
     se::Value   tmp;
-    set_member_field<cc::Vec3>(obj, to, "s", &cc::geometry::Line::s, tmp);
-    set_member_field<cc::Vec3>(obj, to, "e", &cc::geometry::Line::e, tmp);
+    set_member_field(obj, to, "s", &cc::geometry::Line::s, tmp);
+    set_member_field(obj, to, "e", &cc::geometry::Line::e, tmp);
     return true;
 }
 
@@ -671,8 +672,8 @@ bool sevalue_to_native(const se::Value &from, cc::geometry::Ray *to, se::Object 
     SE_PRECONDITION2(from.isObject(), false, "Convert parameter to Sphere failed!");
     se::Object *obj = from.toObject();
     se::Value   tmp;
-    set_member_field<cc::Vec3>(obj, to, "o", &cc::geometry::Ray::o, tmp);
-    set_member_field<cc::Vec3>(obj, to, "d", &cc::geometry::Ray::d, tmp);
+    set_member_field(obj, to, "o", &cc::geometry::Ray::o, tmp);
+    set_member_field(obj, to, "d", &cc::geometry::Ray::d, tmp);
     return true;
 }
 
@@ -691,9 +692,9 @@ bool sevalue_to_native(const se::Value &from, cc::geometry::Triangle *to, se::Ob
     SE_PRECONDITION2(from.isObject(), false, "Convert parameter to Plane failed!");
     se::Object *obj = from.toObject();
     se::Value   tmp;
-    set_member_field<cc::Vec3>(obj, to, "a", &cc::geometry::Triangle::a, tmp);
-    set_member_field<cc::Vec3>(obj, to, "b", &cc::geometry::Triangle::b, tmp);
-    set_member_field<cc::Vec3>(obj, to, "c", &cc::geometry::Triangle::c, tmp);
+    set_member_field(obj, to, "a", &cc::geometry::Triangle::a, tmp);
+    set_member_field(obj, to, "b", &cc::geometry::Triangle::b, tmp);
+    set_member_field(obj, to, "c", &cc::geometry::Triangle::c, tmp);
     return true;
 }
 
@@ -702,8 +703,8 @@ bool sevalue_to_native(const se::Value &from, cc::geometry::Plane *to, se::Objec
     SE_PRECONDITION2(from.isObject(), false, "Convert parameter to Plane failed!");
     se::Object *obj = from.toObject();
     se::Value   tmp;
-    set_member_field<cc::Vec3>(obj, to, "n", &cc::geometry::Plane::n, tmp);
-    set_member_field<float>(obj, to, "d", &cc::geometry::Plane::d, tmp);
+    set_member_field(obj, to, "n", &cc::geometry::Plane::n, tmp);
+    set_member_field(obj, to, "d", &cc::geometry::Plane::d, tmp);
     return true;
 }
 
@@ -717,8 +718,8 @@ bool sevalue_to_native(const se::Value &from, cc::geometry::Frustum *to, se::Obj
     SE_PRECONDITION2(from.isObject(), false, "Convert parameter to Frustum failed!");
     se::Object *obj = from.toObject();
     se::Value   tmp;
-    set_member_field<std::array<cc::geometry::Plane, 6>>(obj, to, "planes", &cc::geometry::Frustum::planes, tmp);
-    set_member_field<std::array<cc::Vec3, 8>>(obj, to, "vertices", &cc::geometry::Frustum::vertices, tmp);
+    set_member_field(obj, to, "planes", &cc::geometry::Frustum::planes, tmp);
+    set_member_field(obj, to, "vertices", &cc::geometry::Frustum::vertices, tmp);
     return true;
 }
 
@@ -769,32 +770,56 @@ bool sevalue_to_native(const se::Value &from, cc::scene::ShadowsInfo *to, se::Ob
 }
 
 // NOLINTNEXTLINE(readability-identifier-naming)
-bool sevalue_to_native(const se::Value &from, cc::IntrusivePtr<cc::ImageAsset> *to, se::Object * /*unused*/) {
-    cc::ImageAsset *imageAssetPtr = to->get();
-    SE_PRECONDITION2(from.isObject() && imageAssetPtr != nullptr, false, "Convert parameter to ImageAsset failed!");
+bool sevalue_to_native(const se::Value &from, cc::ImageAsset *to, se::Object * /*unused*/) {
     se::Object *obj = from.toObject();
-    se::Value   tmp;
-    set_member_field<uint32_t>(obj, imageAssetPtr, "width", &cc::ImageAsset::setWidth, tmp);
-    set_member_field<uint32_t>(obj, imageAssetPtr, "height", &cc::ImageAsset::setHeight, tmp);
+
+    void *privateData = obj->getPrivateData();
+
+    if (privateData) {
+        assert(false); // not copyable
+        return false;
+    }
+
+    SE_PRECONDITION2(from.isObject(), false, "Convert parameter to ImageAsset failed!");
+
+    se::Value tmp;
+    set_member_field<uint32_t>(obj, to, "width", &cc::ImageAsset::setWidth, tmp);
+    set_member_field<uint32_t>(obj, to, "height", &cc::ImageAsset::setHeight, tmp);
 
     bool ok = obj->getProperty("format", &tmp, true);
     if (ok) {
-        imageAssetPtr->setFormat(static_cast<cc::PixelFormat>(tmp.toInt32()));
+        to->setFormat(static_cast<cc::PixelFormat>(tmp.toInt32()));
     }
 
     return true;
 }
+bool sevalue_to_native(const se::Value &from, cc::ImageAsset **to, se::Object *ctx) {
+    se::Object *obj         = from.toObject();
+    void *      privateData = obj->getPrivateData();
 
+    if (privateData) {
+        *to = static_cast<cc::ImageAsset *>(privateData);
+        return true;
+    }
+    return sevalue_to_native(from, *to, ctx);
+}
 // NOLINTNEXTLINE(readability-identifier-naming)
 bool sevalue_to_native(const se::Value &from, cc::ITextureCubeMipmap *to, se::Object * /*unused*/) {
     se::Object *obj = from.toObject();
     se::Value   tmp;
-    set_member_field<cc::IntrusivePtr<cc::ImageAsset>>(obj, to, "front", &cc::ITextureCubeMipmap::front, tmp);
-    set_member_field<cc::IntrusivePtr<cc::ImageAsset>>(obj, to, "back", &cc::ITextureCubeMipmap::back, tmp);
-    set_member_field<cc::IntrusivePtr<cc::ImageAsset>>(obj, to, "left", &cc::ITextureCubeMipmap::left, tmp);
-    set_member_field<cc::IntrusivePtr<cc::ImageAsset>>(obj, to, "right", &cc::ITextureCubeMipmap::right, tmp);
-    set_member_field<cc::IntrusivePtr<cc::ImageAsset>>(obj, to, "top", &cc::ITextureCubeMipmap::top, tmp);
-    set_member_field<cc::IntrusivePtr<cc::ImageAsset>>(obj, to, "bottom", &cc::ITextureCubeMipmap::bottom, tmp);
+    bool        ok = obj->getProperty("front", &tmp, true);
+
+    to->front = new cc::ImageAsset();
+    // HolderType<cc::IntrusivePtr<cc::ImageAsset>, true> arg0 = {};
+    //HolderType<std::vector<cc::IntrusivePtr<cc::ImageAsset>>, true> arg0 = {};
+    //ok = sevalue_to_native(tmp, &arg0, obj);
+
+    set_member_field(obj, to, "front", &cc::ITextureCubeMipmap::front, tmp);
+    set_member_field(obj, to, "back", &cc::ITextureCubeMipmap::back, tmp);
+    set_member_field(obj, to, "left", &cc::ITextureCubeMipmap::left, tmp);
+    set_member_field(obj, to, "right", &cc::ITextureCubeMipmap::right, tmp);
+    set_member_field(obj, to, "top", &cc::ITextureCubeMipmap::top, tmp);
+    set_member_field(obj, to, "bottom", &cc::ITextureCubeMipmap::bottom, tmp);
 
     return true;
 }
