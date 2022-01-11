@@ -35,10 +35,8 @@
 #include "VKQueue.h"
 #include "VKRenderPass.h"
 #include "VKTexture.h"
-#include "gfx-base/GFXDef-common.h"
 #include "states/VKGlobalBarrier.h"
 #include "states/VKTextureBarrier.h"
-#include "vulkan/vulkan_core.h"
 
 namespace cc {
 namespace gfx {
