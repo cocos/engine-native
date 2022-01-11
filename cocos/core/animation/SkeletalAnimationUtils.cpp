@@ -29,7 +29,7 @@
 namespace cc {
 
 namespace {
-std::vector<IJointTransform *>                     stack; //cjh TODO: how to release ?
+std::vector<IJointTransform *>                     stack; // NOTE: Only use it to visit parent`s transform, no need to release
 std::unordered_map<std::string, IJointTransform *> pool;
 } // namespace
 
@@ -43,10 +43,10 @@ Mat4 getWorldMatrix(IJointTransform *transform, int32_t stamp) {
             break;
         }
         transform->stamp = stamp;
-        stack.resize(i + 1);
-        stack[i++] = transform;
+        stack.emplace_back(transform);
         transform  = transform->parent;
     }
+    i = stack.size();
     while (i > 0) {
         transform        = stack[--i];
         stack[i]         = nullptr;
@@ -60,6 +60,7 @@ Mat4 getWorldMatrix(IJointTransform *transform, int32_t stamp) {
         }
         res = &transform->world;
     }
+    stack.clear();
     return res != nullptr ? *res : Mat4::IDENTITY;
 }
 
