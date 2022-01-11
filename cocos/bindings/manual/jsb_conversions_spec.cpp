@@ -807,13 +807,6 @@ bool sevalue_to_native(const se::Value &from, cc::ImageAsset **to, se::Object *c
 bool sevalue_to_native(const se::Value &from, cc::ITextureCubeMipmap *to, se::Object * /*unused*/) {
     se::Object *obj = from.toObject();
     se::Value   tmp;
-    bool        ok = obj->getProperty("front", &tmp, true);
-
-    to->front = new cc::ImageAsset();
-    // HolderType<cc::IntrusivePtr<cc::ImageAsset>, true> arg0 = {};
-    //HolderType<std::vector<cc::IntrusivePtr<cc::ImageAsset>>, true> arg0 = {};
-    //ok = sevalue_to_native(tmp, &arg0, obj);
-
     set_member_field(obj, to, "front", &cc::ITextureCubeMipmap::front, tmp);
     set_member_field(obj, to, "back", &cc::ITextureCubeMipmap::back, tmp);
     set_member_field(obj, to, "left", &cc::ITextureCubeMipmap::left, tmp);
