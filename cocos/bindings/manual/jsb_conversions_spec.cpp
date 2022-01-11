@@ -769,21 +769,6 @@ bool sevalue_to_native(const se::Value &from, cc::scene::ShadowsInfo *to, se::Ob
 }
 
 // NOLINTNEXTLINE(readability-identifier-naming)
-bool sevalue_to_native(const se::Value &from, cc::scene::SkyboxInfo *to, se::Object * /*ctx*/) {
-    SE_PRECONDITION2(from.isObject(), false, "Convert parameter to ShadowInfo failed!");
-    se::Object *obj = from.toObject();
-    se::Value   tmp;
-    set_member_field<cc::TextureCube *>(obj, to, "envmap", &cc::scene::SkyboxInfo::setEnvmap, tmp);
-    set_member_field<cc::TextureCube *>(obj, to, "diffuseMap", &cc::scene::SkyboxInfo::setDiffuseMap, tmp);
-    set_member_field<bool>(obj, to, "enabled", &cc::scene::SkyboxInfo::setEnabled, tmp);
-    set_member_field<bool>(obj, to, "useIBL", &cc::scene::SkyboxInfo::setUseIBL, tmp);
-    set_member_field<bool>(obj, to, "useHDR", &cc::scene::SkyboxInfo::setUseHDR, tmp);
-    set_member_field<bool>(obj, to, "applyDiffuseMap", &cc::scene::SkyboxInfo::setApplyDiffuseMap, tmp);
-
-    return true;
-}
-
-// NOLINTNEXTLINE(readability-identifier-naming)
 bool sevalue_to_native(const se::Value &from, cc::IntrusivePtr<cc::ImageAsset> *to, se::Object * /*unused*/) {
     cc::ImageAsset *imageAssetPtr = to->get();
     SE_PRECONDITION2(from.isObject() && imageAssetPtr != nullptr, false, "Convert parameter to ImageAsset failed!");
@@ -855,6 +840,21 @@ bool sevalue_to_native(const se::Value &from, cc::TextureCube *to, se::Object * 
 // NOLINTNEXTLINE(readability-identifier-naming)
 bool sevalue_to_native(const se::Value &from, cc::TextureCube **to, se::Object *ctx) {
     return sevalue_to_native(from, *to, ctx);
+}
+
+// NOLINTNEXTLINE(readability-identifier-naming)
+bool sevalue_to_native(const se::Value &from, cc::scene::SkyboxInfo *to, se::Object * /*ctx*/) {
+    SE_PRECONDITION2(from.isObject(), false, "Convert parameter to ShadowInfo failed!");
+    se::Object *obj = from.toObject();
+    se::Value   tmp;
+    set_member_field<cc::TextureCube *>(obj, to, "envmap", &cc::scene::SkyboxInfo::setEnvmap, tmp);
+    set_member_field<cc::TextureCube *>(obj, to, "diffuseMap", &cc::scene::SkyboxInfo::setDiffuseMap, tmp);
+    set_member_field<bool>(obj, to, "enabled", &cc::scene::SkyboxInfo::setEnabled, tmp);
+    set_member_field<bool>(obj, to, "useIBL", &cc::scene::SkyboxInfo::setUseIBL, tmp);
+    set_member_field<bool>(obj, to, "useHDR", &cc::scene::SkyboxInfo::setUseHDR, tmp);
+    set_member_field<bool>(obj, to, "applyDiffuseMap", &cc::scene::SkyboxInfo::setApplyDiffuseMap, tmp);
+
+    return true;
 }
 
 // cc::variant<int32_t, bool, std::string>;
