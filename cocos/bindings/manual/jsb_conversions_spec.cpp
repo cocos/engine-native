@@ -31,6 +31,7 @@
 #include "cocos/math/Vec2.h"
 #include "cocos/math/Vec3.h"
 #include "core/ArrayBuffer.h"
+#include "core/assets/TextureCube.h"
 #include "core/geometry/AABB.h"
 #include "extensions/cocos-ext.h"
 #include "network/Downloader.h"
@@ -772,20 +773,97 @@ bool sevalue_to_native(const se::Value &from, cc::scene::SkyboxInfo *to, se::Obj
     SE_PRECONDITION2(from.isObject(), false, "Convert parameter to ShadowInfo failed!");
     se::Object *obj = from.toObject();
     se::Value   tmp;
-    // TODO(PatriceJiang): export TextureCube
-    //  set_member_field<cc::TextureCube*>(obj, to, "envmap", &cc::scene::SkyboxInfo::setEnvmap, tmp);
+    set_member_field<cc::TextureCube *>(obj, to, "envmap", &cc::scene::SkyboxInfo::setEnvmap, tmp);
+    set_member_field<cc::TextureCube *>(obj, to, "diffuseMap", &cc::scene::SkyboxInfo::setDiffuseMap, tmp);
     set_member_field<bool>(obj, to, "enabled", &cc::scene::SkyboxInfo::setEnabled, tmp);
     set_member_field<bool>(obj, to, "useIBL", &cc::scene::SkyboxInfo::setUseIBL, tmp);
+    set_member_field<bool>(obj, to, "useHDR", &cc::scene::SkyboxInfo::setUseHDR, tmp);
+    set_member_field<bool>(obj, to, "applyDiffuseMap", &cc::scene::SkyboxInfo::setApplyDiffuseMap, tmp);
+
     return true;
 }
 
-// cc::variant<int32_t, float, bool, std::string>;
+// NOLINTNEXTLINE(readability-identifier-naming)
+bool sevalue_to_native(const se::Value &from, cc::IntrusivePtr<cc::ImageAsset> *to, se::Object * /*unused*/) {
+    cc::ImageAsset *imageAssetPtr = to->get();
+    SE_PRECONDITION2(from.isObject() && imageAssetPtr != nullptr, false, "Convert parameter to ImageAsset failed!");
+    se::Object *obj = from.toObject();
+    se::Value   tmp;
+    set_member_field<uint32_t>(obj, imageAssetPtr, "width", &cc::ImageAsset::setWidth, tmp);
+    set_member_field<uint32_t>(obj, imageAssetPtr, "height", &cc::ImageAsset::setHeight, tmp);
+
+    bool ok = obj->getProperty("format", &tmp, true);
+    if (ok) {
+        imageAssetPtr->setFormat(static_cast<cc::PixelFormat>(tmp.toInt32()));
+    }
+
+    return true;
+}
+
+// NOLINTNEXTLINE(readability-identifier-naming)
+bool sevalue_to_native(const se::Value &from, cc::ITextureCubeMipmap *to, se::Object * /*unused*/) {
+    se::Object *obj = from.toObject();
+    se::Value   tmp;
+    set_member_field<cc::IntrusivePtr<cc::ImageAsset>>(obj, to, "front", &cc::ITextureCubeMipmap::front, tmp);
+    set_member_field<cc::IntrusivePtr<cc::ImageAsset>>(obj, to, "back", &cc::ITextureCubeMipmap::back, tmp);
+    set_member_field<cc::IntrusivePtr<cc::ImageAsset>>(obj, to, "left", &cc::ITextureCubeMipmap::left, tmp);
+    set_member_field<cc::IntrusivePtr<cc::ImageAsset>>(obj, to, "right", &cc::ITextureCubeMipmap::right, tmp);
+    set_member_field<cc::IntrusivePtr<cc::ImageAsset>>(obj, to, "top", &cc::ITextureCubeMipmap::top, tmp);
+    set_member_field<cc::IntrusivePtr<cc::ImageAsset>>(obj, to, "bottom", &cc::ITextureCubeMipmap::bottom, tmp);
+
+    return true;
+}
+
+// NOLINTNEXTLINE(readability-identifier-naming)
+bool sevalue_to_native(const se::Value &from, std::vector<cc::ITextureCubeMipmap> *to, se::Object * /*ctx*/) {
+    if (from.isNullOrUndefined()) {
+        to->clear();
+        return true;
+    }
+
+    SE_PRECONDITION2(from.isObject(), false, "sevalue_to_native(std::vector<cc::ITextureCubeMipmap>), not an object");
+    auto *fromObj = from.toObject();
+    CC_ASSERT(fromObj->isArray());
+    uint32_t len = 0;
+    bool     ok  = fromObj->getArrayLength(&len);
+    if (ok) {
+        to->resize(len);
+        se::Value arrElement;
+        for (uint32_t i = 0; i < len; ++i) {
+            ok = fromObj->getArrayElement(i, &arrElement);
+            if (!ok || !arrElement.isObject()) {
+                continue;
+            }
+
+            sevalue_to_native(arrElement, &to->at(i), nullptr);
+        }
+    }
+
+    return true;
+}
+
+// NOLINTNEXTLINE(readability-identifier-naming)
+bool sevalue_to_native(const se::Value &from, cc::TextureCube *to, se::Object * /*unused*/) {
+    SE_PRECONDITION2(from.isObject(), false, "Convert parameter to TextureCube failed!");
+    se::Object *obj = from.toObject();
+    se::Value   tmp;
+    set_member_field<cc::ITextureCubeMipmap>(obj, to, "image", &cc::TextureCube::setImage, tmp);
+    set_member_field<std::vector<cc::ITextureCubeMipmap>>(obj, to, "mipmaps", &cc::TextureCube::setMipmaps, tmp);
+    return true;
+}
+
+// NOLINTNEXTLINE(readability-identifier-naming)
+bool sevalue_to_native(const se::Value &from, cc::TextureCube **to, se::Object *ctx) {
+    return sevalue_to_native(from, *to, ctx);
+}
+
+// cc::variant<int32_t, bool, std::string>;
 // NOLINTNEXTLINE(readability-identifier-naming)
 bool sevalue_to_native(const se::Value &from, cc::MacroValue *to, se::Object * /*ctx*/) {
     if (from.isBoolean()) {
         *to = from.toBoolean();
     } else if (from.isNumber()) {
-        *to = from.toInt32();// NOTE: We only support macro with int32_t type now.
+        *to = from.toInt32(); // NOTE: We only support macro with int32_t type now.
     } else if (from.isString()) {
         *to = from.toString();
     }

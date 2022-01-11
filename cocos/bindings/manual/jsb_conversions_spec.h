@@ -288,7 +288,7 @@ inline bool sevalue_to_native(const se::Value &from, std::vector<se::Value> *to,
 //////////////////  cc::any
 inline bool sevalue_to_native(const se::Value & /*from*/, cc::any * /*to*/, se::Object * /*ctx*/) { // NOLINT(readability-identifier-naming)
     assert(false);
-    //TODO(PatriceJiang): convert any to specific types
+    SE_LOGE("Can not convert any to specific types");
     return false;
 }
 
@@ -482,7 +482,7 @@ inline bool nativevalue_to_se(const cc::monostate & /*from*/, se::Value &to, se:
 
 inline bool nativevalue_to_se(const cc::any &from, se::Value &to, se::Object *ctx) { //NOLINT
     assert(false);
-    //TODO(PatriceJiang): // should not convert cc::any
+    SE_LOGE("should not convert cc::any");
     return true;
 }
 
