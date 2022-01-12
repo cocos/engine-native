@@ -313,6 +313,7 @@ public:
 #ifndef __OHOS__
             ccDeleteLocalRef(t.env, t.classID);
 #endif
+            ccDeleteLocalRef(t.env, array);
             deleteLocalRefs(t.env, &localRefs);
         } else {
             reportError(className, methodName, signature);
