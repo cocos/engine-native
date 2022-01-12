@@ -236,6 +236,7 @@ public:
                     t.env->ReleaseFloatArrayElements(array, elems, 0);
                 };
             }
+            t.env->DeleteLocalRef(array);
             t.env->DeleteLocalRef(t.classID);
             deleteLocalRefs(t.env, localRefs);
             return &ret[0];
