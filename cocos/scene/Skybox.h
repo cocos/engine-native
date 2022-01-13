@@ -103,7 +103,14 @@ public:
     // @type(TextureCube)
     // @tooltip('i18n:skybox.envmap')
     void                setEnvmap(TextureCube *val);
-    inline TextureCube *getEnvamp() const {
+    void setEnvmapForJS(TextureCube *val) {
+        _envmapHDR = val;
+    }
+    TextureCube* getEnvmapForJS() {
+        return _envmapHDR;
+    }
+
+    inline TextureCube *getEnvmap() const {
         const bool isHDR = Root::getInstance()->getPipeline()->getPipelineSceneData()->isHDR();
         return isHDR ? _envmapHDR : _envmapLDR;
     }
