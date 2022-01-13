@@ -103,10 +103,10 @@ public:
     // @type(TextureCube)
     // @tooltip('i18n:skybox.envmap')
     void                setEnvmap(TextureCube *val);
-    void setEnvmapForJS(TextureCube *val) {
+    inline void setEnvmapForJS(TextureCube *val) {
         _envmapHDR = val;
     }
-    TextureCube* getEnvmapForJS() {
+    inline TextureCube *getEnvmapForJS() const {
         return _envmapHDR;
     }
 
