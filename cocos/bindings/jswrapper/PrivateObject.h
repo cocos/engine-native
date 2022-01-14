@@ -209,7 +209,7 @@ inline PrivateObjectBase *shared_private_object(const std::shared_ptr<T> &ptr) {
 template <typename T>
 inline PrivateObjectBase *rawref_private_object(T *ptr) { // NOLINT
     // static_assert(false, "always fail");
-    static_assert(!std::is_base_of<cc::RefCounted, T>::value, "cc::RefCounted is not acceptable for shared_ptr");
+//    static_assert(!std::is_base_of<cc::RefCounted, T>::value, "cc::RefCounted is not acceptable for shared_ptr");
 #if CC_DEBUG
     inHeap(ptr);
 #endif

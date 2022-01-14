@@ -151,10 +151,10 @@ public:
     }
 
 private:
-    IntrusivePtr<Texture2D>    _textureAsset;
-    IntrusivePtr<gfx::Sampler> _sampler;
-    ArrayBuffer::Ptr           _arrayBuffer;
-    Float32Array               _valueView;
+    IntrusivePtr<Texture2D> _textureAsset;
+    gfx::Sampler *          _sampler{nullptr};
+    ArrayBuffer::Ptr        _arrayBuffer;
+    Float32Array            _valueView;
 
     CC_DISALLOW_COPY_MOVE_ASSIGN(MorphTexture);
 };
