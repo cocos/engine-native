@@ -25,6 +25,10 @@ cc_set_if_undefined(USE_JOB_SYSTEM_TASKFLOW  OFF)
 cc_set_if_undefined(USE_JOB_SYSTEM_TBB       OFF)
 cc_set_if_undefined(USE_PHYSICS_PHYSX        OFF)
 cc_set_if_undefined(USE_MODULES              OFF)
+cc_set_if_undefined(USE_AR_MODULE            OFF)
+cc_set_if_undefined(USE_AR_AUTO              ON)
+cc_set_if_undefined(USE_AR_CORE              OFF)
+cc_set_if_undefined(USE_AR_ENGINE            OFF)
 
 add_definitions()
 
@@ -1820,6 +1824,13 @@ if(USE_MIDDLEWARE)
     endif()
 endif()
 
+if(USE_AR_MODULE)
+    cocos_source_files(
+        cocos/bindings/auto/jsb_ar_auto.cpp
+        cocos/bindings/auto/jsb_ar_auto.h
+    )
+endif()
+
 ######## manual
 cocos_source_files(
     NO_WERROR    cocos/bindings/manual/jsb_classtype.cpp
@@ -1899,6 +1910,13 @@ elseif(LINUX)
 elseif(QNX)
     cocos_source_files(
         NO_WERROR    cocos/bindings/manual/jsb_platfrom_qnx.cpp
+    )
+endif()
+
+if(USE_AR_MODULE)
+    cocos_source_files(
+        cocos/bindings/manual/jsb_ar_manual.cpp
+        cocos/bindings/manual/jsb_ar_manual.h
     )
 endif()
 
@@ -2108,6 +2126,30 @@ elseif(QNX)
     endif()
 endif()
 
+##### ar
+if(USE_AR_MODULE)
+    cocos_source_files(
+        cocos/ar/ARModule.cpp
+        cocos/ar/ARModule.h
+        cocos/ar/IARAPI.h
+        cocos/renderer/pipeline/ar/ARStage.cpp
+        cocos/renderer/pipeline/ar/ARStage.h
+        cocos/renderer/pipeline/ar/ARBackground.cpp
+        cocos/renderer/pipeline/ar/ARBackground.h
+    )
+    if(ANDROID)
+    cocos_source_files(
+        cocos/ar/android/ARAndroidAPIImpl.cpp
+        cocos/ar/android/ARAndroidAPIImpl.h
+    )
+    elseif(IOS)
+    cocos_source_files(
+        cocos/ar/ios/ARKitAPIImpl.mm
+        cocos/ar/ios/ARKitAPIImpl.h
+    )
+    endif()
+endif()
+
 ##### extensions
 
 cocos_source_files(
@@ -2259,6 +2301,10 @@ function(cc_apply_definations target)
         $<IF:$<BOOL:${USE_JOB_SYSTEM_TBB}>,USE_JOB_SYSTEM_TBB=1,USE_JOB_SYSTEM_TBB=0>
         $<IF:$<BOOL:${USE_JOB_SYSTEM_TASKFLOW}>,USE_JOB_SYSTEM_TASKFLOW=1,USE_JOB_SYSTEM_TASKFLOW=0>
         $<IF:$<BOOL:${USE_PHYSICS_PHYSX}>,USE_PHYSICS_PHYSX=1,USE_PHYSICS_PHYSX=0>
+        $<IF:$<BOOL:${USE_AR_MODULE}>,USE_AR_MODULE=1,USE_AR_MODULE=0>
+        $<IF:$<BOOL:${USE_AR_AUTO}>,USE_AR_AUTO=1,USE_AR_AUTO=0>
+        $<IF:$<BOOL:${USE_AR_CORE}>,USE_AR_CORE=1,USE_AR_CORE=0>
+        $<IF:$<BOOL:${USE_AR_ENGINE}>,USE_AR_ENGINE=1,USE_AR_ENGINE=0>
         $<$<BOOL:${USE_SE_JSC}>:SCRIPT_ENGINE_TYPE=3>
         $<$<CONFIG:Debug>:CC_DEBUG=1>
     )

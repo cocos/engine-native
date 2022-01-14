@@ -55,6 +55,12 @@
     #include "cocos/bindings/auto/jsb_audio_auto.h"
 #endif
 
+// ARModule ADD
+#if USE_AR_MODULE
+    #include "cocos/bindings/auto/jsb_ar_auto.h"
+    #include "cocos/bindings/manual/jsb_ar_manual.h"
+#endif
+
 #if (CC_PLATFORM == CC_PLATFORM_MAC_IOS || CC_PLATFORM == CC_PLATFORM_MAC_OSX)
     #include "cocos/bindings/manual/JavaScriptObjCBridge.h"
 #endif
@@ -159,6 +165,12 @@ bool jsb_register_all_modules() {
     #endif
 
 #endif // USE_MIDDLEWARE
+
+// ARModule ADD
+#if USE_AR_MODULE
+    se->addRegisterCallback(register_all_ar);
+    se->addRegisterCallback(register_all_ar_manual);
+#endif
 
 #if USE_PHYSICS_PHYSX
     se->addRegisterCallback(register_all_physics);

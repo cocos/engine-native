@@ -130,7 +130,7 @@ float* ARModule::getAddedPlanesInfo() const {
     return _impl->getAddedPlanesInfo();
 }
 
-unsigned long* ARModule::getRemovedPlanesInfo() const {
+int* ARModule::getRemovedPlanesInfo() const {
     return _impl->getRemovedPlanesInfo();
 }
 float* ARModule::getUpdatedPlanesInfo() const {

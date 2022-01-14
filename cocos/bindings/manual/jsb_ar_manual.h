@@ -25,58 +25,8 @@
 
 #pragma once
 
-#include <memory>
-#include "base/Macros.h"
-
 namespace se {
-
-class Object;
-class HandleObject;
-
+    class Object;
 }
 
-namespace cc {
-namespace ar {
-
-class IARAPI;
-
-class CC_DLL ARModule final {
-public:
-    static ARModule* get();
-
-    ARModule();
-    ~ARModule();
-
-    void start();
-    void onResume();
-    void onPause();
-    void beforeUpdate();
-    void update();
-    bool checkStart();
-    int getAPIState();
-
-    float* getCameraPose() const;
-    float* getCameraViewMatrix() const;
-    float* getCameraProjectionMatrix() const;
-    float* getCameraTexCoords() const;
-    void setCameraTextureName(int id);
-    void* getCameraTextureRef() const;
-
-    //void setPlaneFeatureEnable(bool isOn) const;
-    int getAddedPlanesCount() const;
-    int getRemovedPlanesCount() const;
-    int getUpdatedPlanesCount() const;
-    void updatePlanesInfo() const;
-    float* getAddedPlanesInfo() const;
-    int* getRemovedPlanesInfo() const;
-    float* getUpdatedPlanesInfo() const;
-    int getInfoLength() const;
-    
-private:
-    std::unique_ptr<IARAPI> _impl;
-};
-
-static std::unique_ptr<ARModule> arModuleInstance;
-
-} // namespace ar
-} // namespace cc
+bool register_all_ar_manual(se::Object* obj); // NOLINT(readability-identifier-naming)

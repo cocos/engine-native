@@ -25,51 +25,39 @@
 
 #pragma once
 
-#include "base/Log.h"
-
-#define CC_ARAPI_DEBUG
-#ifdef CC_ARAPI_DEBUG
-    #define DLLOG(...) CC_LOG_DEBUG(__VA_ARGS__)
-#else
-    #define DLLOG(...) \
-        do {           \
-        } while (0)
-#endif
+#include "../ar/ARBackground.h"
 
 namespace cc {
-namespace ar {
+namespace pipeline {
 
-using Pose      = std::array<float, 7>;
-using Matrix    = std::array<float, 16>;
-using TexCoords = std::array<float, 8>;
+class RenderFlow;
+class RenderBatchedQueue;
+class RenderInstancedQueue;
+class RenderAdditiveLightQueue;
+class PlanarShadowQueue;
+class ForwardPipeline;
+class UIPhase;
+// ARModule ADD, need remove after modify
+class ARBackground;
 
-class IARAPI {
+class CC_DLL ARStage : public RenderStage {
 public:
-    virtual ~IARAPI()     = default;
-    virtual void start()  = 0;
-    virtual void resume() = 0;
-    virtual void pause()  = 0;
-    virtual void beforeUpdate() {}
-    virtual void update()      = 0;
-    virtual int  getAPIState() = 0;
+    static const RenderStageInfo &getInitializeInfo();
 
-    virtual float* getCameraPose()              = 0;
-    virtual float* getCameraViewMatrix()        = 0;
-    virtual float* getCameraProjectionMatrix()  = 0;
-    virtual float* getCameraTexCoords()         = 0;
-    virtual void   setCameraTextureName(int id) = 0;
-    virtual void*  getCameraTextureRef()        = 0;
+    ARStage();
+    ~ARStage() override;
 
-    //virtual void setPlaneFeatureEnable(bool isOn) = 0;
-    virtual int    getAddedPlanesCount()   = 0;
-    virtual int    getRemovedPlanesCount() = 0;
-    virtual int    getUpdatedPlanesCount() = 0;
-    virtual void   updatePlanesInfo()      = 0;
-    virtual float* getAddedPlanesInfo()    = 0;
-    virtual int*   getRemovedPlanesInfo()  = 0;
-    virtual float* getUpdatedPlanesInfo()  = 0;
-    virtual int    getInfoLength() {}
+    bool initialize(const RenderStageInfo &info) override;
+    void activate(RenderPipeline *pipeline, RenderFlow *flow) override;
+    void destroy() override;
+    void render(scene::Camera *camera) override;
+
+private:
+    void                      dispenseRenderObject2Queues();
+    static RenderStageInfo    initInfo;
+
+    ARBackground * _arBackground = nullptr;
 };
 
-} // namespace ar
+} // namespace pipeline
 } // namespace cc

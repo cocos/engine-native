@@ -65,8 +65,17 @@ void CCMTLTexture::doInit(const TextureInfo &info) {
 
     if(_info.externalRes) {
         auto pixelBuffer = static_cast<CVPixelBufferRef>(_info.externalRes);
+
+        // for separating y tex and cbcr tex from arkit background pixelbuffer 
+        #if USE_AR_MODULE
+        size_t width = CVPixelBufferGetWidthOfPlane(pixelBuffer, _info.layerCount);
+        size_t height = CVPixelBufferGetHeightOfPlane(pixelBuffer, _info.layerCount);
+        _info.width = static_cast<unsigned int>(width);
+        _info.height = static_cast<unsigned int>(height);
+        #else
         size_t width = CVPixelBufferGetWidth(pixelBuffer);
         size_t height = CVPixelBufferGetHeight(pixelBuffer);
+        #endif
 
         CVReturn cvret;
         CVMetalTextureCacheRef CVMTLTextureCache;
@@ -88,14 +97,20 @@ void CCMTLTexture::doInit(const TextureInfo &info) {
                         pixelBuffer, nil,
                         mtlFormat,
                         width, height,
+                        #if USE_AR_MODULE
+                        _info.layerCount,
+                        #else
                         0,
+                        #endif
                         &CVMTLTexture);
 
         CCASSERT(cvret == kCVReturnSuccess, @"Failed to create CoreVideo Metal texture from image");
 
         _mtlTexture = CVMetalTextureGetTexture(CVMTLTexture);
+        #if !USE_AR_MODULE
         CFRelease(CVMTLTexture);
         CFRelease(CVMTLTextureCache);
+        #endif
 
         CCASSERT(_mtlTexture, @"Failed to create Metal texture CoreVideo Metal Texture");
     }

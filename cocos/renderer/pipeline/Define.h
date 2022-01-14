@@ -366,6 +366,7 @@ struct CC_DLL UBOUILocal {
 };
 
 enum class CC_DLL ForwardStagePriority {
+    AR      = 5,
     FORWARD = 10,
     UI      = 20
 };

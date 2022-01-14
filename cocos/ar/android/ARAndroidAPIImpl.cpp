@@ -29,7 +29,10 @@
 #include "platform/java/jni/JniImp.h"
 #include "renderer/gfx-base/GFXDevice.h"
 #include "base/threading/MessageQueue.h"
+
 #ifndef JCLS_ARAPI
+// arengine only supports gles2, arcore supports gles2 and gles3
+// setting the CC_USE_GLES3 off is needed while using USE_AR_AUTO or USE_AR_ENGINE
 #if USE_AR_AUTO
 #define JCLS_ARAPI "com/cocos/lib/CocosARAutoImpl"
 #elif USE_AR_ENGINE
@@ -37,6 +40,7 @@
 #elif USE_AR_CORE
 #define JCLS_ARAPI "com/cocos/lib/CocosARCoreAPI"
 #endif
+
 #endif
 #define JARG_ARAPI "L" JCLS_ARAPI ";"
 

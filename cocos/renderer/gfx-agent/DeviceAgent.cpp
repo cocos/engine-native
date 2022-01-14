@@ -87,7 +87,12 @@ bool DeviceAgent::doInit(const DeviceInfo &info) {
     static_cast<CommandBufferAgent *>(_cmdBuff)->_queue = _queue;
     static_cast<CommandBufferAgent *>(_cmdBuff)->initAgent();
 
+    // arcore & arengine currently only supports gles, session update requires gl context 
+    #if USE_AR_MODULE && CC_PLATFORM == CC_PLATFORM_ANDROID
+    setMultithreaded(false);
+    #else
     setMultithreaded(true);
+    #endif
 
     return true;
 }

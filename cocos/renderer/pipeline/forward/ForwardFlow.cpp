@@ -28,6 +28,10 @@
 #include "ForwardPipeline.h"
 #include "ForwardStage.h"
 
+#if USE_AR_MODULE
+#include "../ar/ARStage.h"
+#endif
+
 namespace cc {
 namespace pipeline {
 RenderFlowInfo ForwardFlow::initInfo = {
@@ -44,6 +48,11 @@ bool ForwardFlow::initialize(const RenderFlowInfo &info) {
     RenderFlow::initialize(info);
 
     if (_stages.empty()) {
+        #if USE_AR_MODULE
+            auto *arStage = CC_NEW(ARStage);
+            arStage->initialize(ARStage::getInitializeInfo());
+            _stages.emplace_back(arStage);
+        #endif
         auto *forwardStage = CC_NEW(ForwardStage);
         forwardStage->initialize(ForwardStage::getInitializeInfo());
         _stages.emplace_back(forwardStage);
