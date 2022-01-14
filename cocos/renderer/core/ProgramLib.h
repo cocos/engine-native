@@ -58,7 +58,7 @@ struct ITemplateInfo {
     gfx::ShaderInfo                              shaderInfo;
     std::vector<int32_t>                         blockSizes;
     Vector<gfx::DescriptorSetLayout *>           setLayouts;
-    IntrusivePtr<gfx::PipelineLayout>            pipelineLayout{nullptr};
+    IntrusivePtr<gfx::PipelineLayout>            pipelineLayout;
     Record<std::string, uint32_t>                handleMap;
     std::vector<gfx::DescriptorSetLayoutBinding> bindings;
     int32_t                                      samplerStartBinding{-1};
