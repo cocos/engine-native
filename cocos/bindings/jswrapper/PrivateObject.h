@@ -117,6 +117,14 @@ private:
 };
 
 template <typename T>
+inline typename std::enable_if_t<std::is_destructible<T>::value, void> cctryDelete(T *t) {
+    delete t;
+}
+template <typename T>
+inline typename std::enable_if_t<!std::is_destructible<T>::value, void> cctryDelete(T *t) {
+}
+
+template <typename T>
 class RawRefPrivateObject final : public TypedPrivateObject<T> {
 public:
     RawRefPrivateObject() = default;
@@ -124,7 +132,7 @@ public:
     ~RawRefPrivateObject() override {
         static_assert(!std::is_same<T, void>::value, "void is not allowed!");
         if (_allowGC) {
-            delete _ptr;
+            cctryDelete(_ptr);
         }
         _ptr = nullptr;
     }
