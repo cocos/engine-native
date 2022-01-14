@@ -82,7 +82,7 @@ const char *getDeviceShaderVersion(const gfx::Device *device);
 class ProgramLib final {
 public:
     static ProgramLib *getInstance();
-    static void        destroy();
+    static void        destroyInstance();
 
     void registerEffect(EffectAsset *effect);
 

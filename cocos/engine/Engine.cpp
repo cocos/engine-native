@@ -97,7 +97,7 @@ Engine::~Engine() {
     EventDispatcher::destroy();
     se::ScriptEngine::destroyInstance();
 
-    ProgramLib::destroy();
+    ProgramLib::destroyInstance();
     gfx::DeviceManager::destroy();
 
     BasePlatform *platform = BasePlatform::getPlatform();

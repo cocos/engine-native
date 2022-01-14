@@ -291,7 +291,7 @@ ProgramLib *ProgramLib::getInstance() {
     return ProgramLib::instance;
 }
 
-void ProgramLib::destroy() {
+void ProgramLib::destroyInstance() {
     if (ProgramLib::instance) {
         delete ProgramLib::instance;
         ProgramLib::instance = nullptr;
