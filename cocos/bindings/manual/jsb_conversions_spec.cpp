@@ -772,7 +772,7 @@ bool sevalue_to_native(const se::Value &from, cc::scene::ShadowsInfo *to, se::Ob
 
 // NOLINTNEXTLINE(readability-identifier-naming)
 bool sevalue_to_native(const se::Value &from, cc::scene::SkyboxInfo *to, se::Object * /*ctx*/) {
-    SE_PRECONDITION2(from.isObject(), false, "Convert parameter to ShadowInfo failed!");
+    SE_PRECONDITION2(from.isObject(), false, "Convert parameter to SkyboxInfo failed!");
     se::Object *obj = from.toObject();
     se::Value   tmp;
     set_member_field<cc::TextureCube *>(obj, to, "envmap", &cc::scene::SkyboxInfo::setEnvmap, tmp);
