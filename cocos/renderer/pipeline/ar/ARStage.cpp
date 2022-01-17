@@ -40,9 +40,7 @@
 #include "gfx-base/GFXTexture.h"
 #include "pipeline/RenderPipeline.h"
 
-
-// ARModule ADD, need remove after modify
-//#include "../ar/ARBackground.h"
+#include "../ar/ARBackground.h"
 
 #include "ar/ARModule.h"
 #include "gfx-agent/DeviceAgent.h"
@@ -69,7 +67,7 @@ bool ARStage::initialize(const RenderStageInfo &info) {
 
 void ARStage::activate(RenderPipeline *pipeline, RenderFlow *flow) {
     RenderStage::activate(pipeline, flow);
-    
+
     _arBackground->activate(pipeline, _device);
 }
 
@@ -81,15 +79,13 @@ void ARStage::destroy() {
 }
 
 void ARStage::render(scene::Camera *camera) {
-    // UI_3D: 8388608 0x00800000 (1 << 23)
+    // UI_3D: 8388608 0x00800000 (1 << 23), ar camera node currently use UI_3D layer
     const scene::Node *camNode = camera->node;
-    const int flag = (static_cast<int>(camNode->getLayer())) & 0x00800000;
-    if(flag == 0) return;
-    //return;
+    const int          flag    = (static_cast<int>(camNode->getLayer())) & 0x00800000;
+    if (flag == 0) return;
 
     struct RenderData {
         framegraph::TextureHandle outputTex;
-        framegraph::TextureHandle depth;
     };
 
     float shadingScale{_pipeline->getPipelineSceneData()->getSharedData()->shadingScale};
@@ -103,54 +99,17 @@ void ARStage::render(scene::Camera *camera) {
             static_cast<uint>(camera->window->getHeight() * shadingScale),
         };
         data.outputTex = builder.create(RenderPipeline::fgStrHandleOutColorTexture, colorTexInfo);
-        /*
-        //if (hasFlag(static_cast<gfx::ClearFlags>(camera->clearFlag), gfx::ClearFlagBit::COLOR)) {
-            _clearColors[0].x = camera->clearColor.x;
-            _clearColors[0].y = camera->clearColor.y;
-            _clearColors[0].z = camera->clearColor.z;
-        //}
-        _clearColors[0].w = camera->clearColor.w;
-        //*/
+
         framegraph::RenderTargetAttachment::Descriptor colorAttachmentInfo;
-        colorAttachmentInfo.usage      = framegraph::RenderTargetAttachment::Usage::COLOR;
-        //colorAttachmentInfo.clearColor = _clearColors[0];
-        colorAttachmentInfo.loadOp     = gfx::LoadOp::CLEAR;
-        /*
-        auto clearFlags = static_cast<gfx::ClearFlagBit>(camera->clearFlag);
-        if (!hasFlag(clearFlags, gfx::ClearFlagBit::COLOR)) {
-            if (hasFlag(clearFlags, static_cast<gfx::ClearFlagBit>(skyboxFlag))) {
-                colorAttachmentInfo.loadOp = gfx::LoadOp::DISCARD;
-            } else {
-                colorAttachmentInfo.loadOp = gfx::LoadOp::LOAD;
-            }
-        }
-        */
+        colorAttachmentInfo.usage  = framegraph::RenderTargetAttachment::Usage::COLOR;
+        colorAttachmentInfo.loadOp = gfx::LoadOp::CLEAR;
+
         colorAttachmentInfo.endAccesses = {gfx::AccessType::COLOR_ATTACHMENT_WRITE};
 
-        data.outputTex   = builder.write(data.outputTex, colorAttachmentInfo);
+        data.outputTex = builder.write(data.outputTex, colorAttachmentInfo);
 
-        // depth
-        gfx::TextureInfo depthTexInfo{
-            gfx::TextureType::TEX2D,
-            gfx::TextureUsageBit::DEPTH_STENCIL_ATTACHMENT,
-            gfx::Format::DEPTH_STENCIL,
-            static_cast<uint>(_pipeline->getWidth() * shadingScale),
-            static_cast<uint>(_pipeline->getHeight() * shadingScale),
-        };
-        framegraph::RenderTargetAttachment::Descriptor depthAttachmentInfo;
-        depthAttachmentInfo.usage        = framegraph::RenderTargetAttachment::Usage::DEPTH_STENCIL;
-        depthAttachmentInfo.loadOp       = gfx::LoadOp::CLEAR;
-        depthAttachmentInfo.clearDepth   = camera->clearDepth;
-        depthAttachmentInfo.clearStencil = camera->clearStencil;
-        depthAttachmentInfo.endAccesses  = {gfx::AccessType::DEPTH_STENCIL_ATTACHMENT_WRITE};
-
-        data.depth = builder.create(RenderPipeline::fgStrHandleOutDepthTexture, depthTexInfo);
-        data.depth = builder.write(data.depth, depthAttachmentInfo);
-        
         builder.writeToBlackboard(RenderPipeline::fgStrHandleOutColorTexture, data.outputTex);
-        builder.writeToBlackboard(RenderPipeline::fgStrHandleOutDepthTexture, data.depth);
         builder.setViewport(_pipeline->getViewport(camera), _pipeline->getScissor(camera));
-
     };
 
     auto offset = _pipeline->getPipelineUBO()->getCurrentCameraUBOOffset();

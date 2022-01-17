@@ -25,17 +25,18 @@
 
 #pragma once
 
-#include "ar/IARAPI.h"
-#include "renderer/gfx-agent/DeviceAgent.h"
-#include "base/threading/Semaphore.h"
 #include <array>
+#include "ar/IARAPI.h"
+#include "base/threading/Semaphore.h"
+#include "renderer/gfx-agent/DeviceAgent.h"
+
 
 class _jobject;
 
 namespace cc {
 namespace ar {
 
-class ARAndroidAPIImpl : public IARAPI{
+class ARAndroidAPIImpl : public IARAPI {
 public:
     ARAndroidAPIImpl();
     ~ARAndroidAPIImpl() override;
@@ -43,40 +44,39 @@ public:
     void resume() override;
     void pause() override;
     void update() override;
-    int getAPIState() override;
+    int  getAPIState() override;
     void beforeUpdate() override;
 
     float* getCameraPose() override;
     float* getCameraViewMatrix() override;
     float* getCameraProjectionMatrix() override;
     float* getCameraTexCoords() override;
-    void setCameraTextureName(int id) override;
-    void* getCameraTextureRef() override;
+    void   setCameraTextureName(int id) override;
+    void*  getCameraTextureRef() override;
 
     //void setPlaneFeatureEnable(bool isOn) override;
-    int getAddedPlanesCount() override;
-    int getRemovedPlanesCount() override;
-    int getUpdatedPlanesCount() override;
-    void updatePlanesInfo() override;
+    int    getAddedPlanesCount() override;
+    int    getRemovedPlanesCount() override;
+    int    getUpdatedPlanesCount() override;
+    void   updatePlanesInfo() override;
     float* getAddedPlanesInfo() override;
-    int* getRemovedPlanesInfo() override;
+    int*   getRemovedPlanesInfo() override;
     float* getUpdatedPlanesInfo() override;
-    int getInfoLength() override;
-    
+    int    getInfoLength() override;
+
 protected:
     _jobject* _impl;
-    Pose *_cameraPose = new Pose();
-    Matrix *_viewMatrix = new Matrix();
-    Matrix *_projMatrix = new Matrix();
-    TexCoords *_cameraTexCoords = new TexCoords();
-    void onBeforeUpdate();
 
-    //float* _addedPlanesInfo = new float[60];
-    float* _addedPlanesInfo = nullptr;
-    int* _removedPlanesInfo = new int[5];
-    //'float* _updatedPlanesInfo = new float[60];
-    float* _updatedPlanesInfo = nullptr;
-    int _infoLength = 0;
+    Pose*      _cameraPose{nullptr};
+    Matrix*    _viewMatrix{nullptr};
+    Matrix*    _projMatrix{nullptr};
+    TexCoords* _cameraTexCoords{nullptr};
+    void       onBeforeUpdate();
+
+    float* _addedPlanesInfo{nullptr};
+    int*   _removedPlanesInfo{nullptr};
+    float* _updatedPlanesInfo{nullptr};
+    int    _infoLength{0};
 
     Semaphore _frameBoundarySemaphore{1};
 };

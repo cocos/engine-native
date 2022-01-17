@@ -463,6 +463,10 @@ namespace ar {
 
 ARKitAPIImpl::ARKitAPIImpl() : _impl(nil) {
     _impl = [ARKitAPI new];
+    _cameraPose = new Pose();
+    _viewMatrix = new Matrix();
+    _projMatrix = new Matrix();
+    _cameraTexCoords = new TexCoords();
 }
 
 ARKitAPIImpl::~ARKitAPIImpl() {
@@ -532,10 +536,10 @@ float* ARKitAPIImpl::getAddedPlanesInfo() {
     _infoLength = [impl getAddedPlanesCount] * 12;
     return (__bridge float *)[impl getAddedPlanesInfo];
 }
-unsigned long* ARKitAPIImpl::getRemovedPlanesInfo() {
+int* ARKitAPIImpl::getRemovedPlanesInfo() {
     TransferImpl;
     _infoLength = [impl getRemovedPlanesCount];
-    return (__bridge unsigned long *)[impl getRemovedPlanesInfo];
+    return (__bridge int *)[impl getRemovedPlanesInfo];
 }
 float* ARKitAPIImpl::getUpdatedPlanesInfo() {
     TransferImpl;

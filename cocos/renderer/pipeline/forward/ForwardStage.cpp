@@ -193,7 +193,6 @@ void ForwardStage::render(scene::Camera *camera) {
         #if USE_AR_MODULE
         } else {
             colorAttachmentInfo.loadOp = gfx::LoadOp::LOAD;
-            //colorAttachmentInfo.endAccesses = {gfx::AccessType::COLOR_ATTACHMENT_WRITE};
         }
         #endif
 

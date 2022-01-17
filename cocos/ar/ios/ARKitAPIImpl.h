@@ -25,13 +25,14 @@
 
 #pragma once
 
-#include "ar/IARAPI.h"
 #include <array>
+#include "ar/IARAPI.h"
+
 
 namespace cc {
 namespace ar {
 
-class ARKitAPIImpl : public IARAPI{
+class ARKitAPIImpl : public IARAPI {
 public:
     ARKitAPIImpl();
     ~ARKitAPIImpl() override;
@@ -39,31 +40,31 @@ public:
     void resume() override;
     void pause() override;
     void update() override;
-    int getAPIState() override;
+    int  getAPIState() override;
 
-    
     float* getCameraPose() override;
     float* getCameraViewMatrix() override;
     float* getCameraProjectionMatrix() override;
     float* getCameraTexCoords() override;
-    void setCameraTextureName(int id) override;
-    void* getCameraTextureRef() override;
+    void   setCameraTextureName(int id) override;
+    void*  getCameraTextureRef() override;
 
-    int getAddedPlanesCount() override;
-    int getRemovedPlanesCount() override;
-    int getUpdatedPlanesCount() override;
-    void updatePlanesInfo() override;
+    int    getAddedPlanesCount() override;
+    int    getRemovedPlanesCount() override;
+    int    getUpdatedPlanesCount() override;
+    void   updatePlanesInfo() override;
     float* getAddedPlanesInfo() override;
-    unsigned long* getRemovedPlanesInfo() override;
+    int*   getRemovedPlanesInfo() override;
     float* getUpdatedPlanesInfo() override;
-    int getInfoLength() override;
+    int    getInfoLength() override;
+
 protected:
-    void* _impl;
-    Pose *_cameraPose = new Pose();
-    Matrix *_viewMatrix = new Matrix();
-    Matrix *_projMatrix = new Matrix();
-    TexCoords *_cameraTexCoords = new TexCoords();
-    int _infoLength = 0;
+    void*      _impl;
+    Pose*      _cameraPose{nullptr};
+    Matrix*    _viewMatrix{nullptr};
+    Matrix*    _projMatrix{nullptr};
+    TexCoords* _cameraTexCoords{nullptr};
+    int        _infoLength{0};
 };
 
 } // namespace ar

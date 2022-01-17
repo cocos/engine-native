@@ -26,8 +26,11 @@
 #include "../RenderStage.h"
 #include "gfx-base/GFXPipelineLayout.h"
 #include "gfx-base/GFXPipelineState.h"
-#include "gfx-gles3/GLES3Wrangler.h"
-//#include "gfx-gles3/GLES3Context.h"
+
+#if CC_PLATFORM == CC_PLATFORM_ANDROID
+    #include "gfx-gles3/GLES3Wrangler.h"
+#endif
+
 #include "renderer/gfx-agent/DeviceAgent.h"
 #include "renderer/gfx-base/GFXDef.h"
 #include "renderer/gfx-base/GFXDevice.h"

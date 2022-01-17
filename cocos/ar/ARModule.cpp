@@ -28,16 +28,16 @@
 #include "ar/ARModule.h"
 
 #if CC_PLATFORM == CC_PLATFORM_ANDROID
-#include "ar/android/ARAndroidAPIImpl.h"
+    #include "ar/android/ARAndroidAPIImpl.h"
 using ARAPIImpl = cc::ar::ARAndroidAPIImpl;
 #elif CC_PLATFORM == CC_PLATFORM_MAC_IOS
-#include "ar/ios/ARKitAPIImpl.h"
+    #include "ar/ios/ARKitAPIImpl.h"
 using ARAPIImpl = cc::ar::ARKitAPIImpl;
 #elif CC_PLATFORM == CC_PLATFORM_WINDOWS
-#include "ar/IARAPI.h"
+    #include "ar/IARAPI.h"
 #endif
 
-#include  "bindings/jswrapper/SeApi.h"
+#include "bindings/jswrapper/SeApi.h"
 
 namespace cc {
 namespace ar {
@@ -49,8 +49,7 @@ ARModule::ARModule() {
 #endif
 }
 
-ARModule::~ARModule()
-{
+ARModule::~ARModule() {
     DLLOG("Destruct ARModule %p", this);
 }
 
@@ -73,11 +72,11 @@ void ARModule::onPause() {
 
 void ARModule::beforeUpdate() {
     //_impl->beforeUpdate();
-    //_impl->update();
+    _impl->update();
 }
 
 void ARModule::update() {
-    _impl->update();
+    //_impl->update();
 }
 
 // -1: not started, 0: arkit, 1: arcore, 2: arengine
@@ -112,15 +111,12 @@ void* ARModule::getCameraTextureRef() const {
 }
 
 int ARModule::getAddedPlanesCount() const {
-    //return _impl->getAddedPlanesCount();
     return _impl->getInfoLength() / 12;
 }
 int ARModule::getRemovedPlanesCount() const {
-    //return _impl->getRemovedPlanesCount();
     return _impl->getInfoLength();
 }
 int ARModule::getUpdatedPlanesCount() const {
-    //return _impl->getUpdatedPlanesCount();
     return _impl->getInfoLength() / 12;
 }
 void ARModule::updatePlanesInfo() const {

@@ -54,12 +54,13 @@ public abstract class CocosARAPIBase {
     public abstract void updateSession();
     // -1: not started, 0: arkit, 1: arcore, 2: arengine
     public abstract int getAPIState();
+    public abstract void setDisplayGeometry(int displayRotation, int width, int height);
 
+    //#region ar camera
     public abstract float[] getCameraPose();
     public abstract float[] getCameraViewMatrix();
     public abstract float[] getCameraProjectionMatrix();
     public abstract float[] getCameraTexCoords();
-    public abstract void setDisplayGeometry(int displayRotation, int width, int height);
     public void setCameraTextureName(int id) {
         mTextureId = id;
     }
@@ -67,6 +68,7 @@ public abstract class CocosARAPIBase {
         mNearClipPlane = near;
         mFarClipPlane = far;
     }
+    //#endregion
 
     //#region plane detection
     /**

@@ -24,14 +24,12 @@
 
 #include "ARBackground.h"
 #include "../forward/ForwardPipeline.h"
-#include "GLES2/gl2.h"
 #include "gfx-base/GFXCommandBuffer.h"
 #include "gfx-base/GFXDef-common.h"
 #include "gfx-base/GFXDef.h"
 #include "gfx-base/GFXTexture.h"
 #include "pipeline/Define.h"
 #include "pipeline/PipelineStateManager.h"
-
 
 #include "ar/ARModule.h"
 #include "gfx-base/GFXDevice.h"
@@ -286,10 +284,6 @@ void ARBackground::activate(RenderPipeline *pipeline, gfx::Device *dev) {
     _textures.resize(2);
 #endif
 
-    //_descriptorSet->bindSampler(1, sampler);
-    //_descriptorSet->bindTexture(1, backgroundTex);
-    //_descriptorSet->update();
-    //*/
     _pipelineLayout = _device->createPipelineLayout({{pipeline->getDescriptorSetLayout(), _descriptorSetLayout}});
 
 #if CC_PLATFORM == CC_PLATFORM_ANDROID
@@ -303,15 +297,6 @@ void ARBackground::activate(RenderPipeline *pipeline, gfx::Device *dev) {
 }
 
 void ARBackground::render(scene::Camera *camera, gfx::RenderPass *renderPass, gfx::CommandBuffer *cmdBuffer) {
-    //auto *_device = gfx::DeviceAgent::getInstance();
-    //if (!_device) { return; }
-    /*
-    const scene::Node *camNode = camera->node;
-    const int flag = (static_cast<int>(camNode->getLayer())) & 0x00800000;
-    if(flag == 0) return;
-    //*/
-
-    //*
     auto *const armodule = cc::ar::ARModule::get();
     if (!armodule) return;
     int apiState = armodule->getAPIState();
@@ -324,8 +309,8 @@ void ARBackground::render(scene::Camera *camera, gfx::RenderPass *renderPass, gf
         armodule->setCameraTextureName(static_cast<int>(_glTex));
 
         gfx::TextureInfo textureInfo;
-        textureInfo.usage           = gfx::TextureUsage::SAMPLED | gfx::TextureUsage::TRANSFER_SRC;
-        textureInfo.format          = gfx::Format::RGBA16F;
+        textureInfo.usage  = gfx::TextureUsage::SAMPLED | gfx::TextureUsage::TRANSFER_SRC;
+        textureInfo.format = gfx::Format::RGBA16F;
         //textureInfo.format          = gfx::Format::RGBA8;
         textureInfo.width           = camera->width;
         textureInfo.height          = camera->height;
@@ -370,7 +355,7 @@ void ARBackground::render(scene::Camera *camera, gfx::RenderPass *renderPass, gf
 
     auto *const data = armodule->getCameraTexCoords();
 #if CC_PLATFORM == CC_PLATFORM_ANDROID
-    if(apiState > 1) {
+    if (apiState > 1) {
         float vertices[] = {-1, -1, data[2], data[3],
                             -1, 1, data[0], data[1],
                             1, -1, data[6], data[7],
@@ -390,7 +375,7 @@ void ARBackground::render(scene::Camera *camera, gfx::RenderPass *renderPass, gf
                         1, 1, data[4], data[5]};
     _vertexBuffer->update(vertices, sizeof(vertices));
 #endif
-    
+
     gfx::PipelineStateInfo pipelineInfo;
     pipelineInfo.shader         = _shader;
     pipelineInfo.pipelineLayout = _pipelineLayout;

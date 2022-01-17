@@ -33,7 +33,7 @@ namespace se {
 class Object;
 class HandleObject;
 
-}
+} // namespace se
 
 namespace cc {
 namespace ar {
@@ -53,25 +53,25 @@ public:
     void beforeUpdate();
     void update();
     bool checkStart();
-    int getAPIState();
+    int  getAPIState();
 
     float* getCameraPose() const;
     float* getCameraViewMatrix() const;
     float* getCameraProjectionMatrix() const;
     float* getCameraTexCoords() const;
-    void setCameraTextureName(int id);
-    void* getCameraTextureRef() const;
+    void   setCameraTextureName(int id);
+    void*  getCameraTextureRef() const;
 
     //void setPlaneFeatureEnable(bool isOn) const;
-    int getAddedPlanesCount() const;
-    int getRemovedPlanesCount() const;
-    int getUpdatedPlanesCount() const;
-    void updatePlanesInfo() const;
+    int    getAddedPlanesCount() const;
+    int    getRemovedPlanesCount() const;
+    int    getUpdatedPlanesCount() const;
+    void   updatePlanesInfo() const;
     float* getAddedPlanesInfo() const;
-    int* getRemovedPlanesInfo() const;
+    int*   getRemovedPlanesInfo() const;
     float* getUpdatedPlanesInfo() const;
-    int getInfoLength() const;
-    
+    int    getInfoLength() const;
+
 private:
     std::unique_ptr<IARAPI> _impl;
 };

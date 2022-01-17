@@ -49,10 +49,7 @@ import com.huawei.hiar.exceptions.ARUnSupportedConfigurationException;
 import com.huawei.hiar.exceptions.ARUnavailableClientSdkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceApkTooOldException;
 import com.huawei.hiar.exceptions.ARUnavailableServiceNotInstalledException;
-//import com.huawei.hiar.exceptions.UnavailableApkTooOldException;
-//import com.huawei.hiar.exceptions.UnavailableArcoreNotInstalledException;
-//import com.huawei.hiar.exceptions.UnavailableDeviceNotCompatibleException;
-//import com.huawei.hiar.exceptions.UnavailableSdkTooOldException;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -81,12 +78,7 @@ public class CocosAREngineAPI extends CocosARAPIBase {
     private ARFrame mFrame;
     private ARCamera mCamera;
 
-    //private float[] mCameraPose = new float[7];
-    //private float[] mViewMatrix = new float[16];
-    //private float[] mProjMatrix = new float[16];
-
     private float[] mQuadCoords = {0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f};
-    //private float[] mCameraTexCoords = new float[8];
     private FloatBuffer mQuadCoordsBuffer;
     private FloatBuffer mTexCoordsBuffer;
 
@@ -100,7 +92,6 @@ public class CocosAREngineAPI extends CocosARAPIBase {
 
     // plane feature
     private final static int PLANE_INFOS_SIZE = 12;
-    //private int planesMaxSize = 5;
     private int planeTag = 0;
     private final HashMap<Integer, ARPlane> planesMap = new HashMap<>();
     private final HashMap<ARPlane, Integer> planesIndexMap = new HashMap<>();

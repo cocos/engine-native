@@ -76,19 +76,14 @@ public class CocosARCoreAPI extends CocosARAPIBase implements ActivityCompat.OnR
     private Frame mFrame;
     private Camera mCamera;
 
-    //private float[] mCameraPose = new float[7];
-    //private float[] mViewMatrix = new float[16];
-    //private float[] mProjMatrix = new float[16];
-
     private float[] mQuadCoords = {-1f, -1f, -1f, 1f, 1f, -1f, 1f, 1f};
-    //private float[] mCameraTexCoords = new float[8];
 
     // requestInstall(Activity, true) will triggers installation of
     // Google Play Services for AR if necessary.
     private boolean mUserRequestedInstall = true;
     private boolean mActive;
 
-    // plane feature
+    // plane detection
     private final static int PLANE_INFOS_SIZE = 12;
     private int planesMaxSize = 5;
     private int planeTag = 0;
@@ -98,6 +93,7 @@ public class CocosARCoreAPI extends CocosARAPIBase implements ActivityCompat.OnR
     private List<Integer> mRemovedPlanes = new ArrayList<>();
     private List<Integer> mUpdatedPlanes = new ArrayList<>();
 
+    //#region static impl
     public static CocosARCoreAPI init() {
         api = new CocosARCoreAPI();
         return api;
@@ -144,24 +140,20 @@ public class CocosARCoreAPI extends CocosARAPIBase implements ActivityCompat.OnR
     }
 
     public static void setCameraTextureName(final CocosARCoreAPI api, int id) {
-        //api.mSession.setCameraTextureName(id);
-        api.mTextureId = id;
+        api.setCameraTextureName(id);
     }
 
     public static float[] getCameraPose(final CocosARCoreAPI api) {
-        return api.mCameraPose;
+        return api.getCameraPose();
     }
     public static float[] getCameraViewMatrix(final CocosARCoreAPI api) {
-        api.mCamera.getViewMatrix(api.mViewMatrix, 0);
-        return api.mViewMatrix;
+        return api.getCameraViewMatrix();
     }
     public static float[] getCameraProjectionMatrix(final CocosARCoreAPI api) {
-        if (api.mSession != null) api.mCamera.getProjectionMatrix(api.mProjMatrix, 0, 0.01f, 1000.0f);
-        return api.mProjMatrix;
+        return api.getCameraProjectionMatrix();
     }
     public static float[] getCameraTexCoords(final CocosARCoreAPI api) {
-        //api.updateCameraTexCoords();
-        return api.mCameraTexCoords;
+        return api.getCameraTexCoords();
     }
 
     // plane feature
@@ -198,98 +190,9 @@ public class CocosARCoreAPI extends CocosARAPIBase implements ActivityCompat.OnR
     public static int getUpdatedPlanesCount(final CocosARCoreAPI api) {
         return api.mUpdatedPlanes.size();
     }
+    //#endregion
 
-    // for CocosARDisplayRotationHelper
-    @Override
-    public void setDisplayGeometry(int displayRotation, int width, int height) {
-        mSession.setDisplayGeometry(displayRotation, width, height);
-    }
-
-    private void updateCameraPose() {
-        if(mCamera == null) return;
-
-        Pose pose = mCamera.getDisplayOrientedPose();
-        mCameraPose[0] = pose.tx();
-        mCameraPose[1] = pose.ty();
-        mCameraPose[2] = pose.tz();
-        mCameraPose[3] = pose.qx();
-        mCameraPose[4] = pose.qy();
-        mCameraPose[5] = pose.qz();
-        mCameraPose[6] = pose.qw();
-    }
-
-    private void updateCameraTexCoords() {
-        if(mFrame == null) return;
-
-        if (mFrame.hasDisplayGeometryChanged()) {
-            // If display rotation changed (also includes view size change), we need to re-query the UV
-            // coordinates for the screen rect, as they may have changed as well.
-            mFrame.transformCoordinates2d(
-                Coordinates2d.OPENGL_NORMALIZED_DEVICE_COORDINATES,
-                mQuadCoords,
-                Coordinates2d.TEXTURE_NORMALIZED,
-                mCameraTexCoords);
-        }
-    }
-
-    private void checkCamera() {
-        Activity activity = GlobalObject.getActivity();
-        if (!CocosARCameraPermissionHelper.hasCameraPermission(activity)) {
-            CocosARCameraPermissionHelper.requestCameraPermission(activity);
-        }
-    }
-
-    // -1 not supported, 0 not installed, 1 ready
-    private int checkSupportAndUpdate() {
-        Activity activity = GlobalObject.getActivity();
-        ArCoreApk.Availability availability = ArCoreApk.getInstance().checkAvailability(activity);
-        if (availability.isTransient()) {
-            // Continue to query availability at 5Hz while compatibility is checked in the background.
-            new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                checkSupportAndUpdate();
-            }
-            }, 200);
-        }
-
-        switch (availability) {
-            case SUPPORTED_INSTALLED:
-              break;
-            case SUPPORTED_APK_TOO_OLD:
-            case SUPPORTED_NOT_INSTALLED:
-              try {
-                // Request ARCore installation or update if needed.
-                ArCoreApk.InstallStatus installStatus =
-                    ArCoreApk.getInstance().requestInstall(activity, /*userRequestedInstall=*/ true);
-                switch (installStatus) {
-                  case INSTALL_REQUESTED:
-                    Log.e(TAG, "ARCore installation requested.");
-                    return 0;
-                  case INSTALLED:
-                    break;
-                }
-              } catch (UnavailableDeviceNotCompatibleException e) {
-                Log.e(TAG, "ARCore not installed", e);
-                return 0;
-              } catch (UnavailableUserDeclinedInstallationException e) {
-                  Log.e(TAG, "ARCore not installed", e);
-                  return 0;
-              }
-              break;
-            case UNKNOWN_ERROR:
-            case UNKNOWN_CHECKING:
-            case UNKNOWN_TIMED_OUT:
-            case UNSUPPORTED_DEVICE_NOT_CAPABLE:
-              Log.e(
-                  TAG,
-                  "ARCore is not supported on this device, ArCoreApk.checkAvailability() returned "
-                      + availability);
-              return -1;
-          }
-          return 1;
-    }
-
+    
     @Override
     public void startSession() {
         CocosActivity activity = (CocosActivity)GlobalObject.getActivity();
@@ -378,6 +281,20 @@ public class CocosARCoreAPI extends CocosARAPIBase implements ActivityCompat.OnR
     }
 
     @Override
+    public int getAPIState() {
+        if (mSession != null && mCamera != null) {
+            return 1;
+        }
+        return -1;
+    }
+
+    // for CocosARDisplayRotationHelper
+    @Override
+    public void setDisplayGeometry(int displayRotation, int width, int height) {
+        mSession.setDisplayGeometry(displayRotation, width, height);
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results) {
         Activity activity = GlobalObject.getActivity();
         if (!CocosARCameraPermissionHelper.hasCameraPermission(activity)) {
@@ -414,12 +331,32 @@ public class CocosARCoreAPI extends CocosARAPIBase implements ActivityCompat.OnR
         //updateCameraTexCoords();
         return mCameraTexCoords;
     }
-    @Override
-    public int getAPIState() {
-        if (mSession != null && mCamera != null) {
-            return 1;
+
+    private void updateCameraPose() {
+        if(mCamera == null) return;
+
+        Pose pose = mCamera.getDisplayOrientedPose();
+        mCameraPose[0] = pose.tx();
+        mCameraPose[1] = pose.ty();
+        mCameraPose[2] = pose.tz();
+        mCameraPose[3] = pose.qx();
+        mCameraPose[4] = pose.qy();
+        mCameraPose[5] = pose.qz();
+        mCameraPose[6] = pose.qw();
+    }
+
+    private void updateCameraTexCoords() {
+        if(mFrame == null) return;
+
+        if (mFrame.hasDisplayGeometryChanged()) {
+            // If display rotation changed (also includes view size change), we need to re-query the UV
+            // coordinates for the screen rect, as they may have changed as well.
+            mFrame.transformCoordinates2d(
+                    Coordinates2d.OPENGL_NORMALIZED_DEVICE_COORDINATES,
+                    mQuadCoords,
+                    Coordinates2d.TEXTURE_NORMALIZED,
+                    mCameraTexCoords);
         }
-        return -1;
     }
     //#endregion
 
@@ -573,6 +510,65 @@ public class CocosARCoreAPI extends CocosARAPIBase implements ActivityCompat.OnR
     }
 
     //#endregion
+
+    // utils
+    private void checkCamera() {
+        Activity activity = GlobalObject.getActivity();
+        if (!CocosARCameraPermissionHelper.hasCameraPermission(activity)) {
+            CocosARCameraPermissionHelper.requestCameraPermission(activity);
+        }
+    }
+
+    // -1 not supported, 0 not installed, 1 ready
+    private int checkSupportAndUpdate() {
+        Activity activity = GlobalObject.getActivity();
+        ArCoreApk.Availability availability = ArCoreApk.getInstance().checkAvailability(activity);
+        if (availability.isTransient()) {
+            // Continue to query availability at 5Hz while compatibility is checked in the background.
+            new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                checkSupportAndUpdate();
+            }
+            }, 200);
+        }
+
+        switch (availability) {
+            case SUPPORTED_INSTALLED:
+              break;
+            case SUPPORTED_APK_TOO_OLD:
+            case SUPPORTED_NOT_INSTALLED:
+              try {
+                // Request ARCore installation or update if needed.
+                ArCoreApk.InstallStatus installStatus =
+                    ArCoreApk.getInstance().requestInstall(activity, /*userRequestedInstall=*/ true);
+                switch (installStatus) {
+                  case INSTALL_REQUESTED:
+                    Log.e(TAG, "ARCore installation requested.");
+                    return 0;
+                  case INSTALLED:
+                    break;
+                }
+              } catch (UnavailableDeviceNotCompatibleException e) {
+                Log.e(TAG, "ARCore not installed", e);
+                return 0;
+              } catch (UnavailableUserDeclinedInstallationException e) {
+                  Log.e(TAG, "ARCore not installed", e);
+                  return 0;
+              }
+              break;
+            case UNKNOWN_ERROR:
+            case UNKNOWN_CHECKING:
+            case UNKNOWN_TIMED_OUT:
+            case UNSUPPORTED_DEVICE_NOT_CAPABLE:
+              Log.e(
+                  TAG,
+                  "ARCore is not supported on this device, ArCoreApk.checkAvailability() returned "
+                      + availability);
+              return -1;
+          }
+          return 1;
+    }
 
     private static void copyPoseToArray(Pose src, float[] arr) {
         copyPoseToArray(src, arr, 0);
