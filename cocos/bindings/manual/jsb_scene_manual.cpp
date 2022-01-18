@@ -299,7 +299,7 @@ static bool js_scene_Node_registerListeners(se::State &s) // NOLINT(readability-
         se::AutoHandleScope hs;
         se::Value           arg0;
         nativevalue_to_se(attached, arg0);
-        se::ScriptEngine::getInstance()->callFunction(jsObject, "_onAttached", 1, &arg0);
+        se::ScriptEngine::getInstance()->callFunction(jsObject, "_onEditorAttached", 1, &arg0);
     });
 
     registerLocalPositionRotationScaleUpdated(cobj, jsObject);
