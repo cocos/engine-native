@@ -129,7 +129,8 @@ Node *Node::instantiate(Node *cloned, bool isSyncedNode) {
     return cloned;
 }
 
-void Node::onHierarchyChangedBase(Node *oldParent) {
+
+void Node::onHierarchyChangedBase(Node *oldParent) {// NOLINT(misc-unused-parameters)
     Node *newParent = _parent;
     auto *scene     = dynamic_cast<Scene *>(newParent);
     if (isPersistNode() && scene == nullptr) {
@@ -139,16 +140,16 @@ void Node::onHierarchyChangedBase(Node *oldParent) {
         //            warnID(1623);
         //        }
     }
-#ifdef EDITOR_JS
+#ifdef CC_EDITOR
     auto *curScene                = this->getScene();
     bool  inCurrentSceneBefore = oldParent && oldParent->isChildOf(curScene);
     bool  inCurrentSceneNow       = newParent && newParent->isChildOf(curScene);
     if (!inCurrentSceneBefore && inCurrentSceneNow) {
         // attached
-        this->notifyAttached(true);
+        this->notifyEditorAttached(true);
     } else if (inCurrentSceneBefore && !inCurrentSceneNow) {
         // detached
-        this->notifyAttached(false);
+        this->notifyEditorAttached(false);
     }
     // conflict detection
     // _Scene.DetectConflict.afterAddChild(this);
@@ -391,9 +392,9 @@ bool Node::onPreDestroyBase() {
     Flags destroyingFlag = Flags::DESTROYING;
     _objFlags |= destroyingFlag;
     bool destroyByParent = (!!_parent) && (!!(_parent->_objFlags & destroyingFlag));
-#ifdef EDITOR_JS
+#ifdef CC_EDITOR
     if (!destroyByParent) {
-        this->notifyAttached(false);
+        this->notifyEditorAttached(false);
     }
 #endif
     if (isPersistNode()) {
@@ -593,7 +594,7 @@ void Node::setScaleInternal(float x, float y, float z, bool calledFromJS) {
     }
 }
 
-void Node::updateWorldTransform() {
+void Node::updateWorldTransform() { //NOLINT(misc-no-recursion)
     if (!getDirtyFlag()) {
         return;
     }
@@ -658,7 +659,7 @@ void Node::updateWorldTransform() {
     }
 }
 
-const Mat4 &Node::getWorldMatrix() const {
+const Mat4 &Node::getWorldMatrix() const { //NOLINT(misc-no-recursion)
     const_cast<Node *>(this)->updateWorldTransform();
     return _worldMatrix;
 }
@@ -747,7 +748,7 @@ void Node::setWorldRotation(float x, float y, float z, float w) {
     notifyLocalRotationUpdated();
 }
 
-const Quaternion &Node::getWorldRotation() const {
+const Quaternion &Node::getWorldRotation() const { //NOLINT(misc-no-recursion)
     const_cast<Node *>(this)->updateWorldTransform();
     return _worldRotation;
 }

@@ -58,9 +58,9 @@ void Scene::load() {
     walk(Node::setScene);
 }
 
-void Scene::activate(bool active /* = true */) {
-#ifdef EDITOR_JS
-    this->notifyAttached(active);
+void Scene::activate(bool active /* = true */) { // NOLINT(misc-unused-parameters)
+#ifdef CC_EDITOR
+    this->notifyEditorAttached(active);
 #endif
     //cjh
     //    Director::getInstance()->getNodeActivator()->activateNode(this, active);
