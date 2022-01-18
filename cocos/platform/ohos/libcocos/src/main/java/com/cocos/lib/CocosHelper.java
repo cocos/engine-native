@@ -136,7 +136,8 @@ public class CocosHelper {
             sTaskOnGameThread.add(runnable);
         }
     }
-
+    
+    @SuppressWarnings("unused")
     static void flushTasksOnGameThread() {
         List<Runnable> tmp = sTaskOnGameThread;
         synchronized (sTaskMtx) {
