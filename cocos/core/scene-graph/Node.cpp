@@ -141,9 +141,9 @@ void Node::onHierarchyChangedBase(Node *oldParent) {// NOLINT(misc-unused-parame
         //        }
     }
 #ifdef CC_EDITOR
-    auto *curScene                = this->getScene();
-    bool  inCurrentSceneBefore = oldParent && oldParent->isChildOf(curScene);
-    bool  inCurrentSceneNow       = newParent && newParent->isChildOf(curScene);
+    auto *     curScene             = getScene();
+    const bool inCurrentSceneBefore = oldParent && oldParent->isChildOf(curScene);
+    const bool inCurrentSceneNow    = newParent && newParent->isChildOf(curScene);
     if (!inCurrentSceneBefore && inCurrentSceneNow) {
         // attached
         this->notifyEditorAttached(true);
