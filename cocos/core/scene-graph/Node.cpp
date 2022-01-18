@@ -129,7 +129,7 @@ Node *Node::instantiate(Node *cloned, bool isSyncedNode) {
     return cloned;
 }
 
-void Node::onHierarchyChangedBase(Node * /*oldParent*/) {
+void Node::onHierarchyChangedBase(Node *oldParent) {
     Node *newParent = _parent;
     auto *scene     = dynamic_cast<Scene *>(newParent);
     if (isPersistNode() && scene == nullptr) {
@@ -139,22 +139,21 @@ void Node::onHierarchyChangedBase(Node * /*oldParent*/) {
         //            warnID(1623);
         //        }
     }
-    // TODO()
-    // if (EDITOR) {
-    //    const scene                = legacyCC.director.getScene() as this | null;
-    //    const inCurrentSceneBefore = oldParent && oldParent.isChildOf(scene);
-    //    const inCurrentSceneNow    = newParent && newParent.isChildOf(scene);
-    //    if (!inCurrentSceneBefore && inCurrentSceneNow) {
-    //        // attached
-    //        this._registerIfAttached !(true);
-    //    } else if (inCurrentSceneBefore && !inCurrentSceneNow) {
-    //        // detached
-    //        this._registerIfAttached !(false);
-    //    }
+#ifdef EDITOR_JS
+    auto *curScene                = this->getScene();
+    bool  inCurrentSceneBefore = oldParent && oldParent->isChildOf(curScene);
+    bool  inCurrentSceneNow       = newParent && newParent->isChildOf(curScene);
+    if (!inCurrentSceneBefore && inCurrentSceneNow) {
+        // attached
+        this->notifyAttached(true);
+    } else if (inCurrentSceneBefore && !inCurrentSceneNow) {
+        // detached
+        this->notifyAttached(false);
+    }
+    // conflict detection
+    // _Scene.DetectConflict.afterAddChild(this);
+#endif 
 
-    //    // conflict detection
-    //    // _Scene.DetectConflict.afterAddChild(this);
-    //}
     bool shouldActiveNow = _active && !!(newParent && newParent->isActiveInHierarchy());
     if (isActiveInHierarchy() != shouldActiveNow) {
         // Director::getInstance()->getNodeActivator()->activateNode(this, shouldActiveNow); // TODO(xwx): use TS temporarily
@@ -392,10 +391,11 @@ bool Node::onPreDestroyBase() {
     Flags destroyingFlag = Flags::DESTROYING;
     _objFlags |= destroyingFlag;
     bool destroyByParent = (!!_parent) && (!!(_parent->_objFlags & destroyingFlag));
-    // TODO()
-    /*if (!destroyByParent && EDITOR) {
-        this._registerIfAttached !(false);
-    }*/
+#ifdef EDITOR_JS
+    if (!destroyByParent) {
+        this->notifyAttached(false);
+    }
+#endif
     if (isPersistNode()) {
         emit(EventTypesToJS::NODE_REMOVE_PERSIST_ROOT_NODE);
     }

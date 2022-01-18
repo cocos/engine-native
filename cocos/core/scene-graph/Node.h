@@ -630,6 +630,12 @@ protected:
 
     bool onPreDestroyBase();
 
+#ifdef EDITOR_JS
+    inline void notifyAttached(bool attached) {
+        emit(EventTypesToJS::NODE_ATTACHED, attached);
+    }
+#endif
+
     static uint32_t clearFrame;
     static uint32_t clearRound;
 

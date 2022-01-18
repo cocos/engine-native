@@ -59,10 +59,10 @@ void Scene::load() {
 }
 
 void Scene::activate(bool active /* = true */) {
-    //cjh    if (EDITOR) {
-    //        // register all nodes to editor
-    //        _registerIfAttached!(active);
-    //    }
+#ifdef EDITOR_JS
+    this->notifyAttached(active);
+#endif
+    //cjh
     //    Director::getInstance()->getNodeActivator()->activateNode(this, active);
     //     The test environment does not currently support the renderer
     //        if (!TEST) {

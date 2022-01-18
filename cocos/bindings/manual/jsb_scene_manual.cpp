@@ -295,6 +295,13 @@ static bool js_scene_Node_registerListeners(se::State &s) // NOLINT(readability-
         se::ScriptEngine::getInstance()->callFunction(jsObject, "_onSceneUpdated", 1, &arg0);
     });
 
+    cobj->on(cc::EventTypesToJS::NODE_ATTACHED, [jsObject](bool attached) {
+        se::AutoHandleScope hs;
+        se::Value           arg0;
+        nativevalue_to_se(attached, arg0);
+        se::ScriptEngine::getInstance()->callFunction(jsObject, "_onAttached", 1, &arg0);
+    });
+
     registerLocalPositionRotationScaleUpdated(cobj, jsObject);
 
     return true;
