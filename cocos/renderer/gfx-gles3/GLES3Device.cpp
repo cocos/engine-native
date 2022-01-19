@@ -86,11 +86,15 @@ bool GLES3Device::doInit(const DeviceInfo & /*info*/) {
     _bindingMappings.blockOffsets.resize(_bindingMappingInfo.setIndices.size());
     _bindingMappings.samplerTextureOffsets.resize(_bindingMappingInfo.setIndices.size());
     for (size_t i = 0; i < _bindingMappingInfo.setIndices.size(); ++i) {
-        uint32_t cur{_bindingMappingInfo.setIndices[i]};
-        uint32_t last{i ? _bindingMappingInfo.setIndices[i - 1] : cur};
-        _bindingMappings.blockOffsets[cur]          = i ? static_cast<int32_t>(_bindingMappingInfo.maxBlockCounts[last]) + _bindingMappings.blockOffsets[last] : 0;
-        _bindingMappings.samplerTextureOffsets[cur] = i ? static_cast<int32_t>(_bindingMappingInfo.maxSamplerTextureCounts[last]) + _bindingMappings.samplerTextureOffsets[last] : 0;
-        _bindingMappings.samplerTextureOffsets[cur] -= static_cast<int32_t>(_bindingMappingInfo.maxBlockCounts[cur]);
+        uint32_t curSet{_bindingMappingInfo.setIndices[i]};
+        uint32_t prevSet{i ? _bindingMappingInfo.setIndices[i - 1] : curSet};
+        // accumulate the per set offset according to the specified capacity
+        _bindingMappings.blockOffsets[curSet]          = i ? static_cast<int32_t>(_bindingMappingInfo.maxBlockCounts[prevSet]) + _bindingMappings.blockOffsets[prevSet] : 0;
+        _bindingMappings.samplerTextureOffsets[curSet] = i ? static_cast<int32_t>(_bindingMappingInfo.maxSamplerTextureCounts[prevSet]) + _bindingMappings.samplerTextureOffsets[prevSet] : 0;
+    }
+    for (uint32_t curSet : _bindingMappingInfo.setIndices) {
+        // textures always come after UBOs
+        _bindingMappings.samplerTextureOffsets[curSet] -= static_cast<int32_t>(_bindingMappingInfo.maxBlockCounts[curSet]);
     }
     _bindingMappings.flexibleSet = _bindingMappingInfo.setIndices.back();
 

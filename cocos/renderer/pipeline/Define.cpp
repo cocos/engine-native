@@ -41,14 +41,14 @@ uint materialSet = static_cast<uint>(SetIndex::MATERIAL);
 uint localSet    = static_cast<uint>(SetIndex::LOCAL);
 
 gfx::BindingMappingInfo bindingMappingInfo = {
-    {globalUBOCount, 0, localUBOCount},
-    {globalSamplerCount, 0, localSamplerCount},
-    {0, 0, 0},
-    {0, 0, 0},
-    {0, 0, 0},
-    {0, 0, 0},
-    {0, 0, 0},
-    {0, 2, 1},
+    {globalUBOCount, 0, localUBOCount},         // Uniform Buffer Counts
+    {globalSamplerCount, 0, localSamplerCount}, // Combined Sampler Texture Counts
+    {0, 0, 0},                                  // Sampler Counts
+    {0, 0, 0},                                  // Texture Counts
+    {0, 0, 0},                                  // Storage Buffer Counts
+    {0, 0, 0},                                  // Storage Image Counts
+    {0, 0, 0},                                  // Subpass Input Counts
+    {0, 2, 1},                                  // Set Order Indices
 };
 
 DescriptorSetLayoutInfos              globalDescriptorSetLayout;
