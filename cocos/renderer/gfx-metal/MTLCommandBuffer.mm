@@ -400,6 +400,7 @@ void CCMTLCommandBuffer::updateDepthStencilState(uint32_t index, MTLRenderPassDe
             descriptor.depthAttachment.storeAction   = MTLStoreActionStore;
             descriptor.stencilAttachment.storeAction = MTLStoreActionStore;
         }
+    }
 }
 
 void CCMTLCommandBuffer::bindPipelineState(PipelineState *pso) {
