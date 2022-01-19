@@ -152,10 +152,9 @@ void glThreadEntry() {
     lk.unlock();
     cc::cocosApp.cond.notify_all();
 
-    int8_t cmd        = 0;
+    int8_t cmd          = 0;
     bool   runInLowRate = false;
     while (true) {
-
         runInLowRate = !cc::cocosApp.animating || APP_CMD_PAUSE == cc::cocosApp.appState;
 
         if (readCommandWithTimeout(cmd, runInLowRate ? 100 : 0) > 0) {
@@ -164,11 +163,11 @@ void glThreadEntry() {
             postExecCmd(cmd);
         }
 
+        // Handle java events send by UI thread. Input events are handled here too.
+        cc::JniHelper::callStaticVoidMethod("com.cocos.lib.CocosHelper",
+                                            "flushTasksOnGameThread");
 
-        if (game) {
-            // Handle java events send by UI thread. Input events are handled here too.
-            cc::JniHelper::callStaticVoidMethod("com.cocos.lib.CocosHelper",
-                                                "flushTasksOnGameThread");
+        if (game && cc::cocosApp.animating) {
             game->tick();
         }
         if (cc::cocosApp.destroyRequested) break;
