@@ -81,7 +81,7 @@ void CCObject::destroyImmediate() {
 
     onPreDestroy();
 
-    // NOTE: native has been use smart pointer, unneed to call TS's destruct logic
+    // NOTE: native has been use smart pointer, not needed to implement 'destruct' interface, remove 'destruct' reference code
 
     _objFlags |= Flags::DESTROYED;
 }
