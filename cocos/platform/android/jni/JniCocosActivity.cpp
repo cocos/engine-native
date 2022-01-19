@@ -157,16 +157,17 @@ void glThreadEntry() {
     while (true) {
         runInLowRate = !cc::cocosApp.animating || APP_CMD_PAUSE == cc::cocosApp.appState;
 
-        if (readCommandWithTimeout(cmd, runInLowRate ? 100 : 0) > 0) {
+        if (readCommandWithTimeout(cmd, runInLowRate ? 50 : 0) > 0) {
             preExecCmd(cmd);
             cc::View::engineHandleCmd(cmd);
             postExecCmd(cmd);
         }
 
-        // Handle java events send by UI thread. Input events are handled here too.
-        cc::JniHelper::callStaticVoidMethod("com.cocos.lib.CocosHelper",
-                                            "flushTasksOnGameThread");
-
+        if(game) {
+            // Handle java events send by UI thread. Input events are handled here too.
+            cc::JniHelper::callStaticVoidMethod("com.cocos.lib.CocosHelper",
+                                                "flushTasksOnGameThread");
+        }
         if (game && cc::cocosApp.animating) {
             game->tick();
         }
