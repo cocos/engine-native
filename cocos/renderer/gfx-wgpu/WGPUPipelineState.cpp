@@ -62,11 +62,20 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
             return;
         }
 
-        const AttributeList&             attrs       = _shader->getAttributes();
-        uint64_t                         offset[256] = {0};
-        std::vector<WGPUVertexAttribute> wgpuAttrs;
-        bool                             isInstance = attrs[0].isInstanced;
-        uint8_t                          index      = 0;
+        const Attribute& maxStreamAttr = std::max_element(_inputState.attributes.begin(), _inputState.attributes.end(), [&](const Attribute& lhs, const Attribute& rhs) {
+            return lhs.stream < rhs.stream;
+        });
+
+        const streamCount = maxStreamAttr.stream + 1;
+
+        std::vector<WGPUVertexBufferLayout>           vbLayouts(streamCount);
+        std::vector<std::vector<WGPUVertexAttribute>> wgpuAttrsVec(streamCount);
+
+        const AttributeList& attrs       = _shader->getAttributes();
+        uint64_t             offset[256] = {0};
+        // std::vector<WGPUVertexAttribute> wgpuAttrs;
+        bool    isInstance = attrs.empty() ? false : attrs[0].isInstanced;
+        uint8_t index      = 0;
 
         //uint8_t                          curStream  = _inputState.attributes[0].stream;
         for (size_t i = 0; i < attrs.size(); i++) {
@@ -80,34 +89,42 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
             if (iter != _inputState.attributes.end()) {
                 realOffset = offset[(*iter).stream];
                 format     = (*iter).format;
-                offset[(*iter).stream] += GFX_FORMAT_INFOS[static_cast<uint>(format)].size;
             }
 
-            WGPUVertexAttribute attr = {
-                .format         = toWGPUVertexFormat(format),
-                .offset         = realOffset,
-                .shaderLocation = attrs[i].location,
-            };
-            wgpuAttrs.push_back(attr);
+            for (size_t j = 0; j < streamCount; ++j) {
+                WGPUVertexAttribute attr = {
+                    .format         = toWGPUVertexFormat(format),
+                    .offset         = offset[(*iter).stream],
+                    .shaderLocation = attrs[i].location,
+                };
+                wgpuAttrs[j].push_back(attr);
+            }
+
+            offset[(*iter).stream] += iter != _inputState.attributes.end() ? GFX_FORMAT_INFOS[static_cast<uint>(format)].size : 0;
         }
 
-        uint64_t stride = std::accumulate(_inputState.attributes.begin(), _inputState.attributes.end(), 0, [](uint64_t initVal, const Attribute& in) {
-            return initVal + GFX_FORMAT_INFOS[static_cast<uint>(in.format)].size;
-        });
+        for (size_t i = 0; i < vbLayouts.size(); ++i) {
+            vbLayouts[i] = {
+                .arrayStride    = offset[i],
+                .stepMode       = isInstance ? WGPUVertexStepMode_Instance : WGPUVertexStepMode_Vertex,
+                .attributeCount = wgpuAttrs[i].size(),
+                .attributes     = wgpuAttrs[i].data(),
+            };
+        }
 
-        WGPUVertexBufferLayout vertexBufferLayout = {
-            .arrayStride    = stride, // TODO_Zeqiang: ???
-            .stepMode       = isInstance ? WGPUVertexStepMode_Instance : WGPUVertexStepMode_Vertex,
-            .attributeCount = wgpuAttrs.size(),
-            .attributes     = wgpuAttrs.data(),
-        };
+        // WGPUVertexBufferLayout vertexBufferLayout = {
+        //     .arrayStride    = stride, // TODO_Zeqiang: ???
+        //     .stepMode       = isInstance ? WGPUVertexStepMode_Instance : WGPUVertexStepMode_Vertex,
+        //     .attributeCount = wgpuAttrs.size(),
+        //     .attributes     = wgpuAttrs.data(),
+        // };
 
         WGPUVertexState vertexState = {
             .nextInChain = nullptr,
             .module      = static_cast<CCWGPUShader*>(_shader)->gpuShaderObject()->wgpuShaderVertexModule,
             .entryPoint  = "main",
-            .bufferCount = 1,
-            .buffers     = &vertexBufferLayout,
+            .bufferCount = vbLayouts.size(),
+            .buffers     = vbLayouts.data(),
         };
 
         bool stripTopology = (_primitive == PrimitiveMode::LINE_STRIP || _primitive == PrimitiveMode::TRIANGLE_STRIP);
