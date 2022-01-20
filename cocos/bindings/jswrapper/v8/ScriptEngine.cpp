@@ -204,8 +204,13 @@ SE_BIND_FUNC(jsbConsoleAssert)
 class ScriptEngineV8Context {
 public:
     ScriptEngineV8Context() {
+    #ifdef CC_EDITOR
+        // to-do
+    #else
         platform = v8::platform::NewDefaultPlatform().release();
         v8::V8::InitializePlatform(platform);
+    #endif // CC_EDITOR
+
 
         std::string flags;
         //NOTICE: spaces are required between flags
@@ -216,11 +221,11 @@ public:
         flags.append(" --jitless");
     #endif
         if (!flags.empty()) {
-            v8::V8::SetFlagsFromString(flags.c_str(), static_cast<int>(flags.length()));
+            //v8::V8::SetFlagsFromString(flags.c_str(), static_cast<int>(flags.length()));
         }
 
-        bool ok = v8::V8::Initialize();
-        assert(ok);
+        //bool ok = v8::V8::Initialize();
+        //assert(ok);
     }
 
     ~ScriptEngineV8Context() {
@@ -450,42 +455,18 @@ ScriptEngine::ScriptEngine()
 
 ScriptEngine::~ScriptEngine() = default;
 
-bool ScriptEngine::init() {
-    cleanup();
-    SE_LOGD("Initializing V8, version: %s\n", v8::V8::GetVersion());
-    ++_vmId;
-
-    _engineThreadId = std::this_thread::get_id();
-
-    for (const auto &hook : _beforeInitHookArray) {
-        hook();
-    }
-    _beforeInitHookArray.clear();
-    v8::Isolate::CreateParams createParams;
-    createParams.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator();
-    _isolate                            = v8::Isolate::New(createParams);
-    v8::HandleScope hs(_isolate);
-    _isolate->Enter();
-
-    _isolate->SetCaptureStackTraceForUncaughtExceptions(true, JSB_STACK_FRAME_LIMIT, v8::StackTrace::kOverview);
-
-    _isolate->SetFatalErrorHandler(onFatalErrorCallback);
-    _isolate->SetOOMErrorHandler(onOOMErrorCallback);
-    _isolate->AddMessageListener(onMessageCallback);
-    _isolate->SetPromiseRejectCallback(onPromiseRejectCallback);
-
-    _context.Reset(_isolate, v8::Context::New(_isolate));
-    _context.Get(_isolate)->Enter();
-
+bool ScriptEngine::postInit() {
     NativePtrToObjectMap::init();
-
     Object::setup();
     Class::setIsolate(_isolate);
     Object::setIsolate(_isolate);
 
-    _globalObj = Object::_createJSObject(nullptr, _context.Get(_isolate)->Global());
+    _globalObj = Object::_createJSObject(nullptr, _isolate->GetCurrentContext()->Global());
     _globalObj->root();
     _globalObj->setProperty("window", Value(_globalObj));
+
+    se::Value tmp;
+    bool      myok = _globalObj->getProperty("window", &tmp);
 
     se::Value consoleVal;
     if (_globalObj->getProperty("console", &consoleVal) && consoleVal.isObject()) {
@@ -533,6 +514,61 @@ bool ScriptEngine::init() {
     _afterInitHookArray.clear();
 
     return _isValid;
+}
+
+bool ScriptEngine::init() {
+    cleanup();
+    SE_LOGD("Initializing V8, version: %s\n", v8::V8::GetVersion());
+    ++_vmId;
+
+    _engineThreadId = std::this_thread::get_id();
+
+    for (const auto &hook : _beforeInitHookArray) {
+        hook();
+    }
+    _beforeInitHookArray.clear();
+    v8::Isolate::CreateParams createParams;
+    createParams.array_buffer_allocator = v8::ArrayBuffer::Allocator::NewDefaultAllocator();
+    _isolate                            = v8::Isolate::New(createParams);
+
+    v8::HandleScope hs(_isolate);
+    _isolate->Enter();
+    _isolate->SetCaptureStackTraceForUncaughtExceptions(true, JSB_STACK_FRAME_LIMIT, v8::StackTrace::kOverview);
+    _isolate->SetFatalErrorHandler(onFatalErrorCallback);
+    _isolate->SetOOMErrorHandler(onOOMErrorCallback);
+    _isolate->AddMessageListener(onMessageCallback);
+    _isolate->SetPromiseRejectCallback(onPromiseRejectCallback);
+
+    _context.Reset(_isolate, v8::Context::New(_isolate));
+    _context.Get(_isolate)->Enter();
+    return postInit();
+}
+
+bool ScriptEngine::init(v8::Isolate *isolate) {
+    cleanup();
+    SE_LOGD("Initializing V8, version: %s\n", v8::V8::GetVersion());
+    ++_vmId;
+
+    _engineThreadId = std::this_thread::get_id();
+
+    for (const auto &hook : _beforeInitHookArray) {
+        hook();
+    }
+    _beforeInitHookArray.clear();
+
+    _isolate = isolate;
+    v8::HandleScope hs(_isolate);
+    _isolate->Enter();
+    _isolate->SetCaptureStackTraceForUncaughtExceptions(true, JSB_STACK_FRAME_LIMIT, v8::StackTrace::kOverview);
+    _isolate->SetFatalErrorHandler(onFatalErrorCallback);
+    _isolate->SetOOMErrorHandler(onOOMErrorCallback);
+    _isolate->AddMessageListener(onMessageCallback);
+    _isolate->SetPromiseRejectCallback(onPromiseRejectCallback);
+    
+    v8::Local<v8::Context> context = isolate->GetCurrentContext();
+    _context.Reset(isolate, context);
+    _context.Get(isolate)->Enter();
+    return postInit();
 }
 
 void ScriptEngine::cleanup() {
@@ -637,30 +673,7 @@ void ScriptEngine::addPermanentRegisterCallback(RegisterCallback cb) {
     }
 }
 
-bool ScriptEngine::start() {
-    if (!init()) {
-        return false;
-    }
-
-    se::AutoHandleScope hs;
-
-    // debugger
-    if (isDebuggerEnabled()) {
-    #if SE_ENABLE_INSPECTOR
-        // V8 inspector stuff, most code are taken from NodeJS.
-        _isolateData = node::CreateIsolateData(_isolate, uv_default_loop());
-        _env         = node::CreateEnvironment(_isolateData, _context.Get(_isolate), 0, nullptr, 0, nullptr);
-
-        node::DebugOptions options;
-        options.set_wait_for_connect(_isWaitForConnect); // the program will be hung up until debug attach if _isWaitForConnect = true
-        options.set_inspector_enabled(true);
-        options.set_port(static_cast<int>(_debuggerServerPort));
-        options.set_host_name(_debuggerServerAddr);
-        bool ok = _env->inspector_agent()->Start(gSharedV8->platform, "", options);
-        assert(ok);
-    #endif
-    }
-    //
+bool ScriptEngine::callRegisteredCallback() {
     bool ok    = false;
     _startTime = std::chrono::steady_clock::now();
 
@@ -684,6 +697,40 @@ bool ScriptEngine::start() {
     _registerCallbackArray.clear();
 
     return ok;
+}
+
+bool ScriptEngine::start() {
+    if (!init()) {
+        return false;
+    }
+    se::AutoHandleScope hs;
+
+    // debugger
+    if (isDebuggerEnabled()) {
+    #if SE_ENABLE_INSPECTOR
+        // V8 inspector stuff, most code are taken from NodeJS.
+        _isolateData = node::CreateIsolateData(_isolate, uv_default_loop());
+        _env         = node::CreateEnvironment(_isolateData, _context.Get(_isolate), 0, nullptr, 0, nullptr);
+
+        node::DebugOptions options;
+        options.set_wait_for_connect(_isWaitForConnect); // the program will be hung up until debug attach if _isWaitForConnect = true
+        options.set_inspector_enabled(true);
+        options.set_port(static_cast<int>(_debuggerServerPort));
+        options.set_host_name(_debuggerServerAddr);
+        bool ok = _env->inspector_agent()->Start(gSharedV8->platform, "", options);
+        assert(ok);
+    #endif
+    }
+
+    return callRegisteredCallback();
+}
+
+bool ScriptEngine::start(v8::Isolate *isolate) {
+    if (!init(isolate)) {
+        return false;
+    }
+    se::AutoHandleScope hs;
+    return callRegisteredCallback();
 }
 
 void ScriptEngine::garbageCollect() {
