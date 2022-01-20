@@ -27,7 +27,7 @@
 
 #ifndef CC_WGPU_WASM
     #include "bindings/jswrapper/SeApi.h"
-#endif()
+#endif
 
 #include "gfx-base/GFXInputAssembler.h"
 #include "gfx-base/GFXPipelineState.h"
@@ -36,15 +36,14 @@
 namespace cc {
 
 namespace utils {
+
+String getStacktraceJS() {
 #ifndef CC_WGPU_WASM
-String getStacktraceJS() {
     return se::ScriptEngine::getInstance()->getCurrentStackTrace();
-}
-#else()
-String getStacktraceJS() {
+#else
     return "";
+#endif
 }
-#endif()
 
 } // namespace utils
 
