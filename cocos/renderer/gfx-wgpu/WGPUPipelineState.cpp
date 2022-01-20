@@ -67,6 +67,7 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
         std::vector<WGPUVertexAttribute> wgpuAttrs;
         bool                             isInstance = attrs[0].isInstanced;
         uint8_t                          index      = 0;
+
         //uint8_t                          curStream  = _inputState.attributes[0].stream;
         for (size_t i = 0; i < attrs.size(); i++) {
             String attrName = attrs[i].name;
@@ -208,6 +209,7 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
         };
         _gpuPipelineStateObj->wgpuRenderPipeline = wgpuDeviceCreateRenderPipeline(CCWGPUDevice::getInstance()->gpuDeviceObject()->wgpuDevice, &piplineDesc);
         _ppl                                     = pipelineLayout;
+        _forceUpdate                             = false;
     } else if (_bindPoint == PipelineBindPoint::COMPUTE) {
         if (_gpuPipelineStateObj->wgpuComputePipeline)
             return;
