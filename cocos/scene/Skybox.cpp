@@ -26,6 +26,7 @@
 #include "scene/Skybox.h"
 #include "3d/assets/Mesh.h"
 #include "3d/misc/CreateMesh.h"
+#include "cocos/bindings/event/EventDispatcher.h"
 #include "core/builtin/BuiltinResMgr.h"
 #include "core/scene-graph/SceneGlobals.h"
 #include "primitive/Primitive.h"
@@ -189,6 +190,10 @@ void Skybox::activate() {
         IMaterialInstanceInfo matInstInfo;
         matInstInfo.parent = mat;
         skyboxMaterial     = new MaterialInstance(matInstInfo);
+        skyboxMaterial->addRef();
+        EventDispatcher::addCustomEventListener("event_close", [](const CustomEvent &) {
+            skyboxMaterial->release();
+        });
     }
 
     if (_enabled) {
