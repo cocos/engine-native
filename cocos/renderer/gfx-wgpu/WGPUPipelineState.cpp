@@ -62,11 +62,16 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
             return;
         }
 
-        const Attribute& maxStreamAttr = std::max_element(_inputState.attributes.begin(), _inputState.attributes.end(), [&](const Attribute& lhs, const Attribute& rhs) {
+        auto maxStreamAttr = std::max_element(_inputState.attributes.begin(), _inputState.attributes.end(), [&](const Attribute& lhs, const Attribute& rhs) {
             return lhs.stream < rhs.stream;
         });
 
-        const streamCount = maxStreamAttr.stream + 1;
+        auto    longestAttr         = std::max_element(_inputState.attributes.begin(), _inputState.attributes.end(), [&](const Attribute& lhs, const Attribute& rhs) {
+            return GFX_FORMAT_INFOS[static_cast<uint>(lhs.format)].size < GFX_FORMAT_INFOS[static_cast<uint>(rhs.format)].size;
+        });
+        uint8_t mostToleranceStream = (*longestAttr).stream;
+
+        const uint8_t streamCount = (*maxStreamAttr).stream + 1;
 
         std::vector<WGPUVertexBufferLayout>           vbLayouts(streamCount);
         std::vector<std::vector<WGPUVertexAttribute>> wgpuAttrsVec(streamCount);
@@ -77,38 +82,55 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
         bool    isInstance = attrs.empty() ? false : attrs[0].isInstanced;
         uint8_t index      = 0;
 
-        //uint8_t                          curStream  = _inputState.attributes[0].stream;
+        // wgpuAttrsVec[0] ∪ wgpuAttrsVec[1] ∪ ... ∪ wgpuAttrsVec[n] == shader.attrs
         for (size_t i = 0; i < attrs.size(); i++) {
             String attrName = attrs[i].name;
             auto   iter     = std::find_if(_inputState.attributes.begin(), _inputState.attributes.end(), [attrName](const Attribute& attr) {
                 return strcmp(attrName.c_str(), attr.name.c_str()) == 0;
             });
 
-            Format   format     = attrs[i].format;
-            uint64_t realOffset = 0;
             if (iter != _inputState.attributes.end()) {
-                realOffset = offset[(*iter).stream];
-                format     = (*iter).format;
-            }
-
-            for (size_t j = 0; j < streamCount; ++j) {
-                WGPUVertexAttribute attr = {
+                Format              format = (*iter).format;
+                WGPUVertexAttribute attr   = {
                     .format         = toWGPUVertexFormat(format),
                     .offset         = offset[(*iter).stream],
                     .shaderLocation = attrs[i].location,
                 };
-                wgpuAttrs[j].push_back(attr);
-            }
+                wgpuAttrsVec[(*iter).stream].push_back(attr);
+                offset[(*iter).stream] += GFX_FORMAT_INFOS[static_cast<uint>(format)].size;
+            } else {
+                // all none-input attr are put in 1st buffer layout with offset = 0;
+                Format              format = attrs[i].format;
+                WGPUVertexAttribute attr   = {
+                    .format         = toWGPUVertexFormat(format),
+                    .offset         = 0,
+                    .shaderLocation = attrs[i].location,
+                };
 
-            offset[(*iter).stream] += iter != _inputState.attributes.end() ? GFX_FORMAT_INFOS[static_cast<uint>(format)].size : 0;
+                if (GFX_FORMAT_INFOS[static_cast<uint>(format)].size > GFX_FORMAT_INFOS[static_cast<uint>((*longestAttr).format)].size) {
+                    printf("found attr %s %s in shader exceed size of longest attr %s %s\n", attrName.c_str(), GFX_FORMAT_INFOS[static_cast<uint>(format)].name.c_str(),
+                           (*longestAttr).name.c_str(), GFX_FORMAT_INFOS[static_cast<uint>((*longestAttr).format)].name.c_str());
+                    _gpuPipelineStateObj->redundantAttr.push_back(attr);
+                    if (GFX_FORMAT_INFOS[static_cast<uint>(format)].size > _gpuPipelineStateObj->maxAttrLength) {
+                        _gpuPipelineStateObj->maxAttrLength = GFX_FORMAT_INFOS[static_cast<uint>(format)].size;
+                    }
+                } else {
+                    wgpuAttrsVec[mostToleranceStream].push_back(attr);
+                }
+            }
         }
 
-        for (size_t i = 0; i < vbLayouts.size(); ++i) {
+        if (_gpuPipelineStateObj->maxAttrLength > 0) {
+            wgpuAttrsVec.push_back(_gpuPipelineStateObj->redundantAttr);
+            vbLayouts.resize(vbLayouts.size() + 1);
+        }
+
+        for (size_t i = 0; i < wgpuAttrsVec.size(); ++i) {
             vbLayouts[i] = {
                 .arrayStride    = offset[i],
                 .stepMode       = isInstance ? WGPUVertexStepMode_Instance : WGPUVertexStepMode_Vertex,
-                .attributeCount = wgpuAttrs[i].size(),
-                .attributes     = wgpuAttrs[i].data(),
+                .attributeCount = wgpuAttrsVec[i].size(),
+                .attributes     = wgpuAttrsVec[i].data(),
             };
         }
 
@@ -134,9 +156,9 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
             .topology         = toWGPUPrimTopology(_primitive),
             .stripIndexFormat = stripTopology ? WGPUIndexFormat_Uint16 : WGPUIndexFormat_Undefined, //TODO_Zeqiang: ???
             .frontFace        = _rasterizerState.isFrontFaceCCW ? WGPUFrontFace::WGPUFrontFace_CCW : WGPUFrontFace::WGPUFrontFace_CW,
-            .cullMode         = _rasterizerState.cullMode == CullMode::FRONT  ? WGPUCullMode::WGPUCullMode_Front
-                                : _rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
-                                                                              : WGPUCullMode::WGPUCullMode_None,
+            .cullMode         = _rasterizerState.cullMode == CullMode::FRONT ? WGPUCullMode::WGPUCullMode_Front
+                                                                     : _rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
+                                                                                                                   : WGPUCullMode::WGPUCullMode_None,
         };
 
         WGPUStencilFaceState stencilFront = {

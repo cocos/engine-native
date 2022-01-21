@@ -166,6 +166,9 @@ struct CCWGPUPipelineLayoutObject {
 struct CCWGPUPipelineStateObject {
     WGPURenderPipeline  wgpuRenderPipeline  = wgpuDefaultHandle;
     WGPUComputePipeline wgpuComputePipeline = wgpuDefaultHandle;
+
+    std::vector<WGPUVertexAttribute> redundantAttr;
+    uint32_t                         maxAttrLength = 0;
 };
 
 struct CCWGPUShaderObject {
@@ -229,6 +232,8 @@ struct CCWGPUCommandBufferObject {
 
     WGPURenderPassDescriptor renderPassDescriptor;
     CCWGPUStateCache         stateCache;
+
+    std::map<uint32_t, CCWGPUBuffer*> redundantVertexBufferMap;
 };
 
 struct CCWGPUQueryPoolObject {

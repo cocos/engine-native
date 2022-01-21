@@ -56,7 +56,15 @@ void CCWGPUCommandBuffer::doInit(const CommandBufferInfo &info) {
 }
 
 void CCWGPUCommandBuffer::doDestroy() {
-    CC_SAFE_DELETE(_gpuCommandBufferObj);
+    if (_gpuCommandBufferObj) {
+        if (!_gpuCommandBufferObj->redundantVertexBufferMap.empty()) {
+            for (auto &pair : _gpuCommandBufferObj->redundantVertexBufferMap) {
+                pair.second->destroy();
+                delete pair.second;
+            }
+        }
+        CC_SAFE_DELETE(_gpuCommandBufferObj);
+    }
 }
 
 void CCWGPUCommandBuffer::begin(RenderPass * /*renderPass*/, uint /*subpass*/, Framebuffer * /*frameBuffer*/) {
@@ -355,6 +363,33 @@ void CCWGPUCommandBuffer::bindStates() {
                                                  vertexBuffer->getOffset(),
                                                  vertexBuffer->getSize());
         }
+
+        {
+            //redundantVertexBufferMap
+            const uint32_t maxAttrLen = pipelineState->gpuPipelineStateObject()->maxAttrLength;
+            if (maxAttrLen != 0) {
+                CCWGPUBuffer *buffer = nullptr;
+                if (_gpuCommandBufferObj->redundantVertexBufferMap.find(maxAttrLen) != _gpuCommandBufferObj->redundantVertexBufferMap.end()) {
+                    buffer = _gpuCommandBufferObj->redundantVertexBufferMap[maxAttrLen];
+                } else {
+                    BufferInfo info = {
+                        .usage    = BufferUsageBit::VERTEX,
+                        .memUsage = MemoryUsageBit::DEVICE,
+                        .size     = maxAttrLen,
+                        .flags    = BufferFlagBit::NONE,
+                    };
+                    buffer = CC_NEW(CCWGPUBuffer);
+                    buffer->initialize(info);
+                    _gpuCommandBufferObj->redundantVertexBufferMap.insert({maxAttrLen, buffer});
+                }
+                wgpuRenderPassEncoderSetVertexBuffer(_gpuCommandBufferObj->wgpuRenderPassEncoder,
+                                                     vertexBufferList.size(),
+                                                     buffer->gpuBufferObject()->wgpuBuffer,
+                                                     0,
+                                                     maxAttrLen);
+            }
+        }
+
         const auto *indexBuffer = static_cast<CCWGPUBuffer *>(ia->getIndexBuffer());
         if (indexBuffer) {
             wgpuRenderPassEncoderSetIndexBuffer(_gpuCommandBufferObj->wgpuRenderPassEncoder,
