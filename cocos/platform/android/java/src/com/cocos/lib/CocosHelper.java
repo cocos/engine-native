@@ -58,8 +58,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Queue;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class CocosHelper {
@@ -86,8 +89,10 @@ public class CocosHelper {
     // The OBB file
     private static ZipResourceFile sOBBFile = null;
 
-    private static Object sTaskMtx = new Object();
-    private static List<Runnable> sTaskOnGameThread = Collections.synchronizedList(new ArrayList<>());
+    private static ReentrantLock sForegroundTaskMtx = new ReentrantLock();
+    private static ReentrantLock sTaskMtx = new ReentrantLock();
+    private static Queue<Runnable> sForegroundTaskQOnGameThread = new LinkedList<>();
+    private static Queue<Runnable> sTaskQOnGameThread = new LinkedList<>();
 
     /**
      * Battery receiver to getting battery level.
@@ -120,19 +125,42 @@ public class CocosHelper {
         context.unregisterReceiver(sBatteryReceiver);
     }
 
+    //Run on game thread forever, no matter foreground or background
     public static void runOnGameThread(final Runnable runnable) {
-        synchronized (sTaskMtx) {
-            sTaskOnGameThread.add(runnable);
-        }
+
+            sTaskMtx.lock();
+            sTaskQOnGameThread.add(runnable);
+       sTaskMtx.unlock();
+
     }
 
     static void flushTasksOnGameThread() {
-        List<Runnable> tmp = sTaskOnGameThread;
-        synchronized (sTaskMtx) {
-            sTaskOnGameThread = Collections.synchronizedList(new ArrayList<>());
-        }
+
+        sTaskMtx.lock();
+            Queue<Runnable> tmp = sTaskQOnGameThread;
+        sTaskQOnGameThread = new LinkedList<>();
+        sTaskMtx.unlock();
+            while (tmp.size() > 0) {
+                Runnable r = tmp.poll();
+                if (r != null) {
+                    r.run();
+                }
+            }
+
+    }
+    public static void runOnGameThreadAtForeground(final Runnable runnable) {
+        sForegroundTaskMtx.lock();
+        sForegroundTaskQOnGameThread.add(runnable);
+        sForegroundTaskMtx.unlock();
+    }
+
+    static void flushTasksOnGameThreadAtForeground() {
+        sForegroundTaskMtx.lock();
+        Queue<Runnable> tmp = sForegroundTaskQOnGameThread;
+        sForegroundTaskQOnGameThread = new LinkedList<>();
+        sForegroundTaskMtx.unlock();
         while (tmp.size() > 0) {
-            Runnable r = tmp.remove(0);
+            Runnable r = tmp.poll();
             if (r != null) {
                 r.run();
             }
