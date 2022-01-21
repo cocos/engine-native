@@ -192,8 +192,9 @@ void Skybox::activate() {
         matInstInfo.parent = mat;
         skyboxMaterial     = new MaterialInstance(matInstInfo);
         skyboxMaterial->addRef();
-        EventDispatcher::addCustomEventListener(EVENT_CLOSE, [](const CustomEvent &) {
+        EventDispatcher::addCustomEventListener(EVENT_CLOSE, [](const CustomEvent & /*unused*/) {
             skyboxMaterial->release();
+            skyboxMaterial = nullptr;
         });
     }
 
