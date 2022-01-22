@@ -57,3 +57,5 @@ c++部分的改动需要手动编译，在engine-native\cocos\renderer\gfx-wgpu�
 ##### c++部分
 
 c++部分WebGPU部分的实现其实和其他后端并无二致，对应接口的头文件就是emscripten提供的webgpu.h。 基本流程和Metal很像，只有一些细微的差别。由Device创建command encoder, command encoder在一个pass中可以作为长期持有的对象，然后command encoder 可以创建render encoder 和 compute encoder分别执行对应功能，最后command encoder执行finish可以产生一个command buffer, 这个就是拿来提交进queue里的command buffer. 
+
+TODO;
