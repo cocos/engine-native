@@ -220,7 +220,7 @@ enum class KEY {
     * @zh 删除键
     * @readonly
     */
-    DELETE = 46,
+    DELETE_ = 46,// DELETE may be used as platform's macro, such as winnt.h,thus use DELETE_ instead here.
 
     /**
     * @en The a key
@@ -826,6 +826,15 @@ static const bool ENABLE_TRANSPARENT_CANVAS{false};
     * @default true
     */
 static const bool ENABLE_WEBGL_ANTIALIAS{true};
+
+/**
+     * @en
+     * Used to set fxaa post-processing anti-aliasing, the default value is false.
+     * @zh
+     * 用于开启fxaa后处理抗锯齿, 默认值为false。
+     * @default false
+     */
+static const bool ENABLE_ANTIALIAS_FXAA{false};
 
 /**
     * @en

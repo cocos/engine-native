@@ -2,6 +2,7 @@
 #include "renderer/pipeline/RenderPipeline.h"
 #include "renderer/pipeline/deferred/BloomStage.h"
 #include "scene/Shadow.h"
+#include "core/platform/Macro.h"
 
 namespace cc {
 namespace pipeline {
@@ -36,10 +37,9 @@ void DeferredPipelineSceneData::initPipelinePassInfo() {
 
     _postProcessMaterial = new Material();
     _postProcessMaterial->setUuid("builtin-post-process-material");
-    //TODO(minggo):
-    //    if (macro.ENABLE_ANTIALIAS_FXAA) {
-    //        _antiAliasing = AntiAliasing::FXAA;
-    //    }
+    if (cc::macro::ENABLE_ANTIALIAS_FXAA) {
+        _antiAliasing = AntiAliasing::FXAA;
+    }
     materialInfo.effectName = "post-process";
     MacroRecord record{{"ANTIALIAS_TYPE", static_cast<int32_t>(_antiAliasing)}};
     materialInfo.defines = record;
