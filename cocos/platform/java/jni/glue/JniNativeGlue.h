@@ -1,5 +1,5 @@
 /****************************************************************************
-Copyright (c) 2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2021-2022 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -22,6 +22,7 @@ Copyright (c) 2021 Xiamen Yaji Software Co., Ltd.
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
 ****************************************************************************/
+
 #pragma once
 
 #include <future>
@@ -89,6 +90,7 @@ public:
     void writeCommandAsync(JniCommand cmd);
     void writeCommandSync(JniCommand cmd);
     int  readCommand(CommandMsg* msg);
+    int  readCommandWithTimeout(CommandMsg* cmd, int delayMS);
 
     void setEventDispatch(IEventDispatch* eventDispatcher);
     void dispatchEvent(const OSEvent& ev);

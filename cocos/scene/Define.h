@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2021-2022 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -21,7 +21,7 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
- ****************************************************************************/
+****************************************************************************/
 
 #pragma once
 
@@ -70,22 +70,13 @@ enum class TransformBit {
 
 struct Shadow {
     bool       enabled{false};
-    bool       dirty{false};
-    bool       shadowMapDirty{false};
-    bool       fixedArea{false};
     ShadowType shadowType{ShadowType::PLANAR};
-    float      invisibleOcclusionRange{0.0F};
-    float      shadowDistance{0.0F};
     float      distance{0.0F};
-    Pass *     instancePass{nullptr};
-    Pass *     planarPass{nullptr};
-    float      nearValue{0.0F};
-    float      farValue{0.0F};
-    uint32_t   pcfType{0};
-    float      bias{0.0F};
-    float      normalBias{0.0F};
-    float      saturation{0.0F};
-    float      orthoSize{0.0F};
+
+    bool  dirty{false};
+    bool  shadowMapDirty{false};
+    Pass *instancePass{nullptr};
+    Pass *planarPass{nullptr};
 
     Vec4 color;
     Vec2 size;

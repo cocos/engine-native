@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2019-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2019-2022 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -49,17 +49,11 @@ Device::~Device() {
 
 bool Device::initialize(const DeviceInfo &info) {
     _bindingMappingInfo = info.bindingMappingInfo;
-    if (_bindingMappingInfo.bufferOffsets.empty()) {
-        _bindingMappingInfo.bufferOffsets.push_back(0);
-    }
-    if (_bindingMappingInfo.samplerOffsets.empty()) {
-        _bindingMappingInfo.samplerOffsets.push_back(0);
-    }
 
 #if CC_CPU_ARCH == CC_CPU_ARCH_32
-    static_assert(sizeof(void*) == 4, "pointer size assumption broken");
+    static_assert(sizeof(void *) == 4, "pointer size assumption broken");
 #else
-    static_assert(sizeof(void*) == 8, "pointer size assumption broken");
+    static_assert(sizeof(void *) == 8, "pointer size assumption broken");
 #endif
 
     return doInit(info);
@@ -78,16 +72,13 @@ void Device::destroy() {
         CC_SAFE_DELETE(pair.second);
     }
 
-    _bindingMappingInfo.bufferOffsets.clear();
-    _bindingMappingInfo.samplerOffsets.clear();
-
     doDestroy();
 
     CC_SAFE_DELETE(_onAcquire);
 }
 
 void Device::destroySurface(void *windowHandle) {
-    for (auto *swapchain :_swapchains) {
+    for (auto *swapchain : _swapchains) {
         if (swapchain->getWindowHandle() == windowHandle) {
             swapchain->destroySurface();
             break;
@@ -96,7 +87,7 @@ void Device::destroySurface(void *windowHandle) {
 }
 
 void Device::createSurface(void *windowHandle) {
-    for (auto *swapchain :_swapchains) {
+    for (auto *swapchain : _swapchains) {
         if (!swapchain->getWindowHandle()) {
             swapchain->createSurface(windowHandle);
             break;

@@ -1,8 +1,8 @@
 /****************************************************************************
- Copyright (c) 2021 Xiamen Yaji Software Co., Ltd.
- 
+ Copyright (c) 2021-2022 Xiamen Yaji Software Co., Ltd.
+
  http://www.cocos.com
- 
+
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated engine source code (the "Software"), a limited,
  worldwide, royalty-free, non-assignable, revocable and non-exclusive license
@@ -10,10 +10,10 @@
  not use Cocos Creator software for developing other software or tools that's
  used for developing games. You are not granted to publish, distribute,
  sublicense, and/or sell copies of Cocos Creator.
- 
+
  The software or tools in this License Agreement are licensed, not sold.
  Xiamen Yaji Software Co., Ltd. reserves all rights not expressly granted to you.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,7 +21,7 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
- ****************************************************************************/
+****************************************************************************/
 
 #pragma once
 
@@ -64,6 +64,10 @@ public:
     }
     inline void setPosition(const Vec3 &pos) { _pos = pos; }
     inline void setSize(float size) { _size = size; }
+    inline void setShadowEnabled(bool enabled) { _shadowEnabled = enabled; }
+    inline void setShadowPcf(float pcf) { _shadowPcf = pcf; }
+    inline void setShadowBias(float bias) { _shadowBias = bias; }
+    inline void setShadowNormalBias(float normalBias) { _shadowNormalBias = normalBias; }
 
     inline AABB *         getAABB() const { return _aabb; }
     inline float          getAngle() const { return _angle; }
@@ -77,6 +81,10 @@ public:
     inline float          getRange() const { return _range; }
     inline const Vec3 &   getPosition() const { return _pos; }
     inline float          getSize() const { return _size; }
+    inline bool           getShadowEnabled() const { return _shadowEnabled; }
+    inline float          getShadowPcf() const { return _shadowPcf; }
+    inline float          getShadowBias() const { return _shadowBias; }
+    inline float          getShadowNormalBias() const { return _shadowNormalBias; }
 
 private:
     bool    _needUpdate{false};
@@ -91,6 +99,12 @@ private:
     Vec3    _pos;
     AABB *  _aabb{nullptr};
     Frustum _frustum;
+
+    // shadow info
+    bool  _shadowEnabled{false};
+    float _shadowPcf{0.0F};
+    float _shadowBias{0.0F};
+    float _shadowNormalBias{0.0F};
 };
 
 } // namespace scene

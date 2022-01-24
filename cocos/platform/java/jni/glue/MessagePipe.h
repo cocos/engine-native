@@ -1,5 +1,5 @@
 /****************************************************************************
- Copyright (c) 2020-2021 Xiamen Yaji Software Co., Ltd.
+ Copyright (c) 2020-2022 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos.com
 
@@ -38,6 +38,7 @@ public:
     int  readCommand(int8_t& cmd) const;
     void writeCommand(void* msg, int32_t size) const;
     int  readCommand(void* msg, int32_t size) const;
+    int  readCommandWithTimeout(void* msg, int32_t size, int delayMS);
 
 private:
     int _pipeRead  = 0;
