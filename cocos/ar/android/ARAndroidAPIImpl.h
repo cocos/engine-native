@@ -45,7 +45,6 @@ public:
     void pause() override;
     void update() override;
     int  getAPIState() override;
-    void beforeUpdate() override;
 
     float* getCameraPose() override;
     float* getCameraViewMatrix() override;
@@ -54,10 +53,6 @@ public:
     void   setCameraTextureName(int id) override;
     void*  getCameraTextureRef() override;
 
-    //void setPlaneFeatureEnable(bool isOn) override;
-    int    getAddedPlanesCount() override;
-    int    getRemovedPlanesCount() override;
-    int    getUpdatedPlanesCount() override;
     void   updatePlanesInfo() override;
     float* getAddedPlanesInfo() override;
     int*   getRemovedPlanesInfo() override;
@@ -71,14 +66,11 @@ protected:
     Matrix*    _viewMatrix{nullptr};
     Matrix*    _projMatrix{nullptr};
     TexCoords* _cameraTexCoords{nullptr};
-    void       onBeforeUpdate();
 
     float* _addedPlanesInfo{nullptr};
     int*   _removedPlanesInfo{nullptr};
     float* _updatedPlanesInfo{nullptr};
     int    _infoLength{0};
-
-    Semaphore _frameBoundarySemaphore{1};
 };
 
 } // namespace ar

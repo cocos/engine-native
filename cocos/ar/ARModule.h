@@ -50,7 +50,6 @@ public:
     void start();
     void onResume();
     void onPause();
-    void beforeUpdate();
     void update();
     bool checkStart();
     int  getAPIState();
@@ -62,7 +61,6 @@ public:
     void   setCameraTextureName(int id);
     void*  getCameraTextureRef() const;
 
-    //void setPlaneFeatureEnable(bool isOn) const;
     int    getAddedPlanesCount() const;
     int    getRemovedPlanesCount() const;
     int    getUpdatedPlanesCount() const;

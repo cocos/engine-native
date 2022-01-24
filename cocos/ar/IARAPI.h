@@ -49,7 +49,6 @@ public:
     virtual void start()  = 0;
     virtual void resume() = 0;
     virtual void pause()  = 0;
-    virtual void beforeUpdate() {}
     virtual void update()      = 0;
     virtual int  getAPIState() = 0;
 
@@ -60,10 +59,6 @@ public:
     virtual void   setCameraTextureName(int id) = 0;
     virtual void*  getCameraTextureRef()        = 0;
 
-    //virtual void setPlaneFeatureEnable(bool isOn) = 0;
-    virtual int    getAddedPlanesCount()   = 0;
-    virtual int    getRemovedPlanesCount() = 0;
-    virtual int    getUpdatedPlanesCount() = 0;
     virtual void   updatePlanesInfo()      = 0;
     virtual float* getAddedPlanesInfo()    = 0;
     virtual int*   getRemovedPlanesInfo()  = 0;

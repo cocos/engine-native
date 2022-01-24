@@ -24,12 +24,10 @@
 ****************************************************************************/
 
 #include "./ARAndroidAPIImpl.h"
-//#include "platform/interfaces/modules/Device.h"
 #include "base/threading/MessageQueue.h"
 #include "platform/java/jni/JniHelper.h"
 #include "platform/java/jni/JniImp.h"
 #include "renderer/gfx-base/GFXDevice.h"
-
 
 #ifndef JCLS_ARAPI
     // arengine only supports gles2, arcore supports gles2 and gles3
@@ -101,13 +99,6 @@ void ARAndroidAPIImpl::start() {
                 _impl);
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
         }
-        /*
-        auto* device = gfx::DeviceAgent::getInstance();
-        auto updateExec = [this]() {
-            update();
-        };
-
-        device->registerOnAcquireCallback(updateExec);//*/
     }
 }
 
@@ -133,37 +124,6 @@ void ARAndroidAPIImpl::pause() {
         if (JniHelper::getStaticMethodInfo(methodInfo,
                                            JCLS_ARAPI,
                                            "pause",
-                                           "(" JARG_ARAPI ")V")) {
-            methodInfo.env->CallStaticVoidMethod(
-                methodInfo.classID,
-                methodInfo.methodID,
-                _impl);
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
-        }
-    }
-}
-
-void ARAndroidAPIImpl::beforeUpdate() {
-    auto* device   = gfx::DeviceAgent::getInstance();
-    auto* msgQueue = device->getMessageQueue();
-
-    ENQUEUE_MESSAGE_2(
-        msgQueue, DevicePresent,
-        api, this,
-        frameBoundarySemaphore, &_frameBoundarySemaphore,
-        {
-            api->onBeforeUpdate();
-            frameBoundarySemaphore->signal();
-        });
-    _frameBoundarySemaphore.wait();
-}
-
-void ARAndroidAPIImpl::onBeforeUpdate() {
-    if (_impl != nullptr) {
-        JniMethodInfo methodInfo;
-        if (JniHelper::getStaticMethodInfo(methodInfo,
-                                           JCLS_ARAPI,
-                                           "beforeUpdate",
                                            "(" JARG_ARAPI ")V")) {
             methodInfo.env->CallStaticVoidMethod(
                 methodInfo.classID,
@@ -228,8 +188,6 @@ void ARAndroidAPIImpl::setCameraTextureName(int id) {
 
 float* ARAndroidAPIImpl::getCameraPose() {
     if (_impl != nullptr) {
-        //auto *deviceAgent = gfx::DeviceAgent::getInstance();
-        //if (deviceAgent) deviceAgent->setMultithreaded(false);
         JniMethodInfo methodInfo;
         if (JniHelper::getStaticMethodInfo(methodInfo,
                                            JCLS_ARAPI,
@@ -249,7 +207,6 @@ float* ARAndroidAPIImpl::getCameraPose() {
             }
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
         }
-        //if (deviceAgent) deviceAgent->setMultithreaded(true);
     }
     return _cameraPose->data();
 }
@@ -333,58 +290,6 @@ void* ARAndroidAPIImpl::getCameraTextureRef() {
     return nullptr;
 }
 
-//void ARAndroidAPIImpl::setPlaneFeatureEnable(bool isOn) {}
-int ARAndroidAPIImpl::getAddedPlanesCount() {
-    if (_impl != nullptr) {
-        JniMethodInfo methodInfo;
-        if (JniHelper::getStaticMethodInfo(methodInfo,
-                                           JCLS_ARAPI,
-                                           "getAddedPlanesCount",
-                                           "(" JARG_ARAPI ")I")) {
-            auto result = static_cast<int>(methodInfo.env->CallStaticIntMethod(
-                methodInfo.classID,
-                methodInfo.methodID,
-                _impl));
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
-            return result;
-        }
-    }
-    return -1;
-}
-int ARAndroidAPIImpl::getRemovedPlanesCount() {
-    if (_impl != nullptr) {
-        JniMethodInfo methodInfo;
-        if (JniHelper::getStaticMethodInfo(methodInfo,
-                                           JCLS_ARAPI,
-                                           "getRemovedPlanesCount",
-                                           "(" JARG_ARAPI ")I")) {
-            auto result = static_cast<int>(methodInfo.env->CallStaticIntMethod(
-                methodInfo.classID,
-                methodInfo.methodID,
-                _impl));
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
-            return result;
-        }
-    }
-    return -1;
-}
-int ARAndroidAPIImpl::getUpdatedPlanesCount() {
-    if (_impl != nullptr) {
-        JniMethodInfo methodInfo;
-        if (JniHelper::getStaticMethodInfo(methodInfo,
-                                           JCLS_ARAPI,
-                                           "getUpdatedPlanesCount",
-                                           "(" JARG_ARAPI ")I")) {
-            auto result = static_cast<int>(methodInfo.env->CallStaticIntMethod(
-                methodInfo.classID,
-                methodInfo.methodID,
-                _impl));
-            methodInfo.env->DeleteLocalRef(methodInfo.classID);
-            return result;
-        }
-    }
-    return -1;
-}
 void ARAndroidAPIImpl::updatePlanesInfo() {
     if (_impl != nullptr) {
         JniMethodInfo methodInfo;
@@ -415,19 +320,14 @@ float* ARAndroidAPIImpl::getAddedPlanesInfo() {
                 methodInfo.methodID,
                 _impl);
             jsize len = methodInfo.env->GetArrayLength(array);
-            //if (len <= 5 * 12) {
             jfloat* elems = methodInfo.env->GetFloatArrayElements(array, nullptr);
             if (elems) {
-                //_addedPlanesInfo->reserve(len);
-                //memcpy(&_addedPlanesInfo[0], elems, sizeof(float) * len);
                 auto* info  = new float[len];
                 _infoLength = len;
-                //memcpy(_addedPlanesInfo, elems, sizeof(float) * len);
                 memcpy(info, elems, sizeof(float) * len);
                 methodInfo.env->ReleaseFloatArrayElements(array, elems, 0);
                 _addedPlanesInfo = info;
             }
-            //}
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
         }
     }
@@ -445,21 +345,18 @@ int* ARAndroidAPIImpl::getRemovedPlanesInfo() {
                 methodInfo.methodID,
                 _impl);
             jsize len = methodInfo.env->GetArrayLength(array);
-            //if (len <= 5) {
             jint* elems = methodInfo.env->GetIntArrayElements(array, nullptr);
             if (elems) {
                 auto* info  = new int[len];
                 _infoLength = len;
                 memcpy(info, elems, sizeof(int) * len);
-                //memcpy(_removedPlanesInfo, elems, sizeof(int) * len);
                 methodInfo.env->ReleaseIntArrayElements(array, elems, 0);
                 _removedPlanesInfo = info;
             };
-            //}
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
         }
     }
-    return _removedPlanesInfo; //->data();
+    return _removedPlanesInfo;
 }
 float* ARAndroidAPIImpl::getUpdatedPlanesInfo() {
     if (_impl != nullptr) {
@@ -473,17 +370,14 @@ float* ARAndroidAPIImpl::getUpdatedPlanesInfo() {
                 methodInfo.methodID,
                 _impl);
             jsize len = methodInfo.env->GetArrayLength(array);
-            //if (len <= 5 * 12) {
             jfloat* elems = methodInfo.env->GetFloatArrayElements(array, nullptr);
             if (elems) {
                 auto* info  = new float[len];
                 _infoLength = len;
                 memcpy(info, elems, sizeof(float) * len);
-                //memcpy(_updatedPlanesInfo, elems, sizeof(float) * len);
                 methodInfo.env->ReleaseFloatArrayElements(array, elems, 0);
                 _updatedPlanesInfo = info;
             };
-            //}
             methodInfo.env->DeleteLocalRef(methodInfo.classID);
         }
     }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.cocos.lib;;
+package com.cocos.lib;
 
 import android.Manifest;
 import android.app.Activity;

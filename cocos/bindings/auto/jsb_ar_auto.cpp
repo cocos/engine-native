@@ -78,21 +78,6 @@ static bool js_ar_ARModule_onPause(se::State& s) // NOLINT(readability-identifie
 }
 SE_BIND_FUNC(js_ar_ARModule_onPause)
 
-static bool js_ar_ARModule_beforeUpdate(se::State& s) // NOLINT(readability-identifier-naming)
-{
-    auto* cobj = SE_THIS_OBJECT<cc::ar::ARModule>(s);
-    SE_PRECONDITION2(cobj, false, "js_ar_ARModule_beforeUpdate : Invalid Native Object");
-    const auto& args = s.args();
-    size_t argc = args.size();
-    if (argc == 0) {
-        cobj->beforeUpdate();
-        return true;
-    }
-    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-    return false;
-}
-SE_BIND_FUNC(js_ar_ARModule_beforeUpdate)
-
 static bool js_ar_ARModule_update(se::State& s) // NOLINT(readability-identifier-naming)
 {
     auto* cobj = SE_THIS_OBJECT<cc::ar::ARModule>(s);
@@ -142,7 +127,6 @@ bool js_register_ar_ARModule(se::Object* obj) // NOLINT(readability-identifier-n
     cls->defineFunction("start", _SE(js_ar_ARModule_start));
     cls->defineFunction("onResume", _SE(js_ar_ARModule_onResume));
     cls->defineFunction("onPause", _SE(js_ar_ARModule_onPause));
-    cls->defineFunction("beforeUpdate", _SE(js_ar_ARModule_beforeUpdate));
     cls->defineFunction("update", _SE(js_ar_ARModule_update));
     cls->defineFinalizeFunction(_SE(js_cc_ar_ARModule_finalize));
     cls->install();

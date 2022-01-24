@@ -87,7 +87,6 @@ public class CocosAREngineAPI extends CocosARAPIBase {
     private boolean mUserRequestedInstall = true;
     private boolean mActive;
 
-    //private int mTextureId = 0;
     private boolean isRemindInstall = false;
 
     // plane feature
@@ -122,40 +121,29 @@ public class CocosAREngineAPI extends CocosARAPIBase {
     public static void pause(final CocosAREngineAPI api) {
         api.pauseSession();
     }
-    public static void beforeUpdate(final CocosAREngineAPI api) {
-        if (api.mSession == null) return;
-        //api.onDrawFrame();
-    }
     public static void update(final CocosAREngineAPI api) {
         api.updateSession();
     }
 
-    public static boolean checkStart(final CocosAREngineAPI api) {
-        if (api != null && api.mSession != null && api.mCamera != null) {
-            return true;
-        }
-        return false;
+    public static int getAPIState(final CocosAREngineAPI api) {
+        return api.getAPIState();
     }
 
     public static void setCameraTextureName(final CocosAREngineAPI api, int id) {
-        //api.mSession.setCameraTextureName(id);
         api.mTextureId = id;
     }
 
     public static float[] getCameraPose(final CocosAREngineAPI api) {
-        return api.mCameraPose;
+        return api.getCameraPose();
     }
     public static float[] getCameraViewMatrix(final CocosAREngineAPI api) {
-        api.mCamera.getViewMatrix(api.mViewMatrix, 0);
-        return api.mViewMatrix;
+        return api.getCameraViewMatrix();
     }
     public static float[] getCameraProjectionMatrix(final CocosAREngineAPI api) {
-        if (api.mSession != null && api.mCamera != null) api.mCamera.getProjectionMatrix(api.mProjMatrix, 0, 0.01f, 1000.0f);
-        return api.mProjMatrix;
+        return api.getCameraProjectionMatrix();
     }
     public static float[] getCameraTexCoords(final CocosAREngineAPI api) {
-        api.updateCameraTexCoords();
-        return api.mCameraTexCoords;
+        return api.getCameraTexCoords();
     }
 
     // plane feature
@@ -163,34 +151,13 @@ public class CocosAREngineAPI extends CocosARAPIBase {
         api.updatePlaneDetection();
     }
     public static float[] getAddedPlanesInfo(final CocosAREngineAPI api) {
-        return api.getPlanesInfoFromList(api.mAddedPlanes);
+        return api.getAddedPlanesInfo();
     }
     public static int[] getRemovedPlanesInfo(final CocosAREngineAPI api) {
-        int size = api.mRemovedPlanes.size();
-        //int[] result = new int[size];
-        int[] result = new int[5];
-        Integer[] temp = api.mRemovedPlanes.toArray(new Integer[size]);
-        //size = size > 5 ? 5 : size; 
-        //for (int n = 0; n < size; ++n) {
-        for (int n = 0; n < 5; ++n) {
-            if( n < size)
-                result[n] = temp[n];
-            else
-                result[n] = -1;
-        }
-        return result;
+        return api.getRemovedPlanesInfo();
     }
     public static float[] getUpdatedPlanesInfo(final CocosAREngineAPI api) {
-        return api.getPlanesInfoFromList(api.mUpdatedPlanes);
-    }
-    public static int getAddedPlanesCount(final CocosAREngineAPI api) {
-        return api.mAddedPlanes.size();
-    }
-    public static int getRemovedPlanesCount(final CocosAREngineAPI api) {
-        return api.mRemovedPlanes.size();
-    }
-    public static int getUpdatedPlanesCount(final CocosAREngineAPI api) {
-        return api.mUpdatedPlanes.size();
+        return api.getUpdatedPlanesInfo();
     }
 
     // for CocosARDisplayRotationHelper
@@ -519,8 +486,7 @@ public class CocosAREngineAPI extends CocosARAPIBase {
                 }
             }
         );
-        
-        //*
+
         int size = sortedPlanes.size();
         size = size > mMaxPlaneProcessCount ? mMaxPlaneProcessCount : size;
         int count = 0, offset = 0;

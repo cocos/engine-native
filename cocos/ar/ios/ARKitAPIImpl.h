@@ -28,7 +28,6 @@
 #include <array>
 #include "ar/IARAPI.h"
 
-
 namespace cc {
 namespace ar {
 
@@ -49,9 +48,6 @@ public:
     void   setCameraTextureName(int id) override;
     void*  getCameraTextureRef() override;
 
-    int    getAddedPlanesCount() override;
-    int    getRemovedPlanesCount() override;
-    int    getUpdatedPlanesCount() override;
     void   updatePlanesInfo() override;
     float* getAddedPlanesInfo() override;
     int*   getRemovedPlanesInfo() override;
@@ -59,12 +55,8 @@ public:
     int    getInfoLength() override;
 
 protected:
-    void*      _impl;
-    Pose*      _cameraPose{nullptr};
-    Matrix*    _viewMatrix{nullptr};
-    Matrix*    _projMatrix{nullptr};
-    TexCoords* _cameraTexCoords{nullptr};
-    int        _infoLength{0};
+    void* _impl;
+    int   _infoLength{0};
 };
 
 } // namespace ar

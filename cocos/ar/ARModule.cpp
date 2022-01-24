@@ -70,13 +70,8 @@ void ARModule::onPause() {
     _impl->pause();
 }
 
-void ARModule::beforeUpdate() {
-    //_impl->beforeUpdate();
-    _impl->update();
-}
-
 void ARModule::update() {
-    //_impl->update();
+    _impl->update();
 }
 
 // -1: not started, 0: arkit, 1: arcore, 2: arengine

@@ -118,25 +118,13 @@ public class CocosARCoreAPI extends CocosARAPIBase implements ActivityCompat.OnR
         api.pauseSession();
     }
 
-    public static void beforeUpdate(final CocosARCoreAPI api) {
-        if (api.mSession == null) return;
-        api.updateSession();
-        //api.updateCameraPose();
-        //api.updateCameraTexCoords();
-    }
-
     public static void update(final CocosARCoreAPI api) {
         if (api.mSession == null) return;
         api.updateSession();
-        //api.updateCameraPose();
-        //api.updateCameraTexCoords();
     }
 
-    public static boolean checkStart(final CocosARCoreAPI api) {
-        if (api != null && api.mSession != null) {
-            return true;
-        }
-        return false;
+    public static int getAPIState(final CocosARCoreAPI api) {
+        return api.getAPIState();
     }
 
     public static void setCameraTextureName(final CocosARCoreAPI api, int id) {
@@ -157,38 +145,17 @@ public class CocosARCoreAPI extends CocosARAPIBase implements ActivityCompat.OnR
     }
 
     // plane feature
-    public static void updatePlanesInfo(final CocosARCoreAPI api) {
+    public static void updatePlaneDetection(final CocosARCoreAPI api) {
         api.updatePlaneDetection();
     }
     public static float[] getAddedPlanesInfo(final CocosARCoreAPI api) {
-        return api.getPlanesInfoFromList(api.mAddedPlanes);
+        return api.getAddedPlanesInfo();
     }
     public static int[] getRemovedPlanesInfo(final CocosARCoreAPI api) {
-        int size = api.mRemovedPlanes.size();
-        //int[] result = new int[size];
-        int[] result = new int[5];
-        Integer[] temp = api.mRemovedPlanes.toArray(new Integer[size]);
-        //size = size > 5 ? 5 : size; 
-        //for (int n = 0; n < size; ++n) {
-        for (int n = 0; n < 5; ++n) {
-            if( n < size)
-                result[n] = temp[n];
-            else
-                result[n] = -1;
-        }
-        return result;
+        return api.getRemovedPlanesInfo();
     }
     public static float[] getUpdatedPlanesInfo(final CocosARCoreAPI api) {
-        return api.getPlanesInfoFromList(api.mUpdatedPlanes);
-    }
-    public static int getAddedPlanesCount(final CocosARCoreAPI api) {
-        return api.mAddedPlanes.size();
-    }
-    public static int getRemovedPlanesCount(final CocosARCoreAPI api) {
-        return api.mRemovedPlanes.size();
-    }
-    public static int getUpdatedPlanesCount(final CocosARCoreAPI api) {
-        return api.mUpdatedPlanes.size();
+        return api.getUpdatedPlanesInfo();
     }
     //#endregion
 
@@ -328,7 +295,6 @@ public class CocosARCoreAPI extends CocosARAPIBase implements ActivityCompat.OnR
     }
     @Override
     public float[] getCameraTexCoords() {
-        //updateCameraTexCoords();
         return mCameraTexCoords;
     }
 

@@ -12,7 +12,18 @@ android {
 
     sourceSets.main {
         aidl.srcDir "../java/src"
-        java.srcDir "../java/src"
+        java {
+            srcDir "../java/src"
+
+            // for not using ARModule
+            exclude 'com/cocos/lib/CocosARAPIBase.java'
+            exclude 'com/cocos/lib/CocosAREngineAPI.java'
+            exclude 'com/cocos/lib/CocosARCoreAPI.java'
+            exclude 'com/cocos/lib/CocosARAutoImpl.java'
+            exclude 'com/cocos/lib/CocosARCameraPermissionHelper.java'
+            exclude 'com/cocos/lib/CocosARDisplayRotationHelper.java'
+            exclude 'com/cocos/lib/CocosAREngineServerConnectActivity.java'
+        }
         manifest.srcFile "AndroidManifest.xml"
     }
 
