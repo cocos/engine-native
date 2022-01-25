@@ -867,6 +867,10 @@ public:
         sets.clear();
     }
 
+    void updateBackBufferCount(uint32_t backBufferCount) {
+        _setsToBeUpdated.resize(backBufferCount);
+    }
+
 private:
     void update(const CCVKGPUDescriptorSet *gpuDescriptorSet) {
         const CCVKGPUDescriptorSet::Instance &instance = gpuDescriptorSet->instances[_device->curBackBufferIndex];
@@ -1331,6 +1335,10 @@ public:
                 _buffersToBeUpdated[i].erase(gpuBuffer);
             }
         }
+    }
+
+    void updateBackBufferCount(uint32_t backBufferCount) {
+        _buffersToBeUpdated.resize(backBufferCount);
     }
 
     void flush(CCVKGPUTransportHub *transportHub);
