@@ -242,8 +242,8 @@ bool TextureCube::validate() const {
                            if (!(mipmap.top && mipmap.bottom && mipmap.front && mipmap.back && mipmap.left && mipmap.right)) {
                                return false;
                            }
+                           return true;
                        });
-    return true;
 }
 
 } // namespace cc

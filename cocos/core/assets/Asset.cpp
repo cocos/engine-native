@@ -85,9 +85,7 @@ void Asset::decAssetRef(bool autoRelease /* = true*/) {
     }
 
     if (autoRelease) {
-        if (_assetRefCount == 0) {
-            DeferredReleasePool::add(this);
-        }
+        //cjh TODO:
     }
 }
 
