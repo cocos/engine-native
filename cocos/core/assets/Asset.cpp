@@ -25,6 +25,7 @@
 
 #include "core/assets/Asset.h"
 #include "base/Macros.h"
+#include "base/DeferredReleasePool.h"
 #include "core/utils/Path.h"
 
 namespace cc {
@@ -84,7 +85,9 @@ void Asset::decAssetRef(bool autoRelease /* = true*/) {
     }
 
     if (autoRelease) {
-        //cjh TODO:
+        if (_assetRefCount == 0) {
+            DeferredReleasePool::add(this);
+        }
     }
 }
 

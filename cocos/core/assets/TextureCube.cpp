@@ -236,8 +236,12 @@ bool TextureCube::validate() const {
         return false;
     }
 
-    //cjh TODO:    return !_mipmaps.empty() && !_mipmaps.find((x) => !(x.top && x.bottom && x.front && x.back && x.left && x.right));
-    return false;
+    for (auto &mipmap : _mipmaps) {
+        if (!(mipmap.top && mipmap.bottom && mipmap.front && mipmap.back && mipmap.left && mipmap.right)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 } // namespace cc

@@ -95,7 +95,6 @@ public:
 
     void            addAssetRef();
     void            decAssetRef(bool autoRelease = true);
-    inline uint32_t getAssetRefCount() const { return _assetRefCount; }
 
     virtual void onLoaded() {}
 
