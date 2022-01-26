@@ -236,11 +236,13 @@ bool TextureCube::validate() const {
         return false;
     }
 
-    for (auto &mipmap : _mipmaps) {
-        if (!(mipmap.top && mipmap.bottom && mipmap.front && mipmap.back && mipmap.left && mipmap.right)) {
-            return false;
-        }
-    }
+    return std::all_of(_mipmaps.begin(),
+                       _mipmaps.end(),
+                       [&](const ITextureCubeMipmap &mipmap) {
+                           if (!(mipmap.top && mipmap.bottom && mipmap.front && mipmap.back && mipmap.left && mipmap.right)) {
+                               return false;
+                           }
+                       });
     return true;
 }
 
