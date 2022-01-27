@@ -156,9 +156,9 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
             .topology         = toWGPUPrimTopology(_primitive),
             .stripIndexFormat = stripTopology ? WGPUIndexFormat_Uint16 : WGPUIndexFormat_Undefined, //TODO_Zeqiang: ???
             .frontFace        = _rasterizerState.isFrontFaceCCW ? WGPUFrontFace::WGPUFrontFace_CCW : WGPUFrontFace::WGPUFrontFace_CW,
-            .cullMode         = _rasterizerState.cullMode == CullMode::FRONT ? WGPUCullMode::WGPUCullMode_Front
-                                                                     : _rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
-                                                                                                                   : WGPUCullMode::WGPUCullMode_None,
+            .cullMode         = _rasterizerState.cullMode == CullMode::FRONT  ? WGPUCullMode::WGPUCullMode_Front
+                                : _rasterizerState.cullMode == CullMode::BACK ? WGPUCullMode::WGPUCullMode_Back
+                                                                              : WGPUCullMode::WGPUCullMode_None,
         };
 
         WGPUStencilFaceState stencilFront = {
@@ -179,7 +179,7 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
             .nextInChain         = nullptr,
             .format              = toWGPUTextureFormat(dsAttachment.format),
             .depthWriteEnabled   = _depthStencilState.depthWrite != 0,
-            .depthCompare        = toWGPUCompareFunction(_depthStencilState.depthFunc),
+            .depthCompare        = _depthStencilState.depthTest ? toWGPUCompareFunction(_depthStencilState.depthFunc) : WGPUCompareFunction_Undefined,
             .stencilFront        = stencilFront,
             .stencilBack         = stencilBack,
             .stencilReadMask     = _depthStencilState.stencilReadMaskFront,

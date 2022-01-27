@@ -436,6 +436,8 @@ void CCWGPUCommandBuffer::bindStates() {
         height           = top + height > rtHeight ? rtHeight - top : height;
         // printf("sc %u, %u, %u, %u\n", left, top, width, height);
         wgpuRenderPassEncoderSetScissorRect(_gpuCommandBufferObj->wgpuRenderPassEncoder, left, top, width, height);
+
+        wgpuRenderPassEncoderSetStencilReference(_gpuCommandBufferObj->wgpuRenderPassEncoder, pipelineState->getDepthStencilState().stencilRefFront);
     } else if (pipelineState->getBindPoint() == PipelineBindPoint::COMPUTE) {
         auto *pipelineState = _gpuCommandBufferObj->stateCache.pipelineState;
 
