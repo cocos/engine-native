@@ -487,19 +487,31 @@ Attachment *SkeletonBinary::readAttachment(DataInput *input, Skin *skin, int slo
 	case AttachmentType_Region: {
 		String path(readStringRef(input, skeletonData));
 		if (path.isEmpty()) path = name;
-		RegionAttachment *region = _attachmentLoader->newRegionAttachment(*skin, String(name), String(path));
-		if (region == NULL){
-			return NULL;
-		}
-		region->_path = path;
-		region->_rotation = readFloat(input);
-		region->_x = readFloat(input) * _scale;
-		region->_y = readFloat(input) * _scale;
-		region->_scaleX = readFloat(input);
-		region->_scaleY = readFloat(input);
-		region->_width = readFloat(input) * _scale;
-		region->_height = readFloat(input) * _scale;
-		readColor(input, region->getColor());
+        auto _rotation = readFloat(input);
+        auto _x = readFloat(input);
+        auto _y = readFloat(input);
+        auto _scaleX = readFloat(input);
+        auto _scaleY = readFloat(input);
+        auto _width = readFloat(input);
+        auto _height = readFloat(input);
+        
+        static Color color;
+        readColor(input, color);
+        
+        RegionAttachment *region = _attachmentLoader->newRegionAttachment(*skin, String(name), String(path));
+        if (region == NULL){
+            return NULL;
+        }
+        
+        region->_path = path;
+		region->_rotation = _rotation;
+		region->_x = _x * _scale;
+		region->_y = _y * _scale;
+		region->_scaleX = _scaleX;
+		region->_scaleY = _scaleY;
+		region->_width = _width * _scale;
+		region->_height = _height * _scale;
+        region->_color = color;
 		region->updateOffset();
 		_attachmentLoader->configureAttachment(region);
 		return region;
