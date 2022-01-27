@@ -120,6 +120,19 @@ void CCWGPUPipelineState::prepare(const std::set<uint8_t>& setInUse) {
             }
         }
 
+        // input state has attr which shader hasnt.
+        for (size_t i = 0; i < _inputState.attributes.size(); ++i) {
+            String      attrName  = _inputState.attributes[i].name;
+            const auto& attribute = _inputState.attributes[i];
+            auto        iter      = std::find_if(attrs.begin(), attrs.end(), [attrName](const Attribute& attr) {
+                return strcmp(attrName.c_str(), attr.name.c_str()) == 0;
+            });
+            if (iter == attrs.end()) {
+                Format format = attribute.format;
+                offset[attribute.stream] += GFX_FORMAT_INFOS[static_cast<uint>(format)].size;
+            }
+        }
+
         if (_gpuPipelineStateObj->maxAttrLength > 0) {
             wgpuAttrsVec.push_back(_gpuPipelineStateObj->redundantAttr);
             vbLayouts.resize(vbLayouts.size() + 1);
