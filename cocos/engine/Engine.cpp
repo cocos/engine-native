@@ -33,6 +33,7 @@
 #include "cocos/core/builtin/BuiltinResMgr.h"
 #include "cocos/renderer/GFXDeviceManager.h"
 #include "cocos/renderer/core/ProgramLib.h"
+#include "cocos/bindings/event/CustomEventTypes.h"
 #include "pipeline/RenderPipeline.h"
 #include "platform/BasePlatform.h"
 #include "platform/FileUtils.h"
@@ -350,6 +351,7 @@ void Engine::onClose() {
     dispatchEventToApp(OSEventType::APP_OSEVENT, appEv);
 
     cc::EventDispatcher::dispatchCloseEvent();
+    cc::EventDispatcher::removeAllCustomEventListeners(EVENT_CLOSE);
 }
 
 } // namespace cc
