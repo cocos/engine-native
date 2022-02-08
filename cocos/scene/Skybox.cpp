@@ -28,8 +28,10 @@
 #include "3d/misc/CreateMesh.h"
 #include "cocos/bindings/event/CustomEventTypes.h"
 #include "cocos/bindings/event/EventDispatcher.h"
+#include "core/Root.h"
 #include "core/builtin/BuiltinResMgr.h"
 #include "core/scene-graph/SceneGlobals.h"
+#include "pipeline/GlobalDescriptorSetManager.h"
 #include "primitive/Primitive.h"
 #include "renderer/core/MaterialInstance.h"
 #include "renderer/core/PassUtils.h"
@@ -93,6 +95,11 @@ void SkyboxInfo::setUseHDR(bool val) {
     }
 }
 
+bool SkyboxInfo::isUseHDR() const {
+    const bool isHDR = Root::getInstance()->getPipeline()->getPipelineSceneData()->isHDR();
+    return _useHDR;
+}
+
 void SkyboxInfo::setEnvmap(TextureCube *val) {
     const bool isHDR = Root::getInstance()->getPipeline()->getPipelineSceneData()->isHDR();
     if (isHDR) {
@@ -116,6 +123,11 @@ void SkyboxInfo::setEnvmap(TextureCube *val) {
     }
 }
 
+TextureCube *SkyboxInfo::getEnvmap() const {
+    const bool isHDR = Root::getInstance()->getPipeline()->getPipelineSceneData()->isHDR();
+    return isHDR ? _envmapHDR : _envmapLDR;
+}
+
 void SkyboxInfo::setDiffuseMap(TextureCube *val) {
     const bool isHDR = Root::getInstance()->getPipeline()->getPipelineSceneData()->isHDR();
     if (isHDR) {
@@ -129,6 +141,11 @@ void SkyboxInfo::setDiffuseMap(TextureCube *val) {
     }
 }
 
+TextureCube *SkyboxInfo::getDiffuseMap() const {
+    const bool isHDR = Root::getInstance()->getPipeline()->getPipelineSceneData()->isHDR();
+    return isHDR ? _diffuseMapHDR : _diffuseMapLDR;
+}
+
 void SkyboxInfo::activate(Skybox *resource) {
     _resource = resource; // weak reference
     setEnvLightingType(this->_envLightingType);
@@ -140,12 +157,35 @@ void SkyboxInfo::activate(Skybox *resource) {
     }
 }
 
+TextureCube *Skybox::getEnvmap() const {
+    const bool isHDR = Root::getInstance()->getPipeline()->getPipelineSceneData()->isHDR();
+    return isHDR ? _envmapHDR : _envmapLDR;
+}
+
 void Skybox::setEnvmap(TextureCube *val) {
     const bool isHDR = Root::getInstance()->getPipeline()->getPipelineSceneData()->isHDR();
     if (isHDR) {
         setEnvMaps(val, _envmapLDR);
     } else {
         setEnvMaps(_envmapHDR, val);
+    }
+}
+
+bool Skybox::isRGBE() const {
+    auto *envmap = getEnvmap();
+    return envmap != nullptr ? envmap->isRGBE : false;
+}
+
+TextureCube *Skybox::getDiffuseMap() const {
+    const bool isHDR = Root::getInstance()->getPipeline()->getPipelineSceneData()->isHDR();
+    return isHDR ? _diffuseMapHDR.get() : _diffuseMapLDR.get();
+}
+void Skybox::setDiffuseMap(TextureCube *val) {
+    const bool isHDR = Root::getInstance()->getPipeline()->getPipelineSceneData()->isHDR();
+    if (isHDR) {
+        setDiffuseMaps(val, _envmapLDR);
+    } else {
+        setDiffuseMaps(_envmapHDR, val);
     }
 }
 

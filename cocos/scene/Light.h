@@ -28,10 +28,10 @@
 #include <string>
 #include "base/Ptr.h"
 #include "base/RefCounted.h"
-#include "core/scene-graph/Node.h"
 #include "math/Vec3.h"
 
 namespace cc {
+class Node;
 namespace scene {
 
 class RenderScene;
@@ -51,10 +51,7 @@ public:
     inline void attachToScene(RenderScene *scene) { _scene = scene; }
     inline void detachFromScene() { _scene = nullptr; }
 
-    inline void destroy() {
-        _name.clear();
-        _node = nullptr;
-    }
+    void destroy();
 
     virtual void initialize() {
         _color     = Vec3(1, 1, 1);
@@ -76,7 +73,7 @@ public:
     inline void  setColorTemperature(float val) { _colorTemp = val; }
 
     inline Node *getNode() const { return _node.get(); }
-    inline void  setNode(Node *node) { _node = node; }
+    void  setNode(Node *node);
 
     inline LightType getType() const { return _type; }
     inline void      setType(LightType type) { _type = type; }

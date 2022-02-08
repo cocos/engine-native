@@ -25,6 +25,7 @@
 
 #include "3d/skeletal-animation/SkeletalAnimationUtils.h"
 #include "3d/assets/Mesh.h"
+#include "core/scene-graph/Node.h"
 #include "renderer/pipeline/Define.h"
 
 namespace {
@@ -100,7 +101,7 @@ void uploadJointDataDQS(cc::Float32Array out, uint32_t base, cc::Mat4 &mat, bool
 }
 
 // change here and cc-skinning.chunk to use other skinning algorithms
-constexpr auto UPLOAD_JOINT_DATA          = uploadJointDataLBS;
+constexpr auto UPLOAD_JOINT_DATA = uploadJointDataLBS;
 #ifdef CC_EDITOR
 const uint32_t MINIMUM_JOINT_TEXTURE_SIZE = 2040;
 #else
