@@ -91,11 +91,11 @@ public:
     void setApplyDiffuseMap(bool val) const;
 
     bool isApplyDiffuseMap() const {
-        return EnvironmentLightingType::DIFFUSEMAP_WITH_REFLECTION == this->_envLightingType;
+        return EnvironmentLightingType::DIFFUSEMAP_WITH_REFLECTION == _envLightingType;
     }
-    void setEnvLightingType (EnvironmentLightingType val);
-    EnvironmentLightingType getEnvLightingType () const {
-        return this->_envLightingType;
+    void                    setEnvLightingType(EnvironmentLightingType val);
+    EnvironmentLightingType getEnvLightingType() const {
+        return _envLightingType;
     }
 
     /**
@@ -115,7 +115,7 @@ public:
     // @tooltip('i18n:skybox.useIBL')
     void        setUseIBL(bool val) const;
     inline bool isUseIBL() const {
-        return EnvironmentLightingType::HEMISPHERE_DIFFUSE != this->_envLightingType;
+        return EnvironmentLightingType::HEMISPHERE_DIFFUSE != _envLightingType;
     }
 
     /**
@@ -190,12 +190,11 @@ public:
     bool _enabled{false};
     // @serializable
     bool _useHDR{true};
-    EnvironmentLightingType _envLightingType {EnvironmentLightingType::HEMISPHERE_DIFFUSE};
+    EnvironmentLightingType _envLightingType{EnvironmentLightingType::HEMISPHERE_DIFFUSE};
     Skybox *_resource{nullptr};
 };
 
 class Skybox final {
-
 public:
     Skybox()  = default;
     ~Skybox() = default;

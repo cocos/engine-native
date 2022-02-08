@@ -62,17 +62,17 @@ void SkyboxInfo::setApplyDiffuseMap(bool val) const{
         _resource->setUseDiffuseMap(val);
     }
 }
-void SkyboxInfo::setEnvLightingType (EnvironmentLightingType val) {
-    if(EnvironmentLightingType::HEMISPHERE_DIFFUSE == val) {
+void SkyboxInfo::setEnvLightingType(EnvironmentLightingType val) {
+    if (EnvironmentLightingType::HEMISPHERE_DIFFUSE == val) {
         setUseIBL(false);
-    }else if(EnvironmentLightingType::AUTOGEN_HEMISPHERE_DIFFUSE_WITH_REFLECTION == val) {
+    } else if (EnvironmentLightingType::AUTOGEN_HEMISPHERE_DIFFUSE_WITH_REFLECTION == val) {
         setUseIBL(true);
         setApplyDiffuseMap(false);
-    }else if(EnvironmentLightingType::DIFFUSEMAP_WITH_REFLECTION == val) {
+    } else if (EnvironmentLightingType::DIFFUSEMAP_WITH_REFLECTION == val) {
         setUseIBL(true);
         setApplyDiffuseMap(true);
     }
-    this->_envLightingType = val;
+    _envLightingType = val;
 }
 void SkyboxInfo::setUseHDR(bool val) {
     Root::getInstance()->getPipeline()->getPipelineSceneData()->setHDR(val);
