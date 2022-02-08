@@ -254,7 +254,7 @@ public class CocosAbilitySlice extends AbilitySlice implements SurfaceOps.Callba
     private void onLoadNativeLibraries() {
         try {
             //TODO: Read library name from configuration
-            System.loadLibrary("game");
+            System.loadLibrary("cocos");
         } catch (Exception e) {
             e.printStackTrace();
         }

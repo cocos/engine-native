@@ -19,7 +19,7 @@
                 android:value="1" />
         <!-- Tell CocosNativeActivity the name of our .so -->
         <meta-data android:name="android.app.lib_name"
-                   android:value="game" />
+                   android:value="cocos" />
         <activity
                 android:name="com.cocos.game.InstantActivity"
                 android:screenOrientation="landscape"
