@@ -51,13 +51,13 @@ void SkyboxInfo::setEnabled(bool val) {
     }
 }
 
-void SkyboxInfo::setUseIBL(bool val) {
+void SkyboxInfo::setUseIBL(bool val) const{
     if (_resource != nullptr) {
         _resource->setUseIBL(val);
     }
 }
 
-void SkyboxInfo::setApplyDiffuseMap(bool val) {
+void SkyboxInfo::setApplyDiffuseMap(bool val) const{
     if (_resource != nullptr) {
         _resource->setUseDiffuseMap(val);
     }

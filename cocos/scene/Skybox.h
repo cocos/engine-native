@@ -88,16 +88,13 @@ public:
     // })
     // @editable
     // @tooltip('i18n:skybox.applyDiffuseMap')
-    void setApplyDiffuseMap(bool val);
+    void setApplyDiffuseMap(bool val) const;
 
     bool isApplyDiffuseMap() const {
-        if (EnvironmentLightingType::DIFFUSEMAP_WITH_REFLECTION == this->_envLightingType) {
-            return true;
-        }
-        return false;
+        return EnvironmentLightingType::DIFFUSEMAP_WITH_REFLECTION == this->_envLightingType;
     }
     void setEnvLightingType (EnvironmentLightingType val);
-    EnvironmentLightingType getEnvLightingType () {
+    EnvironmentLightingType getEnvLightingType () const {
         return this->_envLightingType;
     }
 
@@ -116,12 +113,9 @@ public:
      */
     // @editable
     // @tooltip('i18n:skybox.useIBL')
-    void        setUseIBL(bool val);
+    void        setUseIBL(bool val) const;
     inline bool isUseIBL() const {
-        if (EnvironmentLightingType::HEMISPHERE_DIFFUSE != this->_envLightingType) {
-            return true;
-        }
-        return false;
+        return EnvironmentLightingType::HEMISPHERE_DIFFUSE != this->_envLightingType;
     }
 
     /**
