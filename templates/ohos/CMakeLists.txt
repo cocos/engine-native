@@ -10,7 +10,7 @@ set(CMAKE_CXX_FLAGS_DEBUG  "-Werror=return-type")
 set(COMMON_DIR ${CMAKE_CURRENT_LIST_DIR}/../common)
 include(${COMMON_DIR}/CMakeLists.txt)
 
-set(LIB_NAME libcocos)
+set(LIB_NAME game)
 
 
 set(PROJ_SOURCES

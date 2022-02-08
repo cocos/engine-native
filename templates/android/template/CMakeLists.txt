@@ -6,7 +6,7 @@ project(${APP_NAME} CXX)
 include(${CMAKE_CURRENT_LIST_DIR}/../common/CMakeLists.txt)
 
 
-set(LIB_NAME libcocos)
+set(LIB_NAME game)
 
 set(PROJ_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/../common/Classes/Game.h
