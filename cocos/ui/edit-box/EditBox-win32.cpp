@@ -166,7 +166,8 @@ void EditBox::show(const EditBox::ShowInfo &showInfo) {
         if (showInfo.inputType == "password")
             flags |= WS_EX_TRANSPARENT;
 
-        /* g_hwndEditBox = CreateWindowEx(
+        /* Old edit control code here, now using rich text which supports more text styles and apis
+        g_hwndEditBox = CreateWindowEx(
             WS_EX_WINDOWEDGE,
             L"EDIT",
             NULL,
@@ -223,7 +224,12 @@ void EditBox::show(const EditBox::ShowInfo &showInfo) {
     ::SetWindowTextW(g_hwndEditBox, str2ws(showInfo.defaultValue).c_str());
     ::PostMessage(g_hwndEditBox, WM_ACTIVATE, 0, 0);
     ::ShowWindow(g_hwndEditBox, SW_SHOW);
+    /* Get current length of text in the box */
+    int index = GetWindowTextLength(g_hwndEditBox);
     SetFocus(g_hwndEditBox);
+    /* Set the caret to the end of the text in the box */
+    SendMessage(g_hwndEditBox, EM_SETSEL, (WPARAM)index, (LPARAM)index);
+    SendMessage(g_hwndEditBox, EM_SETFONTSIZE, 30, 0);
 }
 
 void EditBox::hide() {

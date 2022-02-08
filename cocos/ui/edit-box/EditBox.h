@@ -43,6 +43,8 @@ public:
         int         height       = 0;
         bool        confirmHold  = false;
         bool        isMultiline  = false;
+
+        int fontSize = 0;
     };
 
     static void show(const ShowInfo &showInfo);
