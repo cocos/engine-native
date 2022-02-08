@@ -190,6 +190,7 @@ if(WINDOWS)
             PRIVATE ${CMAKE_CURRENT_LIST_DIR}/proj.win32/stdafx.h
         )
     endif()
+    
     target_compile_options(cocos PUBLIC /MP)
 elseif(APPLE)
     target_include_directories(${libsimulator_name} PRIVATE 
