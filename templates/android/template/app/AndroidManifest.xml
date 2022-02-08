@@ -15,7 +15,7 @@
 
         <!-- Tell CocosNativeActivity the name of our .so -->
         <meta-data android:name="android.app.lib_name"
-                   android:value="cocos" />
+                   android:value="game" />
 
         <activity
             android:name="com.cocos.game.AppActivity"
