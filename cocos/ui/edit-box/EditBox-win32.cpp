@@ -34,7 +34,7 @@
 #include <codecvt>
 #include <locale>
 #include <memory>
-
+#include <Richedit.h>
 namespace cc {
 
 /*************************************************************************
@@ -166,7 +166,7 @@ void EditBox::show(const EditBox::ShowInfo &showInfo) {
         if (showInfo.inputType == "password")
             flags |= WS_EX_TRANSPARENT;
 
-        g_hwndEditBox = CreateWindowEx(
+        /* g_hwndEditBox = CreateWindowEx(
             WS_EX_WINDOWEDGE,
             L"EDIT",
             NULL,
@@ -178,8 +178,21 @@ void EditBox::show(const EditBox::ShowInfo &showInfo) {
             parent,
             0,
             NULL,
+            NULL);*/
+        LoadLibrary(TEXT("Msftedit.dll"));
+        g_hwndEditBox = CreateWindowEx(
+            0,
+            MSFTEDIT_CLASS,
+            TEXT("TypeHere"),
+            flags,
+            0,
+            0,
+            0,
+            0,
+            parent,
+            NULL,
+            NULL,
             NULL);
-
         if (!g_hwndEditBox) {
             wchar_t buffer[256] = {0};
             FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
