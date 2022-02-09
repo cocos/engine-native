@@ -31,6 +31,7 @@
 #include "core/Root.h"
 #include "core/assets/TextureBase.h"
 #include "core/builtin/BuiltinResMgr.h"
+#include "core/platform/Debug.h"
 #include "renderer/core/PassUtils.h"
 #include "renderer/core/ProgramLib.h"
 #include "renderer/gfx-base/GFXDef.h"
@@ -228,7 +229,7 @@ void Pass::overridePipelineStates(const IPassInfo & /*original*/, const PassOver
 
 void Pass::update() {
     if (_descriptorSet == nullptr) {
-        // cjh        errorID(12006);
+        debug::errorID(12006);
         return;
     }
 

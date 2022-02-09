@@ -23,6 +23,69 @@
 THE SOFTWARE.
 ****************************************************************************/
 
-namespace cc {
+#include "Debug.h"
 
+namespace cc {
+namespace debug {
+extern const char *CONSOLE_LOG   = "log";
+extern const char *CONSOLE_WARN  = "warn";
+extern const char *CONSOLE_ERROR = "error";
+extern const char *CONSOLE_ASSET = "assert";
+
+std::string getTypedFormatter(const char *tag, uint32_t id) {
+    std::string msg;
+#if CC_DEBUG > 0
+    if (debugInfos.find(id) == debugInfos.end()) {
+        msg = "unknown id";
+    } else {
+        msg = debugInfos[id];
+    }
+#else
+    char szTmp[1024] = {0};
+    snprintf(szTmp, sizeof(szTmp), "%s %d, please go to %s#%d to see details.", tag, id, ERROR_MAP_URL.c_str(), id);
+    msg = szTmp;
+#endif
+
+    return msg;
+}
+
+void callConsoleFunction(const char *jsFunctionName, std::string msg, cc::any *arr, int paramsLength) {
+    se::AutoHandleScope scope;
+    se::ValueArray      args;
+    args.push_back(se::Value(msg));
+
+    auto      global = se::ScriptEngine::getInstance()->getGlobalObject();
+    se::Value consoleVal;
+    se::Value consoleFunction;
+    if (global->getProperty("console", &consoleVal) && consoleVal.isObject()) {
+        consoleVal.toObject()->getProperty(jsFunctionName, &consoleFunction);
+    }
+
+    for (int i = 1; i <= paramsLength; i++) {
+        if (arr[i].type() == typeid(const std::string)) {
+            const std::string s = cc::any_cast<const std::string>(arr[i]);
+            args.push_back(se::Value(s));
+        } else if (arr[i].type() == typeid(std::string)) {
+            std::string s = cc::any_cast<std::string>(arr[i]);
+            args.push_back(se::Value(s));
+        } else if (arr[i].type() == typeid(int)) {
+            int value = cc::any_cast<int>(arr[i]);
+            args.push_back(se::Value(value));
+        } else if (arr[i].type() == typeid(float)) {
+            float value = cc::any_cast<float>(arr[i]);
+            args.push_back(se::Value(value));
+        } else if (arr[i].type() == typeid(const char *)) {
+            const char *s = cc::any_cast<const char *>(arr[i]);
+            args.push_back(se::Value(s));
+        } else {
+            CC_LOG_ERROR("unsupport params data type");
+            return;
+        }
+    }
+    if (consoleFunction.isObject()) {
+        consoleFunction.toObject()->call(args, nullptr);
+    }
+}
+
+} // namespace debug
 } //namespace cc

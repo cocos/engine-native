@@ -27,11 +27,17 @@ THE SOFTWARE.
 
 #include <string>
 #include "cocos/base/Any.h"
+#include "cocos/bindings/jswrapper/SeApi.h"
+#include "core/builtin/DebugInfos.h"
 
 namespace cc {
 namespace debug {
 
-const std::string ERROR_MAP_URL{"https://github.com/cocos-creator/engine/blob/3d/EngineErrorMap.md"};
+const std::string  ERROR_MAP_URL{"https://github.com/cocos-creator/engine/blob/3d/EngineErrorMap.md"};
+extern const char *CONSOLE_LOG;
+extern const char *CONSOLE_WARN;
+extern const char *CONSOLE_ERROR;
+extern const char *CONSOLE_ASSET;
 
 enum class DebugMode {
 
@@ -63,7 +69,7 @@ enum class DebugMode {
      * @en Information mode, which display only messages with "error" level.
      * @zh 错误模式，仅显示“错误”级别的日志消息。
      */
-    ERROR = 4,
+    ERROR_ = 4, // ERROR has been defined by MACRO
 
     /**
      * @en The debug mode info for web page.
@@ -170,17 +176,46 @@ bool isDisplayStats();
 
 void setDisplayStats(bool displayStats);
 
-template <typename... Args>
-void logID(uint32_t id, Args... optionalParams);
+std::string getTypedFormatter(const char *tag, uint32_t id);
+
+template <typename T>
+T unpack_params(T value) {
+    return value;
+}
+
+void callConsoleFunction(const char *jsFunctionName, std::string msg, cc::any *arr, int paramsLength);
 
 template <typename... Args>
-void warnID(uint32_t id, Args... optionalParams);
+void logID(uint32_t id, Args... optionalParams) {
+    std::string msg   = getTypedFormatter(CONSOLE_LOG, id);
+    int         size  = sizeof...(optionalParams);
+    cc::any     arr[] = {0, unpack_params(optionalParams)...};
+    callConsoleFunction(CONSOLE_LOG, msg, arr, size);
+}
 
 template <typename... Args>
-void errorID(uint32_t id, Args... optionalParams);
+void warnID(uint32_t id, Args... optionalParams) {
+    std::string msg   = getTypedFormatter(CONSOLE_WARN, id);
+    int         size  = sizeof...(optionalParams);
+    cc::any     arr[] = {0, unpack_params(optionalParams)...};
+    callConsoleFunction(CONSOLE_WARN, msg, arr, size);
+}
 
 template <typename... Args>
-void assertID(uint32_t id, Args... optionalParams);
+void errorID(uint32_t id, Args... optionalParams) {
+    std::string msg   = getTypedFormatter(CONSOLE_ERROR, id);
+    int         size  = sizeof...(optionalParams);
+    cc::any     arr[] = {0, unpack_params(optionalParams)...};
+    callConsoleFunction(CONSOLE_ERROR, msg, arr, size);
+}
+
+template <typename... Args>
+void assertID(uint32_t id, Args... optionalParams) {
+    std::string msg   = getTypedFormatter(CONSOLE_ASSERT, id);
+    int         size  = sizeof...(optionalParams);
+    cc::any     arr[] = {0, unpack_params(optionalParams)...};
+    callConsoleFunction(CONSOLE_ASSERT, msg, arr, size);
+}
 
 void _throw(); // NOLINT // throw is a reserved word
 } // namespace debug
