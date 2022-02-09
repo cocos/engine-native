@@ -1644,6 +1644,8 @@ cocos_source_files(
     cocos/core/memop/RecyclePool.h
     cocos/core/memop/RecyclePool.cpp
 
+    cocos/core/serialization/Define.h
+    cocos/core/serialization/careal/*
 
     # cocos/core/asset-manager/AssetManager.cpp
     # cocos/core/asset-manager/AssetManager.h
