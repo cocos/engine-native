@@ -1644,8 +1644,20 @@ cocos_source_files(
     cocos/core/memop/RecyclePool.h
     cocos/core/memop/RecyclePool.cpp
 
-    cocos/core/serialization/Define.h
-    cocos/core/serialization/careal/*
+    cocos/core/serialization
+    #cocos/core/serialization/Define.h
+    #cocos/core/serialization/cereal/archives/adapters.hpp
+    #cocos/core/serialization/cereal/archives/binary.hpp
+    #cocos/core/serialization/cereal/archives/json.hpp
+    #cocos/core/serialization/cereal/archives/portable_binary.hpp
+    # cocos/core/serialization/cereal/archives/xml.hpp
+    #cocos/core/serialization/cereal/details/helpers.hpp
+    #cocos/core/serialization/cereal/details/polymorphic_impl_fwd.hpp
+    #cocos/core/serialization/cereal/details/polymorphic_impl.hpp
+    #cocos/core/serialization/cereal/details/static_object.hpp
+    #cocos/core/serialization/cereal/details/traits.hpp
+    #cocos/core/serialization/cereal/details/util.hpp
+    #cocos/core/serialization/cereal/external/base64.hpp
 
     # cocos/core/asset-manager/AssetManager.cpp
     # cocos/core/asset-manager/AssetManager.h
