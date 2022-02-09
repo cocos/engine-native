@@ -32,7 +32,7 @@ namespace {
 const float INF = std::numeric_limits<float>::infinity();
 
 cc::gfx::Format selectJointsMediumFormat(cc::gfx::Device *device) {
-    if (device->hasFeature(cc::gfx::Feature::TEXTURE_FLOAT)) {
+    if (static_cast<uint32_t>(device->getFormatFeatures(cc::gfx::Format::RGBA32F) & cc::gfx::FormatFeature::SAMPLED_TEXTURE)) {
         return cc::gfx::Format::RGBA32F;
     }
     return cc::gfx::Format::RGBA8;
