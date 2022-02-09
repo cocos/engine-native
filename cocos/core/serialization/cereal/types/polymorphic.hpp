@@ -30,13 +30,13 @@
 #ifndef CEREAL_TYPES_POLYMORPHIC_HPP_
 #define CEREAL_TYPES_POLYMORPHIC_HPP_
 
-#include "cereal/cereal.hpp"
-#include "cereal/types/memory.hpp"
+#include "cocos/core/serialization/cereal/cereal.hpp"
+#include "cocos/core/serialization/cereal/types/memory.hpp"
 
-#include "cereal/details/util.hpp"
-#include "cereal/details/helpers.hpp"
-#include "cereal/details/traits.hpp"
-#include "cereal/details/polymorphic_impl.hpp"
+#include "cocos/core/serialization/cereal/details/util.hpp"
+#include "cocos/core/serialization/cereal/details/helpers.hpp"
+#include "cocos/core/serialization/cereal/details/traits.hpp"
+#include "cocos/core/serialization/cereal/details/polymorphic_impl.hpp"
 
 #if defined(_MSC_VER) && _MSC_VER < 1916
 #define CEREAL_STATIC_CONSTEXPR static

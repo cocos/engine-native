@@ -30,7 +30,7 @@
 #ifndef CEREAL_TYPES_DEQUE_HPP_
 #define CEREAL_TYPES_DEQUE_HPP_
 
-#include "cereal/cereal.hpp"
+#include "cocos/core/serialization/cereal/cereal.hpp"
 #include <deque>
 
 namespace cereal

@@ -29,7 +29,7 @@
 #ifndef CEREAL_ARCHIVES_PORTABLE_BINARY_HPP_
 #define CEREAL_ARCHIVES_PORTABLE_BINARY_HPP_
 
-#include "cereal/cereal.hpp"
+#include "cocos/core/serialization/cereal/cereal.hpp"
 #include <sstream>
 #include <limits>
 

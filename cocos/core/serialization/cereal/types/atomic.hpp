@@ -30,7 +30,7 @@
 #ifndef CEREAL_TYPES_ATOMIC_HPP_
 #define CEREAL_TYPES_ATOMIC_HPP_
 
-#include <cereal/cereal.hpp>
+#include <cocos/core/serialization/cereal/cereal.hpp>
 #include <atomic>
 
 namespace cereal

@@ -28,12 +28,12 @@
 */
 #ifndef CEREAL_ARCHIVES_XML_HPP_
 #define CEREAL_ARCHIVES_XML_HPP_
-#include "cereal/cereal.hpp"
-#include "cereal/details/util.hpp"
+#include "cocos/core/serialization/cereal/cereal.hpp"
+#include "cocos/core/serialization/cereal/details/util.hpp"
 
-#include "cereal/external/rapidxml/rapidxml.hpp"
-#include "cereal/external/rapidxml/rapidxml_print.hpp"
-#include "cereal/external/base64.hpp"
+#include "cocos/core/serialization/cereal/external/rapidxml/rapidxml.hpp"
+#include "cocos/core/serialization/cereal/external/rapidxml/rapidxml_print.hpp"
+#include "cocos/core/serialization/cereal/external/base64.hpp"
 
 #include <sstream>
 #include <stack>

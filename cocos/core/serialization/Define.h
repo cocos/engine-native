@@ -27,4 +27,13 @@
 #define SERIALIZATION_BACKEND_CEREAL 1
 #define SERIALIZATION_BACKEND_BOOST 0
 
-#define SERIALIZABLE
+#ifdef SERIALIZATION_BACKEND_CEREAL
+    #define CEREAL_SERIALIZE_FUNCTION_NAME serialize_test
+    #define SERIALIZABLE_CLASS()           friend class cereal::access;
+    #define SERIALIZE_FIELD(T)             cereal::make_nvp(#T, T)
+    #define SERIALIZE_SUPER()              cereal::virtual_base_class<Super>(this)
+#endif
+
+#include "cereal/macros.hpp"
+#include "cereal/access.hpp"
+#include "cereal/cereal.hpp"
