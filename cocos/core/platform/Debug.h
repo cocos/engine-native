@@ -34,10 +34,6 @@ namespace cc {
 namespace debug {
 
 const std::string  ERROR_MAP_URL{"https://github.com/cocos-creator/engine/blob/3d/EngineErrorMap.md"};
-extern const char *CONSOLE_LOG;
-extern const char *CONSOLE_WARN;
-extern const char *CONSOLE_ERROR;
-extern const char *CONSOLE_ASSET;
 
 enum class DebugMode {
 
@@ -176,37 +172,41 @@ bool isDisplayStats();
 
 void setDisplayStats(bool displayStats);
 
-std::string getTypedFormatter(const char *tag, uint32_t id);
+std::string getTypedFormatter(DebugMode mode, uint32_t id);
+
+const std::string &getPrefixTag(DebugMode mode);
+
+LogLevel getLogLevel(DebugMode mode);
 
 template <typename T>
 T unpack_params(T value) {
     return value;
 }
 
-void callConsoleFunction(const char *jsFunctionName, std::string msg, cc::any *arr, int paramsLength);
+void printLog(DebugMode mode, std::string fmt, cc::any *arr, int paramsLength);
 
 template <typename... Args>
 void logID(uint32_t id, Args... optionalParams) {
-    std::string msg   = getTypedFormatter(CONSOLE_LOG, id);
+    std::string       msg    = getTypedFormatter(DebugMode::VERBOSE, id);
     int         size  = sizeof...(optionalParams);
     cc::any     arr[] = {0, unpack_params(optionalParams)...};
-    callConsoleFunction(CONSOLE_LOG, msg, arr, size);
+    printLog(DebugMode::VERBOSE, msg, arr, size);
 }
 
 template <typename... Args>
 void warnID(uint32_t id, Args... optionalParams) {
-    std::string msg   = getTypedFormatter(CONSOLE_WARN, id);
+    std::string       msg    = getTypedFormatter(DebugMode::WARN, id);
     int         size  = sizeof...(optionalParams);
     cc::any     arr[] = {0, unpack_params(optionalParams)...};
-    callConsoleFunction(CONSOLE_WARN, msg, arr, size);
+    printLog(DebugMode::WARN, msg, arr, size);
 }
 
 template <typename... Args>
 void errorID(uint32_t id, Args... optionalParams) {
-    std::string msg   = getTypedFormatter(CONSOLE_ERROR, id);
+    std::string msg   = getTypedFormatter(DebugMode::ERROR_, id);
     int         size  = sizeof...(optionalParams);
     cc::any     arr[] = {0, unpack_params(optionalParams)...};
-    callConsoleFunction(CONSOLE_ERROR, msg, arr, size);
+    printLog(DebugMode::ERROR_, msg, arr, size);
 }
 
 template <typename... Args>
@@ -214,7 +214,7 @@ void assertID(uint32_t id, Args... optionalParams) {
     std::string msg   = getTypedFormatter(CONSOLE_ASSERT, id);
     int         size  = sizeof...(optionalParams);
     cc::any     arr[] = {0, unpack_params(optionalParams)...};
-    callConsoleFunction(CONSOLE_ASSERT, msg, arr, size);
+    printLog(DebugMode::VERBOSE, msg, arr, size);
 }
 
 void _throw(); // NOLINT // throw is a reserved word

@@ -27,13 +27,38 @@ THE SOFTWARE.
 
 namespace cc {
 namespace debug {
-extern const char *CONSOLE_LOG   = "log";
-extern const char *CONSOLE_WARN  = "warn";
-extern const char *CONSOLE_ERROR = "error";
-extern const char *CONSOLE_ASSET = "assert";
+const std::string CONSOLE_LOG   = "log";
+const std::string CONSOLE_WARN  = "warn";
+const std::string CONSOLE_ERROR = "error";
+const std::string CONSOLE_ASSET = "assert";
 
-std::string getTypedFormatter(const char *tag, uint32_t id) {
-    std::string msg;
+const std::string &getPrefixTag(DebugMode mode) {
+    switch (mode) {
+        case DebugMode::VERBOSE:
+            return CONSOLE_LOG;
+        case DebugMode::WARN:
+            return CONSOLE_WARN;
+        case DebugMode::ERROR_:
+            return CONSOLE_ERROR;
+    }
+    return CONSOLE_ASSET;
+}
+
+LogLevel getLogLevel(DebugMode mode) {
+    switch (mode) {
+        case DebugMode::VERBOSE:
+            return LogLevel::LEVEL_DEBUG;
+        case DebugMode::WARN:
+            return LogLevel::WARN;
+        case DebugMode::ERROR_:
+            return LogLevel::ERR;
+    }
+    return LogLevel::FATAL;
+}
+
+std::string getTypedFormatter(DebugMode mode, uint32_t id) {
+    const std::string tag = getPrefixTag(mode);
+    std::string       msg;
 #if CC_DEBUG > 0
     if (debugInfos.find(id) == debugInfos.end()) {
         msg = "unknown id";
@@ -42,49 +67,68 @@ std::string getTypedFormatter(const char *tag, uint32_t id) {
     }
 #else
     char szTmp[1024] = {0};
-    snprintf(szTmp, sizeof(szTmp), "%s %d, please go to %s#%d to see details.", tag, id, ERROR_MAP_URL.c_str(), id);
+    snprintf(szTmp, sizeof(szTmp), "%s %d, please go to %s#%d to see details.", tag.c_str(), id, ERROR_MAP_URL.c_str(), id);
     msg = szTmp;
 #endif
 
     return msg;
 }
 
-void callConsoleFunction(const char *jsFunctionName, std::string msg, cc::any *arr, int paramsLength) {
-    se::AutoHandleScope scope;
-    se::ValueArray      args;
-    args.push_back(se::Value(msg));
+void printLog(DebugMode mode, std::string fmt, cc::any *arr, int paramsLength) {
+    std::string        msg      = fmt;
+    const std::string &prefix   = getPrefixTag(mode);
+    LogLevel           logLevel = getLogLevel(mode);
 
-    auto      global = se::ScriptEngine::getInstance()->getGlobalObject();
-    se::Value consoleVal;
-    se::Value consoleFunction;
-    if (global->getProperty("console", &consoleVal) && consoleVal.isObject()) {
-        consoleVal.toObject()->getProperty(jsFunctionName, &consoleFunction);
-    }
-
+    size_t pos;
     for (int i = 1; i <= paramsLength; i++) {
+        pos                = msg.find('%');
+        bool needToReplace = false;
+        if (pos != std::string::npos && pos != (msg.length() - 1) && (msg[pos + 1] == 'd' || msg[pos + 1] == 's' || msg[pos + 1] == 'f')) {
+            needToReplace = true;
+        }
+
         if (arr[i].type() == typeid(const std::string)) {
             const std::string s = cc::any_cast<const std::string>(arr[i]);
-            args.push_back(se::Value(s));
+            if (needToReplace) {
+                msg.replace(pos, 2, s);
+            } else {
+                msg += " " + s;
+            }
         } else if (arr[i].type() == typeid(std::string)) {
             std::string s = cc::any_cast<std::string>(arr[i]);
-            args.push_back(se::Value(s));
+            if (needToReplace) {
+                msg.replace(pos, 2, s);
+            } else {
+                msg += " " + s;
+            }
         } else if (arr[i].type() == typeid(int)) {
             int value = cc::any_cast<int>(arr[i]);
-            args.push_back(se::Value(value));
+            if (needToReplace) {
+                msg.replace(pos, 2, std::to_string(value));
+            } else {
+                msg += " " + std::to_string(value);
+            }
         } else if (arr[i].type() == typeid(float)) {
             float value = cc::any_cast<float>(arr[i]);
-            args.push_back(se::Value(value));
+            if (needToReplace) {
+                msg.replace(pos, 2, std::to_string(value));
+            } else {
+                msg += " " + std::to_string(value);
+            }
         } else if (arr[i].type() == typeid(const char *)) {
-            const char *s = cc::any_cast<const char *>(arr[i]);
-            args.push_back(se::Value(s));
+            std::string s = cc::any_cast<const char *>(arr[i]);
+            if (needToReplace) {
+                msg.replace(pos, 2, s);
+            } else {
+                msg += " " + s;
+            }
         } else {
             CC_LOG_ERROR("unsupport params data type");
             return;
         }
     }
-    if (consoleFunction.isObject()) {
-        consoleFunction.toObject()->call(args, nullptr);
-    }
+
+    cc::Log::logMessage(cc::LogType::KERNEL, logLevel, "%s %s", prefix.c_str(), msg.c_str());
 }
 
 } // namespace debug
