@@ -45,8 +45,8 @@ enum class LightType {
 
 class Light : public RefCounted {
 public:
-    Light()           = default;
-    ~Light() override = default;
+    Light();
+    ~Light() override;
 
     inline void attachToScene(RenderScene *scene) { _scene = scene; }
     inline void detachFromScene() { _scene = nullptr; }
@@ -73,7 +73,7 @@ public:
     inline void  setColorTemperature(float val) { _colorTemp = val; }
 
     inline Node *getNode() const { return _node.get(); }
-    void  setNode(Node *node);
+    void         setNode(Node *node);
 
     inline LightType getType() const { return _type; }
     inline void      setType(LightType type) { _type = type; }

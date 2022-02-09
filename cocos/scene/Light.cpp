@@ -30,6 +30,10 @@
 namespace cc {
 namespace scene {
 
+Light::Light() = default;
+
+Light::~Light() = default;
+
 void Light::destroy() {
     _name.clear();
     _node = nullptr;
