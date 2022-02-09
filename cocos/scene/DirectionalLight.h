@@ -34,8 +34,8 @@ namespace scene {
 
 class DirectionalLight final : public Light {
 public:
-    DirectionalLight() { _type = LightType::DIRECTIONAL; }
-    ~DirectionalLight() override = default;
+    DirectionalLight();
+    ~DirectionalLight() override;
 
     void initialize() override;
     void update() override;

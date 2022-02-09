@@ -46,6 +46,9 @@ cc::Material *skyboxMaterial{nullptr};
 namespace cc {
 namespace scene {
 
+SkyboxInfo::SkyboxInfo(/* args */) = default;
+SkyboxInfo::~SkyboxInfo() = default;
+
 void SkyboxInfo::setEnabled(bool val) {
     _enabled = val;
     if (_resource != nullptr) {
@@ -53,13 +56,13 @@ void SkyboxInfo::setEnabled(bool val) {
     }
 }
 
-void SkyboxInfo::setUseIBL(bool val) const{
+void SkyboxInfo::setUseIBL(bool val) const {
     if (_resource != nullptr) {
         _resource->setUseIBL(val);
     }
 }
 
-void SkyboxInfo::setApplyDiffuseMap(bool val) const{
+void SkyboxInfo::setApplyDiffuseMap(bool val) const {
     if (_resource != nullptr) {
         _resource->setUseDiffuseMap(val);
     }
@@ -109,7 +112,7 @@ void SkyboxInfo::setEnvmap(TextureCube *val) {
     }
 
     if (!_envmapHDR) {
-        _diffuseMapHDR   = nullptr;
+        _diffuseMapHDR = nullptr;
         setApplyDiffuseMap(false);
         setUseIBL(false);
         setEnvLightingType(EnvironmentLightingType::HEMISPHERE_DIFFUSE);

@@ -31,6 +31,10 @@
 namespace cc {
 namespace scene {
 
+DirectionalLight::DirectionalLight() { _type = LightType::DIRECTIONAL; }
+
+DirectionalLight::~DirectionalLight() = default;
+
 void DirectionalLight::initialize() {
     Light::initialize();
 

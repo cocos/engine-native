@@ -74,8 +74,8 @@ class Skybox;
 // @help('i18n:cc.Skybox')
 class SkyboxInfo : public RefCounted {
 public:
-    SkyboxInfo(/* args */) = default;
-    ~SkyboxInfo() override = default;
+    SkyboxInfo(/* args */);
+    ~SkyboxInfo() override;
 
     /**
      * @en Whether to use diffuse convolution map. Enabled -> Will use map specified. Disabled -> Will revert to hemispheric lighting
@@ -180,9 +180,9 @@ public:
     // @serializable
     bool _enabled{false};
     // @serializable
-    bool _useHDR{true};
+    bool                    _useHDR{true};
     EnvironmentLightingType _envLightingType{EnvironmentLightingType::HEMISPHERE_DIFFUSE};
-    Skybox *_resource{nullptr};
+    Skybox *                _resource{nullptr};
 };
 
 class Skybox final {

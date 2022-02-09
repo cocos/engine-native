@@ -42,6 +42,7 @@
 
 namespace cc {
 namespace scene {
+RenderScene::RenderScene() = default;
 
 RenderScene::~RenderScene() = default;
 

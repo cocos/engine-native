@@ -45,6 +45,9 @@ const std::unordered_map<IScreen::Orientation, gfx::SurfaceTransform> ORIENTATIO
 
 }
 
+RenderWindow::RenderWindow()  = default;
+RenderWindow::~RenderWindow() = default;
+
 bool RenderWindow::initialize(gfx::Device *device, IRenderWindowInfo &info) {
     if (info.title.has_value() && !info.title.value().empty()) {
         _title = info.title.value();

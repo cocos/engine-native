@@ -59,7 +59,7 @@ struct IRenderSceneInfo {
 
 class RenderScene : public RefCounted {
 public:
-    RenderScene() = default;
+    RenderScene();
     ~RenderScene() override;
 
     bool initialize(const IRenderSceneInfo &info);

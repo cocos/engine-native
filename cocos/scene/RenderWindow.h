@@ -48,8 +48,8 @@ struct IRenderWindowInfo {
  */
 class RenderWindow : public RefCounted {
 public:
-    RenderWindow()           = default;
-    ~RenderWindow() override = default;
+    RenderWindow();
+    ~RenderWindow() override;
 
     bool initialize(gfx::Device *device, IRenderWindowInfo &info);
     void destroy();
