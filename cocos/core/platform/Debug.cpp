@@ -40,8 +40,9 @@ const std::string &getPrefixTag(DebugMode mode) {
             return CONSOLE_WARN;
         case DebugMode::ERROR_:
             return CONSOLE_ERROR;
+        default:
+            return CONSOLE_ASSET;
     }
-    return CONSOLE_ASSET;
 }
 
 LogLevel getLogLevel(DebugMode mode) {
@@ -52,8 +53,9 @@ LogLevel getLogLevel(DebugMode mode) {
             return LogLevel::WARN;
         case DebugMode::ERROR_:
             return LogLevel::ERR;
+        default:
+            return LogLevel::FATAL;
     }
-    return LogLevel::FATAL;
 }
 
 std::string getTypedFormatter(DebugMode mode, uint32_t id) {
