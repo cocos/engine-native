@@ -32,7 +32,7 @@ let buildDebugInfos = function() {
         errInfo = errInfo.replace(/\r\n/g, '\n');
 
         if (!errInfo.includes('<!-- DEPRECATED -->')) {
-            errInfo = errInfo.replace(/\n/g, "\\n").replace(/\"/g, "\\\"").replace(/\\`/g, "`");
+            errInfo = errInfo.replace(/\n/g, "\\n").replace(/\"/g, "'").replace(/\\`/g, "`");
             debugInfos = debugInfos.concat("{ ", errCode, ", \"", errInfo, "\" },\n");
         }
 

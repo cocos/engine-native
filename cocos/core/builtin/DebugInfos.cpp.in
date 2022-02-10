@@ -31,4 +31,4 @@ namespace cc {
 std::unordered_map<int, std::string> debugInfos = {
 ${PLACE_HOLDER}
 };
-}
+}//namespace cc
