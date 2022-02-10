@@ -211,7 +211,7 @@ void errorID(uint32_t id, Args... optionalParams) {
 
 template <typename... Args>
 void assertID(uint32_t id, Args... optionalParams) {
-    std::string msg   = getTypedFormatter(Debug::INFO, id);
+    std::string msg   = getTypedFormatter(DebugMode::INFO, id);
     int         size  = sizeof...(optionalParams);
     cc::any     arr[] = {0, unpack_params(optionalParams)...};
     printLog(DebugMode::INFO, msg, arr, size);
