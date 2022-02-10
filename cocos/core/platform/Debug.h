@@ -183,7 +183,7 @@ T unpack_params(T value) {
     return value;
 }
 
-void printLog(DebugMode mode, std::string fmt, cc::any *arr, int paramsLength);
+void printLog(DebugMode mode, const std::string &fmt, cc::any *arr, int paramsLength);
 
 template <typename... Args>
 void logID(uint32_t id, Args... optionalParams) {
@@ -211,10 +211,10 @@ void errorID(uint32_t id, Args... optionalParams) {
 
 template <typename... Args>
 void assertID(uint32_t id, Args... optionalParams) {
-    std::string msg   = getTypedFormatter(CONSOLE_ASSERT, id);
+    std::string msg   = getTypedFormatter(Debug::INFO, id);
     int         size  = sizeof...(optionalParams);
     cc::any     arr[] = {0, unpack_params(optionalParams)...};
-    printLog(DebugMode::VERBOSE, msg, arr, size);
+    printLog(DebugMode::INFO, msg, arr, size);
 }
 
 void _throw(); // NOLINT // throw is a reserved word

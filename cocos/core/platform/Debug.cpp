@@ -57,7 +57,7 @@ LogLevel getLogLevel(DebugMode mode) {
 }
 
 std::string getTypedFormatter(DebugMode mode, uint32_t id) {
-    const std::string tag = getPrefixTag(mode);
+    const std::string &tag = getPrefixTag(mode);
     std::string       msg;
 #if CC_DEBUG > 0
     if (debugInfos.find(id) == debugInfos.end()) {
@@ -74,7 +74,7 @@ std::string getTypedFormatter(DebugMode mode, uint32_t id) {
     return msg;
 }
 
-void printLog(DebugMode mode, std::string fmt, cc::any *arr, int paramsLength) {
+void printLog(DebugMode mode, const std::string &fmt, cc::any *arr, int paramsLength) {
     std::string        msg      = fmt;
     const std::string &prefix   = getPrefixTag(mode);
     LogLevel           logLevel = getLogLevel(mode);
