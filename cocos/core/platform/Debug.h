@@ -65,7 +65,7 @@ enum class DebugMode {
      * @en Information mode, which display only messages with "error" level.
      * @zh 错误模式，仅显示“错误”级别的日志消息。
      */
-    ERROR_ = 4, // ERROR has been defined by MACRO
+    ERROR_MODE = 4, // ERROR has been defined by MACRO
 
     /**
      * @en The debug mode info for web page.
@@ -179,7 +179,7 @@ const std::string &getPrefixTag(DebugMode mode);
 LogLevel getLogLevel(DebugMode mode);
 
 template <typename T>
-T unpack_params(T value) {
+T unpackParams(T value) {
     return value;
 }
 
@@ -189,7 +189,7 @@ template <typename... Args>
 void logID(uint32_t id, Args... optionalParams) {
     std::string       msg    = getTypedFormatter(DebugMode::VERBOSE, id);
     int         size  = sizeof...(optionalParams);
-    cc::any     arr[] = {0, unpack_params(optionalParams)...};
+    cc::any     arr[] = {0, unpackParams(optionalParams)...};
     printLog(DebugMode::VERBOSE, msg, arr, size);
 }
 
@@ -197,23 +197,23 @@ template <typename... Args>
 void warnID(uint32_t id, Args... optionalParams) {
     std::string       msg    = getTypedFormatter(DebugMode::WARN, id);
     int         size  = sizeof...(optionalParams);
-    cc::any     arr[] = {0, unpack_params(optionalParams)...};
+    cc::any     arr[] = {0, unpackParams(optionalParams)...};
     printLog(DebugMode::WARN, msg, arr, size);
 }
 
 template <typename... Args>
 void errorID(uint32_t id, Args... optionalParams) {
-    std::string msg   = getTypedFormatter(DebugMode::ERROR_, id);
+    std::string msg   = getTypedFormatter(DebugMode::ERROR_MODE, id);
     int         size  = sizeof...(optionalParams);
-    cc::any     arr[] = {0, unpack_params(optionalParams)...};
-    printLog(DebugMode::ERROR_, msg, arr, size);
+    cc::any     arr[] = {0, unpackParams(optionalParams)...};
+    printLog(DebugMode::ERROR_MODE, msg, arr, size);
 }
 
 template <typename... Args>
 void assertID(uint32_t id, Args... optionalParams) {
     std::string msg   = getTypedFormatter(DebugMode::INFO, id);
     int         size  = sizeof...(optionalParams);
-    cc::any     arr[] = {0, unpack_params(optionalParams)...};
+    cc::any     arr[] = {0, unpackParams(optionalParams)...};
     printLog(DebugMode::INFO, msg, arr, size);
 }
 

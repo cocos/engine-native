@@ -415,8 +415,8 @@ gfx::Shader *Pass::getShaderVariant(const std::vector<IMacroPatch> &patches) {
     }
 
 #ifdef CC_EDITOR
-    for (auto i = 0; i < patches.size(); i++) {
-        std::size_t pos = patches[i].name.find_first_of("CC_");
+    for (const auto &patch : patches) {
+        std::size_t pos = patch.name.find_first_of("CC_");
         if (pos != 0) { // not startsWith CC_
             CC_LOG_WARNING("cannot patch non-builtin macros");
             return nullptr;

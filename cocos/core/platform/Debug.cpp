@@ -38,7 +38,7 @@ const std::string &getPrefixTag(DebugMode mode) {
             return CONSOLE_LOG;
         case DebugMode::WARN:
             return CONSOLE_WARN;
-        case DebugMode::ERROR_:
+        case DebugMode::ERROR_MODE:
             return CONSOLE_ERROR;
         default:
             return CONSOLE_ASSET;
@@ -51,7 +51,7 @@ LogLevel getLogLevel(DebugMode mode) {
             return LogLevel::LEVEL_DEBUG;
         case DebugMode::WARN:
             return LogLevel::WARN;
-        case DebugMode::ERROR_:
+        case DebugMode::ERROR_MODE:
             return LogLevel::ERR;
         default:
             return LogLevel::FATAL;
@@ -111,7 +111,7 @@ void printLog(DebugMode mode, const std::string &fmt, cc::any *arr, int paramsLe
                 msg += " " + std::to_string(value);
             }
         } else if (arr[i].type() == typeid(float)) {
-            float value = cc::any_cast<float>(arr[i]);
+            auto value = cc::any_cast<float>(arr[i]);
             if (needToReplace) {
                 msg.replace(pos, 2, std::to_string(value));
             } else {
