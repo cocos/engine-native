@@ -27,13 +27,22 @@
 #define SERIALIZATION_BACKEND_CEREAL 1
 #define SERIALIZATION_BACKEND_BOOST 0
 
+#define SERIALIZE_FUNCTION_NAME serialize
+
 #ifdef SERIALIZATION_BACKEND_CEREAL
-    #define CEREAL_SERIALIZE_FUNCTION_NAME serialize_test
-    #define SERIALIZABLE_CLASS()           friend class cereal::access;
-    #define SERIALIZE_FIELD(T)             cereal::make_nvp(#T, T)
-    #define SERIALIZE_SUPER()              cereal::virtual_base_class<Super>(this)
+    #define CEREAL_SERIALIZE_FUNCTION_NAME SERIALIZE_FUNCTION_NAME
+    #define REGISTER_SERIALIZATION()         \
+    private:                                \
+        friend class cereal::access;        \
+        template <class Archive>            \
+        void SERIALIZE_FUNCTION_NAME(Archive &archive);
+
+    #define SERIALIZE(T)                   archive(cereal::make_nvp(#T, T))
+    #define SERIALIZE_WITH_NAME(NAME, T)   archive(cereal::make_nvp(NAME, T))
+    #define SERIALIZE_SUPER()              archive(cereal::virtual_base_class<Super>(this))
+    #include "cereal/macros.hpp"
+    #include "cereal/access.hpp"
+    #include "cereal/cereal.hpp"
 #endif
 
-#include "cereal/macros.hpp"
-#include "cereal/access.hpp"
-#include "cereal/cereal.hpp"
+

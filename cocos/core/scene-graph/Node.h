@@ -43,7 +43,7 @@
 #include "math/Quaternion.h"
 #include "math/Vec3.h"
 #include "math/Vec4.h"
-#include "core/serialization/Define.h"
+#include "core/serialization/Serialization.h"
 
 namespace cc {
 
@@ -61,7 +61,7 @@ using EventType = NodeEventType;
 using TransformDirtyBit = TransformBit;
 
 class Node : public BaseNode {
-    SERIALIZABLE_CLASS()
+    REGISTER_SERIALIZATION()
 
 public:
     class UserData : public RefCounted {
