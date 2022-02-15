@@ -92,8 +92,9 @@
     [super setFrameSize:newSize];
     layer.drawableSize = nativeSize;
     [self viewDidChangeBackingProperties];
-
-
+    
+    if(cc::Application::getInstance())
+        cc::Application::getInstance()->setViewLogicSize(cc::Vec2(newSize.width, newSize.height));
 
     if (cc::EventDispatcher::initialized())
         cc::EventDispatcher::dispatchResizeEvent(static_cast<int>(nativeSize.width), static_cast<int>(nativeSize.height));

@@ -160,6 +160,8 @@ public:
 
     // return size in logical pixel unit.
     inline const cc::Vec2 &getViewLogicalSize() const { return _viewLogicalSize; }
+    
+    inline void setViewLogicSize(const cc::Vec2& size) { _viewLogicalSize = size; }
 
 private:
     static Application *              instance;
