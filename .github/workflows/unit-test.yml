@@ -27,7 +27,9 @@ jobs:
       - name: Run Unit Tests
         shell: bash
         run: |
+          set -e
           cmake -G
+          set +e
           cmake -B tests/unit-test/build -S tests/unit-test
           cmake --build tests/unit-test/build --config Release
           ./tests/unit-test/build/src/Release/CocosTest.exe
