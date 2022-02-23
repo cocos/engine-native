@@ -27,9 +27,6 @@
 #include "cocos/bindings/event/EventDispatcher.h"
 #include "cocos/platform/Device.h"
 
-namespace {
-    cc::Device::Orientation _lastOrientation;
-}
 
 @interface ViewController ()
 
@@ -51,31 +48,21 @@ namespace {
     return YES;
 }
 
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
-    cc::Device::Orientation orientation = _lastOrientation;
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinaØtor {
+    cc::Device::Orientation orientation = cc::Device::getDeviceOrientation();
     // reference: https://developer.apple.com/documentation/uikit/uiinterfaceorientation?language=objc
     // UIInterfaceOrientationLandscapeRight = UIDeviceOrientationLandscapeLeft
     // UIInterfaceOrientationLandscapeLeft = UIDeviceOrientationLandscapeRight
-    switch ([UIDevice currentDevice].orientation) {
-        case UIDeviceOrientationPortrait:
-            orientation = cc::Device::Orientation::PORTRAIT;
-            break;
-        case UIDeviceOrientationLandscapeRight:
-            orientation = cc::Device::Orientation::LANDSCAPE_LEFT;
-            break;
-        case UIDeviceOrientationPortraitUpsideDown:
-            orientation = cc::Device::Orientation::PORTRAIT_UPSIDE_DOWN;
-            break;
-        case UIDeviceOrientationLandscapeLeft:
-            orientation = cc::Device::Orientation::LANDSCAPE_RIGHT;
-            break;
-        default:
-            break;
-    }
-    if (_lastOrientation != orientation) {
-        cc::EventDispatcher::dispatchOrientationChangeEvent((int) orientation);
-        _lastOrientation = orientation;
-    }
+    cc::EventDispatcher::dispatchOrientationChangeEvent((int) orientation);
+    
+    float    pixelRatio = cc::Device::getDevicePixelRatio();
+    cc::EventDispatcher::dispatchResizeEvent(size.width * pixelRatio
+                                             , size.height * pixelRatio);
+    CAMetalLayer *layer = (CAMetalLayer *)self.view.layer;
+    CGSize tsize             = CGSizeMake(static_cast<int>(size.width * pixelRatio),
+                                         static_cast<int>(size.height * pixelRatio));
+    //self.view.contentScaleFactor = pixelRatio;
+    layer.drawableSize = tsize;
 }
 
 @end
