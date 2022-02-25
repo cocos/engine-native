@@ -53,7 +53,7 @@
     // reference: https://developer.apple.com/documentation/uikit/uiinterfaceorientation?language=objc
     // UIInterfaceOrientationLandscapeRight = UIDeviceOrientationLandscapeLeft
     // UIInterfaceOrientationLandscapeLeft = UIDeviceOrientationLandscapeRight
-    cc::EventDispatcher::dispatchOrientationChangeEvent((int) orientation);
+    cc::EventDispatcher::dispatchOrientationChangeEvent(static_cast<int>(orientation));
     
     float    pixelRatio = cc::Device::getDevicePixelRatio();
     cc::EventDispatcher::dispatchResizeEvent(size.width * pixelRatio
@@ -61,7 +61,6 @@
     CAMetalLayer *layer = (CAMetalLayer *)self.view.layer;
     CGSize tsize             = CGSizeMake(static_cast<int>(size.width * pixelRatio),
                                          static_cast<int>(size.height * pixelRatio));
-    //self.view.contentScaleFactor = pixelRatio;
     layer.drawableSize = tsize;
 }
 
