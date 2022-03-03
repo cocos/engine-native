@@ -171,6 +171,109 @@ createRectangle : function (
 };
 
 /**
+ * @class UserData
+ */
+dragonBones.UserData = {
+
+/**
+ * @method getFloat
+ * @param {unsigned int} arg0
+ * @return {float}
+ */
+getFloat : function (
+int 
+)
+{
+    return 0;
+},
+
+/**
+ * @method getFloats
+ * @return {Array}
+ */
+getFloats : function (
+)
+{
+    return new Array();
+},
+
+/**
+ * @method getString
+ * @param {unsigned int} arg0
+ * @return {String}
+ */
+getString : function (
+int 
+)
+{
+    return ;
+},
+
+/**
+ * @method getInts
+ * @return {Array}
+ */
+getInts : function (
+)
+{
+    return new Array();
+},
+
+/**
+ * @method getInt
+ * @param {unsigned int} arg0
+ * @return {int}
+ */
+getInt : function (
+int 
+)
+{
+    return 0;
+},
+
+/**
+ * @method addInt
+ * @param {int} arg0
+ */
+addInt : function (
+int 
+)
+{
+},
+
+/**
+ * @method getStrings
+ * @return {Array}
+ */
+getStrings : function (
+)
+{
+    return new Array();
+},
+
+/**
+ * @method addFloat
+ * @param {float} arg0
+ */
+addFloat : function (
+float 
+)
+{
+},
+
+/**
+ * @method addString
+ * @param {String} arg0
+ */
+addString : function (
+str 
+)
+{
+},
+
+};
+
+/**
  * @class ArmatureData
  */
 dragonBones.ArmatureData = {

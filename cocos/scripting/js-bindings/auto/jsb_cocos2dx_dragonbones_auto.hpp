@@ -47,6 +47,21 @@ SE_DECLARE_FUNC(js_cocos2dx_dragonbones_TextureData_getFrame);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_TextureData_setParent);
 SE_DECLARE_FUNC(js_cocos2dx_dragonbones_TextureData_createRectangle);
 
+extern se::Object* __jsb_dragonBones_UserData_proto;
+extern se::Class* __jsb_dragonBones_UserData_class;
+
+bool js_register_dragonBones_UserData(se::Object* obj);
+bool register_all_cocos2dx_dragonbones(se::Object* obj);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_UserData_getFloat);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_UserData_getFloats);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_UserData_getString);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_UserData_getInts);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_UserData_getInt);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_UserData_addInt);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_UserData_getStrings);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_UserData_addFloat);
+SE_DECLARE_FUNC(js_cocos2dx_dragonbones_UserData_addString);
+
 extern se::Object* __jsb_dragonBones_ArmatureData_proto;
 extern se::Class* __jsb_dragonBones_ArmatureData_class;
 
