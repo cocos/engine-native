@@ -29,10 +29,13 @@ THE SOFTWARE.
 #include <cstdint>
 
 #include "math/Vec4.h"
+#include "core/serialization/Serialization.h"
 
 namespace cc {
 
 class Color {
+    REGISTER_SERIALIZATION();
+
 public:
     uint8_t r;
     uint8_t g;

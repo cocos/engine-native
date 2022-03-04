@@ -61,7 +61,6 @@ using EventType = NodeEventType;
 using TransformDirtyBit = TransformBit;
 
 class Node : public BaseNode {
-    REGISTER_SERIALIZATION()
 
 public:
     class UserData : public RefCounted {

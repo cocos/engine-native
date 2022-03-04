@@ -97,4 +97,14 @@ Vec4 Color::toVec4() const {
     return {static_cast<float>(r) / 255.F, static_cast<float>(g) / 255.F, static_cast<float>(b) / 255.F, static_cast<float>(a) / 255.F};
 }
 
+template <class Archive>
+void Color::serialize(Archive &ar) {
+    SERIALIZE(ar, r);
+    SERIALIZE(ar, g);
+    SERIALIZE(ar, b);
+    SERIALIZE(ar, a);
+}
+
 } // namespace cc
+
+SERIALIZATION_IMPL(cc::Color);
