@@ -173,11 +173,7 @@ int Device::getDPI()
 
     if (dpi == -1)
     {
-        float scale = 1.0f;
-
-        if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
-            scale = [[UIScreen mainScreen] scale];
-        }
+        float scale = scale = [[UIScreen mainScreen] scale];
 
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             dpi = 132 * scale;

@@ -120,8 +120,7 @@ namespace
 #else
         _discardFramebufferSupported = NO;
 #endif
-        if ([self respondsToSelector:@selector(setContentScaleFactor:)])
-            self.contentScaleFactor = [[UIScreen mainScreen] scale];
+        self.contentScaleFactor = [[UIScreen mainScreen] scale];
         
         _touchIds = 0;
         for (int i = 0; i < 10; ++i)

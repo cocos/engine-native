@@ -178,7 +178,12 @@ namespace
         [self startMainLoop];
     }
     else
-        [self performSelector:@selector(firstStart:) withObject:view afterDelay:0];
+        // Replace performSelector usage for Apple review policy
+        // https://github.com/cocos-creator/3d-tasks/issues/9770
+        // [self performSelector:@selector(firstStart:) withObject:view afterDelay:0];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self firstStart:view];
+        });
 }
 
 -(void) startMainLoop
@@ -308,14 +313,24 @@ void Application::updateViewSize(int width, int height)
 void Application::start()
 {
     if (_delegate)
-        [(MainLoop*)_delegate performSelector:@selector(firstStart:) withObject:(CCEAGLView*)_view afterDelay:0];    
+            // Replace performSelector usage for Apple review policy
+            // https://github.com/cocos-creator/3d-tasks/issues/9770
+            // [(MainLoop*)_delegate performSelector:@selector(firstStart:) withObject:(CCEAGLView*)_view afterDelay:0];
+            dispatch_async(dispatch_get_main_queue(), ^{
+            [(MainLoop*)_delegate firstStart:(CCEAGLView*)_view];
+        });
 }
 
 void Application::restart()
 {
     if (_delegate) {
         [(MainLoop*)_delegate stopMainLoop];
-        [(MainLoop*)_delegate performSelector:@selector(firstStart:) withObject:(CCEAGLView*)_view afterDelay:0];
+        // Replace performSelector usage for Apple review policy
+        // https://github.com/cocos-creator/3d-tasks/issues/9770
+        // [(MainLoop*)_delegate performSelector:@selector(firstStart:) withObject:(CCEAGLView*)_view afterDelay:0];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [(MainLoop*)_delegate firstStart:(CCEAGLView*)_view];
+        });
     }
 }
 
