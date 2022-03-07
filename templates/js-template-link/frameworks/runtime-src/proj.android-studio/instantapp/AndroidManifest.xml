@@ -21,7 +21,7 @@
         <activity
             android:name="org.cocos2dx.javascript.InstantAppActivity"
             android:screenOrientation="sensorLandscape"
-            android:configChanges="orientation|keyboardHidden|screenSize|screenLayout"
+            android:configChanges="orientation|keyboardHidden|screenSize|screenLayout|uiMode"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:taskAffinity=""
