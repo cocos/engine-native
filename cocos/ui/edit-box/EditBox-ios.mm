@@ -353,16 +353,8 @@ namespace
 
 -(void)keyboardWillHide: (NSNotification*) notification
 {
-    NSDictionary *info = [notification userInfo];
-    
-    CGRect beginKeyboardRect = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
-    CGRect endKeyboardRect = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    CGFloat yOffset = endKeyboardRect.origin.y - beginKeyboardRect.origin.y;
-    
-    if (yOffset <= 0) {
-        cocos2d::EditBox::complete();
-        cocos2d::EditBox::hide();
-    }
+    cocos2d::EditBox::complete();
+    cocos2d::EditBox::hide();
 }
 @end
 
