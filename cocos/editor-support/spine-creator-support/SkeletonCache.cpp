@@ -322,7 +322,11 @@ namespace spine {
         auto& drawOrder = _skeleton->getDrawOrder();
         for (size_t i = 0, n = drawOrder.size(); i < n; ++i) {
             slot = drawOrder[i];
-            
+
+            if (slot->getBone().isActive() == false) {
+                continue;
+            }
+
             if (!slot->getAttachment()) {
                 _clipper->clipEnd(*slot);
                 continue;
