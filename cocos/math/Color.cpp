@@ -106,5 +106,5 @@ void Color::serialize(Archive &ar) {
 }
 
 } // namespace cc
-
+//
 SERIALIZATION_IMPL(cc::Color);
