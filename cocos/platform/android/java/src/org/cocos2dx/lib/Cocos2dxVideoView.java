@@ -560,8 +560,7 @@ public class Cocos2dxVideoView extends SurfaceView {
                 mMediaPlayer.setDataSource(mVideoUri.toString());
                 if (mVideoUri.getHost().length() > 0) {
                     mRetriever.setDataSource(mVideoUri.toString(), new HashMap<String, String>());
-                }
-                else {
+                } else {
                     mRetriever.setDataSource(mCocos2dxActivity.getContext(), mVideoUri);
                 }
             }
