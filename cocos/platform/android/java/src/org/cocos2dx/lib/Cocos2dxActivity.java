@@ -78,6 +78,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
     private Cocos2dxEditBox mEditBox = null;
     private boolean gainAudioFocus = false;
     private boolean paused = true;
+    private boolean isBlockedByComponents = true;
 
     // DEBUG VIEW BEGIN
     private LinearLayout mLinearLayoutForDebugView;
@@ -399,11 +400,19 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
         super.onWindowFocusChanged(hasFocus);
         
         this.hasFocus = hasFocus;
+        if(!paused){
+            //if not paused but focus changed, which means the activity is blocked or released by components
+            this.isBlockedByComponents = !hasFocus;
+        }
         resumeIfHasFocus();
     }
 
     private void resumeIfHasFocus() {
         if(hasFocus && !paused) {
+            Utils.hideVirtualButton();
+            Cocos2dxHelper.onResume();
+            mGLSurfaceView.onResume();
+        } else if(!hasFocus && !paused && isBlockedByComponents){
             Utils.hideVirtualButton();
             Cocos2dxHelper.onResume();
             mGLSurfaceView.onResume();
