@@ -302,7 +302,7 @@ public class Cocos2dxHelper {
     public static String getWritablePath() {
         return Cocos2dxHelper.sFileDirectory;
     }
-    
+
     public static String getCurrentLanguage() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return LocaleList.getDefault().get(0).getLanguage();
