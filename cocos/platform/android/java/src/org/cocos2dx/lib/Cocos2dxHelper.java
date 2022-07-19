@@ -302,13 +302,21 @@ public class Cocos2dxHelper {
     public static String getWritablePath() {
         return Cocos2dxHelper.sFileDirectory;
     }
-
+    
     public static String getCurrentLanguage() {
-        return Locale.getDefault().getLanguage();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return LocaleList.getDefault().get(0).getLanguage();
+        } else {
+            return Locale.getDefault().getLanguage();
+        }
     }
 
     public static String getCurrentLanguageCode() {
-        return Locale.getDefault().toString();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return LocaleList.getDefault().get(0).toString();
+        } else {
+            return Locale.getDefault().toString();
+        }
     }
 
     public static String getDeviceModel(){
