@@ -478,13 +478,32 @@ static bool WebSocket_close(se::State& s)
     }
     else if (argc == 2)
     {
-        assert(args[0].isNumber());
-        assert(args[1].isString());
-        int reasonCode;
-        std::string reasonString;
-        seval_to_int32(args[0], &reasonCode);
-        seval_to_std_string(args[1], &reasonString);
-        cobj->closeAsync(reasonCode, reasonString);
+        if (args[0].isNumber()) {
+            int reasonCode;
+            if (args[1].isString()) {
+                std::string reasonString;
+                seval_to_int32(args[0], &reasonCode);
+                seval_to_std_string(args[1], &reasonString);
+                cobj->closeAsync(reasonCode, reasonString);
+            } else if (args[1].isNullOrUndefined()) {
+                seval_to_int32(args[0], &reasonCode);
+                cobj->closeAsync(reasonCode, "no_reason");
+            } else {
+                assert(false);
+            }
+        } else if (args[0].isNullOrUndefined()) {
+            if (args[1].isString()) {
+                std::string reasonString;
+                seval_to_std_string(args[1], &reasonString);
+                cobj->closeAsync(1005, reasonString);
+            } else if (args[1].isNullOrUndefined()) {
+                cobj->closeAsync();
+            } else {
+                assert(false);
+            }
+        } else {
+            assert(false);
+        }
     }
     else 
     {
