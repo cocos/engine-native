@@ -3559,6 +3559,8 @@ static bool JSB_glGetSupportedExtensions(se::State& s) {
                 extensionName = "WEBGL_compressed_texture_etc1";
             else if (0 == strcmp(extensionName, "GL_IMG_texture_compression_pvrtc"))
                 extensionName = "WEBGL_compressed_texture_pvrtc";
+            else if (0 == strcmp(extensionName, "GL_KHR_texture_compression_astc_ldr"))
+                extensionName = "WEBGL_compressed_texture_astc";
 
             jsobj->setArrayElement(element, se::Value(extensionName));
 
@@ -3578,6 +3580,10 @@ static bool JSB_glGetSupportedExtensions(se::State& s) {
     
     if (Configuration::getInstance()->supportsStandardDerivatives()) {
         jsobj->setArrayElement(element++, se::Value("OES_standard_derivatives"));
+    }
+
+    if (Configuration::getInstance()->supportsASTC()) {
+        jsobj->setArrayElement(element++, se::Value("WEBGL_compressed_texture_astc"));
     }
 
     s.rval().setObject(jsobj.get());

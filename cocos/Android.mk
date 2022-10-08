@@ -41,6 +41,7 @@ base/ccRandom.cpp \
 base/ccTypes.cpp \
 base/ccUTF8.cpp \
 base/ccUtils.cpp \
+base/astc.cpp \
 base/etc1.cpp \
 base/etc2.cpp \
 base/pvr.cpp \
