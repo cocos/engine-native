@@ -1833,10 +1833,10 @@ bool Image::initWithASTCData(const unsigned char *data, ssize_t dataLen)
     _dataLen = dataLen - ASTC_HEADER_SIZE;
     _data    = static_cast<unsigned char *>(malloc(_dataLen * sizeof(unsigned char)));
     memcpy(_data, static_cast<const unsigned char *>(data) + ASTC_HEADER_SIZE, _dataLen);
-    // if (_data == nullptr) {
-    //     CCLOG("initWithASTCData: ERROR : Image _data is null!");
-    //     return false;
-    // }
+    if (_data == nullptr) {
+        CCLOG("initWithASTCData: ERROR : Image _data is null!");
+        return false;
+    }
 
     return true;
 }
