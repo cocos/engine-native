@@ -635,6 +635,10 @@
 		04FB24122328D42A0021DD02 /* ArmatureCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 04FB24072328D42A0021DD02 /* ArmatureCache.h */; };
 		04FB24132328D42A0021DD02 /* CCArmatureCacheDisplay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 04FB24082328D42A0021DD02 /* CCArmatureCacheDisplay.cpp */; };
 		04FB24142328D42A0021DD02 /* CCArmatureCacheDisplay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 04FB24082328D42A0021DD02 /* CCArmatureCacheDisplay.cpp */; };
+		0F07F55D28FD38900035F34D /* astc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F07F55B28FD388F0035F34D /* astc.cpp */; };
+		0F07F55E28FD38900035F34D /* astc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0F07F55B28FD388F0035F34D /* astc.cpp */; };
+		0F07F55F28FD38900035F34D /* astc.h in Headers */ = {isa = PBXBuildFile; fileRef = 0F07F55C28FD388F0035F34D /* astc.h */; };
+		0F07F56028FD38900035F34D /* astc.h in Headers */ = {isa = PBXBuildFile; fileRef = 0F07F55C28FD388F0035F34D /* astc.h */; };
 		1A14FD912080B4E300E10ABE /* CCGLUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A14FD8F2080B4E300E10ABE /* CCGLUtils.cpp */; };
 		1A14FD922080B4E300E10ABE /* CCGLUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1A14FD8F2080B4E300E10ABE /* CCGLUtils.cpp */; };
 		1A14FD932080B4E300E10ABE /* CCGLUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A14FD902080B4E300E10ABE /* CCGLUtils.h */; };
@@ -1820,6 +1824,8 @@
 		051C017021E2F85C00D4A347 /* CCModuleConfigIOS.release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CCModuleConfigIOS.release.xcconfig; sourceTree = "<group>"; };
 		051C017121E2F86900D4A347 /* CCModuleConfigMac.release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CCModuleConfigMac.release.xcconfig; sourceTree = "<group>"; };
 		051C017221E2F86900D4A347 /* CCModuleConfigMac.debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = CCModuleConfigMac.debug.xcconfig; sourceTree = "<group>"; };
+		0F07F55B28FD388F0035F34D /* astc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = astc.cpp; sourceTree = "<group>"; };
+		0F07F55C28FD388F0035F34D /* astc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = astc.h; sourceTree = "<group>"; };
 		1551A33F158F2AB200E66CFE /* libcocos2d Mac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libcocos2d Mac.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1551A342158F2AB200E66CFE /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1A14FD8F2080B4E300E10ABE /* CCGLUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CCGLUtils.cpp; sourceTree = "<group>"; };
@@ -3506,6 +3512,8 @@
 		46FDDAE9202ADDCE00931238 /* base */ = {
 			isa = PBXGroup;
 			children = (
+				0F07F55B28FD388F0035F34D /* astc.cpp */,
+				0F07F55C28FD388F0035F34D /* astc.h */,
 				4DCEC124233236D60020F8E3 /* etc2.cpp */,
 				4DCEC125233236D60020F8E3 /* etc2.h */,
 				46FDDAFD202ADDCE00931238 /* base64.cpp */,
@@ -3919,6 +3927,7 @@
 				04F0A928234F14BE002C3533 /* Pool.h in Headers */,
 				046B688C219FA61200B33469 /* MiddlewareManager.h in Headers */,
 				BAEA45551E279D5C00FA219F /* tinydir.h in Headers */,
+				0F07F55F28FD38900035F34D /* astc.h in Headers */,
 				046B689221A00F5600B33469 /* IOTypedArray.h in Headers */,
 				46FDDAB7202ACC6A00931238 /* IndexBuffer.h in Headers */,
 				4617864520522469008256E1 /* HttpAsynConnection-apple.h in Headers */,
@@ -4531,6 +4540,7 @@
 				046E06C82185B49F00B24E2D /* DisplayData.h in Headers */,
 				50ABBD4F1925AB0000A911A9 /* MathUtil.h in Headers */,
 				1A28FF561F20AFAB007A1D9D /* SRIOConsumerPool.h in Headers */,
+				0F07F56028FD38900035F34D /* astc.h in Headers */,
 				04F0A95F234F14BE002C3533 /* TimelineType.h in Headers */,
 				1A28FF7E1F20AFAB007A1D9D /* SRMutex.h in Headers */,
 				403ACADD20CE542900BB433D /* jsb_module_register.hpp in Headers */,
@@ -4956,6 +4966,7 @@
 				046E066C2185B41B00B24E2D /* Slot.cpp in Sources */,
 				50ABC0151926664800A911A9 /* CCImage.cpp in Sources */,
 				046E06D12185B49F00B24E2D /* DisplayData.cpp in Sources */,
+				0F07F55D28FD38900035F34D /* astc.cpp in Sources */,
 				ED18118023D6A97000DED444 /* CCTTFTypes.cpp in Sources */,
 				46AE400B2092F3A600F3A228 /* env.cc in Sources */,
 				46FDDAD3202ACC6A00931238 /* Texture2D.cpp in Sources */,
@@ -5086,6 +5097,7 @@
 				468A968322F43F5A005034BE /* Utils.cpp in Sources */,
 				421EA5822372BB0E009F3FE0 /* Particle3DAssembler.cpp in Sources */,
 				04355817217EADF300B9C056 /* IOBuffer.cpp in Sources */,
+				0F07F55E28FD38900035F34D /* astc.cpp in Sources */,
 				46FDDB7C202ADDCE00931238 /* CCRef.cpp in Sources */,
 				046E06F82189990700B24E2D /* middleware-adapter.cpp in Sources */,
 				04F0AA0D234F14BE002C3533 /* Updatable.cpp in Sources */,
