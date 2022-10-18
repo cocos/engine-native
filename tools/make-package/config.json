@@ -7,7 +7,7 @@
             "extract_to_zip_path": "external",
             "script":"download-deps.py",
             "pwd":"",
-            "script_args":"-f -d"
+            "script_args":"-f -d --github"
         },
         {
             "zip_config_path": "../cocos2d-console/config.json",
