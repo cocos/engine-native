@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\cocos\base\base64.cpp">
@@ -856,6 +856,7 @@
     </ClCompile>
     <ClCompile Include="..\cocos\base\etc2.cpp">
       <Filter>base</Filter>
+    </ClCompile>
     <ClCompile Include="..\cocos\network\WebSocketServer.cpp">
       <Filter>network</Filter>
     </ClCompile>
@@ -875,7 +876,7 @@
       <Filter>cocos\2d</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\2d\CCTTFLabelAtlasCache.cpp">
-      <ClCompile>cocos\2d</Filter>
+      <Filter>cocos\2d</Filter>
     </ClCompile>
     <ClCompile Include="..\cocos\2d\CCTTFLabelRenderer.cpp">
       <Filter>cocos\2d</Filter>
@@ -1947,6 +1948,7 @@
     </ClInclude>
     <ClInclude Include="..\cocos\base\etc2.h">
       <Filter>base</Filter>
+    </ClInclude>
     <ClInclude Include="..\cocos\network\WebSocketServer.h">
       <Filter>network</Filter>
     </ClInclude>
