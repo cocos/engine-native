@@ -42,10 +42,10 @@ public class Cocos2dxAccelerometer implements SensorEventListener {
     // Fields
     // ===========================================================
     private final Context mContext;
-    private final SensorManager mSensorManager;
-    private final Sensor mAcceleration;
-    private final Sensor mAccelerationIncludingGravity;
-    private final Sensor mGyroscope;
+    private SensorManager mSensorManager;
+    private Sensor mAcceleration;
+    private Sensor mAccelerationIncludingGravity;
+    private Sensor mGyroscope;
     private int mSamplingPeriodUs = SensorManager.SENSOR_DELAY_GAME;
 
     class Acceleration {
