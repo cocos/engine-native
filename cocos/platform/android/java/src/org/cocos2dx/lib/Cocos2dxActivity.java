@@ -28,6 +28,7 @@ package org.cocos2dx.lib;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -296,7 +297,9 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
             e.printStackTrace();
         }
 
-        mCocos2dxOrientationHelper = new Cocos2dxOrientationHelper(this);
+        if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_SENSOR) {
+            mCocos2dxOrientationHelper = new Cocos2dxOrientationHelper(this);
+        }
     }
 
     public void setKeepScreenOn(boolean value) {
@@ -390,7 +393,9 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
             Cocos2dxAudioFocusManager.registerAudioFocusListener(this);
         Utils.hideVirtualButton();
        	resumeIfHasFocus();
-       	mCocos2dxOrientationHelper.onResume();
+        if (null != mCocos2dxOrientationHelper) {
+            mCocos2dxOrientationHelper.onResume();
+        }
     }
 
     @Override
@@ -419,7 +424,9 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
             Cocos2dxAudioFocusManager.unregisterAudioFocusListener(this);
         Cocos2dxHelper.onPause();
         mGLSurfaceView.onPause();
-        mCocos2dxOrientationHelper.onPause();
+        if (null != mCocos2dxOrientationHelper) {
+            mCocos2dxOrientationHelper.onPause();
+        }
     }
 
     @Override
