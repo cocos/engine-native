@@ -265,7 +265,8 @@ void Device::vibrate(float duration)
 }
 
 float Device::getBatteryLevel()
-{
+{   
+    [UIDevice currentDevice].batteryMonitoringEnabled = YES;
     return [UIDevice currentDevice].batteryLevel;
 }
 
