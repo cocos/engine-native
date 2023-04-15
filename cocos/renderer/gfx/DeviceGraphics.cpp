@@ -760,13 +760,12 @@ void DeviceGraphics::commitBlendStates()
                                 ENUM_CLASS_TO_GLENUM(_nextState->blendSrcAlpha),
                                 ENUM_CLASS_TO_GLENUM(_nextState->blendDstAlpha)));
         }
-    }
-    
-    if (_currentState->blendEq != _nextState->blendEq ||
+	if (_currentState->blendEq != _nextState->blendEq ||
         _currentState->blendAlphaEq != _nextState->blendAlphaEq)
-    {
-        GL_CHECK(glBlendEquationSeparate(ENUM_CLASS_TO_GLENUM(_nextState->blendEq),
-                                ENUM_CLASS_TO_GLENUM(_nextState->blendAlphaEq)));
+	{
+	    GL_CHECK(glBlendEquationSeparate(ENUM_CLASS_TO_GLENUM(_nextState->blendEq),
+					ENUM_CLASS_TO_GLENUM(_nextState->blendAlphaEq)));
+	}
     }
     else
     {
