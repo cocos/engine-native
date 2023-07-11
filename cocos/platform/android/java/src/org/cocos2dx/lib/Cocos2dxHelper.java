@@ -82,7 +82,6 @@ public class Cocos2dxHelper {
 
     private static AssetManager sAssetManager;
     private static Cocos2dxAccelerometer sCocos2dxAccelerometer;
-    private static boolean sAccelerometerEnabled;
     private static boolean sCompassEnabled;
     private static boolean sActivityVisible;
     private static String sPackageName;
@@ -329,8 +328,7 @@ public class Cocos2dxHelper {
     }
 
     public static void enableAccelerometer() {
-        Cocos2dxHelper.sAccelerometerEnabled = true;
-        Cocos2dxHelper.sCocos2dxAccelerometer.enable();
+        Cocos2dxHelper.sCocos2dxAccelerometer.enableAccelerometer(true);
     }
 
     public static void setAccelerometerInterval(float interval) {
@@ -338,8 +336,7 @@ public class Cocos2dxHelper {
     }
 
     public static void disableAccelerometer() {
-        Cocos2dxHelper.sAccelerometerEnabled = false;
-        Cocos2dxHelper.sCocos2dxAccelerometer.disable();
+        Cocos2dxHelper.sCocos2dxAccelerometer.enableAccelerometer(false);
     }
 
     public static void setKeepScreenOn(boolean value) {
@@ -437,16 +434,12 @@ public class Cocos2dxHelper {
 
     public static void onResume() {
         sActivityVisible = true;
-        if (Cocos2dxHelper.sAccelerometerEnabled) {
-            Cocos2dxHelper.sCocos2dxAccelerometer.enable();
-        }
+        Cocos2dxHelper.sCocos2dxAccelerometer.enable();
     }
 
     public static void onPause() {
         sActivityVisible = false;
-        if (Cocos2dxHelper.sAccelerometerEnabled) {
-            Cocos2dxHelper.sCocos2dxAccelerometer.disable();
-        }
+        Cocos2dxHelper.sCocos2dxAccelerometer.disable();
     }
 
     public static void onEnterBackground() {

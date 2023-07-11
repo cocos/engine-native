@@ -47,6 +47,7 @@ public class Cocos2dxAccelerometer implements SensorEventListener {
     private Sensor mAccelerationIncludingGravity;
     private Sensor mGyroscope;
     private int mSamplingPeriodUs = SensorManager.SENSOR_DELAY_GAME;
+    private boolean mEnableSensor = false;
 
     class Acceleration {
         public float x = 0.0f;
@@ -80,22 +81,33 @@ public class Cocos2dxAccelerometer implements SensorEventListener {
     // Getter & Setter
     // ===========================================================
     public void enable() {
-        if (null == mSensorManager) {
-            mSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
-            mAcceleration = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            mAccelerationIncludingGravity = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-            mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        if (mEnableSensor) {
+            if (null == mSensorManager) {
+                mSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
+                mAcceleration = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+                mAccelerationIncludingGravity = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+                mGyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+            }
+
+            mSensorManager.registerListener(this, mAcceleration, mSamplingPeriodUs);
+            mSensorManager.registerListener(this, mAccelerationIncludingGravity, mSamplingPeriodUs);
+            mSensorManager.registerListener(this, mGyroscope, mSamplingPeriodUs);
         }
-        mSensorManager.registerListener(this, mAcceleration, mSamplingPeriodUs);
-        mSensorManager.registerListener(this, mAccelerationIncludingGravity, mSamplingPeriodUs);
-        mSensorManager.registerListener(this, mGyroscope, mSamplingPeriodUs);
+    }
+
+    public void enableAccelerometer(boolean enabled) {
+        mEnableSensor = enabled;
+        if (enabled) {
+            enable();
+        } else {
+            disable();
+        }
     }
 
     public void disable() {
-        if (null == mSensorManager) {
-            return;
+        if (mEnableSensor && null != mSensorManager) {
+            this.mSensorManager.unregisterListener(this);
         }
-        this.mSensorManager.unregisterListener(this);
     }
 
     public void setInterval(float interval) {
