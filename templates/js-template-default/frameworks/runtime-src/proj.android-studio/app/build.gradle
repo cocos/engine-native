@@ -5,9 +5,9 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion PROP_COMPILE_SDK_VERSION.toInteger()
     buildToolsVersion PROP_BUILD_TOOLS_VERSION
+    namespace "org.cocos2dx.hellojavascript"
 
     defaultConfig {
-        applicationId "org.cocos2dx.hellojavascript"
         minSdkVersion PROP_MIN_SDK_VERSION
         targetSdkVersion PROP_TARGET_SDK_VERSION
         versionCode 1
