@@ -613,7 +613,7 @@ void DeviceGraphics::initCaps()
 
     GL_CHECK(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &_caps.maxTextureUnits));
     
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS ||CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
     // IDEA: how to get these infomations
     _caps.maxColorAttatchments = 1;
     _caps.maxDrawBuffers = 1;

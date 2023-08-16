@@ -1,0 +1,14 @@
+{
+  "shortcuts": [
+    {
+      "shortcutId": "id_test1",
+      "icon": "$media:icon",
+      "wants": [
+        {
+          "bundleName": "com.huawei.cocos_oh_demo",
+          "abilityName": "EntryAbility"
+        }
+      ]
+    }
+  ]
+}

@@ -111,6 +111,8 @@ THE SOFTWARE.
 #include "platform/winrt/CCGL.h"
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
 #include "platform/linux/CCGL-linux.h"
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+#include "platform/openharmony/CCGL-openharmony.h"
 #endif
 
 /// @endcond

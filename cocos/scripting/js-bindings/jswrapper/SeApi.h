@@ -42,6 +42,10 @@
 #include "chakracore/SeApi.h"
 #endif
 
+#if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_NAPI
+#include "napi/SeApi.h"
+#endif
+
 #include "Value.hpp"
 #include "Object.hpp"
 #include "State.hpp"

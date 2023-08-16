@@ -29,6 +29,7 @@
 #define SCRIPT_ENGINE_V8             2
 #define SCRIPT_ENGINE_JSC            3
 //#define SCRIPT_ENGINE_CHAKRACORE     4
+#define SCRIPT_ENGINE_NAPI           5
 
 #define SCRIPT_ENGINE_V8_ON_MAC      1 // default using v8 on macOS, set 0 to disable
 
@@ -49,13 +50,13 @@
             #define SCRIPT_ENGINE_TYPE           SCRIPT_ENGINE_JSC
         #endif
     #endif
-
+#elif defined(OPENHARMONY)
+    #define SCRIPT_ENGINE_TYPE           SCRIPT_ENGINE_NAPI
     //TODO how to make simulator build with v8 too? Because in release mode, it will build
     // which means it will build armv7, but v8 doesn't support armv7.
 #else
     #define SCRIPT_ENGINE_TYPE           SCRIPT_ENGINE_V8
 #endif
-
 
 #ifndef USE_V8_DEBUGGER
 #if defined(COCOS2D_DEBUG) && COCOS2D_DEBUG > 0
@@ -101,6 +102,12 @@ void seLogE(const char * format, ...);
 #define LOG_TAG    "jswrapper"
 #define SE_LOGD(fmt, ...) seLogD("D/" LOG_TAG " (" QUOTEME(__LINE__) "): " fmt "", ##__VA_ARGS__)
 #define SE_LOGE(fmt, ...) seLogE("E/" LOG_TAG " (" QUOTEME(__LINE__) "): " fmt "", ##__VA_ARGS__)
+
+#elif defined(OPENHARMONY)
+#include <hilog/log.h>
+
+#define  SE_LOGD(...)  OH_LOG_Print(LOG_APP, LOG_DEBUG, LOG_DOMAIN, "HMG_LOG", __VA_ARGS__)
+#define  SE_LOGE(...)  OH_LOG_Print(LOG_APP, LOG_ERROR, LOG_DOMAIN, "HMG_LOG", __VA_ARGS__)
 
 #else
 

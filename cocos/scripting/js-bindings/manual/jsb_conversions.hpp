@@ -27,7 +27,7 @@
 
 #include "scripting/js-bindings/jswrapper/SeApi.h"
 #include "scripting/js-bindings/manual/jsb_classtype.hpp"
-
+#include <unordered_map>
 #include "cocos2d.h"
 #include "renderer/gfx/GFX.h"
 #include "renderer/renderer/Renderer.h"
@@ -188,6 +188,44 @@ bool seval_to_native_ptr(const se::Value& v, T* ret)
     return false;
 }
 
+inline bool seval_to_native_base_type(const se::Value& from, bool* to) { // NOLINT(readability-identifier-naming)
+    *to = from.isNullOrUndefined() ? false : (from.isNumber() ? from.toDouble() != 0 : from.toBoolean());
+    return true;
+}
+
+inline bool seval_to_native_base_type(const se::Value& from, int32_t* to) { // NOLINT(readability-identifier-naming)
+    *to = from.toInt32();
+    return true;
+}
+
+inline bool seval_to_native_base_type(const se::Value& from, float* to) { // NOLINT(readability-identifier-naming)
+    *to = from.toFloat();
+    return true;
+}
+
+inline bool seval_to_native_base_type(const se::Value& from, std::string* to) { // NOLINT(readability-identifier-naming)
+    assert(to != nullptr);
+    *to = from.toStringForce();
+    return true;
+}
+
+inline bool seval_to_native_base_type(const se::Value &from, std::vector<float>* to) { // NOLINT(readability-identifier-naming)
+    if (from.isNullOrUndefined()) {
+        to->clear();
+        return true;
+    }
+    auto *array = from.toObject();
+    uint32_t size;
+    se::Value tmp;
+    array->getArrayLength(&size);
+    to->resize(size);
+    for (uint32_t i = 0; i < size; i++) {
+        array->getArrayElement(i, &tmp);
+        (*to)[i] = tmp.toFloat();
+    }
+    return true;
+}
+
 template<typename T>
 bool seval_to_Vector(const se::Value& v, cocos2d::Vector<T>* ret)
 {
@@ -256,6 +294,8 @@ bool seval_to_Map_string_key(const se::Value& v, cocos2d::Map<std::string, T>* r
     return true;
 }
 
+
+
 // native value -> se value
 bool int8_to_seval(int8_t v, se::Value* ret);
 bool uint8_to_seval(uint8_t v, se::Value* ret);
@@ -311,6 +351,13 @@ bool EffectProperty_to_seval(const cocos2d::renderer::Effect::Property& v, se::V
 bool VertexFormat_to_seval(const cocos2d::renderer::VertexFormat& v, se::Value* ret);
 bool TechniqueParameter_to_seval(const cocos2d::renderer::Technique::Parameter& v, se::Value* ret);
 bool std_vector_TechniqueParameter_to_seval(const std::vector<cocos2d::renderer::Technique::Parameter>& v, se::Value* ret);
+#endif
+
+
+bool native_cocos_value_to_se(const cocos2d::Value &from, se::Value &to, se::Object * /*unused*/);
+bool native_int_to_se(int32_t from, se::Value &to, se::Object * /*ctx*/);
+#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+bool native_unorderedmap_to_se(const std::unordered_map<ccstd::string, cocos2d::Value> &from, se::Value &to, se::Object *ctx);
 #endif
 
 template<typename T>

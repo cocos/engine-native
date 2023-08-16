@@ -28,7 +28,11 @@ THE SOFTWARE.
 #include "audio/android/cutils/log.h"
 
 #include <SLES/OpenSLES.h>
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include <SLES/OpenSLES_Android.h>
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+#include <SLES/OpenSLES_Platform.h>
+#endif
 #include <functional>
 #include <string>
 

@@ -24,10 +24,14 @@
  ****************************************************************************/
 #include "base/ccConfig.h"
 
-#if (USE_SOCKET > 0) && (USE_WEBSOCKET_SERVER > 0) && (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+#if (USE_SOCKET > 0) && (USE_WEBSOCKET_SERVER > 0) && (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
 
 #include "jsb_websocket_server.hpp"
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
+#include "uv.h"
+#else
 #include "uv/uv.h"
+#endif
 #include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
 #include "cocos/scripting/js-bindings/manual/jsb_conversions.hpp"
 #include "cocos/scripting/js-bindings/manual/jsb_global.h"

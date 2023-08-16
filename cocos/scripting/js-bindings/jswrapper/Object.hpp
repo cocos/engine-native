@@ -42,3 +42,7 @@
 #include "chakracore/Object.hpp"
 #endif
 
+#if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_NAPI
+#include "napi/Object.h"
+#endif
+

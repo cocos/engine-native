@@ -1,0 +1,13 @@
+{
+  "name": "gulp",
+  "license": "MIT",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "del": "3.0.0",
+    "gulp-watch": "^4.1.1",
+    "xml-js": "1.6.4"
+  }
+}

@@ -22,7 +22,6 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 
 #define LOG_TAG "AudioEngineImpl"
 
@@ -30,11 +29,14 @@
 
 #include <unistd.h>
 // for native asset manager
-#include <sys/types.h>
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include <android/asset_manager.h>
 #include <android/asset_manager_jni.h>
 #include <unordered_map>
 #include <android/log.h>
+#endif
+
+#include <sys/types.h>
 #include <thread>
 #include <mutex>
 
@@ -42,9 +44,13 @@
 #include "platform/CCApplication.h"
 #include "base/CCScheduler.h"
 #include "base/ccUTF8.h"
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include "platform/android/CCFileUtils-android.h"
-#include "platform/android/jni/JniImp.h"
 #include "platform/android/jni/JniHelper.h"
+#include "platform/android/jni/JniImp.h"
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+#include "cocos/platform/openharmony/FileUtils-openharmony.h"
+#endif
 
 #include "audio/android/IAudioPlayer.h"
 #include "audio/android/ICallerThreadUtils.h"
@@ -56,6 +62,28 @@
 #include "scripting/js-bindings/event/CustomEventTypes.h"
 
 using namespace cocos2d;
+
+// Audio focus values synchronized with which in cocos/platform/android/java/src/com/cocos/lib/CocosNativeActivity.java
+namespace {
+AudioEngineImpl *gAudioImpl = nullptr;
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    int bufferSizeInFrames = getDeviceAudioBufferSizeInFramesJNI();
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+    // TODO(hack) : There is currently a bug in the opensles module,
+    // so openharmony must configure a fixed size, otherwise the callback will be suspended
+    int bufferSizeInFrames = 2048;
+#endif
+
+int outputSampleRate = 44100;
+void getAudioInfo() {
+    #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    outputSampleRate = getDeviceSampleRateJNI();
+    #elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+    // In openharmony, setting to 48K does not cause audio delays
+    outputSampleRate = 48000;
+    #endif
+}
+} // namespace
 
 // Audio focus values synchronized with which in cocos/platform/android/java/src/org/cocos2dx/lib/Cocos2dxActivity.java
 static const int AUDIOFOCUS_GAIN = 0;
@@ -93,6 +121,7 @@ static CallerThreadUtils __callerThreadUtils;
 static int fdGetter(const std::string& url, off_t* start, off_t* length)
 {
     int fd = -1;
+    #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
     if (cocos2d::FileUtilsAndroid::getObbFile() != nullptr)
     {
         fd = getObbAssetFileDescriptorJNI(url.c_str(), start, length);
@@ -104,7 +133,14 @@ static int fdGetter(const std::string& url, off_t* start, off_t* length)
         fd = AAsset_openFileDescriptor(asset, start, length);
         AAsset_close(asset);
     }
-
+    #elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+    FileUtilsOpenHarmony* fileUtils = dynamic_cast<FileUtilsOpenHarmony*>(FileUtils::getInstance());
+    if(fileUtils) {
+        RawFileDescriptor descriptor;
+        fileUtils->getRawFileDescriptor(url, descriptor);
+        fd = descriptor.fd;
+    }
+    #endif
     if (fd <= 0)
     {
         ALOGE("Failed to open file descriptor for '%s'", url.c_str());
@@ -124,6 +160,7 @@ AudioEngineImpl::AudioEngineImpl()
 {
     __callerThreadUtils.setCallerThreadId(std::this_thread::get_id());
     __impl = this;
+    getAudioInfo();
 }
 
 AudioEngineImpl::~AudioEngineImpl()
@@ -173,7 +210,7 @@ bool AudioEngineImpl::init()
         result = (*_outputMixObject)->Realize(_outputMixObject, SL_BOOLEAN_FALSE);
         if(SL_RESULT_SUCCESS != result){ ERRORLOG("realize the output mix fail"); break; }
 
-        _audioPlayerProvider = new AudioPlayerProvider(_engineEngine, _outputMixObject, getDeviceSampleRateJNI(), getDeviceAudioBufferSizeInFramesJNI(), fdGetter, &__callerThreadUtils);
+        _audioPlayerProvider = new AudioPlayerProvider(_engineEngine, _outputMixObject, outputSampleRate, bufferSizeInFrames, fdGetter, &__callerThreadUtils);
 
         ret = true;
     }while (false);
@@ -462,5 +499,3 @@ void cocos_audioengine_focus_change(int focusChange)
         __impl->setAudioFocusForAllPlayers(false);
     }
 }
-
-#endif

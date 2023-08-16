@@ -23,7 +23,10 @@
 // no guarantee that it will stay exactly source-code compatible with other libraries.
 
 #include <stdio.h>
+#include "platform/CCPlatformConfig.h"
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include <sys/cdefs.h>
+#endif
 
 __BEGIN_DECLS
 

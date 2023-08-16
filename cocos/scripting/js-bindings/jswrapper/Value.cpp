@@ -26,6 +26,13 @@
 #include "Object.hpp"
 
 namespace se {
+    #ifndef LIKELY
+    #ifdef __GNUC__
+        #define LIKELY(expr) __builtin_expect(!!(expr), 1)
+    #else
+        #define LIKELY(expr) expr
+    #endif
+    #endif
 
     ValueArray EmptyValueArray;
 
@@ -358,6 +365,21 @@ namespace se {
         _u._number = v;
     }
 
+    void Value::setDouble(double v) {
+        reset(Type::Number);
+        _u._number = v;
+    }
+
+    void Value::setInt64(int64_t v) {
+        reset(Type::BigInt);
+        _u._bigint = v;
+    }
+
+    void Value::setUint64(uint64_t v) {
+        reset(Type::BigInt);
+        _u._bigint = static_cast<int64_t>(v);
+    }
+
     void Value::setString(const char* v)
     {
         if (v != nullptr)
@@ -457,6 +479,11 @@ namespace se {
         return static_cast<uint32_t>(toNumber());
     }
 
+    uint64_t Value::toUint64() const
+    {
+        return static_cast<uint64_t>(toNumber());
+    }
+
     long Value::toLong() const
     {
         return static_cast<long>(toNumber());
@@ -484,6 +511,23 @@ namespace se {
         }
         return _u._number;
     }
+	
+	double Value::toDouble() const {
+    	assert(_type == Type::Number || _type == Type::Boolean || _type == Type::BigInt || _type == Type::String);
+    	if (LIKELY(_type == Type::Number)) {
+        	return _u._number;
+    	}
+    	if (_type == Type::BigInt) {
+        	// CC_LOG_WARNING("convert int64 to double");
+        	return static_cast<double>(_u._bigint);
+    	}
+
+    	if (_type == Type::String) {
+        	return std::stod(*_u._string);
+    	}
+
+    	return _u._boolean ? 1.0 : 0.0;
+	}
 
    	bool Value::toBoolean() const
     {

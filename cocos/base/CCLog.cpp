@@ -94,6 +94,10 @@ namespace
             
         } while (pos < len);
         fflush(stdout);
+#elif CC_TARGET_PLATFORM ==  CC_PLATFORM_OPENHARMONY
+    #include <stdarg.h>
+    #include <hilog/log.h>
+    OH_LOG_Print(LOG_APP, LOG_DEBUG, LOG_DOMAIN, "HMG_LOG", "%{public}s", buf);
 #else
         // Linux, Mac, iOS, etc
         fprintf(stdout, "%s", buf);

@@ -22,13 +22,18 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+
 
 #ifndef __AUDIO_ENGINE_INL_H_
 #define __AUDIO_ENGINE_INL_H_
 
+#include "platform/CCPlatformConfig.h"
 #include <SLES/OpenSLES.h>
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include <SLES/OpenSLES_Android.h>
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+#include <SLES/OpenSLES_Platform.h>
+#endif
 #include <string>
 #include <unordered_map>
 #include <functional>
@@ -101,5 +106,3 @@ private:
 
 #endif // __AUDIO_ENGINE_INL_H_
 NS_CC_END
-
-#endif

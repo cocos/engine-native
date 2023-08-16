@@ -20,7 +20,10 @@
 #include <stdbool.h>
 #include <string.h>
 #include <strings.h>
+#include "platform/CCPlatformConfig.h"
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include <sys/cdefs.h>
+#endif
 
 __BEGIN_DECLS
 

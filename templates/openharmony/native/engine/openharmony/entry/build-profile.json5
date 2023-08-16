@@ -1,0 +1,23 @@
+{
+  "apiType": 'stageMode',
+  "buildOption": {
+    "externalNativeOptions": {
+      "path": "../CMakeLists.txt",
+      "arguments": "-v arm-linux-ohos -DOHOS_STL=c++_shared -std=c++17 -DCOMMON_DIR=../common -DCOCOS_X_PATH=../../../../../ -DOPENHARMONY=1",
+      "abiFilters": [
+        "armeabi-v7a",
+        "arm64-v8a"
+      ],
+      "cppFlags": "",
+    }
+  },
+  "targets": [
+    {
+      "name": "default",
+      "runtimeOS": "HarmonyOS"
+    },
+    {
+      "name": "ohosTest",
+    }
+  ]
+}

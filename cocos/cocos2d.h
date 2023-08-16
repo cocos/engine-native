@@ -96,6 +96,10 @@ THE SOFTWARE.
     #include "platform/mac/CCGL-mac.h"
 #endif // CC_TARGET_PLATFORM == CC_PLATFORM_MAC
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
+#include "platform/openharmony/CCGL-openharmony.h"
+#endif
+
 NS_CC_BEGIN
 
 CC_DLL const char* cocos2dVersion();

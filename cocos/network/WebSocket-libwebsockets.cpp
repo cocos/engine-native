@@ -263,7 +263,7 @@ static std::mutex __instanceMutex;
 static struct lws_context* __wsContext = nullptr;
 static WsThreadHelper* __wsHelper = nullptr;
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
 static std::string getFileNameForPath(const std::string& filePath)
 {
     std::string fileName = filePath;
@@ -917,7 +917,7 @@ struct lws_vhost* WebSocketImpl::createVhost(struct lws_protocols* protocols, in
     {
         if (isCAFileExist)
         {
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
             // if ca file is in the apk, try to extract it to writable path
             std::string writablePath = fileUtils->getWritablePath();
             std::string caFileName = getFileNameForPath(_caFilePath);

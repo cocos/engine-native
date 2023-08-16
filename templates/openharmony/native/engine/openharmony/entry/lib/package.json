@@ -1,0 +1,9 @@
+{
+  "name": "cocos-lib",
+  "version": "1.0.0",
+  "description": "Please describe the basic information.",
+  "main": "index.js",
+  "author": "",
+  "license": "",
+  "dependencies": {}
+}

@@ -27,6 +27,7 @@ THE SOFTWARE.
 
 #include "audio/android/PcmAudioService.h"
 #include "audio/android/AudioMixerController.h"
+#include "audio/android/utils/Compat.h"
 
 namespace cocos2d { 
 
@@ -37,11 +38,18 @@ static std::vector<char> __silenceData;
 class SLPcmAudioPlayerCallbackProxy
 {
 public:
-    static void samplePlayerCallback(SLAndroidSimpleBufferQueueItf bq, void *context)
-    {
-        PcmAudioService *thiz = reinterpret_cast<PcmAudioService *>(context);
-        thiz->bqFetchBufferCallback(bq);
-    }
+
+    #if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+        static void samplePlayerCallback(CCSLBufferQueueItf bq, void *context, SLuint32 size) {
+            auto *thiz = reinterpret_cast<PcmAudioService *>(context);
+            thiz->bqFetchBufferCallback(bq);
+        }
+    #elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+        static void samplePlayerCallback(CCSLBufferQueueItf bq, void *context) {
+            PcmAudioService *thiz = reinterpret_cast<PcmAudioService *>(context);
+            thiz->bqFetchBufferCallback(bq);
+        }
+    #endif
 };
 
 PcmAudioService::PcmAudioService(SLEngineItf engineItf, SLObjectItf outputMixObject)
@@ -60,6 +68,12 @@ PcmAudioService::~PcmAudioService()
 
 bool PcmAudioService::enqueue()
 {
+    #if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+        // We need to call this interface in openharmony, otherwise there will be noise
+        SLuint8 *buffer = nullptr;
+        SLuint32 size = 0;
+        (*_bufferQueueItf)->GetBuffer(_bufferQueueItf, &buffer, &size);
+    #endif
     if (_controller->hasPlayingTacks())
     {
         if (_controller->isPaused())
@@ -86,7 +100,7 @@ bool PcmAudioService::enqueue()
     return true;
 }
 
-void PcmAudioService::bqFetchBufferCallback(SLAndroidSimpleBufferQueueItf bq)
+void PcmAudioService::bqFetchBufferCallback(CCSLBufferQueueItf bq)
 {
     // IDEA: PcmAudioService instance may be destroyed, we need to find a way to wait...
     // It's in sub thread
@@ -117,10 +131,8 @@ bool PcmAudioService::init(AudioMixerController* controller, int numChannels, in
             SL_BYTEORDER_LITTLEENDIAN
     };
 
-    SLDataLocator_AndroidSimpleBufferQueue locBufQueue = {
-            SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE,
-            AUDIO_PLAYER_BUFFER_COUNT
-    };
+
+    SLDataLocator_BufferQueue locBufQueue = {SL_DATALOCATOR_BUFFERQUEUE, AUDIO_PLAYER_BUFFER_COUNT};
     SLDataSource source = {&locBufQueue, &formatPcm};
 
     SLDataLocator_OutputMix locOutmix = {
@@ -132,7 +144,7 @@ bool PcmAudioService::init(AudioMixerController* controller, int numChannels, in
     const SLInterfaceID ids[] = {
             SL_IID_PLAY,
             SL_IID_VOLUME,
-            SL_IID_ANDROIDSIMPLEBUFFERQUEUE,
+            CC_SL_IDD_BUFFER_QUEUE,
     };
 
     const SLboolean req[] = {
@@ -156,8 +168,8 @@ bool PcmAudioService::init(AudioMixerController* controller, int numChannels, in
     r = (*_playObj)->GetInterface(_playObj, SL_IID_VOLUME, &_volumeItf);
     SL_RETURN_VAL_IF_FAILED(r, false, "GetInterface SL_IID_VOLUME failed");
 
-    r = (*_playObj)->GetInterface(_playObj, SL_IID_ANDROIDSIMPLEBUFFERQUEUE, &_bufferQueueItf);
-    SL_RETURN_VAL_IF_FAILED(r, false, "GetInterface SL_IID_ANDROIDSIMPLEBUFFERQUEUE failed");
+    r = (*_playObj)->GetInterface(_playObj, CC_SL_IDD_BUFFER_QUEUE, &_bufferQueueItf);
+    SL_RETURN_VAL_IF_FAILED(r, false, "GetInterface CC_SL_IDD_BUFFER_QUEUE failed");
 
     r = (*_bufferQueueItf)->RegisterCallback(_bufferQueueItf,
                                              SLPcmAudioPlayerCallbackProxy::samplePlayerCallback,
@@ -169,6 +181,13 @@ bool PcmAudioService::init(AudioMixerController* controller, int numChannels, in
         __silenceData.resize(_numChannels * _bufferSizeInBytes, 0x00);
     }
 
+    #if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+        // We need to call this interface in openharmony, otherwise there will be noise
+        SLuint8 *buffer = nullptr;
+        SLuint32 size = 0;
+        (*_bufferQueueItf)->GetBuffer(_bufferQueueItf, &buffer, &size);
+    #endif
+    
     r = (*_bufferQueueItf)->Enqueue(_bufferQueueItf, __silenceData.data(), __silenceData.size());
     SL_RETURN_VAL_IF_FAILED(r, false, "_bufferQueueItf Enqueue failed");
 

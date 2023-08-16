@@ -55,6 +55,13 @@ public:
         ANDROIDOS,   /**< Android, because ANDROID is a macro, so use ANDROIDOS instead */
         IPHONE,      /**< iPhone */
         IPAD,        /**< iPad */
+        BLACKBERRY,  /**< BLACKBERRY> */
+        NACL,        /**according to CCSys.js below*/
+        EMSCRIPTEN,
+        TIZEN,
+        WINRT,
+        WP8,
+        OpenHarmony, /**< OpenHarmony£¬because OPENHARMONY is a macro, so use OpenHarmony instead > */
     };
     
     enum class LanguageType

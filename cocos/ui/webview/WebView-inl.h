@@ -31,6 +31,8 @@
 #include "WebViewImpl-ios.h"
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include "WebViewImpl-android.h"
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+#include "WebViewImpl-openharmony.h"
 #else
 static_assert(false, "WebView only supported on iOS & Android");
 #endif

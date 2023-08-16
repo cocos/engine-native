@@ -30,6 +30,7 @@ THE SOFTWARE.
 #include <memory>
 #include <vector>
 #include <functional>
+#include <thread>
 
 #include "base/ccMacros.h"
 

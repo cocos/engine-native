@@ -27,6 +27,7 @@ THE SOFTWARE.
 
 #include "audio/android/UrlAudioPlayer.h"
 #include "audio/android/ICallerThreadUtils.h"
+#include "platform/CCPlatformDefine.h"
 
 #include <math.h>
 #include <algorithm> // for std::find
@@ -70,7 +71,7 @@ UrlAudioPlayer::UrlAudioPlayer(SLEngineItf engineItf, SLObjectItf outputMixObjec
 
     __playerContainerMutex.lock();
     __playerContainer.push_back(this);
-    ALOGV("Current UrlAudioPlayer instance count: %d", (int)__playerContainer.size());
+     ALOGV("Current UrlAudioPlayer instance count: %d", (int)__playerContainer.size());
     __playerContainerMutex.unlock();
 
     _callerThreadId = callerThreadUtils->getCallerThreadId();
@@ -78,7 +79,7 @@ UrlAudioPlayer::UrlAudioPlayer(SLEngineItf engineItf, SLObjectItf outputMixObjec
 
 UrlAudioPlayer::~UrlAudioPlayer()
 {
-    ALOGV("~UrlAudioPlayer(): %p", this);
+     ALOGV("~UrlAudioPlayer(): %p", this);
 
     __playerContainerMutex.lock();
 
@@ -297,6 +298,7 @@ bool UrlAudioPlayer::prepare(const std::string &url, SLuint32 locatorType, std::
     _url = url;
     _assetFd = assetFd;
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
     const char* locatorTypeStr= "UNKNOWN";
     if (locatorType == SL_DATALOCATOR_ANDROIDFD)
         locatorTypeStr = "SL_DATALOCATOR_ANDROIDFD";
@@ -308,8 +310,8 @@ bool UrlAudioPlayer::prepare(const std::string &url, SLuint32 locatorType, std::
         return false;
     }
 
-    ALOGV("UrlAudioPlayer::prepare: %s, %s, %d, %d, %d", _url.c_str(), locatorTypeStr, _assetFd->getFd(), start,
-         length);
+     ALOGV("UrlAudioPlayer::prepare: %s, %s, %d, %d, %d", _url.c_str(), locatorTypeStr, _assetFd->getFd(), start,
+          length);
     SLDataSource audioSrc;
 
     SLDataFormat_MIME formatMime = {SL_DATAFORMAT_MIME, nullptr, SL_CONTAINERTYPE_UNSPECIFIED};
@@ -375,6 +377,7 @@ bool UrlAudioPlayer::prepare(const std::string &url, SLuint32 locatorType, std::
 
     setVolume(1.0f);
 
+#endif
     return true;
 }
 

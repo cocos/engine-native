@@ -42,6 +42,8 @@ THE SOFTWARE.
 #include "platform/winrt/CCPlatformDefine-winrt.h"
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_LINUX
 #include "platform/linux/CCPlatformDefine-linux.h"
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+#include "platform/openharmony/CCPlatformDefine-openharmony.h"
 #endif
 
 /// @endcond

@@ -1,0 +1,31 @@
+{
+	"version-name": "2.0.0",
+	"version-code": 2,
+	"app-distribution-type": "os_integration",
+	"uuid": "5027b99e-5f9e-465d-9508-a9e0134ffe18",
+	"validity": {
+		"not-before": 1594865258,
+		"not-after": 1689473258
+	},
+	"type": "release",
+	"bundle-info": {
+		"developer-id": "OpenHarmony",
+		"distribution-certificate": "-----BEGIN CERTIFICATE-----\nMIICMzCCAbegAwIBAgIEaOC/zDAMBggqhkjOPQQDAwUAMGMxCzAJBgNVBAYTAkNO\nMRQwEgYDVQQKEwtPcGVuSGFybW9ueTEZMBcGA1UECxMQT3Blbkhhcm1vbnkgVGVh\nbTEjMCEGA1UEAxMaT3Blbkhhcm1vbnkgQXBwbGljYXRpb24gQ0EwHhcNMjEwMjAy\nMTIxOTMxWhcNNDkxMjMxMTIxOTMxWjBoMQswCQYDVQQGEwJDTjEUMBIGA1UEChML\nT3Blbkhhcm1vbnkxGTAXBgNVBAsTEE9wZW5IYXJtb255IFRlYW0xKDAmBgNVBAMT\nH09wZW5IYXJtb255IEFwcGxpY2F0aW9uIFJlbGVhc2UwWTATBgcqhkjOPQIBBggq\nhkjOPQMBBwNCAATbYOCQQpW5fdkYHN45v0X3AHax12jPBdEDosFRIZ1eXmxOYzSG\nJwMfsHhUU90E8lI0TXYZnNmgM1sovubeQqATo1IwUDAfBgNVHSMEGDAWgBTbhrci\nFtULoUu33SV7ufEFfaItRzAOBgNVHQ8BAf8EBAMCB4AwHQYDVR0OBBYEFPtxruhl\ncRBQsJdwcZqLu9oNUVgaMAwGCCqGSM49BAMDBQADaAAwZQIxAJta0PQ2p4DIu/ps\nLMdLCDgQ5UH1l0B4PGhBlMgdi2zf8nk9spazEQI/0XNwpft8QAIwHSuA2WelVi/o\nzAlF08DnbJrOOtOnQq5wHOPlDYB4OtUzOYJk9scotrEnJxJzGsh/\n-----END CERTIFICATE-----\n",
+		"bundle-name": "org.cocos2d.demo",
+		"apl": "system_core",
+		"app-feature": "hos_system_app"
+	},
+	"acls": {
+		"allowed-acls": [
+			""
+		]
+	},
+	"permissions": {
+		"restricted-permissions": [
+			"ohos.permission.GET_BUNDLE_INFO_PRIVILEGED"
+		]
+	},
+	"issuer": "pki_internal",
+	"app-privilege-capabilities": [
+	]
+}

@@ -17,9 +17,14 @@
 #pragma once
 
 #include <stdint.h>
-#include <sys/types.h>
+#include "platform/CCPlatformConfig.h"
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include <android/log.h>
 #include <sys/system_properties.h>
+#include <sys/types.h>
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+#include <hilog/log.h>
+#endif
 
 #include "audio/android/AudioBufferProvider.h"
 

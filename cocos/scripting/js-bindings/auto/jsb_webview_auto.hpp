@@ -1,6 +1,6 @@
 #pragma once
 #include "base/ccConfig.h"
-#if (USE_WEB_VIEW > 0) && (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS) && !defined(CC_TARGET_OS_TVOS)
+#if (USE_WEB_VIEW > 0) && (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY) && !defined(CC_TARGET_OS_TVOS)
 
 #include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
 

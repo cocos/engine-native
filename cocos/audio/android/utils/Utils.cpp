@@ -23,7 +23,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 #include "audio/android/utils/Utils.h"
+#include "platform/CCPlatformDefine.h"
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include "platform/android/jni/JniHelper.h"
+#endif
 
 #ifndef JCLS_HELPER
 #define JCLS_HELPER "org/cocos2dx/lib/Cocos2dxHelper"
@@ -33,7 +36,12 @@ namespace cocos2d {
 
 int getSDKVersion()
 {
-    return JniHelper::callStaticIntMethod(JCLS_HELPER, "getSDKVersion");
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+     return JniHelper::callStaticIntMethod(JCLS_HELPER, "getSDKVersion");
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+    // openharmony未实现
+  return 0;
+#endif
 }
 
 } // end of namespace cocos2d

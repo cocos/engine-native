@@ -97,6 +97,8 @@ extern "C"
 #include "base/ZipUtils.h"
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 #include "platform/android/CCFileUtils-android.h"
+#elif(CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
+#include "platform/openharmony/FileUtils-openharmony.h"
 #endif
 
 #include <map>

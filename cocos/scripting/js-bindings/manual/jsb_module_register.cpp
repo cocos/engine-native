@@ -87,7 +87,7 @@
 
 #endif // USE_MIDDLEWARE
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
 
 #if USE_VIDEO
 #include "cocos/scripting/js-bindings/auto/jsb_video_auto.hpp"
@@ -97,7 +97,7 @@
 #include "cocos/scripting/js-bindings/auto/jsb_webview_auto.hpp"
 #endif
 
-#endif // (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+#endif // (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
 
 using namespace cocos2d;
 
@@ -174,17 +174,17 @@ bool jsb_register_all_modules()
 
 #endif // USE_MIDDLEWARE
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
 
 #if USE_VIDEO
     se->addRegisterCallback(register_all_video);
 #endif
 
-#if USE_WEB_VIEW
+#if USE_WEBVIEW
     se->addRegisterCallback(register_all_webview);
 #endif
 
-#endif // (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+#endif // (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
 
     se->addAfterCleanupHook([](){
         PoolManager::getInstance()->getCurrentPool()->clear();

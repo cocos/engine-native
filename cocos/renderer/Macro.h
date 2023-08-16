@@ -30,6 +30,10 @@
 #include <android/log.h>
 #endif
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
+#include <hilog/log.h>
+#endif
+
 #ifndef RENDERER_BEGIN
 #define RENDERER_BEGIN namespace cocos2d { namespace renderer {
 #endif // RENDERER_BEGIN
@@ -53,6 +57,8 @@
 #if defined(COCOS2D_DEBUG) && COCOS2D_DEBUG > 0
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 #define RENDERER_LOGV(fmt, ...) __android_log_print(ANDROID_LOG_VERBOSE, RENDERER_LOG_TAG, " (" RENDERER_QUOTEME(__LINE__) "): " fmt "\n", ##__VA_ARGS__)
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
+#define RENDERER_LOGV(fmt, ...) ((void) OH_LOG_Print(LOG_APP, LOG_DEBUG, LOG_DOMAIN, "HMG_LOG", " (" RENDERER_QUOTEME(__LINE__) "): " fmt "\n", ##__VA_ARGS__)
 #else
 #define RENDERER_LOGV(fmt, ...) printf("V/" RENDERER_LOG_TAG " (" RENDERER_QUOTEME(__LINE__) "): " fmt "\n", ##__VA_ARGS__)
 #endif // (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
@@ -65,6 +71,11 @@
 #define RENDERER_LOGI(fmt, ...) __android_log_print(ANDROID_LOG_INFO, RENDERER_LOG_TAG, " (" RENDERER_QUOTEME(__LINE__) "): " fmt "\n", ##__VA_ARGS__)
 #define RENDERER_LOGW(fmt, ...) __android_log_print(ANDROID_LOG_WARN, RENDERER_LOG_TAG, " (" RENDERER_QUOTEME(__LINE__) "): " fmt "\n", ##__VA_ARGS__)
 #define RENDERER_LOGE(fmt, ...) __android_log_print(ANDROID_LOG_ERROR, RENDERER_LOG_TAG, " (" RENDERER_QUOTEME(__LINE__) "): " fmt "\n", ##__VA_ARGS__)
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
+#define RENDERER_LOGD(fmt, ...) OH_LOG_Print(LOG_APP, LOG_DEBUG, LOG_DOMAIN, "HMG_LOG", " (" RENDERER_QUOTEME(__LINE__) "): " fmt "\n", ##__VA_ARGS__)
+#define RENDERER_LOGI(fmt, ...) OH_LOG_Print(LOG_APP, LOG_INFO, LOG_DOMAIN, "HMG_LOG", " (" RENDERER_QUOTEME(__LINE__) "): " fmt "\n", ##__VA_ARGS__)
+#define RENDERER_LOGW(fmt, ...) OH_LOG_Print(LOG_APP, LOG_WARN, LOG_DOMAIN, "HMG_LOG", " (" RENDERER_QUOTEME(__LINE__) "): " fmt "\n", ##__VA_ARGS__)
+#define RENDERER_LOGE(fmt, ...) OH_LOG_Print(LOG_APP, LOG_ERROR, LOG_DOMAIN, "HMG_LOG", " (" RENDERER_QUOTEME(__LINE__) "): " fmt "\n", ##__VA_ARGS__)
 #else
 #define RENDERER_LOGD(fmt, ...) printf("D/" RENDERER_LOG_TAG " (" RENDERER_QUOTEME(__LINE__) "): " fmt "\n", ##__VA_ARGS__)
 #define RENDERER_LOGI(fmt, ...) printf("I/" RENDERER_LOG_TAG " (" RENDERER_QUOTEME(__LINE__) "): " fmt "\n", ##__VA_ARGS__)

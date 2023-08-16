@@ -27,6 +27,8 @@ THE SOFTWARE.
 
 #include "audio/android/AudioDecoderSLES.h"
 #include "platform/CCFileUtils.h"
+#include "platform/CCPlatformDefine.h"
+#include "audio/android/utils/Compat.h"
 
 #include <thread>
 #include <mutex>
@@ -86,7 +88,7 @@ public:
         thiz->prefetchCallback(caller, event);
     }
 
-    static void decPlayCallback(SLAndroidSimpleBufferQueueItf queueItf, void *context)
+    static void decPlayCallback(CCSLBufferQueueItf queueItf, void *context)
     {
         AudioDecoderSLES *thiz = reinterpret_cast<AudioDecoderSLES *>(context);
         thiz->decodeToPcmCallback(queueItf);
@@ -144,13 +146,14 @@ bool AudioDecoderSLES::init(SLEngineItf engineItf, const std::string &url, int b
 
 bool AudioDecoderSLES::decodeToPcm()
 {
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
    SLresult result;
 
     /* Objects this application uses: one audio player */
     SLObjectItf player;
 
     /* Interfaces for the audio player */
-    SLAndroidSimpleBufferQueueItf decBuffQueueItf;
+    CCSLBufferQueueItf decBuffQueueItf;
     SLPrefetchStatusItf prefetchItf;
     SLPlayItf playItf;
     SLMetadataExtractionItf mdExtrItf;
@@ -463,6 +466,7 @@ bool AudioDecoderSLES::decodeToPcm()
 
     std::string info = _result.toString();
     ALOGI("Original audio info: %s, total size: %d", info.c_str(), (int)_result.pcmBuffer->size());
+   #endif
     return true;
 }
 
@@ -585,7 +589,7 @@ void AudioDecoderSLES::decodeProgressCallback(SLPlayItf caller, SLuint32 event)
 
 //-----------------------------------------------------------------
 /* Callback for decoding buffer queue events */
-void AudioDecoderSLES::decodeToPcmCallback(SLAndroidSimpleBufferQueueItf queueItf)
+void AudioDecoderSLES::decodeToPcmCallback(CCSLBufferQueueItf queueItf)
 {
     _isDecodingCallbackInvoked = true;
     ALOGV("%s ...", __FUNCTION__);

@@ -3201,4 +3201,69 @@ bool spine_Vector_String_to_seval(const spine::Vector<spine::String>& v, se::Val
     
     return ok;
 }
+
+bool native_int_to_se(int32_t from, se::Value &to, se::Object * /*ctx*/) { // NOLINT(readability-identifier-naming)
+    to.setInt32(from);
+    return true;
+}
+
+#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+bool native_unorderedmap_to_se(const std::unordered_map<ccstd::string, cocos2d::Value> &from, se::Value &to, se::Object *ctx) {
+    se::HandleObject obj(se::Object::createPlainObject());
+    bool ok = true;
+    for (const auto &e : from) {
+        const ccstd::string &key = e.first;
+        const cocos2d::Value &value = e.second;
+
+        if (key.empty()) {
+            continue;
+        }
+
+        se::Value tmp;
+        if (!native_cocos_value_to_se(value, tmp, nullptr)) {
+            ok = false;
+            to.setUndefined();
+            break;
+        }
+
+        obj->setProperty(key.c_str(), tmp);
+    }
+    if (ok) {
+        to.setObject(obj);
+    }
+
+    return ok;
+}
+#endif
+
+bool native_cocos_value_to_se(const cocos2d::Value &from, se::Value &to, se::Object * /*unused*/) {
+    bool ok = true;
+    switch (from.getType()) {
+        case cocos2d::Value::Type::NONE:
+            to.setNull();
+            break;
+        case cocos2d::Value::Type::UNSIGNED:
+            to.setUint32(from.asUnsignedInt());
+            break;
+        case cocos2d::Value::Type::INTEGER:
+            to.setInt32(from.asInt());
+            break;
+        case cocos2d::Value::Type::STRING:
+            to.setString(from.asString());
+            break;
+        case cocos2d::Value::Type::BOOLEAN:
+            to.setBoolean(from.asBool());
+            break;
+        case cocos2d::Value::Type::FLOAT:
+        case cocos2d::Value::Type::DOUBLE:
+            to.setDouble(from.asDouble());
+            break;
+        default:
+            SE_LOGE("Could not the way to convert cocos2d::Value::Type (%d) type!", (int)from.getType());
+            ok = false;
+            break;
+    }
+    return ok;
+}
+
 #endif

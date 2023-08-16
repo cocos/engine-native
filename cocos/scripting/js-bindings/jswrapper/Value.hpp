@@ -47,7 +47,8 @@ namespace se {
             Number,
             Boolean,
             String,
-            Object
+            Object,        // NOLINT(readability-identifier-naming)
+        	BigInt
         };
 
         static Value Null;
@@ -237,6 +238,24 @@ namespace se {
          *  @param[in] v The double value to be set.
          */
         void setNumber(double v);
+		
+		/**
+     	*  @brief Sets se::Value to a double value.
+     	*  @param[in] v The double value to be set.
+     	*/
+    	void setDouble(double v);
+
+        /**
+        *  @brief Sets se::Value to a int64_t value.
+        *  @param[in] v The int64_t value to be set.
+        */
+        void setInt64(int64_t v);
+
+        /**
+        *  @brief Sets se::Value to a unsigned int64_t
+        *  @param[in] v The unsigned int64_t value to be set.
+        */
+        void setUint64(uint64_t v);
 
         /**
          *  @brief Sets se::Value to an UTF8 null-terminated string value.
@@ -300,6 +319,8 @@ namespace se {
          */
         uint32_t toUint32() const;
 
+        uint64_t toUint64() const;
+
         /**
          *  @brief Converts se::Value to long.
          *  @return long integer.
@@ -323,6 +344,12 @@ namespace se {
          *  @return double number.
          */
         double toNumber() const;
+
+		/**
+     	*  @brief Converts se::Value to double number.
+     	*  @return double number.
+     	*/
+    	double toDouble() const;
 
         /**
          *  @brief Converts se::Value to boolean.
@@ -361,6 +388,12 @@ namespace se {
          *  @return true if se::Value stores a number, otherwise false.
          */
         inline bool isNumber() const { return _type == Type::Number; }
+		
+		 /**
+     	 *  @brief Tests whether se::Value stores a Bigint.
+     	 *  @return true if se::Value stores a uint64_t or a int64_t, otherwise false.
+     	*/
+    	inline bool isBigInt() const { return _type == Type::BigInt; }
 
         /**
          *  @brief Tests whether se::Value stores a string.
@@ -407,6 +440,7 @@ namespace se {
             double _number;
             std::string* _string;
             Object* _object;
+            int64_t _bigint;
         } _u;
 
         Type _type;

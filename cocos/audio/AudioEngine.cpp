@@ -34,7 +34,7 @@
 #include <thread>
 #include <mutex>
 
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
 #include "audio/android/AudioEngine-inl.h"
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC
 #include "audio/apple/AudioEngine-inl.h"
@@ -365,7 +365,7 @@ void AudioEngine::onPause(const CustomEvent &event) {
         }
     }
     
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID ||  CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
     if (_audioEngineImpl) {
         _audioEngineImpl->onPause();
     }
@@ -384,7 +384,7 @@ void AudioEngine::onResume(const CustomEvent &event) {
     }
     _breakAudioID.clear();
     
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID    
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID ||  CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
     if (_audioEngineImpl) {
         _audioEngineImpl->onResume();
     }

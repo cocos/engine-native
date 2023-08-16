@@ -53,6 +53,7 @@ THE SOFTWARE.
 #define CC_PLATFORM_TIZEN             11
 #define CC_PLATFORM_QT5               12
 #define CC_PLATFORM_WINRT             13
+#define CC_PLATFORM_OPENHARMONY       14
 
 // Determine target platform by compile environment macro.
 #define CC_TARGET_PLATFORM             CC_PLATFORM_UNKNOWN
@@ -135,6 +136,12 @@ THE SOFTWARE.
     #define CC_TARGET_PLATFORM          CC_PLATFORM_WINRT
 #endif
 
+//OPENHARMONY
+#if defined(OPENHARMONY)
+    #undef CC_TARGET_PLATFORM
+    #define CC_TARGET_PLATFORM CC_PLATFORM_OPENHARMONY
+#endif 
+
 //////////////////////////////////////////////////////////////////////////
 // post configure
 //////////////////////////////////////////////////////////////////////////
@@ -147,6 +154,16 @@ THE SOFTWARE.
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
 #ifndef __MINGW32__
 #pragma warning (disable:4127)
+#endif
+#endif  // CC_PLATFORM_WIN32
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
+#ifdef __cplusplus
+#define __BEGIN_DECLS extern "C" {
+#define __END_DECLS }
+#else
+#define __BEGIN_DECLS
+#define __END_DECLS
 #endif
 #endif  // CC_PLATFORM_WIN32
 

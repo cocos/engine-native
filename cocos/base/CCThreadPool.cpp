@@ -32,6 +32,9 @@
 #include <android/log.h>
 #define LOG_TAG "ThreadPool"
 #define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG,__VA_ARGS__)
+#elif OPENHARMONY
+#include <hilog/log.h>
+#define LOGD(...) ((void) OH_LOG_Print(LOG_APP, LOG_DEBUG, LOG_DOMAIN, "HMG_LOG", __VA_ARGS__))
 #else
 #define LOGD(...) printf(__VA_ARGS__)
 #endif

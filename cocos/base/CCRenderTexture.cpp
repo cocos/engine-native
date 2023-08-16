@@ -473,7 +473,7 @@ void RenderTexture::initFramebuffer()
     ccActiveOffScreenFramebuffer(_FBO);
 
     // set up depth buffer and stencil buffer
-#if(CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+#if(CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
     if(Configuration::getInstance()->supportsOESPackedDepthStencil())
     {
         //create and attach depth buffer
