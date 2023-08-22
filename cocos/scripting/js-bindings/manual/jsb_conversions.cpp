@@ -3208,11 +3208,11 @@ bool native_int_to_se(int32_t from, se::Value &to, se::Object * /*ctx*/) { // NO
 }
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
-bool native_unorderedmap_to_se(const std::unordered_map<ccstd::string, cocos2d::Value> &from, se::Value &to, se::Object *ctx) {
+bool native_unorderedmap_to_se(const std::unordered_map<std::string, cocos2d::Value> &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     bool ok = true;
     for (const auto &e : from) {
-        const ccstd::string &key = e.first;
+        const std::string &key = e.first;
         const cocos2d::Value &value = e.second;
 
         if (key.empty()) {

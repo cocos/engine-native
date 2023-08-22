@@ -39,7 +39,7 @@ int getSDKVersion()
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
      return JniHelper::callStaticIntMethod(JCLS_HELPER, "getSDKVersion");
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
-    // openharmony未实现
+    //TODO: openharmony未实现
   return 0;
 #endif
 }

@@ -30,7 +30,6 @@
 #include "Utils.h"
 #include "CommonHeader.h"
 #include <napi/native_api.h>
-#include "base/std/container/array.h"
 
 namespace se {
 AutoHandleScope::AutoHandleScope() {

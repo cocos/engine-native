@@ -134,7 +134,7 @@ static int fdGetter(const std::string& url, off_t* start, off_t* length)
         AAsset_close(asset);
     }
     #elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
-    FileUtilsOpenHarmony* fileUtils = dynamic_cast<FileUtilsOpenHarmony*>(FileUtils::getInstance());
+    FileUtilsOpenHarmony* fileUtils = static_cast<FileUtilsOpenHarmony*>(FileUtils::getInstance());
     if(fileUtils) {
         RawFileDescriptor descriptor;
         fileUtils->getRawFileDescriptor(url, descriptor);

@@ -365,7 +365,7 @@ void AudioEngine::onPause(const CustomEvent &event) {
         }
     }
     
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID ||  CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
     if (_audioEngineImpl) {
         _audioEngineImpl->onPause();
     }

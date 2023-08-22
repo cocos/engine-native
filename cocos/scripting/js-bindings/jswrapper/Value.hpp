@@ -48,7 +48,7 @@ namespace se {
             Boolean,
             String,
             Object,        // NOLINT(readability-identifier-naming)
-        	BigInt
+            BigInt
         };
 
         static Value Null;
@@ -238,12 +238,12 @@ namespace se {
          *  @param[in] v The double value to be set.
          */
         void setNumber(double v);
-		
-		/**
-     	*  @brief Sets se::Value to a double value.
-     	*  @param[in] v The double value to be set.
-     	*/
-    	void setDouble(double v);
+
+        /**
+         *  @brief Sets se::Value to a double value.
+         *  @param[in] v The double value to be set.
+         */
+        void setDouble(double v);
 
         /**
         *  @brief Sets se::Value to a int64_t value.
@@ -345,11 +345,11 @@ namespace se {
          */
         double toNumber() const;
 
-		/**
-     	*  @brief Converts se::Value to double number.
-     	*  @return double number.
-     	*/
-    	double toDouble() const;
+        /**
+         *  @brief Converts se::Value to double number.
+         *  @return double number.
+         */
+        double toDouble() const;
 
         /**
          *  @brief Converts se::Value to boolean.
@@ -388,12 +388,12 @@ namespace se {
          *  @return true if se::Value stores a number, otherwise false.
          */
         inline bool isNumber() const { return _type == Type::Number; }
-		
-		 /**
-     	 *  @brief Tests whether se::Value stores a Bigint.
-     	 *  @return true if se::Value stores a uint64_t or a int64_t, otherwise false.
-     	*/
-    	inline bool isBigInt() const { return _type == Type::BigInt; }
+
+        /**
+         *  @brief Tests whether se::Value stores a Bigint.
+         *  @return true if se::Value stores a uint64_t or a int64_t, otherwise false.
+         */
+        inline bool isBigInt() const { return _type == Type::BigInt; }
 
         /**
          *  @brief Tests whether se::Value stores a string.

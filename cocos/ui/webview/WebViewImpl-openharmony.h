@@ -41,16 +41,16 @@ public:
 
     void destroy();
 
-    void setJavascriptInterfaceScheme(const ccstd::string &scheme);
+    void setJavascriptInterfaceScheme(const std::string &scheme);
 
-    void loadData(const cocos2d::Data &data, const ccstd::string &mimeType,
-                  const ccstd::string &encoding, const ccstd::string &baseURL);
+    void loadData(const cocos2d::Data &data, const std::string &mimeType,
+                  const std::string &encoding, const std::string &baseURL);
 
-    void loadHTMLString(const ccstd::string &string, const ccstd::string &baseURL);
+    void loadHTMLString(const std::string &string, const std::string &baseURL);
 
-    void loadURL(const ccstd::string &url);
+    void loadURL(const std::string &url);
 
-    void loadFile(const ccstd::string &fileName);
+    void loadFile(const std::string &fileName);
 
     void stopLoading();
 
@@ -64,7 +64,7 @@ public:
 
     void goForward();
 
-    void evaluateJS(const ccstd::string &js);
+    void evaluateJS(const std::string &js);
 
     void setScalesPageToFit(bool scalesPageToFit);
 
@@ -76,13 +76,13 @@ public:
 
     void setBackgroundTransparent(bool isTransparent);
 
-    static bool shouldStartLoading(int viewTag, const ccstd::string &url);
+    static bool shouldStartLoading(int viewTag, const std::string &url);
 
-    static void didFinishLoading(int viewTag, const ccstd::string &url);
+    static void didFinishLoading(int viewTag, const std::string &url);
 
-    static void didFailLoading(int viewTag, const ccstd::string &url);
+    static void didFailLoading(int viewTag, const std::string &url);
 
-    static void onJsCallback(int viewTag, const ccstd::string &message);
+    static void onJsCallback(int viewTag, const std::string &message);
 
 private:
     int _viewTag;

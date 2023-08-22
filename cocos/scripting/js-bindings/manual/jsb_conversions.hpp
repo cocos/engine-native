@@ -357,7 +357,7 @@ bool std_vector_TechniqueParameter_to_seval(const std::vector<cocos2d::renderer:
 bool native_cocos_value_to_se(const cocos2d::Value &from, se::Value &to, se::Object * /*unused*/);
 bool native_int_to_se(int32_t from, se::Value &to, se::Object * /*ctx*/);
 #if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
-bool native_unorderedmap_to_se(const std::unordered_map<ccstd::string, cocos2d::Value> &from, se::Value &to, se::Object *ctx);
+bool native_unorderedmap_to_se(const std::unordered_map<std::string, cocos2d::Value> &from, se::Value &to, se::Object *ctx);
 #endif
 
 template<typename T>

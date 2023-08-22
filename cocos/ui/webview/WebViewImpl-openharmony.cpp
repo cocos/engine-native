@@ -24,7 +24,6 @@
 ****************************************************************************/
 
 #include <cstdlib>
-#include "base/std/container/string.h"
 #include <unordered_map>
 
 #include "WebView-inl.h"
@@ -34,14 +33,14 @@
 #include "scripting/js-bindings/manual/jsb_conversions.hpp"
 #include "WebViewImpl-openharmony.h"
 
-static const ccstd::string S_DEFAULT_BASE_URL = "file:///openharmony_asset/";
-static const ccstd::string S_SD_ROOT_BASE_URL = "file://";
+static const std::string S_DEFAULT_BASE_URL = "file:///openharmony_asset/";
+static const std::string S_SD_ROOT_BASE_URL = "file://";
 
-static ccstd::string getFixedBaseUrl(const ccstd::string &baseUrl) {
-    ccstd::string fixedBaseUrl;
+static std::string getFixedBaseUrl(const std::string &baseUrl) {
+    std::string fixedBaseUrl;
     if (baseUrl.empty()) {
         fixedBaseUrl = S_DEFAULT_BASE_URL;
-    } else if (baseUrl.find(S_SD_ROOT_BASE_URL) != ccstd::string::npos) {
+    } else if (baseUrl.find(S_SD_ROOT_BASE_URL) != std::string::npos) {
         fixedBaseUrl = baseUrl;
     } else if (baseUrl.c_str()[0] != '/') {
         if (baseUrl.find("assets/") == 0) {
@@ -60,13 +59,13 @@ static ccstd::string getFixedBaseUrl(const ccstd::string &baseUrl) {
     return fixedBaseUrl;
 }
 
-ccstd::string getUrlStringByFileName(const ccstd::string &fileName) {
-    const ccstd::string basePath(S_DEFAULT_BASE_URL);
-    ccstd::string fullPath = cocos2d::FileUtils::getInstance()->fullPathForFilename(fileName);
-    const ccstd::string assetsPath("assets/");
+std::string getUrlStringByFileName(const std::string &fileName) {
+    const std::string basePath(S_DEFAULT_BASE_URL);
+    std::string fullPath = cocos2d::FileUtils::getInstance()->fullPathForFilename(fileName);
+    const std::string assetsPath("assets/");
 
-    ccstd::string urlString;
-    if (fullPath.find(assetsPath) != ccstd::string::npos) {
+    std::string urlString;
+    if (fullPath.find(assetsPath) != std::string::npos) {
         urlString = fullPath.replace(fullPath.find_first_of(assetsPath), assetsPath.length(),
                                      basePath);
     } else {
@@ -102,11 +101,11 @@ void WebViewImpl::destroy() {
     }
 }
 
-void WebViewImpl::loadData(const Data &data, const ccstd::string &mimeType,
-                           const ccstd::string &encoding, const ccstd::string &baseURL) {
-    ccstd::string dataString(reinterpret_cast<char *>(data.getBytes()),
+void WebViewImpl::loadData(const Data &data, const std::string &mimeType,
+                           const std::string &encoding, const std::string &baseURL) {
+    std::string dataString(reinterpret_cast<char *>(data.getBytes()),
                              static_cast<unsigned int>(data.getSize()));
-    std::unordered_map<ccstd::string, cocos2d::Value> vals;
+    std::unordered_map<std::string, cocos2d::Value> vals;
     vals.insert(std::make_pair("tag", _viewTag));
     vals.insert(std::make_pair("contents", cocos2d::Value(dataString)));
     vals.insert(std::make_pair("mimeType", mimeType));
@@ -115,24 +114,24 @@ void WebViewImpl::loadData(const Data &data, const ccstd::string &mimeType,
     NapiHelper::postUnorderedMapMessageToUIThread("loadData", vals);
 }
 
-void WebViewImpl::loadHTMLString(const ccstd::string &string, const ccstd::string &baseURL) {
-    std::unordered_map<ccstd::string, cocos2d::Value> vals;
+void WebViewImpl::loadHTMLString(const std::string &string, const std::string &baseURL) {
+    std::unordered_map<std::string, cocos2d::Value> vals;
     vals.insert(std::make_pair("tag", _viewTag));
     vals.insert(std::make_pair("contents", cocos2d::Value(string)));
     vals.insert(std::make_pair("baseUrl", baseURL));
     NapiHelper::postUnorderedMapMessageToUIThread("loadHTMLString", vals);
 }
 
-void WebViewImpl::loadURL(const ccstd::string &url) {
-    std::unordered_map<ccstd::string, cocos2d::Value> vals;
+void WebViewImpl::loadURL(const std::string &url) {
+    std::unordered_map<std::string, cocos2d::Value> vals;
     vals.insert(std::make_pair("tag", _viewTag));
     vals.insert(std::make_pair("url", url));
     NapiHelper::postUnorderedMapMessageToUIThread("loadUrl", vals);
 }
 
-void WebViewImpl::loadFile(const ccstd::string &fileName) {
+void WebViewImpl::loadFile(const std::string &fileName) {
     auto fullPath = getUrlStringByFileName(fileName);
-    std::unordered_map<ccstd::string, cocos2d::Value> vals;
+    std::unordered_map<std::string, cocos2d::Value> vals;
     vals.insert(std::make_pair("tag", _viewTag));
     vals.insert(std::make_pair("url", fullPath));
     NapiHelper::postUnorderedMapMessageToUIThread("loadUrl", vals);
@@ -164,12 +163,12 @@ void WebViewImpl::goForward() {
      NapiHelper::postIntMessageToUIThread("goForward", _viewTag);
 }
 
-void WebViewImpl::setJavascriptInterfaceScheme(const ccstd::string &scheme) {
+void WebViewImpl::setJavascriptInterfaceScheme(const std::string &scheme) {
     // TODO(qgh):OpenHarmony does not support this interface.
 }
 
-void WebViewImpl::evaluateJS(const ccstd::string &js) {
-    std::unordered_map<ccstd::string, cocos2d::Value> vals;
+void WebViewImpl::evaluateJS(const std::string &js) {
+    std::unordered_map<std::string, cocos2d::Value> vals;
     vals.insert(std::make_pair("tag", _viewTag));
     vals.insert(std::make_pair("jsContents", js));
     NapiHelper::postUnorderedMapMessageToUIThread("evaluateJS", vals);
@@ -179,7 +178,7 @@ void WebViewImpl::setScalesPageToFit(bool scalesPageToFit) {
     NapiHelper::postIntMessageToUIThread("setScalesPageToFit", _viewTag);
 }
 
-bool WebViewImpl::shouldStartLoading(int viewTag, const ccstd::string &url) {
+bool WebViewImpl::shouldStartLoading(int viewTag, const std::string &url) {
     bool allowLoad = true;
     auto it = sWebViewImpls.find(viewTag);
     if (it != sWebViewImpls.end()) {
@@ -191,7 +190,7 @@ bool WebViewImpl::shouldStartLoading(int viewTag, const ccstd::string &url) {
     return allowLoad;
 }
 
-void WebViewImpl::didFinishLoading(int viewTag, const ccstd::string &url) {
+void WebViewImpl::didFinishLoading(int viewTag, const std::string &url) {
     auto it = sWebViewImpls.find(viewTag);
     if (it != sWebViewImpls.end()) {
         auto webView = it->second->_webView;
@@ -201,7 +200,7 @@ void WebViewImpl::didFinishLoading(int viewTag, const ccstd::string &url) {
     }
 }
 
-void WebViewImpl::didFailLoading(int viewTag, const ccstd::string &url) {
+void WebViewImpl::didFailLoading(int viewTag, const std::string &url) {
     auto it = sWebViewImpls.find(viewTag);
     if (it != sWebViewImpls.end()) {
         auto webView = it->second->_webView;
@@ -211,7 +210,7 @@ void WebViewImpl::didFailLoading(int viewTag, const ccstd::string &url) {
     }
 }
 
-void WebViewImpl::onJsCallback(int viewTag, const ccstd::string &message) {
+void WebViewImpl::onJsCallback(int viewTag, const std::string &message) {
     auto it = sWebViewImpls.find(viewTag);
     if (it != sWebViewImpls.end()) {
         auto webView = it->second->_webView;
@@ -222,7 +221,7 @@ void WebViewImpl::onJsCallback(int viewTag, const ccstd::string &message) {
 }
 
 void WebViewImpl::setVisible(bool visible) {
-    std::unordered_map<ccstd::string, cocos2d::Value> vals;
+    std::unordered_map<std::string, cocos2d::Value> vals;
     vals.insert(std::make_pair("tag", _viewTag));
     vals.insert(std::make_pair("visible", visible));
     NapiHelper::postUnorderedMapMessageToUIThread("setVisible", vals);
@@ -230,7 +229,7 @@ void WebViewImpl::setVisible(bool visible) {
 
 void WebViewImpl::setFrame(float x, float y, float width, float height) {
     //cocos2d::Rect rect(x, y, width, height);
-    std::unordered_map<ccstd::string, cocos2d::Value> vals;
+    std::unordered_map<std::string, cocos2d::Value> vals;
     vals.insert(std::make_pair("tag", _viewTag));
     vals.insert(std::make_pair("x", x));
     vals.insert(std::make_pair("y", y));

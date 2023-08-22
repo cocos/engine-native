@@ -38,17 +38,6 @@
 #include "base/CCScheduler.h"
 #include "cocos/scripting/js-bindings/event/EventDispatcher.h"
 
-// #include "application/ApplicationManager.h"
-// #include "application/CocosApplication.h"
-// #include "platform/UniversalPlatform.h"
-
-// #include "platform/openharmony/modules/System.h"
-// #include "platform/empty/modules/Screen.h"
-// #include "platform/empty/modules/Accelerometer.h"
-// #include "platform/empty/modules/Battery.h"
-// #include "platform/empty/modules/Network.h"
-// #include "platform/empty/modules/Vibrator.h"
-
 #include <sstream>
 #include <chrono>
 
@@ -69,7 +58,7 @@ void dispatchTouchEventCB(OH_NativeXComponent* component, void* window) {
     if (ret != OH_NATIVEXCOMPONENT_RESULT_SUCCESS) {
         return;
     }
-   cocos2d::TouchEvent* ev = new cocos2d::TouchEvent;
+    cocos2d::TouchEvent* ev = new cocos2d::TouchEvent;
     if (touchEvent.type == OH_NATIVEXCOMPONENT_DOWN) {
         ev->type = cocos2d::TouchEvent::Type::BEGAN;
     } else if (touchEvent.type == OH_NATIVEXCOMPONENT_MOVE) {
@@ -79,13 +68,15 @@ void dispatchTouchEventCB(OH_NativeXComponent* component, void* window) {
     } else if (touchEvent.type == OH_NATIVEXCOMPONENT_CANCEL) {
         ev->type = cocos2d::TouchEvent::Type::CANCELLED;
     }
-     for(int i = 0; i < touchEvent.numPoints; ++i) {
+    for(int i = 0; i < touchEvent.numPoints; ++i) {
         cocos2d::TouchInfo touchInfo;
         touchInfo.index = touchEvent.touchPoints[i].id;
         touchInfo.x = touchEvent.touchPoints[i].x;
         touchInfo.y = touchEvent.touchPoints[i].y;
-        ev->touches.push_back(touchInfo);
-     }
+        if (touchEvent.id == touchInfo.index) {
+            ev->touches.push_back(touchInfo);
+        }
+    }
     sendMsgToWorker(cocos2d::MessageType::WM_XCOMPONENT_TOUCH_EVENT, reinterpret_cast<void*>(ev), window);
 }
 
@@ -129,33 +120,7 @@ OpenHarmonyPlatform* OpenHarmonyPlatform::getInstance() {
 
 int32_t OpenHarmonyPlatform::run(int argc, const char** argv) {
     LOGD("begin openharmonyplatform run");
-//    se::ScriptEngine *se = se::ScriptEngine::getInstance();
-    
-//     jsb_set_xxtea_key("");
-//     jsb_init_file_operation_delegate();
-    
-// #if defined(COCOS2D_DEBUG) && (COCOS2D_DEBUG > 0)
-//     // Enable debugger here
-//     jsb_enable_debugger("0.0.0.0", 6086, false);
-// #endif
-    
-//     se->setExceptionCallback([](const char *location, const char *message, const char *stack) {
-//         // Send exception information to server like Tencent Bugly.
-//         cocos2d::log("\nUncaught Exception:\n - location :  %s\n - msg : %s\n - detail : \n      %s\n", location, message, stack);
-//     });
-    
-//     jsb_register_all_modules();
-    
-//     se->start();
-    
-//     se::AutoHandleScope hs;
-//     // jsb_run_script("jsb-adapter/jsb-builtin.js");
-//     // jsb_run_script("main.js");
-    
-//     se->addAfterCleanupHook([]() {
-//         JSBClassType::destroy();
-//     });
-    // OpenHarmonyPlatform* platform = OpenHarmonyPlatform::getInstance();
+
     int width = static_cast<int>(width_);
     int height = static_cast<int>(height_);
     g_app = new AppDelegate(width, height);
@@ -231,9 +196,6 @@ void OpenHarmonyPlatform::onMessageCallback(const uv_async_t* /* req */) {
         } else if (msgData.type == MessageType::WM_APP_DESTROY) {
             platform->onDestroyNative();
         }
-        // if(msgData.type == MessageType::WM_VSYNC) {
-        //     platform->runTask();
-        // }
     }
 }
 
@@ -312,7 +274,6 @@ void OpenHarmonyPlatform::onSurfaceChanged(OH_NativeXComponent* component, void*
 void OpenHarmonyPlatform::onSurfaceDestroyed(OH_NativeXComponent* component, void* window) {
 }
 
-
 void OpenHarmonyPlatform::tick() {
         static std::chrono::steady_clock::time_point prevTime;
         static std::chrono::steady_clock::time_point now;
@@ -327,9 +288,5 @@ void OpenHarmonyPlatform::tick() {
         now = std::chrono::steady_clock::now();
         dt = std::chrono::duration_cast<std::chrono::microseconds>(now - prevTime).count() / 1000000.f;
         prevTime = std::chrono::steady_clock::now();
-
 }
-
-
-
 }; // namespace cc

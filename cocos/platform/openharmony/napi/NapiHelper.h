@@ -152,7 +152,7 @@ public:
         _postMsg2UIThreadCb(type, value);
     }
 
-    static void postUnorderedMapMessageToUIThread(const std::string& type, std::unordered_map<ccstd::string, cocos2d::Value> param) {
+    static void postUnorderedMapMessageToUIThread(const std::string& type, std::unordered_map<std::string, cocos2d::Value> param) {
         if (!_postMsg2UIThreadCb) {
             return;
         }

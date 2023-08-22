@@ -174,11 +174,11 @@ static bool configureCURL(HttpClient* client, HttpRequest* request, CURL* handle
     if (code != CURLE_OK) {
         return false;
     }
-    code = curl_easy_setopt(handle, CURLOPT_TIMEOUT, (long)request->getTimeout());
+    code = curl_easy_setopt(handle, CURLOPT_TIMEOUT, static_cast<long>(request->getTimeout()));
     if (code != CURLE_OK) {
         return false;
     }
-    code = curl_easy_setopt(handle, CURLOPT_CONNECTTIMEOUT, (long)request->getTimeout());
+    code = curl_easy_setopt(handle, CURLOPT_CONNECTTIMEOUT, static_cast<long>(request->getTimeout()));
     if (code != CURLE_OK) {
         return false;
     }

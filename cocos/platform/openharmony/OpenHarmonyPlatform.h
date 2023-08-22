@@ -92,6 +92,5 @@ public:
     Application* g_app = nullptr;
     //game started
     bool g_started = false;
-
 };
 } // namespace cc

@@ -27,7 +27,6 @@
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
 #include <cstdlib>
-#include "base/std/container/string.h"
 #include "platform/CCFileUtils.h"
 #include "platform/openharmony/napi/NapiHelper.h"
 
@@ -62,8 +61,8 @@ VideoPlayer::~VideoPlayer() {
     }
 }
 
-void VideoPlayer::setURL(const ccstd::string &videoUrl) {
-    if (videoUrl.find("://") == ccstd::string::npos) {
+void VideoPlayer::setURL(const std::string &videoUrl) {
+    if (videoUrl.find("://") == std::string::npos) {
         _videoURL = FileUtils::getInstance()->fullPathForFilename(videoUrl);
         _videoSource = VideoPlayer::Source::FILENAME;
     } else {
@@ -110,7 +109,7 @@ void VideoPlayer::setVisible(bool visible) {
     // todo openharmony cannot support
 }
 
-void VideoPlayer::addEventListener(const ccstd::string &name, const VideoPlayer::ccVideoPlayerCallback &callback) {
+void VideoPlayer::addEventListener(const std::string &name, const VideoPlayer::ccVideoPlayerCallback &callback) {
     _eventCallback[name] = callback;
 }
 

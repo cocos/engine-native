@@ -165,7 +165,7 @@ THE SOFTWARE.
 #define __BEGIN_DECLS
 #define __END_DECLS
 #endif
-#endif  // CC_PLATFORM_WIN32
+#endif  // CC_PLATFORM_OPENHARMONY
 
 /// @endcond
 #endif  // __BASE_CC_PLATFORM_CONFIG_H__

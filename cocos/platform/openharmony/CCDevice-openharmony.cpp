@@ -46,18 +46,15 @@ int Device::getDevicePixelRatio() {
     return 1;
 }
 
-void Device::setKeepScreenOn(bool value)
-{
+void Device::setKeepScreenOn(bool value) {
     CC_UNUSED_PARAM(value);
 }
 
-cocos2d::Vec4 Device::getSafeAreaEdge()
-{
+cocos2d::Vec4 Device::getSafeAreaEdge() {
     return cocos2d::Vec4();
 }
 
-Device::Rotation Device::getDeviceRotation()
-{
+Device::Rotation Device::getDeviceRotation() {
     int32_t value = 0;
     NapiHelper::napiCallFunction("getDeviceOrientation", &value);
     if(value == 0) {
@@ -73,8 +70,7 @@ Device::Rotation Device::getDeviceRotation()
     return cocos2d::Device::Rotation::_0;
 }
 
-Device::NetworkType Device::getNetworkType()
-{
+Device::NetworkType Device::getNetworkType() {
     int32_t value;
     NapiHelper::napiCallFunction("getNetworkType", &value);
     if(value == 0) {
@@ -85,15 +81,13 @@ Device::NetworkType Device::getNetworkType()
         return cocos2d::Device::NetworkType::NONE;
     }
 }
-float Device::getBatteryLevel() 
-{
+float Device::getBatteryLevel() {
     int32_t value;
     NapiHelper::napiCallFunction("getBatteryLevel", &value);
     return value;
 }
 
-const Device::MotionValue& Device::getDeviceMotionValue()
-{
+const Device::MotionValue& Device::getDeviceMotionValue() {
     std::vector<float>  v;
     NapiHelper::napiCallFunction<std::vector<float> >("getDeviceMotionValue", &v);
     static MotionValue motionValue;
@@ -116,15 +110,13 @@ const Device::MotionValue& Device::getDeviceMotionValue()
     return motionValue;
 }
 
-std::string Device::getDeviceModel()
-{
+std::string Device::getDeviceModel() {
     std::string str;
     NapiHelper::napiCallFunction<std::string>("getDeviceModel", &str);
     return str;
 }
 
-void Device::setAccelerometerEnabled(bool isEnabled)
-{
+void Device::setAccelerometerEnabled(bool isEnabled) {
     // if (isEnabled)
     // {
     //     JniHelper::callStaticVoidMethod(JCLS_HELPER, "enableAccelerometer");
@@ -135,17 +127,15 @@ void Device::setAccelerometerEnabled(bool isEnabled)
     // }
 }
 
-void Device::setAccelerometerInterval(float interval)
-{
+void Device::setAccelerometerInterval(float interval) {
     // JniHelper::callStaticVoidMethod(JCLS_HELPER, "setAccelerometerInterval", interval);
 }
 
-void Device::vibrate(float duration)
-{
+void Device::vibrate(float duration) {
     int32_t value = 0;
     NapiHelper::napiCallFunctionByFloatArgs("vibrate", duration, &value);
 }
 
 NS_CC_END
 
-#endif // CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+#endif // CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
