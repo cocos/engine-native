@@ -61,7 +61,7 @@ public:
         TIZEN,
         WINRT,
         WP8,
-        OpenHarmony, /**< OpenHarmony, because OPENHARMONY is a macro, so use OpenHarmony instead > */
+        OpenHarmony /**< OpenHarmony > */
     };
     
     enum class LanguageType

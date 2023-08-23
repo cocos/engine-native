@@ -81,7 +81,6 @@ list(APPEND CC_COCOS_SOURCES
 
 ##### base
 list(APPEND CC_COCOS_SOURCES
-    ${CMAKE_CURRENT_LIST_DIR}/cocos/base/Macros.h
     ${CMAKE_CURRENT_LIST_DIR}/cocos/base/astc.cpp
     ${CMAKE_CURRENT_LIST_DIR}/cocos/base/astc.h
     ${CMAKE_CURRENT_LIST_DIR}/cocos/base/base64.cpp
@@ -357,7 +356,7 @@ if(CC_USE_GFX_RENDERER)
         ${CMAKE_CURRENT_LIST_DIR}/cocos/renderer/Types.cpp
         ${CMAKE_CURRENT_LIST_DIR}/cocos/renderer/Types.h
         ${CMAKE_CURRENT_LIST_DIR}/cocos/renderer/Macro.h
-	    ${CMAKE_CURRENT_LIST_DIR}/cocos/renderer/gfx/DeviceGraphics.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/cocos/renderer/gfx/DeviceGraphics.cpp
         ${CMAKE_CURRENT_LIST_DIR}/cocos/renderer/gfx/DeviceGraphics.h
         ${CMAKE_CURRENT_LIST_DIR}/cocos/renderer/gfx/FrameBuffer.cpp
         ${CMAKE_CURRENT_LIST_DIR}/cocos/renderer/gfx/FrameBuffer.h

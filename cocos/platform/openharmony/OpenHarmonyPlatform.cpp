@@ -23,7 +23,6 @@
  THE SOFTWARE.
 ****************************************************************************/
 #include "platform/openharmony/OpenHarmonyPlatform.h"
-#include "base/Macros.h"
 #include "platform/CCPlatformDefine.h"
 
 #include <ace/xcomponent/native_interface_xcomponent.h>

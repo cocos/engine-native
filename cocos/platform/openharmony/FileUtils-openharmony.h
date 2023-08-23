@@ -29,7 +29,6 @@
 #include <rawfile/raw_dir.h>
 #include <rawfile/raw_file.h>
 #include <rawfile/raw_file_manager.h>
-#include "base/Macros.h"
 #include "cocos/platform/CCFileUtils.h"
 #include <napi/native_api.h>
 
