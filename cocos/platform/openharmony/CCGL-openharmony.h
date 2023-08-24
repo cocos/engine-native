@@ -30,39 +30,6 @@ THE SOFTWARE.
 #include "platform/CCPlatformConfig.h"
 #if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
 
-// #define glClearDepth                glClearDepthf
-// // #define glDeleteVertexArrays        glDeleteVertexArraysOES
-// // #define glGenVertexArrays           glGenVertexArraysOES
-// // #define glBindVertexArray           glBindVertexArrayOES
-// // #define glMapBuffer                 glMapBufferOES
-// // #define glUnmapBuffer               glUnmapBufferOES
-// // #define glTexImage3D				glTexImage3DOES
-// // #define glCompressedTexImage3D		glCompressedTexImage3DOES
-// // #define glCompressedTexSubImage3D	glCompressedTexSubImage3DOES
-// // #define glTexSubImage3D             glTexSubImage3DOES
-// #define glDepthRange				glDepthRangef
-// // #define glSubImage3D				glSubImage3DOES
-
-// // #define GL_DEPTH24_STENCIL8         GL_DEPTH24_STENCIL8_OES
-// // #define GL_WRITE_ONLY               GL_WRITE_ONLY_OES
-
-
-// // #ifndef GL_GLEXT_PROTOTYPES
-// // #define GL_GLEXT_PROTOTYPES 1
-// // #endif
-// #define GL_DEPTH_COMPONENT24_OES GL_DEPTH_COMPONENT24
-
-// #include <GLES3/gl3platform.h>
-// // normal process
-// #include <GLES3/gl3.h>
-// #include <EGL/egl.h>
-// #include <EGL/eglext.h>
-// // gl2.h doesn't define GLchar on Android
-// typedef char GLchar;
-// // android defines GL_BGRA_EXT but not GL_BRGA
-// #ifndef GL_BGRA
-// #define GL_BGRA  0x80E1
-// #endif
 #define glClearDepth                glClearDepthf
 #define glDeleteVertexArrays        glDeleteVertexArraysOES
 #define glGenVertexArrays           glGenVertexArraysOES

@@ -174,7 +174,7 @@ bool jsb_register_all_modules()
 
 #endif // USE_MIDDLEWARE
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 
 #if USE_VIDEO
     se->addRegisterCallback(register_all_video);
@@ -184,7 +184,13 @@ bool jsb_register_all_modules()
     se->addRegisterCallback(register_all_webview);
 #endif
 
-#endif // (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
+
+#if USE_WEBVIEW
+    se->addRegisterCallback(register_all_webview);
+#endif
+
+#endif // (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
 
     se->addAfterCleanupHook([](){
         PoolManager::getInstance()->getCurrentPool()->clear();

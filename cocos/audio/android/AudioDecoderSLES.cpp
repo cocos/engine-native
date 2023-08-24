@@ -146,8 +146,8 @@ bool AudioDecoderSLES::init(SLEngineItf engineItf, const std::string &url, int b
 
 bool AudioDecoderSLES::decodeToPcm()
 {
-#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
-   SLresult result;
+    #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    SLresult result;
 
     /* Objects this application uses: one audio player */
     SLObjectItf player;
@@ -466,7 +466,7 @@ bool AudioDecoderSLES::decodeToPcm()
 
     std::string info = _result.toString();
     ALOGI("Original audio info: %s, total size: %d", info.c_str(), (int)_result.pcmBuffer->size());
-   #endif
+    #endif
     return true;
 }
 

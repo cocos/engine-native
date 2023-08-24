@@ -737,15 +737,6 @@ if(CC_USE_DRAGONBONES)
     )
 endif() # CC_USE_DRAGONBONES
 
-##### USE_VIDEO
-if(CC_USE_VIDEO)
-    list(APPEND CC_COCOS_SOURCES 
-        ${CMAKE_CURRENT_LIST_DIR}/cocos/ui/videoplayer/VideoPlayer-openharmony.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/cocos/ui/videoplayer/VideoPlayer.h
-        ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/auto/jsb_video_auto.cpp
-    )
-endif() # USE_VIDEO
-
 ##### USE_WEBVIEW
 if(CC_USE_WEBVIEW)
     list(APPEND CC_COCOS_SOURCES
