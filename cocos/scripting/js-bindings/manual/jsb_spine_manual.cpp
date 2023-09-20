@@ -176,7 +176,8 @@ static bool js_register_spine_disposeSkeletonData (se::State& s)
     auto mgr = spine::SkeletonDataMgr::getInstance();
     bool hasSkeletonData = mgr->hasSkeletonData(uuid);
     if (!hasSkeletonData) return true;
-    mgr->releaseByUUID(uuid);
+    mgr->releaseByUUID(uuid); // release ref by SkeletonRenderer
+    mgr->releaseByUUID(uuid); // release self
     return true;
 }
 SE_BIND_FUNC(js_register_spine_disposeSkeletonData)
