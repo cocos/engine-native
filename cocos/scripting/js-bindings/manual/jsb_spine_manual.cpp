@@ -179,7 +179,8 @@ static bool js_register_spine_disposeSkeletonData (se::State& s)
     if (!hasSkeletonData) return true;
     auto it = _uuidRefedByRenderer.find(uuid);
     if (it != _uuidRefedByRenderer.end()) {
-        for (int i = 0; i < it->second; ++i) {
+        int refCount = it->second;
+        for (int i = 0; i < refCount; ++i) {
             mgr->releaseByUUID(uuid); // release ref by SkeletonRenderer
             it->second--;
         }
