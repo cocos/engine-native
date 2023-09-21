@@ -159,6 +159,7 @@ static bool js_register_spine_initSkeletonData (se::State& s)
 }
 SE_BIND_FUNC(js_register_spine_initSkeletonData)
 
+static std::map<std::string, int> _uuidRefedByRenderer;
 static bool js_register_spine_disposeSkeletonData (se::State& s)
 {
     const auto& args = s.args();
@@ -176,7 +177,15 @@ static bool js_register_spine_disposeSkeletonData (se::State& s)
     auto mgr = spine::SkeletonDataMgr::getInstance();
     bool hasSkeletonData = mgr->hasSkeletonData(uuid);
     if (!hasSkeletonData) return true;
-    mgr->releaseByUUID(uuid);
+    auto it = _uuidRefedByRenderer.find(uuid);
+    if (it != _uuidRefedByRenderer.end()) {
+        int refCount = it->second;
+        for (int i = 0; i < refCount; ++i) {
+            mgr->releaseByUUID(uuid); // release ref by SkeletonRenderer
+            it->second--;
+        }
+    }
+    mgr->releaseByUUID(uuid); // release self
     return true;
 }
 SE_BIND_FUNC(js_register_spine_disposeSkeletonData)
@@ -204,6 +213,12 @@ static bool js_register_spine_initSkeletonRenderer(se::State& s)
     bool hasSkeletonData = mgr->hasSkeletonData(uuid);
     if (hasSkeletonData) {
         node->initWithUUID(uuid);
+        auto it = _uuidRefedByRenderer.find(uuid);
+        if (it == _uuidRefedByRenderer.end()) {
+            _uuidRefedByRenderer.insert(std::pair<std::string, int>(uuid, 1));
+        } else {
+            it->second++;
+        }
     }
     return true;
 }
