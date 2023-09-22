@@ -86,9 +86,9 @@ function radiansToDegrees(radians)  {
 let sDeviceMotionValues = [];
 try {
     sensor.on(sensor.SensorId.ACCELEROMETER, function (data) {
-        sDeviceMotionValues[0] = data.x;
-        sDeviceMotionValues[1] = data.y;
-        sDeviceMotionValues[2] = -data.z;
+        sDeviceMotionValues[0] = data.x * -1;
+        sDeviceMotionValues[1] = data.y * -1;
+        sDeviceMotionValues[2] = data.z;
     },
         { interval: 200000000 }
     );

@@ -1,4 +1,5 @@
-globalThis.oh = {};
+globalThis.oh = {} as any;
+
 function boot() {
   const cc = globalThis.cc;
   var settings = globalThis._CCSettings;
@@ -20,13 +21,13 @@ function boot() {
       cc.view.setOrientation(cc.macro.ORIENTATION_PORTRAIT);
     }
     cc.view.enableAutoFullScreen([
-      cc.sys.BROWSER_TYPE_BAIDU,
-      cc.sys.BROWSER_TYPE_BAIDU_APP,
-      cc.sys.BROWSER_TYPE_WECHAT,
-      cc.sys.BROWSER_TYPE_MOBILE_QQ,
-      cc.sys.BROWSER_TYPE_MIUI,
-      cc.sys.BROWSER_TYPE_HUAWEI,
-      cc.sys.BROWSER_TYPE_UC,
+    cc.sys.BROWSER_TYPE_BAIDU,
+    cc.sys.BROWSER_TYPE_BAIDU_APP,
+    cc.sys.BROWSER_TYPE_WECHAT,
+    cc.sys.BROWSER_TYPE_MOBILE_QQ,
+    cc.sys.BROWSER_TYPE_MIUI,
+    cc.sys.BROWSER_TYPE_HUAWEI,
+    cc.sys.BROWSER_TYPE_UC,
     ].indexOf(cc.sys.browserType) < 0);
 
     var launchScene = settings.launchScene;
@@ -62,6 +63,7 @@ function boot() {
   settings.hasResourcesBundle && bundleRoot.push(RESOURCES);
 
   var count = 0;
+
   function cb(err) {
     if (err) {
       return console.error(err.message, err.stack);
@@ -74,8 +76,8 @@ function boot() {
     }
   }
 
-  globalThis.oh.loadJsList(settings.jsList,cb);
-  
+  globalThis.oh.loadJsList(settings.jsList, cb);
+
   for (var i = 0; i < bundleRoot.length; i++) {
     cc.assetManager.loadBundle(bundleRoot[i], cb);
   }

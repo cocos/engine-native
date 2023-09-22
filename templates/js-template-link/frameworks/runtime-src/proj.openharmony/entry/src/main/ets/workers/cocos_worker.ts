@@ -22,90 +22,82 @@ import hilog from '@ohos.hilog';
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
-****************************************************************************/
-
+ ****************************************************************************/
 import worker from '@ohos.worker';
-import cocos from "libcocos.so";
-import { ContextType } from "../common/Constants"
-import { launchEngine } from '../cocos/game'
+import cocos from 'libcocos.so';
+import { ContextType } from '../common/Constants';
+import { launchEngine } from '../cocos/game';
 import { PortProxy } from '../common/PortProxy';
 
 const nativeContext = cocos.getContext(ContextType.WORKER_INIT);
-nativeContext.workerInit()
+nativeContext.workerInit();
 
 const nativeEditBox = cocos.getContext(ContextType.EDITBOX_UTILS);
 const nativeWebView = cocos.getContext(ContextType.WEBVIEW_UTILS);
 const appLifecycle = cocos.getContext(ContextType.APP_LIFECYCLE);
 
-let uiPort = new PortProxy(worker.parentPort);
+let uiPort = new PortProxy(worker.workerPort);
 
-nativeContext.postMessage = function(msgType: string, msgData:string) {
-    uiPort.postMessage(msgType, msgData);
+nativeContext.postMessage = function (msgType: string, msgData: string): void {
+  uiPort.postMessage(msgType, msgData);
 }
 
-nativeContext.postSyncMessage = async function(msgType: string, msgData:string) {
-    const result = await uiPort.postSyncMessage(msgType, msgData);
-   return result;
+nativeContext.postSyncMessage = async function (msgType: string, msgData: string): Promise<boolean | string | number> {
+  const result = await uiPort.postSyncMessage(msgType, msgData) as boolean | string | number;
+  return result;
 }
 
 // The purpose of this is to avoid being GC
 nativeContext.setPostMessageFunction.call(nativeContext, nativeContext.postMessage)
 nativeContext.setPostSyncMessageFunction.call(nativeContext, nativeContext.postSyncMessage)
 
-uiPort._messageHandle = function(e) {
-    var data = e.data;
-    var msg = data.data;
-    hilog.info(0x0000, 'testTag',msg.name,msg.param);
+uiPort._messageHandle = function (e) {
+  var data = e.data;
+  var msg = data.data;
 
-    switch(msg.name) {
-        case "onXCLoad":
-            hilog.info(0x0000, 'testTag', '%{public}s', '_messageHandle onXCLoad');
-            console.info("cocos worker:_messageHandle onXCLoad");
-            const renderContext = cocos.getContext(ContextType.NATIVE_RENDER_API);
-            renderContext.nativeEngineInit();
-            hilog.info(0x0000, 'testTag', '%{public}s', 'begin invoke launchEngine');
-            launchEngine().then(() => {
-                hilog.info(0x0000, 'testTag', '%{public}s', 'launch CC engine finished');
-                console.info('launch CC engine finished');
-            }).catch(e => {
-                hilog.info(0x0000, 'testTag', '%{public}s', 'launch CC engine failed');
-                console.error('launch CC engine failed');
-            });
-
-           // @ts-ignore
-            globalThis.oh.postMessage = nativeContext.postMessage;
-           // @ts-ignore
-            globalThis.oh.postSyncMessage = nativeContext.postSyncMessage;
-            renderContext.nativeEngineStart();
-            break;
-        case "onTextInput":
-            nativeEditBox.onTextChange(msg.param);
-            break;
-        case "onComplete":
-            nativeEditBox.onComplete(msg.param);
-            break;
-        case "onPageBegin":
-            nativeWebView.shouldStartLoading(msg.param.viewTag, msg.param.url);
-            break;
-        case "onPageEnd":
-            nativeWebView.finishLoading(msg.param.viewTag, msg.param.url);
-            break;
-        case "onErrorReceive":
-            nativeWebView.failLoading(msg.param.viewTag, msg.param.url);
-            break;
-        case "onVideoEvent":
-            // @ts-ignore
-            if(globalThis.oh && typeof globalThis.oh.onVideoEvent === "function") {
-                // @ts-ignore
-                globalThis.oh.onVideoEvent(msg.param.videoTag, msg.param.videoEvent, msg.param.args);
-            }
-            break;
-        case "backPress":
-                appLifecycle.onBackPress();
-                break;
-        default:
-            hilog.info(0x0000, 'testTag', 'cocos worker: message type unknown:%{public}s', msg.name);
-            console.error("cocos worker: message type unknown");
-            break;
-    }
+  switch (msg.name) {
+    case "onXCLoad":
+      const renderContext = cocos.getContext(ContextType.NATIVE_RENDER_API);
+      renderContext.nativeEngineInit();
+      launchEngine().then(() => {
+        console.info('launch CC engine finished');
+      }).catch(e => {
+        console.error('launch CC engine failed');
+      });
+    // @ts-ignore
+      globalThis.oh.postMessage = nativeContext.postMessage;
+    // @ts-ignore
+      globalThis.oh.postSyncMessage = nativeContext.postSyncMessage;
+      renderContext.nativeEngineStart();
+      break;
+    case "onTextInput":
+      nativeEditBox.onTextChange(msg.param);
+      break;
+    case "onComplete":
+      nativeEditBox.onComplete(msg.param);
+      break;
+    case "onPageBegin":
+      nativeWebView.shouldStartLoading(msg.param.viewTag, msg.param.url);
+      break;
+    case "onPageEnd":
+      nativeWebView.finishLoading(msg.param.viewTag, msg.param.url);
+      break;
+    case "onErrorReceive":
+      nativeWebView.failLoading(msg.param.viewTag, msg.param.url);
+      break;
+    case "onVideoEvent":
+    // @ts-ignore
+      if (globalThis.oh && typeof globalThis.oh.onVideoEvent === "function") {
+        // @ts-ignore
+        globalThis.oh.onVideoEvent(msg.param.videoTag, msg.param.videoEvent, msg.param.args);
+      }
+      break;
+    case "backPress":
+      appLifecycle.onBackPress();
+      break;
+    default:
+      hilog.info(0x0000, 'testTag', 'cocos worker: message type unknown:%{public}s', msg.name);
+      console.error("cocos worker: message type unknown");
+      break;
+  }
 }

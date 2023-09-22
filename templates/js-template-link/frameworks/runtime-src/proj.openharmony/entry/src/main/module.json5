@@ -23,8 +23,6 @@
         "srcEntry": "./ets/entryability/EntryAbility.ts",
         "description": "$string:MainAbility_desc",
         "orientation": "portrait",
-        "icon": "$media:icon",
-        "label": "$string:MainAbility_label",
         "startWindowIcon": "$media:icon",
         "startWindowBackground": "$color:white",
         "exported": true,
@@ -36,6 +34,12 @@
             "actions": [
               "action.system.home"
             ]
+          }
+        ],
+        "metadata": [
+          {
+            "name": "ohos.ability.shortcuts",
+            "resource": "$profile:shortcuts_config"
           }
         ]
       }
