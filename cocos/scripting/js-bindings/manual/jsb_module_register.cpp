@@ -180,13 +180,13 @@ bool jsb_register_all_modules()
     se->addRegisterCallback(register_all_video);
 #endif
 
-#if USE_WEBVIEW
+#if USE_WEB_VIEW
     se->addRegisterCallback(register_all_webview);
 #endif
 
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
 
-#if USE_WEBVIEW
+#if USE_WEB_VIEW
     se->addRegisterCallback(register_all_webview);
 #endif
 
