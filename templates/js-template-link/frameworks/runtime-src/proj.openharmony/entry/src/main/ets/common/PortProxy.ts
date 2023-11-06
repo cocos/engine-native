@@ -28,13 +28,13 @@ import { MessageEvent } from '@ohos.worker';
 export class PortProxy {
   private autoId: number = 0;
   public actionHandleMap = {}
-  private workerPort: ThreadWorkerGlobalScope = null;
+  private port: ThreadWorkerGlobalScope = null;
 
   public _messageHandle?: (e: MessageEvent<any>) => void;
 
   constructor(worker) {
-    this.workerPort = worker;
-    this.workerPort.onmessage = this.onMessage.bind(this);
+    this.port = worker;
+    this.port.onmessage = this.onMessage.bind(this);
   }
 
   public onMessage(e) {
@@ -53,12 +53,12 @@ export class PortProxy {
 
   public postReturnMessage(e: any, res: any) {
     if (e.type == "sync" && res != null && res != undefined) {
-      this.workerPort.postMessage({ type: "syncResult", data: { id: e.data.cbId, response: res } });
+      this.port.postMessage({ type: "syncResult", data: { id: e.data.cbId, response: res } });
     }
   }
 
   public postMessage(msgName: string, msgData: any) {
-    this.workerPort.postMessage({ type: "async", data: { name: msgName, param: msgData } });
+    this.port.postMessage({ type: "async", data: { name: msgName, param: msgData } });
   }
 
   public postSyncMessage(msgName: string, msgData: any) {
@@ -67,7 +67,7 @@ export class PortProxy {
       const message = {
         type: "sync", data: { cbId: id, name: msgName, param: msgData }
       }
-      this.workerPort.postMessage(message);
+      this.port.postMessage(message);
       this.actionHandleMap[id] = (response) => {
         resolve(response)
       }

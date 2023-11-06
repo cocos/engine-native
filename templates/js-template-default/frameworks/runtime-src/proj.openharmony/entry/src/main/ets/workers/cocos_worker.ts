@@ -64,9 +64,9 @@ uiPort._messageHandle = function (e) {
       }).catch(e => {
         console.error('launch CC engine failed');
       });
-    // @ts-ignore
+      // @ts-ignore
       globalThis.oh.postMessage = nativeContext.postMessage;
-    // @ts-ignore
+      // @ts-ignore
       globalThis.oh.postSyncMessage = nativeContext.postSyncMessage;
       renderContext.nativeEngineStart();
       break;
@@ -86,7 +86,7 @@ uiPort._messageHandle = function (e) {
       nativeWebView.failLoading(msg.param.viewTag, msg.param.url);
       break;
     case "onVideoEvent":
-    // @ts-ignore
+      // @ts-ignore
       if (globalThis.oh && typeof globalThis.oh.onVideoEvent === "function") {
         // @ts-ignore
         globalThis.oh.onVideoEvent(msg.param.videoTag, msg.param.videoEvent, msg.param.args);

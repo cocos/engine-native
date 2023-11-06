@@ -21,13 +21,13 @@ function boot() {
       cc.view.setOrientation(cc.macro.ORIENTATION_PORTRAIT);
     }
     cc.view.enableAutoFullScreen([
-    cc.sys.BROWSER_TYPE_BAIDU,
-    cc.sys.BROWSER_TYPE_BAIDU_APP,
-    cc.sys.BROWSER_TYPE_WECHAT,
-    cc.sys.BROWSER_TYPE_MOBILE_QQ,
-    cc.sys.BROWSER_TYPE_MIUI,
-    cc.sys.BROWSER_TYPE_HUAWEI,
-    cc.sys.BROWSER_TYPE_UC,
+      cc.sys.BROWSER_TYPE_BAIDU,
+      cc.sys.BROWSER_TYPE_BAIDU_APP,
+      cc.sys.BROWSER_TYPE_WECHAT,
+      cc.sys.BROWSER_TYPE_MOBILE_QQ,
+      cc.sys.BROWSER_TYPE_MIUI,
+      cc.sys.BROWSER_TYPE_HUAWEI,
+      cc.sys.BROWSER_TYPE_UC,
     ].indexOf(cc.sys.browserType) < 0);
 
     var launchScene = settings.launchScene;

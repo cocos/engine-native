@@ -90,10 +90,10 @@ export struct CocosWebView {
       .onHttpErrorReceive((event) => {
         this.workPort?.postMessage("onErrorReceive", { viewTag: this.viewInfo.viewTag as number, url: this.viewInfo.url as string } as param)
       })
-      .domStorageAccess(true)// 开启DOM存储权限
-      .databaseAccess(true)// 开启数据库存储权限
-      .imageAccess(true)// 图片加载相关权限
-      .javaScriptAccess(true)// 支持JS代码运行
+      .domStorageAccess(true)// enable DOM storage permissions
+      .databaseAccess(true)// enable database storage permissions
+      .imageAccess(true)// enable image loading permissions
+      .javaScriptAccess(true)// support JS code running
       .visibility(this.viewInfo.visible ? Visibility.Visible : Visibility.None)
   }
 }
