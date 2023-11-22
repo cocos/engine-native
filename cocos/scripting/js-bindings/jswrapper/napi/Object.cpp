@@ -509,10 +509,9 @@ void Object::setPrivateData(void* data){
     //issue https://github.com/nodejs/node/issues/23999
     auto tmpThis = _objRef.getValue(_env);
     //_objRef.deleteRef();
-    napi_ref result = nullptr;
     NODE_API_CALL(status, _env,
                   napi_wrap(_env, tmpThis, data, weakCallback,
-                            (void*)this /* finalize_hint */, &result));
+                            (void*)this /* finalize_hint */, nullptr));
     //_objRef.setWeakref(_env, result);
     setProperty("__native_ptr__", se::Value(static_cast<long>(reinterpret_cast<uintptr_t>(data))));
 }

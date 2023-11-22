@@ -50,7 +50,7 @@ namespace spine {
     
     /** Draws a skeleton.
      */
-    class SkeletonRenderer: public cocos2d::middleware::IMiddleware, public cocos2d::Ref {
+    class SkeletonRenderer: public cocos2d::Ref, public cocos2d::middleware::IMiddleware {
     public:
         static SkeletonRenderer* create ();
         static SkeletonRenderer* createWithSkeleton(Skeleton* skeleton, bool ownsSkeleton = false, bool ownsSkeletonData = false);

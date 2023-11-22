@@ -34,7 +34,7 @@ DRAGONBONES_NAMESPACE_BEGIN
 
 class CacheModeAttachUtil;
 
-class CCArmatureCacheDisplay : public cocos2d::middleware::IMiddleware, public cocos2d::Ref
+class CCArmatureCacheDisplay : public cocos2d::Ref, public cocos2d::middleware::IMiddleware
 {
 public:
     CCArmatureCacheDisplay(const std::string& armatureName, const std::string& armatureKey, const std::string& atlasUUID, bool isShare);

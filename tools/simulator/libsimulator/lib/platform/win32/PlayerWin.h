@@ -38,7 +38,7 @@
 
 PLAYER_NS_BEGIN
 
-class CC_LIBSIM_DLL PlayerWin : public PlayerProtocol, public cocos2d::Ref
+class CC_LIBSIM_DLL PlayerWin : public cocos2d::Ref, public PlayerProtocol
 {
 public:
     static PlayerWin *createWithHwnd(HWND hWnd);

@@ -106,7 +106,7 @@ enum EmitterMode
     RADIUS = 1
 };
 
-class ParticleSimulator : public cocos2d::middleware::IMiddleware, public cocos2d::Ref {
+class ParticleSimulator : public cocos2d::Ref, public cocos2d::middleware::IMiddleware {
     
     //* @enum
     enum {
