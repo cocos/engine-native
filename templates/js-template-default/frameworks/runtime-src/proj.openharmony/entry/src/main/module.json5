@@ -5,7 +5,8 @@
     "description": "$string:entry_desc",
     "mainElement": "EntryAbility",
     "deviceTypes": [
-      "default"
+      "phone",
+      "tablet"
     ],
     "requestPermissions":[
       {"name" : "ohos.permission.INTERNET"},

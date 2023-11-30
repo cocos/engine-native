@@ -131,17 +131,14 @@ globalThis.getDeviceMotionValue = function () {
 
 
 globalThis.getNetworkType = function () {
-    connection.getDefaultNet().then((netHandle)=>
-       connection.getNetCapabilities(netHandle).then((data)=>{
-            return data.bearerTypes;
-        }).catch(err => { 
-            console.log('getDefaultNet error.' + JSON.stringify(err));
-            return -1; // 未获取到网络连接类型
-        })
-    ).catch(err => { 
-        console.log('getDefaultNet error.' + JSON.stringify(err));
-        return -1; // 网络未连接
-    });
+    let netHandle = connection.getDefaultNetSync();
+    if(netHandle && netHandle.netId != 0) {
+        let result = connection.getNetCapabilitiesSync(netHandle);
+        if (result && result.bearerTypes) {
+            return result.bearerTypes[0];
+        }
+    }
+    return -1;
 }
 
 globalThis.vibrate = function (duration) {
