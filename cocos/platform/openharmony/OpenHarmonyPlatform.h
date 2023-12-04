@@ -78,9 +78,9 @@ public:
     static void onMessageCallback(const uv_async_t* req);
     static void timerCb(uv_timer_t* handle);
     void tick();
-    int64_t _prefererredNanosecondsPerFrame{NANOSECONDS_60FPS};
     void setPreferedFramePersecond(int fps);
 
+    int64_t _prefererredNanosecondsPerFrame{NANOSECONDS_60FPS};
     OH_NativeXComponent* _component{nullptr};
     OH_NativeXComponent_Callback _callback;
     uv_timer_t _timerHandle;

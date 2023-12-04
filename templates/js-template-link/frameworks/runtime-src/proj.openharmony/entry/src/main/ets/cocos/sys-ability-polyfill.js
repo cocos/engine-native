@@ -132,7 +132,7 @@ globalThis.getDeviceMotionValue = function () {
 
 globalThis.getNetworkType = function () {
     let netHandle = connection.getDefaultNetSync();
-    if(netHandle && netHandle.netId != 0) {
+    if (netHandle && netHandle.netId != 0) {
         let result = connection.getNetCapabilitiesSync(netHandle);
         if (result && result.bearerTypes) {
             return result.bearerTypes[0];
