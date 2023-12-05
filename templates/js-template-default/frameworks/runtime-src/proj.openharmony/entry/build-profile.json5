@@ -3,7 +3,7 @@
   "buildOption": {
     "externalNativeOptions": {
       "path": "../CMakeLists.txt",
-      "arguments": "-v arm-linux-ohos -DOHOS_STL=c++_shared -std=c++17 -DCOCOS_X_PATH=../../cocos2d-x -DOPENHARMONY=1",
+      "arguments": "-v arm-linux-ohos -DOHOS_STL=c++_shared -std=c++17 -DCOCOS_X_PATH=${COCOS_X_PATH} -DOPENHARMONY=1",
       "abiFilters": [
         "armeabi-v7a",
         "arm64-v8a"
@@ -13,8 +13,7 @@
   },
   "targets": [
     {
-      "name": "default",
-      "runtimeOS": "HarmonyOS"
+      "name": "default"
     },
     {
       "name": "ohosTest",

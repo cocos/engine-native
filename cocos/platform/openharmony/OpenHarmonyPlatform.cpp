@@ -273,11 +273,25 @@ void OpenHarmonyPlatform::onSurfaceChanged(OH_NativeXComponent* component, void*
 void OpenHarmonyPlatform::onSurfaceDestroyed(OH_NativeXComponent* component, void* window) {
 }
 
+void OpenHarmonyPlatform::setPreferedFramePersecond(int fps) {
+    if (fps == 0) {
+        return;
+    }
+    _prefererredNanosecondsPerFrame = static_cast<long>(1.0 / fps * NANOSECONDS_PER_SECOND); // NOLINT(google-runtime-int)
+}
+
 void OpenHarmonyPlatform::tick() {
         static std::chrono::steady_clock::time_point prevTime;
         static std::chrono::steady_clock::time_point now;
         static float dt = 0.f;
         static float dtSum = 0.f;
+        static double dtNS = NANOSECONDS_60FPS;
+        if (dtNS < static_cast<double>(_prefererredNanosecondsPerFrame)) {
+        std::this_thread::sleep_for(std::chrono::nanoseconds(
+            _prefererredNanosecondsPerFrame - static_cast<int64_t>(dtNS)));
+        dtNS = static_cast<double>(_prefererredNanosecondsPerFrame);
+        }
+        prevTime = std::chrono::steady_clock::now();
         static uint32_t jsbInvocationTotalCount = 0;
         static uint32_t jsbInvocationTotalFrames = 0;
         std::shared_ptr<Scheduler> scheduler = g_app->getScheduler();
@@ -285,7 +299,7 @@ void OpenHarmonyPlatform::tick() {
         EventDispatcher::dispatchTickEvent(dt);
         PoolManager::getInstance()->getCurrentPool()->clear();
         now = std::chrono::steady_clock::now();
-        dt = std::chrono::duration_cast<std::chrono::microseconds>(now - prevTime).count() / 1000000.f;
-        prevTime = std::chrono::steady_clock::now();
+        dtNS = dtNS * 0.1 + 0.9 * static_cast<double>(std::chrono::duration_cast<std::chrono::nanoseconds>(now - prevTime).count());
+        dt = static_cast<float>(dtNS) / NANOSECONDS_PER_SECOND;
 }
 }; // namespace cc

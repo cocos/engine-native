@@ -121,7 +121,8 @@ void Application::onResume()
 void Application::setPreferredFramesPerSecond(int fps)
 {
     _fps = fps;
-    // setPreferredFramesPerSecondJNI(_fps);
+    cocos2d::OpenHarmonyPlatform* platform = cocos2d::OpenHarmonyPlatform::getInstance();
+    platform->setPreferedFramePersecond(_fps);
 }
 
 bool Application::isDisplayStats() {
