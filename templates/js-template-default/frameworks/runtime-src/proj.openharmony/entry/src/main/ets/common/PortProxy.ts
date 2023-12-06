@@ -22,13 +22,13 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-import { ThreadWorkerGlobalScope } from '@ohos.worker';
+import { DedicatedWorkerGlobalScope } from '@ohos.worker';
 import { MessageEvent } from '@ohos.worker';
 
 export class PortProxy {
   private autoId: number = 0;
   public actionHandleMap = {}
-  private port: ThreadWorkerGlobalScope = null;
+  private port: DedicatedWorkerGlobalScope = null;
 
   public _messageHandle?: (e: MessageEvent<any>) => void;
 

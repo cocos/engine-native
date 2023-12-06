@@ -27,10 +27,10 @@ import worker from '@ohos.worker';
 import { Constants } from '../common/Constants'
 
 export class WorkerManager {
-  private cocosWorker: worker.ThreadWorker;
+  private cocosWorker: worker.Worker;
 
   private constructor() {
-    this.cocosWorker = new worker.ThreadWorker("entry/ets/workers/cocos_worker.ts", {
+    this.cocosWorker = new worker.Worker("entry/ets/workers/cocos_worker.ts", {
       type: "classic",
       name: "CocosWorker"
     });
@@ -44,13 +44,13 @@ export class WorkerManager {
   }
 
   public static getInstance(): WorkerManager {
-    if (AppStorage.get(Constants.APP_KEY_WORKER_MANAGER) as WorkerManager == undefined) {
-      AppStorage.setOrCreate(Constants.APP_KEY_WORKER_MANAGER, new WorkerManager);
+    if (AppStorage.Get(Constants.APP_KEY_WORKER_MANAGER) as WorkerManager == undefined) {
+      AppStorage.SetOrCreate(Constants.APP_KEY_WORKER_MANAGER, new WorkerManager);
     }
-    return AppStorage.get(Constants.APP_KEY_WORKER_MANAGER) as WorkerManager;
+    return AppStorage.Get(Constants.APP_KEY_WORKER_MANAGER) as WorkerManager;
   }
 
-  public getWorker(): worker.ThreadWorker {
+  public getWorker(): worker.Worker {
     return this.cocosWorker;
   }
 }
