@@ -379,6 +379,12 @@ void XMLHttpRequest::getHeader(const std::string& header)
         // Transform field name to lower case as they are case-insensitive
         std::transform(http_field.begin(), http_field.end(), http_field.begin(), ::tolower);
 
+        if (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY && _httpHeader.find(http_field) != _httpHeader.end()) {
+            _httpHeader[http_field].insert(strlen(_httpHeader[http_field]) - 1, ",");
+            _httpHeader[http_field].insert(strlen(_httpHeader[http_field]) - 1, http_value);
+            http_value = _httpHeader[http_field];
+        }
+
         _httpHeader[http_field] = http_value;
 
     }
