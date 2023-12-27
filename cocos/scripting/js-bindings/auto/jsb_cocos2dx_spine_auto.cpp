@@ -12990,6 +12990,21 @@ static bool js_cocos2dx_spine_SkeletonRenderer_paused(se::State& s)
 }
 SE_BIND_FUNC(js_cocos2dx_spine_SkeletonRenderer_paused)
 
+static bool js_cocos2dx_spine_SkeletonRenderer_destroy(se::State& s)
+{
+    spine::SkeletonRenderer* cobj = (spine::SkeletonRenderer*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_spine_SkeletonRenderer_destroy : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->destroy();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_cocos2dx_spine_SkeletonRenderer_destroy)
+
 static bool js_cocos2dx_spine_SkeletonRenderer_setAttachment(se::State& s)
 {
     CC_UNUSED bool ok = true;
@@ -13919,6 +13934,7 @@ bool js_register_cocos2dx_spine_SkeletonRenderer(se::Object* obj)
     cls->defineFunction("setAttachUtil", _SE(js_cocos2dx_spine_SkeletonRenderer_setAttachUtil));
     cls->defineFunction("setOpacityModifyRGB", _SE(js_cocos2dx_spine_SkeletonRenderer_setOpacityModifyRGB));
     cls->defineFunction("paused", _SE(js_cocos2dx_spine_SkeletonRenderer_paused));
+    cls->defineFunction("destroy", _SE(js_cocos2dx_spine_SkeletonRenderer_destroy));
     cls->defineFunction("setAttachment", _SE(js_cocos2dx_spine_SkeletonRenderer_setAttachment));
     cls->defineFunction("setBonesToSetupPose", _SE(js_cocos2dx_spine_SkeletonRenderer_setBonesToSetupPose));
     cls->defineFunction("onEnable", _SE(js_cocos2dx_spine_SkeletonRenderer_onEnable));
@@ -14385,6 +14401,21 @@ static bool js_cocos2dx_spine_SkeletonAnimation_setEndListener(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_cocos2dx_spine_SkeletonAnimation_setEndListener)
+
+static bool js_cocos2dx_spine_SkeletonAnimation_destroy(se::State& s)
+{
+    spine::SkeletonAnimation* cobj = (spine::SkeletonAnimation*)s.nativeThisObject();
+    SE_PRECONDITION2(cobj, false, "js_cocos2dx_spine_SkeletonAnimation_destroy : Invalid Native Object");
+    const auto& args = s.args();
+    size_t argc = args.size();
+    if (argc == 0) {
+        cobj->destroy();
+        return true;
+    }
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
+    return false;
+}
+SE_BIND_FUNC(js_cocos2dx_spine_SkeletonAnimation_destroy)
 
 static bool js_cocos2dx_spine_SkeletonAnimation_getState(se::State& s)
 {
@@ -15070,6 +15101,7 @@ bool js_register_cocos2dx_spine_SkeletonAnimation(se::Object* obj)
     cls->defineFunction("setTrackCompleteListenerNative", _SE(js_cocos2dx_spine_SkeletonAnimation_setTrackCompleteListener));
     cls->defineFunction("setAnimationStateData", _SE(js_cocos2dx_spine_SkeletonAnimation_setAnimationStateData));
     cls->defineFunction("setEndListener", _SE(js_cocos2dx_spine_SkeletonAnimation_setEndListener));
+    cls->defineFunction("destroy", _SE(js_cocos2dx_spine_SkeletonAnimation_destroy));
     cls->defineFunction("getState", _SE(js_cocos2dx_spine_SkeletonAnimation_getState));
     cls->defineFunction("setCompleteListenerNative", _SE(js_cocos2dx_spine_SkeletonAnimation_setCompleteListener));
     cls->defineFunction("setTrackDisposeListener", _SE(js_cocos2dx_spine_SkeletonAnimation_setTrackDisposeListener));
