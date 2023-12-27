@@ -155,8 +155,12 @@ void SkeletonRenderer::destroy() {
         delete _skeleton->getData();
         _ownsSkeletonData = false;
     }
-    CC_SAFE_DELETE(_skeleton);
-    CC_SAFE_DELETE(_atlas);
+    if (_ownsSkeleton) {
+        CC_SAFE_DELETE(_skeleton);
+    }
+    if (_ownsAtlas && _atlas) {
+        CC_SAFE_DELETE(_atlas);
+    }
     CC_SAFE_DELETE(_attachmentLoader);
     if (_uuid != "") {
         SkeletonDataMgr::getInstance()->releaseByUUID(_uuid);
