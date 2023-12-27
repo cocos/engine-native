@@ -130,6 +130,10 @@ SkeletonAnimation::SkeletonAnimation ()
 }
 
 SkeletonAnimation::~SkeletonAnimation () {
+    SkeletonAnimation::destroy();
+}
+
+void SkeletonAnimation::destroy() {
     _startListener = nullptr;
     _interruptListener = nullptr;
     _endListener = nullptr;
@@ -139,9 +143,12 @@ SkeletonAnimation::~SkeletonAnimation () {
 
     if (_state) {
         clearTracks();
-        if (_ownsAnimationStateData) delete _state->getData();
-        delete _state;
+        if (_ownsAnimationStateData) {
+            delete _state->getData();
+        }
+        CC_SAFE_DELETE(_state);
     }
+    SkeletonRenderer::destroy();
 }
 
 void SkeletonAnimation::update (float deltaTime) {

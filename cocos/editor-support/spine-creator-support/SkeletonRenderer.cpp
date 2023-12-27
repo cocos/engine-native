@@ -146,22 +146,25 @@ SkeletonRenderer::SkeletonRenderer (const std::string& skeletonDataFile, const s
 }
 
 SkeletonRenderer::~SkeletonRenderer () {
-    CC_SAFE_RELEASE(_effectDelegate);
-    if (_ownsSkeletonData) delete _skeleton->getData();
-    if (_ownsSkeleton) delete _skeleton;
-    if (_ownsAtlas && _atlas) delete _atlas;
-    if (_attachmentLoader) delete _attachmentLoader;
-    if (_uuid != "") SkeletonDataMgr::getInstance()->releaseByUUID(_uuid);
-    if (_clipper) delete _clipper;
-    
-    if (_debugBuffer) {
-        delete _debugBuffer;
-        _debugBuffer = nullptr;
+    SkeletonRenderer::destroy();
+}
+
+void SkeletonRenderer::destroy() {
+    CC_SAFE_RELEASE_NULL(_effectDelegate);
+    if (_ownsSkeletonData) {
+        delete _skeleton->getData();
+        _ownsSkeletonData = false;
     }
-    
-    CC_SAFE_RELEASE(_attachUtil);
-    CC_SAFE_RELEASE(_nodeProxy);
-    CC_SAFE_RELEASE(_effect);
+    CC_SAFE_DELETE(_skeleton);
+    CC_SAFE_DELETE(_atlas);
+    CC_SAFE_DELETE(_attachmentLoader);
+    if (_uuid != "") SkeletonDataMgr::getInstance()->releaseByUUID(_uuid);
+    CC_SAFE_DELETE(_clipper);
+    CC_SAFE_DELETE(_debugBuffer);
+
+    CC_SAFE_RELEASE_NULL(_attachUtil);
+    CC_SAFE_RELEASE_NULL(_nodeProxy);
+    CC_SAFE_RELEASE_NULL(_effect);
     stopSchedule();
 }
 

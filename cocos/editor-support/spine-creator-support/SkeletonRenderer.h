@@ -124,6 +124,7 @@ namespace spine {
         virtual void stopSchedule();
         void onEnable();
         void onDisable();
+        virtual void destroy();
         
     CC_CONSTRUCTOR_ACCESS:
         SkeletonRenderer ();
