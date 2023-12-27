@@ -158,7 +158,10 @@ void SkeletonRenderer::destroy() {
     CC_SAFE_DELETE(_skeleton);
     CC_SAFE_DELETE(_atlas);
     CC_SAFE_DELETE(_attachmentLoader);
-    if (_uuid != "") SkeletonDataMgr::getInstance()->releaseByUUID(_uuid);
+    if (_uuid != "") {
+        SkeletonDataMgr::getInstance()->releaseByUUID(_uuid);
+        _uuid = "";
+    }
     CC_SAFE_DELETE(_clipper);
     CC_SAFE_DELETE(_debugBuffer);
 
