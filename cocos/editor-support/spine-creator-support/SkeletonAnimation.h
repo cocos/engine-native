@@ -92,7 +92,7 @@ public:
 
     virtual void onAnimationStateEvent (TrackEntry* entry, EventType type, Event* event);
     virtual void onTrackEntryEvent (TrackEntry* entry, EventType type, Event* event);
-    void destroy() override;
+    virtual void destroy();
 
     AnimationState* getState() const;
     
