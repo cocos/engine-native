@@ -160,14 +160,12 @@ void SkeletonRenderer::destroy() {
     }
     if (_ownsSkeleton) {
         CC_SAFE_DELETE(_skeleton);
-    } else {
-        _skeleton = nullptr;
     }
     if (_ownsAtlas && _atlas) {
         CC_SAFE_DELETE(_atlas);
-    } else {
-        _atlas = nullptr;
     }
+    _skeleton = nullptr;
+    _atlas = nullptr;
     CC_SAFE_DELETE(_attachmentLoader);
     if (_uuid != "") {
         SkeletonDataMgr::getInstance()->releaseByUUID(_uuid);
