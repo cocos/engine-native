@@ -93,6 +93,7 @@ namespace spine {
         void setToSetupPose ();
         void setBonesToSetupPose ();
         void setSlotsToSetupPose ();
+        void destroy();
     private:
         float _timeScale = 1;
         bool _paused = false;

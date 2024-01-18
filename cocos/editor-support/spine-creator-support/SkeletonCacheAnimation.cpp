@@ -58,6 +58,11 @@ namespace spine {
     }
     
     SkeletonCacheAnimation::~SkeletonCacheAnimation () {
+        destroy();
+    }
+
+    void SkeletonCacheAnimation::destroy() {
+        stopSchedule();
         if (_skeletonCache) {
             _skeletonCache->release();
             _skeletonCache = nullptr;
@@ -68,9 +73,8 @@ namespace spine {
             delete ani;
         }
         CC_SAFE_RELEASE_NULL(_attachUtil);
-        CC_SAFE_RELEASE(_nodeProxy);
-        CC_SAFE_RELEASE(_effect);
-        stopSchedule();
+        CC_SAFE_RELEASE_NULL(_nodeProxy);
+        CC_SAFE_RELEASE_NULL(_effect);
     }
     
     void SkeletonCacheAnimation::update(float dt) {
