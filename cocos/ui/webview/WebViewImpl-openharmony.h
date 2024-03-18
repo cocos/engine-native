@@ -26,8 +26,7 @@
 #pragma once
 
 #include "platform/openharmony/napi/NapiHelper.h"
-#include "SeApi.h"
-
+#include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
 
 namespace cocos2d {
 

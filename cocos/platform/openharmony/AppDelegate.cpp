@@ -66,6 +66,7 @@ bool AppDelegate::applicationDidFinishLaunching()
     
     se::AutoHandleScope hs;
     #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
+        jsb_run_script("jsb-adapter/jsb-builtin.js");
         jsb_run_script("main.js");
     #endif
     

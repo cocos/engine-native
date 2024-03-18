@@ -120,7 +120,6 @@ function boot() {
 
 async function launchEngine() {
   globalThis.require('src/settings.js');
-  globalThis.require('jsb-adapter/jsb-builtin.js');
   globalThis.require('src/cocos2d-jsb.js');
   globalThis.require('src/physics.js');
   globalThis.require('jsb-adapter/jsb-engine.js');

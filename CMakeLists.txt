@@ -228,7 +228,6 @@ list(APPEND CC_COCOS_SOURCES
 
 ##### v8 script engine
 if(CC_USE_SE_V8)
-message("USE_SE_V8")
 list(APPEND CC_COCOS_SOURCES 
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/Base.h
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/Class.hpp
@@ -272,7 +271,6 @@ endif ()
 
 ##### napi script engine
 if(CC_USE_SE_NAPI)
-message("USE_SE_NAPI")
 list(APPEND CC_COCOS_SOURCES 
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi/Class.cpp
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi/Class.h
@@ -957,7 +955,7 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/ui/edit-box)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/ui/webview)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi)
 if(CC_USE_SE_NAPI)
-include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi)
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi)
 else()
-include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8)
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8)
 endif()

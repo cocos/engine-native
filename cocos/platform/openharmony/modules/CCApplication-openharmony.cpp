@@ -94,7 +94,6 @@ void Application::restart()
 
 void Application::end()
 {
-    int32_t value;
     NapiHelper::napiCallFunction("terminateProcess");
 }
 
