@@ -82,7 +82,7 @@ static std::unordered_map<int, WebViewImpl *> sWebViewImpls;
 WebViewImpl::WebViewImpl(WebView *webView) : _viewTag(-1),
                                              _webView(webView) {
     _viewTag = kWebViewTag++;
-    NapiHelper::postIntMessageToUIThread("createWebView", _viewTag);
+    NapiHelper::postMessageToUIThread("createWebView", Napi::Number::New(NapiHelper::getWorkerEnv(), static_cast<double>(_viewTag)));
     sWebViewImpls[_viewTag] = this;
 }
 
@@ -92,7 +92,7 @@ WebViewImpl::~WebViewImpl() {
 
 void WebViewImpl::destroy() {
     if (_viewTag != -1) {
-        NapiHelper::postIntMessageToUIThread("removeWebView", _viewTag);
+        NapiHelper::postMessageToUIThread("removeWebView", Napi::Number::New(NapiHelper::getWorkerEnv(), static_cast<double>(_viewTag)));
         auto iter = sWebViewImpls.find(_viewTag);
         if (iter != sWebViewImpls.end()) {
             sWebViewImpls.erase(iter);
@@ -105,44 +105,54 @@ void WebViewImpl::loadData(const Data &data, const std::string &mimeType,
                            const std::string &encoding, const std::string &baseURL) {
     std::string dataString(reinterpret_cast<char *>(data.getBytes()),
                              static_cast<unsigned int>(data.getSize()));
-    std::unordered_map<std::string, cocos2d::Value> vals;
-    vals.insert(std::make_pair("tag", _viewTag));
-    vals.insert(std::make_pair("contents", cocos2d::Value(dataString)));
-    vals.insert(std::make_pair("mimeType", mimeType));
-    vals.insert(std::make_pair("encoding", encoding));
-    vals.insert(std::make_pair("baseUrl", baseURL));
-    NapiHelper::postUnorderedMapMessageToUIThread("loadData", vals);
+
+    auto env = NapiHelper::getWorkerEnv();
+    auto args = Napi::Object::New(env);
+    args["tag"] = Napi::Number::New(env, static_cast<double>(_viewTag));
+    args["contents"] = Napi::String::New(env, dataString);
+    args["mimeType"] = Napi::String::New(env, mimeType);
+    args["encoding"] = Napi::String::New(env, encoding);
+    args["baseUrl"] = Napi::String::New(env, baseURL);
+
+    NapiHelper::postMessageToUIThread("loadData", args);
 }
 
 void WebViewImpl::loadHTMLString(const std::string &string, const std::string &baseURL) {
-    std::unordered_map<std::string, cocos2d::Value> vals;
-    vals.insert(std::make_pair("tag", _viewTag));
-    vals.insert(std::make_pair("contents", cocos2d::Value(string)));
-    vals.insert(std::make_pair("baseUrl", baseURL));
-    NapiHelper::postUnorderedMapMessageToUIThread("loadHTMLString", vals);
+    auto env = NapiHelper::getWorkerEnv();
+    auto args = Napi::Object::New(env);
+    args["tag"] = Napi::Number::New(env, static_cast<double>(_viewTag));
+    args["contents"] = Napi::String::New(env, string);
+    args["baseUrl"] = Napi::String::New(env, baseURL);
+
+    NapiHelper::postMessageToUIThread("loadHTMLString", args);
 }
 
 void WebViewImpl::loadURL(const std::string &url) {
-    std::unordered_map<std::string, cocos2d::Value> vals;
-    vals.insert(std::make_pair("tag", _viewTag));
-    vals.insert(std::make_pair("url", url));
-    NapiHelper::postUnorderedMapMessageToUIThread("loadUrl", vals);
+    auto env = NapiHelper::getWorkerEnv();
+    auto args = Napi::Object::New(env);
+    args["tag"] = Napi::Number::New(env, static_cast<double>(_viewTag));
+    args["url"] = Napi::String::New(env, url);
+
+    NapiHelper::postMessageToUIThread("loadUrl", args);
 }
 
 void WebViewImpl::loadFile(const std::string &fileName) {
     auto fullPath = getUrlStringByFileName(fileName);
-    std::unordered_map<std::string, cocos2d::Value> vals;
-    vals.insert(std::make_pair("tag", _viewTag));
-    vals.insert(std::make_pair("url", fullPath));
-    NapiHelper::postUnorderedMapMessageToUIThread("loadUrl", vals);
+
+    auto env = NapiHelper::getWorkerEnv();
+    auto args = Napi::Object::New(env);
+    args["tag"] = Napi::Number::New(env, static_cast<double>(_viewTag));
+    args["url"] = Napi::String::New(env, fullPath);
+
+    NapiHelper::postMessageToUIThread("loadUrl", args);
 }
 
 void WebViewImpl::stopLoading() {
-    NapiHelper::postIntMessageToUIThread("stopLoading", _viewTag);
+    NapiHelper::postMessageToUIThread("stopLoading", Napi::Number::New(NapiHelper::getWorkerEnv(), static_cast<double>(_viewTag)));
 }
 
 void WebViewImpl::reload() {
-    NapiHelper::postIntMessageToUIThread("reload", _viewTag);
+    NapiHelper::postMessageToUIThread("reload", Napi::Number::New(NapiHelper::getWorkerEnv(), static_cast<double>(_viewTag)));
 }
 
 bool WebViewImpl::canGoBack() {
@@ -156,11 +166,11 @@ bool WebViewImpl::canGoForward() {
 }
 
 void WebViewImpl::goBack() {
-    NapiHelper::postIntMessageToUIThread("goBack", _viewTag);
+    NapiHelper::postMessageToUIThread("goBack", Napi::Number::New(NapiHelper::getWorkerEnv(), static_cast<double>(_viewTag)));
 }
 
 void WebViewImpl::goForward() {
-     NapiHelper::postIntMessageToUIThread("goForward", _viewTag);
+    NapiHelper::postMessageToUIThread("goForward", Napi::Number::New(NapiHelper::getWorkerEnv(), static_cast<double>(_viewTag)));
 }
 
 void WebViewImpl::setJavascriptInterfaceScheme(const std::string &scheme) {
@@ -168,14 +178,15 @@ void WebViewImpl::setJavascriptInterfaceScheme(const std::string &scheme) {
 }
 
 void WebViewImpl::evaluateJS(const std::string &js) {
-    std::unordered_map<std::string, cocos2d::Value> vals;
-    vals.insert(std::make_pair("tag", _viewTag));
-    vals.insert(std::make_pair("jsContents", js));
-    NapiHelper::postUnorderedMapMessageToUIThread("evaluateJS", vals);
+    auto env = NapiHelper::getWorkerEnv();
+    auto args = Napi::Object::New(env);
+    args["tag"] = Napi::Number::New(env, static_cast<double>(_viewTag));
+    args["jsContents"] = Napi::String::New(env, js);
+    NapiHelper::postMessageToUIThread("evaluateJS", args);
 }
 
 void WebViewImpl::setScalesPageToFit(bool scalesPageToFit) {
-    NapiHelper::postIntMessageToUIThread("setScalesPageToFit", _viewTag);
+    NapiHelper::postMessageToUIThread("setScalesPageToFit", Napi::Number::New(NapiHelper::getWorkerEnv(), static_cast<double>(_viewTag)));
 }
 
 bool WebViewImpl::shouldStartLoading(int viewTag, const std::string &url) {
@@ -221,21 +232,24 @@ void WebViewImpl::onJsCallback(int viewTag, const std::string &message) {
 }
 
 void WebViewImpl::setVisible(bool visible) {
-    std::unordered_map<std::string, cocos2d::Value> vals;
-    vals.insert(std::make_pair("tag", _viewTag));
-    vals.insert(std::make_pair("visible", visible));
-    NapiHelper::postUnorderedMapMessageToUIThread("setVisible", vals);
+    auto env = NapiHelper::getWorkerEnv();
+    auto args = Napi::Object::New(env);
+    args["tag"] = Napi::Number::New(env, static_cast<double>(_viewTag));
+    args["visible"] = Napi::Boolean::New(env, visible);
+
+    NapiHelper::postMessageToUIThread("setVisible", args);
 }
 
 void WebViewImpl::setFrame(float x, float y, float width, float height) {
-    //cocos2d::Rect rect(x, y, width, height);
-    std::unordered_map<std::string, cocos2d::Value> vals;
-    vals.insert(std::make_pair("tag", _viewTag));
-    vals.insert(std::make_pair("x", x));
-    vals.insert(std::make_pair("y", y));
-    vals.insert(std::make_pair("w", width));
-    vals.insert(std::make_pair("h", height));
-    NapiHelper::postUnorderedMapMessageToUIThread("setWebViewRect", vals);
+    auto env = NapiHelper::getWorkerEnv();
+    auto args = Napi::Object::New(env);
+    args["tag"] = Napi::Number::New(env, static_cast<double>(_viewTag));
+    args["x"] = Napi::Number::New(env, x);
+    args["y"] = Napi::Number::New(env, y);
+    args["w"] = Napi::Number::New(env, width);
+    args["h"] = Napi::Number::New(env, height);
+
+    NapiHelper::postMessageToUIThread("setWebViewRect", args);
 }
 
 void WebViewImpl::setBounces(bool bounces) {
@@ -246,86 +260,50 @@ void WebViewImpl::setBackgroundTransparent(bool isTransparent) {
     // TODO(qgh):OpenHarmony is not supported at this time
 }
 
-void OpenHarmonyWebView::GetInterfaces(std::vector<napi_property_descriptor> &descriptors) {
-    descriptors = {
-        DECLARE_NAPI_FUNCTION("shouldStartLoading", OpenHarmonyWebView::napiShouldStartLoading),
-        DECLARE_NAPI_FUNCTION("finishLoading", OpenHarmonyWebView::napiFinishLoading),
-        DECLARE_NAPI_FUNCTION("failLoading", OpenHarmonyWebView::napiFailLoading),
-        DECLARE_NAPI_FUNCTION("jsCallback", OpenHarmonyWebView::napiJsCallback),
-    };
+static void getViewTagAndUrlFromCallbackInfo(const Napi::CallbackInfo &info, int32_t *viewTag, std::string *url) {
+    auto env = info.Env();
+    if (info.Length() != 2) {
+        Napi::Error::New(env, "napiShouldStartLoading, 2 arguments expected").ThrowAsJavaScriptException();
+        return;
+    }
+
+    auto arg0 = info[0].As<Napi::Number>();
+    auto arg1 = info[1].As<Napi::String>();
+
+    if (env.IsExceptionPending()) {
+        return;
+    }
+
+    *viewTag = arg0.Int32Value();
+    *url = arg1.Utf8Value();
 }
 
-napi_value OpenHarmonyWebView::napiShouldStartLoading(napi_env env, napi_callback_info info) {
-    size_t      argc = 2;
-    napi_value  args[2];
-    NAPI_CALL(env, napi_get_cb_info(env, info, &argc, args, nullptr, nullptr));
-    
-    se::ValueArray seArgs;
-    seArgs.reserve(2);   
-    se::internal::jsToSeArgs(argc, args, &seArgs);
-
-    int32_t viewTag;
-    seval_to_int32(seArgs[0], &viewTag);
-
+void OpenHarmonyWebView::napiShouldStartLoading(const Napi::CallbackInfo &info) {
+    int32_t viewTag = 0;
     std::string url;
-    seval_to_std_string(seArgs[1], &url);
+    getViewTagAndUrlFromCallbackInfo(info, &viewTag, &url);
     WebViewImpl::shouldStartLoading(viewTag, url);
-    return nullptr;
 }
 
-napi_value OpenHarmonyWebView::napiFinishLoading(napi_env env, napi_callback_info info) {
-    size_t      argc = 2;
-    napi_value  args[2];
-    NAPI_CALL(env, napi_get_cb_info(env, info, &argc, args, nullptr, nullptr));
-    
-    se::ValueArray seArgs;
-    seArgs.reserve(2);   
-    se::internal::jsToSeArgs(argc, args, &seArgs);
-
-    int32_t viewTag;
-    seval_to_int32(seArgs[0], &viewTag);
-
+void OpenHarmonyWebView::napiFinishLoading(const Napi::CallbackInfo &info) {
+    int32_t viewTag = 0;
     std::string url;
-    seval_to_std_string(seArgs[1], &url);
+    getViewTagAndUrlFromCallbackInfo(info, &viewTag, &url);
     WebViewImpl::didFinishLoading(viewTag, url);
-    return nullptr;
 }
 
-napi_value OpenHarmonyWebView::napiFailLoading(napi_env env, napi_callback_info info) {
-    size_t      argc = 2;
-    napi_value  args[2];
-    NAPI_CALL(env, napi_get_cb_info(env, info, &argc, args, nullptr, nullptr));
-    
-    se::ValueArray seArgs;
-    seArgs.reserve(2);   
-    se::internal::jsToSeArgs(argc, args, &seArgs);
-
-    int32_t viewTag;
-    seval_to_int32(seArgs[0], &viewTag);
-
+void OpenHarmonyWebView::napiFailLoading(const Napi::CallbackInfo &info) {
+    int32_t viewTag = 0;
     std::string url;
-    seval_to_std_string(seArgs[1], &url);
+    getViewTagAndUrlFromCallbackInfo(info, &viewTag, &url);
     WebViewImpl::didFailLoading(viewTag, url);
-    return nullptr;
 }
 
-napi_value OpenHarmonyWebView::napiJsCallback(napi_env env, napi_callback_info info) {
-    size_t      argc = 2;
-    napi_value  args[2];
-    NAPI_CALL(env, napi_get_cb_info(env, info, &argc, args, nullptr, nullptr));
-    
-    se::ValueArray seArgs;
-    seArgs.reserve(2);   
-    se::internal::jsToSeArgs(argc, args, &seArgs);
-
-    int32_t viewTag;
-    seval_to_int32(seArgs[0], &viewTag);
-
+void OpenHarmonyWebView::napiJsCallback(const Napi::CallbackInfo &info) {
+    int32_t viewTag = 0;
     std::string url;
-    seval_to_std_string(seArgs[1], &url);
+    getViewTagAndUrlFromCallbackInfo(info, &viewTag, &url);
     WebViewImpl::onJsCallback(viewTag, url);
-    return nullptr;
 }
-
 
 } //namespace cocos2d

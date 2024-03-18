@@ -36,7 +36,7 @@
 #include "cocos/scripting/js-bindings/manual/jsb_classtype.hpp"
 #include "base/CCScheduler.h"
 #include "cocos/scripting/js-bindings/event/EventDispatcher.h"
-
+#include "scripting/js-bindings/jswrapper/SeApi.h"
 #include <sstream>
 #include <chrono>
 
@@ -223,7 +223,12 @@ void OpenHarmonyPlatform::timerCb(uv_timer_t* handle) {
     }
 }
 
-void OpenHarmonyPlatform::workerInit(napi_env env, uv_loop_t* loop) {
+void OpenHarmonyPlatform::restartJSVM()
+{
+    g_started = false;
+}
+
+void OpenHarmonyPlatform::workerInit(uv_loop_t* loop) {
     _workerLoop = loop;
     if (_workerLoop) {
         uv_async_init(_workerLoop, &_messageSignal, reinterpret_cast<uv_async_cb>(OpenHarmonyPlatform::onMessageCallback));
@@ -281,11 +286,36 @@ void OpenHarmonyPlatform::setPreferedFramePersecond(int fps) {
 }
 
 void OpenHarmonyPlatform::tick() {
-    static std::chrono::steady_clock::time_point prevTime;
-    static std::chrono::steady_clock::time_point now;
-    static float dt = 0.f;
-    static double dtNS = NANOSECONDS_60FPS;
-    if (dtNS < static_cast<double>(_prefererredNanosecondsPerFrame)) {
+        if (!g_started)
+        {
+            auto scheduler = Application::getInstance()->getScheduler();
+            scheduler->removeAllFunctionsToBePerformedInCocosThread();
+            scheduler->unscheduleAll();
+
+            se::ScriptEngine::getInstance()->cleanup();
+            cocos2d::PoolManager::getInstance()->getCurrentPool()->clear();
+
+            //REFINE: Wait HttpClient, WebSocket, Audio thread to exit
+
+            ccInvalidateStateCache();
+          
+            se::ScriptEngine* se = se::ScriptEngine::getInstance();
+            se->addRegisterCallback(setCanvasCallback);
+
+            EventDispatcher::init();
+
+            if(!g_app->applicationDidFinishLaunching())
+            {
+                return;
+            }
+
+            g_started = true;
+        }
+        static std::chrono::steady_clock::time_point prevTime;
+        static std::chrono::steady_clock::time_point now;
+        static float dt = 0.f;
+        static double dtNS = NANOSECONDS_60FPS;
+        if (dtNS < static_cast<double>(_prefererredNanosecondsPerFrame)) {
         std::this_thread::sleep_for(std::chrono::nanoseconds(
             _prefererredNanosecondsPerFrame - static_cast<int64_t>(dtNS)));
         dtNS = static_cast<double>(_prefererredNanosecondsPerFrame);

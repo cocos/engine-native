@@ -36,6 +36,9 @@
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include "platform/android/jni/JniImp.h"
 #endif
+#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY && SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
+    #include "platform/openharmony/napi/NapiHelper.h"
+#endif
 
 #include <regex>
 
@@ -287,17 +290,7 @@ bool jsb_set_extend_property(const char* ns, const char* clsName)
 namespace {
 
     std::unordered_map<std::string, se::Value> __moduleCache;
-    #if (CC_TARGET_PLATFORM != CC_PLATFORM_OPENHARMONY) 
-        static bool require(se::State& s)
-        {
-            const auto& args = s.args();
-            int argc = (int)args.size();
-            assert(argc >= 1);
-            assert(args[0].isString());
-            return jsb_run_script(args[0].toString(), &s.rval());
-        }
-        SE_BIND_FUNC(require)
-    #else
+    #if (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY && SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_NAPI)
         static bool run_script(se::State& s)
         {
             const auto& args = s.args();
@@ -307,6 +300,16 @@ namespace {
             return jsb_run_script(args[0].toString(), &s.rval());
         }
         SE_BIND_FUNC(run_script)
+    #else
+        static bool require(se::State& s)
+        {
+            const auto& args = s.args();
+            int argc = (int)args.size();
+            assert(argc >= 1);
+            assert(args[0].isString());
+            return jsb_run_script(args[0].toString(), &s.rval());
+        }
+        SE_BIND_FUNC(require)
     #endif
 
     static bool doModuleRequire(const std::string& path, se::Value* ret, const std::string& prevScriptFileDir)
@@ -426,7 +429,7 @@ namespace {
         assert(false);
         return false;
     }
-    #if (CC_TARGET_PLATFORM != CC_PLATFORM_OPENHARMONY) 
+    #if (CC_TARGET_PLATFORM != CC_PLATFORM_OPENHARMONY ||  SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8) 
         static bool moduleRequire(se::State& s)
         {
             const auto& args = s.args();
@@ -1266,14 +1269,139 @@ static bool JSB_hideInputBox(se::State& s)
 }
 SE_BIND_FUNC(JSB_hideInputBox)
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY && SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
+static bool sevalue_to_napivalue(const se::Value &seVal, Napi::Value *napiVal, Napi::Env env);
+
+static bool seobject_to_napivalue(se::Object *seObj, Napi::Value *napiVal, Napi::Env env) {
+    auto napiObj = Napi::Object::New(env);
+    std::vector<std::string> allKeys;
+    bool ok = seObj->getAllKeys(&allKeys);
+    if (ok && !allKeys.empty()) {
+        for (const auto &key : allKeys) {
+            Napi::Value napiProp;
+            se::Value prop;
+            ok = seObj->getProperty(key.c_str(), &prop);
+            if (ok) {
+                ok = sevalue_to_napivalue(prop, &napiProp, env);
+                if (ok) {
+                    napiObj.Set(key.c_str(), napiProp);
+                }
+            }
+        }
+    }
+    *napiVal = napiObj;
+    return true;
+}
+
+static bool sevalue_to_napivalue(const se::Value &seVal, Napi::Value *napiVal, Napi::Env env) {
+    // Only supports number or {tag: number, url: string} now
+    if (seVal.isNumber()) {
+        *napiVal = Napi::Number::New(env, seVal.toDouble());
+    } else if (seVal.isString()) {
+        *napiVal = Napi::String::New(env, seVal.toString().c_str());
+    } else if (seVal.isBoolean()) {
+        *napiVal = Napi::Boolean::New(env, seVal.toBoolean());
+    } else if (seVal.isObject()) {
+        seobject_to_napivalue(seVal.toObject(), napiVal, env);
+    } else {
+        LOGW("sevalue_to_napivalue, Unsupported type: %d", static_cast<int32_t>(seVal.getType()));
+        return false;
+    }
+
+    return true;
+}
+
+static bool JSB_openharmony_postMessage(se::State &s) { // NOLINT(readability-identifier-naming)
+    LOGI("[0111] enter JSB_openharmony_postMessage");
+    const auto &args = s.args();
+    size_t argc = args.size();
+
+    if (argc == 2) {
+        bool ok = false;
+        std::string msgType;
+        ok = seval_to_std_string(args[0], &msgType);
+        SE_PRECONDITION2(ok, false, "Error processing arguments");
+
+        const auto &arg1 = args[1];
+        auto env = NapiHelper::getWorkerEnv();
+
+        Napi::Value napiArg1 = env.Undefined();
+
+        if (arg1.isNumber()) {
+            napiArg1 = Napi::Number::New(env, arg1.toDouble());
+        } else if (arg1.isString()) {
+            napiArg1 = Napi::String::New(env, arg1.toString());
+        }  else if (arg1.isObject()) {
+            seobject_to_napivalue(arg1.toObject(), &napiArg1, env);
+        } else {
+            SE_REPORT_ERROR("postMessage, Unsupported type");
+            return false;
+        }
+
+        NapiHelper::postMessageToUIThread(msgType.c_str(), napiArg1);
+        return true;
+    }
+
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    return false;
+}
+SE_BIND_FUNC(JSB_openharmony_postMessage)
+
+static bool JSB_empty_promise_then(se::State &s) {
+    return true;
+}
+SE_BIND_FUNC(JSB_empty_promise_then)
+
+static bool JSB_openharmony_postSyncMessage(se::State &s) { // NOLINT(readability-identifier-naming)
+    const auto &args = s.args();
+    size_t argc = args.size();
+
+    if (argc == 2) {
+        bool ok = false;
+        std::string msgType;
+        ok = seval_to_std_string(args[0], &msgType);
+        SE_PRECONDITION2(ok, false, "Error processing arguments");
+
+        const auto &arg1 = args[1];
+        auto env = NapiHelper::getWorkerEnv();
+
+        Napi::Value napiArg1 = env.Undefined();
+
+        if (arg1.isNumber()) {
+            napiArg1 = Napi::Number::New(env, arg1.toDouble());
+        } else if (arg1.isString()) {
+            napiArg1 = Napi::String::New(env, arg1.toString());
+        } else if (arg1.isObject()) {
+            seobject_to_napivalue(arg1.toObject(), &napiArg1, env);
+        } else {
+            SE_REPORT_ERROR("postMessage, Unsupported type");
+            return false;
+        }
+
+        Napi::Value napiPromise = NapiHelper::postSyncMessageToUIThread(msgType.c_str(), napiArg1);
+
+        //TODO(cjh): Implement Promise for se
+        se::HandleObject retObj(se::Object::createPlainObject());
+        retObj->defineFunction("then", _SE(JSB_empty_promise_then));
+        s.rval().setObject(retObj);
+        //
+        return true;
+    }
+
+    SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
+    return false;
+}
+SE_BIND_FUNC(JSB_openharmony_postSyncMessage)
+#endif
+
 bool jsb_register_global_variables(se::Object* global)
 {
     g_threadPool.reset(ThreadPool::newFixedThreadPool(3));
-    #if (CC_TARGET_PLATFORM != CC_PLATFORM_OPENHARMONY)
+    #if (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY && SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_NAPI)
+        global->defineFunction("run_script", _SE(run_script));    
+    #else
         global->defineFunction("require", _SE(require));
         global->defineFunction("requireModule", _SE(moduleRequire));
-    #else
-        global->defineFunction("run_script", _SE(run_script));    
     #endif
 
     getOrCreatePlainObject_r("jsb", global, &__jsbObj);
@@ -1316,6 +1444,12 @@ bool jsb_register_global_variables(se::Object* global)
     performanceObj->defineFunction("now", _SE(js_performance_now));
     global->setProperty("performance", se::Value(performanceObj));
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY && SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
+    se::HandleObject ohObj(se::Object::createPlainObject());
+    global->setProperty("oh", se::Value(ohObj));
+    ohObj->defineFunction("postMessage", _SE(JSB_openharmony_postMessage));
+    ohObj->defineFunction("postSyncMessage", _SE(JSB_openharmony_postSyncMessage));
+#endif
     se::ScriptEngine::getInstance()->clearException();
 
     se::ScriptEngine::getInstance()->addBeforeCleanupHook([](){

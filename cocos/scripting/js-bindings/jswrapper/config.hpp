@@ -50,7 +50,7 @@
             #define SCRIPT_ENGINE_TYPE           SCRIPT_ENGINE_JSC
         #endif
     #endif
-#elif defined(OPENHARMONY)
+#elif (defined(OPENHARMONY) && USE_SE_NAPI)
     #define SCRIPT_ENGINE_TYPE           SCRIPT_ENGINE_NAPI
     //TODO how to make simulator build with v8 too? Because in release mode, it will build
     // which means it will build armv7, but v8 doesn't support armv7.

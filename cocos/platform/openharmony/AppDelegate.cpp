@@ -26,7 +26,7 @@
 #include "AppDelegate.h"
 
 #include "cocos2d.h"
-
+#include "config.hpp"
 #include "cocos/scripting/js-bindings/manual/jsb_module_register.hpp"
 #include "cocos/scripting/js-bindings/manual/jsb_global.h"
 #include "cocos/scripting/js-bindings/jswrapper/SeApi.h"
@@ -65,8 +65,9 @@ bool AppDelegate::applicationDidFinishLaunching()
     se->start();
     
     se::AutoHandleScope hs;
-    // jsb_run_script("jsb-adapter/jsb-builtin.js");
-    // jsb_run_script("main.js");
+    #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
+        jsb_run_script("main.js");
+    #endif
     
     se->addAfterCleanupHook([]() {
         JSBClassType::destroy();

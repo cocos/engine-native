@@ -24,6 +24,7 @@
 ****************************************************************************/
 
 #include "egl_core.h"
+#include "HelperMacros.h"
 #include "platform/openharmony/napi/NapiHelper.h"
 
 EGLConfig getConfig(int version, EGLDisplay eglDisplay) {

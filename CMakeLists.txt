@@ -28,8 +28,9 @@ option(CC_USE_WEBSOCKET_SERVER     "Enable WebSocket Server"            OFF)
 option(CC_USE_MIDDLEWARE           "Enable Middleware"                  ON)
 option(CC_USE_SPINE                "Enable Spine"                       ON)
 option(CC_USE_DRAGONBONES          "Enable Dragonbones"                 ON)
-option(CC_USE_SE_NAPI              "Enable Dragonbones"                 ON)
 option(CC_USE_PARTICLE             "Enable Particle"                    ON)
+option(CC_USE_SE_NAPI              "Enable NAPI"                        ON)
+option(CC_USE_SE_V8                "Enable V8"                          OFF)
 
 
 ################################# external source code ################################
@@ -77,6 +78,13 @@ list(APPEND CC_COCOS_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/CCStdC.h
     ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/AppDelegate.cpp
     ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/AppDelegate.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/NapiInit.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/NapiHelper.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/NapiHelper.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/native_common.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/CommonHeader.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/napi.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/napi-inl.h
 )
 
 ##### base
@@ -218,14 +226,58 @@ list(APPEND CC_COCOS_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/Value.hpp
 )
 
+##### v8 script engine
+if(CC_USE_SE_V8)
+message("USE_SE_V8")
+list(APPEND CC_COCOS_SOURCES 
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/Base.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/Class.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/Class.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/HelperMacros.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/Object.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/Object.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/ObjectWrap.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/ObjectWrap.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/ScriptEngine.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/ScriptEngine.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/SeApi.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/Utils.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/Utils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/base64.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/env.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/http_parser.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/inspector_agent.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/inspector_io.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/inspector_socket.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/inspector_socket_server.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/node.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/node_debug_options.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/node_mutex.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/SHA1.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/util-inl.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/util.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/v8_inspector_protocol_json.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/env.cc
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/http_parser.c
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/inspector_agent.cc
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/inspector_io.cc
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/inspector_socket.cc
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/inspector_socket_server.cc
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/node.cc
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/node_debug_options.cc
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/SHA1.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8/debugger/util.cc
+)
+endif ()
+
 ##### napi script engine
+if(CC_USE_SE_NAPI)
+message("USE_SE_NAPI")
 list(APPEND CC_COCOS_SOURCES 
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi/Class.cpp
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi/Class.h
-    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi/CommonHeader.h
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi/HelperMacros.cpp
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi/HelperMacros.h
-    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi/native_common.h
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi/Object.cpp
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi/Object.h
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi/ScriptEngine.cpp
@@ -233,10 +285,8 @@ list(APPEND CC_COCOS_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi/SeApi.h
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi/Utils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi/Utils.h
-    ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/NapiHelper.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/NapiHelper.h
-    ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/NapiInit.cpp
 )
+endif ()
 
 ##### CCDevice CCApplication modules:screen、system
 list(APPEND CC_COCOS_SOURCES 
@@ -878,6 +928,7 @@ function(cc_apply_definations target)
         $<IF:$<BOOL:${CC_USE_DRAGONBONES}>,USE_DRAGONBONES=1,USE_DRAGONBONES=0>
         $<IF:$<BOOL:${CC_USE_SE_NAPI}>,USE_SE_NAPI=1,USE_SE_NAPI=0>
         $<IF:$<BOOL:${CC_USE_PARTICLE}>,USE_PARTICLE=1,USE_PARTICLE=0>
+        $<IF:$<BOOL:${CC_USE_SE_V8}>,USE_SE_V8=1,USE_SE_V8=0>
     )
 endfunction()
 
@@ -904,5 +955,9 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrap
 include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/storage/local-storage)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/ui/edit-box)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/ui/webview)
-include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi)
+if(CC_USE_SE_NAPI)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi)
+else()
+include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8)
+endif()

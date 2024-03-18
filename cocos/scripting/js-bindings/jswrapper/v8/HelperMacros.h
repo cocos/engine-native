@@ -25,10 +25,27 @@
 #pragma once
 
 #include "../config.hpp"
+#include "platform/CCPlatformConfig.h"
+#include <stdint.h>
 
 #if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
 
 extern uint32_t __jsbInvocationCount;
+
+#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+    #include <hilog/log.h>
+    #ifndef LOGI
+        #define LOGI(...) ((void) OH_LOG_Print(LOG_APP, LOG_INFO, LOG_DOMAIN, "HMG_LOG", __VA_ARGS__))
+        #define LOGW(...) ((void) OH_LOG_Print(LOG_APP, LOG_WARN, LOG_DOMAIN, "HMG_LOG", __VA_ARGS__))
+        #define LOGE(...) ((void) OH_LOG_Print(LOG_APP, LOG_ERROR, LOG_DOMAIN, "HMG_LOG", __VA_ARGS__))
+        #define LOGD(...) ((void) OH_LOG_Print(LOG_APP, LOG_DEBUG, LOG_DOMAIN, "HMG_LOG", __VA_ARGS__))
+    #endif
+#else
+    #define LOGI
+    #define LOGW
+    #define LOGE
+    #define LOGD
+#endif
 
 #ifdef __GNUC__
 #define SE_UNUSED __attribute__ ((unused))

@@ -29,7 +29,7 @@
 #include "Class.hpp"
 #include "ScriptEngine.hpp"
 #include "../MappingUtils.hpp"
-
+#include "platform/CCPlatformConfig.h"
 #include <memory>
 #include <unordered_map>
 
@@ -214,6 +214,17 @@ namespace se {
     Object* Object::createArrayBufferObject(void* data, size_t byteLength)
     {
         v8::Local<v8::ArrayBuffer> jsobj = v8::ArrayBuffer::New(__isolate, byteLength);
+        
+#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+        if (data)
+        {
+            memcpy(jsobj->GetBackingStore()->Data(), data, byteLength);
+        }
+        else
+        {
+            memset(jsobj->GetBackingStore()->Data(), 0, byteLength);
+        }
+#else
         if (data)
         {
             memcpy(jsobj->GetContents().Data(), data, byteLength);
@@ -222,6 +233,7 @@ namespace se {
         {
             memset(jsobj->GetContents().Data(), 0, byteLength);
         }
+#endif
         Object* obj = Object::_createJSObject(nullptr, jsobj);
         return obj;
     }
@@ -242,11 +254,19 @@ namespace se {
 
         v8::Local<v8::ArrayBuffer> jsobj = v8::ArrayBuffer::New(__isolate, byteLength);
         //If data has content,then will copy data into buffer,or will only clear buffer.
+#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+        if (data) {
+            memcpy(jsobj->GetBackingStore()->Data(), data, byteLength);
+        } else {
+            memset(jsobj->GetBackingStore()->Data(), 0, byteLength);
+        }
+#else
         if (data) {
             memcpy(jsobj->GetContents().Data(), data, byteLength);
         }else{
             memset(jsobj->GetContents().Data(), 0, byteLength);
         }
+#endif
         
         v8::Local<v8::Object> arr;
         switch (type) {
@@ -463,8 +483,14 @@ namespace se {
         assert(isTypedArray());
         v8::Local<v8::Object> obj = const_cast<Object*>(this)->_obj.handle(__isolate);
         v8::Local<v8::TypedArray> arr = v8::Local<v8::TypedArray>::Cast(obj);
+#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+        const auto &backingStore = arr->Buffer()->GetBackingStore();
+        *ptr = static_cast<uint8_t *>(backingStore->Data()) + arr->ByteOffset();
+#else
         v8::ArrayBuffer::Contents content = arr->Buffer()->GetContents();
         *ptr = (uint8_t*)content.Data() + arr->ByteOffset();
+#endif
+        
         *length = arr->ByteLength();
         return true;
     }
@@ -480,9 +506,15 @@ namespace se {
         assert(isArrayBuffer());
         v8::Local<v8::Object> obj = const_cast<Object*>(this)->_obj.handle(__isolate);
         v8::Local<v8::ArrayBuffer> arrBuf = v8::Local<v8::ArrayBuffer>::Cast(obj);
+#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+        const auto &backingStore = arrBuf->GetBackingStore();
+        *ptr = static_cast<uint8_t *>(backingStore->Data());
+        *length = backingStore->ByteLength();
+#else
         v8::ArrayBuffer::Contents content = arrBuf->GetContents();
         *ptr = (uint8_t*)content.Data();
         *length = content.ByteLength();
+#endif        
         return true;
     }
 

@@ -32,10 +32,8 @@ namespace cocos2d {
 
 class OpenHarmonyEditBox : public EditBox {
 public:
-    static void GetInterfaces(std::vector<napi_property_descriptor>& descriptors);
-    
-    static napi_value napiOnComplete(napi_env env, napi_callback_info info);
-    static napi_value napiOnTextChange(napi_env env, napi_callback_info info);
+    static void napiOnComplete(const Napi::CallbackInfo &info);
+    static void napiOnTextChange(const Napi::CallbackInfo &info);
 
     static napi_value show(const std::string& inputMessage);
     static napi_value hide();

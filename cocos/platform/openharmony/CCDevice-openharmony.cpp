@@ -25,6 +25,7 @@ THE SOFTWARE.
 ****************************************************************************/
 
 #include "platform/CCPlatformConfig.h"
+#include "HelperMacros.h"
 #if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
 
 #include "platform/CCDevice.h"
@@ -33,9 +34,11 @@ THE SOFTWARE.
 NS_CC_BEGIN
 
 int Device::getDPI() {
-    float value;
-    NapiHelper::napiCallFunction("getDPI", &value);
-    return value;
+    auto value = NapiHelper::napiCallFunction("getDPI");
+    if (value.IsNumber()) {
+        return value.As<Napi::Number>().FloatValue();
+    }
+    return 0.F;
 }
 
 int Device::getDevicePixelRatio() {
@@ -51,20 +54,56 @@ void Device::setKeepScreenOn(bool value) {
 }
 
 cocos2d::Vec4 Device::getSafeAreaEdge() {
-    return cocos2d::Vec4();
+        // screen with enabled cutout area
+        auto value = NapiHelper::napiCallFunction("getDeviceOrientation");
+        auto height = NapiHelper::napiCallFunction("getCutoutHeight");
+        auto width = NapiHelper::napiCallFunction("getCutoutWidth");
+        int32_t orientation = 0;
+        int32_t cutout_height = 0;
+        int32_t cutout_width = 0;
+
+        if (value.IsNumber()) {
+            orientation = value.As<Napi::Number>().Int32Value();
+        }
+        if (height.IsNumber()) {
+            cutout_height = height.As<Napi::Number>().Int32Value();
+        }
+        if (width.IsNumber()) {
+            cutout_width = width.As<Napi::Number>().Int32Value();
+        }
+
+        double safearea_top = 0.0f;
+        double safearea_left = 0.0f;
+        double safearea_bottom = 0.0f;
+        double safearea_right = 0.0f;
+
+        if(0 == orientation) {
+            safearea_top += cutout_height;
+        } else if(1 == orientation) {
+            safearea_right += cutout_width;
+        } else if(2 == orientation) {
+            safearea_bottom += cutout_height;
+        } else if(3 == orientation) {
+            safearea_left += cutout_width;
+        }
+        
+        return cocos2d::Vec4(safearea_top, safearea_left, safearea_bottom, safearea_right);
 }
 
 Device::Rotation Device::getDeviceRotation() {
-    int32_t value = 0;
-    NapiHelper::napiCallFunction("getDeviceOrientation", &value);
-    if(value == 0) {
+    auto value = NapiHelper::napiCallFunction("getDeviceOrientation");
+    int32_t result = 0;
+    if (value.IsNumber()) {
+        result = value.As<Napi::Number>().Int32Value();
+    }
+     if(result == 0) {
         return cocos2d::Device::Rotation::_0;
-    } else if(value == 1) {
+    } else if(result == 1) {
         // TODO(qgh): The openharmony platform is rotated clockwise.
         return cocos2d::Device::Rotation::_270;
-    } else if(value == 2) {
+    } else if(result == 2) {
         return cocos2d::Device::Rotation::_180;
-    } else if(value == 3) {
+    } else if(result == 3) {
         // TODO(qgh): The openharmony platform is rotated clockwise.
         return cocos2d::Device::Rotation::_90;
     }
@@ -73,39 +112,47 @@ Device::Rotation Device::getDeviceRotation() {
 }
 
 Device::NetworkType Device::getNetworkType() {
-    int32_t value;
-    NapiHelper::napiCallFunction("getNetworkType", &value);
-    if(value == 0) {
-        return cocos2d::Device::NetworkType::WWAN;
-    } else if(value == 1 or value == 3) {
-        return cocos2d::Device::NetworkType::LAN;
-    } else {
-        return cocos2d::Device::NetworkType::NONE;
+    auto value = NapiHelper::napiCallFunction("getNetworkType");
+    int32_t result;
+    if (value.IsNumber()) {
+        result = value.As<Napi::Number>().Int32Value();
     }
+    if(result == 0) {
+        return cocos2d::Device::NetworkType::WWAN;
+    } else if(result == 1 or result == 3) {
+        return cocos2d::Device::NetworkType::LAN;
+    }
+    return cocos2d::Device::NetworkType::NONE;
 }
+
 float Device::getBatteryLevel() {
-    int32_t value;
-    NapiHelper::napiCallFunction("getBatteryLevel", &value);
-    return value;
+    auto value = NapiHelper::napiCallFunction("getBatteryLevel");
+    if (value.IsNumber()) {
+        return value.As<Napi::Number>().FloatValue();
+    }
+    return 0.F;
 }
 
 const Device::MotionValue& Device::getDeviceMotionValue() {
-    std::vector<float>  v;
-    NapiHelper::napiCallFunction<std::vector<float> >("getDeviceMotionValue", &v);
     static MotionValue motionValue;
-    if (!v.empty()) {
-        
-        motionValue.accelerationIncludingGravityX = v[0];
-        motionValue.accelerationIncludingGravityY = v[1];
-        motionValue.accelerationIncludingGravityZ = v[2];
+    auto value = NapiHelper::napiCallFunction("getDeviceMotionValue");
+    if (!value.IsArray()) {
+         return motionValue;
+    }
+    
+    auto v = value.As<Napi::Array>();
+    if (v.Length() == 9) {
+        motionValue.accelerationIncludingGravityX = static_cast<Napi::Value>(v[(uint32_t)0]).As<Napi::Number>().FloatValue();
+        motionValue.accelerationIncludingGravityY = static_cast<Napi::Value>(v[(uint32_t)1]).As<Napi::Number>().FloatValue();
+        motionValue.accelerationIncludingGravityZ = static_cast<Napi::Value>(v[(uint32_t)2]).As<Napi::Number>().FloatValue();
 
-        motionValue.accelerationX = v[3];
-        motionValue.accelerationY = v[4];
-        motionValue.accelerationZ = v[5];
+        motionValue.accelerationX = static_cast<Napi::Value>(v[(uint32_t)3]).As<Napi::Number>().FloatValue();
+        motionValue.accelerationY = static_cast<Napi::Value>(v[(uint32_t)4]).As<Napi::Number>().FloatValue();
+        motionValue.accelerationZ = static_cast<Napi::Value>(v[(uint32_t)5]).As<Napi::Number>().FloatValue();
 
-        motionValue.rotationRateAlpha = v[6];
-        motionValue.rotationRateBeta = v[7];
-        motionValue.rotationRateGamma = v[8];
+        motionValue.rotationRateAlpha = static_cast<Napi::Value>(v[(uint32_t)6]).As<Napi::Number>().FloatValue();
+        motionValue.rotationRateBeta = static_cast<Napi::Value>(v[(uint32_t)7]).As<Napi::Number>().FloatValue();
+        motionValue.rotationRateGamma = static_cast<Napi::Value>(v[(uint32_t)8]).As<Napi::Number>().FloatValue();
     } else {
         memset(&motionValue, 0, sizeof(motionValue));
     }
@@ -114,7 +161,10 @@ const Device::MotionValue& Device::getDeviceMotionValue() {
 
 std::string Device::getDeviceModel() {
     std::string str;
-    NapiHelper::napiCallFunction<std::string>("getDeviceModel", &str);
+    auto ret = NapiHelper::napiCallFunction("getDeviceModel");
+    if (ret.IsString()) {
+        str = ret.As<Napi::String>().Utf8Value();
+    }
     return str;
 }
 
@@ -134,8 +184,7 @@ void Device::setAccelerometerInterval(float interval) {
 }
 
 void Device::vibrate(float duration) {
-    int32_t value = 0;
-    NapiHelper::napiCallFunctionByFloatArgs("vibrate", duration, &value);
+    NapiHelper::napiCallFunction("vibrate", duration);
 }
 
 NS_CC_END

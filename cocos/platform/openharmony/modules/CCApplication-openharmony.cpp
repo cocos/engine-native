@@ -89,13 +89,13 @@ void Application::start()
 
 void Application::restart()
 {
-    // restartJSVM();
+    OpenHarmonyPlatform::getInstance()->restartJSVM();
 }
 
 void Application::end()
 {
     int32_t value;
-    NapiHelper::napiCallFunction("terminateProcess", &value);
+    NapiHelper::napiCallFunction("terminateProcess");
 }
 
 void Application::setMultitouch(bool /*value*/)
@@ -142,7 +142,10 @@ void Application::setDisplayStats(bool isShow) {
 
 std::string Application::getCurrentLanguageCode() const {
     std::string str;
-    NapiHelper::napiCallFunction<std::string>("getSystemLanguage", &str);
+    auto ret = NapiHelper::napiCallFunction("getSystemLanguage");
+    if (ret.IsString()) {
+        str = ret.As<Napi::String>().Utf8Value();
+    }
     std::string::size_type pos = str.find('-');
     if(pos != std::string::npos) {
         str = str.substr(0, pos);
@@ -269,7 +272,10 @@ void Application::copyTextToClipboard(const std::string &text)
 std::string Application::getSystemVersion()
 {
     std::string str;
-    NapiHelper::napiCallFunction<std::string>("getOSFullName", &str);
+    auto ret = NapiHelper::napiCallFunction("getOSFullName");
+    if (ret.IsString()) {
+        str = ret.As<Napi::String>().Utf8Value();
+    }
     return str;
 }
 

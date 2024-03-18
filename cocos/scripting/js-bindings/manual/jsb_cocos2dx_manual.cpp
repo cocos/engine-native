@@ -708,7 +708,7 @@ static void js_engine_LabelRenderer_export_structs_info(se::Object *obj)
         DESCRIPT_FIELD(cocos2d::LabelRenderer::LabelRendererConfig, fontSizeRetina, "float");
         ss << "}";
         se::Object *cfgFields;
-        #if (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
+        #if (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY && SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_NAPI)
             cfgFields = se::Object::createUTF8String(ss.str());
         #else
             cfgFields = se::Object::createJSONObject(ss.str());
@@ -761,7 +761,7 @@ static void js_engine_LabelRenderer_export_structs_info(se::Object *obj)
         DESCRIPT_FIELD(cocos2d::LabelLayoutInfo, overflow, "int8");
         ss << "}";
         se::Object *cfgFields;
-        #if (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
+        #if (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY && SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_NAPI)
             cfgFields = se::Object::createUTF8String(ss.str());
         #else
             cfgFields = se::Object::createJSONObject(ss.str());

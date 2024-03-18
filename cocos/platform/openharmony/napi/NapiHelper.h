@@ -25,150 +25,23 @@
 
 #pragma once
 
-#include <napi/native_api.h>
-#include <uv.h>
-#include "scripting/js-bindings/jswrapper/SeApi.h"
-#include "scripting/js-bindings/manual/jsb_conversions.hpp"
+#define NODE_ADDON_API_ENABLE_TYPE_CHECK_ON_AS 1
+#define NAPI_DISABLE_CPP_EXCEPTIONS            1
+#define NODE_ADDON_API_DISABLE_DEPRECATED      1
+#include "napi.h"
 
 namespace cocos2d {
 
 class NapiHelper {
 public:
-
-    static napi_value getContext(napi_env env, napi_callback_info info);
-    // APP Lifecycle
-    static napi_value napiOnCreate(napi_env env, napi_callback_info info);
-    static napi_value napiOnShow(napi_env env, napi_callback_info info);
-    static napi_value napiOnHide(napi_env env, napi_callback_info info);
-    static napi_value napiOnDestroy(napi_env env, napi_callback_info info);
-    static napi_value napiOnBackPress(napi_env env, napi_callback_info info);
-
-    // JS Page : Lifecycle
-    static napi_value napiOnPageShow(napi_env env, napi_callback_info info);
-    static napi_value napiOnPageHide(napi_env env, napi_callback_info info);
-
-    // Worker Func
-    static napi_value napiWorkerInit(napi_env env, napi_callback_info info);
-    static napi_value napiASend(napi_env env, napi_callback_info info);
-    static napi_value napiNativeEngineInit(napi_env env, napi_callback_info info);
-    static napi_value napiNativeEngineStart(napi_env env, napi_callback_info info);
-
-    static napi_value napiWritablePathInit(napi_env env, napi_callback_info info);
-    static napi_value napiResourceManagerInit(napi_env env, napi_callback_info info);
-
-    static napi_value napiOnDisplayChange(napi_env env, napi_callback_info info);
-
-    template <class ReturnType>
-    static napi_value napiCallFunction(const std::string& functionName, ReturnType* value) {
-        if (!se::ScriptEngine::getInstance()->isValid()) {
-            return nullptr;
-        }
-        se::Value tickVal;
-        se::AutoHandleScope scope;
-        if (tickVal.isUndefined()) {
-            se::ScriptEngine::getInstance()->getGlobalObject()->getProperty(functionName, &tickVal);
-        }
-        se::Value rval;
-        se::ValueArray tickArgsValArr(1);
-        if (!tickVal.isUndefined()) {
-            tickVal.toObject()->call(tickArgsValArr, nullptr, &rval);
-        }
-        if(rval.isNullOrUndefined()) {
-            return nullptr;
-        }
-        bool ok = true;
-        ok &= seval_to_native_base_type(rval, value);
-        SE_PRECONDITION2(ok, nullptr, "Error processing arguments");
-        return nullptr;
-    }
-
-    static napi_value napiCallFunctionByStrArgs(const std::string& functionName, const std::string& args1, int32_t* value) {
-        if (!se::ScriptEngine::getInstance()->isValid()) {
-            return nullptr;
-        }
-        se::Value tickVal;
-        se::AutoHandleScope scope;
-        if (tickVal.isUndefined()) {
-            se::ScriptEngine::getInstance()->getGlobalObject()->getProperty(functionName, &tickVal);
-        }
-        se::Value rval;
-        se::ValueArray tickArgsValArr;
-        tickArgsValArr.push_back(se::Value(args1));
-        if (!tickVal.isUndefined()) {
-            tickVal.toObject()->call(tickArgsValArr, nullptr, &rval);
-        }
-        if(rval.isNullOrUndefined()) {
-            return nullptr;
-        }
-        bool ok = true;
-        ok &= seval_to_native_base_type(rval, value);
-        SE_PRECONDITION2(ok, nullptr, "Error processing arguments");
-        return nullptr;
-    }
-
-    static napi_value napiCallFunctionByFloatArgs(const std::string& functionName, float& sec, int32_t* value) {
-        if (!se::ScriptEngine::getInstance()->isValid()) {
-            return nullptr;
-        }
-        se::Value tickVal;
-        se::AutoHandleScope scope;
-        if (tickVal.isUndefined()) {
-            se::ScriptEngine::getInstance()->getGlobalObject()->getProperty(functionName, &tickVal);
-        }
-        se::Value rval;
-        se::ValueArray tickArgsValArr;
-        tickArgsValArr.push_back(se::Value(sec));
-        if (!tickVal.isUndefined()) {
-            tickVal.toObject()->call(tickArgsValArr, nullptr, &rval);
-        }
-        if(rval.isNullOrUndefined()) {
-            return nullptr;
-        }
-        bool ok = true;
-        ok &= seval_to_native_base_type(rval, value);
-        SE_PRECONDITION2(ok, nullptr, "Error processing arguments");
-        return nullptr;
-    }
-
-    static napi_value napiSetPostMessageFunction(napi_env env, napi_callback_info info);
-    // Napi export
-    static bool exportFunctions(napi_env env, napi_value exports);
-
-    static void postStringMessageToUIThread(const std::string& type, std::string param) {
-        if (!_postMsg2UIThreadCb) {
-            return;
-        }
-        CC_UNUSED bool ok = true;
-        se::Value value;
-        ok &= std_string_to_seval(param, &value);
-        _postMsg2UIThreadCb(type, value);
-    }
-
-    static void postIntMessageToUIThread(const std::string& type, int param) {
-        if (!_postMsg2UIThreadCb) {
-            return;
-        }
-        CC_UNUSED bool ok = true;
-        se::Value value;
-        ok &= native_int_to_se(param, value, nullptr /*ctx*/);
-        _postMsg2UIThreadCb(type, value);
-    }
-
-    static void postUnorderedMapMessageToUIThread(const std::string& type, std::unordered_map<std::string, cocos2d::Value> param) {
-        if (!_postMsg2UIThreadCb) {
-            return;
-        }
-        CC_UNUSED bool ok = true;
-        se::Value value;
-        ok &= native_unorderedmap_to_se(param, value, nullptr /*ctx*/);
-        _postMsg2UIThreadCb(type, value);
-    }
-
-public:
-    using PostMessage2UIThreadCb = std::function<void(const std::string&, const se::Value&)>;
-    static PostMessage2UIThreadCb _postMsg2UIThreadCb;
-    using PostSyncMessage2UIThreadCb = std::function<void(const std::string&, const se::Value&, se::Value*)>;
-    static PostSyncMessage2UIThreadCb _postSyncMsg2UIThreadCb;
+    static Napi::Env getWorkerEnv();
+    static Napi::Object init(Napi::Env env, Napi::Object exports);
+    static Napi::Value napiCallFunction(const char* functionName);
+    static Napi::Value napiCallFunction(const char *functionName,float duration);
+    static void postMessageToUIThread(const std::string
+                                                              &type,
+                                                          Napi::Value param);
+    static Napi::Value postSyncMessageToUIThread(const std::string& type, Napi::Value param);
 };
 
 }

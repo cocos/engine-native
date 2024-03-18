@@ -31,15 +31,8 @@ const char kLibname[] = "cocos";
  * function for module exports
  */
 static napi_value init(napi_env env, napi_value exports) {
-    napi_property_descriptor desc[] = {
-        DECLARE_NAPI_FUNCTION("getContext", cocos2d::NapiHelper::getContext),
-    };
-    
-    NAPI_CALL(env, napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc));
-    bool ret = cocos2d::NapiHelper::exportFunctions(env, exports);
-    if (!ret) {
-        LOGE("Init failed");
-    }
+    LOGI("napi init!!!");
+    cocos2d::NapiHelper::init(Napi::Env(env), Napi::Object(env, exports));
     return exports;
 }
 
@@ -58,6 +51,6 @@ static napi_module cocos2dModule = {
 /*
  * Module register function
  */
-extern "C" __attribute__((constructor)) void RegisterModule(void) {
+extern "C" __attribute__((visibility("default"))) __attribute__((constructor)) void RegisterModule(void) {
     napi_module_register(&cocos2dModule);
 }
