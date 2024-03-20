@@ -290,27 +290,16 @@ bool jsb_set_extend_property(const char* ns, const char* clsName)
 namespace {
 
     std::unordered_map<std::string, se::Value> __moduleCache;
-    #if (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY && SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_NAPI)
-        static bool run_script(se::State& s)
-        {
-            const auto& args = s.args();
-            int argc = (int)args.size();
-            assert(argc >= 1);
-            assert(args[0].isString());
-            return jsb_run_script(args[0].toString(), &s.rval());
-        }
-        SE_BIND_FUNC(run_script)
-    #else
-        static bool require(se::State& s)
-        {
-            const auto& args = s.args();
-            int argc = (int)args.size();
-            assert(argc >= 1);
-            assert(args[0].isString());
-            return jsb_run_script(args[0].toString(), &s.rval());
-        }
-        SE_BIND_FUNC(require)
-    #endif
+
+    static bool require(se::State& s)
+    {
+        const auto& args = s.args();
+        int argc = (int)args.size();
+        assert(argc >= 1);
+        assert(args[0].isString());
+        return jsb_run_script(args[0].toString(), &s.rval());
+    }
+    SE_BIND_FUNC(require)
 
     static bool doModuleRequire(const std::string& path, se::Value* ret, const std::string& prevScriptFileDir)
     {
@@ -1398,7 +1387,7 @@ bool jsb_register_global_variables(se::Object* global)
 {
     g_threadPool.reset(ThreadPool::newFixedThreadPool(3));
     #if (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY && SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_NAPI)
-        global->defineFunction("run_script", _SE(run_script));    
+        global->defineFunction("run_script", _SE(require));    
     #else
         global->defineFunction("require", _SE(require));
         global->defineFunction("requireModule", _SE(moduleRequire));

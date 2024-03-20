@@ -223,8 +223,7 @@ void OpenHarmonyPlatform::timerCb(uv_timer_t* handle) {
     }
 }
 
-void OpenHarmonyPlatform::restartJSVM()
-{
+void OpenHarmonyPlatform::restartJSVM() {
     g_started = false;
 }
 
@@ -286,38 +285,35 @@ void OpenHarmonyPlatform::setPreferedFramePersecond(int fps) {
 }
 
 void OpenHarmonyPlatform::tick() {
-        if (!g_started)
-        {
-            auto scheduler = Application::getInstance()->getScheduler();
-            scheduler->removeAllFunctionsToBePerformedInCocosThread();
-            scheduler->unscheduleAll();
+    if(!g_started) {
+        auto scheduler = Application::getInstance()->getScheduler();
+        scheduler->removeAllFunctionsToBePerformedInCocosThread();
+        scheduler->unscheduleAll();
 
-            se::ScriptEngine::getInstance()->cleanup();
-            cocos2d::PoolManager::getInstance()->getCurrentPool()->clear();
+        se::ScriptEngine::getInstance()->cleanup();
+        cocos2d::PoolManager::getInstance()->getCurrentPool()->clear();
 
-            //REFINE: Wait HttpClient, WebSocket, Audio thread to exit
-
-            ccInvalidateStateCache();
+        //REFINE: Wait HttpClient, WebSocket, Audio thread to exit
+        ccInvalidateStateCache();
           
-            se::ScriptEngine* se = se::ScriptEngine::getInstance();
-            se->addRegisterCallback(setCanvasCallback);
+        se::ScriptEngine* se = se::ScriptEngine::getInstance();
+        se->addRegisterCallback(setCanvasCallback);
 
-            EventDispatcher::init();
+        EventDispatcher::init();
 
-            if(!g_app->applicationDidFinishLaunching())
-            {
+        if(!g_app->applicationDidFinishLaunching()) {
                 return;
-            }
-
-            g_started = true;
         }
-        static std::chrono::steady_clock::time_point prevTime;
-        static std::chrono::steady_clock::time_point now;
-        static float dt = 0.f;
-        static double dtNS = NANOSECONDS_60FPS;
-        if (dtNS < static_cast<double>(_prefererredNanosecondsPerFrame)) {
+        g_started = true;
+    }
+
+    static std::chrono::steady_clock::time_point prevTime;
+    static std::chrono::steady_clock::time_point now;
+    static float dt = 0.f;
+    static double dtNS = NANOSECONDS_60FPS;
+    if(dtNS < static_cast<double>(_prefererredNanosecondsPerFrame)) {
         std::this_thread::sleep_for(std::chrono::nanoseconds(
-            _prefererredNanosecondsPerFrame - static_cast<int64_t>(dtNS)));
+        _prefererredNanosecondsPerFrame - static_cast<int64_t>(dtNS)));
         dtNS = static_cast<double>(_prefererredNanosecondsPerFrame);
     }
     prevTime = std::chrono::steady_clock::now();

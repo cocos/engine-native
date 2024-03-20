@@ -71,10 +71,10 @@ cocos2d::Vec4 Device::getSafeAreaEdge() {
     if (width.IsNumber()) {
         cutout_width = width.As<Napi::Number>().Int32Value();
     }
-    double safearea_top = 0.0f;
-    double safearea_left = 0.0f;
-    double safearea_bottom = 0.0f;
-    double safearea_right = 0.0f;
+    float safearea_top = 0.0f;
+    float safearea_left = 0.0f;
+    float safearea_bottom = 0.0f;
+    float safearea_right = 0.0f;
     if(0 == orientation) {
         safearea_top += cutout_height;
     } else if(1 == orientation) {
@@ -94,7 +94,7 @@ Device::Rotation Device::getDeviceRotation() {
     if (value.IsNumber()) {
         result = value.As<Napi::Number>().Int32Value();
     }
-     if(result == 0) {
+    if(result == 0) {
         return cocos2d::Device::Rotation::_0;
     } else if(result == 1) {
         // TODO(qgh): The openharmony platform is rotated clockwise.
