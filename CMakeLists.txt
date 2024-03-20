@@ -82,7 +82,6 @@ list(APPEND CC_COCOS_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/NapiHelper.cpp
     ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/NapiHelper.h
     ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/native_common.h
-    ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/CommonHeader.h
     ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/napi.h
     ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/napi-inl.h
 )
@@ -283,6 +282,7 @@ list(APPEND CC_COCOS_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi/SeApi.h
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi/Utils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi/Utils.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi/CommonHeader.h
 )
 endif ()
 
