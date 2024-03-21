@@ -68,10 +68,6 @@ namespace {
 AudioEngineImpl *gAudioImpl = nullptr;
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
     int bufferSizeInFrames = getDeviceAudioBufferSizeInFramesJNI();
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
-    // TODO(hack) : There is currently a bug in the opensles module,
-    // so openharmony must configure a fixed size, otherwise the callback will be suspended
-    int bufferSizeInFrames = 2048;
 #endif
 
 int outputSampleRate = 44100;
@@ -199,7 +195,8 @@ bool AudioEngineImpl::init()
         // get the engine interface, which is needed in order to create other objects
         result = (*_engineObject)->GetInterface(_engineObject, SL_IID_ENGINE, &_engineEngine);
         if(SL_RESULT_SUCCESS != result){ ERRORLOG("get the engine interface fail"); break; }
-
+        
+    #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
         // create output mix
         const SLInterfaceID outputMixIIDs[] = {};
         const SLboolean outputMixReqs[] = {};
@@ -211,7 +208,10 @@ bool AudioEngineImpl::init()
         if(SL_RESULT_SUCCESS != result){ ERRORLOG("realize the output mix fail"); break; }
 
         _audioPlayerProvider = new AudioPlayerProvider(_engineEngine, _outputMixObject, outputSampleRate, bufferSizeInFrames, fdGetter, &__callerThreadUtils);
-
+        
+    #elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+        _audioPlayerProvider = new AudioPlayerProvider(_engineEngine, outputSampleRate, fdGetter, &__callerThreadUtils);
+    #endif
         ret = true;
     }while (false);
 
@@ -233,8 +233,13 @@ int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume
 
     do 
     {
+        #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
         if (_engineEngine == nullptr || _audioPlayerProvider == nullptr)
             break;
+        #elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+        if (_audioPlayerProvider == nullptr)
+            break;
+        #endif
 
         auto fullPath = FileUtils::getInstance()->fullPathForFilename(filePath);
 

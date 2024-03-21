@@ -47,9 +47,14 @@ class ThreadPool;
 class AudioPlayerProvider
 {
 public:
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
     AudioPlayerProvider(SLEngineItf engineItf, SLObjectItf outputMixObject, int deviceSampleRate,
                         int bufferSizeInFrames, const FdGetterCallback &fdGetterCallback,
                         ICallerThreadUtils* callerThreadUtils);
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+    AudioPlayerProvider(SLEngineItf engineItf, int deviceSampleRate,
+                        const FdGetterCallback &fdGetterCallback, ICallerThreadUtils *callerThreadUtils);
+#endif
 
     virtual ~AudioPlayerProvider();
 

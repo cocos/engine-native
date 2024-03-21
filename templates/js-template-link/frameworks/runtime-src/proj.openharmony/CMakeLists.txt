@@ -60,7 +60,7 @@ find_library( # Sets the name of the path variable.
               rawfile.z )
 message(STATUS, "rawfile=${rawfile-lib}")
 target_link_libraries(${CC_LIB_NAME} PUBLIC
-${EGL-lib} ${GLESv3-lib} ${hilog-lib} ${libace-lib} ${libnapi-lib} ${libuv-lib} ${rawfile-lib} libnative_drawing.so libc++.a libOpenSLES.so
+${EGL-lib} ${GLESv3-lib} ${hilog-lib} ${libace-lib} ${libnapi-lib} ${libuv-lib} ${rawfile-lib} libnative_drawing.so libc++.a libOpenSLES.so libohaudio.so libavplayer.so
 ${CC_EXTERNAL_LIBS}
 )
 

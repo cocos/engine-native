@@ -27,12 +27,17 @@ THE SOFTWARE.
 
 #include "base/CCThreadPool.h"
 #include "audio/android/AudioPlayerProvider.h"
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include "audio/android/UrlAudioPlayer.h"
+#include "audio/android/PcmAudioService.h"
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+#include "audio/openharmony/UrlAudioPlayer.h"
+#include "audio/openharmony/PcmAudioService.h"
+#endif
 #include "audio/android/PcmAudioPlayer.h"
 #include "audio/android/AudioDecoder.h"
 #include "audio/android/AudioDecoderProvider.h"
 #include "audio/android/AudioMixerController.h"
-#include "audio/android/PcmAudioService.h"
 #include "audio/android/ICallerThreadUtils.h"
 #include "audio/android/utils/Utils.h"
 
@@ -87,6 +92,7 @@ static AudioFileIndicator __audioFileIndicator[] = {
         {".mp3",    160000}
 };
 
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 AudioPlayerProvider::AudioPlayerProvider(SLEngineItf engineItf, SLObjectItf outputMixObject,
                                          int deviceSampleRate, int bufferSizeInFrames,
                                          const FdGetterCallback &fdGetterCallback,
@@ -108,6 +114,21 @@ AudioPlayerProvider::AudioPlayerProvider(SLEngineItf engineItf, SLObjectItf outp
 
     ALOG_ASSERT(callerThreadUtils != nullptr, "Caller thread utils parameter should not be nullptr!");
 }
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+AudioPlayerProvider::AudioPlayerProvider(SLEngineItf engineItf, int deviceSampleRate,
+                                         const FdGetterCallback &fdGetterCallback, 
+                                         ICallerThreadUtils *callerThreadUtils)
+        : _engineItf(engineItf), _deviceSampleRate(deviceSampleRate), _fdGetterCallback(fdGetterCallback),
+          _callerThreadUtils(callerThreadUtils), _pcmAudioService(nullptr), 
+          _mixController(nullptr), _threadPool(ThreadPool::newCachedThreadPool(1, 8, 5, 2, 2)) 
+{
+    _mixController = new AudioMixerController(_deviceSampleRate, 2);
+    _pcmAudioService = new PcmAudioService();
+    _pcmAudioService->init(_mixController, 2, deviceSampleRate, &_bufferSizeInFrames);
+    _mixController->init(_bufferSizeInFrames);
+    ALOG_ASSERT(callerThreadUtils != nullptr, "Caller thread utils parameter should not be nullptr!");
+}
+#endif
 
 AudioPlayerProvider::~AudioPlayerProvider()
 {
@@ -430,10 +451,6 @@ AudioPlayerProvider::AudioFileInfo AudioPlayerProvider::getFileInfo(
 
 bool AudioPlayerProvider::isSmallFile(const AudioFileInfo &info)
 {
-#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
-    // TODO(qgh): OpenHarmony system does not support this function yet
-    return true;
-#endif
     //REFINE: If file size is smaller than 100k, we think it's a small file. This value should be set by developers.
     AudioFileInfo &audioFileInfo = const_cast<AudioFileInfo &>(info);
     size_t judgeCount = sizeof(__audioFileIndicator) / sizeof(__audioFileIndicator[0]);
@@ -519,16 +536,23 @@ UrlAudioPlayer *AudioPlayerProvider::createUrlAudioPlayer(
 
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
     SLuint32 locatorType = info.assetFd->getFd() > 0 ? SL_DATALOCATOR_ANDROIDFD : SL_DATALOCATOR_URI;
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
-    SLuint32 locatorType = SL_DATALOCATOR_URI;
-#endif
-
     auto urlPlayer = new (std::nothrow) UrlAudioPlayer(_engineItf, _outputMixObject, _callerThreadUtils);
     bool ret = urlPlayer->prepare(info.url, locatorType, info.assetFd, info.start, info.length);
     if (!ret)
     {
         SL_SAFE_DELETE(urlPlayer);
     }
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+    auto urlPlayer = new (std::nothrow) UrlAudioPlayer(_callerThreadUtils);
+    bool ret = urlPlayer->prepare(info.url, info.assetFd, info.start, info.length);
+    if (!ret)
+    {
+        if (urlPlayer != nullptr) { 
+            delete urlPlayer;
+            urlPlayer = nullptr; 
+        }
+    }
+#endif
     return urlPlayer;
 }
 
