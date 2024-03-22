@@ -838,8 +838,6 @@ if(CC_USE_AUDIO)
         ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/android/OpenSLHelper.h
         ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/android/PcmAudioPlayer.cpp
         ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/android/PcmAudioPlayer.h
-        ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/openharmony/PcmAudioService.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/openharmony/PcmAudioService.h
         ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/android/PcmBufferProvider.cpp
         ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/android/PcmBufferProvider.h
         ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/android/PcmData.cpp
@@ -848,8 +846,6 @@ if(CC_USE_AUDIO)
         ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/android/tinysndfile.h
         ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/android/Track.cpp
         ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/android/Track.h
-        ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/openharmony/UrlAudioPlayer.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/openharmony/UrlAudioPlayer.h
         ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/android/audio_utils/format.c
         ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/android/audio_utils/minifloat.cpp
         ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/android/audio_utils/primitives.c
@@ -863,6 +859,10 @@ if(CC_USE_AUDIO)
         ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/android/utils/Errors.h
         ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/android/utils/Utils.cpp
         ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/android/utils/Utils.h
+        ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/openharmony/PcmAudioService.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/openharmony/PcmAudioService.h
+        ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/openharmony/UrlAudioPlayer.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/cocos/audio/openharmony/UrlAudioPlayer.h
     )
 endif() # USE_AUDIO
 

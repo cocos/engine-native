@@ -83,8 +83,6 @@ public:
 
     virtual void setPlayEventCallback(const PlayEventCallback &playEventCallback) override;
 
-    // Override Functions EndOv
-
 private:
     UrlAudioPlayer(ICallerThreadUtils* callerThreadUtils);
     virtual ~UrlAudioPlayer();
@@ -97,8 +95,7 @@ private:
 
     void destroy();
 
-    inline void setState(State state)
-    { _state = state; };
+    inline void setState(State state) { _state = state; };
 
     void playEventCallback();
     
