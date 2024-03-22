@@ -106,7 +106,7 @@ bool PcmAudioService::init(AudioMixerController *controller, int numChannels, in
 
     int32_t buffer_size;
     OH_AudioRenderer_GetFrameSizeInCallback(_audioRenderer, &buffer_size);
-    _bufferSizeInBytes = buffer_size * 4;
+    _bufferSizeInBytes = buffer_size * numChannels * 2;
     *bufferSizeInBytes = buffer_size;
 
     if (__silenceData.empty()) {

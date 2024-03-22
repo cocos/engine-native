@@ -43,22 +43,22 @@ class AudioMixerController;
 class PcmAudioService
 {
 public:
-    inline int getChannelCount() const
-    { return _numChannels; };
+    inline int getChannelCount() const { return _numChannels; };
 
-    inline int getSampleRate() const
-    { return _sampleRate; };
+    inline int getSampleRate() const { return _sampleRate; };
 
 
     PcmAudioService();
     virtual ~PcmAudioService();
 
+    // openharmony platform add bufferSizeInBytes pointer param to get ohaudio buffersize, which is needed by AudioMixer.
     bool init(AudioMixerController* controller, int numChannels, int sampleRate, int* bufferSizeInBytes);
     
 
     void pause();
     void resume();
-
+    
+private:
     static int32_t AudioRendererOnWriteData(OH_AudioRenderer* renderer, void* userData, void* buffer, int32_t bufferLen);
     int _numChannels;
     int _sampleRate;

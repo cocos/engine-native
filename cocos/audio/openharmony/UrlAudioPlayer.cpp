@@ -60,17 +60,17 @@ UrlAudioPlayer::~UrlAudioPlayer()
 {
     __playerContainerMutex.lock();
     
-    std::map<OH_AVPlayer*, cocos2d::UrlAudioPlayer*>::iterator it = __playerContainer.begin();  
+    auto it = __playerContainer.begin();  
     while(it != __playerContainer.end())  
     {  
-        if((UrlAudioPlayer*)it->second == this)  
+        if(it->second == this)  
         {  
             it = __playerContainer.erase(it);  
         }  
         else  
         {
             it++;
-        }  
+        }
     }
 
     __playerContainerMutex.unlock();
@@ -241,7 +241,7 @@ void UrlAudioPlayer::onInfo(OH_AVPlayer *player, AVPlayerOnInfoType type, int32_
             auto it = __playerContainer.find(player);
             if (it != __playerContainer.end())
             {
-                UrlAudioPlayer *audioPlayer = (UrlAudioPlayer *)it->second;
+                UrlAudioPlayer *audioPlayer = it->second;
                 audioPlayer->playEventCallback();
             }
         }
@@ -336,10 +336,10 @@ void UrlAudioPlayer::stopAll()
     auto temp = __playerContainer;
     __playerContainerMutex.unlock();
 
-    std::map<OH_AVPlayer*, cocos2d::UrlAudioPlayer*>::iterator it = temp.begin();  
+    auto it = temp.begin();  
     while(it != temp.end())  
     {  
-        UrlAudioPlayer* thiz = (UrlAudioPlayer*)it->second;
+        UrlAudioPlayer* thiz = it->second;
         thiz->stop();
         it++;
     }

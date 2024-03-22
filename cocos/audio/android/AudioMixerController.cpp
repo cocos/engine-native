@@ -55,8 +55,8 @@ AudioMixerController::AudioMixerController(int bufferSizeInFrames, int sampleRat
 AudioMixerController::AudioMixerController(int sampleRate, int channelCount)
 : _sampleRate(sampleRate), _channelCount(channelCount), _mixer(nullptr), _isPaused(false), _isMixingFrame(false) {
     ALOGV("In the constructor of AudioMixerController!");
-    int32_t maxBufferSize = 17832; 
-    _mixingBuffer.buf = memalign(32, maxBufferSize);
+    int32_t maxBufferLength = MAX_AUDIO_BUFFER_SIZE * channelCount * 2; 
+    _mixingBuffer.buf = memalign(32, maxBufferLength);
 }
 #endif
 
