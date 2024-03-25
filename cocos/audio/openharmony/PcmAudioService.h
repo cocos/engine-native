@@ -43,11 +43,6 @@ class AudioMixerController;
 class PcmAudioService
 {
 public:
-    inline int getChannelCount() const { return _numChannels; };
-
-    inline int getSampleRate() const { return _sampleRate; };
-
-
     PcmAudioService();
     virtual ~PcmAudioService();
 
@@ -57,11 +52,9 @@ public:
 
     void pause();
     void resume();
-    
+
 private:
     static int32_t AudioRendererOnWriteData(OH_AudioRenderer* renderer, void* userData, void* buffer, int32_t bufferLen);
-    int _numChannels;
-    int _sampleRate;
     int _bufferSizeInBytes;
 
     AudioMixerController* _controller;
