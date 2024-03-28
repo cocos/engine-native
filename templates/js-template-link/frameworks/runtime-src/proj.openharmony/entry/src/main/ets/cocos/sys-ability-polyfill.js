@@ -36,6 +36,13 @@ import cocos from "libcocos.so";
 const systemUtils = cocos.getContext(ContextType.SYSTEM_UTILS);
 
 let pro = new process.ProcessManager();
+let cutout = {
+    left: 0,
+    top: 0,
+    width: 0,
+    height: 0
+};
+
 globalThis.getSystemLanguage = function () {
     return I18n.System.getSystemLanguage();
 }
@@ -131,17 +138,14 @@ globalThis.getDeviceMotionValue = function () {
 
 
 globalThis.getNetworkType = function () {
-    connection.getDefaultNet().then((netHandle)=>
-       connection.getNetCapabilities(netHandle).then((data)=>{
-            return data.bearerTypes;
-        }).catch(err => { 
-            console.log('getDefaultNet error.' + JSON.stringify(err));
-            return -1; // 未获取到网络连接类型
-        })
-    ).catch(err => { 
-        console.log('getDefaultNet error.' + JSON.stringify(err));
-        return -1; // 网络未连接
-    });
+    let netHandle = connection.getDefaultNetSync();
+    if(netHandle && netHandle.netId != 0) {
+        let result = connection.getNetCapabilitiesSync(netHandle);
+        if (result && result.bearerTypes) {
+            return result.bearerTypes[0];
+        }
+    }
+    return -1;
 }
 
 globalThis.vibrate = function (duration) {
@@ -167,5 +171,46 @@ globalThis.vibrate = function (duration) {
 }
 
 globalThis.terminateProcess = function () {
-    this.pro.exit(0);
+    pro.exit(0);
+}
+
+globalThis.initScreenInfo = function () {
+    display.getDefaultDisplaySync().getCutoutInfo().then((data) => {
+        if (data.boundingRects.length == 0) {
+            return;
+        }
+
+        cutout.left = data.boundingRects[0].left;
+        cutout.top = data.boundingRects[0].top;
+        cutout.width = data.boundingRects[0].width;
+        cutout.height = data.boundingRects[0].height;
+    }).catch((err) => {
+    });
+}();
+
+globalThis.getCutoutWidth = function () {
+    if(!cutout.width) {
+        return 0;
+    }
+
+    let disPlayWidth = display.getDefaultDisplaySync().width;
+    if(cutout.left + cutout.width > disPlayWidth - cutout.left) {
+        return disPlayWidth - cutout.left;
+    }
+    return cutout.left + cutout.width;
+}
+
+globalThis.getCutoutHeight = function () {
+    if(!cutout.height) {
+        return 0;
+    }
+
+    let disPlayHeight = display.getDefaultDisplaySync().height;
+    let orientation = globalThis.getDeviceOrientation();
+    if (orientation == display.Orientation.PORTRAIT) {
+        return cutout.top + cutout.height;
+    } else if(orientation == display.Orientation.PORTRAIT_INVERTED) {
+        return disPlayHeight - cutout.top;
+    }
+    return 0;
 }
