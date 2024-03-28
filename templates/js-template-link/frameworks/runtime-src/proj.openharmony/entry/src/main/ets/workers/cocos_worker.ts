@@ -36,7 +36,7 @@ const nativeEditBox = cocos.getContext(ContextType.EDITBOX_UTILS);
 const nativeWebView = cocos.getContext(ContextType.WEBVIEW_UTILS);
 const appLifecycle = cocos.getContext(ContextType.APP_LIFECYCLE);
 
-let uiPort = new PortProxy(worker.parentPort);
+let uiPort = new PortProxy(worker.workerPort);
 
 nativeContext.postMessage = function (msgType: string, msgData: string): void {
   uiPort.postMessage(msgType, msgData);

@@ -32,7 +32,7 @@
 #include "math/CCMath.h"
 #include "base/CCData.h"
 #include "platform/CCCanvasRenderingContext2D.h"
-
+#include "platform/openharmony/FileUtils-openharmony.h"
 //#include "platform/openharmony/OpenHarmonyPlatform.h"
 
 #include <native_drawing/drawing_text_typography.h>
@@ -43,6 +43,7 @@
 #include <native_drawing/drawing_bitmap.h>
 #include <native_drawing/drawing_text_declaration.h>
 #include <native_drawing/drawing_brush.h>
+#include <native_drawing/drawing_register_font.h>
 
 using namespace cocos2d;
     
@@ -87,6 +88,17 @@ public:
         OH_Drawing_SetTypographyTextAlign(_typographyStyle, TEXT_ALIGN_LEFT);
 
         _fontCollection = OH_Drawing_CreateFontCollection();
+        // Register TTF
+        const auto& fontInfoMap = getFontFamilyNameMap();
+        for (auto fontInfo : fontInfoMap) {
+            std::string fontName = fontInfo.first;
+            std::string fontPath = fontInfo.second;
+            Data bufferData = FileUtils::getInstance()->getDataFromFile(fontPath);
+            if (bufferData.isNull()) {
+                continue;
+            }
+            OH_Drawing_RegisterFontBuffer(_fontCollection, fontName.c_str(), bufferData.getBytes(), bufferData.getSize());
+        }
         _typographyCreate = OH_Drawing_CreateTypographyHandler(_typographyStyle, _fontCollection);
         _textStyle = OH_Drawing_CreateTextStyle();
     }
