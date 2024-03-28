@@ -58,8 +58,19 @@ export default class EntryAbility extends UIAbility {
         return;
       }
     });
-
-
+    windowStage.on("windowStageEvent", (data) => {
+      let stageEventType: window.WindowStageEventType = data;
+      switch (stageEventType) {
+          case window.WindowStageEventType.RESUMED:
+              nativeAppLifecycle.onShow();
+              break;
+          case window.WindowStageEventType.PAUSED:
+              nativeAppLifecycle.onHide();
+              break;
+          default:
+              break;
+      }
+  });
   }
 
   onWindowStageDestroy() {
