@@ -206,11 +206,11 @@ globalThis.getCutoutHeight = function () {
         return 0;
     }
 
-    let displayHeight = display.getDefaultDisplaySync().height;
     let orientation = globalThis.getDeviceOrientation();
     if (orientation == display.Orientation.PORTRAIT) {
         return cutout.top + cutout.height;
     } else if(orientation == display.Orientation.PORTRAIT_INVERTED) {
+        let displayHeight = display.getDefaultDisplaySync().height;
         return displayHeight - cutout.top;
     }
     return 0;
