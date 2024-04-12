@@ -184,6 +184,7 @@ globalThis.initScreenInfo = function () {
         cutout.width = data.boundingRects[0].width;
         cutout.height = data.boundingRects[0].height;
     }).catch((err) => {
+        console.log("get cutout info error!");
     });
 }();
 
@@ -204,12 +205,12 @@ globalThis.getCutoutHeight = function () {
         return 0;
     }
 
-    let disPlayHeight = display.getDefaultDisplaySync().height;
+    let displayHeight = display.getDefaultDisplaySync().height;
     let orientation = globalThis.getDeviceOrientation();
     if (orientation == display.Orientation.PORTRAIT) {
         return cutout.top + cutout.height;
     } else if(orientation == display.Orientation.PORTRAIT_INVERTED) {
-        return disPlayHeight - cutout.top;
+        return displayHeight - cutout.top;
     }
     return 0;
 }
