@@ -51,21 +51,17 @@ void onSurfaceCreatedCB(OH_NativeXComponent* component, void* window) {
     sendMsgToWorker(cocos2d::MessageType::WM_XCOMPONENT_SURFACE_CREATED, component, window);
 }
 
-void touchEventTransform(TouchEvent* ev, OH_NativeXComponent_TouchPoint touchPoint) {
-    cocos2d::TouchInfo touchInfo;
-    touchInfo.index = touchPoint.id;
-    touchInfo.x = touchPoint.x;
-    touchInfo.y = touchPoint.y;
-    if (touchPoint.type == OH_NATIVEXCOMPONENT_DOWN) {
-        ev->type = cocos2d::TouchEvent::Type::BEGAN;
-    } else if (touchPoint.type == OH_NATIVEXCOMPONENT_MOVE) {
-        ev->type = cocos2d::TouchEvent::Type::MOVED;
-    } else if (touchPoint.type == OH_NATIVEXCOMPONENT_UP) {
-        ev->type = cocos2d::TouchEvent::Type::ENDED;
-    } else if (touchPoint.type == OH_NATIVEXCOMPONENT_CANCEL) {
-        ev->type = cocos2d::TouchEvent::Type::CANCELLED;
+cocos2d::TouchEvent::Type touchTypeTransform(OH_NativeXComponent_TouchEventType touchType) {
+    if (touchType == OH_NATIVEXCOMPONENT_DOWN) {
+        return cocos2d::TouchEvent::Type::BEGAN;
+    } else if (touchType == OH_NATIVEXCOMPONENT_MOVE) {
+        return cocos2d::TouchEvent::Type::MOVED;
+    } else if (touchType == OH_NATIVEXCOMPONENT_UP) {
+        return cocos2d::TouchEvent::Type::ENDED;
+    } else if (touchType == OH_NATIVEXCOMPONENT_CANCEL) {
+        return cocos2d::TouchEvent::Type::CANCELLED;
     }
-    ev->touches.push_back(touchInfo);
+    return cocos2d::TouchEvent::Type::UNKNOWN;
 }
 
 void dispatchTouchEventCB(OH_NativeXComponent* component, void* window) {
@@ -76,8 +72,12 @@ void dispatchTouchEventCB(OH_NativeXComponent* component, void* window) {
     }
     cocos2d::TouchEvent* ev = new cocos2d::TouchEvent;
     for(int i = 0; i < touchEvent.numPoints; ++i) {
-        OH_NativeXComponent_TouchPoint touchPoint = touchEvent.touchPoints[i];
-        touchEventTransform(ev, touchPoint);
+        cocos2d::TouchInfo touchInfo;
+        touchInfo.index = touchEvent.touchPoints[i].id;
+        touchInfo.x = touchEvent.touchPoints[i].x;
+        touchInfo.y = touchEvent.touchPoints[i].y;
+        ev->type = touchEventTransform(touchEvent.touchPoints[i].type);
+        ev->touches.push_back(touchInfo);
     }
     sendMsgToWorker(cocos2d::MessageType::WM_XCOMPONENT_TOUCH_EVENT, reinterpret_cast<void*>(ev), window);
 }
