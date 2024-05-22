@@ -71,12 +71,12 @@ void dispatchTouchEventCB(OH_NativeXComponent* component, void* window) {
         return;
     }
     cocos2d::TouchEvent* ev = new cocos2d::TouchEvent;
+    ev->type = touchTypeTransform(touchEvent.type);
     for(int i = 0; i < touchEvent.numPoints; ++i) {
         cocos2d::TouchInfo touchInfo;
         touchInfo.index = touchEvent.touchPoints[i].id;
         touchInfo.x = touchEvent.touchPoints[i].x;
         touchInfo.y = touchEvent.touchPoints[i].y;
-        ev->type = touchTypeTransform(touchEvent.touchPoints[i].type);
         ev->touches.push_back(touchInfo);
     }
     sendMsgToWorker(cocos2d::MessageType::WM_XCOMPONENT_TOUCH_EVENT, reinterpret_cast<void*>(ev), window);

@@ -372,6 +372,13 @@ list(APPEND CC_COCOS_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/cocos/ui/edit-box/EditBox-openharmony.cpp
 )
 
+##### videoplayer
+list(APPEND CC_COCOS_SOURCES 
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/ui/videoplayer/VideoPlayer-openharmony.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/ui/videoplayer/VideoPlayer-openharmony.cpp
+)
+
+
 ##### editor-support
 list(APPEND CC_COCOS_SOURCES 
     ${CMAKE_CURRENT_LIST_DIR}/cocos/editor-support/IOBuffer.cpp

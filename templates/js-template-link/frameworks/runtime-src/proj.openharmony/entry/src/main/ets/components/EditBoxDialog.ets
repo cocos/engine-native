@@ -36,6 +36,7 @@ export struct EditBoxDialog {
     Column() {
       Row() {
         TextInput({ text: this.showMessage })
+          .defaultFocus(true)
           .backgroundColor('#ffffff')
           .layoutWeight(1)
           .onChange((value) => {

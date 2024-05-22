@@ -236,7 +236,11 @@ struct Index {
         }
         case "startVideo": {
           let index = this.videoIndexMap.get(msg.param as number) as number;
-          this.videoArray[index].controller.start();
+          if(this.videoArray[index].duration){
+            this.videoArray[index].controller.start();
+          }else{
+            this.videoArray[index].isPreparedStart = true;
+          }
           break;
         }
         case "pauseVideo": {

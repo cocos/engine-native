@@ -34,6 +34,7 @@ export enum ContextType {
     WEBVIEW_UTILS,
     SYSTEM_UTILS,
     UV_ASYNC_SEND,
+    VIDEO_UTILS
 }
 
 export class Constants {

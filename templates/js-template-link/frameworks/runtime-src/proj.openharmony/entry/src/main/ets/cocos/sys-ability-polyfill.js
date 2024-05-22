@@ -72,6 +72,9 @@ globalThis.getPixelRation = function () {
 let onDisplayChange = (data) => {
     // Monitor changes in screen orientation.
     systemUtils.onDisplayChange(globalThis.getDeviceOrientation());
+
+    // update screen cutout info
+    globalThis.initScreenInfo();
 }
 
 try {
@@ -187,7 +190,8 @@ globalThis.initScreenInfo = function () {
     }).catch((err) => {
         console.log("get cutout info error!");
     });
-}();
+};
+globalThis.initScreenInfo();
 
 globalThis.getCutoutWidth = function () {
     if(!cutout.width) {

@@ -32,6 +32,7 @@
 #include "ui/webview/WebViewImpl-openharmony.h"
 #include "platform/openharmony/WorkerMessageQueue.h"
 #include "platform/CCDevice.h"
+#include "ui/videoplayer/VideoPlayer-openharmony.h"
 #define KEYCODE_BACK_OH 6
 
 namespace cocos2d {
@@ -325,7 +326,9 @@ static Napi::Value getContext(const Napi::CallbackInfo &info) {
         case UV_ASYNC_SEND: {
             exports["send"] = Napi::Function::New(env, napiASend);
         } break;
-
+        case VIDEO_UTILS: {
+            exports["onVideoEvent"] = Napi::Function::New(env, OpenHarmonyVideoPlayer::napiVideoMessageHandle);
+        } break;
         default:
             LOGE("unknown type");
     }
