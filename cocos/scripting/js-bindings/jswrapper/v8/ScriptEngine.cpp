@@ -457,13 +457,12 @@ namespace se {
         //NOTICE: spaces are required between flags
         flags.append(" --expose-gc-as=" EXPOSE_GC);
         // flags.append(" --trace-gc"); // v8 trace gc
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
-        flags.append(" --jitless");
-#endif
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
         if(!jitSupported()) {
             flags.append(" --jitless");
         }
+#elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+        flags.append(" --jitless");
 #endif
         if(!flags.empty())
         {
