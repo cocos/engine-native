@@ -3,7 +3,7 @@
   "buildOption": {
     "externalNativeOptions": {
       "path": "../CMakeLists.txt",
-      "arguments": "-v arm-linux-ohos -DOHOS_STL=c++_shared -DCOCOS_X_PATH=${COCOS_X_PATH} -DOPENHARMONY=1",
+      "arguments": "arm-linux-ohos -DOHOS_STL=c++_shared -DCOCOS_X_PATH=${COCOS_X_PATH} -DOPENHARMONY=1",
       "abiFilters": [
         "armeabi-v7a",
         "arm64-v8a"
