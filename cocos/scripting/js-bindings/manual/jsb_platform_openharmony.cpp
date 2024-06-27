@@ -78,7 +78,7 @@ static bool JSB_loadFont(se::State& s)
             return true;
         }
 
-        OH_Drawing_FontCollection *_fontCollection = OH_Drawing_CreateSharedFontCollection();
+        OH_Drawing_FontCollection *_fontCollection = OH_Drawing_CreateFontCollection();
         Data bufferData = FileUtils::getInstance()->getDataFromFile(fontFilePath);
         if (bufferData.isNull()) {
             SE_LOGE("bufferData read error (%s)!", fontFilePath.c_str());

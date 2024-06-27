@@ -233,7 +233,7 @@ public:
         if (it != fontInfoMap.end()) {
             _fontCollection = it->second;
         } else {
-            _fontCollection = OH_Drawing_CreateSharedFontCollection();
+            _fontCollection = OH_Drawing_CreateFontCollection();
         }
         _typographyStyle = OH_Drawing_CreateTypographyStyle();
         OH_Drawing_SetTypographyTextDirection(_typographyStyle, TEXT_DIRECTION_LTR);
