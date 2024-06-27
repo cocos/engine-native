@@ -24,10 +24,11 @@
  ****************************************************************************/
 
 #pragma once
-
-#include <native_drawing/drawing_text_declaration.h>
-#include <unordered_map>
 #include "platform/CCPlatformConfig.h"
+#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+#include <native_drawing/drawing_text_declaration.h>
+#endif
+#include <unordered_map>
 
 namespace se {
     class Object;
