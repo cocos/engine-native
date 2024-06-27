@@ -40,11 +40,11 @@
 
 using namespace cocos2d;
 
-static std::unordered_map<std::string, OH_Drawing_FontCollection*> _fontFamilyNameMap;
+static std::unordered_map<std::string, OH_Drawing_FontCollection*> _fontCollectionMap;
 
 const std::unordered_map<std::string, OH_Drawing_FontCollection*>& getFontFamilyCollectionMap()
 {
-    return _fontFamilyNameMap;
+    return _fontCollectionMap;
 }
 
 static bool JSB_loadFont(se::State& s)
@@ -85,7 +85,7 @@ static bool JSB_loadFont(se::State& s)
             return true;
         }
         OH_Drawing_RegisterFontBuffer(_fontCollection, fontFamily.c_str(), bufferData.getBytes(), bufferData.getSize());
-        _fontFamilyNameMap.emplace(fontFamily, _fontCollection);
+        _fontCollectionMap.emplace(fontFamily, _fontCollection);
         s.rval().setString(fontFamily);
         
         return true;
