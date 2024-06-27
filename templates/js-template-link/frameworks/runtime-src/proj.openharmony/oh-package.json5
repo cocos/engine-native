@@ -8,5 +8,6 @@
   "description": "Please describe the basic information.",
   "main": "",
   "version": "1.0.0",
-  "dependencies": {}
+  "dependencies": {},
+  "modelVersion": "5.0.0",
 }
