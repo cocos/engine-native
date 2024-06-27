@@ -25,7 +25,9 @@
 
 #pragma once
 
+#include <native_drawing/drawing_text_declaration.h>
 #include <unordered_map>
+#include "platform/CCPlatformConfig.h"
 
 namespace se {
     class Object;
@@ -33,3 +35,6 @@ namespace se {
 
 bool register_platform_bindings(se::Object* obj);
 const std::unordered_map<std::string, std::string>& getFontFamilyNameMap();
+#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
+const std::unordered_map<std::string, OH_Drawing_FontCollection*>& getFontFamilyCollectionMap();
+#endif

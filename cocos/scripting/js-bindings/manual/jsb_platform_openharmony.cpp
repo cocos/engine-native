@@ -29,7 +29,8 @@
 #include "cocos/scripting/js-bindings/manual/jsb_conversions.hpp"
 #include "cocos/scripting/js-bindings/manual/jsb_global.h"
 #include "cocos/platform/CCFileUtils.h"
-
+#include <native_drawing/drawing_font_collection.h>
+#include <native_drawing/drawing_register_font.h>
 #include <regex>
 
 #ifndef JCLS_CANVASIMPL
@@ -39,9 +40,9 @@
 
 using namespace cocos2d;
 
-static std::unordered_map<std::string, std::string> _fontFamilyNameMap;
+static std::unordered_map<std::string, OH_Drawing_FontCollection*> _fontFamilyNameMap;
 
-const std::unordered_map<std::string, std::string>& getFontFamilyNameMap()
+const std::unordered_map<std::string, OH_Drawing_FontCollection*>& getFontFamilyCollectionMap()
 {
     return _fontFamilyNameMap;
 }
@@ -76,9 +77,15 @@ static bool JSB_loadFont(se::State& s)
             SE_LOGE("Font (%s) doesn't exist!", fontFilePath.c_str());
             return true;
         }
- 
-        _fontFamilyNameMap.emplace(fontFamily, fontFilePath);
- 
+
+        OH_Drawing_FontCollection *_fontCollection = OH_Drawing_CreateSharedFontCollection();
+        Data bufferData = FileUtils::getInstance()->getDataFromFile(fontFilePath);
+        if (bufferData.isNull()) {
+            SE_LOGE("bufferData read error (%s)!", fontFilePath.c_str());
+            return true;
+        }
+        OH_Drawing_RegisterFontBuffer(_fontCollection, fontFamily.c_str(), bufferData.getBytes(), bufferData.getSize());
+        _fontFamilyNameMap.emplace(fontFamily, _fontCollection);
         s.rval().setString(fontFamily);
         
         return true;
