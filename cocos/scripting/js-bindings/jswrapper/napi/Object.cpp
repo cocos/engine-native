@@ -655,11 +655,11 @@ void Object::weakCallback(napi_env env, void* nativeObject, void* finalizeHint /
         SE_LOGE("weakCallback class name:%s, ptr:%p", clsName, rawPtr);
 
         if (seObj->_finalizeCb != nullptr) {
-            seObj->_finalizeCb(env, finalizeHint, finalizeHint);
+            seObj->_finalizeCb(env, rawPtr, rawPtr);
         } else {
             assert(seObj->_getClass() != nullptr);
             if (seObj->_getClass()->_getFinalizeFunction() != nullptr) {
-                seObj->_getClass()->_getFinalizeFunction()(env, finalizeHint, finalizeHint);
+                seObj->_getClass()->_getFinalizeFunction()(env, rawPtr, rawPtr);
             }
         }
         seObj->decRef();
