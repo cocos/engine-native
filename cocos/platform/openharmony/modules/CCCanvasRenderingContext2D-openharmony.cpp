@@ -228,13 +228,13 @@ public:
         _fontName = fontName;
         _fontSize = static_cast<int>(fontSize);
         
-        if(_fontCollection) {
+        if (_fontCollection) {
             OH_Drawing_DestroyFontCollection(_fontCollection);
         }
-        if(_typographyCreate) {
+        if (_typographyCreate) {
             OH_Drawing_DestroyTypographyHandler(_typographyCreate);
         }
-        if(_textStyle) {
+        if (_textStyle) {
             OH_Drawing_DestroyTextStyle(_textStyle);
         }
 
