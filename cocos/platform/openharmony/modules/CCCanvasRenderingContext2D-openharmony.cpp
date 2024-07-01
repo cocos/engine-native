@@ -231,7 +231,7 @@ public:
         if(_fontCollection) {
             OH_Drawing_DestroyFontCollection(_fontCollection);
         }
-        if(_typographyCreate) {
+        if (_typographyCreate) {
             OH_Drawing_DestroyTypographyHandler(_typographyCreate);
         }
         if(_textStyle) {
