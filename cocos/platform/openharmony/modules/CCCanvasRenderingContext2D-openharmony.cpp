@@ -254,7 +254,6 @@ public:
         const char *fontFamilies[1];
         fontFamilies[0] = fontName.c_str();
         OH_Drawing_SetTextStyleFontFamilies(_textStyle, 1, fontFamilies);
-        OH_Drawing_SetTextStyleLocale(_textStyle, "en");
         
         if (_fontSize)
             OH_Drawing_SetTextStyleFontSize(_textStyle, _fontSize);
