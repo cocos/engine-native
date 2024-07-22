@@ -73,6 +73,7 @@ namespace se {
         if (iter != NativePtrToObjectMap::end())
         {
             Object* obj = iter->second;
+            NativePtrToObjectMap::erase(iter);
             if (obj->_finalizeCb != nullptr)
             {
                 obj->_finalizeCb(nativeObj);
@@ -84,7 +85,6 @@ namespace se {
                     obj->_getClass()->_finalizeFunc(nativeObj);
             }
             obj->decRef();
-            NativePtrToObjectMap::erase(iter);
         }
         else
         {
