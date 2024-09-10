@@ -56,16 +56,19 @@ uint32_t __jsbInvocationCount = 0;
 uint32_t __jsbStackFrameLimit = 20;
 
 #define RETRUN_VAL_IF_FAIL(cond, val) \
-    if (!(cond)) return val
+    if (!(cond))                      \
+    return val
 
-namespace se {
+namespace se
+{
 
-    Class* __jsb_CCPrivateData_class = nullptr;
+    Class *__jsb_CCPrivateData_class = nullptr;
 
-    namespace {
-        ScriptEngine* __instance = nullptr;
+    namespace
+    {
+        ScriptEngine *__instance = nullptr;
 
-        void __log(const v8::FunctionCallbackInfo<v8::Value>& info)
+        void __log(const v8::FunctionCallbackInfo<v8::Value> &info)
         {
             if (info[0]->IsString())
             {
@@ -74,7 +77,7 @@ namespace se {
             }
         }
 
-        void __forceGC(const v8::FunctionCallbackInfo<v8::Value>& info)
+        void __forceGC(const v8::FunctionCallbackInfo<v8::Value> &info)
         {
             ScriptEngine::getInstance()->garbageCollect();
         }
@@ -114,7 +117,7 @@ namespace se {
                 snprintf(tmp, sizeof(tmp), "%d", frame->GetLineNumber());
                 stackStr += tmp;
 
-                if (i < (e-1))
+                if (i < (e - 1))
                 {
                     stackStr += "\n";
                 }
@@ -130,12 +133,12 @@ namespace se {
         se::Value __oldConsoleError;
         se::Value __oldConsoleAssert;
 
-        bool JSB_console_format_log(State& s, const char* prefix, int msgIndex = 0)
+        bool JSB_console_format_log(State &s, const char *prefix, int msgIndex = 0)
         {
             if (msgIndex < 0)
                 return false;
 
-            const auto& args = s.args();
+            const auto &args = s.args();
             int argc = (int)args.size();
             if ((argc - msgIndex) == 1)
             {
@@ -146,10 +149,10 @@ namespace se {
             {
                 std::string msg = args[msgIndex].toStringForce();
                 size_t pos;
-                for (int i = (msgIndex+1); i < argc; ++i)
+                for (int i = (msgIndex + 1); i < argc; ++i)
                 {
                     pos = msg.find("%");
-                    if (pos != std::string::npos && pos != (msg.length()-1) && (msg[pos+1] == 'd' || msg[pos+1] == 's' || msg[pos+1] == 'f'))
+                    if (pos != std::string::npos && pos != (msg.length() - 1) && (msg[pos + 1] == 'd' || msg[pos + 1] == 's' || msg[pos + 1] == 'f'))
                     {
                         msg.replace(pos, 2, args[i].toStringForce());
                     }
@@ -165,7 +168,7 @@ namespace se {
             return true;
         }
 
-        bool JSB_console_log(State& s)
+        bool JSB_console_log(State &s)
         {
             JSB_console_format_log(s, "");
             __oldConsoleLog.toObject()->call(s.args(), s.thisObject());
@@ -173,7 +176,7 @@ namespace se {
         }
         SE_BIND_FUNC(JSB_console_log)
 
-        bool JSB_console_debug(State& s)
+        bool JSB_console_debug(State &s)
         {
             JSB_console_format_log(s, "[DEBUG]: ");
             __oldConsoleDebug.toObject()->call(s.args(), s.thisObject());
@@ -181,7 +184,7 @@ namespace se {
         }
         SE_BIND_FUNC(JSB_console_debug)
 
-        bool JSB_console_info(State& s)
+        bool JSB_console_info(State &s)
         {
             JSB_console_format_log(s, "[INFO]: ");
             __oldConsoleInfo.toObject()->call(s.args(), s.thisObject());
@@ -189,7 +192,7 @@ namespace se {
         }
         SE_BIND_FUNC(JSB_console_info)
 
-        bool JSB_console_warn(State& s)
+        bool JSB_console_warn(State &s)
         {
             JSB_console_format_log(s, "[WARN]: ");
             __oldConsoleWarn.toObject()->call(s.args(), s.thisObject());
@@ -197,7 +200,7 @@ namespace se {
         }
         SE_BIND_FUNC(JSB_console_warn)
 
-        bool JSB_console_error(State& s)
+        bool JSB_console_error(State &s)
         {
             JSB_console_format_log(s, "[ERROR]: ");
             __oldConsoleError.toObject()->call(s.args(), s.thisObject());
@@ -205,9 +208,9 @@ namespace se {
         }
         SE_BIND_FUNC(JSB_console_error)
 
-        bool JSB_console_assert(State& s)
+        bool JSB_console_assert(State &s)
         {
-            const auto& args = s.args();
+            const auto &args = s.args();
             if (!args.empty())
             {
                 if (args[0].isBoolean() && !args[0].toBoolean())
@@ -219,77 +222,86 @@ namespace se {
             return true;
         }
         SE_BIND_FUNC(JSB_console_assert)
-    
-    
-        #if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+
+#if CC_TARGET_PLATFORM == CC_PLATFORM_IOS
         /**
          *  JIT is enabled on iOS 14.2+ & chipset A12+
          *  ref https://github.com/flutter/engine/pull/22377
          */
-        bool jitSupported() {
-            #if CC_IOS_FORCE_DISABLE_JIT
+        bool jitSupported()
+        {
+#if CC_IOS_FORCE_DISABLE_JIT
             return false;
-            #elif TARGET_CPU_X86 || TARGET_CPU_X86_64
+#elif TARGET_CPU_X86 || TARGET_CPU_X86_64
             return true;
-            #else
-            
+#else
+
             // Check for arm64e.
             cpu_type_t cpuType = 0;
             size_t cpuTypeSize = sizeof(cpu_type_t);
-            if (::sysctlbyname("hw.cputype", &cpuType, &cpuTypeSize, nullptr, 0) < 0) {
+            if (::sysctlbyname("hw.cputype", &cpuType, &cpuTypeSize, nullptr, 0) < 0)
+            {
                 SE_LOGD("Could not execute sysctl() to get CPU type: %s", strerror(errno));
             }
-            
+
             cpu_subtype_t cpuSubType = 0;
-            if (::sysctlbyname("hw.cpusubtype", &cpuSubType, &cpuTypeSize, nullptr, 0) < 0) {
+            if (::sysctlbyname("hw.cpusubtype", &cpuSubType, &cpuTypeSize, nullptr, 0) < 0)
+            {
                 SE_LOGD("Could not execute sysctl() to get CPU subtype: %s", strerror(errno));
             }
-            
+
             // Tracing is necessary unless the device is arm64e (A12 chip or higher).
-            if (cpuType != CPU_TYPE_ARM64 || cpuSubType != CPU_SUBTYPE_ARM64E) {
+            if (cpuType != CPU_TYPE_ARM64 || cpuSubType != CPU_SUBTYPE_ARM64E)
+            {
                 return false;
             }
-            
+
             // Check for iOS 14.2 and higher.
             size_t osVersionSize;
             ::sysctlbyname("kern.osversion", NULL, &osVersionSize, NULL, 0);
             char osversionBuffer[osVersionSize];
-            
-            if (::sysctlbyname("kern.osversion", osversionBuffer, &osVersionSize, NULL, 0) < 0) {
+
+            if (::sysctlbyname("kern.osversion", osversionBuffer, &osVersionSize, NULL, 0) < 0)
+            {
                 SE_LOGD("Could not execute sysctl() to get current OS version: %s", strerror(errno));
                 return false;
             }
-            
+
             int majorVersion = 0;
             char minorLetter = 'Z';
-            
-            for (size_t index = 0; index < osVersionSize; index++) {
+
+            for (size_t index = 0; index < osVersionSize; index++)
+            {
                 char version_char = osversionBuffer[index];
                 // Find the minor version build letter.
-                if (isalpha(version_char)) {
-                    majorVersion = atoi((const char*)osversionBuffer);
+                if (isalpha(version_char))
+                {
+                    majorVersion = atoi((const char *)osversionBuffer);
                     minorLetter = toupper(version_char);
                     break;
                 }
             }
             // 18B92 is iOS 14.2 beta release candidate where tracing became unnecessary.
             return majorVersion > 18 || (majorVersion == 18 && minorLetter >= 'B');
-            #endif //TARGET_CPU_X86 || TARGET_CPU_X86_64
+#endif // TARGET_CPU_X86 || TARGET_CPU_X86_64
         }
-        #endif //CC_TARGET_PLATFORM == CC_PLATFORM_IOS
+#endif // CC_TARGET_PLATFORM == CC_PLATFORM_IOS
 
     } // namespace {
 
-    void ScriptEngine::callExceptionCallback(const char* location, const char* message, const char *stack) {
-        if (_nativeExceptionCallback) {
+    void ScriptEngine::callExceptionCallback(const char *location, const char *message, const char *stack)
+    {
+        if (_nativeExceptionCallback)
+        {
             _nativeExceptionCallback(location, message, stack);
         }
-        if (_jsExceptionCallback) {
+        if (_jsExceptionCallback)
+        {
             _jsExceptionCallback(location, message, stack);
         }
     }
 
-    void ScriptEngine::onFatalErrorCallback(const char* location, const char* message)
+    void ScriptEngine::onFatalErrorCallback(const char *location, const char *message)
     {
         std::string errorStr = "[FATAL ERROR] location: ";
         errorStr += location;
@@ -301,26 +313,25 @@ namespace se {
         getInstance()->callExceptionCallback(location, message, "(no stack information)");
     }
 
-    void ScriptEngine::onOOMErrorCallback(const char* location, bool is_heap_oom)
-    {
-        std::string errorStr = "[OOM ERROR] location: ";
-        errorStr += location;
-        std::string message;
-        message = "is heap out of memory: ";
-        if (is_heap_oom)
-            message += "true";
-        else
-            message += "false";
+    // void ScriptEngine::onOOMErrorCallback(const char *location, const v8::OOMDetails &details)
+    // {
+    //     std::string errorStr = "[OOM ERROR] location: ";
+    //     errorStr += location;
+    //     std::string message;
+    //     message = "is heap out of memory: ";
+    //     if (details.is_heap_oom)
+    //         message += "true";
+    //     else
+    //         message += "false";
 
-        errorStr += ", " + message;
-        SE_LOGE("%s\n", errorStr.c_str());
-        getInstance()->callExceptionCallback(location, message.c_str(), "(no stack information)");
-        
-    }
+    //     errorStr += ", " + message;
+    //     SE_LOGE("%s\n", errorStr.c_str());
+    //     getInstance()->callExceptionCallback(location, message.c_str(), "(no stack information)");
+    // }
 
     void ScriptEngine::onMessageCallback(v8::Local<v8::Message> message, v8::Local<v8::Value> data)
     {
-        ScriptEngine* thiz = getInstance();
+        ScriptEngine *thiz = getInstance();
         v8::Local<v8::String> msg = message->Get();
         Value msgVal;
         internal::jsToSeValue(v8::Isolate::GetCurrent(), msg, &msgVal);
@@ -328,10 +339,8 @@ namespace se {
         v8::ScriptOrigin origin = message->GetScriptOrigin();
         Value resouceNameVal;
         internal::jsToSeValue(v8::Isolate::GetCurrent(), origin.ResourceName(), &resouceNameVal);
-        Value line;
-        internal::jsToSeValue(v8::Isolate::GetCurrent(), origin.ResourceLineOffset(), &line);
-        Value column;
-        internal::jsToSeValue(v8::Isolate::GetCurrent(), origin.ResourceColumnOffset(), &column);
+        Value line(origin.LineOffset());
+        Value column(origin.ColumnOffset());
 
         std::string location = resouceNameVal.toStringForce() + ":" + line.toStringForce() + ":" + column.toStringForce();
 
@@ -380,34 +389,41 @@ namespace se {
         auto event = msg.GetEvent();
         auto value = msg.GetValue();
         const char *eventName = "[invalidatePromiseEvent]";
-        
-        if(event == v8::kPromiseRejectWithNoHandler) {
+
+        if (event == v8::kPromiseRejectWithNoHandler)
+        {
             eventName = "unhandledRejectedPromise";
-        }else if(event == v8::kPromiseHandlerAddedAfterReject) {
+        }
+        else if (event == v8::kPromiseHandlerAddedAfterReject)
+        {
             eventName = "handlerAddedAfterPromiseRejected";
-        }else if(event == v8::kPromiseRejectAfterResolved) {
+        }
+        else if (event == v8::kPromiseRejectAfterResolved)
+        {
             eventName = "rejectAfterPromiseResolved";
-        }else if( event == v8::kPromiseResolveAfterResolved) {
+        }
+        else if (event == v8::kPromiseResolveAfterResolved)
+        {
             eventName = "resolveAfterPromiseResolved";
         }
-        
-        if(!value.IsEmpty()) {
+
+        if (!value.IsEmpty())
+        {
             // prepend error object to stack message
             v8::Local<v8::String> str = value->ToString(isolate->GetCurrentContext()).ToLocalChecked();
             v8::String::Utf8Value valueUtf8(isolate, str);
             ss << *valueUtf8 << std::endl;
         }
-        
+
         auto stackStr = getInstance()->getCurrentStackTrace();
         ss << "stacktrace: " << std::endl;
         ss << stackStr << std::endl;
         getInstance()->callExceptionCallback("", eventName, ss.str().c_str());
-        
     }
 
-    void ScriptEngine::privateDataFinalize(void* nativeObj)
+    void ScriptEngine::privateDataFinalize(void *nativeObj)
     {
-        internal::PrivateData* p = (internal::PrivateData*)nativeObj;
+        internal::PrivateData *p = (internal::PrivateData *)nativeObj;
 
         Object::nativeObjectFinalizeHook(p->data);
 
@@ -435,38 +451,34 @@ namespace se {
     }
 
     ScriptEngine::ScriptEngine()
-    : _platform(nullptr)
-    , _isolate(nullptr)
-    , _handleScope(nullptr)
-    , _globalObj(nullptr)
+        : _platform(nullptr), _isolate(nullptr), _handleScope(nullptr), _globalObj(nullptr)
 #if SE_ENABLE_INSPECTOR
-    , _env(nullptr)
-    , _isolateData(nullptr)
+          ,
+          _env(nullptr), _isolateData(nullptr)
 #endif
-    , _debuggerServerPort(0)
-    , _vmId(0)
-    , _isValid(false)
-    , _isGarbageCollecting(false)
-    , _isInCleanup(false)
-    , _isErrorHandleWorking(false)
+          ,
+          _debuggerServerPort(0), _vmId(0), _isValid(false), _isGarbageCollecting(false), _isInCleanup(false), _isErrorHandleWorking(false)
     {
         _platform = v8::platform::NewDefaultPlatform().release();
         v8::V8::InitializePlatform(_platform);
 
         std::string flags;
-        //NOTICE: spaces are required between flags
+        // NOTICE: spaces are required between flags
         flags.append(" --expose-gc-as=" EXPOSE_GC);
+        // flags.append(" --no-flush-bytecode --no-lazy");
+        // flags.append(" --no-turbo-escape");
         // flags.append(" --trace-gc"); // v8 trace gc
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-        if(!jitSupported()) {
+        if (!jitSupported())
+        {
             flags.append(" --jitless");
         }
 #endif
-        if(!flags.empty())
+        if (!flags.empty())
         {
             v8::V8::SetFlagsFromString(flags.c_str(), (int)flags.length());
         }
-        
+
         bool ok = v8::V8::Initialize();
         assert(ok);
     }
@@ -475,7 +487,7 @@ namespace se {
     {
         cleanup();
         v8::V8::Dispose();
-        v8::V8::ShutdownPlatform();
+        v8::V8::DisposePlatform();
         delete _platform;
     }
 
@@ -487,7 +499,7 @@ namespace se {
 
         _engineThreadId = std::this_thread::get_id();
 
-        for (const auto& hook : _beforeInitHookArray)
+        for (const auto &hook : _beforeInitHookArray)
         {
             hook();
         }
@@ -501,7 +513,7 @@ namespace se {
         _isolate->SetCaptureStackTraceForUncaughtExceptions(true, __jsbStackFrameLimit, v8::StackTrace::kOverview);
 
         _isolate->SetFatalErrorHandler(onFatalErrorCallback);
-        _isolate->SetOOMErrorHandler(onOOMErrorCallback);
+        // _isolate->SetOOMErrorHandler(onOOMErrorCallback);
         _isolate->AddMessageListener(onMessageCallback);
         _isolate->SetPromiseRejectCallback(onPromiseRejectCallback);
 
@@ -510,7 +522,7 @@ namespace se {
 
         NativePtrToObjectMap::init();
         NonRefNativePtrCreatedByCtorMap::init();
-        
+
         Object::setup();
         Class::setIsolate(_isolate);
         Object::setIsolate(_isolate);
@@ -545,15 +557,16 @@ namespace se {
 
         _globalObj->defineFunction("log", __log);
         _globalObj->defineFunction("forceGC", __forceGC);
-        
-        
+
         _globalObj->getProperty(EXPOSE_GC, &_gcFuncValue);
-        if(_gcFuncValue.isObject() && _gcFuncValue.toObject()->isFunction()) {
+        if (_gcFuncValue.isObject() && _gcFuncValue.toObject()->isFunction())
+        {
             _gcFunc = _gcFuncValue.toObject();
-        } else {
+        }
+        else
+        {
             _gcFunc = nullptr;
         }
-        
 
         __jsb_CCPrivateData_class = Class::create("__PrivateData", _globalObj, nullptr, nullptr);
         __jsb_CCPrivateData_class->defineFinalizeFunction(privateDataFinalize);
@@ -562,7 +575,7 @@ namespace se {
 
         _isValid = true;
 
-        for (const auto& hook : _afterInitHookArray)
+        for (const auto &hook : _afterInitHookArray)
         {
             hook();
         }
@@ -581,7 +594,7 @@ namespace se {
 
         {
             AutoHandleScope hs;
-            for (const auto& hook : _beforeCleanupHookArray)
+            for (const auto &hook : _beforeCleanupHookArray)
             {
                 hook();
             }
@@ -627,7 +640,7 @@ namespace se {
 
         _registerCallbackArray.clear();
 
-        for (const auto& hook : _afterCleanupHookArray)
+        for (const auto &hook : _afterCleanupHookArray)
         {
             hook();
         }
@@ -640,27 +653,27 @@ namespace se {
         SE_LOGD("ScriptEngine::cleanup end ...\n");
     }
 
-    Object* ScriptEngine::getGlobalObject() const
+    Object *ScriptEngine::getGlobalObject() const
     {
         return _globalObj;
     }
 
-    void ScriptEngine::addBeforeInitHook(const std::function<void()>& hook)
+    void ScriptEngine::addBeforeInitHook(const std::function<void()> &hook)
     {
         _beforeInitHookArray.push_back(hook);
     }
 
-    void ScriptEngine::addAfterInitHook(const std::function<void()>& hook)
+    void ScriptEngine::addAfterInitHook(const std::function<void()> &hook)
     {
         _afterInitHookArray.push_back(hook);
     }
 
-    void ScriptEngine::addBeforeCleanupHook(const std::function<void()>& hook)
+    void ScriptEngine::addBeforeCleanupHook(const std::function<void()> &hook)
     {
         _beforeCleanupHookArray.push_back(hook);
     }
 
-    void ScriptEngine::addAfterCleanupHook(const std::function<void()>& hook)
+    void ScriptEngine::addAfterCleanupHook(const std::function<void()> &hook)
     {
         _afterCleanupHookArray.push_back(hook);
     }
@@ -687,7 +700,7 @@ namespace se {
             _env = node::CreateEnvironment(_isolateData, _context.Get(_isolate), 0, nullptr, 0, nullptr);
 
             node::DebugOptions options;
-            options.set_wait_for_connect(_isWaitForConnect);// the program will be hung up until debug attach if _isWaitForConnect = true
+            options.set_wait_for_connect(_isWaitForConnect); // the program will be hung up until debug attach if _isWaitForConnect = true
             options.set_inspector_enabled(true);
             options.set_port((int)_debuggerServerPort);
             options.set_host_name(_debuggerServerAddr.c_str());
@@ -717,8 +730,8 @@ namespace se {
     {
         int objSize = __objectMap ? (int)__objectMap->size() : -1;
         SE_LOGD("GC begin ..., (js->native map) size: %d, all objects: %d\n", (int)NativePtrToObjectMap::size(), objSize);
-        
-        if(_gcFunc == nullptr)
+
+        if (_gcFunc == nullptr)
         {
             const double kLongIdlePauseInSeconds = 1.0;
             _isolate->ContextDisposedNotification();
@@ -733,7 +746,7 @@ namespace se {
             _gcFunc->call({}, nullptr);
         }
         objSize = __objectMap ? (int)__objectMap->size() : -1;
-        
+
         SE_LOGD("GC end ..., (js->native map) size: %d, all objects: %d\n", (int)NativePtrToObjectMap::size(), objSize);
     }
 
@@ -752,9 +765,9 @@ namespace se {
         return _isValid;
     }
 
-    bool ScriptEngine::evalString(const char* script, ssize_t length/* = -1 */, Value* ret/* = nullptr */, const char* fileName/* = nullptr */)
+    bool ScriptEngine::evalString(const char *script, ssize_t length /* = -1 */, Value *ret /* = nullptr */, const char *fileName /* = nullptr */)
     {
-        if(_engineThreadId != std::this_thread::get_id())
+        if (_engineThreadId != std::this_thread::get_id())
         {
             // `evalString` should run in main thread
             assert(false);
@@ -789,7 +802,7 @@ namespace se {
         if (originStr.IsEmpty())
             return false;
 
-        v8::ScriptOrigin origin(originStr.ToLocalChecked());
+        v8::ScriptOrigin origin(_isolate, originStr.ToLocalChecked());
         v8::MaybeLocal<v8::Script> maybeScript = v8::Script::Compile(_context.Get(_isolate), source.ToLocalChecked(), &origin);
 
         bool success = false;
@@ -813,7 +826,8 @@ namespace se {
                 success = true;
             }
 
-            if (block.HasCaught()) {
+            if (block.HasCaught())
+            {
                 v8::Local<v8::Message> message = block.Message();
                 SE_LOGE("ScriptEngine::evalString catch exception:\n");
                 onMessageCallback(message, v8::Undefined(_isolate));
@@ -837,17 +851,17 @@ namespace se {
         return stackTraceToString(stack);
     }
 
-    void ScriptEngine::setFileOperationDelegate(const FileOperationDelegate& delegate)
+    void ScriptEngine::setFileOperationDelegate(const FileOperationDelegate &delegate)
     {
         _fileOperationDelegate = delegate;
     }
 
-    const ScriptEngine::FileOperationDelegate& ScriptEngine::getFileOperationDelegate() const
+    const ScriptEngine::FileOperationDelegate &ScriptEngine::getFileOperationDelegate() const
     {
         return _fileOperationDelegate;
     }
 
-    bool ScriptEngine::runScript(const std::string& path, Value* ret/* = nullptr */)
+    bool ScriptEngine::runScript(const std::string &path, Value *ret /* = nullptr */)
     {
         assert(!path.empty());
         assert(_fileOperationDelegate.isValid());
@@ -865,15 +879,15 @@ namespace se {
 
     void ScriptEngine::clearException()
     {
-        //IDEA:
+        // IDEA:
     }
 
-    void ScriptEngine::setExceptionCallback(const ExceptionCallback& cb)
+    void ScriptEngine::setExceptionCallback(const ExceptionCallback &cb)
     {
         _nativeExceptionCallback = cb;
     }
 
-    void ScriptEngine::setJSExceptionCallback(const ExceptionCallback& cb)
+    void ScriptEngine::setJSExceptionCallback(const ExceptionCallback &cb)
     {
         _jsExceptionCallback = cb;
     }
@@ -883,7 +897,7 @@ namespace se {
         return _context.Get(_isolate);
     }
 
-    void ScriptEngine::enableDebugger(const std::string& serverAddr, uint32_t port, bool isWait)
+    void ScriptEngine::enableDebugger(const std::string &serverAddr, uint32_t port, bool isWait)
     {
         _debuggerServerAddr = serverAddr;
         _debuggerServerPort = port;

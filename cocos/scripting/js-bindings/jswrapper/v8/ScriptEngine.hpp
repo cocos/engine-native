@@ -34,8 +34,10 @@
 #include <thread>
 
 #if SE_ENABLE_INSPECTOR
-namespace node {
-    namespace inspector {
+namespace node
+{
+    namespace inspector
+    {
         class Agent;
     }
 
@@ -44,13 +46,14 @@ namespace node {
 }
 #endif
 
-namespace se {
+namespace se
+{
 
     class Object;
     class Class;
     class Value;
 
-    extern Class* __jsb_CCPrivateData_class;
+    extern Class *__jsb_CCPrivateData_class;
 
     /**
      * A stack-allocated class that governs a number of local handles.
@@ -62,12 +65,13 @@ namespace se {
     {
     public:
         AutoHandleScope()
-        : _handleScope(v8::Isolate::GetCurrent())
+            : _handleScope(v8::Isolate::GetCurrent())
         {
         }
         ~AutoHandleScope()
         {
         }
+
     private:
         v8::HandleScope _handleScope;
     };
@@ -82,7 +86,7 @@ namespace se {
          *  @brief Gets or creates the instance of script engine.
          *  @return The script engine instance.
          */
-        static ScriptEngine* getInstance();
+        static ScriptEngine *getInstance();
 
         /**
          *  @brief Destroys the instance of script engine.
@@ -93,9 +97,9 @@ namespace se {
          *  @brief Gets the global object of JavaScript VM.
          *  @return The se::Object stores the global JavaScript object.
          */
-        Object* getGlobalObject() const;
+        Object *getGlobalObject() const;
 
-        typedef bool (*RegisterCallback)(Object*);
+        typedef bool (*RegisterCallback)(Object *);
 
         /**
          *  @brief Adds a callback for registering a native binding module.
@@ -123,14 +127,14 @@ namespace se {
          *  @param[in] hook A hook function to be invoked before initializing script engine.
          *  @note Multiple hook functions could be added, they will be invoked by the order of adding.
          */
-        void addBeforeInitHook(const std::function<void()>& hook);
+        void addBeforeInitHook(const std::function<void()> &hook);
 
         /**
          *  @brief Adds a hook function after initializing script engine.
          *  @param[in] hook A hook function to be invoked before initializing script engine.
          *  @note Multiple hook functions could be added, they will be invoked by the order of adding.
          */
-        void addAfterInitHook(const std::function<void()>& hook);
+        void addAfterInitHook(const std::function<void()> &hook);
 
         /**
          *  @brief Cleanups script engine.
@@ -143,14 +147,14 @@ namespace se {
          *  @param[in] hook A hook function to be invoked before cleanuping script engine.
          *  @note Multiple hook functions could be added, they will be invoked by the order of adding.
          */
-        void addBeforeCleanupHook(const std::function<void()>& hook);
+        void addBeforeCleanupHook(const std::function<void()> &hook);
 
         /**
          *  @brief Adds a hook function after cleanuping script engine.
          *  @param[in] hook A hook function to be invoked after cleanuping script engine.
          *  @note Multiple hook functions could be added, they will be invoked by the order of adding.
          */
-        void addAfterCleanupHook(const std::function<void()>& hook);
+        void addAfterCleanupHook(const std::function<void()> &hook);
 
         /**
          *  @brief Executes a utf-8 string buffer which contains JavaScript code.
@@ -160,7 +164,7 @@ namespace se {
          *  @param[in] fileName A string containing a URL for the script's source file. This is used by debuggers and when reporting exceptions. Pass NULL if you do not care to include source file information.
          *  @return true if succeed, otherwise false.
          */
-        bool evalString(const char* scriptStr, ssize_t length = -1, Value* rval = nullptr, const char* fileName = nullptr);
+        bool evalString(const char *scriptStr, ssize_t length = -1, Value *rval = nullptr, const char *fileName = nullptr);
 
         /**
          * @brief Grab a snapshot of the current JavaScript execution stack.
@@ -175,42 +179,39 @@ namespace se {
         {
         public:
             FileOperationDelegate()
-            : onGetDataFromFile(nullptr)
-            , onGetStringFromFile(nullptr)
-            , onCheckFileExist(nullptr)
-            , onGetFullPath(nullptr)
-            {}
+                : onGetDataFromFile(nullptr), onGetStringFromFile(nullptr), onCheckFileExist(nullptr), onGetFullPath(nullptr)
+            {
+            }
 
             /**
              *  @brief Tests whether delegate is valid.
              */
-            bool isValid() const {
-                return onGetDataFromFile != nullptr
-                && onGetStringFromFile != nullptr
-                && onCheckFileExist != nullptr
-                && onGetFullPath != nullptr; }
+            bool isValid() const
+            {
+                return onGetDataFromFile != nullptr && onGetStringFromFile != nullptr && onCheckFileExist != nullptr && onGetFullPath != nullptr;
+            }
 
             // path, buffer, buffer size
-            std::function<void(const std::string&, const std::function<void(const uint8_t*, size_t)>& )> onGetDataFromFile;
+            std::function<void(const std::string &, const std::function<void(const uint8_t *, size_t)> &)> onGetDataFromFile;
             // path, return file string content.
-            std::function<std::string(const std::string&)> onGetStringFromFile;
+            std::function<std::string(const std::string &)> onGetStringFromFile;
             // path
-            std::function<bool(const std::string&)> onCheckFileExist;
+            std::function<bool(const std::string &)> onCheckFileExist;
             // path, return full path
-            std::function<std::string(const std::string&)> onGetFullPath;
+            std::function<std::string(const std::string &)> onGetFullPath;
         };
 
         /**
          *  @brief Sets the delegate for file operation.
          *  @param delegate[in] The delegate instance for file operation.
          */
-        void setFileOperationDelegate(const FileOperationDelegate& delegate);
+        void setFileOperationDelegate(const FileOperationDelegate &delegate);
 
         /**
          *  @brief Gets the delegate for file operation.
          *  @return The delegate for file operation
          */
-        const FileOperationDelegate& getFileOperationDelegate() const;
+        const FileOperationDelegate &getFileOperationDelegate() const;
 
         /**
          *  @brief Executes a file which contains JavaScript code.
@@ -218,7 +219,7 @@ namespace se {
          *  @param[in] rval The se::Value that results from evaluating script. Passing nullptr if you don't care about the result.
          *  @return true if succeed, otherwise false.
          */
-        bool runScript(const std::string& path, Value* rval = nullptr);
+        bool runScript(const std::string &path, Value *rval = nullptr);
 
         /**
          *  @brief Tests whether script engine is doing garbage collection.
@@ -248,33 +249,32 @@ namespace se {
          */
         void clearException();
 
-        using ExceptionCallback = std::function<void(const char*, const char*, const char*)>; // location, message, stack
+        using ExceptionCallback = std::function<void(const char *, const char *, const char *)>; // location, message, stack
 
         /**
          *  @brief Sets the callback function while an exception is fired.
          *  @param[in] cb The callback function to notify that an exception is fired.
          */
-        void setExceptionCallback(const ExceptionCallback& cb);
+        void setExceptionCallback(const ExceptionCallback &cb);
 
         /**
          *  @brief Sets the callback function while an exception is fired in JS.
          *  @param[in] cb The callback function to notify that an exception is fired.
          */
-        void setJSExceptionCallback(const ExceptionCallback& cb);
-
+        void setJSExceptionCallback(const ExceptionCallback &cb);
 
         /**
          *  @brief Gets the start time of script engine.
          *  @return The start time of script engine.
          */
-        const std::chrono::steady_clock::time_point& getStartTime() const { return _startTime; }
+        const std::chrono::steady_clock::time_point &getStartTime() const { return _startTime; }
 
         /**
          *  @brief Enables JavaScript debugger
          *  @param[in] serverAddr The address of debugger server.
          *  @param[in] isWait Whether wait debugger attach when loading.
          */
-        void enableDebugger(const std::string& serverAddr, uint32_t port, bool isWait = false);
+        void enableDebugger(const std::string &serverAddr, uint32_t port, bool isWait = false);
 
         /**
          *  @brief Tests whether JavaScript debugger is enabled
@@ -293,8 +293,8 @@ namespace se {
         uint32_t getVMId() const { return _vmId; }
 
         // Private API used in wrapper
-        void _retainScriptObject(void* owner, void* target);
-        void _releaseScriptObject(void* owner, void* target);
+        void _retainScriptObject(void *owner, void *target);
+        void _releaseScriptObject(void *owner, void *target);
         v8::Local<v8::Context> _getContext() const;
         void _setGarbageCollecting(bool isGarbageCollecting);
         //
@@ -302,14 +302,14 @@ namespace se {
         ScriptEngine();
         ~ScriptEngine();
 
-        static void privateDataFinalize(void* nativeObj);
+        static void privateDataFinalize(void *nativeObj);
 
-        static void onFatalErrorCallback(const char* location, const char* message);
-        static void onOOMErrorCallback(const char* location, bool is_heap_oom);
+        static void onFatalErrorCallback(const char *location, const char *message);
+        // static void onOOMErrorCallback(const char *location, const v8::OOMDetails &details);
         static void onMessageCallback(v8::Local<v8::Message> message, v8::Local<v8::Value> data);
         static void onPromiseRejectCallback(v8::PromiseRejectMessage msg);
 
-        void callExceptionCallback(const char*, const char*, const char*);
+        void callExceptionCallback(const char *, const char *, const char *);
 
         std::chrono::steady_clock::time_point _startTime;
         std::vector<RegisterCallback> _registerCallbackArray;
@@ -320,10 +320,10 @@ namespace se {
 
         v8::Persistent<v8::Context> _context;
 
-        v8::Platform* _platform;
-        v8::Isolate* _isolate;
-        v8::HandleScope* _handleScope;
-        Object* _globalObj;
+        v8::Platform *_platform;
+        v8::Isolate *_isolate;
+        v8::HandleScope *_handleScope;
+        Object *_globalObj;
         Value _gcFuncValue;
         Object *_gcFunc = nullptr;
 
@@ -332,8 +332,8 @@ namespace se {
         ExceptionCallback _jsExceptionCallback = nullptr;
 
 #if SE_ENABLE_INSPECTOR
-        node::Environment* _env;
-        node::IsolateData* _isolateData;
+        node::Environment *_env;
+        node::IsolateData *_isolateData;
 #endif
 
         std::thread::id _engineThreadId;

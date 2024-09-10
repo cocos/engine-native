@@ -1,0 +1,77 @@
+websockets
+    mac: 2.1.0
+    win32: 2.1.0 
+    ios: 2.1.0
+    android: 2.1.0
+
+openssl
+    mac: 1.1.0c
+    win32: 1.1.0c
+    ios: 1.1.0c
+    android: 1.1.0c
+    
+curl
+    mac: 7.52.1
+    win32: 7.52.1
+
+png
+    mac: 1.6.21
+    win32: 1.6.16
+    ios: --
+    android: 1.6.21
+
+jpeg
+    mac: v9
+    win32: v9
+    ios: --
+    android: v9
+
+tiff
+    mac: 4.0.6
+    win32: 4.0.3
+    ios: 4.0.6
+    android: 4.0.6
+
+freetype2
+    mac: 2.6.3
+    win32: 2.5.5
+    ios: 2.6.3
+    android: 2.6.3
+
+libz
+    mac: 1.2.8
+    win32: 1.2.5
+    ios: --
+    android: 1.2.8
+
+spidermonkey
+    mac: v52
+    win32: v52
+    ios: v52
+    android: v52
+
+anysdk
+    mac: --
+    win32: --
+    android: 2.2.5
+    ios: 2.2.5
+
+rapidjson
+    mac: 1.1.0
+    win32: 1.1.0
+    ios: 1.1.0
+    android: 1.1.0
+
+tinydir
+    mac: 1.2.1
+    win32: 1.2.1
+    android: 1.2.1
+    ios: 1.2.1
+
+v8
+    win32: 6.0.286.52
+    android: 6.0.286.52
+
+libuv
+    win32: 1.13.1
+    android: 1.13.1

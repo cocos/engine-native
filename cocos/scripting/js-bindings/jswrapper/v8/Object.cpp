@@ -33,21 +33,18 @@
 #include <memory>
 #include <unordered_map>
 
-namespace se {
+namespace se
+{
 
+    std::unique_ptr<std::unordered_map<Object *, void *>> __objectMap; // Currently, the value `void*` is always nullptr
 
-    std::unique_ptr<std::unordered_map<Object*, void*>> __objectMap; // Currently, the value `void*` is always nullptr
-
-    namespace {
-        v8::Isolate* __isolate = nullptr;
+    namespace
+    {
+        v8::Isolate *__isolate = nullptr;
     }
 
     Object::Object()
-    : _cls(nullptr)
-    , _rootCount(0)
-    , _privateData(nullptr)
-    , _finalizeCb(nullptr)
-    , _internalData(nullptr)
+        : _cls(nullptr), _rootCount(0), _privateData(nullptr), _finalizeCb(nullptr), _internalData(nullptr)
     {
     }
 
@@ -57,14 +54,15 @@ namespace se {
         {
             _obj.unref();
         }
-        
-        if(__objectMap){
+
+        if (__objectMap)
+        {
             __objectMap->erase(this);
         }
     }
 
     /*static*/
-    void Object::nativeObjectFinalizeHook(void* nativeObj)
+    void Object::nativeObjectFinalizeHook(void *nativeObj)
     {
         if (nativeObj == nullptr)
             return;
@@ -72,7 +70,7 @@ namespace se {
         auto iter = NativePtrToObjectMap::find(nativeObj);
         if (iter != NativePtrToObjectMap::end())
         {
-            Object* obj = iter->second;
+            Object *obj = iter->second;
             if (obj->_finalizeCb != nullptr)
             {
                 obj->_finalizeCb(nativeObj);
@@ -88,30 +86,30 @@ namespace se {
         }
         else
         {
-//            assert(false);
+            //            assert(false);
         }
     }
 
     /* static */
-    void Object::setIsolate(v8::Isolate* isolate)
+    void Object::setIsolate(v8::Isolate *isolate)
     {
         __isolate = isolate;
     }
 
     void Object::setup()
     {
-        __objectMap.reset(new std::unordered_map<Object*, void*>());
+        __objectMap.reset(new std::unordered_map<Object *, void *>());
     }
 
     /* static */
     void Object::cleanup()
     {
-        void* nativeObj = nullptr;
-        Object* obj = nullptr;
-        Class* cls = nullptr;
+        void *nativeObj = nullptr;
+        Object *obj = nullptr;
+        Class *cls = nullptr;
 
-        const auto& nativePtrToObjectMap = NativePtrToObjectMap::instance();
-        for (const auto& e : nativePtrToObjectMap)
+        const auto &nativePtrToObjectMap = NativePtrToObjectMap::instance();
+        for (const auto &e : nativePtrToObjectMap)
         {
             nativeObj = e.first;
             obj = e.second;
@@ -142,9 +140,10 @@ namespace se {
         NativePtrToObjectMap::clear();
         NonRefNativePtrCreatedByCtorMap::clear();
 
-        if(__objectMap){
-            std::vector<Object*> toReleaseObjects;
-            for (const auto& e : *__objectMap)
+        if (__objectMap)
+        {
+            std::vector<Object *> toReleaseObjects;
+            for (const auto &e : *__objectMap)
             {
                 obj = e.first;
                 cls = obj->_getClass();
@@ -162,21 +161,20 @@ namespace se {
             }
         }
 
-
         __objectMap.reset();
         __isolate = nullptr;
     }
 
-    Object* Object::createPlainObject()
+    Object *Object::createPlainObject()
     {
         v8::Local<v8::Object> jsobj = v8::Object::New(__isolate);
-        Object* obj = _createJSObject(nullptr, jsobj);
+        Object *obj = _createJSObject(nullptr, jsobj);
         return obj;
     }
 
-    Object* Object::getObjectWithPtr(void* ptr)
+    Object *Object::getObjectWithPtr(void *ptr)
     {
-        Object* obj = nullptr;
+        Object *obj = nullptr;
         auto iter = NativePtrToObjectMap::find(ptr);
         if (iter != NativePtrToObjectMap::end())
         {
@@ -186,9 +184,9 @@ namespace se {
         return obj;
     }
 
-    Object* Object::_createJSObject(Class* cls, v8::Local<v8::Object> obj)
+    Object *Object::_createJSObject(Class *cls, v8::Local<v8::Object> obj)
     {
-        Object* ret = new Object();
+        Object *ret = new Object();
         if (!ret->init(cls, obj))
         {
             delete ret;
@@ -197,36 +195,37 @@ namespace se {
         return ret;
     }
 
-    Object* Object::createObjectWithClass(Class* cls)
+    Object *Object::createObjectWithClass(Class *cls)
     {
         v8::Local<v8::Object> jsobj = Class::_createJSObjectWithClass(cls);
-        Object* obj = Object::_createJSObject(cls, jsobj);
+        Object *obj = Object::_createJSObject(cls, jsobj);
         return obj;
     }
 
-    Object* Object::createArrayObject(size_t length)
+    Object *Object::createArrayObject(size_t length)
     {
         v8::Local<v8::Array> jsobj = v8::Array::New(__isolate, (int)length);
-        Object* obj = Object::_createJSObject(nullptr, jsobj);
+        Object *obj = Object::_createJSObject(nullptr, jsobj);
         return obj;
     }
 
-    Object* Object::createArrayBufferObject(void* data, size_t byteLength)
+    Object *Object::createArrayBufferObject(void *data, size_t byteLength)
     {
         v8::Local<v8::ArrayBuffer> jsobj = v8::ArrayBuffer::New(__isolate, byteLength);
+        auto *srcData = jsobj->GetBackingStore()->Data();
         if (data)
         {
-            memcpy(jsobj->GetContents().Data(), data, byteLength);
+            memcpy(srcData, data, byteLength);
         }
         else
         {
-            memset(jsobj->GetContents().Data(), 0, byteLength);
+            memset(srcData, 0, byteLength);
         }
-        Object* obj = Object::_createJSObject(nullptr, jsobj);
+        Object *obj = Object::_createJSObject(nullptr, jsobj);
         return obj;
     }
-    
-    Object* Object::createTypedArray(TypedArrayType type, void* data, size_t byteLength)
+
+    Object *Object::createTypedArray(TypedArrayType type, void *data, size_t byteLength)
     {
         if (type == TypedArrayType::NONE)
         {
@@ -241,54 +240,59 @@ namespace se {
         }
 
         v8::Local<v8::ArrayBuffer> jsobj = v8::ArrayBuffer::New(__isolate, byteLength);
-        //If data has content,then will copy data into buffer,or will only clear buffer.
-        if (data) {
-            memcpy(jsobj->GetContents().Data(), data, byteLength);
-        }else{
-            memset(jsobj->GetContents().Data(), 0, byteLength);
+        // If data has content,then will copy data into buffer,or will only clear buffer.
+        auto *srcData = jsobj->GetBackingStore()->Data();
+        if (data)
+        {
+            memcpy(srcData, data, byteLength);
         }
-        
-        v8::Local<v8::Object> arr;
-        switch (type) {
-            case TypedArrayType::INT8:
-                arr = v8::Int8Array::New(jsobj, 0, byteLength);
-                break;
-            case TypedArrayType::INT16:
-                arr = v8::Int16Array::New(jsobj, 0, byteLength / 2);
-                break;
-            case TypedArrayType::INT32:
-                arr = v8::Int32Array::New(jsobj, 0, byteLength / 4);
-                break;
-            case TypedArrayType::UINT8:
-                arr = v8::Uint8Array::New(jsobj, 0, byteLength);
-                break;
-            case TypedArrayType::UINT16:
-                arr = v8::Uint16Array::New(jsobj, 0, byteLength / 2);
-                break;
-            case TypedArrayType::UINT32:
-                arr = v8::Uint32Array::New(jsobj, 0, byteLength / 4);
-                break;
-            case TypedArrayType::FLOAT32:
-                arr = v8::Float32Array::New(jsobj, 0, byteLength / 4);
-                break;
-            case TypedArrayType::FLOAT64:
-                arr = v8::Float64Array::New(jsobj, 0, byteLength / 8);
-                break;
-            default:
-                assert(false); // Should never go here.
-                break;
+        else
+        {
+            memset(srcData, 0, byteLength);
         }
 
-        Object* obj = Object::_createJSObject(nullptr, arr);
+        v8::Local<v8::Object> arr;
+        switch (type)
+        {
+        case TypedArrayType::INT8:
+            arr = v8::Int8Array::New(jsobj, 0, byteLength);
+            break;
+        case TypedArrayType::INT16:
+            arr = v8::Int16Array::New(jsobj, 0, byteLength / 2);
+            break;
+        case TypedArrayType::INT32:
+            arr = v8::Int32Array::New(jsobj, 0, byteLength / 4);
+            break;
+        case TypedArrayType::UINT8:
+            arr = v8::Uint8Array::New(jsobj, 0, byteLength);
+            break;
+        case TypedArrayType::UINT16:
+            arr = v8::Uint16Array::New(jsobj, 0, byteLength / 2);
+            break;
+        case TypedArrayType::UINT32:
+            arr = v8::Uint32Array::New(jsobj, 0, byteLength / 4);
+            break;
+        case TypedArrayType::FLOAT32:
+            arr = v8::Float32Array::New(jsobj, 0, byteLength / 4);
+            break;
+        case TypedArrayType::FLOAT64:
+            arr = v8::Float64Array::New(jsobj, 0, byteLength / 8);
+            break;
+        default:
+            assert(false); // Should never go here.
+            break;
+        }
+
+        Object *obj = Object::_createJSObject(nullptr, arr);
         return obj;
     }
 
-    Object* Object::createUint8TypedArray(uint8_t* data, size_t dataCount)
+    Object *Object::createUint8TypedArray(uint8_t *data, size_t dataCount)
     {
         return createTypedArray(TypedArrayType::UINT8, data, dataCount);
     }
 
-    Object* Object::createJSONObject(const std::string& jsonStr)
+    Object *Object::createJSONObject(const std::string &jsonStr)
     {
         v8::Local<v8::Context> context = __isolate->GetCurrentContext();
         Value strVal(jsonStr);
@@ -303,14 +307,15 @@ namespace se {
         return Object::_createJSObject(nullptr, jsobj);
     }
 
-    bool Object::init(Class* cls, v8::Local<v8::Object> obj)
+    bool Object::init(Class *cls, v8::Local<v8::Object> obj)
     {
         _cls = cls;
 
         _obj.init(obj);
         _obj.setFinalizeCallback(nativeObjectFinalizeHook);
 
-        if(__objectMap){
+        if (__objectMap)
+        {
             assert(__objectMap->find(this) == __objectMap->end());
             __objectMap->emplace(this, nullptr);
         }
@@ -339,7 +344,6 @@ namespace se {
         v8::Maybe<bool> maybeExist = _obj.handle(__isolate)->Has(context, nameValToLocal);
         if (maybeExist.IsNothing())
             return false;
-
 
         if (!maybeExist.FromJust())
             return false;
@@ -379,8 +383,7 @@ namespace se {
         return true;
     }
 
-
-    bool Object::setProperty(const char *name, const Value& data)
+    bool Object::setProperty(const char *name, const Value &data)
     {
         v8::MaybeLocal<v8::String> nameValue = v8::String::NewFromUtf8(__isolate, name, v8::NewStringType::kNormal);
         if (nameValue.IsEmpty())
@@ -411,7 +414,7 @@ namespace se {
 
     bool Object::isFunction() const
     {
-        return const_cast<Object*>(this)->_obj.handle(__isolate)->IsCallable();
+        return const_cast<Object *>(this)->_obj.handle(__isolate)->IsCallable();
     }
 
     bool Object::_isNativeFunction() const
@@ -429,12 +432,12 @@ namespace se {
 
     bool Object::isTypedArray() const
     {
-        return const_cast<Object*>(this)->_obj.handle(__isolate)->IsTypedArray();
+        return const_cast<Object *>(this)->_obj.handle(__isolate)->IsTypedArray();
     }
 
     Object::TypedArrayType Object::getTypedArrayType() const
     {
-        v8::Local<v8::Value> value = const_cast<Object*>(this)->_obj.handle(__isolate);
+        v8::Local<v8::Value> value = const_cast<Object *>(this)->_obj.handle(__isolate);
         TypedArrayType ret = TypedArrayType::NONE;
         if (value->IsInt8Array())
             ret = TypedArrayType::INT8;
@@ -458,35 +461,38 @@ namespace se {
         return ret;
     }
 
-    bool Object::getTypedArrayData(uint8_t** ptr, size_t* length) const
+    bool Object::getTypedArrayData(uint8_t **ptr, size_t *length) const
     {
         assert(isTypedArray());
-        v8::Local<v8::Object> obj = const_cast<Object*>(this)->_obj.handle(__isolate);
+        v8::Local<v8::Object> obj = const_cast<Object *>(this)->_obj.handle(__isolate);
         v8::Local<v8::TypedArray> arr = v8::Local<v8::TypedArray>::Cast(obj);
-        v8::ArrayBuffer::Contents content = arr->Buffer()->GetContents();
-        *ptr = (uint8_t*)content.Data() + arr->ByteOffset();
-        *length = arr->ByteLength();
+        const auto &backingStore = arr->Buffer()->GetBackingStore();
+        *ptr = static_cast<uint8_t *>(backingStore->Data()) + arr->ByteOffset();
+        if (length)
+        {
+            *length = arr->ByteLength();
+        }
         return true;
     }
 
     bool Object::isArrayBuffer() const
     {
-        v8::Local<v8::Object> obj = const_cast<Object*>(this)->_obj.handle(__isolate);
+        v8::Local<v8::Object> obj = const_cast<Object *>(this)->_obj.handle(__isolate);
         return obj->IsArrayBuffer();
     }
 
-    bool Object::getArrayBufferData(uint8_t** ptr, size_t* length) const
+    bool Object::getArrayBufferData(uint8_t **ptr, size_t *length) const
     {
         assert(isArrayBuffer());
-        v8::Local<v8::Object> obj = const_cast<Object*>(this)->_obj.handle(__isolate);
+        v8::Local<v8::Object> obj = const_cast<Object *>(this)->_obj.handle(__isolate);
         v8::Local<v8::ArrayBuffer> arrBuf = v8::Local<v8::ArrayBuffer>::Cast(obj);
-        v8::ArrayBuffer::Contents content = arrBuf->GetContents();
-        *ptr = (uint8_t*)content.Data();
-        *length = content.ByteLength();
+        const auto &backingStore = arrBuf->GetBackingStore();
+        *ptr = static_cast<uint8_t *>(backingStore->Data());
+        *length = backingStore->ByteLength();
         return true;
     }
 
-    void Object::setPrivateData(void* data)
+    void Object::setPrivateData(void *data)
     {
         assert(_privateData == nullptr);
         assert(NativePtrToObjectMap::find(data) == NativePtrToObjectMap::end());
@@ -495,11 +501,11 @@ namespace se {
         _privateData = data;
     }
 
-    void* Object::getPrivateData() const
+    void *Object::getPrivateData() const
     {
         if (_privateData == nullptr)
         {
-            const_cast<Object*>(this)->_privateData = internal::getPrivate(__isolate, const_cast<Object*>(this)->_obj.handle(__isolate));
+            const_cast<Object *>(this)->_privateData = internal::getPrivate(__isolate, const_cast<Object *>(this)->_obj.handle(__isolate));
         }
         return _privateData;
     }
@@ -517,15 +523,15 @@ namespace se {
 
     v8::Local<v8::Object> Object::_getJSObject() const
     {
-        return const_cast<Object*>(this)->_obj.handle(__isolate);
+        return const_cast<Object *>(this)->_obj.handle(__isolate);
     }
 
-    ObjectWrap& Object::_getWrap()
+    ObjectWrap &Object::_getWrap()
     {
         return _obj;
     }
 
-    bool Object::call(const ValueArray& args, Object* thisObject, Value* rval/* = nullptr*/)
+    bool Object::call(const ValueArray &args, Object *thisObject, Value *rval /* = nullptr*/)
     {
         if (_obj.persistent().IsEmpty())
         {
@@ -575,7 +581,7 @@ namespace se {
             se::ScriptEngine::getInstance()->clearException();
         }
 
-//        assert(false);
+        //        assert(false);
 
         return false;
     }
@@ -592,22 +598,22 @@ namespace se {
             return false;
 
         v8::Maybe<bool> ret = _obj.handle(__isolate)->Set(context,
-                                    v8::Local<v8::Name>::Cast(maybeFuncName.ToLocalChecked()),
-                                    maybeFunc.ToLocalChecked());
+                                                          v8::Local<v8::Name>::Cast(maybeFuncName.ToLocalChecked()),
+                                                          maybeFunc.ToLocalChecked());
 
         return ret.IsJust() && ret.FromJust();
     }
 
     bool Object::isArray() const
     {
-        return const_cast<Object*>(this)->_obj.handle(__isolate)->IsArray();
+        return const_cast<Object *>(this)->_obj.handle(__isolate)->IsArray();
     }
 
-    bool Object::getArrayLength(uint32_t* length) const
+    bool Object::getArrayLength(uint32_t *length) const
     {
         assert(isArray());
         assert(length != nullptr);
-        Object* thiz = const_cast<Object*>(this);
+        Object *thiz = const_cast<Object *>(this);
 
         v8::MaybeLocal<v8::String> lengthStr = v8::String::NewFromUtf8(__isolate, "length", v8::NewStringType::kNormal);
         if (lengthStr.IsEmpty())
@@ -625,7 +631,7 @@ namespace se {
         if (obj.IsEmpty())
             return false;
 
-        v8::Maybe<uint32_t> mbLen= obj.ToLocalChecked()->Uint32Value(context);
+        v8::Maybe<uint32_t> mbLen = obj.ToLocalChecked()->Uint32Value(context);
         if (mbLen.IsNothing())
             return false;
 
@@ -633,11 +639,11 @@ namespace se {
         return true;
     }
 
-    bool Object::getArrayElement(uint32_t index, Value* data) const
+    bool Object::getArrayElement(uint32_t index, Value *data) const
     {
         assert(isArray());
         assert(data != nullptr);
-        Object* thiz = const_cast<Object*>(this);
+        Object *thiz = const_cast<Object *>(this);
         v8::MaybeLocal<v8::Value> result = thiz->_obj.handle(__isolate)->Get(__isolate->GetCurrentContext(), index);
 
         if (result.IsEmpty())
@@ -647,7 +653,7 @@ namespace se {
         return true;
     }
 
-    bool Object::setArrayElement(uint32_t index, const Value& data)
+    bool Object::setArrayElement(uint32_t index, const Value &data)
     {
         assert(isArray());
 
@@ -658,10 +664,10 @@ namespace se {
         return ret.IsJust() && ret.FromJust();
     }
 
-    bool Object::getAllKeys(std::vector<std::string>* allKeys) const
+    bool Object::getAllKeys(std::vector<std::string> *allKeys) const
     {
         assert(allKeys != nullptr);
-        Object* thiz = const_cast<Object*>(this);
+        Object *thiz = const_cast<Object *>(this);
         v8::Local<v8::Context> context = __isolate->GetCurrentContext();
         v8::MaybeLocal<v8::Array> keys = thiz->_obj.handle(__isolate)->GetOwnPropertyNames(context);
         if (keys.IsEmpty())
@@ -696,7 +702,7 @@ namespace se {
         return true;
     }
 
-    Class* Object::_getClass() const
+    Class *Object::_getClass() const
     {
         return _cls;
     }
@@ -735,19 +741,19 @@ namespace se {
 
     bool Object::strictEquals(Object *o) const
     {
-        Object* a = const_cast<Object*>(this);
+        Object *a = const_cast<Object *>(this);
         return a->_obj.handle(__isolate) == o->_obj.handle(__isolate);
     }
 
-    bool Object::attachObject(Object* obj)
+    bool Object::attachObject(Object *obj)
     {
         assert(obj);
 
-        Object* global = ScriptEngine::getInstance()->getGlobalObject();
+        Object *global = ScriptEngine::getInstance()->getGlobalObject();
         Value jsbVal;
         if (!global->getProperty("jsb", &jsbVal))
             return false;
-        Object* jsbObj = jsbVal.toObject();
+        Object *jsbObj = jsbVal.toObject();
 
         Value func;
 
@@ -761,15 +767,15 @@ namespace se {
         return true;
     }
 
-    bool Object::detachObject(Object* obj)
+    bool Object::detachObject(Object *obj)
     {
         assert(obj);
 
-        Object* global = ScriptEngine::getInstance()->getGlobalObject();
+        Object *global = ScriptEngine::getInstance()->getGlobalObject();
         Value jsbVal;
         if (!global->getProperty("jsb", &jsbVal))
             return false;
-        Object* jsbObj = jsbVal.toObject();
+        Object *jsbObj = jsbVal.toObject();
 
         Value func;
 
@@ -788,7 +794,7 @@ namespace se {
         std::string ret;
         if (isFunction() || isArray() || isTypedArray())
         {
-            v8::String::Utf8Value utf8(__isolate, const_cast<Object*>(this)->_obj.handle(__isolate));
+            v8::String::Utf8Value utf8(__isolate, const_cast<Object *>(this)->_obj.handle(__isolate));
             ret = *utf8;
         }
         else if (isArrayBuffer())

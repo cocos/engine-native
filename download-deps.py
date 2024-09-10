@@ -47,6 +47,7 @@ import json
 import socket
 import urlparse
 import select
+import certifi
 
 from optparse import OptionParser
 from time import time
@@ -126,7 +127,7 @@ def select_fastest_url(url_list):
         u = None
         try:
             print("==>   Try fetch %s" % url)
-            u = urllib2.urlopen(url)
+            u = urllib2.urlopen(url, cafile=certifi.where())
             print("==>     Response code: %s " % u.getcode())
             return url
         except urllib2.HTTPError as e:
@@ -191,7 +192,7 @@ class CocosZipInstaller(object):
         print("==> Ready to download '%s' from '%s'" % (self._filename, self._url))
         import urllib2
         try:
-            u = urllib2.urlopen(self._url)
+            u = urllib2.urlopen(self._url, cafile=certifi.where())
         except urllib2.HTTPError as e:
             if e.code == 404:
                 print("==> Error: Could not find the file from url: '%s'" % (self._url))
