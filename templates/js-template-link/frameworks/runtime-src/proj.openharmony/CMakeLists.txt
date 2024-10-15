@@ -7,13 +7,18 @@ set(CC_COCOS_SOURCES)
 set(CC_COMMON_SOURCES)
 set(CC_ALL_SOURCES)
 
-set(CC_USE_SE_V8 ON)
+set(CC_USE_SE_V8 OFF)
 set(CC_USE_SE_NAPI OFF)
+set(CC_USE_SE_JSVM ON)
+
+SET(CMAKE_BUILD_TYPE "Debug")
+
+SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")
+
+SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
 
 option(APP_NAME "Project Name" "test-cases")
 project(${APP_NAME} CXX)
-
-set(CMAKE_CXX_FLAGS_DEBUG  "-Werror=return-type -ferror-limit=0")
 
 enable_language(C ASM)
 set(CMAKE_CXX_STANDARD 17)
@@ -63,7 +68,7 @@ find_library( # Sets the name of the path variable.
               rawfile.z )
 message(STATUS, "rawfile=${rawfile-lib}")
 target_link_libraries(${CC_LIB_NAME} PUBLIC
-${EGL-lib} ${GLESv3-lib} ${hilog-lib} ${libace-lib} ${libnapi-lib} ${libuv-lib} ${rawfile-lib} libnative_drawing.so libc++.a libOpenSLES.so libohaudio.so libavplayer.so
+${EGL-lib} ${GLESv3-lib} ${hilog-lib} ${libace-lib} ${libnapi-lib} ${libuv-lib} ${rawfile-lib} libnative_drawing.so libc++.a libOpenSLES.so libohaudio.so libavplayer.so libjsvm.so libnative_window.so libnative_buffer.so  libbundle_ndk.z.so
 ${CC_EXTERNAL_LIBS}
 )
 

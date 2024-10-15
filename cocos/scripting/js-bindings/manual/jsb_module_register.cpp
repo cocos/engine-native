@@ -68,6 +68,10 @@
 #include "cocos/scripting/js-bindings/manual/JavaScriptJavaBridge.h"
 #endif
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
+#include "cocos/scripting/js-bindings/manual/JavaScriptArkTsBridge.h"
+#endif
+
 #if USE_GFX_RENDERER && USE_MIDDLEWARE
 #include "cocos/scripting/js-bindings/auto/jsb_cocos2dx_editor_support_auto.hpp"
 
@@ -141,6 +145,10 @@ bool jsb_register_all_modules()
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
     se->addRegisterCallback(register_javascript_java_bridge);
+#endif
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
+    se->addRegisterCallback(register_javascript_arkTs_bridge);
 #endif
 
 #if USE_AUDIO

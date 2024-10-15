@@ -35,7 +35,8 @@ cc_set_if_undefined(CC_USE_MIDDLEWARE ON)
 cc_set_if_undefined(CC_USE_SPINE ON)
 cc_set_if_undefined(CC_USE_DRAGONBONES ON)
 cc_set_if_undefined(CC_USE_PARTICLE ON)
-cc_set_if_undefined(CC_USE_SE_NAPI ON)
+cc_set_if_undefined(CC_USE_SE_NAPI OFF)
+cc_set_if_undefined(CC_USE_SE_JSVM ON)
 cc_set_if_undefined(CC_USE_SE_V8 OFF)
 
 
@@ -87,6 +88,8 @@ list(APPEND CC_COCOS_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/NapiInit.cpp
     ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/NapiHelper.cpp
     ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/NapiHelper.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/NapiValueConverter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/NapiValueConverter.h
     ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/native_common.h
     ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/napi.h
     ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi/napi-inl.h
@@ -292,6 +295,24 @@ list(APPEND CC_COCOS_SOURCES
 )
 endif ()
 
+##### jsvm script engine
+if(CC_USE_SE_JSVM)
+list(APPEND CC_COCOS_SOURCES 
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/jsvm/Class.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/jsvm/Class.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/jsvm/HelperMacros.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/jsvm/HelperMacros.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/jsvm/Object.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/jsvm/Object.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/jsvm/ScriptEngine.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/jsvm/ScriptEngine.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/jsvm/SeApi.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/jsvm/Utils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/jsvm/Utils.h
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/jsvm/CommonHeader.h
+)
+endif ()
+
 ##### CCDevice CCApplication modules:screen、system
 list(APPEND CC_COCOS_SOURCES 
     ${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/modules/CCApplication-openharmony.cpp
@@ -352,6 +373,8 @@ list(APPEND CC_COCOS_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/manual/jsb_websocket.hpp
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/manual/jsb_socketio.hpp
     ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/manual/jsb_websocket_server.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/manual/JavaScriptArkTsBridge.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/manual/JavaScriptArkTsBridge.h
 )
 
 ##### canvas rendering
@@ -940,6 +963,7 @@ function(cc_apply_definations target)
         $<IF:$<BOOL:${CC_USE_SE_NAPI}>,USE_SE_NAPI=1,USE_SE_NAPI=0>
         $<IF:$<BOOL:${CC_USE_PARTICLE}>,USE_PARTICLE=1,USE_PARTICLE=0>
         $<IF:$<BOOL:${CC_USE_SE_V8}>,USE_SE_V8=1,USE_SE_V8=0>
+        $<IF:$<BOOL:${CC_USE_SE_JSVM}>,USE_SE_JSVM=1,USE_SE_JSVM=0>
     )
 endfunction()
 
@@ -969,6 +993,8 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/ui/webview)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/platform/openharmony/napi)
 if(CC_USE_SE_NAPI)
     include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/napi)
+elseif(CC_USE_SE_JSVM)
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/jsvm)
 else()
     include_directories(${CMAKE_CURRENT_LIST_DIR}/cocos/scripting/js-bindings/jswrapper/v8)
 endif()

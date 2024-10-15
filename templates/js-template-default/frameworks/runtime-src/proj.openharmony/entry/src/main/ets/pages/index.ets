@@ -22,7 +22,7 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-import nativerender from 'libcocos.so';
+import nativerender,{context} from 'libcocos.so';
 
 import { WorkerManager } from '../cocos/WorkerManager';
 import { ContextType } from '../common/Constants';
@@ -31,9 +31,16 @@ import { CocosWebView, WebViewInfo } from '../components/CocosWebView';
 import { CocosVideoPlayer, VideoInfo } from '../components/CocosVideoPlayer';
 import { MessageEvent } from '@ohos.worker';
 import { PortProxy } from '../common/PortProxy';
+import { common } from '@kit.AbilityKit';
+import { BusinessError } from '@kit.BasicServicesKit';
 
-const nativePageLifecycle = nativerender.getContext(ContextType.JSPAGE_LIFECYCLE);
-const engineUtils = nativerender.getContext(ContextType.ENGINE_UTILS);
+const nativePageLifecycle :context = nativerender.getContext(ContextType.JSPAGE_LIFECYCLE);
+const engineUtils :context = nativerender.getContext(ContextType.ENGINE_UTILS);
+
+function executeNativeMethod(nativeFunc: Function, funcData: string, funCb: Function): void {
+  nativeFunc && nativeFunc(funcData, funCb);
+}
+engineUtils.registerFunction("executeNativeMethod", executeNativeMethod);
 
 interface WorkerMessage {
   type: string;
@@ -286,6 +293,10 @@ struct Index {
           result = this.videoArray[index].currentTime;
           break;
         }
+        case "exitGame": {
+          this.terminateSelf();
+          break;
+        }
         default: {
 
         }
@@ -317,6 +328,22 @@ struct Index {
     this.workPort.postMessage("backPress", "");
     // If disable system exit needed, remove comment "return true"
     // return true;
+  }
+
+  terminateSelf() {
+    try {
+      (getContext(this) as common.UIAbilityContext).terminateSelf((err: BusinessError) => {
+        if (err.code) {
+          console.error(`terminateSelf failed, code is ${err.code}, message is ${err.message}`);
+          return;
+        }
+        console.info('terminateSelf succeed');
+      });
+    } catch (err) {
+      let code = (err as BusinessError).code;
+      let message = (err as BusinessError).message;
+      console.error(`terminateSelf failed, code is ${code}, message is ${message}`);
+    }
   }
 
   build() {

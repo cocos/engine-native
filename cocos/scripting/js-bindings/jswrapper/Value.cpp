@@ -474,6 +474,11 @@ namespace se {
         return static_cast<int32_t>(toNumber());
     }
 
+    int64_t Value::toInt64() const
+    {
+        return static_cast<int64_t>(toNumber());
+    }
+
     uint32_t Value::toUint32() const
     {
         return static_cast<uint32_t>(toNumber());

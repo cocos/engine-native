@@ -312,6 +312,12 @@ namespace se {
          *  @return int32_t integer.
          */
         int32_t toInt32() const;
+        
+        /**
+         *  @brief Converts se::Value to int64_t.
+         *  @return int64_t integer.
+         */
+        int64_t toInt64() const;
 
         /**
          *  @brief Converts se::Value to uint32_t.

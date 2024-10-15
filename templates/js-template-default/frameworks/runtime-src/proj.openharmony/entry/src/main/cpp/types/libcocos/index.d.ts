@@ -22,6 +22,8 @@ interface context {
   onHide: () => void;
   resourceManagerInit: (resourceManager: any) => void;
   writablePathInit: (cacheDir: string) => void;
+  onVideoEvent: (param: string) => void;
+  registerFunction: (name:string ,fun:Function) => void;
 }
 
 export const getContext: (type: ContextType) => context;

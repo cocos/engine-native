@@ -25,45 +25,22 @@
 
 #pragma once
 
-#include <queue>
+#include "../config.hpp"
+#include "Object.h"
+namespace se {
 
-#include <thread>
-#include <mutex>
+namespace internal {
 
-
-namespace cocos2d {
-
-enum class MessageType {
-    WM_XCOMPONENT_SURFACE_CREATED = 0,
-    WM_XCOMPONENT_TOUCH_EVENT,
-    WM_XCOMPONENT_SURFACE_CHANGED,
-    WM_XCOMPONENT_SURFACE_HIDE,
-    WM_XCOMPONENT_SURFACE_SHOW,
-    WM_XCOMPONENT_SURFACE_DESTROY,
-    WM_APP_SHOW,
-    WM_APP_HIDE,
-    WM_APP_DESTROY,
-    WM_VSYNC,
+using target_value = JSVM_Value;
+struct PrivateData {
+    void *  data;
+    Object *seObj;
 };
 
-struct WorkerMessageData {
-    MessageType type;
-    void* data;
-    void* window;
-};
-
-class WorkerMessageQueue final {
-public:
-    void   enqueue(const WorkerMessageData& data);
-    bool   dequeue(WorkerMessageData *data);
-    bool   empty() const;
-    size_t size() const {
-        return _queue.size();
-    }
-
-private:
-    std::mutex                    _mutex;
-    std::queue<WorkerMessageData> _queue;
-};
-
-} // namespace cc
+bool setReturnValue(const Value &data, target_value &argv);
+void jsToSeValue(const target_value &value, Value *v);
+void jsToSeArgs(size_t argc, target_value *argv, ValueArray *outArr);
+bool seToJsValue(const Value &v, target_value *jsval);
+void seToJsArgs(JSVM_Env env, const ValueArray &args, std::vector<target_value> *outArr);
+} // namespace internal
+} // namespace se

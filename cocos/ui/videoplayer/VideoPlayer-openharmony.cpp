@@ -54,9 +54,9 @@ void getVideoMessageCallback() {
 }
 
 void callJSFunc(const std::string &data) {
+    se::AutoHandleScope scope;
     getVideoMessageCallback();
 
-    se::AutoHandleScope scope;
     se::ValueArray args;
     args.push_back(se::Value(data));
     if(videoCallback.isObject()) {

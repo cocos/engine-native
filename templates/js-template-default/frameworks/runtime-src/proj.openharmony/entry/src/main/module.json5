@@ -19,14 +19,16 @@
     "pages": "$profile:main_pages",
     "abilities": [
       {
-        "name": "MainAbility",
+        "name": "EntryAbility",
         "srcEntry": "./ets/entryability/EntryAbility.ts",
         "description": "$string:MainAbility_desc",
         "orientation": "portrait",
         "icon": "$media:icon",
         "label": "$string:MainAbility_label",
         "startWindowIcon": "$media:icon",
+        "removeMissionAfterTerminate": true,
         "startWindowBackground": "$color:white",
+        "supportWindowMode": ["fullscreen"],
         "exported": true,
         "skills": [
           {

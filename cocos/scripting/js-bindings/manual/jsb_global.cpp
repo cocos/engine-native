@@ -36,7 +36,7 @@
 #if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
 #include "platform/android/jni/JniImp.h"
 #endif
-#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY && SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
+#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY && (SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8 || SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_JSVM)
     #include "platform/openharmony/napi/NapiHelper.h"
 #endif
 
@@ -418,7 +418,7 @@ namespace {
         assert(false);
         return false;
     }
-    #if (CC_TARGET_PLATFORM != CC_PLATFORM_OPENHARMONY ||  SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8) 
+    #if (CC_TARGET_PLATFORM != CC_PLATFORM_OPENHARMONY ||  SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8 || SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_JSVM) 
         static bool moduleRequire(se::State& s)
         {
             const auto& args = s.args();
@@ -1258,7 +1258,7 @@ static bool JSB_hideInputBox(se::State& s)
 }
 SE_BIND_FUNC(JSB_hideInputBox)
 
-#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY && SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
+#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY && (SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8 || SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_JSVM)
 static bool sevalue_to_napivalue(const se::Value &seVal, Napi::Value *napiVal, Napi::Env env);
 
 static bool seobject_to_napivalue(se::Object *seObj, Napi::Value *napiVal, Napi::Env env) {
@@ -1433,7 +1433,7 @@ bool jsb_register_global_variables(se::Object* global)
     performanceObj->defineFunction("now", _SE(js_performance_now));
     global->setProperty("performance", se::Value(performanceObj));
 
-#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY && SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8
+#if CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY && (SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_V8 || SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_JSVM)
     se::HandleObject ohObj(se::Object::createPlainObject());
     global->setProperty("oh", se::Value(ohObj));
     ohObj->defineFunction("postMessage", _SE(JSB_openharmony_postMessage));

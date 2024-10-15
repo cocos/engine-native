@@ -30,6 +30,7 @@
 #define SCRIPT_ENGINE_JSC            3
 //#define SCRIPT_ENGINE_CHAKRACORE     4
 #define SCRIPT_ENGINE_NAPI           5
+#define SCRIPT_ENGINE_JSVM           6
 
 #define SCRIPT_ENGINE_V8_ON_MAC      1 // default using v8 on macOS, set 0 to disable
 
@@ -54,6 +55,8 @@
     #define SCRIPT_ENGINE_TYPE           SCRIPT_ENGINE_NAPI
     //TODO how to make simulator build with v8 too? Because in release mode, it will build
     // which means it will build armv7, but v8 doesn't support armv7.
+#elif (defined(OPENHARMONY) && USE_SE_JSVM)
+    #define SCRIPT_ENGINE_TYPE           SCRIPT_ENGINE_JSVM
 #else
     #define SCRIPT_ENGINE_TYPE           SCRIPT_ENGINE_V8
 #endif

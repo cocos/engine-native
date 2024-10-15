@@ -43,25 +43,25 @@ Object::~Object() {
 }
 
 Object* Object::createObjectWithClass(Class* cls) {
-    napi_value jsobj = Class::_createJSObjectWithClass(cls);
+    JSVM_Value jsobj = Class::_createJSObjectWithClass(cls);
     Object*    obj   = Object::_createJSObject(ScriptEngine::getEnv(), jsobj, cls);
     return obj;
 }
 
 bool Object::setProperty(const char* name, const Value& data) {
-    napi_status status;
-    napi_value  jsVal;
+    JSVM_Status status;
+    JSVM_Value  jsVal;
     internal::seToJsValue(data, &jsVal);
-    NODE_API_CALL(status, _env, napi_set_named_property(_env, _objRef.getValue(_env), name, jsVal));
-    return status == napi_ok;
+    NODE_API_CALL(status, _env, OH_JSVM_SetNamedProperty(_env, _objRef.getValue(_env), name, jsVal));
+    return status == JSVM_OK;
 }
 
 bool Object::getProperty(const char* name, Value* d) {
-    napi_status status;
-    napi_value  jsVal;
+    JSVM_Status status;
+    JSVM_Value  jsVal;
     Value       data;
-    NODE_API_CALL(status, _env, napi_get_named_property(_env, _objRef.getValue(_env), name, &jsVal));
-    if (status == napi_ok) {
+    NODE_API_CALL(status, _env, OH_JSVM_GetNamedProperty(_env, _objRef.getValue(_env), name, &jsVal));
+    if (status == JSVM_OK) {
         internal::jsToSeValue(jsVal, &data);
         *d = data;
         if (data.isUndefined()) {
@@ -73,28 +73,28 @@ bool Object::getProperty(const char* name, Value* d) {
 }
 
 bool Object::deleteProperty(const char *name) {
-    napi_status status;
-    napi_value key;
-    NODE_API_CALL(status, _env, napi_get_named_property(_env, _objRef.getValue(_env), name, &key));
-    if (status != napi_ok) {
+    JSVM_Status status;
+    JSVM_Value key;
+    NODE_API_CALL(status, _env, OH_JSVM_GetNamedProperty(_env, _objRef.getValue(_env), name, &key));
+    if (status != JSVM_OK) {
         return false;
     }
     bool        ret = false;
-    NODE_API_CALL(status, _env, napi_delete_property(_env, _objRef.getValue(_env), key, &ret));
+    NODE_API_CALL(status, _env, OH_JSVM_DeleteProperty(_env, _objRef.getValue(_env), key, &ret));
     return ret;
 }
 
 bool Object::isArray() const {
-    napi_status status;
+    JSVM_Status status;
     bool        ret = false;
-    NODE_API_CALL(status, _env, napi_is_array(_env, _objRef.getValue(_env), &ret));
+    NODE_API_CALL(status, _env, OH_JSVM_IsArray(_env, _objRef.getValue(_env), &ret));
     return ret;
 }
 
 bool Object::getArrayLength(uint32_t* length) const {
-    napi_status status;
+    JSVM_Status status;
     uint32_t    len = 0;
-    NODE_API_CALL(status, _env, napi_get_array_length(_env, _objRef.getValue(_env), &len));
+    NODE_API_CALL(status, _env, OH_JSVM_GetArrayLength(_env, _objRef.getValue(_env), &len));
     if (length) {
         *length = len;
     }
@@ -102,25 +102,25 @@ bool Object::getArrayLength(uint32_t* length) const {
 }
 
 bool Object::getArrayElement(uint32_t index, Value* data) const {
-    napi_status status;
-    napi_value  val;
-    NODE_API_CALL(status, _env, napi_get_element(_env, _objRef.getValue(_env), index, &val));
+    JSVM_Status status;
+    JSVM_Value  val;
+    NODE_API_CALL(status, _env, OH_JSVM_GetElement(_env, _objRef.getValue(_env), index, &val));
     internal::jsToSeValue(val, data);
     return true;
 }
 
 bool Object::setArrayElement(uint32_t index, const Value& data) {
-    napi_status status;
-    napi_value  val;
+    JSVM_Status status;
+    JSVM_Value  val;
     internal::seToJsValue(data, &val);
-    NODE_API_CALL(status, _env, napi_set_element(_env, _objRef.getValue(_env), index, val));
+    NODE_API_CALL(status, _env, OH_JSVM_SetElement(_env, _objRef.getValue(_env), index, val));
     return true;
 }
 
 bool Object::isTypedArray() const {
-    napi_status status;
+    JSVM_Status status;
     bool        ret = false;
-    NODE_API_CALL(status, _env, napi_is_typedarray(_env, _objRef.getValue(_env), &ret));
+    NODE_API_CALL(status, _env, OH_JSVM_IsTypedarray(_env, _objRef.getValue(_env), &ret));
     return ret;
 }
 
@@ -131,41 +131,47 @@ bool Object::isProxy() const {
 }
 
 Object::TypedArrayType Object::getTypedArrayType() const {
-    napi_status          status;
-    napi_typedarray_type type;
-    napi_value           inputBuffer;
+    JSVM_Status          status;
+    JSVM_TypedarrayType type;
+    JSVM_Value           inputBuffer;
     size_t               byteOffset;
     size_t               length;
-    NODE_API_CALL(status, _env, napi_get_typedarray_info(_env, _objRef.getValue(_env), &type, &length, NULL, &inputBuffer, &byteOffset));
+    NODE_API_CALL(status, _env, OH_JSVM_GetTypedarrayInfo(_env, _objRef.getValue(_env), &type, &length, NULL, &inputBuffer, &byteOffset));
 
     TypedArrayType ret = TypedArrayType::NONE;
     switch (type) {
-        case napi_int8_array:
+        case JSVM_INT8_ARRAY:
             ret = TypedArrayType::INT8;
             break;
-        case napi_uint8_array:
+        case JSVM_UINT8_ARRAY:
             ret = TypedArrayType::UINT8;
             break;
-        case napi_uint8_clamped_array:
+        case JSVM_UINT8_CLAMPED_ARRAY:
             ret = TypedArrayType::UINT8_CLAMPED;
             break;
-        case napi_int16_array:
+        case JSVM_INT16_ARRAY:
             ret = TypedArrayType::INT16;
             break;
-        case napi_uint16_array:
+        case JSVM_UINT16_ARRAY:
             ret = TypedArrayType::UINT16;
             break;
-        case napi_int32_array:
+        case JSVM_INT32_ARRAY:
             ret = TypedArrayType::INT32;
             break;
-        case napi_uint32_array:
+        case JSVM_UINT32_ARRAY:
             ret = TypedArrayType::UINT32;
             break;
-        case napi_float32_array:
+        case JSVM_FLOAT32_ARRAY:
             ret = TypedArrayType::FLOAT32;
             break;
-        case napi_float64_array:
+        case JSVM_FLOAT64_ARRAY:
             ret = TypedArrayType::FLOAT64;
+            break;
+        case JSVM_BIGINT64_ARRAY:
+            ret = TypedArrayType::BIGINT64;
+            break;
+        case JSVM_BIGUINT64_ARRAY:
+            ret = TypedArrayType::BIGUINT64;
             break;
         default:
             break;
@@ -174,31 +180,50 @@ Object::TypedArrayType Object::getTypedArrayType() const {
 }
 
 bool Object::getTypedArrayData(uint8_t** ptr, size_t* length) const {
-    napi_status          status;
-    napi_typedarray_type type;
-    napi_value           inputBuffer;
+    JSVM_Status          status;
+    JSVM_TypedarrayType type;
+    JSVM_Value           inputBuffer;
     size_t               byteOffset;
-    size_t               byteLength;
+    size_t               arrayLength;
     void*                data = nullptr;
-    NODE_API_CALL(status, _env, napi_get_typedarray_info(_env, _objRef.getValue(_env), &type, &byteLength, &data, &inputBuffer, &byteOffset));
+    NODE_API_CALL(status, _env, OH_JSVM_GetTypedarrayInfo(_env, _objRef.getValue(_env), &type, &arrayLength, &data, &inputBuffer, &byteOffset));
     *ptr = (uint8_t*)(data);
     if (length) {
-        *length = byteLength;
+        size_t bytesOfElement = 1;
+        switch (type) {
+        case JSVM_INT16_ARRAY:
+        case JSVM_UINT16_ARRAY:
+            bytesOfElement = 2;
+            break;
+        case JSVM_INT32_ARRAY:
+        case JSVM_UINT32_ARRAY:
+        case JSVM_FLOAT32_ARRAY:
+            bytesOfElement = 4;
+            break;
+        case JSVM_FLOAT64_ARRAY:
+        case JSVM_BIGINT64_ARRAY:
+        case JSVM_BIGUINT64_ARRAY:
+            bytesOfElement = 8;
+            break;            
+        default:
+            break;
+        }
+        *length = arrayLength * bytesOfElement;
     }
     return true;
 }
 
 bool Object::isArrayBuffer() const {
     bool        ret = false;
-    napi_status status;
-    NODE_API_CALL(status, _env, napi_is_arraybuffer(_env, _objRef.getValue(_env), &ret));
+    JSVM_Status status;
+    NODE_API_CALL(status, _env, OH_JSVM_IsArraybuffer(_env, _objRef.getValue(_env), &ret));
     return ret;
 }
 
 bool Object::getArrayBufferData(uint8_t** ptr, size_t* length) const {
-    napi_status status;
+    JSVM_Status status;
     size_t      len = 0;
-    NODE_API_CALL(status, _env, napi_get_arraybuffer_info(_env, _objRef.getValue(_env), reinterpret_cast<void**>(ptr), &len));
+    NODE_API_CALL(status, _env, OH_JSVM_GetArraybufferInfo(_env, _objRef.getValue(_env), reinterpret_cast<void**>(ptr), &len));
     if (length) {
         *length = len;
     }
@@ -206,7 +231,7 @@ bool Object::getArrayBufferData(uint8_t** ptr, size_t* length) const {
 }
 
 Object* Object::createTypedArray(Object::TypedArrayType type, const void* data, size_t byteLength) {
-    napi_status status;
+    JSVM_Status status;
     if (type == TypedArrayType::NONE) {
         SE_LOGE("Don't pass se::Object::TypedArrayType::NONE to createTypedArray API!");
         return nullptr;
@@ -216,45 +241,53 @@ Object* Object::createTypedArray(Object::TypedArrayType type, const void* data, 
         SE_LOGE("Doesn't support to create Uint8ClampedArray with Object::createTypedArray API!");
         return nullptr;
     }
-    napi_typedarray_type napiType;
-    napi_value           outputBuffer;
+    JSVM_TypedarrayType  jsvmType;
+    JSVM_Value           outputBuffer;
     void*                outputPtr = nullptr;
-    NODE_API_CALL(status, ScriptEngine::getEnv(), napi_create_arraybuffer(ScriptEngine::getEnv(), byteLength, &outputPtr, &outputBuffer));
+    NODE_API_CALL(status, ScriptEngine::getEnv(), OH_JSVM_CreateArraybuffer(ScriptEngine::getEnv(), byteLength, &outputPtr, &outputBuffer));
     if (outputPtr && data && byteLength > 0) {
         memcpy(outputPtr, data, byteLength);
     }
     size_t sizeOfEle = 0;
     switch (type) {
         case TypedArrayType::INT8:
-            napiType  = napi_int8_array;
+            jsvmType  = JSVM_INT8_ARRAY;
             sizeOfEle = 1;
             break;
         case TypedArrayType::UINT8:
-            napiType  = napi_uint8_array;
+            jsvmType  = JSVM_UINT8_ARRAY;
             sizeOfEle = 1;
             break;
         case TypedArrayType::INT16:
-            napiType  = napi_int16_array;
+            jsvmType  = JSVM_INT16_ARRAY;
             sizeOfEle = 2;
             break;
         case TypedArrayType::UINT16:
-            napiType  = napi_uint16_array;
+            jsvmType  = JSVM_UINT16_ARRAY;
             sizeOfEle = 2;
             break;
         case TypedArrayType::INT32:
-            napiType  = napi_int32_array;
+            jsvmType  = JSVM_INT32_ARRAY;
             sizeOfEle = 4;
             break;
         case TypedArrayType::UINT32:
-            napiType  = napi_uint32_array;
+            jsvmType  = JSVM_UINT32_ARRAY;
             sizeOfEle = 4;
             break;
         case TypedArrayType::FLOAT32:
-            napiType  = napi_float32_array;
+            jsvmType  = JSVM_FLOAT32_ARRAY;
             sizeOfEle = 4;
             break;
         case TypedArrayType::FLOAT64:
-            napiType  = napi_float64_array;
+            jsvmType  = JSVM_FLOAT64_ARRAY;
+            sizeOfEle = 8;
+            break;
+        case TypedArrayType::BIGINT64:
+            jsvmType  = JSVM_BIGINT64_ARRAY;
+            sizeOfEle = 8;
+            break;
+        case TypedArrayType::BIGUINT64:
+            jsvmType  = JSVM_BIGUINT64_ARRAY;
             sizeOfEle = 8;
             break;
         default:
@@ -262,8 +295,8 @@ Object* Object::createTypedArray(Object::TypedArrayType type, const void* data, 
             break;
     }
     size_t     eleCounts = byteLength / sizeOfEle;
-    napi_value outputArray;
-    NODE_API_CALL(status, ScriptEngine::getEnv(), napi_create_typedarray(ScriptEngine::getEnv(), napiType, eleCounts, outputBuffer, 0, &outputArray));
+    JSVM_Value outputArray;
+    NODE_API_CALL(status, ScriptEngine::getEnv(), OH_JSVM_CreateTypedarray(ScriptEngine::getEnv(), jsvmType, eleCounts, outputBuffer, 0, &outputArray));
 
     Object* obj = Object::_createJSObject(ScriptEngine::getEnv(), outputArray, nullptr);
     return obj;
@@ -297,39 +330,47 @@ Object* Object::createTypedArrayWithBuffer(TypedArrayType type, const Object *ob
     }
 
     assert(obj->isArrayBuffer());
-    napi_status status;
-    napi_value outputBuffer = obj->_getJSObject();
-    napi_typedarray_type napiType;
+    JSVM_Status status;
+    JSVM_Value outputBuffer = obj->_getJSObject();
+    JSVM_TypedarrayType jsvmType;
 
     size_t sizeOfEle = 0;
     switch (type) {
         case TypedArrayType::INT8:
-            napiType  = napi_int8_array;
+            jsvmType  = JSVM_INT8_ARRAY;
             sizeOfEle = 1;
             break;
         case TypedArrayType::UINT8:
-            napiType  = napi_uint8_array;
+            jsvmType  = JSVM_UINT8_ARRAY;
             sizeOfEle = 1;
             break;
         case TypedArrayType::INT16:
-            napiType  = napi_int8_array;
+            jsvmType  = JSVM_INT8_ARRAY;
             sizeOfEle = 2;
         case TypedArrayType::UINT16:
-            napiType  = napi_uint8_array;
+            jsvmType  = JSVM_UINT8_ARRAY;
             sizeOfEle = 2;
             break;
         case TypedArrayType::INT32:
-            napiType  = napi_int32_array;
+            jsvmType  = JSVM_INT32_ARRAY;
             sizeOfEle = 4;
         case TypedArrayType::UINT32:
-            napiType  = napi_uint32_array;
+            jsvmType  = JSVM_UINT32_ARRAY;
             sizeOfEle = 4;
         case TypedArrayType::FLOAT32:
-            napiType  = napi_float32_array;
+            jsvmType  = JSVM_FLOAT32_ARRAY;
             sizeOfEle = 4;
             break;
         case TypedArrayType::FLOAT64:
-            napiType  = napi_float64_array;
+            jsvmType  = JSVM_FLOAT64_ARRAY;
+            sizeOfEle = 8;
+            break;
+        case TypedArrayType::BIGINT64:
+            jsvmType  = JSVM_BIGINT64_ARRAY;
+            sizeOfEle = 8;
+            break;
+        case TypedArrayType::BIGUINT64:
+            jsvmType  = JSVM_BIGUINT64_ARRAY;
             sizeOfEle = 8;
             break;
         default:
@@ -337,66 +378,38 @@ Object* Object::createTypedArrayWithBuffer(TypedArrayType type, const Object *ob
             break;
     }
     size_t     eleCounts = byteLength / sizeOfEle;
-    napi_value outputArray;
-    NODE_API_CALL(status, ScriptEngine::getEnv(), napi_create_typedarray(ScriptEngine::getEnv(), napiType, eleCounts, outputBuffer, offset, &outputArray));
+    JSVM_Value outputArray;
+    NODE_API_CALL(status, ScriptEngine::getEnv(), OH_JSVM_CreateTypedarray(ScriptEngine::getEnv(), jsvmType, eleCounts, outputBuffer, offset, &outputArray));
 
     return Object::_createJSObject(ScriptEngine::getEnv(), outputArray, nullptr);
 }
 
-Object* Object::createExternalArrayBufferObject(void *contents, size_t byteLength, BufferContentsFreeFunc freeFunc, void *freeUserData) {
-    napi_status status;
-    napi_value result;
-    if (freeFunc) {
-        struct ExternalArrayBufferCallbackParams* param = new (struct ExternalArrayBufferCallbackParams);
-        param->func = freeFunc;
-        param->contents = contents;
-        param->byteLength = byteLength;
-        param->userData = freeUserData;
-        NODE_API_CALL(status, ScriptEngine::getEnv(), napi_create_external_arraybuffer(
-                                                          ScriptEngine::getEnv(), contents, byteLength, [](napi_env env, void* finalize_data, void* finalize_hint) {
-                                                              if (finalize_hint) {
-                                                                  struct ExternalArrayBufferCallbackParams* param = reinterpret_cast<struct ExternalArrayBufferCallbackParams *>(finalize_hint);
-                                                                  param->func(param->contents, param->byteLength, param->userData);
-                                                                  delete param;
-                                                              }
-                                                          },
-                                                          reinterpret_cast<void*>(param), &result));
-    } else {
-        NODE_API_CALL(status, ScriptEngine::getEnv(), napi_create_external_arraybuffer(
-                                                          ScriptEngine::getEnv(), contents, byteLength, nullptr,
-                                                          freeUserData, &result));
-    }
-
-    Object* obj = Object::_createJSObject(ScriptEngine::getEnv(), result, nullptr);
-    return obj;
-}
-
 bool Object::isFunction() const {
-    napi_valuetype valuetype0;
-    napi_status    status;
-    NODE_API_CALL(status, _env, napi_typeof(_env, _objRef.getValue(_env), &valuetype0));
-    return (valuetype0 == napi_function);
+    JSVM_ValueType valuetype0;
+    JSVM_Status    status;
+    NODE_API_CALL(status, _env, OH_JSVM_Typeof(_env, _objRef.getValue(_env), &valuetype0));
+    return (valuetype0 == JSVM_ValueType::JSVM_FUNCTION);
 }
 
-bool Object::defineFunction(const char* funcName, napi_callback func) {
-    napi_value  fn;
-    napi_status status;
-    NODE_API_CALL(status, _env, napi_create_function(_env, funcName, NAPI_AUTO_LENGTH, func, NULL, &fn));
-    NODE_API_CALL(status, _env, napi_set_named_property(_env, _objRef.getValue(_env), funcName, fn));
+bool Object::defineFunction(const char* funcName, JSVM_Callback func) {
+    JSVM_Value  fn;
+    JSVM_Status status;
+    NODE_API_CALL(status, _env, OH_JSVM_CreateFunction(_env, funcName, JSVM_AUTO_LENGTH, func, &fn));
+    NODE_API_CALL(status, _env, OH_JSVM_SetNamedProperty(_env, _objRef.getValue(_env), funcName, fn));
     return true;
 }
 
-bool Object::defineProperty(const char* name, napi_callback getter, napi_callback setter) {
-    napi_status              status;
-    napi_property_descriptor properties[] = {{name, nullptr, nullptr, getter, setter, 0, napi_default, 0}};
-    status = napi_define_properties(_env, _objRef.getValue(_env), sizeof(properties) / sizeof(napi_property_descriptor), properties);
-    if (status == napi_ok) {
+bool Object::defineProperty(const char* name, JSVM_Callback getter, JSVM_Callback setter) {
+    JSVM_Status              status;
+    JSVM_PropertyDescriptor properties[] = {{name, nullptr, nullptr, getter, setter, 0, JSVM_DEFAULT}};
+    status = OH_JSVM_DefineProperties(_env, _objRef.getValue(_env), sizeof(properties) / sizeof(JSVM_PropertyDescriptor), properties);
+    if (status == JSVM_OK) {
         return true;
     }
     return false;
 }
 
-Object* Object::_createJSObject(napi_env env, napi_value js_object, Class* cls) { // NOLINT(readability-identifier-naming)
+Object* Object::_createJSObject(JSVM_Env env, JSVM_Value js_object, Class* cls) { // NOLINT(readability-identifier-naming)
     Object* ret = new Object();
     if (!ret->init(env, js_object, cls)) {
         delete ret;
@@ -406,28 +419,28 @@ Object* Object::_createJSObject(napi_env env, napi_value js_object, Class* cls) 
 }
 
 Object* Object::createPlainObject() {
-    napi_value  result;
-    napi_status status;
-    NODE_API_CALL(status, ScriptEngine::getEnv(), napi_create_object(ScriptEngine::getEnv(), &result));
+    JSVM_Value  result;
+    JSVM_Status status;
+    NODE_API_CALL(status, ScriptEngine::getEnv(), OH_JSVM_CreateObject(ScriptEngine::getEnv(), &result));
     Object* obj = _createJSObject(ScriptEngine::getEnv(), result, nullptr);
     return obj;
 }
 
 Object* Object::createArrayObject(size_t length) {
-    napi_value  result;
-    napi_status status;
-    NODE_API_CALL(status, ScriptEngine::getEnv(), napi_create_array_with_length(ScriptEngine::getEnv(), length, &result));
+    JSVM_Value  result;
+    JSVM_Status status;
+    NODE_API_CALL(status, ScriptEngine::getEnv(), OH_JSVM_CreateArrayWithLength(ScriptEngine::getEnv(), length, &result));
     Object* obj = _createJSObject(ScriptEngine::getEnv(), result, nullptr);
     return obj;
 }
 
 Object* Object::createArrayBufferObject(const void* data, size_t byteLength) {
-    napi_value  result;
-    napi_status status;
+    JSVM_Value  result;
+    JSVM_Status status;
     void*       retData;
     Object*     obj = nullptr;
-    NODE_API_CALL(status, ScriptEngine::getEnv(), napi_create_arraybuffer(ScriptEngine::getEnv(), byteLength, &retData, &result));
-    if (status == napi_ok) {
+    NODE_API_CALL(status, ScriptEngine::getEnv(), OH_JSVM_CreateArraybuffer(ScriptEngine::getEnv(), byteLength, &retData, &result));
+    if (status == JSVM_OK) {
         if (data) {
             memcpy(retData, data, byteLength);
         }
@@ -437,22 +450,22 @@ Object* Object::createArrayBufferObject(const void* data, size_t byteLength) {
 }
 
 bool Object::getAllKeys(std::vector<std::string>* allKeys) const {
-    napi_status status;
-    napi_value  names;
+    JSVM_Status status;
+    JSVM_Value  names;
 
-    NODE_API_CALL(status, _env, napi_get_property_names(_env, _objRef.getValue(_env), &names));
-    if (status != napi_ok) {
+    NODE_API_CALL(status, _env, OH_JSVM_GetPropertyNames(_env, _objRef.getValue(_env), &names));
+    if (status != JSVM_OK) {
         return false;
     }
     uint32_t name_len = 0;
-    NODE_API_CALL(status, _env, napi_get_array_length(_env, names, &name_len));
+    NODE_API_CALL(status, _env, OH_JSVM_GetArrayLength(_env, names, &name_len));
     for (uint32_t i = 0; i < name_len; i++) {
-        napi_value val;
-        NODE_API_CALL(status, _env, napi_get_element(_env, names, i, &val));
-        if (status == napi_ok) {
+        JSVM_Value val;
+        NODE_API_CALL(status, _env, OH_JSVM_GetElement(_env, names, i, &val));
+        if (status == JSVM_OK) {
             char   buffer[MAX_STRING_LEN];
             size_t result = 0;
-            NODE_API_CALL(status, _env, napi_get_value_string_utf8(_env, val, buffer, MAX_STRING_LEN, &result));
+            NODE_API_CALL(status, _env, OH_JSVM_GetValueStringUtf8(_env, val, buffer, MAX_STRING_LEN, &result));
             if (result > 0) {
                 allKeys->push_back(buffer);
             }
@@ -462,7 +475,7 @@ bool Object::getAllKeys(std::vector<std::string>* allKeys) const {
     return true;
 }
 
-bool Object::init(napi_env env, napi_value js_object, Class* cls) {
+bool Object::init(JSVM_Env env, JSVM_Value js_object, Class* cls) {
     assert(env);
     _cls = cls;
     _env = env;
@@ -472,30 +485,32 @@ bool Object::init(napi_env env, napi_value js_object, Class* cls) {
         assert(__objectMap->find(this) == __objectMap->end());
         __objectMap->emplace(this, nullptr);
     }
-
-    napi_status status;
     return true;
 }
 
 bool Object::call(const ValueArray& args, Object* thisObject, Value* rval) {
     size_t                  argc = 0;
-    std::vector<napi_value> argv;
+    std::vector<JSVM_Value> argv;
     argv.reserve(10);
     argc = args.size();
     internal::seToJsArgs(_env, args, &argv);
-    napi_value  return_val;
-    napi_status status;
+    JSVM_Value  return_val;
+    JSVM_Status status;
     assert(isFunction());
-    napi_value thisObj = thisObject ? thisObject->_getJSObject() : nullptr;
-    status =
-        napi_call_function(_env, thisObj, _getJSObject(), argc, argv.data(), &return_val);
+    JSVM_Value thisObj = thisObject ? thisObject->_getJSObject() : ({
+        JSVM_Value undefinedValue;
+        OH_JSVM_GetUndefined(_env, &undefinedValue);
+        undefinedValue;
+    });
+    NODE_API_CALL(status, _env,
+        OH_JSVM_CallFunction(_env, thisObj, _getJSObject(), argc, argv.data(), &return_val));
     if (rval) {
         internal::jsToSeValue(return_val, rval);
     }
     return true;
 }
 
-void Object::_setFinalizeCallback(napi_finalize finalizeCb) {
+void Object::_setFinalizeCallback(JSVM_Finalize finalizeCb) {
     assert(finalizeCb != nullptr);
     _finalizeCb = finalizeCb;
 }
@@ -503,24 +518,24 @@ void Object::_setFinalizeCallback(napi_finalize finalizeCb) {
 void Object::setPrivateData(void* data){
     assert(_privateData == nullptr);
     assert(NativePtrToObjectMap::find(data) == NativePtrToObjectMap::end());
-    napi_status status;
+    JSVM_Status status;
     NativePtrToObjectMap::emplace(data, this);
     _privateData = data;
     //issue https://github.com/nodejs/node/issues/23999
     auto tmpThis = _objRef.getValue(_env);
     //_objRef.deleteRef();
     NODE_API_CALL(status, _env,
-                  napi_wrap(_env, tmpThis, data, weakCallback,
+                  OH_JSVM_Wrap(_env, tmpThis, data, weakCallback,
                             (void*)this /* finalize_hint */, nullptr));
     //_objRef.setWeakref(_env, result);
     setProperty("__native_ptr__", se::Value(static_cast<long>(reinterpret_cast<uintptr_t>(data))));
 }
 
 void* Object::getPrivateData() const{
-    napi_status status;
+    JSVM_Status status;
     void* data;
     auto tmpThis = _objRef.getValue(_env);
-    status = napi_unwrap(_env, tmpThis, &data);
+    status = OH_JSVM_Unwrap(_env, tmpThis, &data);
     const_cast<Object*>(this)->_privateData = data;
     return _privateData;
 }
@@ -573,13 +588,13 @@ bool Object::detachObject(Object* obj) {
 
 std::string Object::toString() const {
     std::string ret;
-    napi_status status;
+    JSVM_Status status;
     if (isFunction() || isArray() || isTypedArray()) {
-        napi_value result;
-        NODE_API_CALL(status, _env, napi_coerce_to_string(_env, _objRef.getValue(_env), &result));
+        JSVM_Value result;
+        NODE_API_CALL(status, _env, OH_JSVM_CoerceToString(_env, _objRef.getValue(_env), &result));
         char   buffer[MAX_STRING_LEN];
         size_t result_t = 0;
-        NODE_API_CALL(status, _env, napi_get_value_string_utf8(_env, result, buffer, MAX_STRING_LEN, &result_t));
+        NODE_API_CALL(status, _env, OH_JSVM_GetValueStringUtf8(_env, result, buffer, MAX_STRING_LEN, &result_t));
         ret = buffer;
     } else if (isArrayBuffer()) {
         ret = "[object ArrayBuffer]";
@@ -590,17 +605,16 @@ std::string Object::toString() const {
 }
 
 void Object::root() {
-    napi_status status;
+    JSVM_Status status;
     if (_rootCount == 0) {
         uint32_t result = 0;
         _objRef.incRef(_env);
-        //NODE_API_CALL(status, _env, napi_reference_ref(_env, _wrapper, &result));
     }
     ++_rootCount;
 }
 
 void Object::unroot() {
-    napi_status status;
+    JSVM_Status status;
     if (_rootCount > 0) {
         --_rootCount;
         if (_rootCount == 0) {
@@ -627,11 +641,11 @@ Object* Object::getObjectWithPtr(void* ptr) {
     return obj;
 }
 
-napi_value Object::_getJSObject() const {
+JSVM_Value Object::_getJSObject() const {
     return _objRef.getValue(_env);
 }
 
-void Object::weakCallback(napi_env env, void* nativeObject, void* finalizeHint /*finalize_hint*/) {
+void Object::weakCallback(JSVM_Env env, void* nativeObject, void* finalizeHint /*finalize_hint*/) {
     if (finalizeHint) {
         if (nativeObject == nullptr) {
             return;
@@ -703,29 +717,53 @@ void Object::cleanup() {
 }
 
 Object* Object::createJSONObject(const std::string& jsonStr) {
-    //not impl
-    return nullptr;
+    auto _env = ScriptEngine::getEnv();
+    JSVM_Status status;
+    JSVM_Value global;
+    // 获取js全局对象
+    NODE_API_CALL(status, _env, OH_JSVM_GetGlobal(_env, &global));
+    assert(status == JSVM_OK);
+
+    // 获取js对象中的JSON对象
+    JSVM_Value globalJsonObj;
+    NODE_API_CALL(status, _env, OH_JSVM_GetNamedProperty(_env, global, "JSON", &globalJsonObj));
+
+    // 获取js对象中的parse方法
+    JSVM_Value parseFunc;
+    NODE_API_CALL(status, _env, OH_JSVM_GetNamedProperty(_env, globalJsonObj, "parse", &parseFunc));
+
+    // 创建一个js的string，字符源于输入的std::string jsonStr
+    JSVM_Value jsJsonStr;
+    NODE_API_CALL(status, _env, OH_JSVM_CreateStringUtf8(_env, jsonStr.c_str(), jsonStr.length(), &jsJsonStr));
+
+    // 调用js中的JSON.parse将jsJsonStr转换成js对象
+    JSVM_Value jsObj;
+    NODE_API_CALL(status, _env, OH_JSVM_CallFunction(_env, globalJsonObj, parseFunc, 1, &jsJsonStr ,&jsObj));
+
+    Object *obj = nullptr;
+    obj = Object::_createJSObject(_env, jsObj, nullptr);
+    return obj;
 }
 
 void Object::clearPrivateData(bool clearMapping) {
     if (_privateData != nullptr) {
-        napi_status status;
+        JSVM_Status status;
         void* result = nullptr;
         auto tmpThis = _objRef.getValue(_env);
         _onCleaingPrivateData = true;
         if (clearMapping) {
             NativePtrToObjectMap::erase(_privateData);
         }
-        NODE_API_CALL(status, _env, napi_remove_wrap(_env, tmpThis, &result));
+        NODE_API_CALL(status, _env, OH_JSVM_RemoveWrap(_env, tmpThis, &result));
         _privateData = nullptr;
         _onCleaingPrivateData = false;
     }
 }
 
 Object* Object::createUTF8String(const std::string& str) { 
-    napi_status status;
-    napi_value result;
-    NODE_API_CALL(status, ScriptEngine::getEnv(), napi_create_string_utf8(ScriptEngine::getEnv(),str.c_str(),NAPI_AUTO_LENGTH,&result));
+    JSVM_Status status;
+    JSVM_Value result;
+    NODE_API_CALL(status, ScriptEngine::getEnv(), OH_JSVM_CreateStringUtf8(ScriptEngine::getEnv(), str.c_str(), JSVM_AUTO_LENGTH, &result));
     Object* obj = _createJSObject(ScriptEngine::getEnv(), result, nullptr);
     return obj;
 }

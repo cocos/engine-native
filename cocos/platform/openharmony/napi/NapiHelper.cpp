@@ -258,6 +258,29 @@ static void napiWritablePathInit(const Napi::CallbackInfo &info) {
     FileUtilsOpenHarmony::_ohWritablePath = info[0].As<Napi::String>().Utf8Value();
 }
 
+static void registerFunction(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    if(info.Length() != 2) {
+        Napi::Error::New(info.Env(), "2 argument expected").ThrowAsJavaScriptException();
+        return;
+    }
+    std::string functionName = info[0].As<Napi::String>().Utf8Value();
+    if(!info[1].IsFunction()) {
+        Napi::Error::New(info.Env(), "Function expected").ThrowAsJavaScriptException();
+        return;        
+    }
+    Napi::Function jsFunction = info[1].As<Napi::Function>();
+    napi_ref fucRef;
+    napi_create_reference(env, jsFunction, 1, &fucRef);
+    char* name = new char[functionName.length() + 1];
+    strcpy(name, functionName.c_str());
+    JSFunction* jsFunctionPtr = new JSFunction(name, env, fucRef);
+    JSFunction::addFunction(name, jsFunctionPtr);
+    return;
+}
+
+std::unordered_map<std::string, JSFunction> JSFunction::FUNCTION_MAP;
+
 static void napiASend(const Napi::CallbackInfo &info) {
     OpenHarmonyPlatform::getInstance()->triggerMessageSignal();
 }
@@ -310,6 +333,7 @@ static Napi::Value getContext(const Napi::CallbackInfo &info) {
         case ENGINE_UTILS: {
             exports["resourceManagerInit"] = Napi::Function::New(env, napiResourceManagerInit);
             exports["writablePathInit"] = Napi::Function::New(env, napiWritablePathInit);
+            exports["registerFunction"] = Napi::Function::New(env, registerFunction);
         } break;
         case EDITBOX_UTILS: {
             exports["onTextChange"] = Napi::Function::New(env, OpenHarmonyEditBox::napiOnTextChange);

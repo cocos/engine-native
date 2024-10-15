@@ -46,6 +46,10 @@
 #include "napi/SeApi.h"
 #endif
 
+#if SCRIPT_ENGINE_TYPE == SCRIPT_ENGINE_JSVM
+#include "jsvm/SeApi.h"
+#endif
+
 #include "Value.hpp"
 #include "Object.hpp"
 #include "State.hpp"

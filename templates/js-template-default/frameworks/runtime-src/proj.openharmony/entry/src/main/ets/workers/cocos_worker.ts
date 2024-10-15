@@ -62,6 +62,10 @@ nativeContext.postSyncMessage = async function (msgType: string, msgData: string
 nativeContext.setPostMessageFunction.call(nativeContext, nativeContext.postMessage)
 nativeContext.setPostSyncMessageFunction.call(nativeContext, nativeContext.postSyncMessage)
 
+globalThis.terminateProcess = function () {
+  uiPort.postMessage("exitGame",0);
+}
+
 uiPort._messageHandle = function (e) {
   var data = e.data;
   var msg = data.data;

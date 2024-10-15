@@ -74,6 +74,8 @@ public:
     void onSurfaceCreated(OH_NativeXComponent* component, void* window);
     void onSurfaceChanged(OH_NativeXComponent* component, void* window);
     void onSurfaceDestroyed(OH_NativeXComponent* component, void* window);
+    void onSurfaceHide();
+    void onSurfaceShow(void* window);
     void dispatchTouchEvent(OH_NativeXComponent* component, void* window);
     
     static void onMessageCallback(const uv_async_t* req);

@@ -29,13 +29,11 @@ import batteryInfo from '@ohos.batteryInfo';
 import sensor from '@ohos.sensor';
 import connection from '@ohos.net.connection'
 import vibrator from '@ohos.vibrator';
-import process from '@ohos.process';
 import { ContextType } from "../common/Constants"
 import cocos from "libcocos.so";
 
 const systemUtils = cocos.getContext(ContextType.SYSTEM_UTILS);
 
-let pro = new process.ProcessManager();
 let cutout = {
     left: 0,
     top: 0,
@@ -171,10 +169,6 @@ globalThis.vibrate = function (duration) {
       } catch (err) {
         console.error('errCode: ' + err.code + ' ,msg: ' + err.message);
       }
-}
-
-globalThis.terminateProcess = function () {
-    pro.exit(0);
 }
 
 globalThis.initScreenInfo = function () {
