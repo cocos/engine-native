@@ -46,7 +46,7 @@ public:
 
     bool isAbsolutePath(const std::string &strPath) const override;
 
-    FileUtils::Status getRawFileDescriptor(const std::string &filename,RawFileDescriptor& descriptor);
+    FileUtils::Status getRawFileDescriptor(const std::string &filename,RawFileDescriptor64& descriptor);
 
     virtual std::string getWritablePath() const override;
 

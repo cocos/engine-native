@@ -98,26 +98,26 @@ FileUtils::Status FileUtilsOpenHarmony::getContents(const std::string &filename,
         return FileUtils::Status::NotInitialized;
     }
 
-    RawFile *rawFile = OH_ResourceManager_OpenRawFile(_nativeResourceManager, fullPath.c_str());
+    RawFile64 *rawFile = OH_ResourceManager_OpenRawFile64(_nativeResourceManager, fullPath.c_str());
     if (nullptr == rawFile) {
         return FileUtils::Status::OpenFailed;
     }
 
-    auto size = OH_ResourceManager_GetRawFileSize(rawFile);
+    auto size = OH_ResourceManager_GetRawFileSize64(rawFile);
     buffer->resize(size);
 
     assert(buffer->buffer());
 
-    int readsize = OH_ResourceManager_ReadRawFile(rawFile, buffer->buffer(), size);
+    int readsize = OH_ResourceManager_ReadRawFile64(rawFile, buffer->buffer(), size);
     // TODO(unknown): read error
     if (readsize < size) {
         if (readsize >= 0) {
             buffer->resize(readsize);
         }
-        OH_ResourceManager_CloseRawFile(rawFile);
+        OH_ResourceManager_CloseRawFile64(rawFile);
         return FileUtils::Status::ReadFailed;
     }
-    OH_ResourceManager_CloseRawFile(rawFile);
+    OH_ResourceManager_CloseRawFile64(rawFile);
     return FileUtils::Status::OK;
 }
 
@@ -166,15 +166,15 @@ bool FileUtilsOpenHarmony::isFileExistInternal(const std::string &strFilePath) c
         return false;
     }
 
-    RawFile* rawFile = OH_ResourceManager_OpenRawFile(_nativeResourceManager, strPath.c_str());
+    RawFile64* rawFile = OH_ResourceManager_OpenRawFile64(_nativeResourceManager, strPath.c_str());
     if(rawFile) {
-        OH_ResourceManager_CloseRawFile(rawFile);
+        OH_ResourceManager_CloseRawFile64(rawFile);
         return true;
     }
     return false;
 }
 
-FileUtils::Status FileUtilsOpenHarmony::getRawFileDescriptor(const std::string &filename,RawFileDescriptor& descriptor) {
+FileUtils::Status FileUtilsOpenHarmony::getRawFileDescriptor(const std::string &filename,RawFileDescriptor64& descriptor) {
     if (filename.empty()) {
         return FileUtils::Status::NotExists;
     }
@@ -189,18 +189,18 @@ FileUtils::Status FileUtilsOpenHarmony::getRawFileDescriptor(const std::string &
         return FileUtils::Status::NotInitialized;
     }
 
-    RawFile *rawFile = OH_ResourceManager_OpenRawFile(_nativeResourceManager, fullPath.c_str());
+    RawFile64 *rawFile = OH_ResourceManager_OpenRawFile64(_nativeResourceManager, fullPath.c_str());
     if (nullptr == rawFile) {
         return FileUtils::Status::OpenFailed;
     }
 
-    bool result = OH_ResourceManager_GetRawFileDescriptor(rawFile, descriptor);
+    bool result = OH_ResourceManager_GetRawFileDescriptor64(rawFile, &descriptor);
     if (!result) {
-         OH_ResourceManager_CloseRawFile(rawFile);
+         OH_ResourceManager_CloseRawFile64(rawFile);
         return FileUtils::Status::OpenFailed;
     }
 
-    OH_ResourceManager_CloseRawFile(rawFile);
+    OH_ResourceManager_CloseRawFile64(rawFile);
     return FileUtils::Status::OK;  
 }
 
