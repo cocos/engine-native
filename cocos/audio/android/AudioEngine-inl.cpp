@@ -132,7 +132,7 @@ static int fdGetter(const std::string& url, off_t* start, off_t* length)
     #elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
     FileUtilsOpenHarmony* fileUtils = static_cast<FileUtilsOpenHarmony*>(FileUtils::getInstance());
     if(fileUtils) {
-        RawFileDescriptor descriptor;
+        RawFileDescriptor64 descriptor;
         fileUtils->getRawFileDescriptor(url, descriptor);
         fd = descriptor.fd;
     }

@@ -411,7 +411,7 @@ AudioPlayerProvider::AudioFileInfo AudioPlayerProvider::getFileInfo(
 
         fileSize = length;
 #elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
-        RawFileDescriptor descriptor;
+        RawFileDescriptor64 descriptor;
         FileUtilsOpenHarmony* fileUtils = static_cast<FileUtilsOpenHarmony*>(FileUtils::getInstance());
         if(!fileUtils) {
             return info;

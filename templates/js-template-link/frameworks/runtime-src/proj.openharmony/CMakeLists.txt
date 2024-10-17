@@ -11,8 +11,6 @@ set(CC_USE_SE_V8 OFF)
 set(CC_USE_SE_NAPI OFF)
 set(CC_USE_SE_JSVM ON)
 
-SET(CMAKE_BUILD_TYPE "Debug")
-
 SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")
 
 SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
@@ -67,11 +65,31 @@ find_library( # Sets the name of the path variable.
               # you want CMake to locate.
               rawfile.z )
 message(STATUS, "rawfile=${rawfile-lib}")
-target_link_libraries(${CC_LIB_NAME} PUBLIC
-${EGL-lib} ${GLESv3-lib} ${hilog-lib} ${libace-lib} ${libnapi-lib} ${libuv-lib} ${rawfile-lib} libnative_drawing.so libc++.a libOpenSLES.so libohaudio.so libavplayer.so libjsvm.so libnative_window.so libnative_buffer.so  libbundle_ndk.z.so
-${CC_EXTERNAL_LIBS}
+
+set(LIBS
+    ${EGL-lib}
+    ${GLESv3-lib}
+    ${hilog-lib}
+    ${libace-lib}
+    ${libnapi-lib}
+    ${libuv-lib}
+    ${rawfile-lib}
+    libnative_drawing.so
+    libc++.a
+    libOpenSLES.so
+    libohaudio.so
+    libavplayer.so
+    libnative_window.so
+    libnative_buffer.so
+    libbundle_ndk.z.so
+    ${CC_EXTERNAL_LIBS}
 )
 
+if(CC_USE_SE_JSVM)
+    list(APPEND LIBS libjsvm.so)
+endif()
+
+target_link_libraries(${CC_LIB_NAME} PUBLIC ${LIBS})
 
 
 #cc_openharmony_before_target(${CC_LIB_NAME})
