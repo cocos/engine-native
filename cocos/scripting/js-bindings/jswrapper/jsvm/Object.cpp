@@ -27,6 +27,8 @@
 #include <memory>
 #include <unordered_map>
 #include "../MappingUtils.hpp"
+#include "CCApplication.h"
+#include "base/CCScheduler.h"
 #include "Class.h"
 #include "ScriptEngine.h"
 #include "Utils.h"
@@ -525,7 +527,7 @@ void Object::setPrivateData(void* data){
     auto tmpThis = _objRef.getValue(_env);
     //_objRef.deleteRef();
     NODE_API_CALL(status, _env,
-                  OH_JSVM_Wrap(_env, tmpThis, data, weakCallback,
+                  OH_JSVM_Wrap(_env, tmpThis, data, sendWeakCallback,
                             (void*)this /* finalize_hint */, nullptr));
     //_objRef.setWeakref(_env, result);
     setProperty("__native_ptr__", se::Value(static_cast<long>(reinterpret_cast<uintptr_t>(data))));
@@ -643,6 +645,11 @@ Object* Object::getObjectWithPtr(void* ptr) {
 
 JSVM_Value Object::_getJSObject() const {
     return _objRef.getValue(_env);
+}
+
+void Object::sendWeakCallback(JSVM_Env env, void* nativeObject, void* finalizeHint /*finalize_hint*/) {
+    auto cb = std::bind(weakCallback, env, nativeObject, finalizeHint);
+    cocos2d::Application::getInstance()->getScheduler()->performFunctionInCocosThread(cb);
 }
 
 void Object::weakCallback(JSVM_Env env, void* nativeObject, void* finalizeHint /*finalize_hint*/) {

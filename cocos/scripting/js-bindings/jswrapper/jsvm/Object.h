@@ -412,6 +412,7 @@ public:
 private:
 //     Object();
 //     virtual ~Object();
+    static void sendWeakCallback(JSVM_Env env, void *nativeObject, void * /*finalize_hint*/);
     static void weakCallback(JSVM_Env env, void *nativeObject, void * /*finalize_hint*/);
     static void setup();
     static void cleanup();
