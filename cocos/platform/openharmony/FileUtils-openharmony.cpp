@@ -103,12 +103,12 @@ FileUtils::Status FileUtilsOpenHarmony::getContents(const std::string &filename,
         return FileUtils::Status::OpenFailed;
     }
 
-    auto size = OH_ResourceManager_GetRawFileSize64(rawFile);
+    int64_t size = OH_ResourceManager_GetRawFileSize64(rawFile);
     buffer->resize(size);
 
     assert(buffer->buffer());
 
-    int readsize = OH_ResourceManager_ReadRawFile64(rawFile, buffer->buffer(), size);
+    int64_t readsize = OH_ResourceManager_ReadRawFile64(rawFile, buffer->buffer(), size);
     // TODO(unknown): read error
     if (readsize < size) {
         if (readsize >= 0) {
