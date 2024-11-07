@@ -75,6 +75,11 @@ export struct CocosWebView {
       .width(this.viewInfo.w)
       .height(this.viewInfo.h)
       .border({ width: 1 })
+      .onControllerAttached(() => {
+        if (this.viewInfo.url != '') {
+          this.viewInfo.controller.loadUrl(this.viewInfo.url);
+        }
+      })
       .onPageBegin((event) => {
         this.workPort?.postMessage("onPageBegin", {
           viewTag: this.viewInfo.viewTag as number,
