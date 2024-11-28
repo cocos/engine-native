@@ -236,7 +236,7 @@ bool ScriptEngine::init() {
     for (const auto &hook : _beforeInitHookArray) {
         hook();
     }
-
+    _beforeInitHookArray.clear();
     NODE_API_CALL(status, _env, OH_JSVM_CreateVM(nullptr, &_vm));
     NODE_API_CALL(status, _env, OH_JSVM_OpenVMScope(_vm, &_vmScope));
     NODE_API_CALL(status, _env, OH_JSVM_CreateEnv(_vm, 0, nullptr, &_env));
@@ -330,38 +330,47 @@ void ScriptEngine::cleanup() {
     if (!_isValid) {
         return;
     }
-
+    Object::restarting = true;
+    Object::resetBaseSet();
     SE_LOGD("ScriptEngine::cleanup begin ...\n");
     _isInCleanup = true;
+    se::AutoHandleScope hs;
 
     do{
-        se::AutoHandleScope hs;
         for (const auto &hook : _beforeCleanupHookArray) {
             hook();
         }
-        _beforeCleanupHookArray.clear();
     }while (0);
-    
+    _beforeCleanupHookArray.clear();
 
     SAFE_DEC_REF(_globalObj);
     Object::cleanup();
     Class::cleanup();
     garbageCollect();
 
-    JSVM_Status status;
-    NODE_API_CALL(status, _env, OH_JSVM_CloseEnvScope(_env, _envScope));
-
-    NODE_API_CALL(status, _env, OH_JSVM_DestroyEnv(_env));
-    NODE_API_CALL(status, _env, OH_JSVM_CloseVMScope(_vm, _vmScope));
-    NODE_API_CALL(status, _env, OH_JSVM_DestroyVM(_vm));
-    _envScope = nullptr;
+    __oldConsoleLog.setUndefined();
+    __oldConsoleDebug.setUndefined();
+    __oldConsoleInfo.setUndefined();
+    __oldConsoleWarn.setUndefined();
+    __oldConsoleError.setUndefined();
+    __oldConsoleAssert.setUndefined();
+    
+    JSVM_Env env = _env;
     _env = nullptr;
+    JSVM_Status status;
+    NODE_API_CALL(status, env, OH_JSVM_CloseEnvScope(env, _envScope));
+
+    NODE_API_CALL(status, env, OH_JSVM_DestroyEnv(env));
+    NODE_API_CALL(status, env, OH_JSVM_CloseVMScope(_vm, _vmScope));
+    NODE_API_CALL(status, env, OH_JSVM_DestroyVM(_vm));
+    _envScope = nullptr;
+    env = nullptr;
     _vmScope = nullptr;
     _vm = nullptr;
 
     _globalObj = nullptr;
     _isValid   = false;
-
+    _gcFunc = nullptr;
     _registerCallbackArray.clear();
 
     for (const auto &hook : _afterCleanupHookArray) {
@@ -371,6 +380,7 @@ void ScriptEngine::cleanup() {
 
     _isInCleanup = false;
     NativePtrToObjectMap::destroy();
+    NonRefNativePtrCreatedByCtorMap::destroy();
     SE_LOGD("ScriptEngine::cleanup end ...\n");
 }
 
@@ -496,6 +506,6 @@ void ScriptEngine::mainLoopUpdate() {
 
 void ScriptEngine::throwException(const std::string &errorMessage) {
     JSVM_Status status;
-    NODE_API_CALL_RETURN_VOID(getEnv(), OH_JSVM_ThrowError(getEnv(), nullptr, errorMessage.c_str()));
+    NODE_API_CALL(status, getEnv(), OH_JSVM_ThrowError(getEnv(), nullptr, errorMessage.c_str()));
 }
 }; // namespace se

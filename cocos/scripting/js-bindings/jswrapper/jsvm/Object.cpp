@@ -37,8 +37,15 @@
 namespace se {
 std::unique_ptr<std::unordered_map<Object*, void*>> __objectMap; // Currently, the value `void*` is always nullptr
 
+std::set<Object*> Object::objBaseSet = {};
+
+bool Object::restarting = false;
+
 Object::Object() {}
 Object::~Object() {
+    if(restarting) {
+        objBaseSet.insert(this);
+    }
     if (__objectMap) {
         __objectMap->erase(this);
     }
@@ -653,24 +660,20 @@ void Object::sendWeakCallback(JSVM_Env env, void* nativeObject, void* finalizeHi
 }
 
 void Object::weakCallback(JSVM_Env env, void* nativeObject, void* finalizeHint /*finalize_hint*/) {
-    if (finalizeHint) {
-        if (nativeObject == nullptr) {
-            return;
-        }
-        void *rawPtr = reinterpret_cast<Object*>(finalizeHint)->_privateData;
-        Object* seObj = reinterpret_cast<Object*>(finalizeHint);
-        if (seObj->_onCleaingPrivateData) { //called by cleanPrivateData, not release seObj;
-            return;
-        }
-        if (seObj->_clearMappingInFinalizer && rawPtr != nullptr) {
-            auto iter = NativePtrToObjectMap::find(rawPtr);
-            if (iter != NativePtrToObjectMap::end()) {
-                NativePtrToObjectMap::erase(iter);
-            } else {
-                SE_LOGE("not find ptr in NativePtrToObjectMap");
-            }
-        }
-
+    if(finalizeHint == nullptr || nativeObject == nullptr){
+        return;
+    }
+    void *rawPtr = reinterpret_cast<Object*>(finalizeHint)->_privateData;
+    Object* seObj = reinterpret_cast<Object*>(finalizeHint);
+    auto it = objBaseSet.find(seObj);
+    if(it != objBaseSet.end()) {
+        return;
+    }
+    if (seObj->_onCleaingPrivateData) { //called by cleanPrivateData, not release seObj;
+        return;
+    }
+    auto iter = NativePtrToObjectMap::find(rawPtr);
+    if (iter != NativePtrToObjectMap::end()) {
         if (seObj->_finalizeCb != nullptr) {
             seObj->_finalizeCb(env, rawPtr, rawPtr);
         } else {
@@ -680,10 +683,12 @@ void Object::weakCallback(JSVM_Env env, void* nativeObject, void* finalizeHint /
             }
         }
         seObj->decRef();
-    }
+        NativePtrToObjectMap::erase(iter);
+     }
 }
 
 void Object::setup() {
+    restarting = false;
     __objectMap = std::make_unique<std::unordered_map<Object*, void*>>();
 }
 
