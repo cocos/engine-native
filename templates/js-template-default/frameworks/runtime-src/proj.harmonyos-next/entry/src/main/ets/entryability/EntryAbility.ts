@@ -7,6 +7,7 @@ const nativeContext = cocos.getContext(ContextType.ENGINE_UTILS);
 const nativeAppLifecycle = cocos.getContext(ContextType.APP_LIFECYCLE);
 
 export default class EntryAbility extends UIAbility {
+  private windowStageType: number = 0;
   onCreate(want, launchParam) {
     globalThis.abilityWant = want;
     nativeAppLifecycle.onCreate();
@@ -62,11 +63,11 @@ export default class EntryAbility extends UIAbility {
       let stageEventType: window.WindowStageEventType = data;
       switch (stageEventType) {
           case window.WindowStageEventType.RESUMED:
-              nativeAppLifecycle.onShow();
+              this.onChangeWinodowStageType(1);
               break;
           case window.WindowStageEventType.PAUSED:
-              nativeAppLifecycle.onHide();
-              break;
+              this.windowStageType && this.onChangeWinodowStageType(0);
+            break;
           default:
               break;
       }
@@ -79,11 +80,16 @@ export default class EntryAbility extends UIAbility {
 
   onForeground() {
     // Ability has brought to foreground
-    nativeAppLifecycle.onShow();
+    this.onChangeWinodowStageType(1);
   }
 
   onBackground() {
     // Ability has back to background
-    nativeAppLifecycle.onHide();
+    this.windowStageType && this.onChangeWinodowStageType(0);
+  }
+
+  onChangeWinodowStageType(type:number) {
+    this.windowStageType = type;
+    type? nativeAppLifecycle.onShow() :nativeAppLifecycle.onHide();
   }
 }
