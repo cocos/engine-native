@@ -10,7 +10,7 @@ enum windowStageType {
   show
 }
 export default class EntryAbility extends UIAbility {
-  private windowStageType: number = 0;
+  private windowStageType: number = windowStageType.hide;
 
   onCreate(want, launchParam) {
     globalThis.abilityWant = want;
