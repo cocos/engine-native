@@ -67,7 +67,7 @@ export default class EntryAbility extends UIAbility {
       let stageEventType: window.WindowStageEventType = data;
       switch (stageEventType) {
         case window.WindowStageEventType.RESUMED:
-          this.onChangeWinodowStageType(windowStageType.show);
+          this.windowStageType === windowStageType.hide && this.onChangeWinodowStageType(windowStageType.show);
           break;
         case window.WindowStageEventType.PAUSED:
           this.windowStageType === windowStageType.show && this.onChangeWinodowStageType(windowStageType.hide);
@@ -84,7 +84,7 @@ export default class EntryAbility extends UIAbility {
 
   onForeground() {
     // Ability has brought to foreground
-    this.onChangeWinodowStageType(windowStageType.show);
+    this.windowStageType === windowStageType.hide && this.onChangeWinodowStageType(windowStageType.show);
   }
 
   onBackground() {
