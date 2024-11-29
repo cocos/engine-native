@@ -64,7 +64,7 @@ bool JSB_console_format_log(State& s, const char* prefix, int msgIndex = 0) {
     int argc = (int)args.size();
     if ((argc - msgIndex) == 1) {
         std::string msg = args[msgIndex].toStringForce();
-        SE_LOGD("JS: %s%s\n", prefix, msg.c_str());
+        SE_LOGD("JS: %{public}s%{public}s\n", prefix, msg.c_str());
     } else if (argc > 1) {
         std::string msg = args[msgIndex].toStringForce();
         size_t pos;
@@ -78,7 +78,7 @@ bool JSB_console_format_log(State& s, const char* prefix, int msgIndex = 0) {
                 }
         }
 
-        SE_LOGD("JS: %s%s\n", prefix, msg.c_str());
+        SE_LOGD("JS: %{public}s%{public}s\n", prefix, msg.c_str());
     }
     return true;
 }

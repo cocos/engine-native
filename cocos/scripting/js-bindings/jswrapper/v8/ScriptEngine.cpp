@@ -140,7 +140,7 @@ namespace se {
             if ((argc - msgIndex) == 1)
             {
                 std::string msg = args[msgIndex].toStringForce();
-                SE_LOGD("JS: %s%s\n", prefix, msg.c_str());
+                SE_LOGD("JS: %{public}s%{public}s\n", prefix, msg.c_str());
             }
             else if (argc > 1)
             {
@@ -159,7 +159,7 @@ namespace se {
                     }
                 }
 
-                SE_LOGD("JS: %s%s\n", prefix, msg.c_str());
+               SE_LOGD("JS: %{public}s%{public}s\n", prefix, msg.c_str());
             }
 
             return true;
@@ -461,8 +461,8 @@ namespace se {
         if(!jitSupported()) {
             flags.append(" --jitless");
         }
-#elif CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY
-        flags.append(" --jitless");
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_OPENHARMONY)
+            flags.append(" --jitless");
 #endif
         if(!flags.empty())
         {
