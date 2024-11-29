@@ -70,12 +70,12 @@ export default class EntryAbility extends UIAbility {
           this.onChangeWinodowStageType(windowStageType.show);
           break;
         case window.WindowStageEventType.PAUSED:
-          this.windowStageType && this.onChangeWinodowStageType(windowStageType.hide);
+          this.windowStageType === windowStageType.show && this.onChangeWinodowStageType(windowStageType.hide);
           break;
         default:
           break;
       }
-  });
+    });
   }
 
   onWindowStageDestroy() {
@@ -89,11 +89,11 @@ export default class EntryAbility extends UIAbility {
 
   onBackground() {
     // Ability has back to background
-    this.windowStageType && this.onChangeWinodowStageType(windowStageType.hide);
+    this.windowStageType === windowStageType.show && this.onChangeWinodowStageType(windowStageType.hide);
   }
 
-  onChangeWinodowStageType(type:number) {
+  onChangeWinodowStageType(type: windowStageType) {
     this.windowStageType = type;
-    type? nativeAppLifecycle.onShow() :nativeAppLifecycle.onHide();
+    this.windowStageType === windowStageType.show ? nativeAppLifecycle.onShow() : nativeAppLifecycle.onHide();
   }
 }
