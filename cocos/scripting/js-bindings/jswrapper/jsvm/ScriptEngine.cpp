@@ -138,7 +138,16 @@ SE_BIND_FUNC(JSB_console_assert)
 
 ScriptEngine *gSriptEngineInstance = nullptr;
 
-ScriptEngine::ScriptEngine() { OH_JSVM_Init(nullptr); };
+ScriptEngine::ScriptEngine() {
+    static bool initialized = false;
+    if (initialized) {
+        return;
+    }
+    JSVM_InitOptions initOptions;
+    memset(&initOptions, 0, sizeof(initOptions));
+    OH_JSVM_Init(&initOptions);
+    initialized = true;
+};
 
 ScriptEngine::~ScriptEngine() = default;
 

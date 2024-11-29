@@ -356,6 +356,7 @@ Object* Object::createTypedArrayWithBuffer(TypedArrayType type, const Object *ob
         case TypedArrayType::INT16:
             jsvmType  = JSVM_INT8_ARRAY;
             sizeOfEle = 2;
+            break;
         case TypedArrayType::UINT16:
             jsvmType  = JSVM_UINT8_ARRAY;
             sizeOfEle = 2;
@@ -363,9 +364,11 @@ Object* Object::createTypedArrayWithBuffer(TypedArrayType type, const Object *ob
         case TypedArrayType::INT32:
             jsvmType  = JSVM_INT32_ARRAY;
             sizeOfEle = 4;
+            break;
         case TypedArrayType::UINT32:
             jsvmType  = JSVM_UINT32_ARRAY;
             sizeOfEle = 4;
+            break;
         case TypedArrayType::FLOAT32:
             jsvmType  = JSVM_FLOAT32_ARRAY;
             sizeOfEle = 4;
