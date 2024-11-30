@@ -92,45 +92,53 @@ function radiansToDegrees(radians)  {
 }
 
 let sDeviceMotionValues = [];
-try {
-    sensor.on(sensor.SensorId.ACCELEROMETER, function (data) {
-        sDeviceMotionValues[0] = data.x;
-        sDeviceMotionValues[1] = data.y;
-        sDeviceMotionValues[2] = -data.z;
-    },
-        { interval: 200000000 }
-    );
-} catch (err) {
-    sDeviceMotionValues[0] = 0;
-    sDeviceMotionValues[1] = 0;
-    sDeviceMotionValues[2] = 0;
+let interval = 200000000;
+
+globalThis.senserOff = function (){
+    sensor.off(sensor.SensorId.ACCELEROMETER);
+    sensor.off(sensor.SensorId.LINEAR_ACCELEROMETER);
+    sensor.off(sensor.SensorId.GYROSCOPE);
 }
 
-try {
-    sensor.on(sensor.SensorId.LINEAR_ACCELEROMETER, function(data){
-        sDeviceMotionValues[3] = data.x;
-        sDeviceMotionValues[4] = data.y;
-        sDeviceMotionValues[5] = data.z;
-    },
-        {interval: 200000000}
-    );
-} catch (err) {
-    sDeviceMotionValues[3] = 0;
-    sDeviceMotionValues[4] = 0;
-    sDeviceMotionValues[5] = 0;
+globalThis.senserOn = function (){
+    senserOff();
+    try {
+        sensor.on(sensor.SensorId.ACCELEROMETER, (data) => {
+            sDeviceMotionValues[0] = data.x;
+            sDeviceMotionValues[1] = data.y;
+            sDeviceMotionValues[2] = -data.z;
+        }, { interval: interval });
+    } catch (err) {
+        sDeviceMotionValues[0] = 0;
+        sDeviceMotionValues[1] = 0;
+        sDeviceMotionValues[2] = 0;
+    }
+    try {
+        sensor.on(sensor.SensorId.LINEAR_ACCELEROMETER, (data) => {
+            sDeviceMotionValues[3] = data.x;
+            sDeviceMotionValues[4] = data.y;
+            sDeviceMotionValues[5] = data.z;
+        }, { interval: interval });
+    } catch (err) {
+        sDeviceMotionValues[3] = 0;
+        sDeviceMotionValues[4] = 0;
+        sDeviceMotionValues[5] = 0;
+    }
+    try {
+        sensor.on(sensor.SensorId.GYROSCOPE, (data) => {
+            sDeviceMotionValues[6] = radiansToDegrees(data.x);
+            sDeviceMotionValues[7] = radiansToDegrees(data.y);
+            sDeviceMotionValues[8] = radiansToDegrees(data.z);
+        }, { interval: interval });
+    } catch (err) {
+        sDeviceMotionValues[6] = 0;
+        sDeviceMotionValues[7] = 0;
+        sDeviceMotionValues[8] = 0;
+    }
 }
-try {
-    sensor.on(sensor.SensorId.GYROSCOPE, function(data){
-        sDeviceMotionValues[6] = radiansToDegrees(data.x);
-        sDeviceMotionValues[7] = radiansToDegrees(data.y);
-        sDeviceMotionValues[8] = radiansToDegrees(data.z);
-    },
-        {interval: 200000000}
-    );
-} catch (err) {
-    sDeviceMotionValues[6] = 0;
-    sDeviceMotionValues[7] = 0;
-    sDeviceMotionValues[8] = 0;
+
+globalThis.setAccelerometerInterval = function (interval){
+    interval = interval;
 }
 
 globalThis.getDeviceMotionValue = function () {

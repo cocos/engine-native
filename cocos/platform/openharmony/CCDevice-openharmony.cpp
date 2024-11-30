@@ -167,18 +167,19 @@ std::string Device::getDeviceModel() {
 }
 
 void Device::setAccelerometerEnabled(bool isEnabled) {
-    // if (isEnabled)
-    // {
-    //     JniHelper::callStaticVoidMethod(JCLS_HELPER, "enableAccelerometer");
-    // }
-    // else
-    // {
-    //     JniHelper::callStaticVoidMethod(JCLS_HELPER, "disableAccelerometer");
-    // }
+    if (isEnabled)
+    {
+       NapiHelper::napiCallFunction("senserOn");
+    }
+    else
+    {
+       NapiHelper::napiCallFunction("senserOff");
+    }
 }
 
 void Device::setAccelerometerInterval(float interval) {
-    // JniHelper::callStaticVoidMethod(JCLS_HELPER, "setAccelerometerInterval", interval);
+    NapiHelper::napiCallFunction("setAccelerometerInterval",interval);
+    NapiHelper::napiCallFunction("senserOn");
 }
 
 void Device::vibrate(float duration) {
