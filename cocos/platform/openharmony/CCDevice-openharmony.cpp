@@ -167,19 +167,15 @@ std::string Device::getDeviceModel() {
 }
 
 void Device::setAccelerometerEnabled(bool isEnabled) {
-    if (isEnabled)
-    {
+    if (isEnabled) {
        NapiHelper::napiCallFunction("senserOn");
-    }
-    else
-    {
+    } else {
        NapiHelper::napiCallFunction("senserOff");
     }
 }
 
 void Device::setAccelerometerInterval(float interval) {
     NapiHelper::napiCallFunction("setAccelerometerInterval",interval);
-    NapiHelper::napiCallFunction("senserOn");
 }
 
 void Device::vibrate(float duration) {

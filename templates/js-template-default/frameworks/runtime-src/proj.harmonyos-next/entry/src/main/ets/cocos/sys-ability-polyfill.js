@@ -137,8 +137,11 @@ globalThis.senserOn = function (){
     }
 }
 
-globalThis.setAccelerometerInterval = function (interval){
-    interval = interval;
+globalThis.setAccelerometerInterval = function (dt){
+    if(interval != dt){
+        interval = dt;
+        senserOn();
+    }
 }
 
 globalThis.getDeviceMotionValue = function () {
