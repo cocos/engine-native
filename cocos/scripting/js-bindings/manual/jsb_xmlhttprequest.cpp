@@ -656,6 +656,7 @@ static bool XMLHttpRequest_finalize(se::State& s)
         request->onabort = nullptr;
         request->onerror = nullptr;
         request->ontimeout = nullptr;
+        request->release();
         return true;
     }
     SE_LOGD("XMLHttpRequest_finalize, %p ... \n", request);

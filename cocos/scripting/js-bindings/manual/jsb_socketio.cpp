@@ -158,11 +158,12 @@ private:
 static bool SocketIO_finalize(se::State& s)
 {
     SIOClient* cobj = (SIOClient*)s.nativeThisObject();
-    CCLOGINFO("jsbindings: finalizing JS object %p (SocketIO)", cobj);
-    cobj->disconnect();
     if(se::ScriptEngine::getInstance()->isInCleanup()) {
+        cobj->release();
         return true;
     }
+    CCLOGINFO("jsbindings: finalizing JS object %p (SocketIO)", cobj);
+    cobj->disconnect();
     JSB_SocketIODelegate* delegate = static_cast<JSB_SocketIODelegate*>(cobj->getDelegate());
     if (delegate->getReferenceCount() == 1)
     {

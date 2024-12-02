@@ -272,6 +272,7 @@ static bool WebSocket_finalize(se::State& s)
         cobj->closeAsync();
     }
     if(se::ScriptEngine::getInstance()->isInCleanup()) {
+        cobj->release();
         return true;
     }
     static_cast<JSB_WebSocketDelegate*>(cobj->getDelegate())->release();
