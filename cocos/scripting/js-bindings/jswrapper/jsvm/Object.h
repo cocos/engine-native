@@ -97,7 +97,11 @@ public:
         if (!_ref) {
             return;
         }
-        OH_JSVM_DeleteReference(_env, _ref);
+        uint32_t result = 0;
+        OH_JSVM_ReferenceRef(_env, _ref, &result);
+        if(result == 1) {
+            OH_JSVM_DeleteReference(_env, _ref);
+        }
         _ref = nullptr;
     }
 };   
