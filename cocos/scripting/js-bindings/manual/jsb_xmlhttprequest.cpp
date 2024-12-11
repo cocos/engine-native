@@ -700,6 +700,7 @@ static bool XMLHttpRequest_constructor(se::State& s)
         {
 //            SE_LOGD("XMLHttpRequest (%p) onloadend ...\n", request);
             cb("onloadend");
+            se::AutoHandleScope hs;
             thiz.toObject()->unroot();
         }
         else

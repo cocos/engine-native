@@ -35,7 +35,7 @@ namespace se {
         ObjectWrap();
         ~ObjectWrap();
 
-        bool init(v8::Local<v8::Object> handle);
+        bool init(v8::Local<v8::Object> handle, bool registerWeak);
         void setFinalizeCallback(V8FinalizeFunc finalizeCb);
 
         v8::Local<v8::Object> handle();
@@ -70,6 +70,7 @@ namespace se {
         v8::Persistent<v8::Object> handle_;
         void *_nativeObj;
         V8FinalizeFunc _finalizeCb;
+        bool _registerWeak;
     };
 
 }  // namespace se

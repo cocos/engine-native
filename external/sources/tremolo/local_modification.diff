@@ -1,0 +1,24 @@
+diff -ru ./codebook.c /Users/cocos/Downloads/Tremolo008/codebook.c
+--- ./codebook.c	2018-11-07 16:47:06.000000000 +0800
++++ /Users/cocos/Downloads/Tremolo008/codebook.c	2010-02-01 21:45:48.000000000 +0800
+@@ -679,7 +679,7 @@
+     }
+     case 4:
+     {
+-      //Output("32/32");
++      Output("32/32");
+       for(i=0;i<read;i++){
+ 	chase=((ogg_uint32_t *)(book->dec_table))[chase*2+((lok>>i)&1)];
+ 	if(chase&0x80000000UL)break;
+Only in .: local_modification.diff
+diff -ru ./misc.h /Users/cocos/Downloads/Tremolo008/misc.h
+--- ./misc.h	2018-11-07 16:46:32.000000000 +0800
++++ /Users/cocos/Downloads/Tremolo008/misc.h	2007-07-05 18:35:10.000000000 +0800
+@@ -46,7 +46,6 @@
+ #ifndef  _LOW_ACCURACY_
+ /* 64 bit multiply */
+ 
+-#include <endian.h>
+ #include <sys/types.h>
+ 
+ #if BYTE_ORDER==LITTLE_ENDIAN

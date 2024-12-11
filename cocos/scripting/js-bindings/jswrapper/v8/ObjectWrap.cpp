@@ -28,10 +28,12 @@ namespace se {
         refs_ = 0;
         _nativeObj = nullptr;
         _finalizeCb = nullptr;
+        _registerWeak = false;
     }
 
-    bool ObjectWrap::init(v8::Local<v8::Object> handle) {
+    bool ObjectWrap::init(v8::Local<v8::Object> handle, bool registerWeak) {
         assert(persistent().IsEmpty());
+        _registerWeak = registerWeak;
         persistent().Reset(v8::Isolate::GetCurrent(), handle);
         makeWeak();
         return true;
@@ -78,9 +80,14 @@ namespace se {
         handle()->SetAlignedPointerInInternalField(0, nativeObj);
     }
 
-    void ObjectWrap::makeWeak() {
-        persistent().SetWeak(this, weakCallback, v8::WeakCallbackType::kFinalizer);
-//        persistent().MarkIndependent();
+    void ObjectWrap::makeWeak()
+    {
+        if (_registerWeak && handle()->InternalFieldCount() > 0)
+        {
+            persistent().SetWeak(this, weakCallback, v8::WeakCallbackType::kParameter);
+        } else {
+            persistent().SetWeak();
+        }
     }
 
 

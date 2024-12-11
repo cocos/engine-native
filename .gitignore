@@ -133,7 +133,7 @@ project.properties
 *.iml
 
 # Ignore prebuilt libraries folder
-/external/*
+# /external/*
 !/external/config.json
 /templates/lua-template-runtime/runtime
 /v*-deps-*.zip

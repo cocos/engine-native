@@ -111,7 +111,6 @@ scripting/js-bindings/jswrapper/v8/debugger/node_debug_options.cc \
 scripting/js-bindings/jswrapper/v8/debugger/http_parser.c
 # uv_static only used in v8 debugger
 LOCAL_STATIC_LIBRARIES += uv_static
-LOCAL_STATIC_LIBRARIES += v8_inspector
 LOCAL_STATIC_LIBRARIES += cocos_extension_static
 
 # opengl bindings depend on GFXUtils "_JSB_GL_CHECK"

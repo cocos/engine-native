@@ -615,7 +615,7 @@ MaybeLocal<Value> MakeCallback(Isolate* isolate,
     //
     // Because of the AssignToContext() call in src/node_contextify.cc,
     // the two contexts need not be the same.
-    Environment* env = Environment::GetCurrent(callback->CreationContext());
+    Environment* env = Environment::GetCurrent(callback->GetCreationContext().ToLocalChecked());
     Context::Scope context_scope(env->context());
     return MakeCallback(env, recv.As<Value>(), callback, argc, argv,
                         asyncContext);

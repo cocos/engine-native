@@ -305,7 +305,7 @@ namespace se {
         static void privateDataFinalize(void* nativeObj);
 
         static void onFatalErrorCallback(const char* location, const char* message);
-        static void onOOMErrorCallback(const char* location, bool is_heap_oom);
+        static void onOOMErrorCallback(const char *location, const v8::OOMDetails &details);
         static void onMessageCallback(v8::Local<v8::Message> message, v8::Local<v8::Value> data);
         static void onPromiseRejectCallback(v8::PromiseRejectMessage msg);
 

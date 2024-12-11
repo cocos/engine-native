@@ -214,15 +214,16 @@ namespace se {
     Object* Object::createArrayBufferObject(void* data, size_t byteLength)
     {
         v8::Local<v8::ArrayBuffer> jsobj = v8::ArrayBuffer::New(__isolate, byteLength);
+        auto *srcData = jsobj->GetBackingStore()->Data();
         if (data)
         {
-            memcpy(jsobj->GetContents().Data(), data, byteLength);
+            memcpy(srcData, data, byteLength);
         }
         else
         {
-            memset(jsobj->GetContents().Data(), 0, byteLength);
+            memset(srcData, 0, byteLength);
         }
-        Object* obj = Object::_createJSObject(nullptr, jsobj);
+        Object *obj = Object::_createJSObject(nullptr, jsobj);
         return obj;
     }
     
@@ -241,11 +242,12 @@ namespace se {
         }
 
         v8::Local<v8::ArrayBuffer> jsobj = v8::ArrayBuffer::New(__isolate, byteLength);
+        auto *srcData = jsobj->GetBackingStore()->Data();
         //If data has content,then will copy data into buffer,or will only clear buffer.
         if (data) {
-            memcpy(jsobj->GetContents().Data(), data, byteLength);
+            memcpy(srcData, data, byteLength);
         }else{
-            memset(jsobj->GetContents().Data(), 0, byteLength);
+            memset(srcData, 0, byteLength);
         }
         
         v8::Local<v8::Object> arr;
@@ -307,7 +309,7 @@ namespace se {
     {
         _cls = cls;
 
-        _obj.init(obj);
+        _obj.init(obj, _cls != nullptr);
         _obj.setFinalizeCallback(nativeObjectFinalizeHook);
 
         if(__objectMap){
@@ -463,9 +465,12 @@ namespace se {
         assert(isTypedArray());
         v8::Local<v8::Object> obj = const_cast<Object*>(this)->_obj.handle(__isolate);
         v8::Local<v8::TypedArray> arr = v8::Local<v8::TypedArray>::Cast(obj);
-        v8::ArrayBuffer::Contents content = arr->Buffer()->GetContents();
-        *ptr = (uint8_t*)content.Data() + arr->ByteOffset();
-        *length = arr->ByteLength();
+        const auto &backingStore = arr->Buffer()->GetBackingStore();
+        *ptr = static_cast<uint8_t*>(backingStore->Data()) + arr->ByteOffset();
+        if (length)
+        {
+            *length = arr->ByteLength();
+        }
         return true;
     }
 
@@ -480,9 +485,9 @@ namespace se {
         assert(isArrayBuffer());
         v8::Local<v8::Object> obj = const_cast<Object*>(this)->_obj.handle(__isolate);
         v8::Local<v8::ArrayBuffer> arrBuf = v8::Local<v8::ArrayBuffer>::Cast(obj);
-        v8::ArrayBuffer::Contents content = arrBuf->GetContents();
-        *ptr = (uint8_t*)content.Data();
-        *length = content.ByteLength();
+        const auto &backingStore = arrBuf->GetBackingStore();
+        *ptr = static_cast<uint8_t*>(backingStore->Data());
+        *length = backingStore->ByteLength();
         return true;
     }
 

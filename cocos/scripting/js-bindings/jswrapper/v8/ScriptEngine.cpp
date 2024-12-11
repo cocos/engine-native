@@ -301,13 +301,13 @@ namespace se {
         getInstance()->callExceptionCallback(location, message, "(no stack information)");
     }
 
-    void ScriptEngine::onOOMErrorCallback(const char* location, bool is_heap_oom)
+    void ScriptEngine::onOOMErrorCallback(const char *location, const v8::OOMDetails &details)
     {
         std::string errorStr = "[OOM ERROR] location: ";
         errorStr += location;
         std::string message;
         message = "is heap out of memory: ";
-        if (is_heap_oom)
+        if (details.is_heap_oom)
             message += "true";
         else
             message += "false";
@@ -328,10 +328,8 @@ namespace se {
         v8::ScriptOrigin origin = message->GetScriptOrigin();
         Value resouceNameVal;
         internal::jsToSeValue(v8::Isolate::GetCurrent(), origin.ResourceName(), &resouceNameVal);
-        Value line;
-        internal::jsToSeValue(v8::Isolate::GetCurrent(), origin.ResourceLineOffset(), &line);
-        Value column;
-        internal::jsToSeValue(v8::Isolate::GetCurrent(), origin.ResourceColumnOffset(), &column);
+        Value line(origin.LineOffset());
+        Value column(origin.ColumnOffset());
 
         std::string location = resouceNameVal.toStringForce() + ":" + line.toStringForce() + ":" + column.toStringForce();
 
@@ -475,7 +473,6 @@ namespace se {
     {
         cleanup();
         v8::V8::Dispose();
-        v8::V8::ShutdownPlatform();
         delete _platform;
     }
 
@@ -789,7 +786,7 @@ namespace se {
         if (originStr.IsEmpty())
             return false;
 
-        v8::ScriptOrigin origin(originStr.ToLocalChecked());
+        v8::ScriptOrigin origin(_isolate, originStr.ToLocalChecked());
         v8::MaybeLocal<v8::Script> maybeScript = v8::Script::Compile(_context.Get(_isolate), source.ToLocalChecked(), &origin);
 
         bool success = false;

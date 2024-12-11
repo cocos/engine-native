@@ -390,7 +390,7 @@ class ChannelImpl final : public v8_inspector::V8Inspector::Channel {
   explicit ChannelImpl(V8Inspector* inspector,
                        InspectorSessionDelegate* delegate)
                        : delegate_(delegate) {
-    session_ = inspector->connect(1, this, StringView());
+    session_ = inspector->connect(1, this, StringView(), v8_inspector::V8Inspector::ClientTrustLevel::kFullyTrusted);
   }
 
   virtual ~ChannelImpl() {}
@@ -559,7 +559,7 @@ class NodeInspectorClient : public V8InspectorClient {
   void FatalException(Local<Value> error, Local<v8::Message> message) {
     Local<Context> context = env_->context();
 
-    int script_id = message->GetScriptOrigin().ScriptID()->Value();
+    int script_id = message->GetScriptOrigin().ScriptId();
 
     Local<v8::StackTrace> stack_trace = message->GetStackTrace();
 
@@ -801,7 +801,7 @@ void Agent::RequestIoThreadStart() {
   // for IO events)
   uv_async_send(&start_io_thread_async);
   v8::Isolate* isolate = parent_env_->isolate();
-  platform_->CallOnForegroundThread(isolate, new StartIoTask(this));
+  platform_->GetForegroundTaskRunner(isolate)->PostTask(std::make_unique<StartIoTask>(this));
   isolate->RequestInterrupt(StartIoInterrupt, this);
   uv_async_send(&start_io_thread_async);
 }
