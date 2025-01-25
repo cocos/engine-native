@@ -110,8 +110,11 @@ function uploadZipFile(zipFileName, path, cb) {
     if (branch === 'develop') {
         branch = 'dev';
     }
-    var remotePath = Path.join('TestBuilds', 'Fireball', 'cocos2d-x', branch, zipFileName);
-    var zipFilePath = Path.join(path, zipFileName);
+    // Path.posix: Fix ftp uploads to fail in Windows.
+    // FTP only supports paths using the “/” character, but Windows creates paths with “\”. 
+    // The posix.join method needs to be used to normalize the paths.
+    var remotePath = Path.posix.join('TestBuilds', 'Fireball', 'cocos2d-x', branch, zipFileName);
+    var zipFilePath = Path.posix.join(path, zipFileName);
     upload2Ftp(zipFilePath, remotePath, {
         host: 'ftp.cocos.org',
         user: process.env.ftpUser,
