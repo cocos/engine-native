@@ -233,7 +233,8 @@ void logJsException(JSVM_Env env, const char *file, int line) {
     [stack]: %{public}s",
             file, line, nameStr.c_str(), messageStr.c_str(), stackStr.c_str());
 
-    ScriptEngine::getInstance()->getExceptionCallback()("", messageStr.c_str(), stackStr.c_str());
+    auto& cb = ScriptEngine::getInstance()->getExceptionCallback();
+    cb("", messageStr.c_str(), stackStr.c_str());
 }
 
     
