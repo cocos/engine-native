@@ -141,9 +141,9 @@ public:
     static void CallJS(napi_env env, napi_value js_cb, void *context, void *data) {
         CallParam *callParam = (CallParam*) (data);
         if(callParam->isSync){
-            CallJsSync(env,js_cb,context,data);
+            CallJsSync(env, js_cb, context, data);
         } else{
-            CallJsAsync(env,js_cb,context,data);
+            CallJsAsync(env, js_cb, context, data);
         }
     }
     
