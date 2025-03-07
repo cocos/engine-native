@@ -64,7 +64,7 @@ bool JSB_console_format_log(State& s, const char* prefix, int msgIndex = 0) {
     int argc = (int)args.size();
     if ((argc - msgIndex) == 1) {
         std::string msg = args[msgIndex].toStringForce();
-        SE_LOGD("JS: %{public}s%{public}s\n", prefix, msg.c_str());
+        SE_LOGD("JS: %s%s\n", prefix, msg.c_str());
     } else if (argc > 1) {
         std::string msg = args[msgIndex].toStringForce();
         size_t pos;
@@ -78,7 +78,7 @@ bool JSB_console_format_log(State& s, const char* prefix, int msgIndex = 0) {
                 }
         }
 
-        SE_LOGD("JS: %{public}s%{public}s\n", prefix, msg.c_str());
+        SE_LOGD("JS: %s%s\n", prefix, msg.c_str());
     }
     return true;
 }
@@ -195,7 +195,7 @@ bool ScriptEngine::evalString(const char *scriptStr, ssize_t length, Value *ret,
     JSVM_Value  jsvmStr;
     NODE_API_CALL(status, _env, OH_JSVM_CreateStringUtf8(_env, scriptStr, length, &jsvmStr));
     if(status != JSVM_OK) {
-        SE_LOGE("ScriptEngine::evalString, create string failed, fileName = %{public}s", fileName);
+        SE_LOGE("ScriptEngine::evalString, create string failed, fileName = %s", fileName);
         return false;
     }
 
@@ -215,14 +215,14 @@ bool ScriptEngine::evalString(const char *scriptStr, ssize_t length, Value *ret,
                   OH_JSVM_CompileScriptWithOrigin(_env, jsvmStr, cachedData, cacheLength, false, &cacheRejected,&scriptOrigin, &compiledScript));
     
     if(status != JSVM_OK) {
-       SE_LOGE("ScriptEngine::evalSting, compile failed, fileName = %{public}s", fileName);
+       SE_LOGE("ScriptEngine::evalSting, compile failed, fileName = %s", fileName);
        return false;
     }
 
     JSVM_Value result;
     NODE_API_CALL(status, _env, OH_JSVM_RunScript(_env, compiledScript, &result));
     if(status != JSVM_OK) {
-       SE_LOGE("ScriptEngine::evelSting, run failed, fileName = %{public}s", fileName);
+       SE_LOGE("ScriptEngine::evelSting, run failed, fileName = %s", fileName);
        return false;
     }
 
@@ -447,7 +447,7 @@ void ScriptEngine::clearException() {
 }
 
 void ScriptEngine::garbageCollect() {
-    SE_LOGD("GC begin ..., (js->native map) size: %{public}d",(int)NativePtrToObjectMap::size());
+    SE_LOGD("GC begin ..., (js->native map) size: %d",(int)NativePtrToObjectMap::size());
 
     if(_gcFunc == nullptr) {
         JSVM_Status status;
@@ -456,7 +456,7 @@ void ScriptEngine::garbageCollect() {
         _gcFunc->call({}, nullptr);
     }
     
-    SE_LOGD("GC end ..., (js->native map) size: %{public}d",(int)NativePtrToObjectMap::size());
+    SE_LOGD("GC end ..., (js->native map) size: %d",(int)NativePtrToObjectMap::size());
 }
 
 bool ScriptEngine::isGarbageCollecting() const {

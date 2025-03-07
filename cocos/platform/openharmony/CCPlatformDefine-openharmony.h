@@ -38,14 +38,14 @@ THE SOFTWARE.
 #define CC_NO_MESSAGE_PSEUDOASSERT(cond)                        \
     if (!(cond)) {                                              \
         OH_LOG_Print(LOG_APP, LOG_ERROR, LOG_DOMAIN, "HMG_LOG", \
-                            "assert file:%{public}s function:%{public}s line:%{public}d",           \
+                            "assert file:%s function:%s line:%d",           \
                             __FILE__, __FUNCTION__, __LINE__);  \
     }
 
 #define CC_MESSAGE_PSEUDOASSERT(cond, msg)                          \
     if (!(cond)) {                                                  \
         OH_LOG_Print(LOG_APP, LOG_ERROR, LOG_DOMAIN, "HMG_LOG", \
-                            "assert file:%{public}s function:%{public}s line:%{public}d, %{public}s",      \
+                            "assert file:%s function:%s line:%d, %s",      \
                             __FILE__, __FUNCTION__, __LINE__, msg); \
     }
 

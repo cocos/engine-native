@@ -80,13 +80,13 @@ public:
         napi_status status;
         status = napi_acquire_threadsafe_function(saveFunc);
         if (status != napi_ok) {
-            LOGW("invokeAsync napi_acquire_threadsafe_function fail,status=%{public}d", status);
+            LOGW("invokeAsync napi_acquire_threadsafe_function fail,status=%d", status);
             return;
         }
         
         status = napi_call_threadsafe_function(saveFunc, callParam, napi_tsfn_blocking);
         if (status != napi_ok) {
-            LOGW("invokeAsync napi_call_threadsafe_function fail,status=%{public}d", status);
+            LOGW("invokeAsync napi_call_threadsafe_function fail,status=%d", status);
             return;
         }
     }
@@ -152,21 +152,21 @@ public:
         napi_value callbackFunc = nullptr;
         status = napi_create_function(env, "callbackFunc", NAPI_AUTO_LENGTH, callback, callParam, &callbackFunc);
         if (status != napi_ok) {
-            LOGW("CallJS napi_create_function fail,status=%{public}d", status);
+            LOGW("CallJS napi_create_function fail,status=%d", status);
             return;
         }
 
         napi_value result;
         status = napi_load_module_with_info(env, callParam->clsPath, callParam->module_info, &result);
         if (status != napi_ok) {
-            LOGW("callNativeMethod napi_load_module_with_info fail, status=%{public}d", status);
+            LOGW("callNativeMethod napi_load_module_with_info fail, status=%d", status);
             return;
         }
 
         napi_value callFunc;
         status = napi_get_named_property(env, result, callParam->method, &callFunc);
         if (status != napi_ok) {
-            LOGW("callNativeMethod napi_get_named_property fail, status=%{public}d", status);
+            LOGW("callNativeMethod napi_get_named_property fail, status=%d", status);
             return;
         }
 
@@ -175,12 +175,12 @@ public:
         napi_value global;
         status = napi_get_global(env, &global);
         if (status != napi_ok) {
-            LOGW("CallJS napi_get_global fail,status=%{public}d", status);
+            LOGW("CallJS napi_get_global fail,status=%d", status);
         }
         
         status = napi_call_function(env, global, js_cb, 3, jsArgs, &return_val);
         if (status != napi_ok) {
-            LOGW("CallJS napi_call_function fail,status=%{public}d", status);
+            LOGW("CallJS napi_call_function fail,status=%d", status);
         }
     }
 
@@ -195,14 +195,14 @@ public:
         napi_value result;
         status = napi_load_module_with_info(env, callParam->clsPath, callParam->module_info, &result);
         if (status != napi_ok) {
-            LOGW("callNativeMethod napi_load_module_with_info fail, status=%{public}d", status);
+            LOGW("callNativeMethod napi_load_module_with_info fail, status=%d", status);
             return;
         }
 
         napi_value callFunc;
         status = napi_get_named_property(env, result, callParam->method, &callFunc);
         if (status != napi_ok) {
-            LOGW("callNativeMethod napi_get_named_property fail, status=%{public}d", status);
+            LOGW("callNativeMethod napi_get_named_property fail, status=%d", status);
             return;
         }
 
@@ -211,7 +211,7 @@ public:
         napi_value global;
         status = napi_get_global(env, &global);
         if (status != napi_ok) {
-            LOGW("CallJS napi_get_global fail,status=%{public}d", status);
+            LOGW("CallJS napi_get_global fail,status=%d", status);
         }
 
         status = napi_call_function(env, global, js_cb, 2, jsArgs, &return_val);
@@ -240,7 +240,7 @@ public:
         callParam->cb(callbackValue);
 
         if (status != napi_ok) {
-            LOGW("CallJS napi_call_function fail,status=%{public}d", status);
+            LOGW("CallJS napi_call_function fail,status=%d", status);
         }
     }
 };

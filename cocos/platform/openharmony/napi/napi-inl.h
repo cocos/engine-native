@@ -54,7 +54,7 @@ inline napi_status AttachData(napi_env env,
 #if 1 //cjh (NAPI_VERSION < 5)
     napi_value symbol, external;
     // status = napi_create_symbol(env, nullptr, &symbol);
-    // MY_LOGE("AttachData 02, %{public}p", symbol);
+    // MY_LOGE("AttachData 02, %p", symbol);
     status = napi_ok;
     if (status == napi_ok) {
         status = napi_create_external(env, data, finalizer, hint, &external);

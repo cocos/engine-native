@@ -274,7 +274,7 @@ static void registerFunction(const Napi::CallbackInfo &info) {
     napi_value workName;
     status = napi_create_string_utf8(env, "Thread-safe call from async work", NAPI_AUTO_LENGTH, &workName);
     if (status != napi_ok) {
-        LOGW("invokeAsync napi_create_string_utf8 fail,status=%{public}d", status);
+        LOGW("invokeAsync napi_create_string_utf8 fail,status=%d", status);
         return;
     }
         

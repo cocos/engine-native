@@ -109,7 +109,7 @@ uiPort._messageHandle = function (e) {
       appLifecycle.onBackPress();
       break;
     default:
-      hilog.info(0x0000, 'testTag', 'cocos worker: message type unknown:%{public}s', msg.name);
+      hilog.info(0x0000, 'testTag', 'cocos worker: message type unknown:%s', msg.name);
       console.error("cocos worker: message type unknown");
       break;
   }
