@@ -371,7 +371,7 @@ void UrlAudioPlayer::destroy()
     {
         *_isDestroyed = true;
         OH_AVErrCode code = OH_AVPlayer_Release(_playObj);
-        if (code == AV_ERR_OK) {
+        if (code != AV_ERR_OK) {
             ALOGE("UrlAudioPlayer release error, code: %d", code);
         }
     }
