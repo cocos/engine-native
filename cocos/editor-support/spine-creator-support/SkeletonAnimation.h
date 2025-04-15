@@ -30,8 +30,15 @@
 #pragma once
 #include "spine/spine.h"
 #include "spine-creator-support/SkeletonRenderer.h"
+#include <vector>
 
 namespace spine {
+
+struct CacheEventInfo {
+  EventType type{EventType::EventType_Start};
+  TrackEntry *entry{nullptr};
+  Event *event{nullptr};
+};
 
 typedef std::function<void(TrackEntry* entry)> StartListener;
 typedef std::function<void(TrackEntry* entry)> InterruptListener;
@@ -94,6 +101,10 @@ public:
     virtual void onTrackEntryEvent (TrackEntry* entry, EventType type, Event* event);
     virtual void destroy();
 
+    void cacheAnimationEvent(TrackEntry *entry, EventType type, Event *event);
+    void cacheTrackEvent(TrackEntry *entry, EventType type, Event *event);
+    void dispatchEvents();
+
     AnimationState* getState() const;
     
 CC_CONSTRUCTOR_ACCESS:
@@ -114,6 +125,8 @@ protected:
     EventListener           _eventListener = nullptr;
 private:
     typedef SkeletonRenderer super;
+    std::vector<CacheEventInfo> _vecAnimationEvents;
+    std::vector<CacheEventInfo> _vecTrackEvents;
 };
 
 }
