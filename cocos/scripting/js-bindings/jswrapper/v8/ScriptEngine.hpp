@@ -288,6 +288,11 @@ namespace se {
         void mainLoopUpdate();
 
         /**
+        * @brief Handle all exceptions throwed by promise
+        */
+        void handlePromiseExceptions();
+
+        /**
          *  @brief Gets script virtual machine instance ID. Default value is 1, increase by 1 if `init` is invoked.
          */
         uint32_t getVMId() const { return _vmId; }
@@ -310,7 +315,17 @@ namespace se {
         static void onPromiseRejectCallback(v8::PromiseRejectMessage msg);
 
         void callExceptionCallback(const char*, const char*, const char*);
+         // Push promise and exception msg to _promiseArray
+        void pushPromiseExeception(const v8::Local<v8::Promise> &promise, const char *event, const char *stackTrace);
 
+        // Struct to save exception info
+        struct PromiseExceptionMsg {
+            std::string event;
+            std::string stackTrace;
+        };
+
+        std::string _lastStackTrace;
+        std::vector<std::tuple<std::unique_ptr<v8::Persistent<v8::Promise>>, std::vector<PromiseExceptionMsg>>> _promiseArray;
         std::chrono::steady_clock::time_point _startTime;
         std::vector<RegisterCallback> _registerCallbackArray;
         std::vector<std::function<void()>> _beforeInitHookArray;

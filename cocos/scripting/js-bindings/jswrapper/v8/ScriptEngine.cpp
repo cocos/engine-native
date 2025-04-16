@@ -379,37 +379,146 @@ namespace se {
         }
     }
 
+    /**
+    * Bug in v8 stacktrace:
+    * "handlerAddedAfterPromiseRejected" event is triggered if a resolve handler is added.
+    * But if no reject handler is added, then "unhandledRejectedPromise" exception will be called again, but the stacktrace this time become empty
+    * LastStackTrace is used to store it.
+    */
+    void ScriptEngine::pushPromiseExeception(const v8::Local<v8::Promise> &promise, const char *event, const char *stackTrace) {
+        using element_type = decltype(_promiseArray)::value_type;
+        element_type *current;
+
+        auto itr = std::find_if(_promiseArray.begin(), _promiseArray.end(), [&](const element_type &e) -> bool {
+            return std::get<0>(e)->Get(_isolate) == promise;
+        });
+
+        if (itr == _promiseArray.end()) { // Not found, create one
+            auto newPromise = new v8::Persistent<v8::Promise>();
+            newPromise->Reset(_isolate, promise);
+            _promiseArray.emplace_back(std::unique_ptr<v8::Persistent<v8::Promise>>(newPromise), std::vector<PromiseExceptionMsg>{});
+            current = &_promiseArray.back();
+        } else {
+            current = &(*itr);
+        }
+
+        auto &exceptions = std::get<1>(*current);
+        if (strcmp(event, "handlerAddedAfterPromiseRejected") == 0) {
+            for (int i = 0; i < exceptions.size(); i++) {
+                if (exceptions[i].event == "unhandledRejectedPromise") {
+                    _lastStackTrace = exceptions[i].stackTrace;
+                    exceptions.erase(exceptions.begin() + i);
+                    return;
+                }
+            }
+        }
+        exceptions.push_back(PromiseExceptionMsg{event, stackTrace});
+    }
+
+    void ScriptEngine::handlePromiseExceptions() {
+        if (_promiseArray.empty()) {
+            return;
+        }
+        for (auto &exceptionsPair : _promiseArray) {
+            auto &exceptionVector = std::get<1>(exceptionsPair);
+            for (const auto &exceptions : exceptionVector) {
+                getInstance()->callExceptionCallback("", exceptions.event.c_str(), exceptions.stackTrace.c_str());
+            }
+            std::get<0>(exceptionsPair).get()->Reset();
+        }
+        _promiseArray.clear();
+        _lastStackTrace.clear();
+    }
+
     void ScriptEngine::onPromiseRejectCallback(v8::PromiseRejectMessage msg)
     {
+        /* Reject message contains different types, yet not every type will lead to the exception in the end.
+        * A detection is needed: if the reject handler is added after the promise is triggered, it's actually valid.*/
         v8::Isolate *isolate = getInstance()->_isolate;
         v8::HandleScope scope(isolate);
+        v8::TryCatch tryCatch(isolate);
         std::stringstream ss;
         auto event = msg.GetEvent();
-        auto value = msg.GetValue();
-        const char *eventName = "[invalidatePromiseEvent]";
-        
-        if(event == v8::kPromiseRejectWithNoHandler) {
-            eventName = "unhandledRejectedPromise";
-        }else if(event == v8::kPromiseHandlerAddedAfterReject) {
-            eventName = "handlerAddedAfterPromiseRejected";
-        }else if(event == v8::kPromiseRejectAfterResolved) {
-            eventName = "rejectAfterPromiseResolved";
-        }else if( event == v8::kPromiseResolveAfterResolved) {
-            eventName = "resolveAfterPromiseResolved";
-        }
-        
-        if(!value.IsEmpty()) {
+        v8::Local<v8::Value> value = msg.GetValue();
+        auto promiseName = msg.GetPromise()->GetConstructorName();
+
+        if (!value.IsEmpty()) {
             // prepend error object to stack message
-            v8::Local<v8::String> str = value->ToString(isolate->GetCurrentContext()).ToLocalChecked();
-            v8::String::Utf8Value valueUtf8(isolate, str);
-            ss << *valueUtf8 << std::endl;
+            // v8::MaybeLocal<v8::String> maybeStr = value->ToString(isolate->GetCurrentContext());
+            if (value->IsString()) {
+                v8::Local<v8::String> str = value->ToString(isolate->GetCurrentContext()).ToLocalChecked();
+
+                v8::String::Utf8Value valueUtf8(isolate, str);
+                auto *strp = *valueUtf8;
+                if (strp == nullptr) {
+                    ss << "value: null" << std::endl;
+                    auto tn = value->TypeOf(isolate);
+                    v8::String::Utf8Value tnUtf8(isolate, tn);
+                    strp = *tnUtf8;
+                    ss << " type: " << strp << std::endl;
+                }
+
+            } else if (value->IsObject()) {
+                v8::MaybeLocal<v8::String> json = v8::JSON::Stringify(isolate->GetCurrentContext(), value);
+                if (!json.IsEmpty()) {
+                    v8::String::Utf8Value jsonStr(isolate, json.ToLocalChecked());
+                    auto *strp = *jsonStr;
+                    if (strp) {
+                        ss << " obj: " << strp << std::endl;
+                    } else {
+                        ss << " obj: null" << std::endl;
+                    }
+                } else {
+                    v8::Local<v8::Object> obj = value->ToObject(isolate->GetCurrentContext()).ToLocalChecked();
+                    v8::Local<v8::Array> attrNames = obj->GetOwnPropertyNames(isolate->GetCurrentContext()).ToLocalChecked();
+
+                    if (!attrNames.IsEmpty()) {
+                        uint32_t size = attrNames->Length();
+                        for (uint32_t i = 0; i < size; i++) {
+                            se::Value e;
+
+                            
+                            v8::Local<v8::String> attrName = attrNames->Get(isolate->GetCurrentContext(), i)
+                                                                .ToLocalChecked()
+                                                                ->ToString(isolate->GetCurrentContext())
+                                                                .ToLocalChecked();
+                            v8::String::Utf8Value attrUtf8(isolate, attrName);
+                            auto *strp = *attrUtf8;
+                            ss << " obj.property " << strp << std::endl;
+                        }
+                        ss << " obj: JSON.parse failed!" << std::endl;
+                    }
+                }
+            }
+            v8::String::Utf8Value valuePromiseConstructor(isolate, promiseName);
+            auto *strp = *valuePromiseConstructor;
+            if (strp) {
+                ss << "PromiseConstructor " << strp;
+            }
         }
-        
         auto stackStr = getInstance()->getCurrentStackTrace();
         ss << "stacktrace: " << std::endl;
-        ss << stackStr << std::endl;
-        getInstance()->callExceptionCallback("", eventName, ss.str().c_str());
-        
+        if (stackStr.empty()) {
+            ss << getInstance()->_lastStackTrace << std::endl;
+        } else {
+            ss << stackStr << std::endl;
+        }
+        // Check event immediately, for certain case throw exception.
+        switch (event) {
+            case v8::kPromiseRejectWithNoHandler:
+                getInstance()->pushPromiseExeception(msg.GetPromise(), "unhandledRejectedPromise", ss.str().c_str());
+                break;
+            case v8::kPromiseHandlerAddedAfterReject:
+                getInstance()->pushPromiseExeception(msg.GetPromise(), "handlerAddedAfterPromiseRejected", ss.str().c_str());
+                break;
+            // ignore v8::kPromiseRejectAfterResolved and v8::kPromiseResolveAfterResolved, because use promise.all and promise.race can trigger this problem. the issue please visit https://forum.cocos.org/t/topic/158288
+            // case v8::kPromiseRejectAfterResolved:
+            //     getInstance()->callExceptionCallback("", "rejectAfterPromiseResolved", stackStr.c_str());
+            //     break;
+            // case v8::kPromiseResolveAfterResolved:
+            //     getInstance()->callExceptionCallback("", "resolveAfterPromiseResolved", stackStr.c_str());
+            //     break;
+        }
     }
 
     void ScriptEngine::privateDataFinalize(void* nativeObj)
@@ -595,6 +704,8 @@ namespace se {
                 hook();
             }
             _beforeCleanupHookArray.clear();
+            _promiseArray.clear();  
+            _lastStackTrace.clear();
 
             SAFE_DEC_REF(_globalObj);
             Object::cleanup();

@@ -289,6 +289,7 @@ void EventDispatcher::dispatchTickEvent(float dt)
     long long microSeconds = std::chrono::duration_cast<std::chrono::microseconds>(prevTime - se::ScriptEngine::getInstance()->getStartTime()).count();
     args.push_back(se::Value((double)(microSeconds * 0.001)));
     _tickVal.toObject()->call(args, nullptr);
+    se::ScriptEngine::getInstance()->handlePromiseExceptions();
 }
 
 void EventDispatcher::dispatchResizeEvent(int width, int height)
