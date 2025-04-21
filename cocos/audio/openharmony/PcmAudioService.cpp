@@ -47,7 +47,7 @@ PcmAudioService::~PcmAudioService() {
 }
 
 
-int32_t PcmAudioService::AudioRendererOnWriteData(OH_AudioRenderer* renderer,
+OH_AudioData_Callback_Result PcmAudioService::AudioRendererOnWriteData(OH_AudioRenderer* renderer,
     void* userData,
     void* buffer,
     int32_t bufferLen)
@@ -107,11 +107,16 @@ bool PcmAudioService::init(AudioMixerController *controller, int numChannels, in
     OH_AudioStreamBuilder_SetRendererInfo(_builder, AUDIOSTREAM_USAGE_GAME);
 
     OH_AudioRenderer_Callbacks callbacks;
-    callbacks.OH_AudioRenderer_OnWriteData = AudioRendererOnWriteData;
+    callbacks.OH_AudioRenderer_OnWriteData = nullptr;
     callbacks.OH_AudioRenderer_OnInterruptEvent = AudioRendererOnInterrupt;
     callbacks.OH_AudioRenderer_OnError = nullptr;
     callbacks.OH_AudioRenderer_OnStreamEvent = nullptr;
     ret = OH_AudioStreamBuilder_SetRendererCallback(_builder, callbacks, this);
+    if (ret != AUDIOSTREAM_SUCCESS) {
+        return false;
+    }
+    
+    ret =  OH_AudioStreamBuilder_SetRendererWriteDataCallback(_builder, AudioRendererOnWriteData, this);
     if (ret != AUDIOSTREAM_SUCCESS) {
         return false;
     }
