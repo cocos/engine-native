@@ -40,6 +40,11 @@ let cutout = {
     height: 0
 };
 
+let sceneInfo = {
+    width: 0,
+    height: 0
+};
+
 globalThis.getSystemLanguage = function () {
     return I18n.System.getSystemLanguage();
 }
@@ -128,35 +133,74 @@ globalThis.initScreenInfo = function () {
         cutout.top = data.boundingRects[0].top;
         cutout.width = data.boundingRects[0].width;
         cutout.height = data.boundingRects[0].height;
+
+        sceneInfo.width = display.getDefaultDisplaySync().width;
+        sceneInfo.height = display.getDefaultDisplaySync().height;
     }).catch((err) => {
         console.log("get cutout info error!");
     });
 };
 globalThis.initScreenInfo();
 
-globalThis.getCutoutWidth = function () {
-    if(!cutout.width) {
-        return 0;
-    }
-
-    let disPlayWidth = display.getDefaultDisplaySync().width;
-    if(cutout.left + cutout.width > disPlayWidth - cutout.left) {
-        return disPlayWidth - cutout.left;
-    }
-    return cutout.left + cutout.width;
-}
-
-globalThis.getCutoutHeight = function () {
+globalThis.getCutoutToTop = function () {
     if(!cutout.height) {
         return 0;
     }
 
-    let orientation = globalThis.getDeviceOrientation();
-    if (orientation == display.Orientation.PORTRAIT) {
-        return cutout.top + cutout.height;
-    } else if(orientation == display.Orientation.PORTRAIT_INVERTED) {
-        let displayHeight = display.getDefaultDisplaySync().height;
-        return displayHeight - cutout.top;
+    return cutout.top + cutout.height;
+}
+
+globalThis.getCutoutToRight = function () {
+    if(!sceneInfo.width) {
+        return 0;
     }
-    return 0;
+
+    return sceneInfo.width - cutout.left;
+}
+
+globalThis.getCutoutToBottom = function () {
+    if(!sceneInfo.height) {
+        return 0;
+    }
+
+    return sceneInfo.height - cutout.top;
+}
+
+globalThis.getCutoutToLeft = function () {
+    if(!cutout.width) {
+        return 0;
+    }
+
+    return cutout.left + cutout.width;
+}
+
+globalThis.getAvoidSide = function() {
+    if (!sceneInfo.width || !sceneInfo.height) {
+        console.log("get scene info error!");
+        return 0;
+    }
+
+    // Calculate which side to yield by the yield area，return 0 means the yield area is top;return 1 means right; return 2 means bottom; return 3 means left
+    let upAvoidArea = sceneInfo.width * (cutout.top + cutout.height);
+    let minIndex = 0;
+    let minAvoidArea = upAvoidArea;
+
+    let rightAvoidArea = sceneInfo.height * (sceneInfo.width - cutout.left);
+    if (rightAvoidArea < minAvoidArea) {
+        minAvoidArea = rightAvoidArea;
+        minIndex = 1;
+    }
+
+    let bottomAvoidArea = sceneInfo.width * (sceneInfo.height - cutout.top);
+    if (bottomAvoidArea < minAvoidArea) {
+        minAvoidArea = bottomAvoidArea;
+        minIndex = 2;
+    }
+
+    let leftAvoidArea = sceneInfo.height * (cutout.left + cutout.width);
+    if (leftAvoidArea < minAvoidArea) {
+        minIndex = 3
+    }
+
+    return minIndex;
 }
