@@ -321,6 +321,8 @@ void OpenHarmonyPlatform::onSurfaceChanged(OH_NativeXComponent* component, void*
 }
 
 void OpenHarmonyPlatform::onSurfaceDestroyed(OH_NativeXComponent* component, void* window) {
+    delete eglCore_;
+    eglCore_ = nullptr;
 }
 
 void OpenHarmonyPlatform::onSurfaceHide() {
