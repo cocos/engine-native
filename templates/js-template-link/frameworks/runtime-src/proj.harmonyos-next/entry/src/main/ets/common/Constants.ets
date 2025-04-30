@@ -40,3 +40,33 @@ export enum ContextType {
 export class Constants {
     static readonly APP_KEY_WORKER_MANAGER = "app_key_worker_manager";
 }
+
+export interface WorkerMessage {
+    type: string;
+    data: MsgData;
+}
+
+export interface MsgData {
+    id?: number,
+    name?: string,
+    param: boolean | number | string | MsgParam | null,
+}
+
+export interface MsgParam {
+    tag?: number,
+    url?: string,
+    contents?: string,
+    mimeType?: string,
+    encoding?: string,
+    baseUrl?: string,
+    jsContents?: string,
+    x?: number,
+    y?: number,
+    w?: number,
+    h?: number,
+    visible?: boolean,
+    resourceType?: number,
+    time?: number,
+    fullScreen?: boolean,
+    viewTag?: number
+}

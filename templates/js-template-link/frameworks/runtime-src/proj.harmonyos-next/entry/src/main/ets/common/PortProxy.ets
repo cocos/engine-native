@@ -24,53 +24,62 @@
  ****************************************************************************/
 import { ThreadWorkerGlobalScope } from '@ohos.worker';
 import { MessageEvent } from '@ohos.worker';
+import { WorkerMessage } from '../common/Constants';
+import { worker } from '@kit.ArkTS';
 
 export class PortProxy {
   private autoId: number = 0;
-  public actionHandleMap = {}
-  private port: ThreadWorkerGlobalScope = null;
+  public actionHandleMap = new Map<number, Function>();
+  private port: ThreadWorkerGlobalScope | worker.ThreadWorker | null = null;
+  public _messageHandle?: (e: MessageEvent<WorkerMessage>) => void;
 
-  public _messageHandle?: (e: MessageEvent<any>) => void;
-
-  constructor(worker) {
+  constructor(worker: ThreadWorkerGlobalScope | worker.ThreadWorker) {
     this.port = worker;
     this.port.onmessage = this.onMessage.bind(this);
   }
 
-  public onMessage(e) {
-    let data = e['data'];
+  public onMessage(e: MessageEvent<WorkerMessage>) {
+    const data = e['data'];
     if (data.type != "syncResult" && this._messageHandle) {
       this._messageHandle(e);
     } else if (data.type == "syncResult") {
-      const { id, response } = data.data;
-      if (!this.actionHandleMap[id]) {
+      const id = data.data.id || 0;
+      const response = data.data.param;
+      if (!this.actionHandleMap.has(id)) {
         return;
       }
-      this.actionHandleMap[id].call(this, response);
-      delete this.actionHandleMap[id];
+      const cb = this.actionHandleMap.get(id);
+      if (cb) {
+        cb(response);
+        this.actionHandleMap.delete(id);
+      }
+
     }
   }
 
-  public postReturnMessage(e: any, res: any) {
+  public postReturnMessage(e: WorkerMessage, res: boolean | string | number | null) {
     if (e.type == "sync" && res != null && res != undefined) {
-      this.port.postMessage({ type: "syncResult", data: { id: e.data.cbId, response: res } });
+      const message: WorkerMessage = { type: "syncResult", data: { id: e.data.id, param: res } }
+      this.port?.postMessage(message);
     }
   }
 
-  public postMessage(msgName: string, msgData: any) {
-    this.port.postMessage({ type: "async", data: { name: msgName, param: msgData } });
+  public postMessage(msgName: string, msgData: string | number | boolean | object) {
+    const message: WorkerMessage = { type: "async", data: { name: msgName, param: msgData } }
+    this.port?.postMessage(message);
   }
 
-  public postSyncMessage(msgName: string, msgData: any) {
-    const id = this.autoId++;
-    return new Promise((resolve, reject) => {
-      const message = {
-        type: "sync", data: { cbId: id, name: msgName, param: msgData }
+  public postSyncMessage(msgName: string, msgData: string) {
+    const id = ++this.autoId;
+    return new Promise<string>((resolve: (value: string) => void) => {
+      const message: WorkerMessage = {
+        type: "sync",
+        data: { id: id, name: msgName, param: msgData }
       }
-      this.port.postMessage(message);
-      this.actionHandleMap[id] = (response) => {
-        resolve(response)
-      }
-    })
+      this.port?.postMessage(message);
+      this.actionHandleMap.set(id, (response: string) => {
+        resolve(response);
+      });
+    });
   }
 }

@@ -84,7 +84,6 @@ function boot() {
 };
 
 async function loadSysTemReady() {
-  await import('./sys-ability-polyfill');
   await import('./index');
 }
 

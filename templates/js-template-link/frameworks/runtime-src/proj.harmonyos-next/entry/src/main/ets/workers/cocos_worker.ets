@@ -30,13 +30,11 @@ import { ContextType } from '../common/Constants';
 import { launchEngine } from '../cocos/game';
 <% } %>
 import { PortProxy } from '../common/PortProxy';
-
+import '../cocos/sys-ability-polyfill';
+import { MessageEvent } from '@kit.ArkTS';
+import { WorkerMessage, MsgParam } from '../common/Constants';
 <% if(useV8) { %>
-  globalThis.importPolyfill = async function () {
-    await import('../cocos/sys-ability-polyfill.js');
-  }
-  globalThis.importPolyfill();
-  globalThis.oh = {};
+globalThis.oh = {};
 <% } %>
 
 const nativeContext = cocos.getContext(ContextType.WORKER_INIT);
@@ -49,26 +47,26 @@ const nativeVideo = cocos.getContext(ContextType.VIDEO_UTILS);
 
 let uiPort = new PortProxy(worker.workerPort);
 
-nativeContext.postMessage = function (msgType: string, msgData: string): void {
+nativeContext.postMessage = (msgType: string, msgData: string) => {
   uiPort.postMessage(msgType, msgData);
 }
 
-nativeContext.postSyncMessage = async function (msgType: string, msgData: string): Promise<boolean | string | number> {
+nativeContext.postSyncMessage = async (msgType: string, msgData: string): Promise<boolean | string | number> => {
   const result = await uiPort.postSyncMessage(msgType, msgData) as boolean | string | number;
   return result;
 }
 
 // The purpose of this is to avoid being GC
-nativeContext.setPostMessageFunction.call(nativeContext, nativeContext.postMessage)
-nativeContext.setPostSyncMessageFunction.call(nativeContext, nativeContext.postSyncMessage)
+nativeContext.setPostMessageFunction(nativeContext.postMessage);
+nativeContext.setPostSyncMessageFunction(nativeContext.postSyncMessage);
 
-globalThis.terminateProcess = function () {
-  uiPort.postMessage("exitGame",0);
+globalThis.terminateProcess = () => {
+  uiPort.postMessage("exitGame", 0);
 }
 
-uiPort._messageHandle = function (e) {
-  var data = e.data;
-  var msg = data.data;
+uiPort._messageHandle = (e: MessageEvent<WorkerMessage>) => {
+  let data = e.data;
+  let msg = data.data;
 
   switch (msg.name) {
     case "onXCLoad":
@@ -77,30 +75,31 @@ uiPort._messageHandle = function (e) {
       <% if(!useV8) { %>
         launchEngine().then(() => {
           console.info('launch CC engine finished');
-        }).catch(e => {
+        }).catch(() => {
           console.error('launch CC engine failed');
         });
       <% } %>
-      // @ts-ignore
       globalThis.oh.postMessage = nativeContext.postMessage;
-      // @ts-ignore
       globalThis.oh.postSyncMessage = nativeContext.postSyncMessage;
       renderContext.nativeEngineStart();
       break;
     case "onTextInput":
-      nativeEditBox.onTextChange(msg.param);
+      nativeEditBox.onTextChange(msg.param as string);
       break;
     case "onComplete":
-      nativeEditBox.onComplete(msg.param);
+      nativeEditBox.onComplete(msg.param as string);
       break;
     case "onPageBegin":
-      nativeWebView.shouldStartLoading(msg.param.viewTag, msg.param.url);
+      let onPageBeginParm = msg.param as MsgParam;
+      nativeWebView.shouldStartLoading(onPageBeginParm.viewTag as number, onPageBeginParm.url as string);
       break;
     case "onPageEnd":
-      nativeWebView.finishLoading(msg.param.viewTag, msg.param.url);
+      let onPageEndParm = msg.param as MsgParam;
+      nativeWebView.finishLoading(onPageEndParm.viewTag as number, onPageEndParm.url as string);
       break;
     case "onErrorReceive":
-      nativeWebView.failLoading(msg.param.viewTag, msg.param.url);
+      let onErrorReceiveParm = msg.param as MsgParam;
+      nativeWebView.failLoading(onErrorReceiveParm.viewTag as number, onErrorReceiveParm.url as string);
       break;
     case "onVideoEvent":
       nativeVideo.onVideoEvent(JSON.stringify(msg.param));
