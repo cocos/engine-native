@@ -6,6 +6,9 @@ require('./jsb-adapter/jsb-engine.js');
 
 <%commonJSModuleMap%>
 
+globalThis.oh.postMessage = null;
+globalThis.oh.postSyncMessage = null;
+
 globalThis.oh.loadModule = (name) => {
     commonJSModuleMap[name]?.();
 };

@@ -22,10 +22,10 @@
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  THE SOFTWARE.
  ****************************************************************************/
-import nativerender,{context} from 'libcocos.so';
+import nativerender, { context } from 'libcocos.so';
 
 import { WorkerManager } from '../cocos/WorkerManager';
-import { ContextType } from '../common/Constants';
+import { ContextType, WorkerMessage, MsgParam } from '../common/Constants';
 import { EditBoxDialog } from '../components/EditBoxDialog';
 import { CocosWebView, WebViewInfo } from '../components/CocosWebView';
 import { CocosVideoPlayer, VideoInfo } from '../components/CocosVideoPlayer';
@@ -34,46 +34,19 @@ import { PortProxy } from '../common/PortProxy';
 import { common } from '@kit.AbilityKit';
 import { BusinessError } from '@kit.BasicServicesKit';
 
-const nativePageLifecycle :context = nativerender.getContext(ContextType.JSPAGE_LIFECYCLE);
-const engineUtils :context = nativerender.getContext(ContextType.ENGINE_UTILS);
+const nativePageLifecycle: context = nativerender.getContext(ContextType.JSPAGE_LIFECYCLE);
+const engineUtils: context = nativerender.getContext(ContextType.ENGINE_UTILS);
 
 function executeMethodAsync(nativeFunc: Function, funcData: string, funCb: Function): void {
   nativeFunc && nativeFunc(funcData, funCb);
 }
-function executeMethodSync(nativeFunc: Function, funcData: string): string|boolean|number {
+
+function executeMethodSync(nativeFunc: Function, funcData: string): string | boolean | number {
   return nativeFunc && nativeFunc(funcData);
 }
+
 engineUtils.registerFunction("executeMethodAsync", executeMethodAsync);
 engineUtils.registerFunction("executeMethodSync", executeMethodSync);
-
-interface WorkerMessage {
-  type: string;
-  data: data;
-}
-
-interface data {
-  id: string,
-  name: string,
-  param: number | string | param
-}
-
-interface param {
-  tag?: number,
-  url?: string,
-  contents?: string,
-  mimeType?: string,
-  encoding?: string,
-  baseUrl?: string,
-  jsContents?: string,
-  x?: number,
-  y?: number,
-  w?: number,
-  h?: number,
-  visible?: boolean,
-  resourceType?: number,
-  time?: number,
-  fullScreen?: boolean
-}
 
 @Entry
 @Component
@@ -111,7 +84,7 @@ struct Index {
       let msg = data.data;
       let result: boolean | string | number | null = null;
       switch (msg.name) {
-      // EditBox
+        // EditBox
         case "showEditBox": {
           this.showMessage = msg.param as string;
           this.dialogController.open();
@@ -122,7 +95,7 @@ struct Index {
           this.dialogController.close();
           break;
         }
-      // WebView
+        // WebView
         case "createWebView": {
           this.webViewArray.push(new WebViewInfo(0, 0, 0, 0, msg.param as number));
           this.webViewIndexMap.set(msg.param as number, this.webViewArray.length - 1);
@@ -135,14 +108,14 @@ struct Index {
           break;
         }
         case "loadUrl": {
-          let web = msg.param as param;
+          let web = msg.param as MsgParam;
           let index = this.webViewIndexMap.get(web?.tag as number) as number;
           this.webViewArray[index].url = web?.url as string;
           this.webViewArray[index].controller.loadUrl(web?.url as string);
           break;
         }
         case "loadHTMLString": {
-          let web = msg.param as param;
+          let web = msg.param as MsgParam;
           let index = this.webViewIndexMap.get(web?.tag as number) as number;
           this.webViewArray[index].controller.loadData(
             web?.contents as string,
@@ -153,7 +126,7 @@ struct Index {
           break;
         }
         case "loadData": {
-          let web = msg.param as param;
+          let web = msg.param as MsgParam;
           let index = this.webViewIndexMap.get(web?.tag as number) as number;
           this.webViewArray[index].controller.loadData(
             web?.contents as string,
@@ -164,7 +137,7 @@ struct Index {
           break;
         }
         case "evaluateJS": {
-          let web = msg.param as param;
+          let web = msg.param as MsgParam;
           let index = this.webViewIndexMap.get(web?.tag as number) as number;
           this.webViewArray[index].controller.runJavaScript(web?.jsContents as string);
           break;
@@ -200,7 +173,7 @@ struct Index {
           break;
         }
         case "setWebViewRect": {
-          let web = msg.param as param
+          let web = msg.param as MsgParam
           let index = this.webViewIndexMap.get(web?.tag as number) as number;
           this.webViewArray[index].x = px2vp(web?.x as number) as number;
           this.webViewArray[index].y = px2vp(web?.y as number) as number;
@@ -209,7 +182,7 @@ struct Index {
           break;
         }
         case "setVisible": {
-          let web = msg.param as param;
+          let web = msg.param as MsgParam;
           let index = this.webViewIndexMap.get(web?.tag as number) as number;
           this.webViewArray[index].visible = web?.visible as boolean;
           break;
@@ -227,7 +200,7 @@ struct Index {
           break;
         }
         case "setVideoUrl":
-          let video = msg.param as param;
+          let video = msg.param as MsgParam;
           let index = this.videoIndexMap.get(video?.tag as number) as number;
           let resourceType = video.resourceType;
           if (resourceType == 1) {
@@ -237,7 +210,7 @@ struct Index {
           }
           break;
         case "setVideoRect": {
-          let video = msg.param as param;
+          let video = msg.param as MsgParam;
           let index = this.videoIndexMap.get(video?.tag as number) as number;
           this.videoArray[index].x = px2vp(video?.x as number) as number;
           this.videoArray[index].y = px2vp(video?.y as number) as number;
@@ -275,19 +248,19 @@ struct Index {
           break;
         }
         case "seekVideoTo": {
-          let video = msg.param as param;
+          let video = msg.param as MsgParam;
           let index = this.videoIndexMap.get(video?.tag as number) as number;
           this.videoArray[index].controller.setCurrentTime(video?.time as number, SeekMode.Accurate);
           break;
         }
         case "setVideoVisible": {
-          let video = msg.param as param;
+          let video = msg.param as MsgParam;
           let index = this.videoIndexMap.get(video?.tag as number) as number;
           this.videoArray[index].visible = video.visible as boolean;
           break;
         }
         case "setFullScreenEnabled": {
-          let video = msg.param as param;
+          let video = msg.param as MsgParam;
           let index = this.videoIndexMap.get(video?.tag as number) as number;
           this.videoArray[index].isFullScreen = video.fullScreen as boolean;
           break;
