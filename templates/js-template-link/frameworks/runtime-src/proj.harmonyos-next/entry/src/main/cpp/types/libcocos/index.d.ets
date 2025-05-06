@@ -25,8 +25,9 @@ interface context {
   resourceManagerInit: (res: resourceManager.ResourceManager) => void;
   writablePathInit: (cacheDir: string) => void;
   onVideoEvent: (param: string) => void;
-  registerFunction: (name:string ,fun:Function) => void;
+  registerFunction: (name: string, fun: Function) => void;
 }
 
-export const getContext: (type: ContextType) => context ;
+export const getContext: (type: ContextType) => context;
+
 export const evalString: (value: string) => boolean | number | string;
