@@ -189,7 +189,7 @@ globalThis.getCutoutToLeft = () => {
 globalThis.getAvoidSide = () => {
     if (!sceneInfo.width || !sceneInfo.height) {
         console.log("get scene info error!");
-        return 0;
+        return -1;
     }
 
     // Calculate which side to yield by the yield area，return 0 means the yield area is top;return 1 means right; return 2 means bottom; return 3 means left
