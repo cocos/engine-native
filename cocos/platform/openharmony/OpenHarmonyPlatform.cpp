@@ -75,6 +75,136 @@ void onSurfaceShowCB(OH_NativeXComponent* component, void* window) {
     sendMsgToWorker(cocos2d::MessageType::WM_XCOMPONENT_SURFACE_SHOW, component, window);
 }
 
+int ohKeyCodeToCocosKeyCode(OH_NativeXComponent_KeyCode ohKeyCode){
+    static const int keyZeroInCocos = 48;
+    static const int keyF1InCocos = 112;
+    static const int keyAInCocos = 65;
+    static std::unordered_map<OH_NativeXComponent_KeyCode, cocos2d::KeyCode> keyCodeMap = {
+        {KEY_ESCAPE, cocos2d::KeyCode::ESCAPE},
+        {KEY_GRAVE, cocos2d::KeyCode::BACKQUOTE},
+        {KEY_MINUS, cocos2d::KeyCode::MINUS},
+        {KEY_EQUALS, cocos2d::KeyCode::EQUAL},
+        {KEY_DEL, cocos2d::KeyCode::BACKSPACE},
+        {KEY_TAB, cocos2d::KeyCode::TAB},
+        {KEY_LEFT_BRACKET, cocos2d::KeyCode::BRACKET_LEFT},
+        {KEY_RIGHT_BRACKET, cocos2d::KeyCode::BRACKET_RIGHT},
+        {KEY_BACKSLASH, cocos2d::KeyCode::BACKSLASH},
+        {KEY_CAPS_LOCK, cocos2d::KeyCode::CAPS_LOCK},
+        {KEY_SEMICOLON, cocos2d::KeyCode::SEMICOLON},
+        {KEY_APOSTROPHE, cocos2d::KeyCode::QUOTE},
+        {KEY_ENTER, cocos2d::KeyCode::ENTER},
+        {KEY_SHIFT_LEFT, cocos2d::KeyCode::SHIFT_LEFT},
+        {KEY_COMMA, cocos2d::KeyCode::COMMA},
+        {KEY_PERIOD, cocos2d::KeyCode::PERIOD},
+        {KEY_SLASH, cocos2d::KeyCode::SLASH},
+        {KEY_SHIFT_RIGHT, cocos2d::KeyCode::SHIFT_RIGHT},
+        {KEY_CTRL_LEFT, cocos2d::KeyCode::CONTROL_LEFT},
+        {KEY_ALT_LEFT, cocos2d::KeyCode::ALT_LEFT},
+        {KEY_SPACE, cocos2d::KeyCode::SPACE},
+        {KEY_ALT_RIGHT, cocos2d::KeyCode::ALT_RIGHT},
+        {KEY_CTRL_RIGHT, cocos2d::KeyCode::CONTROL_RIGHT},
+        {KEY_DPAD_LEFT, cocos2d::KeyCode::ARROW_LEFT},
+        {KEY_DPAD_RIGHT, cocos2d::KeyCode::ARROW_RIGHT},
+        {KEY_DPAD_DOWN, cocos2d::KeyCode::ARROW_DOWN},
+        {KEY_DPAD_UP, cocos2d::KeyCode::ARROW_UP},
+        {KEY_INSERT, cocos2d::KeyCode::INSERT},
+    };
+    if(keyCodeMap.find(ohKeyCode) != keyCodeMap.end()){
+        return int(keyCodeMap[ohKeyCode]);
+    }
+    if(ohKeyCode >= KEY_0 && ohKeyCode <= KEY_9){
+        return keyZeroInCocos + ohKeyCode - KEY_0;
+    }
+    if(ohKeyCode >= KEY_A && ohKeyCode <= KEY_Z){
+        return keyAInCocos + ohKeyCode - KEY_A;
+    }  
+    if(ohKeyCode >= KEY_F1 && ohKeyCode <= KEY_F12){
+        return keyF1InCocos + ohKeyCode - KEY_F1;
+    }  
+    return ohKeyCode;
+}
+
+void dispatchKeyEventCB(OH_NativeXComponent* component, void* window) {
+    OH_NativeXComponent_KeyEvent* keyEvent;
+    if (OH_NativeXComponent_GetKeyEvent(component, &keyEvent) >= 0) {
+        static const int keyCodeUnknownInOH = -1;
+        static const int keyActionUnknownInOH = -1;
+        OH_NativeXComponent_KeyAction action;
+        OH_NativeXComponent_GetKeyEventAction(keyEvent, &action);
+        OH_NativeXComponent_KeyCode code;
+        OH_NativeXComponent_GetKeyEventCode(keyEvent, &code);
+        if (code == keyCodeUnknownInOH || action == keyActionUnknownInOH) {
+            LOGD("unknown code and action don't callback");
+            return;
+        }
+        cocos2d::KeyboardEvent* ev = new cocos2d::KeyboardEvent;
+        ev->action = 0 == action ? cocos2d::KeyboardEvent::Action::PRESS : cocos2d::KeyboardEvent::Action::RELEASE;
+        ev->key = ohKeyCodeToCocosKeyCode(code);
+        sendMsgToWorker(cocos2d::MessageType::WM_XCOMPONENT_KEY_EVENT, reinterpret_cast<void*>(ev), window);
+    } else {
+        LOGD("OpenHarmonyPlatform::getKeyEventError");
+    }
+}
+
+void dispatchMouseEventCB(OH_NativeXComponent* component, void* window) {
+    OH_NativeXComponent_MouseEvent mouseEvent;
+    int32_t ret = OH_NativeXComponent_GetMouseEvent(component, window, &mouseEvent);
+    if (ret == OH_NATIVEXCOMPONENT_RESULT_SUCCESS) {
+        if (mouseEvent.action == OH_NativeXComponent_MouseEventAction::OH_NATIVEXCOMPONENT_MOUSE_NONE)
+            return;
+        cocos2d::MouseEvent* ev = new cocos2d::MouseEvent;
+        ev->x = mouseEvent.x;
+        ev->y = mouseEvent.y;
+        switch (mouseEvent.action) {
+            case OH_NativeXComponent_MouseEventAction::OH_NATIVEXCOMPONENT_MOUSE_PRESS:
+                ev->type = cocos2d::MouseEvent::Type::DOWN;
+                break;
+            case OH_NativeXComponent_MouseEventAction::OH_NATIVEXCOMPONENT_MOUSE_RELEASE:
+                ev->type = cocos2d::MouseEvent::Type::UP;
+                break;
+            case OH_NativeXComponent_MouseEventAction::OH_NATIVEXCOMPONENT_MOUSE_MOVE:
+                ev->type = cocos2d::MouseEvent::Type::MOVE;
+                break;          
+            default:
+                ev->type = cocos2d::MouseEvent::Type::UNKNOWN;
+                break;
+        }
+        switch (mouseEvent.button) {
+            case OH_NativeXComponent_MouseEventButton::OH_NATIVEXCOMPONENT_LEFT_BUTTON:
+                ev->button = 0;
+                break;
+            case OH_NativeXComponent_MouseEventButton::OH_NATIVEXCOMPONENT_RIGHT_BUTTON:
+                ev->button = 2;
+                break;
+            case OH_NativeXComponent_MouseEventButton::OH_NATIVEXCOMPONENT_MIDDLE_BUTTON:
+                ev->button = 1;
+                break;
+            case OH_NativeXComponent_MouseEventButton::OH_NATIVEXCOMPONENT_BACK_BUTTON:
+                ev->button = 3;
+                break;
+            case OH_NativeXComponent_MouseEventButton::OH_NATIVEXCOMPONENT_FORWARD_BUTTON:
+                ev->button = 4;
+                break;
+            case OH_NativeXComponent_MouseEventButton::OH_NATIVEXCOMPONENT_NONE_BUTTON:
+                ev->button = -1;
+                break;
+        }
+        if(mouseEvent.action == 1 && mouseEvent.button == 1) {
+            cocos2d::OpenHarmonyPlatform::getInstance()->isMouseLeftActive = true;
+        }
+        if(mouseEvent.action == 2 && mouseEvent.button == 1) {
+            cocos2d::OpenHarmonyPlatform::getInstance()->isMouseLeftActive = false;
+        }
+        sendMsgToWorker(cocos2d::MessageType::WM_XCOMPONENT_MOUSE_EVENT, reinterpret_cast<void*>(ev), window);
+    } else {
+        LOGD("OpenHarmonyPlatform::getMouseEventError");
+    }
+}
+
+void dispatchHoverEventCB(OH_NativeXComponent* component, bool isHover) {
+    // OpenharmonyPlatform::DispatchHoverEventCB
+}
+
 
 cocos2d::TouchEvent::Type touchTypeTransform(OH_NativeXComponent_TouchEventType touchType) {
     if (touchType == OH_NATIVEXCOMPONENT_DOWN) {
@@ -163,6 +293,12 @@ void OpenHarmonyPlatform::setNativeXComponent(OH_NativeXComponent* component) {
     OH_NativeXComponent_RegisterCallback(_component, &_callback);
     OH_NativeXComponent_RegisterSurfaceHideCallback(_component, onSurfaceHideCB);
     OH_NativeXComponent_RegisterSurfaceShowCallback(_component, onSurfaceShowCB);
+    // register KeyEvent                                     
+    OH_NativeXComponent_RegisterKeyEventCallback(_component, dispatchKeyEventCB);
+    // register mouseEvent
+    _mouseCallback.DispatchMouseEvent = dispatchMouseEventCB;
+    _mouseCallback.DispatchHoverEvent = dispatchHoverEventCB;
+    OH_NativeXComponent_RegisterMouseEventCallback(_component, &_mouseCallback);
 }
 
 void OpenHarmonyPlatform::enqueue(const WorkerMessageData& msg) {
@@ -204,6 +340,16 @@ void OpenHarmonyPlatform::onMessageCallback(const uv_async_t* /* req */) {
                 OH_NativeXComponent* nativexcomponet = reinterpret_cast<OH_NativeXComponent*>(msgData.data);
                 CC_ASSERT(nativexcomponet != nullptr);
                 platform->onSurfaceCreated(nativexcomponet, msgData.window);
+            } else if (msgData.type == MessageType::WM_XCOMPONENT_KEY_EVENT) {
+                KeyboardEvent* ev = reinterpret_cast<KeyboardEvent*>(msgData.data);
+                EventDispatcher::dispatchKeyboardEvent(*ev);
+                delete ev;
+                ev = nullptr;
+            } else if (msgData.type == MessageType::WM_XCOMPONENT_MOUSE_EVENT || msgData.type == MessageType::WM_XCOMPONENT_MOUSE_WHEEL_EVENT ) {
+                MouseEvent* ev = reinterpret_cast<MouseEvent*>(msgData.data);
+                EventDispatcher::dispatchMouseEvent(*ev);
+                delete ev;
+                ev = nullptr;
             } else if (msgData.type == MessageType::WM_XCOMPONENT_SURFACE_CHANGED) {
                 OH_NativeXComponent* nativexcomponet = reinterpret_cast<OH_NativeXComponent*>(msgData.data);
                 CC_ASSERT(nativexcomponet != nullptr);        
@@ -333,6 +479,22 @@ void OpenHarmonyPlatform::onSurfaceShow(void* window) {
     eglCore_->createSurface(window);
 }
 
+void OpenHarmonyPlatform::dispatchMouseWheelCB(std::string eventType, float offsetY) {
+    if(isMouseLeftActive) {
+        return;
+    }
+    if(eventType == "actionUpdate") {
+        float moveScrollY = offsetY - scrollDistance;
+        scrollDistance = offsetY;
+        cocos2d::MouseEvent* ev = new cocos2d::MouseEvent;
+        ev->type = MouseEvent::Type::WHEEL;
+        ev->x = 0;
+        ev->y = moveScrollY;
+        sendMsgToWorker(MessageType::WM_XCOMPONENT_MOUSE_WHEEL_EVENT, reinterpret_cast<void*>(ev), nullptr);
+    } else {
+        scrollDistance = 0;
+    }
+}
 
 void OpenHarmonyPlatform::setPreferedFramePersecond(int fps) {
     if (fps == 0) {

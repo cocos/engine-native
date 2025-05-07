@@ -25,6 +25,7 @@ interface context {
   resourceManagerInit: (res: resourceManager.ResourceManager) => void;
   writablePathInit: (cacheDir: string) => void;
   onVideoEvent: (param: string) => void;
+  onMouseWheel: (type: string, offsetY: number) => void;
   registerFunction: (name: string, fun: Function) => void;
 }
 

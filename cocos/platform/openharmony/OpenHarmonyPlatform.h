@@ -77,7 +77,8 @@ public:
     void onSurfaceHide();
     void onSurfaceShow(void* window);
     void dispatchTouchEvent(OH_NativeXComponent* component, void* window);
-    
+    void dispatchMouseWheelCB(std::string eventType, float offsetY);
+
     static void onMessageCallback(const uv_async_t* req);
     static void timerCb(uv_timer_t* handle);
     void tick();
@@ -87,6 +88,7 @@ public:
     std::chrono::steady_clock::time_point _lastTickInNanoSeconds;
     OH_NativeXComponent* _component{nullptr};
     OH_NativeXComponent_Callback _callback;
+    OH_NativeXComponent_MouseEvent_Callback _mouseCallback{nullptr};
     uv_timer_t _timerHandle;
     uv_loop_t* _workerLoop{nullptr};
     uv_async_t _messageSignal{};
@@ -96,8 +98,10 @@ public:
 
     uint64_t width_;
     uint64_t height_;
-    Application* g_app = nullptr;
+    Application* g_app{nullptr};
     //game started
-    bool g_started = false;
+    bool g_started{false};
+    bool isMouseLeftActive{false};
+    float scrollDistance{0};
 };
 } // namespace cc
