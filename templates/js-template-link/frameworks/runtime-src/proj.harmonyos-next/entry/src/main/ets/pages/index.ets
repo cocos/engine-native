@@ -31,7 +31,7 @@ import { CocosWebView, WebViewInfo } from '../components/CocosWebView';
 import { CocosVideoPlayer, VideoInfo } from '../components/CocosVideoPlayer';
 import { MessageEvent } from '@ohos.worker';
 import { PortProxy } from '../common/PortProxy';
-import { common } from '@kit.AbilityKit';
+import { common, Want } from '@kit.AbilityKit';
 import { BusinessError } from '@kit.BasicServicesKit';
 
 const nativePageLifecycle: context = nativerender.getContext(ContextType.JSPAGE_LIFECYCLE);
@@ -276,6 +276,10 @@ struct Index {
           this.terminateSelf();
           break;
         }
+        case "openUrl": {
+          this.openUrl(msg.param as string);
+          break;
+        }
         default: {
 
         }
@@ -307,6 +311,23 @@ struct Index {
     this.workPort.postMessage("backPress", "");
     // If disable system exit needed, remove comment "return true"
     // return true;
+  }
+
+  openUrl(url: string) {
+    let context = getContext() as common.UIAbilityContext;
+    let wantInfo: Want = {
+      'action': 'ohos.want.action.viewData',
+      'entities': ['entity.system.browsable'],
+      'uri': url,
+      'parameters': {
+        'ohos.ability.params.showDefaultPicker':true
+      }
+    }
+    context.startAbility(wantInfo).then(()=>{
+      console.log('openUrl success');
+    }).catch((err: BusinessError)=>{
+      console.log('openUrl err:', err.code, err.message);
+    })
   }
 
   terminateSelf() {

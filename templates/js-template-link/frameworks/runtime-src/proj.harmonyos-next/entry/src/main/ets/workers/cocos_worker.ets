@@ -64,6 +64,11 @@ globalThis.terminateProcess = () => {
   uiPort.postMessage("exitGame", 0);
 }
 
+globalThis.openUrl = (url: string) => {
+  uiPort.postMessage("openUrl", url);
+}
+
+
 uiPort._messageHandle = (e: MessageEvent<WorkerMessage>) => {
   let data = e.data;
   let msg = data.data;
