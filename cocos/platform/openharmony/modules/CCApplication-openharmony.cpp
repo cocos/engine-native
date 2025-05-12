@@ -260,7 +260,7 @@ void Application::onCreateView(PixelFormat& /*pixelformat*/, DepthFormat& /*dept
 bool Application::openURL(const std::string &url)
 {
     try {
-        NapiHelper::napiCallFunction("openUrl",url);
+        NapiHelper::napiCallFunction("openUrl", url);
     } catch(std::exception& e) {
         return false;
     }

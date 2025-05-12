@@ -320,7 +320,7 @@ struct Index {
       'entities': ['entity.system.browsable'],
       'uri': url,
       'parameters': {
-        'ohos.ability.params.showDefaultPicker':true
+        'ohos.ability.params.showDefaultPicker': true
       }
     }
     context.startAbility(wantInfo).then(()=>{
