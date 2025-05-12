@@ -120,7 +120,7 @@ Napi::Value NapiHelper::napiCallFunction(const char *functionName, float duratio
 }
 
 /* static */
-Napi::Value NapiHelper::napiCallFunction(const char *functionName, const std::string str) {
+Napi::Value NapiHelper::napiCallFunction(const char *functionName, const std::string& str) {
     auto env = getWorkerEnv();
     auto funcVal = env.Global().Get(functionName);
     if (!funcVal.IsFunction()) {

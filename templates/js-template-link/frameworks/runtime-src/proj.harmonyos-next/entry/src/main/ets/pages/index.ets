@@ -326,7 +326,7 @@ struct Index {
     context.startAbility(wantInfo).then(()=>{
       console.log('openUrl success');
     }).catch((err: BusinessError)=>{
-      console.log('openUrl err:', err.code, err.message);
+      console.warn('openUrl err:', err.code, err.message);
     })
   }
 
