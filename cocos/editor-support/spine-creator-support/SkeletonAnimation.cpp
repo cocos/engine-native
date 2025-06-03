@@ -78,11 +78,19 @@ void SkeletonAnimation::setGlobalTimeScale(float timeScale) {
 }
 
 void SkeletonAnimation::cacheAnimationEvent(TrackEntry *entry, EventType type, Event *event) {
-    _vecAnimationEvents.push_back({type, entry, event});
+    CacheEventInfo info;
+    info.type = type;
+    info.entry = entry;
+    info.event = event;
+    _vecAnimationEvents.push_back(std::move(info));
 }
 
 void SkeletonAnimation::cacheTrackEvent(TrackEntry *entry, EventType type, Event *event) {
-    _vecTrackEvents.push_back({type, entry, event});
+    CacheEventInfo info;
+    info.type = type;
+    info.entry = entry;
+    info.event = event;
+    _vecTrackEvents.push_back(std::move(info));
 }
 
 void SkeletonAnimation::dispatchEvents() {
