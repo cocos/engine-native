@@ -207,6 +207,7 @@ namespace spine {
         _state->update(deltaTime);
         _state->apply(*_skeleton);
         _skeleton->updateWorldTransform();
+        dispatchEvents();
     }
     
     void SkeletonCache::updateToFrame (const std::string& animationName, int toFrameIdx/*= -1*/) {

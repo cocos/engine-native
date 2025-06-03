@@ -35,9 +35,9 @@
 namespace spine {
 
 struct CacheEventInfo {
-  EventType type{EventType::EventType_Start};
-  TrackEntry *entry{nullptr};
-  Event *event{nullptr};
+  spine::EventType type{spine::EventType::EventType_Start};
+  spine::TrackEntry *entry{nullptr};
+  spine::Event *event{nullptr};
 };
 
 typedef std::function<void(TrackEntry* entry)> StartListener;
