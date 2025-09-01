@@ -65,9 +65,10 @@ bool AppDelegate::applicationDidFinishLaunching()
     se->start();
     
     se::AutoHandleScope hs;
-    jsb_run_script("jsb-adapter/jsb-builtin.js");
-    jsb_run_script("main.js");
-    
+    #if SCRIPT_ENGINE_TYPE != SCRIPT_ENGINE_NAPI
+        jsb_run_script("jsb-adapter/jsb-builtin.js");
+        jsb_run_script("main.js");
+    #endif
     se->addAfterCleanupHook([]() {
         JSBClassType::destroy();
     });

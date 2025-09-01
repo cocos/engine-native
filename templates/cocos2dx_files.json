@@ -580,8 +580,6 @@
         "cocos/platform/mac/CCModuleConfigMac.release.xcconfig", 
         "cocos/platform/mac/CCPlatformDefine-mac.h", 
         "cocos/platform/mac/cocos2d-prefix.pch", 
-        "cocos/platform/openharmony/AppDelegate.cpp", 
-        "cocos/platform/openharmony/AppDelegate.h", 
         "cocos/platform/openharmony/CCDevice-openharmony.cpp", 
         "cocos/platform/openharmony/CCDevice-openharmonySensor.cpp", 
         "cocos/platform/openharmony/CCGL-openharmony.h", 

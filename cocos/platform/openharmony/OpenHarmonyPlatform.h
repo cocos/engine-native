@@ -37,7 +37,7 @@
 #include "platform/openharmony/WorkerMessageQueue.h"
 #include "scripting/js-bindings/event/EventDispatcher.h"
 #include "platform/openharmony/render/egl_core.h"
-#include "platform/openharmony/AppDelegate.h"
+#include "AppDelegate.h"
 
 namespace cocos2d {
 #define NANOSECONDS_PER_SECOND 1000000000

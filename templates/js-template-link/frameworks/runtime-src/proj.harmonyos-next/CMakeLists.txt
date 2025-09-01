@@ -23,8 +23,15 @@ set(CMAKE_CXX_STANDARD 17)
 
 include(${COCOS_X_PATH}/CMakeLists.txt)
 
+list(APPEND CC_COCOS_SOURCES
+    ${CMAKE_CURRENT_LIST_DIR}/../Classes/jsb_module_register.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../Classes/AppDelegate.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../Classes/AppDelegate.h)
+
 list(APPEND CC_ALL_SOURCES ${CC_COCOS_SOURCES} ${CC_COMMON_SOURCES} ${CC_PROJ_SOURCES})
 add_library(${CC_LIB_NAME} SHARED ${CC_ALL_SOURCES})
+
+target_include_directories(${CC_LIB_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/../Classes)
 
 # setup default flags
 cc_apply_definations(${CC_LIB_NAME})
