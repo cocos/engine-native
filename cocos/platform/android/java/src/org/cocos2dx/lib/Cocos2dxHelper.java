@@ -428,8 +428,12 @@ public class Cocos2dxHelper {
     }
 
     public static void endApplication() {
-        if (sActivity != null)
-            sActivity.finish();
+        // On Android 15, isTaskRoot check in Cocos2dxActivity.java will return false which is not compatible with lower android version.
+        // cc.game.end() will invoke `endApplication`, it's safe to terminate the process here rather than delay it to `Cocos2dxActivity.onDestroy` by `finish`.
+        // if (sActivity != null)
+        //     sActivity.finish();
+
+        terminateProcess();
     }
 
     public static void onResume() {
