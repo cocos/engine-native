@@ -39,6 +39,9 @@ export struct EditBoxDialog {
           .defaultFocus(true)
           .backgroundColor('#ffffff')
           .layoutWeight(1)
+          .onBlur(() => {
+            this.controller?.close();
+          })
           .onChange((value) => {
             if (this.onTextChange) {
               this.onTextChange(value);
